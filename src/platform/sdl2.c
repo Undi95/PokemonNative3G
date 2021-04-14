@@ -138,12 +138,11 @@ int main(int argc, char **argv)
     isFrameAvailable.value = 0;
     vBlankSemaphore = SDL_CreateSemaphore(0);
 
-    SDL_AudioSpec want, have;
-    SDL_AudioDeviceID dev;
+    SDL_AudioSpec want;
 
     SDL_memset(&want, 0, sizeof(want)); /* or SDL_zero(want) */
     want.freq = 42048;
-    want.format = AUDIO_S8;
+    want.format = AUDIO_S32;
     want.channels = 2;
     want.samples = 1024;
 
@@ -151,8 +150,8 @@ int main(int argc, char **argv)
         SDL_Log("Failed to open audio: %s", SDL_GetError());
     else
     {
-        if (want.format != AUDIO_S8) /* we let this one thing change. */
-            SDL_Log("We didn't get Signed8 audio format.");
+        if (want.format != AUDIO_S32) /* we let this one thing change. */
+            SDL_Log("We didn't get Signed32 audio format.");
         SDL_PauseAudio(0);
     }
     
@@ -214,8 +213,8 @@ int main(int argc, char **argv)
         SDL_RenderPresent(sdlRenderer);
     }
 
-	//StoreSaveFile();
-	CloseSaveFile();
+    //StoreSaveFile();
+    CloseSaveFile();
 
     SDL_DestroyWindow(sdlWindow);
     SDL_Quit();
@@ -232,7 +231,7 @@ static void ReadSaveFile(char *path)
     }
 
     fseek(sSaveFile, 0, SEEK_END);
-	int fileSize = ftell(sSaveFile);
+    int fileSize = ftell(sSaveFile);
     fseek(sSaveFile, 0, SEEK_SET);
 
     // Only read as many bytes as fit inside the buffer
@@ -250,16 +249,16 @@ static void ReadSaveFile(char *path)
 
 static void StoreSaveFile()
 {
-	if (sSaveFile != NULL)
-	{
-		fseek(sSaveFile, 0, SEEK_SET);
-		fwrite(FLASH_BASE, 1, sizeof(FLASH_BASE), sSaveFile);
-	}
+    if (sSaveFile != NULL)
+    {
+        fseek(sSaveFile, 0, SEEK_SET);
+        fwrite(FLASH_BASE, 1, sizeof(FLASH_BASE), sSaveFile);
+    }
 }
 
 void Platform_StoreSaveFile(void)
 {
-	StoreSaveFile();
+    StoreSaveFile();
 }
 
 static void CloseSaveFile()
