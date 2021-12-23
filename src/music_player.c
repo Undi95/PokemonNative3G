@@ -5,12 +5,14 @@
 
 // Don't uncomment this. vvvvv
 // #define POKEMON_EXTENSIONS
+#define MIXED_AUDIO_BUFFER_SIZE 4907
 
 static u32 MidiKeyToFreq(struct WaveData2 *wav, u8 key, u8 pitch);
 extern void * const gMPlayJumpTableTemplate[];
 extern const u8 gScaleTable[];
 extern const u32 gFreqTable[];
 extern const u8 gClockTable[];
+float audioBuffer [MIXED_AUDIO_BUFFER_SIZE];
 
 u32 umul3232H32(u32 a, u32 b) {
     u64 result = a;
@@ -747,25 +749,21 @@ void m4aSoundVSync(void)
 #ifdef PORTABLE
     if(mixer->lockStatus-PLAYER_UNLOCKED <= 1)
     {
-        s32 samplesPerFrame = mixer->samplesPerFrame;
-        s32 *outBuffer = mixer->outBuffer;
+        s32 samplesPerFrame = mixer->samplesPerFrame * 2;
+        float *m4aBuffer = mixer->outBuffer;
+        float *cgbBuffer = cgb_get_buffer();
         s32 dmaCounter = mixer->dmaCounter;
-        s32 * stereoBuffer = _calloc(2, samplesPerFrame * 4);
-        s32 * temp = stereoBuffer;
 
         if (dmaCounter > 1) {
-            outBuffer += samplesPerFrame * (mixer->framesPerDmaCycle - (dmaCounter - 1));
+            m4aBuffer += samplesPerFrame * (mixer->framesPerDmaCycle - (dmaCounter - 1));
         }
+
         for(u32 i = 0; i < samplesPerFrame; i++)
-        {
-            *temp++ = outBuffer[MIXED_AUDIO_BUFFER_SIZE];
-            *temp++ = outBuffer[0];
-            outBuffer++;
-        }
-        _SDL_QueueAudio(1, stereoBuffer, samplesPerFrame * 8);
+            audioBuffer[i] = m4aBuffer[i] + cgbBuffer[i];
+
+        _SDL_QueueAudio(1, audioBuffer, samplesPerFrame * 4);
         if((s8)(--mixer->dmaCounter) <= 0)
             mixer->dmaCounter = mixer->framesPerDmaCycle;
-        _free(stereoBuffer);
     }
 #else
     if(mixer->lockStatus-PLAYER_UNLOCKED <= 1 && (s8)(--mixer->dmaCounter) <= 0)

@@ -153,7 +153,7 @@ struct SoundChannel
     u8 rhythmPan;
     u8 dummy3[3];
     u32 count;
-    u32 fw;
+    float fw;
     u32 frequency;
     struct WaveData *wav;
     s8 *currentPointer;
@@ -161,8 +161,7 @@ struct SoundChannel
     void *prevChannelPointer;
     void *nextChannelPointer;
     u32 dummy4;
-    u16 xpi;
-    u16 xpc;
+    u32 blockCount;
 };
 
 #define MAX_DIRECTSOUND_CHANNELS 12
@@ -201,7 +200,7 @@ struct SoundInfo
     u8 gap[3];
     s32 pcmSamplesPerVBlank;
     s32 pcmFreq;
-    s32 divFreq;
+    float divFreq;
     struct CgbChannel *cgbChans;
     MPlayMainFunc MPlayMainHead;
     struct MusicPlayerInfo *musicPlayerHead;
@@ -213,7 +212,7 @@ struct SoundInfo
     ExtVolPitFunc ExtVolPit;
     u8 gap2[16];
     struct SoundChannel chans[MAX_DIRECTSOUND_CHANNELS];
-    s32 pcmBuffer[PCM_DMA_BUF_SIZE * 2];
+    float pcmBuffer[PCM_DMA_BUF_SIZE * 2];
 };
 
 struct SongHeader
@@ -392,6 +391,8 @@ extern const u16 gPcmSamplesPerVBlankTable[];
 extern const u8 gCgbScaleTable[];
 extern const s16 gCgbFreqTable[];
 extern const u8 gNoiseTable[];
+
+extern const s8 gDeltaEncodingTable[];
 
 extern const struct PokemonCrySong gPokemonCrySongTemplate;
 
