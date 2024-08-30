@@ -1873,7 +1873,7 @@ static void DrawSpritesWinMask(struct scanlineData* scanline, uint16_t vcount)
 }
 
 // Parts of this code heavily borrowed from NanoboyAdvance.
-static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool windowsEnabled, uint8_t priority, uint16_t* pixels, bool notWinOutOnly)
+static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool windowsEnabled, uint8_t priority, uint16_t* pixels, bool IsInsideWinIn)
 {
     int i;
     unsigned int x;
@@ -1882,7 +1882,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
     unsigned int blendMode = (REG_BLDCNT >> 6) & 3;
     bool winShouldBlendPixel = true;
     
-    if (windowsEnabled == true && notWinOutOnly == false)
+    if (windowsEnabled == true && IsInsideWinIn == false)
     {
         if (!(REG_WINOUT & WINOUT_WIN01_OBJ))
             return;
@@ -2064,7 +2064,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                         scanline->winMask[global_x] = (REG_WINOUT >> 8) & 0x3F;
                         continue;
                     }*/
-                    if (windowsEnabled && !(scanline->winMask[global_x] & WINMASK_OBJ) && notWinOutOnly == true)
+                    if (windowsEnabled && !(scanline->winMask[global_x] & WINMASK_OBJ) && IsInsideWinIn == true)
                     {
                         continue;
                     }
@@ -2073,7 +2073,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                     if (global_x < DISPLAY_WIDTH && global_x >= 0)
                     {
                         //check if its enabled in the window (if window is enabled)
-                        if (notWinOutOnly == true)
+                        if (IsInsideWinIn == true)
                             winShouldBlendPixel = (windowsEnabled == false || scanline->winMask[global_x] & WINMASK_CLR);
                         else
                             winShouldBlendPixel = (windowsEnabled == false || REG_WINOUT & WINOUT_WIN01_CLR);
@@ -2126,7 +2126,7 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
     
     //windows code!!!
     bool windowsEnabled = false;
-    bool notWinOutOnly;
+    bool IsInsideWinIn;
     uint16_t WIN0bottom, WIN0top, WIN0right, WIN0left;
     uint16_t WIN1bottom, WIN1top, WIN1right, WIN1left;
     bool WIN0enable, WIN1enable;
@@ -2175,11 +2175,11 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
     if (REG_DISPCNT & DISPCNT_OBJWIN_ON && REG_DISPCNT & DISPCNT_OBJ_ON)
         windowsEnabled = true;
     
-    notWinOutOnly = (WIN0enable || WIN1enable || (REG_DISPCNT & DISPCNT_OBJWIN_ON && REG_DISPCNT & DISPCNT_OBJ_ON));
+    IsInsideWinIn = (WIN0enable || WIN1enable || (REG_DISPCNT & DISPCNT_OBJWIN_ON && REG_DISPCNT & DISPCNT_OBJ_ON));
     
     
     //draw to pixel mask
-    if (notWinOutOnly)
+    if (IsInsideWinIn)
     {
         for (xpos = 0; xpos < DISPLAY_WIDTH; xpos++)
         {
@@ -2219,9 +2219,6 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
     switch (mode)
     {
     case 0:
-        // All backgrounds are text mode
-        //for (bgnum = 3; bgnum >= 0; bgnum--)
-        //{
         for (prnum = 3; prnum >= 0; prnum--)
         {
             for (char prsub = scanline.prioritySortedBgsCount[prnum] - 1; prsub >= 0; prsub--)
@@ -2233,7 +2230,7 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
                     uint16_t bgvoffs = *(uint16_t *)(REG_ADDR_BG0VOFS + bgnum * 4);
                     bool doesBGblend = (blendMode != 0 && REG_BLDCNT & (1 << bgnum));
                     
-                    if (notWinOutOnly)
+                    if (IsInsideWinIn)
                     {
                         //blending check
                         if (doesBGblend)
@@ -2243,7 +2240,7 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
                         
                     } else {
                         
-                        if (doesBGblend)
+                        if (doesBGblend && (windowsEnabled == false || (REG_WINOUT & WINOUT_WIN01_CLR)) )
                             RenderBGScanlineBlend(bgnum, scanline.bgcnts[bgnum], bghoffs, bgvoffs, vcount, pixels, &scanline, windowsEnabled);
                         else
                             RenderBGScanlineNoEffect(bgnum, scanline.bgcnts[bgnum], bghoffs, bgvoffs, vcount, pixels, &scanline, windowsEnabled);
@@ -2252,7 +2249,7 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
                 }
             }
             if (REG_DISPCNT & DISPCNT_OBJ_ON)
-                DrawSprites(&scanline, vcount, windowsEnabled, prnum, pixels, notWinOutOnly);
+                DrawSprites(&scanline, vcount, windowsEnabled, prnum, pixels, IsInsideWinIn);
         }
         
         break;
@@ -2271,7 +2268,7 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
                     
                     if (bgnum != 2)
                     {
-                        if (notWinOutOnly)
+                        if (IsInsideWinIn)
                         {
                             //blending check
                             if (doesBGblend)
@@ -2289,7 +2286,7 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
                     }
                     else
                     {
-                        if (notWinOutOnly)
+                        if (IsInsideWinIn)
                         {
                             //blending check
                             if (doesBGblend)
@@ -2299,7 +2296,7 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
                             
                         } else {
                             
-                            if (doesBGblend)
+                            if (doesBGblend && (windowsEnabled == false || (REG_WINOUT & WINOUT_WIN01_CLR)))
                                 RenderRotScaleBGScanlineBlend(bgnum, scanline.bgcnts[bgnum], bghoffs, bgvoffs, vcount, pixels, &scanline, windowsEnabled);
                             else
                                 RenderRotScaleBGScanlineNoEffect(bgnum, scanline.bgcnts[bgnum], bghoffs, bgvoffs, vcount, pixels, &scanline, windowsEnabled);
@@ -2308,7 +2305,7 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
                 }
             }
             if (REG_DISPCNT & DISPCNT_OBJ_ON)
-                DrawSprites(&scanline, vcount, windowsEnabled, prnum, pixels, notWinOutOnly);
+                DrawSprites(&scanline, vcount, windowsEnabled, prnum, pixels, IsInsideWinIn);
         }
         break;
     default:
