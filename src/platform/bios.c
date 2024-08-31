@@ -175,8 +175,7 @@ void LZ77UnCompVram(const u32 *src_, void *dest_)
                 // Some Ruby/Sapphire tilesets overflow.
                 if (destPos + blockSize > destSize) {
                     blockSize = destSize - destPos;
-                    //fprintf(stderr, "Destination buffer overflow.\n");
-                    puts("Destination buffer overflow.\n");
+                    DBGPRINTF("Destination buffer overflow.\n");
                 }
 
                 if (blockPos < 0)
@@ -449,7 +448,9 @@ void ObjAffineSet(struct ObjAffineSrcData *src, void *dest, s32 count, s32 offse
 void SoftReset(u32 resetFlags)
 {
     puts("Soft Reset called. Exiting.");
-    //exit(0);
+	#ifndef NO_STD_LIB_ENABLED
+    exit(0);
+	#endif
 }
 
 // Following functions taken from mGBA's source

@@ -5,6 +5,12 @@
 #include <string.h>
 #include <limits.h>
 
+#ifndef NO_STD_LIB_ENABLED
+#define DBGPRINTF(...) printf(__VA_ARGS__)
+#else
+#define DBGPRINTF(...)
+#endif
+
 #ifndef NO_UNDERSCORE_HACK
 #define REG_BASE       _REG_BASE
 #define VRAM_          _VRAM_

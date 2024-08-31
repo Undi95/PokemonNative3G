@@ -9,6 +9,10 @@
 #include <xinput.h>
 #endif
 
+#ifdef NO_STD_LIB_ENABLED
+#define main _main
+#endif
+
 #define NO_UNDERSCORE_HACK
 
 #include "global.h"
@@ -66,6 +70,7 @@ static u16 keys;
 #define IDM_PAUSEGAMETEXT "&Pause game"
 
 //no standard library workarounds, these have to be defined
+#ifdef NO_STD_LIB_ENABLED
 void __chkstk_ms()
 {
     return;
@@ -77,6 +82,7 @@ void acrt_iob_func()
 }
 
 void (*_imp____acrt_iob_func)(void) = &acrt_iob_func;
+#endif
 
 
 void AddMenus(HWND hwnd) {
@@ -315,27 +321,27 @@ void intToStr(char* string, int num, int max)
 
 unsigned int framesDrawn = 0;
 
-int _main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     LARGE_INTEGER largeint;
     MSG msg;
     HACCEL hAccelTable;
     HINSTANCE hInstance = GetModuleHandle(NULL);
     int nCmdShow = 1;
-    fprintf_placeholder(stderr, "Game launch main()\n");
+    DBGPRINTF("Game launch main()\n");
     ReadSaveFile(savePath);
     MyRegisterClass(hInstance);
 
     // Perform application initialization:
     if (!InitInstance (hInstance, nCmdShow))
     {
-        fprintf_placeholder(stderr, "Creating win32 window failed!\n");
+        DBGPRINTF("Creating win32 window failed!\n");
         return FALSE;
     }
-    fprintf_placeholder(stderr, "Window Init done!\n");
+    DBGPRINTF("Window Init done!\n");
     window_hdc = GetDC(ghwnd);
     win32CreateBitmap();
-    fprintf_placeholder(stderr, "Bitmap Init done!\n");
+    DBGPRINTF("Bitmap Init done!\n");
     
     //todo: convert these to int64
     QueryPerformanceCounter(&largeint);
@@ -345,19 +351,19 @@ int _main(int argc, char **argv)
     vBlankSemaphore = CreateEvent(NULL, TRUE, FALSE, TEXT("vBlankEvent")); 
     if (vBlankSemaphore == NULL) 
     {
-        fprintf_placeholder(stderr, "Could not create a event!\n");
+        DBGPRINTF("Could not create a event!\n");
         return 1;
     }
     
-    fprintf_placeholder(stderr, "Event Init done!\n");
+    DBGPRINTF("Event Init done!\n");
 
     cgb_audio_init(42048);
-    fprintf_placeholder(stderr, "cgb_audio_init Init done!\n");
+    DBGPRINTF("cgb_audio_init Init done!\n");
     
     VDraw();
     int ThreadID;
     CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DoMain, (LPVOID)&nCmdShow, 0, &ThreadID);
-    fprintf_placeholder(stderr, "Thread Init done!\n");
+    DBGPRINTF("Thread Init done!\n");
 
     double accumulator = 0.0;
 
@@ -365,7 +371,7 @@ int _main(int argc, char **argv)
     internalClock.status = SIIRTCINFO_24HOUR;
     UpdateInternalClock();
     
-    fprintf_placeholder(stderr, "Clock init done!\n");
+    DBGPRINTF("Clock init done!\n");
     
     unsigned int fpsseconds = GetTickCount()+1000;
     while (isRunning)
@@ -407,7 +413,7 @@ int _main(int argc, char **argv)
 
                     if(!SetEvent(vBlankSemaphore))
                     {
-                        fprintf_placeholder(stderr, "Could not set vBlankSemaphore!");
+                        DBGPRINTF("Could not set vBlankSemaphore!");
                         return 1;
                     }
                     accumulator -= dt;
@@ -446,7 +452,7 @@ static void ReadSaveFile(char *path)
     if (sSaveFile == INVALID_HANDLE_VALUE)
     {
         sSaveFile = CreateFileA(path, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-        if (sSaveFile == INVALID_HANDLE_VALUE) { printf_placeholder("Invalid HANDLE at ReadSaveFile()\n"); }
+        if (sSaveFile == INVALID_HANDLE_VALUE) { DBGPRINTF("Invalid HANDLE at ReadSaveFile()\n"); }
     }
 
     int fileSize = SetFilePointer(sSaveFile, 0, 0, FILE_END);
@@ -487,22 +493,22 @@ void Platform_StoreSaveFile(void)
 void Platform_ReadFlash(u16 sectorNum, u32 offset, u8 *dest, u32 size)
 {
     int bytesRead;
-    printf_placeholder("ReadFlash(sectorNum=0x%04X,offset=0x%08X,size=0x%02X)\n",sectorNum,offset,size);
+    DBGPRINTF("ReadFlash(sectorNum=0x%04X,offset=0x%08X,size=0x%02X)\n",sectorNum,offset,size);
     HANDLE savefile = CreateFileA(savePath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL); 
     if (savefile == INVALID_HANDLE_VALUE)
     {
-        printf_placeholder("Error opening save file (GetLastError %u).\n", GetLastError());
+        DBGPRINTF("Error opening save file (GetLastError %u).\n", GetLastError());
         return;
     }
     if (SetFilePointer(savefile, (sectorNum << gFlash->sector.shift) + offset, 0, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
     {
-        printf_placeholder("SetFilePointer failed! (offset=%x) (GetLastError %u)\n", (sectorNum << gFlash->sector.shift), GetLastError());
+        DBGPRINTF("SetFilePointer failed! (offset=%x) (GetLastError %u)\n", (sectorNum << gFlash->sector.shift), GetLastError());
         CloseHandle(savefile);
         return;
     }
     if (!ReadFile(savefile, dest, size, &bytesRead, NULL))
     {
-        printf_placeholder("ReadFile failed! (GetLastError %u)\n", GetLastError());
+        DBGPRINTF("ReadFile failed! (GetLastError %u)\n", GetLastError());
         CloseHandle(savefile);
         return;
     }
@@ -650,7 +656,7 @@ static void UpdateInternalClock(void)
     GetLocalTime(&time);
 
     internalClock.year = BinToBcd(time.wYear - 100);
-    internalClock.month = BinToBcd(time.wMonth) + 1;
+    internalClock.month = BinToBcd(time.wMonth-1) + 1;
     internalClock.day = BinToBcd(time.wDay);
     internalClock.dayOfWeek = BinToBcd(time.wDayOfWeek);
     internalClock.hour = BinToBcd(time.wHour);
@@ -669,7 +675,7 @@ void Platform_GetDateTime(struct SiiRtcInfo *rtc)
     rtc->hour = internalClock.hour;
     rtc->minute = internalClock.minute;
     rtc->second = internalClock.second;
-    printf_placeholder("GetDateTime: %d-%02d-%02d %02d:%02d:%02d\n", ConvertBcdToBinary(rtc->year),
+    DBGPRINTF("GetDateTime: %d-%02d-%02d %02d:%02d:%02d\n", ConvertBcdToBinary(rtc->year),
                                                          ConvertBcdToBinary(rtc->month),
                                                          ConvertBcdToBinary(rtc->day),
                                                          ConvertBcdToBinary(rtc->hour),
@@ -694,7 +700,7 @@ void Platform_GetTime(struct SiiRtcInfo *rtc)
     rtc->hour = internalClock.hour;
     rtc->minute = internalClock.minute;
     rtc->second = internalClock.second;
-    printf_placeholder("GetTime: %02d:%02d:%02d\n", ConvertBcdToBinary(rtc->hour),
+    DBGPRINTF("GetTime: %02d:%02d:%02d\n", ConvertBcdToBinary(rtc->hour),
                                         ConvertBcdToBinary(rtc->minute),
                                         ConvertBcdToBinary(rtc->second));
 }

@@ -1,3 +1,4 @@
+#ifdef NO_STD_LIB_ENABLED
 #include <stddef.h>
 
 void *memcpy(void *dest_str, const void * src_str, size_t n)
@@ -39,3 +40,4 @@ int strcmp (const char* str1, const char* str2)
 {
     return 0;
 }
+#endif
