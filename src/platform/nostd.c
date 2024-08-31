@@ -1,24 +1,22 @@
 #ifdef NO_STD_LIB_ENABLED
 #include <stddef.h>
 
-void *memcpy(void *dest_str, const void * src_str, size_t n)
+//memcpy and memset taken from libgcc
+void* memcpy(void *dest, const void *src, size_t len)
 {
-    int i = 0;
-    while (i != n)
-    {
-        *(char*)&dest_str[i] = *(char*)&src_str[i];
-        i++;
-    }
+	char *d = dest;
+	const char *s = src;
+	while (len--)
+		*d++ = *s++;
+	return dest;
 }
 
-void *memset(void *str, int c, size_t n)
+void* memset(void *dest, int val, size_t len)
 {
-    int i = 0;
-    while (i != n)
-    {
-        *(char*)&str[i] = c;
-        i++;
-    }
+	unsigned char *ptr = dest;
+	while (len-- > 0)
+		*ptr++ = val;
+	return dest;
 }
 
 int puts(const char *str)
