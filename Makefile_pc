@@ -15,6 +15,8 @@ else
 EXE :=
 endif
 
+all: rom
+
 TITLE       := POKEMON EMER
 GAME_CODE   := BPEE
 MAKER_CODE  := 01
@@ -58,21 +60,19 @@ LDFLAGS = -Map ../../$(MAP)
 
 LIB := $(LIBPATH) -lgcc -lc
 
-SHA1 := $(shell { command -v sha1sum || command -v shasum; } 2>/dev/null) -c
-GFX := tools/gbagfx/gbagfx$(EXE)
-AIF := tools/aif2pcm/aif2pcm$(EXE)
-MID := tools/mid2agb/mid2agb$(EXE)
-SCANINC := tools/scaninc/scaninc$(EXE)
-PREPROC := tools/preproc/preproc$(EXE)
-RAMSCRGEN := tools/ramscrgen/ramscrgen$(EXE)
-FIX := tools/gbafix/gbafix$(EXE)
-MAPJSON := tools/mapjson/mapjson$(EXE)
-JSONPROC := tools/jsonproc/jsonproc$(EXE)
+AUTO_GEN_TARGETS :=
+include make_tools.mk
 
-# Inclusive list. If you don't want a tool to be built, don't add it here.
-TOOLDIRS := tools/aif2pcm tools/bin2c tools/gbafix tools/gbagfx tools/jsonproc tools/mapjson tools/mid2agb tools/preproc tools/ramscrgen tools/rsfont tools/scaninc
-TOOLBASE = $(TOOLDIRS:tools/%=%)
-TOOLS = $(foreach tool,$(TOOLBASE),tools/$(tool)/$(tool)$(EXE))
+SHA1 := $(shell { command -v sha1sum || command -v shasum; } 2>/dev/null) -c
+GFX := $(TOOLS_DIR)/gbagfx/gbagfx$(EXE)
+AIF := $(TOOLS_DIR)/aif2pcm/aif2pcm$(EXE)
+MID := $(TOOLS_DIR)/mid2agb/mid2agb$(EXE)
+SCANINC := $(TOOLS_DIR)/scaninc/scaninc$(EXE)
+PREPROC := $(TOOLS_DIR)/preproc/preproc$(EXE)
+RAMSCRGEN := $(TOOLS_DIR)/ramscrgen/ramscrgen$(EXE)
+FIX := $(TOOLS_DIR)/gbafix/gbafix$(EXE)
+MAPJSON := $(TOOLS_DIR)/mapjson/mapjson$(EXE)
+JSONPROC := $(TOOLS_DIR)/jsonproc/jsonproc$(EXE)
 
 MAKEFLAGS += --no-print-directory
 
@@ -86,9 +86,20 @@ MAKEFLAGS += --no-print-directory
 # Secondary expansion is required for dependency variables in object rules.
 .SECONDEXPANSION:
 
-.PHONY: all rom clean compare tidy tools mostlyclean clean-tools $(TOOLDIRS) libagbsyscall modern tidymodern tidynonmodern
+.PHONY: all rom clean compare tidy mostlyclean libagbsyscall modern tidymodern tidynonmodern
 
 infoshell = $(foreach line, $(shell $1 | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
+
+# Build tools when building the rom
+# Disable dependency scanning for clean/tidy/tools
+# Use a separate minimal makefile for speed
+# Since we don't need to reload most of this makefile
+ifeq (,$(filter-out all rom compare modern libagbsyscall syms,$(MAKECMDGOALS)))
+$(call infoshell, $(MAKE) -f make_tools.mk)
+$(call infoshell, $(MAKE) generated)
+else
+NODEP ?= 1
+endif
 
 # Build tools when building the rom
 # Disable dependency scanning for clean/tidy/tools
@@ -128,16 +139,7 @@ OBJS_REL := $(patsubst $(OBJ_DIR)/%,%,$(OBJS))
 
 SUBDIRS  := $(sort $(dir $(OBJS)))
 
-AUTO_GEN_TARGETS :=
-
 $(shell mkdir -p $(SUBDIRS))
-
-all: rom
-
-tools: $(TOOLDIRS)
-
-$(TOOLDIRS):
-	@$(MAKE) -C $@ CC=$(HOSTCC) CXX=$(HOSTCXX)
 
 rom: $(ROM)
 ifeq ($(COMPARE),1)
@@ -148,9 +150,6 @@ endif
 compare: ; @$(MAKE) COMPARE=1
 
 clean: mostlyclean clean-tools
-
-clean-tools:
-	@$(foreach tooldir,$(TOOLDIRS),$(MAKE) clean -C $(tooldir);)
 
 mostlyclean: tidy
 	rm -f $(SAMPLE_SUBDIR)/*.bin
@@ -175,6 +174,8 @@ include spritesheet_rules.mk
 include json_data_rules.mk
 include songs.mk
 
+generated: $(AUTO_GEN_TARGETS)
+
 %.s: ;
 %.png: ;
 %.pal: ;
@@ -195,7 +196,7 @@ sound/%.bin: sound/%.aif ; $(AIF) $< $@
 ifeq ($(NODEP),1)
 $(C_BUILDDIR)/%.o: c_dep :=
 else
-$(C_BUILDDIR)/%.o: c_dep = $(shell [[ -f $(C_SUBDIR)/$*.c ]] && $(SCANINC) -I include -I tools/agbcc/include -I gflib $(C_SUBDIR)/$*.c)
+$(C_BUILDDIR)/%.o: c_dep = $(shell [[ -f $(C_SUBDIR)/$*.c ]] && $(SCANINC) -I include -I $(TOOLS_DIR)/agbcc/include -I gflib $(C_SUBDIR)/$*.c)
 endif
 
 ifeq ($(DINFO),1)
@@ -213,7 +214,7 @@ $(C_BUILDDIR)/%.o : $(C_SUBDIR)/%.c $$(c_dep)
 ifeq ($(NODEP),1)
 $(GFLIB_BUILDDIR)/%.o: c_dep :=
 else
-$(GFLIB_BUILDDIR)/%.o: c_dep = $(shell [[ -f $(GFLIB_SUBDIR)/$*.c ]] && $(SCANINC) -I include -I tools/agbcc/include -I gflib $(GFLIB_SUBDIR)/$*.c)
+$(GFLIB_BUILDDIR)/%.o: c_dep = $(shell [[ -f $(GFLIB_SUBDIR)/$*.c ]] && $(SCANINC) -I include -I $(TOOLS_DIR)/agbcc/include -I gflib $(GFLIB_SUBDIR)/$*.c)
 endif
 
 $(GFLIB_BUILDDIR)/%.o : $(GFLIB_SUBDIR)/%.c $$(c_dep)
@@ -240,11 +241,11 @@ endif
 
 ifeq ($(NODEP),1)
 $(DATA_ASM_BUILDDIR)/%.o: $(DATA_ASM_SUBDIR)/%.s
-	$(PREPROC) $< charmap.txt | $(CPP) -I include | $(ASM_PSEUDO_OP_CONV) | $(AS) $(ASFLAGS) -o $@
+	$(PREPROC) $< charmap.txt | $(CPP) -I include | $(PREPROC) -ie $$< charmap.txt | $(ASM_PSEUDO_OP_CONV) | $(AS) $(ASFLAGS) -o $@
 else
 define DATA_ASM_DEP
 $1: $2 $$(shell $(SCANINC) -I include -I "" $2)
-	$$(PREPROC) $$< charmap.txt | $$(CPP) -I include | $$(ASM_PSEUDO_OP_CONV) | $$(AS) $$(ASFLAGS) -o $$@
+	$$(PREPROC) $$< charmap.txt | $$(CPP) -I include | $$(PREPROC) -ie $$< charmap.txt | $$(ASM_PSEUDO_OP_CONV) | $$(AS) $$(ASFLAGS) -o $$@
 endef
 $(foreach src, $(REGULAR_DATA_ASM_SRCS), $(eval $(call DATA_ASM_DEP,$(patsubst $(DATA_ASM_SUBDIR)/%.s,$(DATA_ASM_BUILDDIR)/%.o, $(src)),$(src))))
 $(foreach src, $(C_ASM_SRCS), $(eval $(call DATA_ASM_DEP,$(patsubst $(C_SUBDIR)/%.s,$(C_BUILDDIR)/%.o, $(src)),$(src))))
