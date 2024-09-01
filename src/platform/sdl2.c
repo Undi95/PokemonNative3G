@@ -558,4 +558,10 @@ void Platform_SetAlarm(u8 *alarmData)
     // TODO
 }
 
+void SoftReset(u32 resetFlags)
+{
+    puts("Soft Reset called. Exiting.");
+    exit(0);
+}
+
 #endif

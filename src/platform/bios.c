@@ -441,14 +441,6 @@ void ObjAffineSet(struct ObjAffineSrcData *src, void *dest, s32 count, s32 offse
     }
 }
 
-void SoftReset(u32 resetFlags)
-{
-    puts("Soft Reset called. Exiting.");
-	#ifndef NO_STD_LIB_ENABLED
-    exit(0);
-	#endif
-}
-
 // Following functions taken from mGBA's source
 u16 ArcTan(s16 i)
 {
