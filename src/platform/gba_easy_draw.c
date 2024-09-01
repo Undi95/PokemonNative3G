@@ -1,5 +1,4 @@
 #ifdef RENDERER_EASY_DRAW
-#define NO_UNDERSCORE_HACK
 #include "global.h"
 #include <stdbool.h>
 #include "platform/dma.h"

@@ -11,8 +11,6 @@
 
 #include <SDL2/SDL.h>
 
-#define NO_UNDERSCORE_HACK
-
 #include "global.h"
 #include "platform.h"
 #include "rtc.h"

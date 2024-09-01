@@ -1,10 +1,6 @@
 #include "global.h"
 // BIOS function implementations are based on the VBA-M source code.
 
-#ifdef _WIN32 //underscore hack stuff
-#define exit _exit
-#endif
-
 //memory defines here because there's no better spot for them
 u16 INTR_CHECK;
 void *INTR_VECTOR;

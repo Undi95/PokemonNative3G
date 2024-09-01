@@ -13,8 +13,6 @@
 #define main _main
 #endif
 
-#define NO_UNDERSCORE_HACK
-
 #include "global.h"
 #include "platform.h"
 #include "rtc.h"

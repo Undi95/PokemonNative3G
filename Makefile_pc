@@ -5,6 +5,8 @@ AS := $(PREFIX)as
 
 SDL_DIR := /home/pokeemerald/SDL2-2.0.14/i686-w64-mingw32
 ASM_PSEUDO_OP_CONV := sed -e 's/\.4byte/\.int/g;s/\.2byte/\.short/g'
+#FIX_UNDERSCORE is required for 32 bit windows
+FIX_UNDERSCORE := $(OBJCOPY) --prefix-symbol _
 
 export CPP := $(PREFIX)cpp
 export LD := $(PREFIX)ld
@@ -22,8 +24,8 @@ GAME_CODE   := BPEE
 MAKER_CODE  := 01
 REVISION    := 0
 MODERN      := 1
-TARGET_PLATFORM := PLATFORM_SDL2
-TILE_RENDERER := RENDERER_EASY_DRAW
+TARGET_PLATFORM := PLATFORM_WIN32
+TILE_RENDERER := RENDERER_FAST_DRAW
 
 SHELL := /bin/bash -o pipefail
 
@@ -52,7 +54,7 @@ ASFLAGS := --32 --defsym MODERN=$(MODERN) --defsym PORTABLE=1 --defsym UBFIX=1
 GCC_VER := $(shell $(CC) -dumpversion)
 
 CC1 	:= $(shell $(PREFIX)gcc --print-prog-name=cc1) -quiet
-override CFLAGS += -Wno-trigraphs -Wimplicit -Wparentheses -Wunused -m32 -std=gnu99 -fno-leading-underscore -fno-dce -fno-builtin -Wno-unused-function -DPORTABLE -DNONMATCHING -D UBFIX -DMODERN=$(MODERN)
+override CFLAGS += -Wno-trigraphs -Wimplicit -Wparentheses -Wunused -m32 -std=gnu99 -fleading-underscore -fno-dce -fno-builtin -Wno-unused-function -DPORTABLE -DNONMATCHING -D UBFIX -DMODERN=$(MODERN)
 ROM		:= pokeemerald.exe
 OBJ_DIR	:= build/pc
 
@@ -216,13 +218,6 @@ generated: $(AUTO_GEN_TARGETS)
 $(CRY_SUBDIR)/%.bin: $(CRY_SUBDIR)/%.aif ; $(AIF) $< $@ --compress
 sound/%.bin: sound/%.aif ; $(AIF) $< $@
 
-%src/platform/sdl2.o: CFLAGS += -fleading-underscore
-%src/platform/win32.o: CFLAGS += -fleading-underscore
-%src/platform/dma.o: CFLAGS += -fleading-underscore
-%src/platform/gba_fast_draw.o: CFLAGS += -fleading-underscore
-%src/platform/gba_easy_draw.o: CFLAGS += -fleading-underscore
-%src/platform/nostd.o: CFLAGS += -fleading-underscore
-
 ifeq ($(NODEP),1)
 $(C_BUILDDIR)/%.o: c_dep :=
 else
@@ -261,10 +256,12 @@ $(GFLIB_BUILDDIR)/%.o : $(GFLIB_SUBDIR)/%.c $$(c_dep)
 ifeq ($(NODEP),1)
 $(ASM_BUILDDIR)/%.o: $(ASM_SUBDIR)/%.s
 	$(AS) $(ASFLAGS) -o $@ $<
+	$(FIX_UNDERSCORE) $@
 else
 define ASM_DEP
 $1: $2 $$(shell $(SCANINC) -I include -I "" $2)
 	$$(AS) $$(ASFLAGS) -o $$@ $$<
+	$(FIX_UNDERSCORE) $$@
 endef
 $(foreach src, $(ASM_SRCS), $(eval $(call ASM_DEP,$(patsubst $(ASM_SUBDIR)/%.s,$(ASM_BUILDDIR)/%.o, $(src)),$(src))))
 endif
@@ -272,10 +269,12 @@ endif
 ifeq ($(NODEP),1)
 $(DATA_ASM_BUILDDIR)/%.o: $(DATA_ASM_SUBDIR)/%.s
 	$(PREPROC) $< charmap.txt | $(CPP) -I include | $(PREPROC) -ie $$< charmap.txt | $(ASM_PSEUDO_OP_CONV) | $(AS) $(ASFLAGS) -o $@
+	$(FIX_UNDERSCORE) $@
 else
 define DATA_ASM_DEP
 $1: $2 $$(shell $(SCANINC) -I include -I "" $2)
 	$$(PREPROC) $$< charmap.txt | $$(CPP) -I include | $$(PREPROC) -ie $$< charmap.txt | $$(ASM_PSEUDO_OP_CONV) | $$(AS) $$(ASFLAGS) -o $$@
+	$$(FIX_UNDERSCORE) $$@
 endef
 $(foreach src, $(REGULAR_DATA_ASM_SRCS), $(eval $(call DATA_ASM_DEP,$(patsubst $(DATA_ASM_SUBDIR)/%.s,$(DATA_ASM_BUILDDIR)/%.o, $(src)),$(src))))
 $(foreach src, $(C_ASM_SRCS), $(eval $(call DATA_ASM_DEP,$(patsubst $(C_SUBDIR)/%.s,$(C_BUILDDIR)/%.o, $(src)),$(src))))
@@ -283,6 +282,7 @@ endif
 
 $(SONG_BUILDDIR)/%.o: $(SONG_SUBDIR)/%.s
 	$(ASM_PSEUDO_OP_CONV) $< | $(AS) $(ASFLAGS) -I sound -o $@
+	$(FIX_UNDERSCORE) $@
 
 $(OBJ_DIR)/sym_bss.ld: sym_bss.txt
 	$(RAMSCRGEN) .bss $< ENGLISH > $@

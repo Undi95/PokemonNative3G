@@ -1,5 +1,3 @@
-#define NO_UNDERSCORE_HACK
-
 #include "global.h"
 #include "platform/dma.h"
 
