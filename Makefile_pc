@@ -43,7 +43,7 @@ DATA_ASM_BUILDDIR = $(OBJ_DIR)/$(DATA_ASM_SUBDIR)
 SONG_BUILDDIR = $(OBJ_DIR)/$(SONG_SUBDIR)
 MID_BUILDDIR = $(OBJ_DIR)/$(MID_SUBDIR)
 
-ASFLAGS := --64 --defsym MODERN=$(MODERN) --defsym PORTABLE=1 --defsym UBFIX=1
+ASFLAGS := --64 --defsym MODERN=$(MODERN) --defsym PORTABLE=1 --defsym VER_64BIT=1 --defsym UBFIX=1
 
 GCC_VER := $(shell $(CC) -dumpversion)
 
@@ -52,7 +52,7 @@ override CFLAGS += -Wno-trigraphs -Wimplicit -Wparentheses -Wunused -m64 -std=gn
 ROM		:= pokeemerald64.exe
 OBJ_DIR	:= build/pc
 
-CPPFLAGS := -iquote include -iquote $(GFLIB_SUBDIR) -Wno-trigraphs -D NONMATCHING -D PORTABLE -D MODERN=$(MODERN) -D UBFIX -I$(SDL_DIR)/include -L$(SDL_DIR)/lib
+CPPFLAGS := -iquote include -iquote $(GFLIB_SUBDIR) -Wno-trigraphs -D NONMATCHING -D PORTABLE -D VER_64BIT -D MODERN=$(MODERN) -D UBFIX -I$(SDL_DIR)/include -L$(SDL_DIR)/lib
 
 LDFLAGS = -Map ../../$(MAP)
 

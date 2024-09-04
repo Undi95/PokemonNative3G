@@ -190,6 +190,21 @@ u64 ScriptReadQuadWord(struct ScriptContext *ctx)
     return value0;
 }
 
+#ifdef VER_64BIT
+u64 ScriptReadPointer(struct ScriptContext *ctx)
+#else
+u32 ScriptReadPointer(struct ScriptContext *ctx)
+#endif
+{
+    #ifdef VER_64BIT
+    u64 value0 = *((u64*)ctx->scriptPtr);
+    #else
+    u32 value0 = *((u32*)ctx->scriptPtr)
+    #endif
+    ctx->scriptPtr += DSIZEPTR;
+    return value0;
+}
+
 void LockPlayerFieldControls(void)
 {
     sLockFieldControls = TRUE;
@@ -296,7 +311,7 @@ u8 *MapHeaderGetScriptTable(u8 tag)
             mapScripts++;
             return T2_READ_PTR(mapScripts);
         }
-        mapScripts += 9;
+        mapScripts += DSIZEPTR + 1;
     }
 }
 
@@ -332,7 +347,7 @@ u8 *MapHeaderCheckScriptTable(u8 tag)
         // Run map script if vars are equal
         if (VarGet(varIndex1) == VarGet(varIndex2))
             return T2_READ_PTR(ptr);
-        ptr += 8;
+        ptr += DSIZEPTR;
     }
 }
 

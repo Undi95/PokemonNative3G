@@ -513,7 +513,11 @@ void SoundClear(void)
     {
         ((struct SoundChannel *)chan)->statusFlags = 0;
         i--;
+        #ifdef VER_64BIT
         chan = (void *)((s64)chan + sizeof(struct SoundChannel));
+        #else
+        chan = (void *)((s32)chan + sizeof(struct SoundChannel));
+        #endif
     }
 
     chan = soundInfo->cgbChans;
@@ -527,7 +531,11 @@ void SoundClear(void)
             soundInfo->CgbOscOff(i);
             ((struct CgbChannel *)chan)->statusFlags = 0;
             i++;
+            #ifdef VER_64BIT
             chan = (void *)((s64)chan + sizeof(struct CgbChannel));
+            #else
+            chan = (void *)((s32)chan + sizeof(struct CgbChannel));
+            #endif
         }
     }
 
@@ -1013,7 +1021,11 @@ void CgbSound(void)
                     #endif
                     // fallthrough
                 case 2:
+                    #ifdef VER_64BIT
                     *nrx1ptr = ((u64)channels->wavePointer << 6) + channels->length;
+                    #else
+                    *nrx1ptr = ((u32)channels->wavePointer << 6) + channels->length;
+                    #endif
                     goto init_env_step_time_dir;
                 case 3:
                     if (channels->wavePointer != channels->currentPointer)
@@ -1037,7 +1049,11 @@ void CgbSound(void)
                     break;
                 default:
                     *nrx1ptr = channels->length;
+                    #ifdef VER_64BIT
                     *nrx3ptr = (u64)channels->wavePointer << 3;
+                    #else
+                    *nrx3ptr = (u32)channels->wavePointer << 3;
+                    #endif
                 init_env_step_time_dir:
                     envelopeStepTimeAndDir = channels->attack + CGB_NRx2_ENV_DIR_INC;
                     if (channels->length)
@@ -1569,7 +1585,11 @@ void ply_xxx(struct MusicPlayerInfo *mplayInfo, struct MusicPlayerTrack *track)
 
 void ply_xwave(struct MusicPlayerInfo *mplayInfo, struct MusicPlayerTrack *track)
 {
+#ifdef VER_64BIT
     u64 wav;
+#else
+    u32 wav;
+#endif
 
 #ifdef UBFIX
     wav = 0;
@@ -1715,7 +1735,11 @@ start_song:
     gPokemonCrySongs[i].tone = tone;
     gPokemonCrySongs[i].part[0] = &gPokemonCrySongs[i].part0;
     gPokemonCrySongs[i].part[1] = &gPokemonCrySongs[i].part1;
+    #ifdef VER_64BIT
     gPokemonCrySongs[i].gotoTarget = (u64)&gPokemonCrySongs[i].cont;
+    #else
+    gPokemonCrySongs[i].gotoTarget = (u32)&gPokemonCrySongs[i].cont;
+    #endif
 
     mplayInfo->ident = ID_NUMBER;
 
