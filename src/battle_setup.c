@@ -969,7 +969,7 @@ static void TryUpdateGymLeaderRematchFromTrainer(void)
 }
 
 // why not just use the macros? maybe its because they didnt want to uncast const every time?
-static u32 TrainerBattleLoadArg64(const u8 *ptr)
+static u64 TrainerBattleLoadArg64(const u8 *ptr)
 {
     return T1_READ_64(ptr);
 }
@@ -1059,7 +1059,7 @@ static inline void SetU32(void *ptr, u32 value)
     *(u32 *)(ptr) = value;
 }
 
-static inline void SetU64(void *ptr, u32 value)
+static inline void SetU64(void *ptr, u64 value)
 {
     *(u64 *)(ptr) = value;
 }
