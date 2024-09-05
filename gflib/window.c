@@ -555,6 +555,12 @@ bool8 SetWindowAttribute(u8 windowId, u8 attributeId, u32 value)
     }
 }
 
+bool8 SetWindowTileData(u8 windowId, u8* tileData)
+{
+    gWindows[windowId].tileData = tileData;
+    return TRUE;
+}
+
 u32 GetWindowAttribute(u8 windowId, u8 attributeId)
 {
     switch (attributeId)
@@ -578,6 +584,11 @@ u32 GetWindowAttribute(u8 windowId, u8 attributeId)
     default:
         return 0;
     }
+}
+
+u8* GetWindowTileData(u8 windowId)
+{
+    return gWindows[windowId].tileData;
 }
 
 static u8 GetNumActiveWindowsOnBg(u8 bgId)
