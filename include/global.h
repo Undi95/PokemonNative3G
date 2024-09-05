@@ -170,7 +170,7 @@ int strcmp(const char *, const char*);
 #define T1_READ_8(ptr)  ((ptr)[0])
 #define T1_READ_16(ptr) ((ptr)[0] | ((ptr)[1] << 8))
 #define T1_READ_32(ptr) ((ptr)[0] | ((ptr)[1] << 8) | ((ptr)[2] << 16) | ((ptr)[3] << 24))
-#define T1_READ_64(ptr) (*(u64*)&ptr)
+#define T1_READ_64(ptr) ((u64)((ptr)[0] | ((ptr)[1] << 8) | ((ptr)[2] << 16) | ((ptr)[3] << 24)) | (((u64)((ptr)[4] | ((ptr)[5] << 8) | ((ptr)[6] << 16) | ((ptr)[7] << 24))) << 32))
 
 #ifdef VER_64BIT
 #define T1_READ_PTR(ptr) (u8 *) T1_READ_64(ptr)
@@ -184,7 +184,7 @@ int strcmp(const char *, const char*);
 #define T2_READ_8(ptr)  ((ptr)[0])
 #define T2_READ_16(ptr) ((ptr)[0] + ((ptr)[1] << 8))
 #define T2_READ_32(ptr) ((ptr)[0] + ((ptr)[1] << 8) + ((ptr)[2] << 16) + ((ptr)[3] << 24))
-#define T2_READ_64(ptr) (*(u64*)&ptr)
+#define T2_READ_64(ptr) ((u64)((ptr)[0] | ((ptr)[1] << 8) | ((ptr)[2] << 16) | ((ptr)[3] << 24)) | (((u64)((ptr)[4] | ((ptr)[5] << 8) | ((ptr)[6] << 16) | ((ptr)[7] << 24))) << 32))
 
 #ifdef VER_64BIT
 #define T2_READ_PTR(ptr) (void *) T2_READ_64(ptr)
