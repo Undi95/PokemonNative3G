@@ -309,7 +309,7 @@ bool8 ScrCmd_loadword(struct ScriptContext *ctx)
 {
     u8 index = ScriptReadByte(ctx);
 
-    ctx->data[index] = ScriptReadWord(ctx);
+    ctx->data[index] = ScriptReadQuadWord(ctx);
     return FALSE;
 }
 
