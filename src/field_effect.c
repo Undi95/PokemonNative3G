@@ -770,17 +770,21 @@ u32 FieldEffectScript_ReadWord(u8 **script)
          + ((*script)[3] << 24);
 }
 
+#ifdef VER_64BIT
+u64 FieldEffectScript_ReadPtr(u8 **script)
+{
+    return *(u64*)(*script);
+}
+#else
 u32 FieldEffectScript_ReadPtr(u8 **script)
 {
     return (*script)[0]
          + ((*script)[1] << 8)
          + ((*script)[2] << 16)
          + ((*script)[3] << 24)
-         + ((*script)[4] << 32)
-         + ((*script)[5] << 40)
-         + ((*script)[6] << 48)
-         + ((*script)[7] << 56);
 }
+#endif
+
 
 void FieldEffectScript_LoadTiles(u8 **script)
 {
