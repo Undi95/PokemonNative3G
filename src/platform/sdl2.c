@@ -505,8 +505,8 @@ static void RunDMAs(u32 type)
     for (int dmaNum = 0; dmaNum < DMA_COUNT; dmaNum++)
     {
         struct DMATransfer *dma = &DMAList[dmaNum];
-        u32 dmaCntReg = (&REG_DMA0CNT)[dmaNum * 3];
-        if (!((dmaCntReg >> 16) & DMA_ENABLE))
+        u32 dmaCntReg = DMASet[dmaNum].control;
+        if (!(dmaCntReg & DMA_ENABLE))
         {
             dma->control &= ~DMA_ENABLE;
         }
@@ -558,7 +558,7 @@ static void RunDMAs(u32 type)
 
             if (dma->control & DMA_REPEAT)
             {
-                dma->size = ((&REG_DMA0CNT)[dmaNum * 3] & 0x1FFFF);
+                dma->size = DMASet[dmaNum].size;
                 if (((dma->control) & DMA_DEST_MASK) == DMA_DEST_RELOAD)
                 {
                     dma->dst = DMASet[dmaNum].dst;
