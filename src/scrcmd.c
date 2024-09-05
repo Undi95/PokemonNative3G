@@ -202,7 +202,11 @@ bool8 ScrCmd_setvaddress(struct ScriptContext *ctx)
 
 bool8 ScrCmd_vgoto(struct ScriptContext *ctx)
 {
-    u32 addr = ScriptReadPointer(ctx);
+	#ifdef VER_64BIT
+    u64 addr = ScriptReadPointer(ctx);
+	#else
+	u32 addr = ScriptReadPointer(ctx);
+	#endif
 
     ScriptJump(ctx, (u8 *)(addr - sAddressOffset));
     return FALSE;
@@ -210,7 +214,11 @@ bool8 ScrCmd_vgoto(struct ScriptContext *ctx)
 
 bool8 ScrCmd_vcall(struct ScriptContext *ctx)
 {
-    u32 addr = ScriptReadPointer(ctx);
+	#ifdef VER_64BIT
+    u64 addr = ScriptReadPointer(ctx);
+	#else
+	u32 addr = ScriptReadPointer(ctx);
+	#endif
 
     ScriptCall(ctx, (u8 *)(addr - sAddressOffset));
     return FALSE;

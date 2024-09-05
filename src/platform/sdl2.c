@@ -849,6 +849,7 @@ void RLUnCompWram(const void *src, void *dest)
     }
 }
 
+//todo get rid of these ugly 64 bit ifdefs
 void RLUnCompVram(const void *src, void *dest)
 {
     int remaining = CPUReadMemory(src) >> 8;
@@ -871,10 +872,18 @@ void RLUnCompVram(const void *src, void *dest)
             while (blockHeader-- && remaining)
             {
                 remaining--;
-                if ((u32)dest_u32 & 1)
+				#ifdef VER_64BIT
+                if ((u64)dest_u32 & 1)
+				#else
+				if ((u32)dest_u32 & 1)
+				#endif
                 {
                     halfWord |= block << 8;
-                    CPUWriteHalfWord((u32)dest_u32 ^ 1, halfWord);
+					#ifdef VER_64BIT
+                    CPUWriteHalfWord((u64)dest_u32 ^ 1, halfWord);
+					#else
+					CPUWriteHalfWord((u32)dest_u32 ^ 1, halfWord);
+					#endif
                 }
                 else
                     halfWord = block;
@@ -889,10 +898,18 @@ void RLUnCompVram(const void *src, void *dest)
                 remaining--;
                 u8 byte = CPUReadByte(src);
                 src++;
-                if ((u32)dest_u32 & 1)
+				#ifdef VER_64BIT
+                if ((u64)dest_u32 & 1)
+				#else
+				if ((u32)dest_u32 & 1)
+				#endif
                 {
                     halfWord |= byte << 8;
-                    CPUWriteHalfWord((u32)dest_u32 ^ 1, halfWord);
+					#ifdef VER_64BIT
+                    CPUWriteHalfWord((u64)dest_u32 ^ 1, halfWord);
+					#else
+					CPUWriteHalfWord((u32)dest_u32 ^ 1, halfWord);
+					#endif
                 }
                 else
                     halfWord = byte;
@@ -900,7 +917,11 @@ void RLUnCompVram(const void *src, void *dest)
             }
         }
     }
-    if ((u32)dest_u32 & 1)
+	#ifdef VER_64BIT
+    if ((u64)dest_u32 & 1)
+	#else
+	if ((u32)dest_u32 & 1)
+	#endif
     {
         padding--;
         dest_u32++;
