@@ -2190,7 +2190,7 @@ static void Cmd_nop_57(void)
 
 static void Cmd_call(void)
 {
-    AIStackPushVar(gAIScriptPtr + 5);
+    AIStackPushVar(gAIScriptPtr + DSIZEPTR);
     gAIScriptPtr = T1_READ_PTR(gAIScriptPtr + 1);
 }
 

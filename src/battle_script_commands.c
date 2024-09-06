@@ -3963,7 +3963,7 @@ static void Cmd_end3(void)
 
 static void Cmd_call(void)
 {
-    BattleScriptPush(gBattlescriptCurrInstr + 5);
+    BattleScriptPush(gBattlescriptCurrInstr + DSIZEPTR + 1);
     gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 1);
 }
 
