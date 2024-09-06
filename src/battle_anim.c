@@ -1667,12 +1667,12 @@ static void Cmd_jumpargeq(void)
 
     sBattleAnimScriptPtr++;
     argId = sBattleAnimScriptPtr[0];
-    valueToCheck = T1_READ_16(sBattleAnimScriptPtr + 1);
+    valueToCheck = T1_READ_16(sBattleAnimScriptPtr + DSIZE8BIT);
 
     if (valueToCheck == gBattleAnimArgs[argId])
-        sBattleAnimScriptPtr = T2_READ_PTR(sBattleAnimScriptPtr + 3);
+        sBattleAnimScriptPtr = T2_READ_PTR(sBattleAnimScriptPtr + DSIZE8BIT + DSIZE16BIT);
     else
-        sBattleAnimScriptPtr += DSIZE16BIT + DSIZEPTR + 1;
+        sBattleAnimScriptPtr += DSIZE8BIT + DSIZE16BIT + DSIZEPTR;
 }
 
 static void Cmd_jumpifcontest(void)
