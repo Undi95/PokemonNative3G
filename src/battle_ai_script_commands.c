@@ -592,9 +592,9 @@ static void BattleAI_DoAIProcessing(void)
             case AIState_Processing:
                 if (AI_THINKING_STRUCT->moveConsidered != 0)
                 {
-                    printf("pre AI thinking cmd ptr: %x\n", gAIScriptPtr);
+                    printf("pre AI thinking cmd ptr: %p\n", gAIScriptPtr);
                     sBattleAICmdTable[*gAIScriptPtr](); // Run AI command.
-                    printf("post AI thinking cmd ptr: %x\n", gAIScriptPtr);
+                    printf("post AI thinking cmd ptr: %p\n", gAIScriptPtr);
                 }
                 else
                 {
