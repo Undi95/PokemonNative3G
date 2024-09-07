@@ -3086,7 +3086,7 @@ static void Cmd_jumpifstatus2(void)
 {
     u8 battlerId = GetBattlerForBattleScript(gBattlescriptCurrInstr[DSIZE8BIT]);
     u32 flags = T2_READ_32(gBattlescriptCurrInstr + DSIZE8BIT + DSIZE8BIT);
-    const u8 *jumpPtr = T2_READ_PTR(gBattlescriptCurrInstr + DSIZE8BIT + DSIZE32BIT);
+    const u8 *jumpPtr = T2_READ_PTR(gBattlescriptCurrInstr + DSIZE8BIT + DSIZE8BIT + DSIZE32BIT);
 
     if (gBattleMons[battlerId].status2 & flags && gBattleMons[battlerId].hp != 0)
         gBattlescriptCurrInstr = jumpPtr;
