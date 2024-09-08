@@ -2,6 +2,7 @@ STD_REVERB = 50
 
 $(MID_BUILDDIR)/%.o: $(MID_SUBDIR)/%.s
 	$(ASM_PSEUDO_OP_CONV) $< | $(AS) $(ASFLAGS) -I sound -o $@
+	$(FIX_UNDERSCORE) $@
 
 $(MID_SUBDIR)/mus_aqua_magma_hideout.s: %.s: %.mid
 	$(MID) $< $@ -E -R$(STD_REVERB) -G076 -V084

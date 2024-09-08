@@ -5,54 +5,10 @@
 #include <string.h>
 #include <limits.h>
 
-#ifndef NO_UNDERSCORE_HACK
-#define REG_BASE       _REG_BASE
-#define VRAM_          _VRAM_
-#define OAM            _OAM
-#define PLTT           _PLTT
-#define FLASH_BASE     _FLASH_BASE
-#define SOUND_INFO_PTR _SOUND_INFO_PTR
-#define INTR_CHECK     _INTR_CHECK
-#define INTR_VECTOR    _INTR_VECTOR
-#define fopen          _fopen
-#define fseek          _fseek
-#define fclose         _fclose
-#define fread          _fread
-#define fwrite         _fwrite
-#define puts           _puts
-#define memcpy         _memcpy
-#define memset         _memset
-#define strcmp         _strcmp
-#define strcpy         _strcpy
-#define getc           _getc
-#define printf         _printf
-#define CpuSet         _CpuSet
-#define CpuFastSet     _CpuFastSet
-#define DmaSet         _DmaSet
-#define BgAffineSet    _BgAffineSet
-#define ObjAffineSet   _ObjAffineSet
-#define SoftReset      _SoftReset
-#define LZ77UnCompVram _LZ77UnCompVram
-#define LZ77UnCompWram _LZ77UnCompWram
-#define RLUnCompVram   _RLUnCompVram
-#define RLUnCompWram   _RLUnCompWram
-#define AgbMain _AgbMain
-#define gIntrTable _gIntrTable
-#define VBlankIntrWait _VBlankIntrWait
-#define Sqrt           _Sqrt
-#define ArcTan         _ArcTan
-#define ArcTan2        _ArcTan2
-#define ConvertBcdToBinary _ConvertBcdToBinary
-#define DoSoftReset _DoSoftReset
-#define Platform_GetKeyInput _Platform_GetKeyInput
-#define Platform_StoreSaveFile _Platform_StoreSaveFile
-#define Platform_GetStatus _Platform_GetStatus
-#define Platform_SetStatus _Platform_SetStatus
-#define Platform_GetDateTime _Platform_GetDateTime
-#define Platform_SetDateTime _Platform_SetDateTime
-#define Platform_GetTime _Platform_GetTime
-#define Platform_SetTime _Platform_SetTime
-#define Platform_SetAlarm _Platform_SetAlarm
+#ifndef NO_STD_LIB_ENABLED
+#define DBGPRINTF(...) printf(__VA_ARGS__)
+#else
+#define DBGPRINTF(...)
 #endif
 
 #include "config.h" // we need to define config before gba headers as print stuff needs the functions nulled before defines.
@@ -144,7 +100,7 @@ int strcmp(const char *, const char*);
 // There are cases where GF does a&(n-1) where we would really like to have a%n, because
 // if n is changed to a value that isn't a power of 2 then a&(n-1) is unlikely to work as
 // intended, and a%n for powers of 2 isn't always optimized to use &.
-#define MOD(a, n)(((n) & ((n)-1)) ? ((a) % (n)) : ((a) & ((n)-1)))
+#define MOD(a, n) (((n) & ((n)-1)) ? ((a) % (n)) : ((a) & ((n)-1)))
 
 // Used in cases where modulo by 0 can occur in the retail version.
 // Avoids invalid opcodes on some emulators, and the otherwise UB.
@@ -193,7 +149,7 @@ int strcmp(const char *, const char*);
     f;                       \
 })
 
-#define DIV_ROUND_UP(val, roundBy)(((val) / (roundBy)) + (((val) % (roundBy)) ? 1 : 0))
+#define DIV_ROUND_UP(val, roundBy) (((val) / (roundBy)) + (((val) % (roundBy)) ? 1 : 0))
 
 #define ROUND_BITS_TO_BYTES(numBits) DIV_ROUND_UP(numBits, 8)
 
