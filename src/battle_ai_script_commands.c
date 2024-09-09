@@ -1737,7 +1737,7 @@ static void Cmd_if_can_faint(void)
 {
     if (gBattleMoves[AI_THINKING_STRUCT->moveConsidered].power < 2)
     {
-        gAIScriptPtr += 9;
+        gAIScriptPtr += DSIZE8BIT + DSIZEPTR;
         return;
     }
 
@@ -1788,7 +1788,7 @@ static void Cmd_if_cant_faint(void)
 #endif
 
     if (gBattleMons[gBattlerTarget].hp > gBattleMoveDamage)
-        gAIScriptPtr = T1_READ_PTR(DSIZE8BIT + 1);
+        gAIScriptPtr = T1_READ_PTR(gAIScriptPtr + DSIZE8BIT);
     else
         gAIScriptPtr += DSIZE8BIT + DSIZEPTR;
 }
@@ -2190,7 +2190,7 @@ static void Cmd_nop_57(void)
 
 static void Cmd_call(void)
 {
-    AIStackPushVar(gAIScriptPtr + DSIZEPTR);
+    AIStackPushVar(gAIScriptPtr + DSIZE8BIT + DSIZEPTR);
     gAIScriptPtr = T1_READ_PTR(gAIScriptPtr + DSIZE8BIT);
 }
 
