@@ -1,3 +1,4 @@
+#ifdef PLATFORM_SDL2
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -10,17 +11,24 @@
 
 #include <SDL2/SDL.h>
 
+<<<<<<< HEAD
 // #define NO_UNDERSCORE_HACK
 
+=======
+>>>>>>> b5550326066636fe5c1f21d1bce8b68376e6e073
 #include "global.h"
 #include "platform.h"
 #include "rtc.h"
 #include "gba/defines.h"
 #include "gba/m4a_internal.h"
 #include "cgb_audio.h"
+#include "gba/flash_internal.h"
+#include "platform/dma.h"
+#include "platform/framedraw.h"
 
 extern void (*const gIntrTable[])(void);
 
+<<<<<<< HEAD
 u16 INTR_CHECK;
 void *INTR_VECTOR;
 unsigned char REG_BASE[0x400] __attribute__ ((aligned (4)));
@@ -72,6 +80,8 @@ struct bgPriority {
     char subPriority;
 };
 
+=======
+>>>>>>> b5550326066636fe5c1f21d1bce8b68376e6e073
 SDL_Thread *mainLoopThread;
 SDL_Window *sdlWindow;
 SDL_Renderer *sdlRenderer;
@@ -104,7 +114,6 @@ static void StoreSaveFile(void);
 static void CloseSaveFile(void);
 
 static void UpdateInternalClock(void);
-static void RunDMAs(u32 type);
 
 int main(int argc, char **argv)
 {
@@ -119,21 +128,21 @@ int main(int argc, char **argv)
 
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
     {
-        fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        DBGPRINTF("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
 
     sdlWindow = SDL_CreateWindow("pokeemerald", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DISPLAY_WIDTH * videoScale, DISPLAY_HEIGHT * videoScale, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (sdlWindow == NULL)
     {
-        fprintf(stderr, "Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        DBGPRINTF("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
 
     sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_PRESENTVSYNC);
     if (sdlRenderer == NULL)
     {
-        fprintf(stderr, "Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+        DBGPRINTF("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
 
@@ -148,7 +157,7 @@ int main(int argc, char **argv)
                                    DISPLAY_WIDTH, DISPLAY_HEIGHT);
     if (sdlTexture == NULL)
     {
-        fprintf(stderr, "Texture could not be created! SDL_Error: %s\n", SDL_GetError());
+        DBGPRINTF("Texture could not be created! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
 
@@ -281,6 +290,34 @@ void Platform_StoreSaveFile(void)
 {
     StoreSaveFile();
 }
+
+void Platform_ReadFlash(u16 sectorNum, u32 offset, u8 *dest, u32 size)
+{
+    DBGPRINTF("ReadFlash(sectorNum=0x%04X,offset=0x%08X,size=0x%02X)\n",sectorNum,offset,size);
+    FILE * savefile = fopen("pokeemerald.sav", "r+b");
+    if (savefile == NULL)
+    {
+        puts("Error opening save file.");
+        return;
+    }
+    if (fseek(savefile, (sectorNum << gFlash->sector.shift) + offset, SEEK_SET))
+    {
+        fclose(savefile);
+        return;
+    }
+    if (fread(dest, 1, size, savefile) != size)
+    {
+        fclose(savefile);
+        return;
+    }
+    fclose(savefile);
+}
+
+void Platform_QueueAudio(float *audioBuffer, s32 samplesPerFrame)
+{
+    SDL_QueueAudio(1, audioBuffer, samplesPerFrame);
+}
+
 
 static void CloseSaveFile()
 {
@@ -468,6 +505,7 @@ u16 Platform_GetKeyInput(void)
     return keys;
 }
 
+<<<<<<< HEAD
 // BIOS function implementations are based on the VBA-M source code.
 
 static uint32_t CPUReadMemory(const void *src)
@@ -1955,6 +1993,8 @@ static void DrawFrame(uint16_t *pixels)
     }
 }
 
+=======
+>>>>>>> b5550326066636fe5c1f21d1bce8b68376e6e073
 void VDraw(SDL_Texture *texture)
 {
     static uint16_t image[DISPLAY_WIDTH * DISPLAY_HEIGHT];
@@ -2025,7 +2065,7 @@ void Platform_GetDateTime(struct SiiRtcInfo *rtc)
     rtc->hour = internalClock.hour;
     rtc->minute = internalClock.minute;
     rtc->second = internalClock.second;
-    printf("GetDateTime: %d-%02d-%02d %02d:%02d:%02d\n", ConvertBcdToBinary(rtc->year),
+    DBGPRINTF("GetDateTime: %d-%02d-%02d %02d:%02d:%02d\n", ConvertBcdToBinary(rtc->year),
                                                          ConvertBcdToBinary(rtc->month),
                                                          ConvertBcdToBinary(rtc->day),
                                                          ConvertBcdToBinary(rtc->hour),
@@ -2050,7 +2090,7 @@ void Platform_GetTime(struct SiiRtcInfo *rtc)
     rtc->hour = internalClock.hour;
     rtc->minute = internalClock.minute;
     rtc->second = internalClock.second;
-    printf("GetTime: %02d:%02d:%02d\n", ConvertBcdToBinary(rtc->hour),
+    DBGPRINTF("GetTime: %02d:%02d:%02d\n", ConvertBcdToBinary(rtc->hour),
                                         ConvertBcdToBinary(rtc->minute),
                                         ConvertBcdToBinary(rtc->second));
 }
@@ -2067,104 +2107,10 @@ void Platform_SetAlarm(u8 *alarmData)
     // TODO
 }
 
-// Following functions taken from mGBA's source
-u16 ArcTan(s16 i)
+void SoftReset(u32 resetFlags)
 {
-    s32 a = -((i * i) >> 14);
-    s32 b = ((0xA9 * a) >> 14) + 0x390;
-    b = ((b * a) >> 14) + 0x91C;
-    b = ((b * a) >> 14) + 0xFB6;
-    b = ((b * a) >> 14) + 0x16AA;
-    b = ((b * a) >> 14) + 0x2081;
-    b = ((b * a) >> 14) + 0x3651;
-    b = ((b * a) >> 14) + 0xA2F9;
-
-    return (i * b) >> 16;
+    puts("Soft Reset called. Exiting.");
+    exit(0);
 }
 
-u16 ArcTan2(s16 x, s16 y)
-{
-    if (!y)
-    {
-        if (x >= 0)
-            return 0;
-        return 0x8000;
-    }
-    if (!x)
-    {
-        if (y >= 0)
-            return 0x4000;
-        return 0xC000;
-    }
-    if (y >= 0)
-    {
-        if (x >= 0)
-        {
-            if (x >= y)
-                return ArcTan((y << 14) / x);
-        }
-        else if (-x >= y)
-            return ArcTan((y << 14) / x) + 0x8000;
-        return 0x4000 - ArcTan((x << 14) / y);
-    }
-    else
-    {
-        if (x <= 0)
-        {
-            if (-x > -y)
-                return ArcTan((y << 14) / x) + 0x8000;
-        }
-        else if (x >= -y)
-            return ArcTan((y << 14) / x) + 0x10000;
-        return 0xC000 - ArcTan((x << 14) / y);
-    }
-}
-
-u16 Sqrt(u32 num)
-{
-    if (!num)
-        return 0;
-    u32 lower;
-    u32 upper = num;
-    u32 bound = 1;
-    while (bound < upper)
-    {
-        upper >>= 1;
-        bound <<= 1;
-    }
-    while (1)
-    {
-        upper = num;
-        u32 accum = 0;
-        lower = bound;
-        while (1)
-        {
-            u32 oldLower = lower;
-            if (lower <= upper >> 1)
-                lower <<= 1;
-            if (oldLower >= upper >> 1)
-                break;
-        }
-        while (1)
-        {
-            accum <<= 1;
-            if (upper >= lower)
-            {
-                ++accum;
-                upper -= lower;
-            }
-            if (lower == bound)
-                break;
-            lower >>= 1;
-        }
-        u32 oldBound = bound;
-        bound += accum;
-        bound >>= 1;
-        if (bound >= oldBound)
-        {
-            bound = oldBound;
-            break;
-        }
-    }
-    return bound;
-}
+#endif
