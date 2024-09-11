@@ -5245,5 +5245,4 @@ void RunBattleScriptCommands(void)
 {
     if (gBattleControllerExecFlags == 0)
         gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
-    printf("battle_main ptr: gBattlescriptCurrInstr %p\n", gBattlescriptCurrInstr);
 }
