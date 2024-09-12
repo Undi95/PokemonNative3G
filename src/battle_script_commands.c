@@ -3971,7 +3971,7 @@ static void Cmd_jumpiftype2(void)
 {
     u8 battlerId = GetBattlerForBattleScript(gBattlescriptCurrInstr[DSIZE8BIT]);
 
-    if (gBattlescriptCurrInstr[DSIZE8BIT + DSIZE8BIT] == gBattleMons[battlerId].type1 || gBattlescriptCurrInstr[DSIZE8BIT + DSIZE8BIT] == gBattleMons[battlerId].type2)
+    if (gBattlescriptCurrInstr[DSIZE8BIT + DSIZE8BIT] == gBattleMons[battlerId].types[0] || gBattlescriptCurrInstr[DSIZE8BIT + DSIZE8BIT] == gBattleMons[battlerId].types[1])
         gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + DSIZE8BIT + DSIZE8BIT + DSIZE8BIT);
     else
         gBattlescriptCurrInstr += DSIZE8BIT + DSIZE8BIT + DSIZE8BIT + DSIZEPTR;

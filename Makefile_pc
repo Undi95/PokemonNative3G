@@ -6,7 +6,7 @@ AS := $(PREFIX)as
 SDL_DIR := /home/pokeemerald/SDL2-2.0.14/x86_64-w64-mingw32
 ASM_PSEUDO_OP_CONV := sed -e 's/\.4byte/\.int/g;s/\.2byte/\.short/g'
 #FIX_UNDERSCORE is required for 32 bit windows
-FIX_UNDERSCORE := $(OBJCOPY) --prefix-symbol _
+FIX_UNDERSCORE := $(OBJCOPY)
 
 export CPP := $(PREFIX)cpp
 export LD := $(PREFIX)ld
@@ -25,7 +25,7 @@ MAKER_CODE  := 01
 REVISION    := 0
 MODERN      := 1
 TARGET_PLATFORM := PLATFORM_SDL2
-TILE_RENDERER := RENDERER_EASY_DRAW
+TILE_RENDERER := RENDERER_FAST_DRAW
 
 SHELL := /bin/bash -o pipefail
 
@@ -58,7 +58,7 @@ override CFLAGS += -Wno-trigraphs -Wimplicit -Wparentheses -Wunused -m64 -std=gn
 ROM		:= pokeemerald64.exe
 OBJ_DIR	:= build/pc
 
-CPPFLAGS := -iquote include -iquote $(GFLIB_SUBDIR) -Wno-trigraphs -D NONMATCHING -D PORTABLE -D VER_64BIT -D MODERN=$(MODERN) -D UBFIX -I$(SDL_DIR)/include -L$(SDL_DIR)/lib
+CPPFLAGS := -iquote include -iquote $(GFLIB_SUBDIR) -Wno-trigraphs -D NONMATCHING -D PORTABLE -D $(TARGET_PLATFORM) -D $(TILE_RENDERER) -D VER_64BIT -D MODERN=$(MODERN) -D UBFIX  -I$(SDL_DIR)/include -L$(SDL_DIR)/lib
 
 LDFLAGS = -Map ../../$(MAP)
 
