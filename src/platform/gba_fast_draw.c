@@ -1974,14 +1974,14 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                 half_height *= 2;
             }
         }
-        else
+        /*else
         {
             // Identity
             matrix[0][0] = 0x100;
             matrix[0][1] = 0;
             matrix[1][0] = 0;
             matrix[1][1] = 0x100;
-        }
+        }*/
 
         x += half_width;
         y += half_height;
@@ -2009,15 +2009,25 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                 if (global_x < 0 || global_x >= DISPLAY_WIDTH)
                     continue;
 
-                if (oam->mosaic == 1)
+                if (isAffine)
                 {
-                    //mosaic effect has to be applied to global coordinates otherwise the mosaic will scroll
-                    local_mosaicX = applySpriteHorizontalMosaicEffect(global_x) - x;
-                    tex_x = ((matrix[0][0] * local_mosaicX + matrix[0][1] * local_y) >> 8) + (width / 2);
-                    tex_y = ((matrix[1][0] * local_mosaicX + matrix[1][1] * local_y) >> 8) + (height / 2);
-                }else{
-                    tex_x = ((matrix[0][0] * local_x + matrix[0][1] * local_y) >> 8) + (width / 2);
-                    tex_y = ((matrix[1][0] * local_x + matrix[1][1] * local_y) >> 8) + (height / 2);
+                    if (oam->mosaic == 1)
+                    {
+                        //mosaic effect has to be applied to global coordinates otherwise the mosaic will scroll
+                        local_mosaicX = applySpriteHorizontalMosaicEffect(global_x) - x;
+                        tex_x = ((matrix[0][0] * local_mosaicX + matrix[0][1] * local_y) >> 8) + (width / 2);
+                        tex_y = ((matrix[1][0] * local_mosaicX + matrix[1][1] * local_y) >> 8) + (height / 2);
+                    }
+                    else
+                    {
+                        tex_x = ((matrix[0][0] * local_x + matrix[0][1] * local_y) >> 8) + (width / 2);
+                        tex_y = ((matrix[1][0] * local_x + matrix[1][1] * local_y) >> 8) + (height / 2);
+                    }
+                }
+                else
+                {
+                    tex_x = (oam->mosaic == 1 ? applySpriteHorizontalMosaicEffect(global_x) - x : local_x) + (width / 2);
+                    tex_y = local_y + (height / 2);
                 }
 
 
