@@ -659,11 +659,10 @@ u16 Platform_GetKeyInput(void)
 
 void VDraw()
 {
-    DrawFrame(lpBitmapBits);
-    
-    
     if (frameskipCounter == 0)
     {
+        DrawFrame(lpBitmapBits);
+
         //convert pixels to to the correct format
         for (int x = 0; x < DISPLAY_HEIGHT * DISPLAY_WIDTH ; x++)
         {
