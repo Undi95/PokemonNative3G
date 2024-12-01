@@ -1903,7 +1903,6 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
             continue;
         unsigned int width;
         unsigned int height;
-        //uint16_t *pixels;
 
         bool isAffine  = oam->affineMode & 1;
         bool doubleSizeOrDisabled = (oam->affineMode >> 1) & 1;
@@ -1951,38 +1950,6 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
         if (y >= DISPLAY_HEIGHT)
             y -= 256;
 
-        if (isAffine)
-        {
-            //TODO: there is probably a better way to do this
-            u8 matrixNum = oam->matrixNum * 4;
-
-            struct OamData *oam1 = &((struct OamData *)OAM)[matrixNum];
-            struct OamData *oam2 = &((struct OamData *)OAM)[matrixNum + 1];
-            struct OamData *oam3 = &((struct OamData *)OAM)[matrixNum + 2];
-            struct OamData *oam4 = &((struct OamData *)OAM)[matrixNum + 3];
-
-            matrix[0][0] = oam1->affineParam;
-            matrix[0][1] = oam2->affineParam;
-            matrix[1][0] = oam3->affineParam;
-            matrix[1][1] = oam4->affineParam;
-
-            if (doubleSizeOrDisabled) // double size for affine
-            {
-                rect_width *= 2;
-                rect_height *= 2;
-                half_width *= 2;
-                half_height *= 2;
-            }
-        }
-        /*else
-        {
-            // Identity
-            matrix[0][0] = 0x100;
-            matrix[0][1] = 0;
-            matrix[1][0] = 0;
-            matrix[1][1] = 0x100;
-        }*/
-
         x += half_width;
         y += half_height;
 
@@ -2009,37 +1976,13 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                 if (global_x < 0 || global_x >= DISPLAY_WIDTH)
                     continue;
 
-                if (isAffine)
-                {
-                    if (oam->mosaic == 1)
-                    {
-                        //mosaic effect has to be applied to global coordinates otherwise the mosaic will scroll
-                        local_mosaicX = applySpriteHorizontalMosaicEffect(global_x) - x;
-                        tex_x = ((matrix[0][0] * local_mosaicX + matrix[0][1] * local_y) >> 8) + (width / 2);
-                        tex_y = ((matrix[1][0] * local_mosaicX + matrix[1][1] * local_y) >> 8) + (height / 2);
-                    }
-                    else
-                    {
-                        tex_x = ((matrix[0][0] * local_x + matrix[0][1] * local_y) >> 8) + (width / 2);
-                        tex_y = ((matrix[1][0] * local_x + matrix[1][1] * local_y) >> 8) + (height / 2);
-                    }
-                }
-                else
-                {
-                    tex_x = (oam->mosaic == 1 ? applySpriteHorizontalMosaicEffect(global_x) - x : local_x) + (width / 2);
-                    tex_y = local_y + (height / 2);
-                }
+				tex_x = local_x + (width / 2);
+				tex_y = local_y + (height / 2);
 
 
                 /* Check if transformed coordinates are inside bounds. */
-
                 if (tex_x >= width || tex_y >= height || tex_x < 0 || tex_y < 0)
                     continue;
-
-                if (flipX)
-                    tex_x = width  - tex_x - 1;
-                if (flipY)
-                    tex_y = height - tex_y - 1;
 
                 int tile_x = tex_x % 8;
                 int tile_y = tex_y % 8;
@@ -2048,68 +1991,21 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                 int block_offset = ((block_y * (REG_DISPCNT & 0x40 ? (width / 8) : 16)) + block_x);
                 uint16_t pixel = 0;
 
-                if (!is8BPP)
-                {
-                    pixel = tiledata[(block_offset + oam->tileNum) * 32 + (tile_y * 4) + (tile_x / 2)];
-                    if (tile_x & 1)
-                        pixel >>= 4;
-                    else
-                        pixel &= 0xF;
-                    palette += oam->paletteNum * 16;
-                }
-                else
-                {
-                    pixel = tiledata[(block_offset * 2 + oam->tileNum) * 32 + (tile_y * 8) + tile_x];
-                }
+				pixel = tiledata[(block_offset + oam->tileNum) * 32 + (tile_y * 4) + (tile_x / 2)];
+				
+				if (tile_x & 1)
+					pixel >>= 4;
+				else
+					pixel &= 0xF;
+				palette += oam->paletteNum * 16;
 
                 if (pixel != 0)
                 {
                     uint16_t color = palette[pixel];;
                     
-                    //if sprite mode is 2 then write to the window mask instead
-                    /*if (isObjWin)
-                    {
-                        if (scanline->winMask[global_x] & WINMASK_WINOUT)
-                        scanline->winMask[global_x] = (REG_WINOUT >> 8) & 0x3F;
-                        continue;
-                    }*/
-                    if (windowsEnabled && !(scanline->winMask[global_x] & WINMASK_OBJ) && IsInsideWinIn == true)
-                    {
-                        continue;
-                    }
-                    
                     //this code runs if pixel is to be drawn
                     if (global_x < DISPLAY_WIDTH && global_x >= 0)
                     {
-                        //check if its enabled in the window (if window is enabled)
-                        if (IsInsideWinIn == true)
-                            winShouldBlendPixel = (windowsEnabled == false || scanline->winMask[global_x] & WINMASK_CLR);
-                        else
-                            winShouldBlendPixel = (windowsEnabled == false || REG_WINOUT & WINOUT_WIN01_CLR);
-                        //has to be separated from the blend mode switch statement because of OBJ semi transparancy feature
-                        if ((blendMode == 1 && REG_BLDCNT & BLDCNT_TGT1_OBJ && winShouldBlendPixel) || isSemiTransparent)
-                        {
-                            uint16_t targetA = color;
-                            uint16_t targetB = 0;
-                            //if (alphaBlendSelectTargetB(scanline, &targetB, oam->priority, 0, global_x, false))
-                            //{
-                            if (scanline->bgMask[global_x] & (REG_BLDCNT >> 8))
-                                color = alphaBlendColor(targetA, pixels[global_x]);
-                            //}
-                        }
-                        else if (REG_BLDCNT & BLDCNT_TGT1_OBJ && winShouldBlendPixel)
-                        {
-                            switch (blendMode)
-                            {
-                            case 2:
-                                color = alphaBrightnessIncrease(color);
-                                break;
-                            case 3:
-                                color = alphaBrightnessDecrease(color);
-                                break;
-                            }
-                        }
-                        
                         //write pixel to pixel framebuffer
                         pixels[global_x] = color | (1 << 15);
                         scanline->bgMask[global_x] = (1 << 4); // top most obj pixel bit
