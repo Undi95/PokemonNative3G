@@ -1983,14 +1983,14 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                 if (tex_x >= width || tex_y >= height || tex_x < 0 || tex_y < 0)
                     continue;
 
-                int tile_x = tex_x % 8;
-                int tile_y = tex_y % 8;
+                int tile_x = tex_x & 7;
+                int tile_y = tex_y & 7;
                 int block_x = tex_x / 8;
                 int block_y = tex_y / 8;
                 int block_offset = ((block_y * (REG_DISPCNT & 0x40 ? (width / 8) : 16)) + block_x);
                 uint16_t pixel = 0;
 
-				pixel = tiledata[(block_offset + oam->tileNum) * 32 + (tile_y * 4) + (tile_x / 2)];
+				pixel = tiledata[(oam->tileNum + block_offset) * 32 + (tile_y * 4) + (tile_x / 2)];
 				
 				if (tile_x & 1)
 					pixel >>= 4;
