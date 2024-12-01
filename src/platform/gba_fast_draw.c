@@ -1979,7 +1979,6 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
 				tex_x = local_x + (width / 2);
 				tex_y = local_y + (height / 2);
 
-
                 /* Check if transformed coordinates are inside bounds. */
                 if (tex_x >= width || tex_y >= height || tex_x < 0 || tex_y < 0)
                     continue;
@@ -2003,13 +2002,9 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                 {
                     uint16_t color = palette[pixel];;
                     
-                    //this code runs if pixel is to be drawn
-                    if (global_x < DISPLAY_WIDTH && global_x >= 0)
-                    {
-                        //write pixel to pixel framebuffer
-                        pixels[global_x] = color | (1 << 15);
-                        scanline->bgMask[global_x] = (1 << 4); // top most obj pixel bit
-                    }
+					//write pixel to pixel framebuffer
+					pixels[global_x] = color | (1 << 15);
+					scanline->bgMask[global_x] = (1 << 4); // top most obj pixel bit
                 }
             }
         }
