@@ -1963,7 +1963,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
             bool flipY  = !isAffine && ((oam->matrixNum >> 4) & 1);
             bool is8BPP  = oam->bpp & 1;
             uint8_t *tiledata = (uint8_t *)objtiles;
-            uint16_t *palette = (uint16_t *)(PLTT + 0x200);
+            uint16_t *palette = (uint16_t *)OBJ_PLTT;
             palette += oam->paletteNum * 16; //choose the palette
             int local_mosaicX;
             int tex_y = local_y + (height / 2);
@@ -1973,27 +1973,27 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
             int blockStart, blockEnd, blockIncrement;
             if (flipX)
             {
-                blockStart = width/8-1;
+                blockStart = width / TILE_WIDTH-1;
                 blockEnd = -1;
                 blockIncrement = -1;
             }
             else
             {
                 blockStart = 0;
-                blockEnd = width/8;
+                blockEnd = width / TILE_WIDTH;
                 blockIncrement = 1;
             }
             
             for (int block_x = blockStart; block_x != blockEnd; block_x += blockIncrement)
             {
-                int tile_y = tex_y & 7;
+                int tile_y = tex_y & TILE_HEIGHT-1;
                 //int block_x = block;
-                int block_y = tex_y / 8;
-                int block_offset = ((block_y * (REG_DISPCNT & 0x40 ? (width / 8) : 16)) + block_x);
-                uint8_t* pixelData = &tiledata[(oam->tileNum + block_offset) * 32 + (tile_y * 4)];
+                int block_y = tex_y / TILE_HEIGHT;
+                int block_offset = ((block_y * (REG_DISPCNT & DISPCNT_OBJ_1D_MAP ? (width / 8) : 16)) + block_x);
+                uint8_t* pixelData = &tiledata[(oam->tileNum + block_offset) * TILE_SIZE_4BPP + (tile_y * 4)];
                 uint32_t pixel32 = *(uint32_t*)pixelData; //load while tile worth of palette pixels
                 
-                if (x >= 0 && x + 8 <= DISPLAY_WIDTH)
+                if (x >= 0 && x + TILE_WIDTH <= DISPLAY_WIDTH)
                 {
                     #define writeSpritePixel(pixel, x) \
                         if (pixel) \
@@ -2024,9 +2024,9 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                 }
                 else //handle tiles that are partially cut off screen
                 {
-                    if (x < 0 && x > -8) //left side
+                    if (x < 0 && x > -TILE_WIDTH) //left side
                     {
-                        int amountOfPixelsToBeDrawn = 8 - abs(x);
+                        int amountOfPixelsToBeDrawn = TILE_WIDTH - abs(x);
                         if (flipX)
                         {
                             for (int i = 0; i < amountOfPixelsToBeDrawn; i++)
@@ -2044,7 +2044,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                             }
                         }
                     }
-                    else if(x < DISPLAY_WIDTH && x+8 > DISPLAY_WIDTH) //right side
+                    else if(x < DISPLAY_WIDTH && x + TILE_WIDTH > DISPLAY_WIDTH) //right side
                     {
                         int amountOfPixelsToBeDrawn = DISPLAY_WIDTH-x;
                         if (flipX)
@@ -2063,7 +2063,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                         }
                     }
                 }
-                x += 8;
+                x += TILE_WIDTH;
                 #undef writeSpritePixel
             }
         }
