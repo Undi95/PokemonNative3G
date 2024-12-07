@@ -1967,6 +1967,8 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
             palette += oam->paletteNum * 16; //choose the palette
             int local_mosaicX;
             int tex_y = local_y + (height / 2);
+            if (flipY)
+                tex_y = height - tex_y - 1;
             //run the block drawing loop in reverse if sprite is flipped otherwise run as normal
             int blockStart, blockEnd, blockIncrement;
             if (flipX)
