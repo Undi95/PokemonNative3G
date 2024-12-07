@@ -1950,7 +1950,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
         if (y >= DISPLAY_HEIGHT)
             y -= 256;
 
-        x += half_width;
+        //x += half_width;
         y += half_height;
 
         // Does this sprite actually draw on this scanline?
@@ -1958,54 +1958,111 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
         {
             int local_y = (oam->mosaic == 1) ? applySpriteVerticalMosaicEffect(vcount) - y : vcount - y;
             int number  = oam->tileNum;
-            int palette = oam->paletteNum;
+            //int palette = oam->paletteNum;
             bool flipX  = !isAffine && ((oam->matrixNum >> 3) & 1);
             bool flipY  = !isAffine && ((oam->matrixNum >> 4) & 1);
             bool is8BPP  = oam->bpp & 1;
-
-            for (int local_x = -half_width; local_x <= half_width; local_x++)
+            uint8_t *tiledata = (uint8_t *)objtiles;
+            uint16_t *palette = (uint16_t *)(PLTT + 0x200);
+            palette += oam->paletteNum * 16; //choose the palette
+            int local_mosaicX;
+            int tex_y = local_y + (height / 2);
+            //run the block drawing loop in reverse if sprite is flipped otherwise run as normal
+            int blockStart, blockEnd, blockIncrement;
+            if (flipX)
             {
-                uint8_t *tiledata = (uint8_t *)objtiles;
-                uint16_t *palette = (uint16_t *)(PLTT + 0x200);
-                int local_mosaicX;
-                int tex_x;
-                int tex_y;
-
-                unsigned int global_x = local_x + x;
-
-                if (global_x < 0 || global_x >= DISPLAY_WIDTH)
-                    continue;
-
-				tex_x = local_x + (width / 2);
-				tex_y = local_y + (height / 2);
-
-                /* Check if transformed coordinates are inside bounds. */
-                if (tex_x >= width || tex_y >= height || tex_x < 0 || tex_y < 0)
-                    continue;
-
-                int tile_x = tex_x & 7;
+                blockStart = width/8-1;
+                blockEnd = -1;
+                blockIncrement = -1;
+            }
+            else
+            {
+                blockStart = 0;
+                blockEnd = width/8;
+                blockIncrement = 1;
+            }
+            
+            for (int block_x = blockStart; block_x != blockEnd; block_x += blockIncrement)
+            {
                 int tile_y = tex_y & 7;
-                int block_x = tex_x / 8;
+                //int block_x = block;
                 int block_y = tex_y / 8;
                 int block_offset = ((block_y * (REG_DISPCNT & 0x40 ? (width / 8) : 16)) + block_x);
-                uint16_t pixel = 0;
-
-				pixel = tiledata[(oam->tileNum + block_offset) * 32 + (tile_y * 4) + (tile_x / 2)];
-				
-				if (tile_x & 1)
-					pixel >>= 4;
-				else
-					pixel &= 0xF;
-				palette += oam->paletteNum * 16;
-
-                if (pixel != 0)
+                uint8_t* pixelData = &tiledata[(oam->tileNum + block_offset) * 32 + (tile_y * 4)];
+                uint32_t pixel32 = *(uint32_t*)pixelData; //load while tile worth of palette pixels
+                
+                if (x >= 0 && x + 8 <= DISPLAY_WIDTH)
                 {
-                    uint16_t color = palette[pixel];;
+                    #define writeSpritePixel(pixel, x) \
+                        if (pixel) \
+                            pixels[x] = palette[pixel] | (1 << 15);
                     
-					//write pixel to pixel framebuffer
-					pixels[global_x] = color | (1 << 15);
-					scanline->bgMask[global_x] = (1 << 4); // top most obj pixel bit
+                    if (flipX)
+                    {
+                        writeSpritePixel(pixel32 >> 28, x)
+                        writeSpritePixel((pixel32 >> 24) & 0xF, x+1)
+                        writeSpritePixel((pixel32 >> 20) & 0xF, x+2)
+                        writeSpritePixel((pixel32 >> 16) & 0xF, x+3)
+                        writeSpritePixel((pixel32 >> 12) & 0xF, x+4)
+                        writeSpritePixel((pixel32 >> 8) & 0xF, x+5)
+                        writeSpritePixel((pixel32 >> 4) & 0xF, x+6)
+                        writeSpritePixel(pixel32 & 0xF, x+7)
+                    }
+                    else
+                    {
+                        writeSpritePixel(pixel32 & 0xF, x)
+                        writeSpritePixel((pixel32 >> 4) & 0xF, x+1)
+                        writeSpritePixel((pixel32 >> 8) & 0xF, x+2)
+                        writeSpritePixel((pixel32 >> 12) & 0xF, x+3)
+                        writeSpritePixel((pixel32 >> 16) & 0xF, x+4)
+                        writeSpritePixel((pixel32 >> 20) & 0xF, x+5)
+                        writeSpritePixel((pixel32 >> 24) & 0xF, x+6)
+                        writeSpritePixel(pixel32 >> 28, x+7)
+                    }
                 }
+                else //handle tiles that are partially cut off screen
+                {
+                    if (x < 0 && x > -8) //left side
+                    {
+                        int amountOfPixelsToBeDrawn = 8 - abs(x);
+                        if (flipX)
+                        {
+                            for (int i = 0; i < amountOfPixelsToBeDrawn; i++)
+                            {
+                                int pixelOffset = abs(x);
+                                writeSpritePixel((pixel32 >> 28-((pixelOffset+i)*4)) & 0xF, i);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < amountOfPixelsToBeDrawn; i++)
+                            {
+                                int pixelOffset = abs(x);
+                                writeSpritePixel((pixel32 >> ((pixelOffset+i)*4)) & 0xF, i);
+                            }
+                        }
+                    }
+                    else if(x < DISPLAY_WIDTH && x+8 > DISPLAY_WIDTH) //right side
+                    {
+                        int amountOfPixelsToBeDrawn = DISPLAY_WIDTH-x;
+                        if (flipX)
+                        {
+                            for (int i = 0; i < amountOfPixelsToBeDrawn; i++)
+                            {
+                                writeSpritePixel((pixel32 >> 28-(i*4)) & 0xF, x+i);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < amountOfPixelsToBeDrawn; i++)
+                            {
+                                writeSpritePixel((pixel32 >> i*4) & 0xF, x+i);
+                            }
+                        }
+                    }
+                }
+                x += 8;
+                #undef writeSpritePixel
             }
         }
     }
