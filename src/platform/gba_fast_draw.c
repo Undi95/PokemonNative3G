@@ -1991,39 +1991,192 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                 int block_y = tex_y / TILE_HEIGHT;
                 int block_offset = ((block_y * (REG_DISPCNT & DISPCNT_OBJ_1D_MAP ? (width / 8) : 16)) + block_x);
                 uint8_t* pixelData = &tiledata[(oam->tileNum + block_offset) * TILE_SIZE_4BPP + (tile_y * 4)];
-                uint32_t pixel32 = *(uint32_t*)pixelData; //load while tile worth of palette pixels
+                uint32_t pixel32 = *(uint32_t*)pixelData; //load whole tile worth of palette pixels
                 
                 if (x >= 0 && x + TILE_WIDTH <= DISPLAY_WIDTH)
                 {
-                    #define writeSpritePixel(pixel, x) \
-                        if (pixel) \
-                            pixels[x] = palette[pixel] | (1 << 15);
-                    
-                    if (flipX)
+                    if (windowsEnabled)
                     {
-                        writeSpritePixel(pixel32 >> 28, x)
-                        writeSpritePixel((pixel32 >> 24) & 0xF, x+1)
-                        writeSpritePixel((pixel32 >> 20) & 0xF, x+2)
-                        writeSpritePixel((pixel32 >> 16) & 0xF, x+3)
-                        writeSpritePixel((pixel32 >> 12) & 0xF, x+4)
-                        writeSpritePixel((pixel32 >> 8) & 0xF, x+5)
-                        writeSpritePixel((pixel32 >> 4) & 0xF, x+6)
-                        writeSpritePixel(pixel32 & 0xF, x+7)
+                        if (blendMode != 0 || isSemiTransparent) //Windowing and blending
+                        {
+                            #define writeSpritePixelWinBlend(pixel, x) \
+                                if (pixel && (scanline->winMask[x] & WINMASK_OBJ)) { \
+                                    uint16_t color = palette[pixel]; \
+                                    winShouldBlendPixel = scanline->winMask[x] & WINMASK_CLR || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_CLR); \
+                                    \
+                                    if ((blendMode == 1 && REG_BLDCNT & BLDCNT_TGT1_OBJ) && winShouldBlendPixel || isSemiTransparent) \
+                                    { \
+                                        if (scanline->bgMask[x] & (REG_BLDCNT >> 8)) \
+                                            color = alphaBlendColor(color, pixels[x]); \
+                                    } \
+                                    else if(winShouldBlendPixel) \
+                                    { \
+                                        switch (blendMode) \
+                                        { \
+                                            case 2: \
+                                                color = alphaBrightnessIncrease(color); \
+                                                break; \
+                                            case 3: \
+                                                color = alphaBrightnessDecrease(color); \
+                                                break; \
+                                        } \
+                                    } \
+                                    pixels[x] = color | (1 << 15); \
+                                    scanline->bgMask[x] = (1 << 4); \
+                                }
+
+                            if (flipX)
+                            {
+                                writeSpritePixelWinBlend(pixel32 >> 28, x)
+                                writeSpritePixelWinBlend((pixel32 >> 24) & 0xF, x+1)
+                                writeSpritePixelWinBlend((pixel32 >> 20) & 0xF, x+2)
+                                writeSpritePixelWinBlend((pixel32 >> 16) & 0xF, x+3)
+                                writeSpritePixelWinBlend((pixel32 >> 12) & 0xF, x+4)
+                                writeSpritePixelWinBlend((pixel32 >> 8) & 0xF, x+5)
+                                writeSpritePixelWinBlend((pixel32 >> 4) & 0xF, x+6)
+                                writeSpritePixelWinBlend(pixel32 & 0xF, x+7)
+                            }
+                            else
+                            {
+                                writeSpritePixelWinBlend(pixel32 & 0xF, x)
+                                writeSpritePixelWinBlend((pixel32 >> 4) & 0xF, x+1)
+                                writeSpritePixelWinBlend((pixel32 >> 8) & 0xF, x+2)
+                                writeSpritePixelWinBlend((pixel32 >> 12) & 0xF, x+3)
+                                writeSpritePixelWinBlend((pixel32 >> 16) & 0xF, x+4)
+                                writeSpritePixelWinBlend((pixel32 >> 20) & 0xF, x+5)
+                                writeSpritePixelWinBlend((pixel32 >> 24) & 0xF, x+6)
+                                writeSpritePixelWinBlend(pixel32 >> 28, x+7)
+                            }
+                            #undef writeSpritePixelWinBlend
+                        }
+                        else //Windowing
+                        {
+                            #define writeSpritePixelWin(pixel, x) \
+                                if (pixel && ((scanline->winMask[x] & WINMASK_OBJ) && IsInsideWinIn == true || REG_WINOUT & WINOUT_WIN01_OBJ && IsInsideWinIn == false)) { \
+                                    pixels[x] = palette[pixel] | (1 << 15); \
+                                    scanline->bgMask[x] = (1 << 4); \
+                                }
+
+                            if (flipX)
+                            {
+                                writeSpritePixelWin(pixel32 >> 28, x)
+                                writeSpritePixelWin((pixel32 >> 24) & 0xF, x+1)
+                                writeSpritePixelWin((pixel32 >> 20) & 0xF, x+2)
+                                writeSpritePixelWin((pixel32 >> 16) & 0xF, x+3)
+                                writeSpritePixelWin((pixel32 >> 12) & 0xF, x+4)
+                                writeSpritePixelWin((pixel32 >> 8) & 0xF, x+5)
+                                writeSpritePixelWin((pixel32 >> 4) & 0xF, x+6)
+                                writeSpritePixelWin(pixel32 & 0xF, x+7)
+                            }
+                            else
+                            {
+                                writeSpritePixelWin(pixel32 & 0xF, x)
+                                writeSpritePixelWin((pixel32 >> 4) & 0xF, x+1)
+                                writeSpritePixelWin((pixel32 >> 8) & 0xF, x+2)
+                                writeSpritePixelWin((pixel32 >> 12) & 0xF, x+3)
+                                writeSpritePixelWin((pixel32 >> 16) & 0xF, x+4)
+                                writeSpritePixelWin((pixel32 >> 20) & 0xF, x+5)
+                                writeSpritePixelWin((pixel32 >> 24) & 0xF, x+6)
+                                writeSpritePixelWin(pixel32 >> 28, x+7)
+                            }
+                            #undef writeSpritePixelWin
+                        }
                     }
-                    else
+                    else //Choose between Blend and none
                     {
-                        writeSpritePixel(pixel32 & 0xF, x)
-                        writeSpritePixel((pixel32 >> 4) & 0xF, x+1)
-                        writeSpritePixel((pixel32 >> 8) & 0xF, x+2)
-                        writeSpritePixel((pixel32 >> 12) & 0xF, x+3)
-                        writeSpritePixel((pixel32 >> 16) & 0xF, x+4)
-                        writeSpritePixel((pixel32 >> 20) & 0xF, x+5)
-                        writeSpritePixel((pixel32 >> 24) & 0xF, x+6)
-                        writeSpritePixel(pixel32 >> 28, x+7)
+                        if (blendMode != 0 || isSemiTransparent) //Blend
+                        {
+                            #define writeSpritePixelBlend(pixel, x) \
+                            if (pixel) { \
+                                uint16_t color = palette[pixel]; \
+                                \
+                                if ((blendMode == 1 && REG_BLDCNT & BLDCNT_TGT1_OBJ) || isSemiTransparent) \
+                                { \
+                                    if (scanline->bgMask[x] & (REG_BLDCNT >> 8)) \
+                                        color = alphaBlendColor(color, pixels[x]); \
+                                } \
+                                else \
+                                { \
+                                    switch (blendMode) \
+                                    { \
+                                        case 2: \
+                                            color = alphaBrightnessIncrease(color); \
+                                            break; \
+                                        case 3: \
+                                            color = alphaBrightnessDecrease(color); \
+                                            break; \
+                                    } \
+                                } \
+                                pixels[x] = color | (1 << 15); \
+                                scanline->bgMask[x] = (1 << 4); \
+                            }
+
+                            if (flipX)
+                            {
+                                writeSpritePixelBlend(pixel32 >> 28, x)
+                                writeSpritePixelBlend((pixel32 >> 24) & 0xF, x+1)
+                                writeSpritePixelBlend((pixel32 >> 20) & 0xF, x+2)
+                                writeSpritePixelBlend((pixel32 >> 16) & 0xF, x+3)
+                                writeSpritePixelBlend((pixel32 >> 12) & 0xF, x+4)
+                                writeSpritePixelBlend((pixel32 >> 8) & 0xF, x+5)
+                                writeSpritePixelBlend((pixel32 >> 4) & 0xF, x+6)
+                                writeSpritePixelBlend(pixel32 & 0xF, x+7)
+                            }
+                            else
+                            {
+                                writeSpritePixelBlend(pixel32 & 0xF, x)
+                                writeSpritePixelBlend((pixel32 >> 4) & 0xF, x+1)
+                                writeSpritePixelBlend((pixel32 >> 8) & 0xF, x+2)
+                                writeSpritePixelBlend((pixel32 >> 12) & 0xF, x+3)
+                                writeSpritePixelBlend((pixel32 >> 16) & 0xF, x+4)
+                                writeSpritePixelBlend((pixel32 >> 20) & 0xF, x+5)
+                                writeSpritePixelBlend((pixel32 >> 24) & 0xF, x+6)
+                                writeSpritePixelBlend(pixel32 >> 28, x+7)
+                            }
+                            #undef writeSpritePixelBlend
+                        }
+                        else //None
+                        {
+                            #define writeSpritePixel(pixel, x) \
+                                if (pixel) { \
+                                    pixels[x] = palette[pixel] | (1 << 15); \
+                                    scanline->bgMask[x] = (1 << 4); \
+                                }
+
+                            if (flipX)
+                            {
+                                writeSpritePixel(pixel32 >> 28, x)
+                                writeSpritePixel((pixel32 >> 24) & 0xF, x+1)
+                                writeSpritePixel((pixel32 >> 20) & 0xF, x+2)
+                                writeSpritePixel((pixel32 >> 16) & 0xF, x+3)
+                                writeSpritePixel((pixel32 >> 12) & 0xF, x+4)
+                                writeSpritePixel((pixel32 >> 8) & 0xF, x+5)
+                                writeSpritePixel((pixel32 >> 4) & 0xF, x+6)
+                                writeSpritePixel(pixel32 & 0xF, x+7)
+                            }
+                            else
+                            {
+                                writeSpritePixel(pixel32 & 0xF, x)
+                                writeSpritePixel((pixel32 >> 4) & 0xF, x+1)
+                                writeSpritePixel((pixel32 >> 8) & 0xF, x+2)
+                                writeSpritePixel((pixel32 >> 12) & 0xF, x+3)
+                                writeSpritePixel((pixel32 >> 16) & 0xF, x+4)
+                                writeSpritePixel((pixel32 >> 20) & 0xF, x+5)
+                                writeSpritePixel((pixel32 >> 24) & 0xF, x+6)
+                                writeSpritePixel(pixel32 >> 28, x+7)
+                            }
+                            #undef writeSpritePixel
+                        }
                     }
                 }
                 else //handle tiles that are partially cut off screen
                 {
+                    #define writeSpritePixel(pixel, x) \
+                        if (pixel) { \
+                            pixels[x] = palette[pixel] | (1 << 15); \
+                            scanline->bgMask[x] = (1 << 4); \
+                        }
+
                     if (x < 0 && x > -TILE_WIDTH) //left side
                     {
                         int amountOfPixelsToBeDrawn = TILE_WIDTH - abs(x);
@@ -2062,9 +2215,9 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                             }
                         }
                     }
+                    #undef writeSpritePixel
                 }
                 x += TILE_WIDTH;
-                #undef writeSpritePixel
             }
         }
     }
