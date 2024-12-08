@@ -1987,7 +1987,6 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
             for (int block_x = blockStart; block_x != blockEnd; block_x += blockIncrement)
             {
                 int tile_y = tex_y & TILE_HEIGHT-1;
-                //int block_x = block;
                 int block_y = tex_y / TILE_HEIGHT;
                 int block_offset = ((block_y * (REG_DISPCNT & DISPCNT_OBJ_1D_MAP ? (width / 8) : 16)) + block_x);
                 uint8_t* pixelData = &tiledata[(oam->tileNum + block_offset) * TILE_SIZE_4BPP + (tile_y * 4)];
@@ -2002,7 +2001,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                             #define writeSpritePixelWinBlend(pixel, x) \
                                 if (pixel && (scanline->winMask[x] & WINMASK_OBJ)) { \
                                     uint16_t color = palette[pixel]; \
-                                    winShouldBlendPixel = scanline->winMask[x] & WINMASK_CLR || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_CLR); \
+                                    winShouldBlendPixel = IsInsideWinIn && scanline->winMask[x] & WINMASK_CLR || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_CLR); \
                                     \
                                     if ((blendMode == 1 && REG_BLDCNT & BLDCNT_TGT1_OBJ) && winShouldBlendPixel || isSemiTransparent) \
                                     { \
@@ -2052,7 +2051,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                         else //Windowing
                         {
                             #define writeSpritePixelWin(pixel, x) \
-                                if (pixel && ((scanline->winMask[x] & WINMASK_OBJ) && IsInsideWinIn == true || REG_WINOUT & WINOUT_WIN01_OBJ && IsInsideWinIn == false)) { \
+                                if (pixel && (IsInsideWinIn && scanline->winMask[x] & WINMASK_OBJ || !IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_OBJ)) { \
                                     pixels[x] = palette[pixel] | (1 << 15); \
                                     scanline->bgMask[x] = (1 << 4); \
                                 }
@@ -2107,6 +2106,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                                             break; \
                                     } \
                                 } \
+                                \
                                 pixels[x] = color | (1 << 15); \
                                 scanline->bgMask[x] = (1 << 4); \
                             }
@@ -2169,15 +2169,38 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                         }
                     }
                 }
-                else //handle tiles that are partially cut off screen
+                else //handle tiles that are partially cut off screen, for the sake of readibility the writeSpritePixel handles all special effect spaces, should affect performance very little
                 {
+                    bool winShouldDraw = true;
                     #define writeSpritePixel(pixel, x) \
-                        if (pixel) { \
-                            pixels[x] = palette[pixel] | (1 << 15); \
+                        winShouldDraw = windowsEnabled == false || (IsInsideWinIn && scanline->winMask[x] & WINMASK_OBJ || !IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_OBJ);\
+                        if (pixel && winShouldDraw) { \
+                            uint16_t color = palette[pixel]; \
+                            \
+                            winShouldBlendPixel = windowsEnabled == false || (IsInsideWinIn && scanline->winMask[x] & WINMASK_CLR || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_CLR)); \
+                            if ((blendMode == 1 && REG_BLDCNT & BLDCNT_TGT1_OBJ && winShouldBlendPixel) || isSemiTransparent) \
+                            { \
+                                if (scanline->bgMask[x] & (REG_BLDCNT >> 8)) \
+                                    color = alphaBlendColor(color, pixels[x]); \
+                            } \
+                            else if(winShouldBlendPixel) \
+                            { \
+                                switch (blendMode) \
+                                { \
+                                    case 2: \
+                                        color = alphaBrightnessIncrease(color); \
+                                        break; \
+                                    case 3: \
+                                        color = alphaBrightnessDecrease(color); \
+                                        break; \
+                                } \
+                            } \
+                            \
+                            pixels[x] = color | (1 << 15); \
                             scanline->bgMask[x] = (1 << 4); \
                         }
 
-                    if (x < 0 && x > -TILE_WIDTH) //left side
+                    if (x > -TILE_WIDTH && x < 0) //left side
                     {
                         int amountOfPixelsToBeDrawn = TILE_WIDTH - abs(x);
                         if (flipX)
@@ -2217,7 +2240,7 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
                     }
                     #undef writeSpritePixel
                 }
-                x += TILE_WIDTH;
+                x += TILE_WIDTH; //Move on onto the next block
             }
         }
     }
