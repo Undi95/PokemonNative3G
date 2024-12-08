@@ -2200,16 +2200,16 @@ static void DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, 
                     if (blendMode != 0 || isSemiTransparent) //Windowing and blending
                     {
                         #define writeSpritePixelWinBlend(pixel, x) \
-                            if (pixel && (scanline->winMask[x] & WINMASK_OBJ)) { \
+                            if (pixel && ((IsInsideWinIn && scanline->winMask[x] & WINMASK_OBJ) || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_OBJ))) { \
                                 uint16_t color = palette[pixel]; \
                                 winShouldBlendPixel = (IsInsideWinIn && scanline->winMask[x] & WINMASK_CLR) || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_CLR); \
                                 \
-                                if ( ((blendMode == 1 && REG_BLDCNT & BLDCNT_TGT1_OBJ) && winShouldBlendPixel) || isSemiTransparent) \
+                                if (((blendMode == 1 && REG_BLDCNT & BLDCNT_TGT1_OBJ) && winShouldBlendPixel) || isSemiTransparent) \
                                 { \
                                     if (scanline->bgMask[x] & (REG_BLDCNT >> 8)) \
                                         color = alphaBlendColor(color, pixels[x]); \
                                 } \
-                                else if(winShouldBlendPixel) \
+                                else if(REG_BLDCNT & BLDCNT_TGT1_OBJ && winShouldBlendPixel) \
                                 { \
                                     switch (blendMode) \
                                     { \
@@ -2252,7 +2252,7 @@ static void DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, 
                     else //Windowing
                     {
                         #define writeSpritePixelWin(pixel, x) \
-                            if (pixel && ( (IsInsideWinIn && scanline->winMask[x] & WINMASK_OBJ) || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_OBJ) )) { \
+                            if (pixel && ((IsInsideWinIn && scanline->winMask[x] & WINMASK_OBJ) || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_OBJ))) { \
                                 pixels[x] = palette[pixel] | (1 << 15); \
                                 scanline->bgMask[x] = (1 << 4); \
                             }
@@ -2295,7 +2295,7 @@ static void DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, 
                                 if (scanline->bgMask[x] & (REG_BLDCNT >> 8)) \
                                     color = alphaBlendColor(color, pixels[x]); \
                             } \
-                            else \
+                            else if(REG_BLDCNT & BLDCNT_TGT1_OBJ) \
                             { \
                                 switch (blendMode) \
                                 { \
@@ -2374,17 +2374,17 @@ static void DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, 
             {
                 bool winShouldDraw = true;
                 #define writeSpritePixel(pixel, x) \
-                    winShouldDraw = windowsEnabled == false || ( (IsInsideWinIn && scanline->winMask[x] & WINMASK_OBJ) || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_OBJ) );\
+                    winShouldDraw = windowsEnabled == false || ((IsInsideWinIn && scanline->winMask[x] & WINMASK_OBJ) || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_OBJ));\
                     if (pixel && winShouldDraw) { \
                         uint16_t color = palette[pixel]; \
                         \
                         winShouldBlendPixel = windowsEnabled == false || ( (IsInsideWinIn && scanline->winMask[x] & WINMASK_CLR) || (!IsInsideWinIn && REG_WINOUT & WINOUT_WIN01_CLR) ); \
-                        if ( (blendMode == 1 && REG_BLDCNT & BLDCNT_TGT1_OBJ && winShouldBlendPixel) || isSemiTransparent) \
+                        if ((blendMode == 1 && REG_BLDCNT & BLDCNT_TGT1_OBJ && winShouldBlendPixel) || isSemiTransparent) \
                         { \
                             if (scanline->bgMask[x] & (REG_BLDCNT >> 8)) \
                                 color = alphaBlendColor(color, pixels[x]); \
                         } \
-                        else if(winShouldBlendPixel) \
+                        else if(REG_BLDCNT & BLDCNT_TGT1_OBJ && winShouldBlendPixel) \
                         { \
                             switch (blendMode) \
                             { \
