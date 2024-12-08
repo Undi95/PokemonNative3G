@@ -23,6 +23,8 @@
 #define getBlueChannel(x) ((x >>  10) & 0x1F)
 #define isbgEnabled(x) ((REG_DISPCNT >> 8) & 0xF) & (1 << x)
 
+#define no_inline __attribute__ ((noinline))
+
 extern void (*const gIntrTable[])(void);
 
 struct scanlineData {
@@ -1861,7 +1863,7 @@ static void DrawSpritesWinMask(struct scanlineData* scanline, uint16_t vcount)
     }
 }
 
-static void DrawAffineSprite(int SpriteIndex, struct scanlineData* scanline, uint16_t vcount, bool windowsEnabled, uint16_t* pixels, bool IsInsideWinIn)
+static void no_inline DrawAffineSprite(int SpriteIndex, struct scanlineData* scanline, uint16_t vcount, bool windowsEnabled, uint16_t* pixels, bool IsInsideWinIn)
 {
     struct OamData *oam = &((struct OamData *)OAM)[SpriteIndex];
     void *objtiles = VRAM_ + 0x10000;
@@ -2078,7 +2080,7 @@ static void DrawAffineSprite(int SpriteIndex, struct scanlineData* scanline, uin
     }
 }
 
-static void DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, uint16_t vcount, bool windowsEnabled, uint16_t* pixels, bool IsInsideWinIn)
+static void no_inline DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, uint16_t vcount, bool windowsEnabled, uint16_t* pixels, bool IsInsideWinIn)
 {
     struct OamData *oam = &((struct OamData *)OAM)[SpriteIndex];
     void *objtiles = VRAM_ + 0x10000;
