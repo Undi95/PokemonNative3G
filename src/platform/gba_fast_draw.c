@@ -1688,11 +1688,7 @@ const u8 spriteSizes[][2] =
 static void DrawSpritesWinMask(struct scanlineData* scanline, uint16_t vcount)
 {
     int i;
-    unsigned int x;
-    unsigned int y;
     void *objtiles = VRAM_ + 0x10000;
-    unsigned int blendMode = (REG_BLDCNT >> 6) & 3;
-    bool winShouldBlendPixel = true;
 
     int16_t matrix[2][2] = {};
 
@@ -1709,11 +1705,9 @@ static void DrawSpritesWinMask(struct scanlineData* scanline, uint16_t vcount)
         
         unsigned int width;
         unsigned int height;
-        //uint16_t *pixels;
 
         bool isAffine  = oam->affineMode & 1;
         bool doubleSizeOrDisabled = (oam->affineMode >> 1) & 1;
-        bool isSemiTransparent = (oam->objMode == 1);
 
         if (!(isAffine) && doubleSizeOrDisabled) // disable for non-affine
         {
@@ -1745,8 +1739,6 @@ static void DrawSpritesWinMask(struct scanlineData* scanline, uint16_t vcount)
 
         int half_width = width / 2;
         int half_height = height / 2;
-
-        //pixels = scanline->spriteLayers[oam->priority];
 
         int32_t x = oam->x;
         int32_t y = oam->y;
@@ -1795,8 +1787,6 @@ static void DrawSpritesWinMask(struct scanlineData* scanline, uint16_t vcount)
         if (vcount >= (y - half_height) && vcount < (y + half_height))
         {
             int local_y = (oam->mosaic == 1) ? applySpriteVerticalMosaicEffect(vcount) - y : vcount - y;
-            int number  = oam->tileNum;
-            int palette = oam->paletteNum;
             bool flipX  = !isAffine && ((oam->matrixNum >> 3) & 1);
             bool flipY  = !isAffine && ((oam->matrixNum >> 4) & 1);
             bool is8BPP  = oam->bpp & 1;
@@ -1883,7 +1873,6 @@ static void DrawAffineSprite(int SpriteIndex, struct scanlineData* scanline, uin
     bool isAffine  = oam->affineMode & 1;
     bool doubleSizeOrDisabled = (oam->affineMode >> 1) & 1;
     bool isSemiTransparent = (oam->objMode == 1);
-    bool isObjWin = (oam->objMode == 2);
 
     if (!(isAffine) && doubleSizeOrDisabled) // disable for non-affine
     {
@@ -1915,8 +1904,6 @@ static void DrawAffineSprite(int SpriteIndex, struct scanlineData* scanline, uin
 
     int half_width = width / 2;
     int half_height = height / 2;
-
-    //pixels = scanline->spriteLayers[oam->priority];
 
     int32_t x = oam->x;
     int32_t y = oam->y;
@@ -1967,8 +1954,6 @@ static void DrawAffineSprite(int SpriteIndex, struct scanlineData* scanline, uin
     if (vcount >= (y - half_height) && vcount < (y + half_height))
     {
         int local_y = (oam->mosaic == 1) ? applySpriteVerticalMosaicEffect(vcount) - y : vcount - y;
-        int number  = oam->tileNum;
-        int palette = oam->paletteNum;
         bool flipX  = !isAffine && ((oam->matrixNum >> 3) & 1);
         bool flipY  = !isAffine && ((oam->matrixNum >> 4) & 1);
         bool is8BPP  = oam->bpp & 1;
@@ -2067,12 +2052,9 @@ static void DrawAffineSprite(int SpriteIndex, struct scanlineData* scanline, uin
                     if ((blendMode == 1 && REG_BLDCNT & BLDCNT_TGT1_OBJ && winShouldBlendPixel) || isSemiTransparent)
                     {
                         uint16_t targetA = color;
-                        uint16_t targetB = 0;
-                        //if (alphaBlendSelectTargetB(scanline, &targetB, oam->priority, 0, global_x, false))
-                        //{
+
                         if (scanline->bgMask[global_x] & (REG_BLDCNT >> 8))
                             color = alphaBlendColor(targetA, pixels[global_x]);
-                        //}
                     }
                     else if (REG_BLDCNT & BLDCNT_TGT1_OBJ && winShouldBlendPixel)
                     {
@@ -2108,7 +2090,6 @@ static void DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, 
     bool isAffine  = oam->affineMode & 1;
     bool doubleSizeOrDisabled = (oam->affineMode >> 1) & 1;
     bool isSemiTransparent = (oam->objMode == 1);
-    bool isObjWin = (oam->objMode == 2);
 
     if (!(isAffine) && doubleSizeOrDisabled) // disable for non-affine
     {
@@ -2135,14 +2116,7 @@ static void DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, 
         return; // prohibited, do not draw
     }
 
-    int rect_width = width;
-    int rect_height = height;
-
-    int half_width = width / 2;
     int half_height = height / 2;
-
-    //pixels = scanline->spriteLayers[oam->priority];
-
     int32_t x = oam->x;
     int32_t y = oam->y;
 
@@ -2151,22 +2125,18 @@ static void DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, 
     if (y >= DISPLAY_HEIGHT)
         y -= 256;
 
-    //x += half_width;
     y += half_height;
 
     // Does this sprite actually draw on this scanline?
     if (vcount >= (y - half_height) && vcount < (y + half_height))
     {
         int local_y = (oam->mosaic == 1) ? applySpriteVerticalMosaicEffect(vcount) - y : vcount - y;
-        int number  = oam->tileNum;
         //int palette = oam->paletteNum;
         bool flipX  = !isAffine && ((oam->matrixNum >> 3) & 1);
         bool flipY  = !isAffine && ((oam->matrixNum >> 4) & 1);
-        bool is8BPP  = oam->bpp & 1;
         uint8_t *tiledata = (uint8_t *)objtiles;
         uint16_t *palette = (uint16_t *)OBJ_PLTT;
         palette += oam->paletteNum * 16; //choose the palette
-        int local_mosaicX;
         int tex_y = local_y + (height / 2);
         if (flipY)
             tex_y = height - tex_y - 1;
