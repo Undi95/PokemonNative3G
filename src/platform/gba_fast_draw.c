@@ -23,7 +23,12 @@
 #define getBlueChannel(x) ((x >>  10) & 0x1F)
 #define isbgEnabled(x) ((REG_DISPCNT >> 8) & 0xF) & (1 << x)
 
-#define no_inline __attribute__ ((noinline))
+#ifdef PLATFORM_WIN32
+//gcc doesn't optimally inline some functions which causes a significant framerate drop in frame rate
+#define inline_hack __attribute__ ((always_inline))
+#else
+#define inline_hack
+#endif
 
 extern void (*const gIntrTable[])(void);
 
@@ -1863,7 +1868,7 @@ static void DrawSpritesWinMask(struct scanlineData* scanline, uint16_t vcount)
     }
 }
 
-static void no_inline DrawAffineSprite(int SpriteIndex, struct scanlineData* scanline, uint16_t vcount, bool windowsEnabled, uint16_t* pixels, bool IsInsideWinIn)
+static void inline_hack DrawAffineSprite(int SpriteIndex, struct scanlineData* scanline, uint16_t vcount, bool windowsEnabled, uint16_t* pixels, bool IsInsideWinIn)
 {
     struct OamData *oam = &((struct OamData *)OAM)[SpriteIndex];
     void *objtiles = VRAM_ + 0x10000;
@@ -2080,7 +2085,7 @@ static void no_inline DrawAffineSprite(int SpriteIndex, struct scanlineData* sca
     }
 }
 
-static void no_inline DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, uint16_t vcount, bool windowsEnabled, uint16_t* pixels, bool IsInsideWinIn)
+static void inline_hack DrawNonAffineSprite(int SpriteIndex, struct scanlineData* scanline, uint16_t vcount, bool windowsEnabled, uint16_t* pixels, bool IsInsideWinIn)
 {
     struct OamData *oam = &((struct OamData *)OAM)[SpriteIndex];
     void *objtiles = VRAM_ + 0x10000;
