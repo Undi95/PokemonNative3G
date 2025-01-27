@@ -205,8 +205,8 @@ gScriptCmdTable::
 	.quad ScrCmd_nop1                              /* 0xca*/
 	.quad ScrCmd_nop1                              /* 0xcb*/
 	.quad ScrCmd_nop1                              /* 0xcc*/
-	.quad ScrCmd_setmonmodernfatefulencounter      /* 0xcd*/
-	.quad ScrCmd_checkmonmodernfatefulencounter    /* 0xce*/
+	.quad ScrCmd_setmodernfatefulencounter         /* 0xcd*/
+	.quad ScrCmd_checkmodernfatefulencounter       /* 0xce*/
 	.quad ScrCmd_trywondercardscript               /* 0xcf*/
 	.quad ScrCmd_nop1                              /* 0xd0*/
 	.quad ScrCmd_warpspinenter                     /* 0xd1*/
