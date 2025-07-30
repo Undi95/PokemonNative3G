@@ -184,7 +184,7 @@ static void RenderBGScanlineWinBlend(int bgNum, uint16_t control, uint16_t hoffs
         }
         return;
     }
-    exitBlankScanlineLoop:
+    exitBlankScanlineLoop:;
     
     unsigned int startTileX = xx / 8;
     unsigned int startTileY = yy / 8;
@@ -434,7 +434,7 @@ static void RenderBGScanlineWin(int bgNum, uint16_t control, uint16_t hoffs, uin
         }
         return;
     }
-    exitBlankScanlineLoop:
+    exitBlankScanlineLoop:;
     
     unsigned int startTileX = xx / 8;
     unsigned int startTileY = yy / 8;
@@ -669,7 +669,7 @@ static void RenderBGScanlineBlend(int bgNum, uint16_t control, uint16_t hoffs, u
         }
         return;
     }
-    exitBlankScanlineLoop:
+    exitBlankScanlineLoop:;
     
     unsigned int startTileX = xx / 8;
     unsigned int startTileY = yy / 8;
@@ -909,7 +909,7 @@ static void RenderBGScanlineNoEffect(int bgNum, uint16_t control, uint16_t hoffs
         }
         return;
     }
-    exitBlankScanlineLoop:
+    exitBlankScanlineLoop:;
     
     unsigned int startTileX = xx / 8;
     unsigned int startTileY = yy / 8;
