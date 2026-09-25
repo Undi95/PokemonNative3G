@@ -14,7 +14,7 @@
 
 .set __special__, 0
 .if ALLOCATE_SPECIAL_TABLE
-		.align 2
+		ptr_align
 gSpecials::
 .endif
 	def_special HealPlayerParty
