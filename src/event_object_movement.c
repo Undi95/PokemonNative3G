@@ -4612,6 +4612,12 @@ static const struct StepAnimTable *GetStepAnimTable(const union AnimCmd *const *
         if (stepTable->anims == anims)
             return stepTable;
     }
+    // Animations des sprites de Rouge Feu (pas alternés gauche/droite)
+    for (stepTable = sKantoStepAnimTables; stepTable->anims != NULL; stepTable++)
+    {
+        if (stepTable->anims == anims)
+            return stepTable;
+    }
     return NULL;
 }
 
