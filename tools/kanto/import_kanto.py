@@ -239,6 +239,10 @@ class Importer:
             os.makedirs(f'{self.em}/data/maps/{m}', exist_ok=True)
             json.dump(out, open(f'{self.em}/data/maps/{m}/map.json', 'w', encoding='utf-8'), indent=2, ensure_ascii=False)
             open(f'{self.em}/data/maps/{m}/scripts.inc', 'w', encoding='utf-8').write(f'{m}_MapScripts::\n\t.byte 0\n')
+            inc = f'{self.em}/data/kanto/scripts.inc'
+            line = f'\t.include "data/maps/{m}/scripts.inc"\n'
+            if line not in open(inc, encoding='utf-8').read():
+                open(inc, 'a', encoding='utf-8', newline='').write(line)
 
             g = 'gMapGroup_Kanto' + fr_group_of[m][len('gMapGroup_'):]
             if g not in groups:
