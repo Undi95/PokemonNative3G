@@ -110,16 +110,16 @@ TrainerTower_EventScript_DoSingleBattle:
 	setvar DISABLE_SINGLES_TRIGGER, TRUE
 	applymovement LOCALID_KANTO_TOWER_TRAINER_SINGLES, TrainerTower_Movement_SingleTrainerApproach
 	waitmovement 0
-	ttower_getspeech TRAINER_KANTO_TOWER_TEXT_INTRO, 0
+	ttower_getspeech TRAINER_TOWER_TEXT_INTRO, 0
 	msgbox gStringVar4
 	closemessage
 	goto TrainerTower_EventScript_DoBattle
 
 TrainerTower_EventScript_DoDoubleBattle::
-	ttower_getspeech TRAINER_KANTO_TOWER_TEXT_INTRO, VAR_TEMP_3
+	ttower_getspeech TRAINER_TOWER_TEXT_INTRO, VAR_TEMP_3
 	msgbox gStringVar4
-	setvar VAR_0x8004, TRAINER_KANTO_TOWER_FUNC_GET_SPEECH
-	setvar VAR_0x8005, TRAINER_KANTO_TOWER_TEXT_INTRO
+	setvar VAR_0x8004, TRAINER_TOWER_FUNC_GET_SPEECH
+	setvar VAR_0x8005, TRAINER_TOWER_TEXT_INTRO
 	addvar VAR_TEMP_3, 1
 	goto_if_eq VAR_TEMP_3, 1, TrainerTower_EventScript_DoSecondTrainerIntro
 	setvar VAR_TEMP_3, 0
@@ -165,7 +165,7 @@ TrainerTower_EventScript_DoKnockoutBattle3::
 	applymovement LOCALID_KANTO_TOWER_TRAINER_SINGLES, TrainerTower_Movement_RightKnockoutTrainerApproach
 	waitmovement 0
 TrainerTower_EventScript_DoKnockoutBattleIntro:
-	ttower_getspeech TRAINER_KANTO_TOWER_TEXT_INTRO, VAR_TEMP_1
+	ttower_getspeech TRAINER_TOWER_TEXT_INTRO, VAR_TEMP_1
 	msgbox gStringVar4
 	closemessage
 TrainerTower_EventScript_DoBattle:
@@ -252,7 +252,7 @@ TrainerTower_EventScript_SpeakToKnockoutTrainer::
 TrainerTower_EventScript_SpeakToDoublesTrainer2::
 	setvar VAR_0x8006, 1
 TrainerTower_EventScript_DoPostBattleText:
-	ttower_getspeech TRAINER_KANTO_TOWER_TEXT_AFTER
+	ttower_getspeech TRAINER_TOWER_TEXT_AFTER
 	lock
 	faceplayer
 	msgbox gStringVar4

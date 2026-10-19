@@ -4,7 +4,7 @@ RocketHideout_B1F_MapScripts::
 	.byte 0
 
 RocketHideout_B1F_OnLoad::
-	call_if_not_defeated TRAINER_KANTO_TEAM_ROCKET_GRUNT_12 RocketHideout_B1F_EventScript_SetBarrier
+	call_if_not_defeated TRAINER_KANTO_TEAM_ROCKET_GRUNT_12, RocketHideout_B1F_EventScript_SetBarrier
 	end
 
 RocketHideout_B1F_OnTransition::

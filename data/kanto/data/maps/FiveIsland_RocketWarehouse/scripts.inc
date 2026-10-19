@@ -11,7 +11,7 @@ FiveIsland_RocketWarehouse_OnTransition::
 	end
 
 FiveIsland_RocketWarehouse_OnLoad::
-	call_if_defeated TRAINER_KANTO_TEAM_ROCKET_ADMIN, FiveIsland_RocketWarehouse_EventScript_SetArrowsForReEntry
+	call_if_defeated TRAINER_KANTO_TEAM_ROCKET_ADMIN,, FiveIsland_RocketWarehouse_EventScript_SetArrowsForReEntry
 	end
 
 FiveIsland_RocketWarehouse_EventScript_SetArrowsForReEntry::

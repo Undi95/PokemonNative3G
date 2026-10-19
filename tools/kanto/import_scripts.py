@@ -56,6 +56,8 @@ class ScriptConverter:
         for h in ('kanto_flags_vars.h', 'kanto_trainers.h'):
             if not os.path.exists(f'{self.em}/include/constants/{h}'):
                 write(f'{self.em}/include/constants/{h}', '// (vide : généré par tools/kanto)\n')
+        FR_TRAINER_IDS.update(re.findall(r'#define (TRAINER_\w+)\s+\d+',
+                                         read(f'{self.fr}/include/constants/opponents.h')))
         self.names = Names(self.fr, self.em)
         self.labels_rename = {}
         self.missing = {}
@@ -135,7 +137,7 @@ class ScriptConverter:
             return self.imp.id_rename.get(t, t)
         if t.startswith('MUS_'):
             return self.imp.music(t)
-        if t.startswith('TRAINER_') and t not in KEEP_TRAINER_TOKENS:
+        if t in FR_TRAINER_IDS:
             return 'TRAINER_KANTO_' + t[len('TRAINER_'):]
         return t
 
@@ -160,6 +162,8 @@ class ScriptConverter:
             if m and m.group(2) in self.fr_labels | set(self.labels_rename.values()):
                 code = f'{m.group(1)}ptrvalue {m.group(2)}'
             code = re.sub(r'^(\s*)\.align\s+2\s*$', r'\1ptr_align', code)
+            # RF : virgule oubliée (« call_if_not_defeated TRAINER_X Label »)
+            code = re.sub(r'^(\s*call_if_(?:not_)?defeated\s+\S+?)\s+(\w+)\s*$', r'\1, \2', code)
             # RF : « hideobjectat id, 0 » = carte courante ; Émeraude exige une carte
             code = re.sub(r'^(\s*(?:hide|show)objectat\s+[^,]+,\s*)0\s*$', r'\1MAP_UNDEFINED', code)
             if comment:
@@ -254,6 +258,10 @@ class ScriptConverter:
 # En-têtes de constantes de RF absents d'Émeraude (copiés dans include/constants/kanto/)
 FR_ONLY_HEADERS = ['fame_checker.h', 'help_system.h', 'menu.h', 'metatile_labels.h', 'quest_log.h', 'seagallop.h',
                    'trainer_card.h', 'trainer_fan_club.h', 'trainer_tower.h']
+
+# Dresseurs de RF (les autres constantes TRAINER_* gardent leur nom)
+FR_TRAINER_IDS = set()
+
 
 # Constantes TRAINER_* qui ne sont pas des dresseurs
 KEEP_TRAINER_TOKENS = {
