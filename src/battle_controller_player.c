@@ -2953,7 +2953,7 @@ static void PlayerHandleIntroTrainerBallThrow(void)
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[gActiveBattler]], 1);
 
     paletteNum = AllocSpritePalette(0xD6F8);
-    LoadCompressedPalette(gTrainerBackPicPaletteTable[gSaveBlock2Ptr->playerGender].data, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
+    LoadCompressedPalette(gTrainerBackPicPaletteTable[GetPlayerBackPicBase() + gSaveBlock2Ptr->playerGender].data, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
     gSprites[gBattlerSpriteIds[gActiveBattler]].oam.paletteNum = paletteNum;
 
     taskId = CreateTask(Task_StartSendOutAnim, 5);

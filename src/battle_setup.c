@@ -1672,7 +1672,9 @@ const u8 *GetTrainerBLoseText(void)
 
 const u8 *GetTrainerWonSpeech(void)
 {
-    return ReturnEmptyStringIfNull(sTrainerVictorySpeech);
+    // Rouge Feu : {RIVAL} etc. remplacés (texte de victoire du rival de Kanto)
+    StringExpandPlaceholders(gStringVar4, ReturnEmptyStringIfNull(sTrainerVictorySpeech));
+    return gStringVar4;
 }
 
 static const u8 *GetTrainerCantBattleSpeech(void)
