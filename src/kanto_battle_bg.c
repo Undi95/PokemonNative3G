@@ -4,6 +4,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_setup.h"
+#include "data.h"
 #include "decompress.h"
 #include "field_player_avatar.h"
 #include "fieldmap.h"
@@ -12,7 +13,18 @@
 #include "constants/metatile_behaviors.h"
 #include "overworld.h"
 #include "palette.h"
+#include "constants/map_types.h"
 #include "constants/trainers.h"
+
+// Comme dans battle_bg.c
+struct BattleBackground
+{
+    const void *tileset;
+    const void *tilemap;
+    const void *entryTileset;
+    const void *entryTilemap;
+    const void *palette;
+};
 
 #include "data/graphics/kanto_battle_terrain.h"
 
