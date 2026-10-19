@@ -22,6 +22,7 @@
 #include "constants/items.h"
 #include "constants/species.h"
 #include "event_data.h"
+#include "pokemon.h"
 
 bool8 gDebugNoClip = FALSE;
 bool8 gDebugNoEncounters = FALSE;
@@ -233,7 +234,17 @@ static void Task_DebugMenu(u8 taskId)
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_GIVE_MON:
-        ScriptGiveMon(SPECIES_MEWTWO, 70, ITEM_NONE, 0, 0, 0);
+        if (ScriptGiveMon(SPECIES_MEWTWO, 70, ITEM_NONE, 0, 0, 0) == MON_GIVEN_TO_PARTY)
+        {
+            // PSYKO (4e attaque) en premier : les tests headless attaquent en appuyant sur A
+            struct Pokemon *mon = &gPlayerParty[CalculatePlayerPartyCount() - 1];
+            u16 move1 = GetMonData(mon, MON_DATA_MOVE1), move4 = GetMonData(mon, MON_DATA_MOVE4);
+            u8 pp1 = GetMonData(mon, MON_DATA_PP1), pp4 = GetMonData(mon, MON_DATA_PP4);
+            SetMonData(mon, MON_DATA_MOVE1, &move4);
+            SetMonData(mon, MON_DATA_PP1, &pp4);
+            SetMonData(mon, MON_DATA_MOVE4, &move1);
+            SetMonData(mon, MON_DATA_PP4, &pp1);
+        }
         FlagSet(FLAG_SYS_POKEMON_GET);
         PlaySE(SE_USE_ITEM);
         break;
