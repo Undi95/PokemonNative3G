@@ -293,6 +293,23 @@ void Platform_StoreSaveFile(void)
     StoreSaveFile();
 }
 
+void Platform_WriteExtraSave(const void *data, u32 size)
+{
+    if (sSaveFile == NULL)
+        return;
+    fseek(sSaveFile, sizeof(FLASH_BASE), SEEK_SET);
+    fwrite(data, 1, size, sSaveFile);
+    fflush(sSaveFile);
+}
+
+bool8 Platform_ReadExtraSave(void *data, u32 size)
+{
+    if (sSaveFile == NULL)
+        return FALSE;
+    fseek(sSaveFile, sizeof(FLASH_BASE), SEEK_SET);
+    return fread(data, 1, size, sSaveFile) == size;
+}
+
 void Platform_ReadFlash(u16 sectorNum, u32 offset, u8 *dest, u32 size)
 {
     DBGPRINTF("ReadFlash(sectorNum=0x%04X,offset=0x%08X,size=0x%02X)\n",sectorNum,offset,size);

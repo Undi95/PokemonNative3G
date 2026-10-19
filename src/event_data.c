@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_save.h"
 #include "event_data.h"
 #include "pokedex.h"
 
@@ -165,6 +166,8 @@ u16 *GetVarPointer(u16 id)
 {
     if (id < VARS_START)
         return NULL;
+    else if (id >= KANTO_VARS_START && id <= KANTO_VARS_END)
+        return &gSaveBlockKanto.vars[id - KANTO_VARS_START];
     else if (id < SPECIAL_VARS_START)
         return &gSaveBlock1Ptr->vars[id - VARS_START];
     else
@@ -197,6 +200,8 @@ u8 *GetFlagPointer(u16 id)
 {
     if (id == 0)
         return NULL;
+    else if (id >= KANTO_FLAGS_START && id <= KANTO_FLAGS_END)
+        return &gSaveBlockKanto.flags[(id - KANTO_FLAGS_START) / 8];
     else if (id < SPECIAL_FLAGS_START)
         return &gSaveBlock1Ptr->flags[id / 8];
     else

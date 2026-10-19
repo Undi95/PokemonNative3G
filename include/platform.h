@@ -5,6 +5,9 @@
 #include "siirtc.h"
 
 void Platform_StoreSaveFile(void);
+// Données hors flash GBA (bloc Kanto), après les 128 Ko du fichier .sav
+void Platform_WriteExtraSave(const void *data, u32 size);
+bool8 Platform_ReadExtraSave(void *data, u32 size);
 void Platform_ReadFlash(u16 sectorNum, u32 offset, u8 *dest, u32 size);
 void Platform_QueueAudio(float *audioBuffer, s32 samplesPerFrame);
 u16 Platform_GetKeyInput(void);

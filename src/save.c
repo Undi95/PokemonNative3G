@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_save.h"
 #include "platform.h"
 #include "agb_flash.h"
 #include "gba/flash_internal.h"
@@ -1052,6 +1053,8 @@ u8 HandleSavingData(u8 saveType)
     }
 
 #ifdef PORTABLE
+    if (saveType != SAVE_LINK && saveType != SAVE_EREADER)
+        KantoSave_Write();
 	Platform_StoreSaveFile();
 #endif
 
@@ -1195,6 +1198,7 @@ u8 LoadGameSave(u8 saveType)
             SaveBlock1FromSaved();
 #endif
         CopyPartyAndObjectsFromSave();
+        KantoSave_Read();
         gSaveFileStatus = status;
         gGameContinueCallback = NULL;
         break;

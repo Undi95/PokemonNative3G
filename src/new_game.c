@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_save.h"
 #include "new_game.h"
 #include "random.h"
 #include "pokemon.h"
@@ -173,6 +174,7 @@ void NewGameInitData(void)
     ResetPokedex();
     ClearFrontierRecord();
     ClearSav1();
+    KantoSave_Clear();
     ClearAllMail();
     gSaveBlock2Ptr->specialSaveWarpFlags = 0;
     gSaveBlock2Ptr->gcnLinkFlags = 0;
