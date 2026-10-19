@@ -16,6 +16,23 @@ enum {
     WALLPAPER_MACHINE,
     WALLPAPER_PLAIN,
     WALLPAPER_FRIENDS, // The one received as a gift from Walda's parents.
+    // PokemonNative3G : fonds de Rouge Feu (dessins différents de ceux d'Émeraude)
+    WALLPAPER_KANTO_FOREST,
+    WALLPAPER_KANTO_CITY,
+    WALLPAPER_KANTO_DESERT,
+    WALLPAPER_KANTO_SAVANNA,
+    WALLPAPER_KANTO_CRAG,
+    WALLPAPER_KANTO_VOLCANO,
+    WALLPAPER_KANTO_SNOW,
+    WALLPAPER_KANTO_CAVE,
+    WALLPAPER_KANTO_BEACH,
+    WALLPAPER_KANTO_SEAFLOOR,
+    WALLPAPER_KANTO_RIVER,
+    WALLPAPER_KANTO_SKY,
+    WALLPAPER_KANTO_STARS,
+    WALLPAPER_KANTO_POKECENTER,
+    WALLPAPER_KANTO_TILES,
+    WALLPAPER_KANTO_SIMPLE,
     WALLPAPER_COUNT
 };
 #define MAX_DEFAULT_WALLPAPER WALLPAPER_SAVANNA
@@ -150,6 +167,57 @@ static const u32 sWallpaperTilemap_Plain[] = INCGFX_U32("graphics/pokemon_storag
 // 12x18 tilemap
 static const u32 sWallpaperTilemap_Unused[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/unused.bin");
 
+
+// Rouge Feu (pokemon_storage_system_graphics.c)
+static const u16 sKantoWallpaperPalettes_Forest[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/forest/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Forest[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/forest/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Forest[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/forest/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_City[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/city/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_City[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/city/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_City[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/city/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Desert[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/desert/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Desert[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/desert/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Desert[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/desert/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Savanna[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/savanna/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Savanna[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/savanna/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Savanna[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/savanna/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Crag[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/crag/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Crag[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/crag/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Crag[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/crag/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Volcano[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/volcano/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Volcano[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/volcano/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Volcano[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/volcano/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Snow[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/snow/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Snow[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/snow/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Snow[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/snow/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Cave[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/cave/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Cave[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/cave/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Cave[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/cave/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Beach[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/beach/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Beach[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/beach/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Beach[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/beach/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Seafloor[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/seafloor/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Seafloor[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/seafloor/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Seafloor[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/seafloor/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_River[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/river/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_River[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/river/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_River[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/river/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Sky[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/sky/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Sky[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/sky/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Sky[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/sky/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Stars[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/stars/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Stars[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/stars/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Stars[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/stars/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Pokecenter[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/pokecenter/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Pokecenter[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/pokecenter/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Pokecenter[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/pokecenter/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Tiles[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/tiles/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Tiles[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/tiles/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Tiles[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/tiles/tilemap.bin", ".lz");
+static const u16 sKantoWallpaperPalettes_Simple[][16] = {INCGFX_U16("graphics/kanto/pokemon_storage/wallpapers/simple/tiles.png", ".gbapal")};
+static const u32 sKantoWallpaperTiles_Simple[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/simple/tiles.png", ".4bpp.lz");
+static const u32 sKantoWallpaperTilemap_Simple[] = INCGFX_U32("graphics/kanto/pokemon_storage/wallpapers/simple/tilemap.bin", ".lz");
+
 // Shadow color, text color
 static const u16 sBoxTitleColors[WALLPAPER_COUNT][2] =
 {
@@ -169,14 +237,31 @@ static const u16 sBoxTitleColors[WALLPAPER_COUNT][2] =
     [WALLPAPER_POKECENTER] = {RGB(7, 7, 7), RGB_WHITE},
     [WALLPAPER_MACHINE]    = {RGB(7, 7, 7), RGB_WHITE},
     [WALLPAPER_PLAIN]      = {RGB(7, 7, 7), RGB_WHITE},
-    [WALLPAPER_FRIENDS]    = {RGB(7, 7, 7), RGB_WHITE}
+    [WALLPAPER_FRIENDS]    = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_FOREST] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_CITY] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_DESERT] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_SAVANNA] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_CRAG] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_VOLCANO] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_SNOW] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_CAVE] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_BEACH] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_SEAFLOOR] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_RIVER] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_SKY] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_STARS] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_POKECENTER] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_TILES] = {RGB(7, 7, 7), RGB_WHITE},
+    [WALLPAPER_KANTO_SIMPLE] = {RGB(7, 7, 7), RGB_WHITE}
+
 };
 
 #define WALLPAPER_ENTRY(name) {sWallpaperTiles_##name, sWallpaperTilemap_##name, sWallpaperPalettes_##name[0]}
 // A few wallpapers are not defined in this file
 #define WALLPAPER_ENTRY_G(name) {gWallpaperTiles_##name, gWallpaperTilemap_##name, gWallpaperPalettes_##name[0]}
 
-static const struct Wallpaper sWallpapers[WALLPAPER_COUNT - 1] =
+static const struct Wallpaper sWallpapers[WALLPAPER_COUNT] = // [WALLPAPER_FRIENDS] : sWaldaWallpapers
 {
     [WALLPAPER_FOREST]     = WALLPAPER_ENTRY(Forest),
     [WALLPAPER_CITY]       = WALLPAPER_ENTRY(City),
@@ -194,6 +279,22 @@ static const struct Wallpaper sWallpapers[WALLPAPER_COUNT - 1] =
     [WALLPAPER_POKECENTER] = WALLPAPER_ENTRY(Pokecenter),
     [WALLPAPER_MACHINE]    = WALLPAPER_ENTRY(Machine),
     [WALLPAPER_PLAIN]      = WALLPAPER_ENTRY(Plain),
+    [WALLPAPER_KANTO_FOREST] = {sKantoWallpaperTiles_Forest, sKantoWallpaperTilemap_Forest, sKantoWallpaperPalettes_Forest[0]},
+    [WALLPAPER_KANTO_CITY] = {sKantoWallpaperTiles_City, sKantoWallpaperTilemap_City, sKantoWallpaperPalettes_City[0]},
+    [WALLPAPER_KANTO_DESERT] = {sKantoWallpaperTiles_Desert, sKantoWallpaperTilemap_Desert, sKantoWallpaperPalettes_Desert[0]},
+    [WALLPAPER_KANTO_SAVANNA] = {sKantoWallpaperTiles_Savanna, sKantoWallpaperTilemap_Savanna, sKantoWallpaperPalettes_Savanna[0]},
+    [WALLPAPER_KANTO_CRAG] = {sKantoWallpaperTiles_Crag, sKantoWallpaperTilemap_Crag, sKantoWallpaperPalettes_Crag[0]},
+    [WALLPAPER_KANTO_VOLCANO] = {sKantoWallpaperTiles_Volcano, sKantoWallpaperTilemap_Volcano, sKantoWallpaperPalettes_Volcano[0]},
+    [WALLPAPER_KANTO_SNOW] = {sKantoWallpaperTiles_Snow, sKantoWallpaperTilemap_Snow, sKantoWallpaperPalettes_Snow[0]},
+    [WALLPAPER_KANTO_CAVE] = {sKantoWallpaperTiles_Cave, sKantoWallpaperTilemap_Cave, sKantoWallpaperPalettes_Cave[0]},
+    [WALLPAPER_KANTO_BEACH] = {sKantoWallpaperTiles_Beach, sKantoWallpaperTilemap_Beach, sKantoWallpaperPalettes_Beach[0]},
+    [WALLPAPER_KANTO_SEAFLOOR] = {sKantoWallpaperTiles_Seafloor, sKantoWallpaperTilemap_Seafloor, sKantoWallpaperPalettes_Seafloor[0]},
+    [WALLPAPER_KANTO_RIVER] = {sKantoWallpaperTiles_River, sKantoWallpaperTilemap_River, sKantoWallpaperPalettes_River[0]},
+    [WALLPAPER_KANTO_SKY] = {sKantoWallpaperTiles_Sky, sKantoWallpaperTilemap_Sky, sKantoWallpaperPalettes_Sky[0]},
+    [WALLPAPER_KANTO_STARS] = {sKantoWallpaperTiles_Stars, sKantoWallpaperTilemap_Stars, sKantoWallpaperPalettes_Stars[0]},
+    [WALLPAPER_KANTO_POKECENTER] = {sKantoWallpaperTiles_Pokecenter, sKantoWallpaperTilemap_Pokecenter, sKantoWallpaperPalettes_Pokecenter[0]},
+    [WALLPAPER_KANTO_TILES] = {sKantoWallpaperTiles_Tiles, sKantoWallpaperTilemap_Tiles, sKantoWallpaperPalettes_Tiles[0]},
+    [WALLPAPER_KANTO_SIMPLE] = {sKantoWallpaperTiles_Simple, sKantoWallpaperTilemap_Simple, sKantoWallpaperPalettes_Simple[0]},
 };
 
 static const u8 sArrow_Gfx[] = INCGFX_U8("graphics/pokemon_storage/arrow.png", ".4bpp");

@@ -132,6 +132,12 @@ enum {
     MENU_SCENERY_3,
     MENU_ETCETERA,
     MENU_FRIENDS,
+    MENU_KANTO,            // PokemonNative3G : ouvre les catégories de fonds de Rouge Feu
+    MENU_KANTO_SETS_START, // PokemonNative3G : fonds de Rouge Feu
+    MENU_KANTO_SCENERY_1 = MENU_KANTO_SETS_START,
+    MENU_KANTO_SCENERY_2,
+    MENU_KANTO_SCENERY_3,
+    MENU_KANTO_ETCETERA,
     MENU_FOREST,
     MENU_CITY,
     MENU_DESERT,
@@ -148,6 +154,22 @@ enum {
     MENU_POKECENTER,
     MENU_MACHINE,
     MENU_SIMPLE,
+    MENU_KANTO_FOREST,
+    MENU_KANTO_CITY,
+    MENU_KANTO_DESERT,
+    MENU_KANTO_SAVANNA,
+    MENU_KANTO_CRAG,
+    MENU_KANTO_VOLCANO,
+    MENU_KANTO_SNOW,
+    MENU_KANTO_CAVE,
+    MENU_KANTO_BEACH,
+    MENU_KANTO_SEAFLOOR,
+    MENU_KANTO_RIVER,
+    MENU_KANTO_SKY,
+    MENU_KANTO_STARS,
+    MENU_KANTO_POKECENTER,
+    MENU_KANTO_TILES,
+    MENU_KANTO_SIMPLE,
 };
 #define MENU_WALLPAPER_SETS_START MENU_SCENERY_1
 #define MENU_WALLPAPERS_START MENU_FOREST
@@ -3442,10 +3464,20 @@ static void Task_HandleWallpapers(u8 taskId)
         case MENU_SCENERY_2:
         case MENU_SCENERY_3:
         case MENU_ETCETERA:
+        case MENU_KANTO_SCENERY_1:
+        case MENU_KANTO_SCENERY_2:
+        case MENU_KANTO_SCENERY_3:
+        case MENU_KANTO_ETCETERA:
             PlaySE(SE_SELECT);
             RemoveMenu();
             sStorage->wallpaperSetId -= MENU_WALLPAPER_SETS_START;
             sStorage->state++;
+            break;
+        case MENU_KANTO:
+            PlaySE(SE_SELECT);
+            RemoveMenu();
+            AddKantoWallpaperSetsMenu();
+            sStorage->state = 1;
             break;
         case MENU_FRIENDS:
             // New wallpaper from Walda.
@@ -3478,7 +3510,10 @@ static void Task_HandleWallpapers(u8 taskId)
         default:
             PlaySE(SE_SELECT);
             ClearBottomWindow();
-            sStorage->wallpaperId -= MENU_WALLPAPERS_START;
+            if (sStorage->wallpaperId >= MENU_KANTO_FOREST) // fonds de Rouge Feu, après WALLPAPER_FRIENDS
+                sStorage->wallpaperId = sStorage->wallpaperId - MENU_KANTO_FOREST + WALLPAPER_KANTO_FOREST;
+            else
+                sStorage->wallpaperId -= MENU_WALLPAPERS_START;
             SetWallpaperForCurrentBox(sStorage->wallpaperId);
             sStorage->state++;
             break;
@@ -4332,6 +4367,17 @@ static void ClearBottomWindow(void)
     ScheduleBgCopyTilemapToVram(0);
 }
 
+// PokemonNative3G : catégories de fonds de Rouge Feu (le menu n'a que 7 lignes)
+static void AddKantoWallpaperSetsMenu(void)
+{
+    InitMenu();
+    SetMenuText(MENU_KANTO_SCENERY_1);
+    SetMenuText(MENU_KANTO_SCENERY_2);
+    SetMenuText(MENU_KANTO_SCENERY_3);
+    SetMenuText(MENU_KANTO_ETCETERA);
+    AddMenu();
+}
+
 static void AddWallpaperSetsMenu(void)
 {
     InitMenu();
@@ -4339,6 +4385,7 @@ static void AddWallpaperSetsMenu(void)
     SetMenuText(MENU_SCENERY_2);
     SetMenuText(MENU_SCENERY_3);
     SetMenuText(MENU_ETCETERA);
+    SetMenuText(MENU_KANTO);
     if (IsWaldaWallpaperUnlocked())
         SetMenuText(MENU_FRIENDS);
     AddMenu();
@@ -4372,6 +4419,30 @@ static void AddWallpapersMenu(u8 wallpaperSet)
         SetMenuText(MENU_POKECENTER);
         SetMenuText(MENU_MACHINE);
         SetMenuText(MENU_SIMPLE);
+        break;
+    case MENU_KANTO_SCENERY_1 - MENU_WALLPAPER_SETS_START:
+        SetMenuText(MENU_KANTO_FOREST);
+        SetMenuText(MENU_KANTO_CITY);
+        SetMenuText(MENU_KANTO_DESERT);
+        SetMenuText(MENU_KANTO_SAVANNA);
+        break;
+    case MENU_KANTO_SCENERY_2 - MENU_WALLPAPER_SETS_START:
+        SetMenuText(MENU_KANTO_CRAG);
+        SetMenuText(MENU_KANTO_VOLCANO);
+        SetMenuText(MENU_KANTO_SNOW);
+        SetMenuText(MENU_KANTO_CAVE);
+        break;
+    case MENU_KANTO_SCENERY_3 - MENU_WALLPAPER_SETS_START:
+        SetMenuText(MENU_KANTO_BEACH);
+        SetMenuText(MENU_KANTO_SEAFLOOR);
+        SetMenuText(MENU_KANTO_RIVER);
+        SetMenuText(MENU_KANTO_SKY);
+        break;
+    case MENU_KANTO_ETCETERA - MENU_WALLPAPER_SETS_START:
+        SetMenuText(MENU_KANTO_STARS);
+        SetMenuText(MENU_KANTO_POKECENTER);
+        SetMenuText(MENU_KANTO_TILES);
+        SetMenuText(MENU_KANTO_SIMPLE);
         break;
     }
     AddMenu();
@@ -7991,6 +8062,27 @@ static const u8 *const sMenuTexts[] =
     [MENU_POKECENTER] = gPCText_Pokecenter,
     [MENU_MACHINE]    = gPCText_Machine,
     [MENU_SIMPLE]     = gPCText_Simple,
+    [MENU_KANTO]           = gPCText_Kanto,
+    [MENU_KANTO_SCENERY_1] = gPCText_KantoScenery1,
+    [MENU_KANTO_SCENERY_2] = gPCText_KantoScenery2,
+    [MENU_KANTO_SCENERY_3] = gPCText_KantoScenery3,
+    [MENU_KANTO_ETCETERA]  = gPCText_KantoEtcetera,
+    [MENU_KANTO_FOREST] = gPCText_KantoForest,
+    [MENU_KANTO_CITY] = gPCText_KantoCity,
+    [MENU_KANTO_DESERT] = gPCText_KantoDesert,
+    [MENU_KANTO_SAVANNA] = gPCText_KantoSavanna,
+    [MENU_KANTO_CRAG] = gPCText_KantoCrag,
+    [MENU_KANTO_VOLCANO] = gPCText_KantoVolcano,
+    [MENU_KANTO_SNOW] = gPCText_KantoSnow,
+    [MENU_KANTO_CAVE] = gPCText_KantoCave,
+    [MENU_KANTO_BEACH] = gPCText_KantoBeach,
+    [MENU_KANTO_SEAFLOOR] = gPCText_KantoSeafloor,
+    [MENU_KANTO_RIVER] = gPCText_KantoRiver,
+    [MENU_KANTO_SKY] = gPCText_KantoSky,
+    [MENU_KANTO_STARS] = gPCText_KantoStars,
+    [MENU_KANTO_POKECENTER] = gPCText_KantoPokecenter,
+    [MENU_KANTO_TILES] = gPCText_KantoTiles,
+    [MENU_KANTO_SIMPLE] = gPCText_KantoSimple,
 };
 
 static void SetMenuText(u8 textId)
