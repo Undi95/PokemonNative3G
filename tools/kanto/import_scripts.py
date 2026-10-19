@@ -52,6 +52,10 @@ class ScriptConverter:
     def __init__(self, imp):
         self.imp = imp
         self.fr, self.em = imp.fr, imp.em
+        # les en-têtes d'Émeraude incluent nos fichiers générés : versions vides au premier passage
+        for h in ('kanto_flags_vars.h', 'kanto_trainers.h'):
+            if not os.path.exists(f'{self.em}/include/constants/{h}'):
+                write(f'{self.em}/include/constants/{h}', '// (vide : généré par tools/kanto)\n')
         self.names = Names(self.fr, self.em)
         self.labels_rename = {}
         self.missing = {}
