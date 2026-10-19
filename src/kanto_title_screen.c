@@ -2,6 +2,9 @@
 // les Options (ÉCRAN TITRE). Graphismes : graphics/kanto/title_screen (graphics.c de RF ci-dessous).
 // Sorties : menu principal, effacement de la sauvegarde, Berry Fix, retour à l'intro d'Émeraude.
 #include "global.h"
+#ifdef PORTABLE
+#include <stdio.h>
+#endif
 #include "bg.h"
 #include "gpu_regs.h"
 #include "main.h"
@@ -378,6 +381,10 @@ static void Task_TitleScreenTimer(u8 taskId)
 static void Task_TitleScreenMain(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
+#ifdef PORTABLE
+    { static int n; if ((n++ % 30) == 0) fprintf(stderr, "TITLE scene=%d st=%d DISPCNT=%04X BG0=%04X BG1=%04X BG2=%04X BG3=%04X BLDCNT=%04X BLDY=%04X\n",
+        data[0], data[1], GetGpuReg(REG_OFFSET_DISPCNT), GetGpuReg(REG_OFFSET_BG0CNT), GetGpuReg(REG_OFFSET_BG1CNT), GetGpuReg(REG_OFFSET_BG2CNT), GetGpuReg(REG_OFFSET_BG3CNT), GetGpuReg(REG_OFFSET_BLDCNT), GetGpuReg(REG_OFFSET_BLDY)); }
+#endif
 
     if (JOY_NEW(A_BUTTON | B_BUTTON | START_BUTTON)
         && tSceneNum != TITLESCREENSCENE_RUN
@@ -582,7 +589,6 @@ static void SetTitleScreenScene_Run(s16 *data)
 
 static void SetGpuRegsForTitleScreenRun(void)
 {
-    return; // TEST
     SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_OBJWIN_ON);
     SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG_ALL | WINOUT_WIN01_OBJ | WINOUT_WINOBJ_ALL);
     SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_LIGHTEN);
