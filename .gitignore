@@ -64,3 +64,6 @@ __pycache__/
 .claude/skills/*
 !.claude/skills/code-audit/
 !.claude/settings.json
+build/
+out/
+out-*.log

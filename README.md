@@ -1,10 +1,30 @@
-# Pokémon - Version Émeraude
+# PokemonNative3G
 
-This is a decompilation of Pokémon - Version Émeraude.
-The original decompilation of the Pokémon - Version Émeraude was done by DizzyEgg, this is just a fork that keeps it up to date with the "main" pokeemerald repository.
+Pokémon Émeraude (version française) compilé **nativement** pour Windows et Linux,
+sans émulateur. Objectif à terme : intégrer Kanto (Rouge Feu) dans le moteur d'Émeraude.
 
+## Origine du code
 
-* [**pokeemeraude.gba**](https://datomatic.no-intro.org/index.php?page=show_record&s=23&n=2161) `sha1: ca666651374d89ca439007bed54d839eb7bd14d0`
+- Décomp française : [qigast/pokeemeraude](https://github.com/qigast/pokeemeraude) (commit `2f0d29fcc`),
+  fork de [pret/pokeemerald](https://github.com/pret/pokeemerald).
+- Couche PC (SDL2) : [fuddlesworth/pokeemerald-native](https://github.com/fuddlesworth/pokeemerald-native)
+  (branche `vanilla`), elle-même issue de [NTx86/pokeemerald-sdl2pc](https://github.com/NTx86/pokeemerald-sdl2pc).
+- Les deux partent du même commit pret (`83df84e40`) : la fusion est un vrai merge git.
 
+## Compiler (Docker, rien à installer d'autre)
 
-For contacts and other pret projects, see [pret.github.io](https://pret.github.io/).
+```
+docker build -t pn3g-build docker
+docker run --rm -v "<chemin du dépôt>:/repo:ro" -v pn3g-work:/work -v "<chemin du dépôt>/out:/out" pn3g-build bash /repo/docker/build.sh linux
+docker run --rm -v "<chemin du dépôt>:/repo:ro" -v pn3g-work:/work -v "<chemin du dépôt>/out:/out" pn3g-build bash /repo/docker/build.sh winwsl
+```
+
+Sorties : `out/linux/pokeemeraude64` et `out/winwsl/pokeemeraude64.exe` + `SDL2.dll`.
+Le build compile le **dernier commit** du dépôt (pas les modifications non commitées).
+Instructions sans Docker : voir [INSTALL_PC.md](INSTALL_PC.md).
+
+## Jouer
+
+Touches par défaut (positions d'un clavier QWERTY US — sur AZERTY : A = **W**, B = **X**,
+L = **Q**, R = **S**) ; Entrée = Start, flèches = croix. Réglages et sauvegarde dans
+`%APPDATA%\pokeemerald` (Windows) ou `~/.local/share/pokeemerald` (Linux).
