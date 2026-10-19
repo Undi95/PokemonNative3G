@@ -6,7 +6,13 @@
 #include "event_data.h"
 #include "event_scripts.h"
 #include "random.h"
+#include "kanto_save.h"
+#include "constants/characters.h"
 #include "constants/kanto/trainer_fan_club.h"
+
+// strings_1_fr.h de RF
+static const u8 gText_LtSurge[] = _("MAJOR BOB");
+static const u8 gText_Koga[] = _("KOGA");
 
 struct TrainerFanClub
 {
@@ -100,20 +106,20 @@ static u8 TryGainNewFanFromCounter(struct TrainerFanClub *fanClub, u8 a1)
 static u8 PlayerGainRandomTrainerFan(struct TrainerFanClub *fanClub)
 {
     static const u8 sFanClubMemberIds[] = {
-            FANCLUB_MEMBER2,
-            FANCLUB_MEMBER4,
-            FANCLUB_MEMBER6,
-            FANCLUB_MEMBER1,
-            FANCLUB_MEMBER8,
-            FANCLUB_MEMBER7,
-            FANCLUB_MEMBER5,
-            FANCLUB_MEMBER3
+            KANTO_FANCLUB_MEMBER2,
+            KANTO_FANCLUB_MEMBER4,
+            KANTO_FANCLUB_MEMBER6,
+            KANTO_FANCLUB_MEMBER1,
+            KANTO_FANCLUB_MEMBER8,
+            KANTO_FANCLUB_MEMBER7,
+            KANTO_FANCLUB_MEMBER5,
+            KANTO_FANCLUB_MEMBER3
         };
 
     u8 i;
     u8 idx = 0;
 
-    for (i = 0; i < NUM_TRAINER_FAN_CLUB_MEMBERS; i++)
+    for (i = 0; i < KANTO_NUM_TRAINER_FAN_CLUB_MEMBERS; i++)
     {
         if (!(GET_TRAINER_FAN_CLUB_FLAG(sFanClubMemberIds[i])))
         {
@@ -134,14 +140,14 @@ static u8 PlayerLoseRandomTrainerFan(struct TrainerFanClub *fanClub)
 {
     static const u8 sFanClubMemberIds[] =
         {
-            FANCLUB_MEMBER6,
-            FANCLUB_MEMBER7,
-            FANCLUB_MEMBER4,
-            FANCLUB_MEMBER8,
-            FANCLUB_MEMBER5,
-            FANCLUB_MEMBER2,
-            FANCLUB_MEMBER1,
-            FANCLUB_MEMBER3
+            KANTO_FANCLUB_MEMBER6,
+            KANTO_FANCLUB_MEMBER7,
+            KANTO_FANCLUB_MEMBER4,
+            KANTO_FANCLUB_MEMBER8,
+            KANTO_FANCLUB_MEMBER5,
+            KANTO_FANCLUB_MEMBER2,
+            KANTO_FANCLUB_MEMBER1,
+            KANTO_FANCLUB_MEMBER3
         };
 
     u8 i;
@@ -150,7 +156,7 @@ static u8 PlayerLoseRandomTrainerFan(struct TrainerFanClub *fanClub)
     if (GetNumFansOfPlayerInTrainerFanClub(fanClub) == 1)
         return 0;
 
-    for (i = 0; i < NUM_TRAINER_FAN_CLUB_MEMBERS; i++)
+    for (i = 0; i < KANTO_NUM_TRAINER_FAN_CLUB_MEMBERS; i++)
     {
         if (GET_TRAINER_FAN_CLUB_FLAG(sFanClubMemberIds[i]))
         {
@@ -179,7 +185,7 @@ static u16 GetNumFansOfPlayerInTrainerFanClub(struct TrainerFanClub *fanClub)
     u8 count = 0;
     u8 i;
 
-    for (i = 0; i < NUM_TRAINER_FAN_CLUB_MEMBERS; i++)
+    for (i = 0; i < KANTO_NUM_TRAINER_FAN_CLUB_MEMBERS; i++)
     {
         if (GET_TRAINER_FAN_CLUB_FLAG(i))
             count++;
@@ -207,7 +213,7 @@ static void TryLoseFansFromPlayTime(struct TrainerFanClub *fanClub)
                 VarSet(VAR_KANTO_FANCLUB_LOSE_FAN_TIMER, gSaveBlock2Ptr->playTimeHours);
                 break;
             }
-            if (i == NUM_TRAINER_FAN_CLUB_MEMBERS)
+            if (i == KANTO_NUM_TRAINER_FAN_CLUB_MEMBERS)
                 break;
 
             timer = VarGet(VAR_KANTO_FANCLUB_LOSE_FAN_TIMER);
@@ -234,9 +240,9 @@ static bool16 IsFanClubMemberFanOfPlayer(struct TrainerFanClub *fanClub)
 
 static void SetInitialFansOfPlayer(struct TrainerFanClub *fanClub)
 {
-    SET_TRAINER_FAN_CLUB_FLAG(FANCLUB_MEMBER1);
-    SET_TRAINER_FAN_CLUB_FLAG(FANCLUB_MEMBER2);
-    SET_TRAINER_FAN_CLUB_FLAG(FANCLUB_MEMBER3);
+    SET_TRAINER_FAN_CLUB_FLAG(KANTO_FANCLUB_MEMBER1);
+    SET_TRAINER_FAN_CLUB_FLAG(KANTO_FANCLUB_MEMBER2);
+    SET_TRAINER_FAN_CLUB_FLAG(KANTO_FANCLUB_MEMBER3);
 }
 
 void Script_BufferFanClubTrainerName(void)
@@ -246,29 +252,29 @@ void Script_BufferFanClubTrainerName(void)
 
     switch (gSpecialVar_0x8004)
     {
-    case FANCLUB_MEMBER1:
+    case KANTO_FANCLUB_MEMBER1:
         whichNPCTrainer = 0;
         whichLinkTrainer = 0;
         break;
-    case FANCLUB_MEMBER2:
-    case FANCLUB_MEMBER3:
-    case FANCLUB_MEMBER4:
-    case FANCLUB_MEMBER8:
+    case KANTO_FANCLUB_MEMBER2:
+    case KANTO_FANCLUB_MEMBER3:
+    case KANTO_FANCLUB_MEMBER4:
+    case KANTO_FANCLUB_MEMBER8:
         break;
-    case FANCLUB_MEMBER5:
+    case KANTO_FANCLUB_MEMBER5:
         whichNPCTrainer = 1;
         whichLinkTrainer = 0;
         break;
-    case FANCLUB_MEMBER6:
+    case KANTO_FANCLUB_MEMBER6:
         whichNPCTrainer = 0;
         whichLinkTrainer = 1;
         break;
-    case FANCLUB_MEMBER7:
+    case KANTO_FANCLUB_MEMBER7:
         whichNPCTrainer = 2;
         whichLinkTrainer = 1;
         break;
     }
-    BufferFanClubTrainerName(&gSaveBlock2Ptr->linkBattleRecords, whichLinkTrainer, whichNPCTrainer);
+    BufferFanClubTrainerName(&gSaveBlock1Ptr->linkBattleRecords, whichLinkTrainer, whichNPCTrainer);
 }
 
 static void BufferFanClubTrainerName(struct LinkBattleRecords *linkRecords, u8 whichLinkTrainer, u8 whichNPCTrainer)
@@ -280,7 +286,7 @@ static void BufferFanClubTrainerName(struct LinkBattleRecords *linkRecords, u8 w
         switch (whichNPCTrainer)
         {
         case 0:
-            StringCopy(gStringVar1, gSaveBlock1Ptr->rivalName);
+            StringCopy(gStringVar1, gSaveBlockKanto.rivalName);
             break;
         case 1:
             StringCopy(gStringVar1, gText_LtSurge);
@@ -289,7 +295,7 @@ static void BufferFanClubTrainerName(struct LinkBattleRecords *linkRecords, u8 w
             StringCopy(gStringVar1, gText_Koga);
             break;
         default:
-            StringCopy(gStringVar1, gSaveBlock1Ptr->rivalName);
+            StringCopy(gStringVar1, gSaveBlockKanto.rivalName);
             break;
         }
     }
