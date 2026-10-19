@@ -1944,12 +1944,38 @@ static void SetBerryTreeGraphics(struct ObjectEvent *objectEvent, struct Sprite 
     }
 }
 
+// Sprites de Rouge Feu équivalents à ceux du joueur d'Émeraude (Rouge Feu n'a ni plongée ni arrosoir)
+static u16 GetRedLeafGraphicsId(u16 graphicsId)
+{
+    switch (graphicsId)
+    {
+    case OBJ_EVENT_GFX_BRENDAN_NORMAL:     return OBJ_EVENT_GFX_KANTO_RED_NORMAL;
+    case OBJ_EVENT_GFX_BRENDAN_MACH_BIKE:
+    case OBJ_EVENT_GFX_BRENDAN_ACRO_BIKE:  return OBJ_EVENT_GFX_KANTO_RED_BIKE;
+    case OBJ_EVENT_GFX_BRENDAN_SURFING:    return OBJ_EVENT_GFX_KANTO_RED_SURF;
+    case OBJ_EVENT_GFX_BRENDAN_FIELD_MOVE: return OBJ_EVENT_GFX_KANTO_RED_FIELD_MOVE;
+    case OBJ_EVENT_GFX_BRENDAN_FISHING:    return OBJ_EVENT_GFX_KANTO_RED_FISH;
+    case OBJ_EVENT_GFX_MAY_NORMAL:         return OBJ_EVENT_GFX_KANTO_GREEN_NORMAL;
+    case OBJ_EVENT_GFX_MAY_MACH_BIKE:
+    case OBJ_EVENT_GFX_MAY_ACRO_BIKE:      return OBJ_EVENT_GFX_KANTO_GREEN_BIKE;
+    case OBJ_EVENT_GFX_MAY_SURFING:        return OBJ_EVENT_GFX_KANTO_GREEN_SURF;
+    case OBJ_EVENT_GFX_MAY_FIELD_MOVE:     return OBJ_EVENT_GFX_KANTO_GREEN_FIELD_MOVE;
+    case OBJ_EVENT_GFX_MAY_FISHING:        return OBJ_EVENT_GFX_KANTO_GREEN_FISH;
+    default:                               return graphicsId;
+    }
+}
+
 const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
 {
     u8 bard;
 
     if (graphicsId >= OBJ_EVENT_GFX_VARS && graphicsId <= OBJ_EVENT_GFX_VAR_F)
         graphicsId = VarGetObjectEventGraphicsId(graphicsId - OBJ_EVENT_GFX_VARS);
+
+    // PokemonNative3G : le joueur incarné par Red/Leaf garde les états d'Émeraude (graphicsId BRENDAN_X/MAY_X)
+    // mais s'affiche avec les sprites de Rouge Feu
+    if (gSaveBlock2Ptr->optionsPlayerCharacter)
+        graphicsId = GetRedLeafGraphicsId(graphicsId);
 
     if (graphicsId >= KANTO_OBJ_EVENT_GFX_START && graphicsId < KANTO_OBJ_EVENT_GFX_START + NUM_KANTO_OBJ_EVENT_GFX)
         return gKantoObjectEventGraphicsInfoPointers[graphicsId - KANTO_OBJ_EVENT_GFX_START];

@@ -1870,10 +1870,18 @@ static void CreateTrainerCardTrainerPic(void)
     }
     else
     {
-        CreateTrainerCardTrainerPicSprite(FacilityClassToPicIndex(sTrainerPicFacilityClass[sData->cardType][sData->trainerCard.gender]),
+        // PokemonNative3G : sur sa propre carte, Red/Leaf si choisis dans les options
+        u8 cardType = sData->cardType;
+        u8 isHoenn = sData->isHoenn;
+        if (!sData->isLink && cardType == CARD_TYPE_EMERALD && gSaveBlock2Ptr->optionsPlayerCharacter)
+        {
+            cardType = CARD_TYPE_FRLG;
+            isHoenn = FALSE;
+        }
+        CreateTrainerCardTrainerPicSprite(FacilityClassToPicIndex(sTrainerPicFacilityClass[cardType][sData->trainerCard.gender]),
                     TRUE,
-                    sTrainerPicOffset[sData->isHoenn][sData->trainerCard.gender][0],
-                    sTrainerPicOffset[sData->isHoenn][sData->trainerCard.gender][1],
+                    sTrainerPicOffset[isHoenn][sData->trainerCard.gender][0],
+                    sTrainerPicOffset[isHoenn][sData->trainerCard.gender][1],
                     8,
                     WIN_TRAINER_PIC);
     }

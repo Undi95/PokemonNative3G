@@ -6954,6 +6954,9 @@ u16 FacilityClassToPicIndex(u16 facilityClass)
 
 u16 PlayerGenderToFrontTrainerPicId(u8 playerGender)
 {
+    // PokemonNative3G : option PERSO
+    if (gSaveBlock2Ptr->optionsPlayerCharacter)
+        return FacilityClassToPicIndex(playerGender != MALE ? FACILITY_CLASS_LEAF : FACILITY_CLASS_RED);
     if (playerGender != MALE)
         return FacilityClassToPicIndex(FACILITY_CLASS_MAY);
     else

@@ -2267,6 +2267,12 @@ static void DoSwitchOutAnimation(void)
 // In emerald it's possible to have a tag battle in the battle frontier facilities with AI
 // which use the front sprite for both the player and the partner as opposed to any other battles (including the one with Steven)
 // that use an animated back pic.
+// PokemonNative3G : Brice/Flora ou Red/Leaf (option PERSO)
+static u32 GetPlayerBackPicBase(void)
+{
+    return gSaveBlock2Ptr->optionsPlayerCharacter ? TRAINER_BACK_PIC_RED : TRAINER_BACK_PIC_BRENDAN;
+}
+
 static void PlayerHandleDrawTrainerPic(void)
 {
     s16 xPos, yPos;
@@ -2291,7 +2297,7 @@ static void PlayerHandleDrawTrainerPic(void)
     }
     else
     {
-        trainerPicId = gSaveBlock2Ptr->playerGender;
+        trainerPicId = gSaveBlock2Ptr->playerGender + GetPlayerBackPicBase();
     }
 
     if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
@@ -2373,7 +2379,7 @@ static void PlayerHandleTrainerSlide(void)
     }
     else
     {
-        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_BRENDAN;
+        trainerPicId = gSaveBlock2Ptr->playerGender + GetPlayerBackPicBase();
     }
 
     DecompressTrainerBackPic(trainerPicId, gActiveBattler);
