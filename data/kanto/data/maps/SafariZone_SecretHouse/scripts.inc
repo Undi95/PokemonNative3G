@@ -1,0 +1,25 @@
+KantoSafariZone_SecretHouse_MapScripts::
+	.byte 0
+
+KantoSafariZone_SecretHouse_EventScript_Attendant::
+	lock
+	faceplayer
+	goto_if_set FLAG_KANTO_GOT_HM03, KantoSafariZone_SecretHouse_EventScript_ExplainSurf
+	msgbox KantoSafariZone_SecretHouse_Text_CongratsYouveWon
+	checkitemspace ITEM_HM03
+	goto_if_eq VAR_RESULT, FALSE, KantoSafariZone_SecretHouse_EventScript_NoRoomForHM03
+	giveitem_msg KantoSafariZone_SecretHouse_Text_ReceivedHM03FromAttendant, ITEM_HM03
+	msgbox KantoSafariZone_SecretHouse_Text_ExplainSurf
+	setflag FLAG_KANTO_GOT_HM03
+	release
+	end
+
+KantoSafariZone_SecretHouse_EventScript_NoRoomForHM03::
+	msgbox KantoSafariZone_SecretHouse_Text_DontHaveRoomForPrize
+	release
+	end
+
+KantoSafariZone_SecretHouse_EventScript_ExplainSurf::
+	msgbox KantoSafariZone_SecretHouse_Text_ExplainSurf
+	release
+	end

@@ -1,0 +1,44 @@
+KantoVictoryRoad_1F_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, KantoVictoryRoad_1F_OnLoad
+	map_script MAP_SCRIPT_ON_TRANSITION, KantoVictoryRoad_1F_OnTransition
+	.byte 0
+
+KantoVictoryRoad_1F_OnLoad::
+	call_if_ne VAR_KANTO_MAP_SCENE_VICTORY_ROAD_1F, 100, KantoVictoryRoad_1F_EventScript_SetRockBarrier
+	end
+
+KantoVictoryRoad_1F_EventScript_SetRockBarrier::
+	setmetatile 12, 14, METATILE_Cave_RockBarrier_Top, 1
+	setmetatile 12, 15, METATILE_Cave_RockBarrier_Bottom, 1
+	return
+
+KantoVictoryRoad_1F_OnTransition::
+	setworldmapflag FLAG_KANTO_WORLD_MAP_VICTORY_ROAD_1F
+	end
+
+KantoVictoryRoad_1F_EventScript_FloorSwitch::
+	lockall
+	goto_if_eq VAR_KANTO_MAP_SCENE_VICTORY_ROAD_1F, 100, KantoVictoryRoad_1F_EventScript_FloorSwitchAlreadyPressed
+	setmetatile 12, 14, METATILE_Cave_Floor_Ledge_Top, 0
+	setmetatile 12, 15, METATILE_Cave_Floor_Ledge_Bottom, 0
+	playse SE_ICE_BREAK
+	special DrawWholeMapView
+	waitse
+	copyobjectxytoperm LOCALID_KANTO_VICTORY_ROAD_1F_BOULDER
+	setvar VAR_KANTO_MAP_SCENE_VICTORY_ROAD_1F, 100
+	releaseall
+	end
+
+KantoVictoryRoad_1F_EventScript_FloorSwitchAlreadyPressed::
+	releaseall
+	end
+
+KantoVictoryRoad_1F_EventScript_Naomi::
+	trainerbattle_single TRAINER_KANTO_COOLTRAINER_NAOMI, KantoVictoryRoad_1F_Text_NaomiIntro, KantoVictoryRoad_1F_Text_NaomiDefeat
+	msgbox KantoVictoryRoad_1F_Text_NaomiPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+KantoVictoryRoad_1F_EventScript_Rolando::
+	trainerbattle_single TRAINER_KANTO_COOLTRAINER_ROLANDO, KantoVictoryRoad_1F_Text_RolandoIntro, KantoVictoryRoad_1F_Text_RolandoDefeat
+	msgbox KantoVictoryRoad_1F_Text_RolandoPostBattle, MSGBOX_AUTOCLOSE
+	end

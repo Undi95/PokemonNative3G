@@ -1,0 +1,76 @@
+EventScript_SetGymTrainers::
+	switch VAR_0x8008
+	case 1, EventScript_SetPewterGymTrainers
+	case 2, EventScript_SetCeruleanGymTrainers
+	case 3, EventScript_SetVermilionGymTrainers
+	case 4, EventScript_SetCeladonGymTrainers
+	case 5, EventScript_SetFuchsiaGymTrainers
+	case 6, EventScript_SetSaffronGymTrainers
+	case 7, EventScript_SetCinnabarGymTrainers
+	case 8, EventScript_SetViridianGymTrainers
+	end
+
+EventScript_SetPewterGymTrainers::
+	settrainerflag TRAINER_KANTO_CAMPER_LIAM
+	return
+
+EventScript_SetCeruleanGymTrainers::
+	settrainerflag TRAINER_KANTO_PICNICKER_DIANA
+	settrainerflag TRAINER_KANTO_SWIMMER_MALE_LUIS
+	return
+
+EventScript_SetVermilionGymTrainers::
+	settrainerflag TRAINER_KANTO_SAILOR_DWAYNE
+	settrainerflag TRAINER_KANTO_ENGINEER_BAILY
+	settrainerflag TRAINER_KANTO_GENTLEMAN_TUCKER
+	return
+
+EventScript_SetCeladonGymTrainers::
+	settrainerflag TRAINER_KANTO_LASS_KAY
+	settrainerflag TRAINER_KANTO_LASS_LISA
+	settrainerflag TRAINER_KANTO_PICNICKER_TINA
+	settrainerflag TRAINER_KANTO_BEAUTY_BRIDGET
+	settrainerflag TRAINER_KANTO_BEAUTY_TAMIA
+	settrainerflag TRAINER_KANTO_BEAUTY_LORI
+	settrainerflag TRAINER_KANTO_COOLTRAINER_MARY
+	return
+
+EventScript_SetFuchsiaGymTrainers::
+	settrainerflag TRAINER_KANTO_TAMER_PHIL
+	settrainerflag TRAINER_KANTO_TAMER_EDGAR
+	settrainerflag TRAINER_KANTO_JUGGLER_KIRK
+	settrainerflag TRAINER_KANTO_JUGGLER_SHAWN
+	settrainerflag TRAINER_KANTO_JUGGLER_KAYDEN
+	settrainerflag TRAINER_KANTO_JUGGLER_NATE
+	return
+
+EventScript_SetSaffronGymTrainers::
+	settrainerflag TRAINER_KANTO_PSYCHIC_JOHAN
+	settrainerflag TRAINER_KANTO_PSYCHIC_TYRON
+	settrainerflag TRAINER_KANTO_PSYCHIC_CAMERON
+	settrainerflag TRAINER_KANTO_PSYCHIC_PRESTON
+	settrainerflag TRAINER_KANTO_CHANNELER_AMANDA
+	settrainerflag TRAINER_KANTO_CHANNELER_STACY
+	settrainerflag TRAINER_KANTO_CHANNELER_TASHA
+	return
+
+EventScript_SetCinnabarGymTrainers::
+	settrainerflag TRAINER_KANTO_SUPER_NERD_ERIK
+	settrainerflag TRAINER_KANTO_SUPER_NERD_AVERY
+	settrainerflag TRAINER_KANTO_SUPER_NERD_DEREK
+	settrainerflag TRAINER_KANTO_SUPER_NERD_ZAC
+	settrainerflag TRAINER_KANTO_BURGLAR_QUINN
+	settrainerflag TRAINER_KANTO_BURGLAR_RAMON
+	settrainerflag TRAINER_KANTO_BURGLAR_DUSTY
+	return
+
+EventScript_SetViridianGymTrainers::
+	settrainerflag TRAINER_KANTO_TAMER_JASON
+	settrainerflag TRAINER_KANTO_TAMER_COLE
+	settrainerflag TRAINER_KANTO_BLACK_BELT_ATSUSHI
+	settrainerflag TRAINER_KANTO_BLACK_BELT_KIYO
+	settrainerflag TRAINER_KANTO_BLACK_BELT_TAKASHI
+	settrainerflag TRAINER_KANTO_COOLTRAINER_SAMUEL
+	settrainerflag TRAINER_KANTO_COOLTRAINER_YUJI
+	settrainerflag TRAINER_KANTO_COOLTRAINER_WARREN
+	return

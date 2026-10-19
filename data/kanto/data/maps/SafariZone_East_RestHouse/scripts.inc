@@ -1,0 +1,14 @@
+KantoSafariZone_East_RestHouse_MapScripts::
+	.byte 0
+
+KantoSafariZone_East_RestHouse_EventScript_Rocker::
+	msgbox KantoSafariZone_East_Text_CaughtChanseyAllWorthwhile, MSGBOX_NPC
+	end
+
+KantoSafariZone_East_RestHouse_EventScript_Scientist::
+	msgbox KantoSafariZone_East_Text_HowManyDidYouCatch, MSGBOX_NPC
+	end
+
+KantoSafariZone_East_RestHouse_EventScript_BaldingMan::
+	msgbox KantoSafariZone_East_Text_TiredFromAllTheFun, MSGBOX_NPC
+	end

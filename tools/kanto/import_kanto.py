@@ -22,6 +22,9 @@ aucun index de tuile, de palette ou de metatile n'est renuméroté dans les cart
 Les événements (PNJ, panneaux, scripts) viendront avec la conversion des scripts.
 """
 import json, os, re, shutil, struct, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from import_scripts import ScriptConverter
 from PIL import Image
 
 EM_TILES_PRI, EM_MT_PRI, EM_PALS_PRI = 512, 512, 6
@@ -304,6 +307,11 @@ class Importer:
         imported_ids = {self.em_map_id(j['id']) for m, j in self.fr_maps.items() if m not in self.skip}
         valid_dest = imported_ids | em_map_ids | {'MAP_DYNAMIC'}
 
+        self.sc = ScriptConverter(self)
+        self.sc.collect()
+        self.sc.plan_labels()
+        tok = lambda v: re.sub(r'\b[A-Za-z_]\w*\b', self.sc.token, str(v))
+
         made, pairs, sec_primary, layouts_done, kanto_maps = [], {}, {}, set(), []
         for m, j in self.fr_maps.items():
             if m in self.skip:
@@ -341,7 +349,17 @@ class Importer:
                 out['region_map_section'] = 'MAPSEC_NONE'
             conns = [dict(c, map=self.em_map_id(c['map'])) for c in (j.get('connections') or [])]
             out['connections'] = [c for c in conns if c['map'] in imported_ids] or None
-            out['object_events'] = []
+            objs = []
+            for o in j.get('object_events', []):
+                if o.get('type', 'object') != 'object':
+                    self.warn('objets « clone » RF (non gérés par Émeraude)', em_name)
+                    continue
+                o = {k: v for k, v in o.items() if k != 'type'}
+                for k in ('local_id', 'graphics_id', 'flag', 'script', 'movement_type', 'trainer_type'):
+                    if k in o:
+                        o[k] = tok(o[k])
+                objs.append(o)
+            out['object_events'] = objs
             warps = []
             for w in j.get('warp_events', []):
                 w = dict(w, dest_map=self.em_map_id(w['dest_map']))
@@ -350,11 +368,21 @@ class Importer:
                 else:
                     self.warn('warp vers une carte absente (retiré)', w['dest_map'])
             out['warp_events'] = warps
-            out['coord_events'] = []
-            out['bg_events'] = []
+            out['coord_events'] = [{k: (tok(v) if k in ('var', 'script') else v) for k, v in c.items()}
+                                   for c in j.get('coord_events', [])]
+            bgs = []
+            for b in j.get('bg_events', []):
+                if b['type'] == 'hidden_item':
+                    if b.get('quantity', 1) != 1 or b.get('underfoot'):
+                        self.warn('objets cachés RF : quantité/« sous les pieds » ignorés', em_name)
+                    b = {k: v for k, v in b.items() if k not in ('quantity', 'underfoot')}
+                    b['flag'] = tok(b['flag'])
+                else:
+                    b = dict(b, script=tok(b['script']))
+                bgs.append(b)
+            out['bg_events'] = bgs
             os.makedirs(f'{self.em}/data/maps/{em_name}', exist_ok=True)
             write_json(f'{self.em}/data/maps/{em_name}/map.json', out)
-            write_text(f'{self.em}/data/maps/{em_name}/scripts.inc', f'{em_name}_MapScripts::\n\t.byte 0\n')
             kanto_maps.append(em_name)
 
             g = 'gMapGroup_Kanto' + self.fr_group_of[m][len('gMapGroup_'):]
@@ -365,10 +393,8 @@ class Importer:
             if out['connections']:
                 groups['connections_include_order'].append(em_name)
 
-        os.makedirs(f'{self.em}/data/kanto', exist_ok=True)
-        write_text(f'{self.em}/data/kanto/scripts.inc',
-                   '/* Scripts des cartes de Kanto (généré par tools/kanto/import_kanto.py) */\n'
-                   + ''.join(f'\t.include "data/maps/{m}/scripts.inc"\n' for m in kanto_maps))
+        shutil.rmtree(f'{self.em}/data/kanto', ignore_errors=True)
+        self.sc.run()
         write_json(layouts_path, em_layouts)
         write_json(groups_path, groups)
         self.write_tileset_sources(made)

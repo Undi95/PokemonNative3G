@@ -1,0 +1,14 @@
+KantoSafariZone_North_RestHouse_MapScripts::
+	.byte 0
+
+KantoSafariZone_North_RestHouse_EventScript_Fisher::
+	msgbox KantoSafariZone_East_Text_PrizeInDeepestPartOfSafariZone, MSGBOX_NPC
+	end
+
+KantoSafariZone_North_RestHouse_EventScript_Scientist::
+	msgbox KantoSafariZone_East_Text_KeepAnyItemFoundOnSafari, MSGBOX_NPC
+	end
+
+KantoSafariZone_North_RestHouse_EventScript_Gentleman::
+	msgbox KantoSafariZone_East_Text_MyEeveeEvolvedIntoFlareon, MSGBOX_NPC
+	end

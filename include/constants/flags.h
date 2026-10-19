@@ -1657,4 +1657,8 @@
 #define FLAG_TEMP_REGICE_PUZZLE_FAILED          FLAG_TEMP_3
 #define FLAG_TEMP_HIDE_MIRAGE_ISLAND_BERRY_TREE FLAG_TEMP_11
 
+// Flags et variables de Kanto (bloc de sauvegarde Kanto, tools/kanto)
+#include "constants/kanto.h"
+#include "constants/kanto_flags_vars.h"
+
 #endif // GUARD_CONSTANTS_FLAGS_H

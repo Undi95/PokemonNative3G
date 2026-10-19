@@ -1,0 +1,37 @@
+EventScript_SetDefeatedEliteFourFlagsVars::
+	clearflag FLAG_KANTO_HIDE_POSTGAME_GOSSIPERS
+	call EventScript_ResetEliteFour
+	special Script_UpdateTrainerFanClubGameClear
+	specialvar VAR_RESULT, IsNationalPokedexEnabled
+	call_if_eq VAR_RESULT, FALSE, EventScript_SetReadyTryGiveNationalDexScene
+	call EventScript_ResetLegendaries
+	return
+
+EventScript_SetReadyTryGiveNationalDexScene::
+	setvar VAR_KANTO_MAP_SCENE_PALLET_TOWN_OAK, 2
+	return
+
+EventScript_ResetLegendaries::
+	clearflag FLAG_KANTO_LUGIA_FLEW_AWAY
+	clearflag FLAG_KANTO_HO_OH_FLEW_AWAY
+	clearflag FLAG_KANTO_DEOXYS_FLEW_AWAY
+	return
+
+EventScript_ResetEliteFourEnd::
+	call EventScript_ResetEliteFour
+	end
+
+EventScript_ResetEliteFour::
+	clearflag FLAG_KANTO_DEFEATED_LORELEI
+	clearflag FLAG_KANTO_DEFEATED_BRUNO
+	clearflag FLAG_KANTO_DEFEATED_AGATHA
+	clearflag FLAG_KANTO_DEFEATED_LANCE
+	clearflag FLAG_KANTO_DEFEATED_CHAMP
+	cleartrainerflag TRAINER_KANTO_CHAMPION_FIRST_SQUIRTLE
+	cleartrainerflag TRAINER_KANTO_CHAMPION_FIRST_BULBASAUR
+	cleartrainerflag TRAINER_KANTO_CHAMPION_FIRST_CHARMANDER
+	cleartrainerflag TRAINER_KANTO_CHAMPION_REMATCH_SQUIRTLE
+	cleartrainerflag TRAINER_KANTO_CHAMPION_REMATCH_BULBASAUR
+	cleartrainerflag TRAINER_KANTO_CHAMPION_REMATCH_CHARMANDER
+	setvar VAR_KANTO_MAP_SCENE_POKEMON_LEAGUE, 0
+	return

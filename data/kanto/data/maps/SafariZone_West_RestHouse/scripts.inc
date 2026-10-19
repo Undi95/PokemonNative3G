@@ -1,0 +1,14 @@
+KantoSafariZone_West_RestHouse_MapScripts::
+	.byte 0
+
+KantoSafariZone_West_RestHouse_EventScript_Man::
+	msgbox KantoSafariZone_West_Text_BaitMakesMonStickAround, MSGBOX_NPC
+	end
+
+KantoSafariZone_West_RestHouse_EventScript_Scientist::
+	msgbox KantoSafariZone_West_Text_RocksMakeMonRunButEasierCatch, MSGBOX_NPC
+	end
+
+KantoSafariZone_West_RestHouse_EventScript_CooltrainerF::
+	msgbox KantoSafariZone_West_Text_HikedLotsDidntSeeMonIWanted, MSGBOX_NPC
+	end

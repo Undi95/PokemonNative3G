@@ -864,4 +864,7 @@
 #define TRAINERS_COUNT                      855
 #define MAX_TRAINERS_COUNT                  864
 
+// Dresseurs de Kanto (tools/kanto)
+#include "constants/kanto_trainers.h"
+
 #endif  // GUARD_CONSTANTS_OPPONENTS_H

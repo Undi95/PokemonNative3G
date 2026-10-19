@@ -1,0 +1,19 @@
+KantoSafariZone_Center_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, KantoSafariZone_Center_OnTransition
+	.byte 0
+
+KantoSafariZone_Center_OnTransition::
+	setworldmapflag FLAG_KANTO_WORLD_MAP_SAFARI_ZONE_CENTER
+	end
+
+KantoSafariZone_Center_EventScript_RestHouseSign::
+	msgbox KantoSafariZone_Center_Text_RestHouse, MSGBOX_SIGN
+	end
+
+KantoSafariZone_Center_EventScript_TrainerTips::
+	msgbox KantoSafariZone_Center_Text_PressStartToCheckTime, MSGBOX_SIGN
+	end
+
+KantoSafariZone_Center_EventScript_AreaSign::
+	msgbox KantoSafariZone_Center_Text_CenterArea, MSGBOX_SIGN
+	end

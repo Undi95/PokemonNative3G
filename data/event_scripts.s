@@ -88,6 +88,8 @@ gSpecialVars::
 	ptrvalue gSpecialVar_MonBoxPos
 	ptrvalue gSpecialVar_Unused_0x8014
 	ptrvalue gTrainerBattleOpponent_A
+	ptrvalue gSpecialVar_TextColor
+	ptrvalue gSpecialVar_PrevTextColor
 
 	.purgem def_special
 	.set ALLOCATE_SPECIAL_TABLE, 1

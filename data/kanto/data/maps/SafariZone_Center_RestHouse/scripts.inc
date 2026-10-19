@@ -1,0 +1,10 @@
+KantoSafariZone_Center_RestHouse_MapScripts::
+	.byte 0
+
+KantoSafariZone_Center_RestHouse_EventScript_Sara::
+	msgbox KantoSafariZone_Center_Text_WhereDidErikGo, MSGBOX_NPC
+	end
+
+KantoSafariZone_Center_RestHouse_EventScript_Scientist::
+	msgbox KantoSafariZone_Center_Text_CatchingMonsAsGifts, MSGBOX_NPC
+	end

@@ -1,0 +1,60 @@
+KantoVictoryRoad_3F_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, KantoVictoryRoad_3F_OnLoad
+	.byte 0
+
+KantoVictoryRoad_3F_OnLoad::
+	call_if_ne VAR_KANTO_MAP_SCENE_VICTORY_ROAD_3F, 100, KantoVictoryRoad_3F_EventScript_SetRockBarrier
+	end
+
+KantoVictoryRoad_3F_EventScript_SetRockBarrier::
+	setmetatile 12, 12, METATILE_Cave_RockBarrier_Top, 1
+	setmetatile 12, 13, METATILE_Cave_RockBarrier_Bottom, 1
+	return
+
+KantoVictoryRoad_3F_EventScript_FloorSwitch::
+	lockall
+	goto_if_eq VAR_KANTO_MAP_SCENE_VICTORY_ROAD_3F, 100, KantoVictoryRoad_3F_EventScript_FloorSwitchAlreadyPressed
+	setmetatile 12, 12, METATILE_Cave_Floor_Ledge_Top, 0
+	setmetatile 12, 13, METATILE_Cave_Floor_Ledge_Bottom, 0
+	playse SE_ICE_BREAK
+	special DrawWholeMapView
+	waitse
+	copyobjectxytoperm LOCALID_KANTO_VICTORY_ROAD_3F_BOULDER1
+	copyobjectxytoperm LOCALID_KANTO_VICTORY_ROAD_3F_BOULDER2
+	setvar VAR_KANTO_MAP_SCENE_VICTORY_ROAD_3F, 100
+	releaseall
+	end
+
+KantoVictoryRoad_3F_EventScript_FloorSwitchAlreadyPressed::
+	releaseall
+	end
+
+KantoVictoryRoad_3F_EventScript_George::
+	trainerbattle_single TRAINER_KANTO_COOLTRAINER_GEORGE, KantoVictoryRoad_3F_Text_GeorgeIntro, KantoVictoryRoad_3F_Text_GeorgeDefeat
+	msgbox KantoVictoryRoad_3F_Text_GeorgePostBattle, MSGBOX_AUTOCLOSE
+	end
+
+KantoVictoryRoad_3F_EventScript_Colby::
+	trainerbattle_single TRAINER_KANTO_COOLTRAINER_COLBY, KantoVictoryRoad_3F_Text_ColbyIntro, KantoVictoryRoad_3F_Text_ColbyDefeat
+	msgbox KantoVictoryRoad_3F_Text_ColbyPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+KantoVictoryRoad_3F_EventScript_Caroline::
+	trainerbattle_single TRAINER_KANTO_COOLTRAINER_CAROLINE, KantoVictoryRoad_3F_Text_CarolineIntro, KantoVictoryRoad_3F_Text_CarolineDefeat
+	msgbox KantoVictoryRoad_3F_Text_CarolinePostBattle, MSGBOX_AUTOCLOSE
+	end
+
+KantoVictoryRoad_3F_EventScript_Alexa::
+	trainerbattle_single TRAINER_KANTO_COOLTRAINER_ALEXA, KantoVictoryRoad_3F_Text_AlexaIntro, KantoVictoryRoad_3F_Text_AlexaDefeat
+	msgbox KantoVictoryRoad_3F_Text_AlexaPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+KantoVictoryRoad_3F_EventScript_Ray::
+	trainerbattle_double TRAINER_KANTO_COOL_COUPLE_RAY_TYRA, KantoVictoryRoad_3F_Text_RayIntro, KantoVictoryRoad_3F_Text_RayDefeat, KantoVictoryRoad_3F_Text_RayNotEnoughMons
+	msgbox KantoVictoryRoad_3F_Text_RayPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+KantoVictoryRoad_3F_EventScript_Tyra::
+	trainerbattle_double TRAINER_KANTO_COOL_COUPLE_RAY_TYRA, KantoVictoryRoad_3F_Text_TyraIntro, KantoVictoryRoad_3F_Text_TyraDefeat, KantoVictoryRoad_3F_Text_TyraNotEnoughMons
+	msgbox KantoVictoryRoad_3F_Text_TyraPostBattle, MSGBOX_AUTOCLOSE
+	end

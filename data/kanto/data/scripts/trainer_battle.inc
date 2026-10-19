@@ -1,0 +1,140 @@
+EventScript_DoTrainerBattleFromApproach::
+	lock
+	special PlayTrainerEncounterMusic
+	special EndTrainerApproach
+	waitstate
+	goto Kanto_EventScript_DoTrainerBattle
+
+Kanto_EventScript_TryDoNormalTrainerBattle::
+	lock
+	faceplayer
+	applymovement VAR_LAST_TALKED, Kanto_Movement_RevealTrainer
+	waitmovement 0
+	specialvar VAR_RESULT, Script_HasTrainerBeenFought
+	goto_if_ne VAR_RESULT, FALSE, EventScript_NoTrainerBattle
+	special PlayTrainerEncounterMusic
+	special SetUpTrainerMovement
+	goto Kanto_EventScript_DoTrainerBattle
+
+EventScript_NoTrainerBattle::
+	gotopostbattlescript
+
+Kanto_EventScript_TryDoDoubleTrainerBattle::
+	lock
+	faceplayer
+	call Kanto_EventScript_RevealTrainer
+	specialvar VAR_RESULT, Script_HasTrainerBeenFought
+	goto_if_ne VAR_RESULT, FALSE, Kanto_EventScript_NoDoubleTrainerBattle
+	special HasEnoughMonsForDoubleBattle
+	goto_if_ne VAR_RESULT, PLAYER_HAS_TWO_USABLE_MONS, Kanto_EventScript_NotEnoughMonsForDoubleBattle
+	special PlayTrainerEncounterMusic
+	special SetUpTrainerMovement
+	goto Kanto_EventScript_DoTrainerBattle
+
+Kanto_EventScript_NotEnoughMonsForDoubleBattle::
+	special ShowTrainerCantBattleSpeech
+	waitmessage
+	waitbuttonpress
+	release
+	end
+
+Kanto_EventScript_NoDoubleTrainerBattle::
+	gotopostbattlescript
+
+Kanto_EventScript_DoNoIntroTrainerBattle::
+	applymovement VAR_LAST_TALKED, Kanto_Movement_RevealTrainer
+	waitmovement 0
+	special PlayTrainerEncounterMusic
+	goto_if_questlog EventScript_EndQuestLogBattle
+	dotrainerbattle
+	gotopostbattlescript
+
+Kanto_EventScript_TryDoRematchBattle::
+	call Kanto_EventScript_RevealTrainer
+	specialvar VAR_RESULT, IsTrainerReadyForRematch
+	goto_if_eq VAR_RESULT, FALSE, EventScript_NoRematchBattle
+	special PlayTrainerEncounterMusic
+	special SetUpTrainerMovement
+	special ShowTrainerIntroSpeech
+	waitmessage
+	waitbuttonpress
+	goto_if_questlog EventScript_EndQuestLogRematch
+	special QuestLog_CutRecording
+	special StartRematchBattle
+	waitstate
+	releaseall
+	end
+
+EventScript_NoRematchBattle::
+	gotopostbattlescript
+
+Kanto_EventScript_TryDoDoubleRematchBattle::
+	specialvar VAR_RESULT, IsTrainerReadyForRematch
+	goto_if_eq VAR_RESULT, FALSE, EventScript_NoDoubleRematchBattle
+	special HasEnoughMonsForDoubleBattle
+	goto_if_ne VAR_RESULT, PLAYER_HAS_TWO_USABLE_MONS, Kanto_EventScript_NotEnoughMonsForDoubleRematchBattle
+	special PlayTrainerEncounterMusic
+	special SetUpTrainerMovement
+	special ShowTrainerIntroSpeech
+	waitmessage
+	waitbuttonpress
+	goto_if_questlog EventScript_EndQuestLogRematch
+	special QuestLog_CutRecording
+	special StartRematchBattle
+	waitstate
+	releaseall
+	end
+
+EventScript_NoDoubleRematchBattle::
+	gotopostbattlescript
+
+Kanto_EventScript_NotEnoughMonsForDoubleRematchBattle::
+	special ShowTrainerCantBattleSpeech
+	waitmessage
+	waitbuttonpress
+	release
+	end
+
+EventScript_EndQuestLogRematch::
+	releaseall
+	end
+
+Kanto_EventScript_RevealTrainer::
+	applymovement VAR_LAST_TALKED, Kanto_Movement_RevealTrainer
+	waitmovement 0
+	return
+
+Kanto_Movement_RevealTrainer::
+	reveal_trainer
+	step_end
+
+Kanto_EventScript_DoTrainerBattle::
+	special ShowTrainerIntroSpeech
+	waitmessage
+	waitbuttonpress
+	goto_if_questlog EventScript_EndQuestLogBattle
+	dotrainerbattle
+	specialvar VAR_RESULT, GetTrainerBattleMode
+	goto_if_eq VAR_RESULT, TRAINER_BATTLE_SINGLE, Kanto_EventScript_EndTrainerBattle
+	goto_if_eq VAR_RESULT, TRAINER_BATTLE_CONTINUE_SCRIPT, EventScript_EndTrainerBattleContinueScript
+	goto_if_eq VAR_RESULT, TRAINER_BATTLE_CONTINUE_SCRIPT_NO_MUSIC, EventScript_EndTrainerBattleContinueScript
+	goto_if_eq VAR_RESULT, TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE, EventScript_EndTrainerBattleContinueScript
+	goto_if_eq VAR_RESULT, TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE_NO_MUSIC, EventScript_EndTrainerBattleContinueScript
+Kanto_EventScript_EndTrainerBattle::
+	releaseall
+	end
+
+EventScript_EndTrainerBattleContinueScript::
+	gotobeatenscript
+
+EventScript_EndQuestLogBattle::
+	special SetBattledTrainerFlag
+	releaseall
+	end
+
+Kanto_Std_MsgboxAutoclose::
+	message 0x0
+	waitmessage
+	waitbuttonpress
+	release
+	return

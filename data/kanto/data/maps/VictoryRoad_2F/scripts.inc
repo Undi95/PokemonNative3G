@@ -1,0 +1,77 @@
+KantoVictoryRoad_2F_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, KantoVictoryRoad_2F_OnLoad
+	.byte 0
+
+KantoVictoryRoad_2F_OnLoad::
+	call_if_ne VAR_KANTO_MAP_SCENE_VICTORY_ROAD_2F_BOULDER1, 100, KantoVictoryRoad_2F_EventScript_SetRockBarrier1
+	call_if_ne VAR_KANTO_MAP_SCENE_VICTORY_ROAD_2F_BOULDER2, 100, KantoVictoryRoad_2F_EventScript_SetRockBarrier2
+	end
+
+KantoVictoryRoad_2F_EventScript_SetRockBarrier1::
+	setmetatile 13, 10, METATILE_Cave_RockBarrier_Top, 1
+	setmetatile 13, 11, METATILE_Cave_RockBarrier_Bottom, 1
+	return
+
+KantoVictoryRoad_2F_EventScript_SetRockBarrier2::
+	setmetatile 33, 16, METATILE_Cave_RockBarrier_Top, 1
+	setmetatile 33, 17, METATILE_Cave_RockBarrier_Bottom, 1
+	return
+
+KantoVictoryRoad_2F_EventScript_FloorSwitch1::
+	lockall
+	goto_if_eq VAR_KANTO_MAP_SCENE_VICTORY_ROAD_2F_BOULDER1, 100, KantoVictoryRoad_2F_EventScript_FloorSwitch1AlreadyPressed
+	setmetatile 13, 10, METATILE_Cave_Floor_Ledge_Top, 0
+	setmetatile 13, 11, METATILE_Cave_Floor_Ledge_Bottom, 0
+	playse SE_ICE_BREAK
+	special DrawWholeMapView
+	waitse
+	copyobjectxytoperm LOCALID_KANTO_VICTORY_ROAD_2F_BOULDER1
+	setvar VAR_KANTO_MAP_SCENE_VICTORY_ROAD_2F_BOULDER1, 100
+	releaseall
+	end
+
+KantoVictoryRoad_2F_EventScript_FloorSwitch1AlreadyPressed::
+	releaseall
+	end
+
+KantoVictoryRoad_2F_EventScript_FloorSwitch2::
+	lockall
+	goto_if_eq VAR_KANTO_MAP_SCENE_VICTORY_ROAD_2F_BOULDER2, 100, KantoVictoryRoad_2F_EventScript_FloorSwitch2AlreadyPressed
+	setmetatile 33, 16, METATILE_Cave_Floor_Ledge_Top, 0
+	setmetatile 33, 17, METATILE_Cave_Floor_Ledge_Bottom, 0
+	playse SE_ICE_BREAK
+	special DrawWholeMapView
+	waitse
+	copyobjectxytoperm LOCALID_KANTO_VICTORY_ROAD_2F_BOULDER2
+	setvar VAR_KANTO_MAP_SCENE_VICTORY_ROAD_2F_BOULDER2, 100
+	releaseall
+	end
+
+KantoVictoryRoad_2F_EventScript_FloorSwitch2AlreadyPressed::
+	releaseall
+	end
+
+KantoVictoryRoad_2F_EventScript_Dawson::
+	trainerbattle_single TRAINER_KANTO_POKEMANIAC_DAWSON, KantoVictoryRoad_2F_Text_DawsonIntro, KantoVictoryRoad_2F_Text_DawsonDefeat
+	msgbox KantoVictoryRoad_2F_Text_DawsonPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+KantoVictoryRoad_2F_EventScript_Daisuke::
+	trainerbattle_single TRAINER_KANTO_BLACK_BELT_DAISUKE, KantoVictoryRoad_2F_Text_DaisukeIntro, KantoVictoryRoad_2F_Text_DaisukeDefeat
+	msgbox KantoVictoryRoad_2F_Text_DaisukePostBattle, MSGBOX_AUTOCLOSE
+	end
+
+KantoVictoryRoad_2F_EventScript_Nelson::
+	trainerbattle_single TRAINER_KANTO_JUGGLER_NELSON, KantoVictoryRoad_2F_Text_NelsonIntro, KantoVictoryRoad_2F_Text_NelsonDefeat
+	msgbox KantoVictoryRoad_2F_Text_NelsonPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+KantoVictoryRoad_2F_EventScript_Gregory::
+	trainerbattle_single TRAINER_KANTO_JUGGLER_GREGORY, KantoVictoryRoad_2F_Text_GregoryIntro, KantoVictoryRoad_2F_Text_GregoryDefeat
+	msgbox KantoVictoryRoad_2F_Text_GregoryPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+KantoVictoryRoad_2F_EventScript_Vincent::
+	trainerbattle_single TRAINER_KANTO_TAMER_VINCENT, KantoVictoryRoad_2F_Text_VincentIntro, KantoVictoryRoad_2F_Text_VincentDefeat
+	msgbox KantoVictoryRoad_2F_Text_VincentPostBattle, MSGBOX_AUTOCLOSE
+	end
