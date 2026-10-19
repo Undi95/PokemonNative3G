@@ -7,7 +7,7 @@ PokemonLeague_LoreleisRoom_Text_Intro::
 	.string "Tes POKéMON zeront à ma merzi\n"
 	.string "une fois gelés!\p"
 	.string "Ach! Ach! Ach!\n"
-	.string "Z'est parti!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "Z'est parti!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 PokemonLeague_LoreleisRoom_Text_RematchIntro::
 	.string "Bienvenue à la LIGUE POKéMON!\p"
@@ -19,7 +19,7 @@ PokemonLeague_LoreleisRoom_Text_RematchIntro::
 	.string "Tes POKéMON zeront à ma merzi\n"
 	.string "une fois gelés!\p"
 	.string "Ach! Ach! Ach!\n"
-	.string "Z'est reparti!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "Z'est reparti!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 PokemonLeague_LoreleisRoom_Text_Defeat::
 	.string "Za devait pas ze passer comme za!$"

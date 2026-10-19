@@ -10,7 +10,7 @@ PokemonLeague_AgathasRoom_Text_Intro::
 	.string "POKéMON servent à combattre!\p"
 	.string "{PLAYER}! Je vais te montrer\n"
 	.string "comment les grands DRESSEURS\l"
-	.string "combattent!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "combattent!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 PokemonLeague_AgathasRoom_Text_RematchIntro::
 	.string "Je suis AGATHA du CONSEIL 4!\p"
@@ -24,7 +24,7 @@ PokemonLeague_AgathasRoom_Text_RematchIntro::
 	.string "POKéMON servent à combattre!\p"
 	.string "{PLAYER}! Je vais te montrer\n"
 	.string "comment les grands DRESSEURS\l"
-	.string "combattent!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "combattent!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 PokemonLeague_AgathasRoom_Text_Defeat::
 	.string "Oh ho!\n"

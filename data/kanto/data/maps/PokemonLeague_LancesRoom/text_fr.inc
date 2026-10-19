@@ -12,7 +12,7 @@ PokemonLeague_LancesRoom_Text_Intro::
 	.string "Ils sont presque invincibles!\p"
 	.string "Le glas de la défaite et de la\n"
 	.string "honte sonne pour toi…\p"
-	.string "L'entends-tu, {PLAYER}!?{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "L'entends-tu, {PLAYER}!?{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 PokemonLeague_LancesRoom_Text_RematchIntro::
 	.string "Ah! C'est encore toi,\n"
@@ -28,7 +28,7 @@ PokemonLeague_LancesRoom_Text_RematchIntro::
 	.string "Ils sont presque invincibles!\p"
 	.string "Le glas de la défaite et de la\n"
 	.string "honte sonne pour toi…\p"
-	.string "L'entends-tu, {PLAYER}?{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "L'entends-tu, {PLAYER}?{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 PokemonLeague_LancesRoom_Text_Defeat::
 	.string "Incroyable!\p"

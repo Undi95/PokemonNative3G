@@ -7,7 +7,7 @@ CinnabarIsland_Gym_Text_BlaineIntro::
 	.string "réduire en cendres!\p"
 	.string "Haha! J'espère que tu as de\n"
 	.string "l'ANTI-BRULE! Y va bientôt faire\l"
-	.string "très chaud!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "très chaud!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 CinnabarIsland_Gym_Text_BlaineDefeat::
 	.string "Vlouff!\n"

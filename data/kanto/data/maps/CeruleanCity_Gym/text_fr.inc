@@ -6,7 +6,7 @@ CeruleanCity_Gym_Text_MistyIntro::
 	.string "C'est quoi ta tactique pour\n"
 	.string "capturer les POKéMON sauvages?\p"
 	.string "Ma tactique? Attaquer\n"
-	.string "avec des POKéMON EAU!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "avec des POKéMON EAU!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 CeruleanCity_Gym_Text_ExplainTM03::
 	.string "La CT03 contient VIBRAQUA!\p"

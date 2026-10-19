@@ -9,7 +9,7 @@ ViridianCity_Gym_Text_GiovanniIntro::
 	.string "Une fois de plus tu oses me défier,\n"
 	.string "moi, le grand GIOVANNI!\p"
 	.string "Mais aujourd'hui, tu vas\n"
-	.string "le regretter!{PLAY_BGM MUS_ENCOUNTER_ROCKET}$"
+	.string "le regretter!{PLAY_BGM MUS_RG_ENCOUNTER_ROCKET}$"
 
 ViridianCity_Gym_Text_GiovanniDefeat::
 	.string "Ah!\n"

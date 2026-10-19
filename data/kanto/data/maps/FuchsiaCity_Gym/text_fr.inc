@@ -5,7 +5,7 @@ FuchsiaCity_Gym_Text_KogaIntro::
 	.string "Par l'enfer, par le sang, par\n"
 	.string "l'acier, j'vais gagner!\p"
 	.string "Prépare-toi à affronter mes\n"
-	.string "terribles POKéMON POISON!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "terribles POKéMON POISON!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 FuchsiaCity_Gym_Text_KogaDefeat::
 	.string "… heu?\n"

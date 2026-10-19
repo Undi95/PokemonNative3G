@@ -8,7 +8,7 @@ PewterCity_Gym_Text_BrockIntro::
 	.string "Tu veux toujours te battre avec\n"
 	.string "moi? Même en sachant que\l"
 	.string "tu vas perdre? \p"
-	.string "Très bien. En garde!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "Très bien. En garde!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 /* NOTE: This defeat text actually causes a buffer overflow. It's too long for the gDisplayedStringBattle */
 /* buffer that it's put into, and it stomps all over the gBattleTextBuffs after, as well as the otherwise */

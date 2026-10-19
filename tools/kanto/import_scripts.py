@@ -139,7 +139,9 @@ class ScriptConverter:
         for line in text.splitlines():
             s = line.lstrip()
             if s.startswith('.string') or s.startswith('.braille'):
-                out.append(line)
+                # musiques citées dans le texte ({PLAY_BGM MUS_X}) : même correspondance
+                out.append(re.sub(r'\{(PLAY_BGM|PLAY_FANFARE) (MUS_\w+)\}',
+                                  lambda m: '{' + m.group(1) + ' ' + self.imp.music(m.group(2)) + '}', line))
                 continue
             code, comment = line, ''
             ci = line.find('@')

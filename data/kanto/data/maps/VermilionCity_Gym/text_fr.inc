@@ -9,7 +9,7 @@ VermilionCity_Gym_Text_LtSurgeIntro::
 	.string "Ils ont paralysé mes ennemis avec\n"
 	.string "leurs éclairs! Comme je te le dis!\p"
 	.string "Et y va t'arriver la même chose!\n"
-	.string "Compte tes dents! Tu vas morfler!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "Compte tes dents! Tu vas morfler!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 VermilionCity_Gym_Text_LtSurgePostBattle::
 	.string "Un p'tit conseil!\p"

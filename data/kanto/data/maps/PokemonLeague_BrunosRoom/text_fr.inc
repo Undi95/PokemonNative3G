@@ -8,7 +8,7 @@ PokemonLeague_BrunosRoom_Text_Intro::
 	.string "{PLAYER}!\p"
 	.string "Ton équipe…\n"
 	.string "J'vais en faire du yaourt!\p"
-	.string "A table!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "A table!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 PokemonLeague_BrunosRoom_Text_RematchIntro::
 	.string "Je suis ALDO du CONSEIL 4!\p"
@@ -20,7 +20,7 @@ PokemonLeague_BrunosRoom_Text_RematchIntro::
 	.string "{PLAYER}!\p"
 	.string "Ton équipe…\n"
 	.string "J'vais en faire du yaourt!\p"
-	.string "A table!{PLAY_BGM MUS_ENCOUNTER_GYM_LEADER}$"
+	.string "A table!{PLAY_BGM MUS_RG_ENCOUNTER_GYM_LEADER}$"
 
 PokemonLeague_BrunosRoom_Text_Defeat::
 	.string "Pourquoi?\n"

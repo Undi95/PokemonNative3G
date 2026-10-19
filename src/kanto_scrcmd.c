@@ -3,6 +3,7 @@
 // getbraillestringwidth reçoit un nouvel opcode à la fin de la table.
 #include "global.h"
 #include "event_data.h"
+#include "overworld.h"
 #include "script.h"
 #include "string_util.h"
 #include "text.h"
