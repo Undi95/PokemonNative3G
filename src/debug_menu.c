@@ -23,6 +23,8 @@
 #include "constants/species.h"
 #include "event_data.h"
 #include "pokemon.h"
+#include "item.h"
+#include "constants/characters.h"
 
 bool8 gDebugNoClip = FALSE;
 bool8 gDebugNoEncounters = FALSE;
@@ -35,6 +37,7 @@ enum {
     DEBUG_ENCOUNTERS,
     DEBUG_HEAL,
     DEBUG_GIVE_MON,
+    DEBUG_GIVE_ITEMS,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -98,6 +101,28 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_SaffronGym, MAP_GROUP(MAP_SAFFRON_CITY_GYM), MAP_NUM(MAP_SAFFRON_CITY_GYM), 14, 22}, // téléporteurs
 };
 
+// Tous les objets du jeu (Hoenn + Kanto) : 99 de chaque (1 pour les objets rares et les CS).
+// Les poches du sac sont limitées : ce qui ne rentre pas va dans le PC (s'il reste de la place).
+static void DebugMenu_GiveAllItems(void)
+{
+    u16 i, count;
+    for (i = 1; i < ITEMS_COUNT; i++)
+    {
+        const u8 *name = GetItemName(i);
+        u8 pocket = GetItemPocket(i);
+        if (name[0] == CHAR_QUESTION_MARK || pocket == POCKET_NONE)
+            continue;
+        if (pocket == POCKET_KEY_ITEMS || (i >= ITEM_HM01 && i <= ITEM_HM08))
+            count = 1;
+        else
+            count = 99;
+        if (CheckBagHasItem(i, count))
+            continue;
+        if (!AddBagItem(i, count))
+            AddPCItem(i, count);
+    }
+}
+
 static const u8 sText_Warp[] = _("Téléportation");
 static const u8 sText_NoClipOn[] = _("Murs : ignorés");
 static const u8 sText_NoClipOff[] = _("Murs : normaux");
@@ -105,6 +130,7 @@ static const u8 sText_EncOn[] = _("Rencontres : OUI");
 static const u8 sText_EncOff[] = _("Rencontres : NON");
 static const u8 sText_Heal[] = _("Soigner l'équipe");
 static const u8 sText_GiveMon[] = _("Recevoir MEWTWO");
+static const u8 sText_GiveItems[] = _("Ajout objets");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -142,6 +168,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_ENCOUNTERS].name = gDebugNoEncounters ? sText_EncOff : sText_EncOn;
         sItems[DEBUG_HEAL].name = sText_Heal;
         sItems[DEBUG_GIVE_MON].name = sText_GiveMon;
+        sItems[DEBUG_GIVE_ITEMS].name = sText_GiveItems;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -248,6 +275,10 @@ static void Task_DebugMenu(u8 taskId)
             SetMonData(mon, MON_DATA_PP4, &pp1);
         }
         FlagSet(FLAG_SYS_POKEMON_GET);
+        PlaySE(SE_USE_ITEM);
+        break;
+    case DEBUG_GIVE_ITEMS:
+        DebugMenu_GiveAllItems();
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_CLOSE:
