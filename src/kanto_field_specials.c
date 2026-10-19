@@ -4,6 +4,8 @@
 #include "kanto_save.h"
 #include "constants/kanto/fame_checker.h"
 #include "constants/songs.h"
+#include "data.h"
+#include "field_specials.h"
 #include "constants/species.h"
 #include "constants/vars.h"
 #include "bike.h"
@@ -85,6 +87,8 @@ void SetFlavorTextFlagFromSpecialVars(void)
         UpdatePickStateFromSpecialVar8005();
     }
 }
+
+u16 GetKantoPokedexCount(u8 caseID);
 
 // field_specials.c (RF)
 #define tXtrans   data[0]
@@ -294,7 +298,7 @@ u16 PlayerPartyContainsSpeciesWithPlayerID(void)
     for (i = 0; i < playerCount; i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == gSpecialVar_0x8004
-            && GetPlayerTrainerId() == GetMonData(&gPlayerParty[i], MON_DATA_OT_ID, NULL))
+            && T1_READ_32(gSaveBlock2Ptr->playerTrainerId) == GetMonData(&gPlayerParty[i], MON_DATA_OT_ID, NULL))
             return TRUE;
     }
     return FALSE;
