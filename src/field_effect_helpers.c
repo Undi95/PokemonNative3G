@@ -179,6 +179,7 @@ u8 CreateWarpArrowSprite(void)
     {
         struct Sprite *sprite = &gSprites[spriteId];
         sprite->oam.priority = 1;
+        sprite->oam.paletteNum = GetPlayerIconPaletteNum();
         sprite->coordOffsetEnabled = TRUE;
         sprite->invisible = TRUE;
     }

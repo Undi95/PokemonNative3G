@@ -288,5 +288,5 @@ const u8 gTrainerBackPic_Wally[] = INCGFX_U8("graphics/trainers/back_pics/wally.
 const u8 gKantoTrainerBackPic_OldMan[] = INCGFX_U8("graphics/kanto/trainers/back_pics/old_man_back_pic.png", ".4bpp");
 const u8 gTrainerBackPic_Steven[] = INCGFX_U8("graphics/trainers/back_pics/steven.png", ".4bpp");
 
-const u32 gTrainerBackPicPalette_Red[] = INCGFX_U32("graphics/trainers/back_pics/red.png", ".gbapal.lz");
-const u32 gTrainerBackPicPalette_Leaf[] = INCGFX_U32("graphics/trainers/back_pics/leaf.png", ".gbapal.lz");
+const u32 gTrainerBackPicPalette_Red[] = INCGFX_U32("graphics/kanto/trainers/back_pics/red_back_pic.pal", ".gbapal.lz"); // palette Rouge Feu (celle du .png est fausse pour les frames 2-3)
+const u32 gTrainerBackPicPalette_Leaf[] = INCGFX_U32("graphics/kanto/trainers/back_pics/leaf_back_pic.pal", ".gbapal.lz"); // palette Rouge Feu

@@ -2591,6 +2591,20 @@ void OverrideSecretBaseDecorationSpriteScript(u8 localId, u8 mapNum, u8 mapGroup
     }
 }
 
+// Option PERSO Red/Leaf : la case 0 contient la palette de Red/Leaf, dont la couleur 14 n'est pas
+// blanche. Les icônes d'Émeraude qui lisent la case 0 (« ! », « ? », flèche de sortie) prennent
+// alors la palette de Brice, chargée à part.
+u8 GetPlayerIconPaletteNum(void)
+{
+    struct SpritePalette pal = {gObjectEventPal_Brendan, OBJ_EVENT_PAL_TAG_BRENDAN};
+    u8 index;
+
+    if (!gSaveBlock2Ptr->optionsPlayerCharacter)
+        return 0;
+    index = LoadSpritePalette(&pal);
+    return index == 0xFF ? 0 : index;
+}
+
 void InitObjectEventPalettes(u8 reflectionType)
 {
     FreeAndReserveObjectSpritePalettes();
