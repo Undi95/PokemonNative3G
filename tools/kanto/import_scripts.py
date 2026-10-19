@@ -187,10 +187,7 @@ class ScriptConverter:
             text = text.replace('GUARD_CONSTANTS_', 'GUARD_CONSTANTS_KANTO_')
             write(f'{self.em}/include/constants/kanto/{h}', '// Copié de Rouge Feu par tools/kanto/import_scripts.py\n' + text)
         tutors = re.findall(r'^#define MOVETUTOR_\w+\s+\d+', read(f'{self.fr}/include/constants/moves.h'), re.M)
-        write(f'{self.em}/include/constants/kanto/move_tutors.h', '// Copié de Rouge Feu par tools/kanto/import_scripts.py
-' + '
-'.join(tutors) + '
-')
+        write(f'{self.em}/include/constants/kanto/move_tutors.h', '// Copié de Rouge Feu\n' + '\n'.join(tutors) + '\n')
         em_std = set(re.findall(r'#define (STDSTRING_\w+)', read(f'{self.em}/include/constants/script_menu.h')))
         self.em_std = em_std
 
