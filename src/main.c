@@ -80,7 +80,7 @@ static EWRAM_DATA u16 sTrainerId = 0;
 static void UpdateLinkAndCallCallbacks(void);
 static void InitMainCallbacks(void);
 static void CallCallbacks(void);
-#ifdef BUGFIX
+#if defined(BUGFIX) || defined(PORTABLE)
 static void SeedRngWithRtc(void);
 #endif
 static void ReadKeys(void);
