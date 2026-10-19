@@ -62,7 +62,7 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 
 ## Carte dresseur
 - [ ] À Hoenn : carte d'Émeraude + badges de Hoenn ; SELECT → carte de Kanto + badges de Kanto
-- [ ] À Kanto : l'inverse ; BRICE/FLORA sur la carte de Kanto, RED/LEAF sur celle de Hoenn
+- [ ] À Kanto : la carte de Kanto s'ouvre d'abord ; le portrait suit l'option PERSO sur les deux cartes (BRICE/FLORA ou RED/LEAF)
 - [ ] Verso des deux cartes (A)
 
 ## Écran titre
