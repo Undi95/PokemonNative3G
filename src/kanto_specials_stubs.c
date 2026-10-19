@@ -13,9 +13,6 @@ u16 EnterColosseumPlayerSpot(void) { KantoSpecialStub("EnterColosseumPlayerSpot"
 u16 EnterTradeSeat(void) { KantoSpecialStub("EnterTradeSeat"); return 0; }
 u16 StartWiredCableClubTrade(void) { KantoSpecialStub("StartWiredCableClubTrade"); return 0; }
 u16 CableClub_AskSaveTheGame(void) { KantoSpecialStub("CableClub_AskSaveTheGame"); return 0; }
-u16 Script_HasTrainerBeenFought(void) { KantoSpecialStub("Script_HasTrainerBeenFought"); return 0; }
-u16 EndTrainerApproach(void) { KantoSpecialStub("EndTrainerApproach"); return 0; }
-u16 StartRematchBattle(void) { KantoSpecialStub("StartRematchBattle"); return 0; }
 u16 TryContestLinkup(void) { KantoSpecialStub("TryContestLinkup"); return 0; }
 u16 Field_AskSaveTheGame(void) { KantoSpecialStub("Field_AskSaveTheGame"); return 0; }
 u16 ShowEasyChatMessage(void) { KantoSpecialStub("ShowEasyChatMessage"); return 0; }
@@ -62,9 +59,6 @@ u16 EnterHallOfFame(void) { KantoSpecialStub("EnterHallOfFame"); return 0; }
 u16 AnimateElevator(void) { KantoSpecialStub("AnimateElevator"); return 0; }
 u16 DrawElevatorCurrentFloorWindow(void) { KantoSpecialStub("DrawElevatorCurrentFloorWindow"); return 0; }
 u16 SetIcefallCaveCrackedIceMetatiles(void) { KantoSpecialStub("SetIcefallCaveCrackedIceMetatiles"); return 0; }
-u16 StartLegendaryBattle(void) { KantoSpecialStub("StartLegendaryBattle"); return 0; }
-u16 SetUpTrainerMovement(void) { KantoSpecialStub("SetUpTrainerMovement"); return 0; }
-u16 StartSouthernIslandBattle(void) { KantoSpecialStub("StartSouthernIslandBattle"); return 0; }
 u16 Dummy_TryEnableBravoTrainerBattleTower(void) { KantoSpecialStub("Dummy_TryEnableBravoTrainerBattleTower"); return 0; }
 u16 SetPostgameFlags(void) { KantoSpecialStub("SetPostgameFlags"); return 0; }
 u16 StartMarowakBattle(void) { KantoSpecialStub("StartMarowakBattle"); return 0; }
@@ -87,7 +81,6 @@ u16 TakePokemonFromRoute5Daycare(void) { KantoSpecialStub("TakePokemonFromRoute5
 u16 DoSeagallopFerryScene(void) { KantoSpecialStub("DoSeagallopFerryScene"); return 0; }
 u16 OpenMuseumFossilPic(void) { KantoSpecialStub("OpenMuseumFossilPic"); return 0; }
 u16 CloseMuseumFossilPic(void) { KantoSpecialStub("CloseMuseumFossilPic"); return 0; }
-u16 SetBattledTrainerFlag(void) { KantoSpecialStub("SetBattledTrainerFlag"); return 0; }
 u16 DoSSAnneDepartureCutscene(void) { KantoSpecialStub("DoSSAnneDepartureCutscene"); return 0; }
 u16 CallTrainerTowerFunc(void) { KantoSpecialStub("CallTrainerTowerFunc"); return 0; }
 u16 Script_HasEnoughBerryPowder(void) { KantoSpecialStub("Script_HasEnoughBerryPowder"); return 0; }

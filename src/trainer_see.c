@@ -818,3 +818,10 @@ void PlayerFaceTrainerAfterBattle(void)
 
     SetMovingNpcId(LOCALID_PLAYER);
 }
+
+// Rouge Feu : EndTrainerApproach (StartTrainerApproachWithFollowupTask(Task_DestroyTrainerApproachTask))
+// = DoTrainerApproach d'Émeraude
+void EndTrainerApproach(void)
+{
+    DoTrainerApproach();
+}

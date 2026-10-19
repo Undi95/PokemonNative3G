@@ -2026,3 +2026,72 @@ u16 CountBattledRematchTeams(u16 trainerId)
 
     return i;
 }
+
+// Rouge Feu (battle_setup.c) : specials des scripts de Kanto
+u16 Script_HasTrainerBeenFought(void)
+{
+    return FlagGet(GetTrainerAFlag());
+}
+
+void SetBattledTrainerFlag(void)
+{
+    FlagSet(GetTrainerAFlag());
+}
+
+void SetUpTrainerMovement(void)
+{
+    struct ObjectEvent *objectEvent = &gObjectEvents[gSelectedObjectEvent];
+
+    SetTrainerMovementType(objectEvent, GetTrainerFacingDirectionMovementType(objectEvent->facingDirection));
+}
+
+// RF : gBattleTypeFlags |= BATTLE_TYPE_LEGENDARY_FRLG (IA plus fine pour ces combats) ; ce bit
+// est BATTLE_TYPE_ARENA dans Émeraude, il n'est donc pas repris. MUS_VS_* de RF = MUS_RG_VS_*.
+void StartLegendaryBattle(void)
+{
+    u16 species;
+
+    LockPlayerFieldControls();
+    gMain.savedCallback = CB2_EndScriptedWildBattle;
+    gBattleTypeFlags = BATTLE_TYPE_LEGENDARY;
+    species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+    switch (species)
+    {
+    case SPECIES_MEWTWO:
+        CreateBattleStartTask(B_TRANSITION_BLUR, MUS_RG_VS_MEWTWO);
+        break;
+    case SPECIES_DEOXYS:
+        CreateBattleStartTask(B_TRANSITION_BLUR, MUS_RG_VS_DEOXYS);
+        break;
+    case SPECIES_MOLTRES:
+    case SPECIES_ARTICUNO:
+    case SPECIES_ZAPDOS:
+    case SPECIES_HO_OH:
+    case SPECIES_LUGIA:
+        CreateBattleStartTask(B_TRANSITION_BLUR, MUS_RG_VS_LEGEND);
+        break;
+    default:
+        CreateBattleStartTask(B_TRANSITION_BLUR, MUS_VS_TRAINER); // MUS_RS_VS_TRAINER de RF
+        break;
+    }
+    IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
+    IncrementGameStat(GAME_STAT_WILD_BATTLES);
+}
+
+void StartRematchBattle(void)
+{
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER;
+    gMain.savedCallback = CB2_EndRematchBattle;
+    DoTrainerBattle();
+    ScriptContext_Stop();
+}
+
+void StartSouthernIslandBattle(void)
+{
+    LockPlayerFieldControls();
+    gMain.savedCallback = CB2_EndScriptedWildBattle;
+    gBattleTypeFlags = BATTLE_TYPE_LEGENDARY;
+    CreateBattleStartTask(GetWildBattleTransition(), 0);
+    IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
+    IncrementGameStat(GAME_STAT_WILD_BATTLES);
+}
