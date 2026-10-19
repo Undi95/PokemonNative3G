@@ -3,7 +3,13 @@
 // Les noms RF des variables / flags / métatuiles sont préfixés KANTO_ (import_scripts.py) ;
 // les numéros de métatuiles de RF sont conservés à l'import (tools/kanto/import_kanto.py).
 #include "global.h"
+#include "berry_powder.h"
 #include "data.h"
+#include "hall_of_fame.h"
+#include "money.h"
+#include "palette.h"
+#include "save_location.h"
+#include "script.h"
 #include "event_data.h"
 #include "field_camera.h"
 #include "field_player_avatar.h"
@@ -16,6 +22,7 @@
 #include "sound.h"
 #include "string_util.h"
 #include "task.h"
+#include "tv.h"
 #include "constants/game_stat.h"
 #include "constants/items.h"
 #include "constants/maps.h"
@@ -584,4 +591,139 @@ u16 HasLearnedAllMovesFromCapeBrinkTutor(void)
         return TRUE;
     else
         return FALSE;
+}
+
+// berry_powder.c de RF : HasEnoughBerryPowder / TakeBerryPowder d'Émeraude lisent déjà gSpecialVar_0x8004
+u16 Script_HasEnoughBerryPowder(void)
+{
+    return HasEnoughBerryPowder();
+}
+
+u16 Script_TakeBerryPowder(void)
+{
+    return TakeBerryPowder();
+}
+
+// item.c
+void RegisteredItemHandleBikeSwap(void)
+{
+    switch (gSaveBlock1Ptr->registeredItem)
+    {
+    case ITEM_MACH_BIKE:
+        gSaveBlock1Ptr->registeredItem = ITEM_ACRO_BIKE;
+        break;
+    case ITEM_ACRO_BIKE:
+        gSaveBlock1Ptr->registeredItem = ITEM_MACH_BIKE;
+        break;
+    }
+}
+
+// script.c de RF : un message de panneau se ferme quand le joueur s'éloigne. Le moteur de
+// script d'Émeraude n'a pas ce mécanisme : sans effet (le message se ferme avec A/B).
+void DisableMsgBoxWalkaway(void)
+{
+}
+
+void SetWalkingIntoSignVars(void)
+{
+}
+
+// save_location.c
+void SetPostgameFlags(void)
+{
+    gSaveBlock2Ptr->specialSaveWarpFlags |= CHAMPION_SAVEWARP;
+    gSaveBlock2Ptr->gcnLinkFlags |= (1 << 1);
+    gSaveBlock2Ptr->gcnLinkFlags |= (1 << 2);
+    gSaveBlock2Ptr->gcnLinkFlags |= (1 << 3);
+    gSaveBlock2Ptr->gcnLinkFlags |= (1 << 15);
+}
+
+// overworld.c : argent perdu après un K.O. (texte de white_out.inc)
+static const u8 sWhiteOutMoneyLossMultipliers[] = {
+     2,
+     4,
+     6,
+     9,
+    12,
+    16,
+    20,
+    25,
+    30
+};
+
+static const u16 sWhiteOutMoneyLossBadgeFlagIDs[] = {
+    FLAG_KANTO_BADGE01_GET,
+    FLAG_KANTO_BADGE02_GET,
+    FLAG_KANTO_BADGE03_GET,
+    FLAG_KANTO_BADGE04_GET,
+    FLAG_KANTO_BADGE05_GET,
+    FLAG_KANTO_BADGE06_GET,
+    FLAG_KANTO_BADGE07_GET,
+    FLAG_KANTO_BADGE08_GET
+};
+
+static u8 CountBadgesForOverworldWhiteOutLossCalculation(void)
+{
+    int i;
+    u8 nbadges = 0;
+    for (i = 0; i < ARRAY_COUNT(sWhiteOutMoneyLossBadgeFlagIDs); i++)
+    {
+        if (FlagGet(sWhiteOutMoneyLossBadgeFlagIDs[i]))
+            nbadges++;
+    }
+    return nbadges;
+}
+
+// pokemon.c de RF
+static u8 GetPlayerPartyHighestLevel(void)
+{
+    s32 slot;
+    u8 level, monLevel;
+
+    level = 1;
+    for (slot = 0; slot < PARTY_SIZE; ++slot)
+    {
+        if (GetMonData(&gPlayerParty[slot], MON_DATA_SANITY_HAS_SPECIES, NULL) == 1 && !GetMonData(&gPlayerParty[slot], MON_DATA_SANITY_IS_EGG, NULL))
+        {
+            monLevel = GetMonData(&gPlayerParty[slot], MON_DATA_LEVEL, NULL);
+            if (monLevel > level)
+                level = monLevel;
+        }
+    }
+    return level;
+}
+
+static u32 ComputeWhiteOutMoneyLoss(void)
+{
+    u8 nbadges = CountBadgesForOverworldWhiteOutLossCalculation();
+    u8 toplevel = GetPlayerPartyHighestLevel();
+    u32 losings = toplevel * 4 * sWhiteOutMoneyLossMultipliers[nbadges];
+    u32 money = GetMoney(&gSaveBlock1Ptr->money);
+    if (losings > money)
+        losings = money;
+    return losings;
+}
+
+void OverworldWhiteOutGetMoneyLoss(void)
+{
+    u32 losings = ComputeWhiteOutMoneyLoss();
+    ConvertIntToDecimalStringN(gStringVar1, losings, STR_CONV_MODE_LEFT_ALIGN, CountDigits(losings));
+}
+
+// hof_pc.c : RF ouvre son propre écran (CB2_InitHofPC) ; ici celui d'Émeraude (CB2_DoHallOfFamePC),
+// en attendant le choix des graphismes en options.
+static void Task_WaitFadeAndSetCallback(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        DestroyTask(taskId);
+        SetMainCallback2(CB2_DoHallOfFamePC);
+    }
+}
+
+void HallOfFamePCBeginFade(void)
+{
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
+    LockPlayerFieldControls();
+    CreateTask(Task_WaitFadeAndSetCallback, 0);
 }

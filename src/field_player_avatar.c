@@ -2279,3 +2279,10 @@ static u8 TrySpinPlayerForWarp(struct ObjectEvent *object, s16 *delayTimer)
     *delayTimer = 0;
     return sSpinDirections[object->facingDirection];
 }
+
+// Rouge Feu (field_player_avatar.c) : le courant des Îles Écume B4F dépose le joueur sur la terre
+// (sans l'enregistrement du journal de RF, non importé)
+void SeafoamIslandsB4F_CurrentDumpsPlayerOnLand(void)
+{
+    CreateStopSurfingTask(DIR_NORTH);
+}
