@@ -10,5 +10,5 @@
         EC_WORD_LET_S,
         EC_WORD_NICE,
         EC_WORD_WITH,
-        EC_POKEMON2(NONE),
+        EC_POKEMON(NONE),
     },

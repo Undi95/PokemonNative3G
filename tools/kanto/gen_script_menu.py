@@ -110,10 +110,10 @@ mails = mails[:mails.index('\n};')]
 fr_trades = cpp_defines(fr, 'constants/trade.h', 'INGAME_TRADE_')
 write(f'{em}/src/data/kanto_ingame_trades_entries.h',
       '// Généré par tools/kanto/gen_script_menu.py — échanges en jeu de Rouge Feu (fin de sIngameTrades)\n'
-      '#define FIRERED\n' + defines + body.rstrip().rstrip(',') + ',\n#undef FIRERED\n')
+      '#include "constants/kanto_script_menu.h"\n#define FIRERED\n' + defines + body.rstrip().rstrip(',') + ',\n#undef FIRERED\n')
 write(f'{em}/src/data/kanto_ingame_trade_mail_entries.h',
       '// Généré par tools/kanto/gen_script_menu.py — lettres des échanges de Rouge Feu (fin de sIngameTradeMail)\n'
-      + mails.rstrip().rstrip(',') + ',\n')
+      + mails.rstrip().rstrip(',').replace('EC_POKEMON2(', 'EC_POKEMON(') + ',\n')
 with open(f'{em}/include/constants/kanto_script_menu.h', encoding='utf-8') as f:
     c = f.read().replace('\n#endif\n', '')
 c += f'\n#define KANTO_INGAME_TRADE_START {trade_start}\n'

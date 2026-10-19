@@ -161,6 +161,8 @@ class ScriptConverter:
             if m and m.group(2) in self.fr_labels | set(self.labels_rename.values()):
                 code = f'{m.group(1)}ptrvalue {m.group(2)}'
             code = re.sub(r'^(\s*)\.align\s+2\s*$', r'\1ptr_align', code)
+            # RF : « hideobjectat id, 0 » = carte courante ; Émeraude exige une carte
+            code = re.sub(r'^(\s*(?:hide|show)objectat\s+[^,]+,\s*)0\s*$', r'\1MAP_UNDEFINED', code)
             if comment:
                 code = f'{code}/* {comment} */' if code.strip() else f'/* {comment} */'
             out.append(code)

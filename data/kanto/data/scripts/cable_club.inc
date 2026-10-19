@@ -304,7 +304,7 @@ Kanto_CableClub_EventScript_EnterColosseum::
 	waitdooranim
 	applymovement LOCALID_PLAYER, Kanto_Movement_PlayerEnterLinkRoom
 	waitmovement 0
-	hideobjectat LOCALID_PLAYER, 0
+	hideobjectat LOCALID_PLAYER, MAP_UNDEFINED
 	closedoor 9, 1
 	waitdooranim
 	release
@@ -402,7 +402,7 @@ Kanto_CableClub_EventScript_EnterTradeCenter::
 	waitdooranim
 	applymovement LOCALID_PLAYER, Kanto_Movement_PlayerEnterLinkRoom
 	waitmovement 0
-	hideobjectat LOCALID_PLAYER, 0
+	hideobjectat LOCALID_PLAYER, MAP_UNDEFINED
 	closedoor 9, 1
 	waitdooranim
 	release
@@ -790,7 +790,7 @@ Kanto_CableClub_EventScript_EnterUnionRoom::
 	waitdooranim
 	applymovement LOCALID_PLAYER, Kanto_Movement_PlayerEnterLinkRoom
 	waitmovement 0
-	hideobjectat LOCALID_PLAYER, 0
+	hideobjectat LOCALID_PLAYER, MAP_UNDEFINED
 	closedoor 5, 1
 	waitdooranim
 	special Script_ResetUnionRoomTrade
@@ -1067,7 +1067,7 @@ Kanto_CableClub_EventScript_EnterWirelessLinkRoom::
 	waitdooranim
 	applymovement LOCALID_PLAYER, Kanto_Movement_PlayerEnterLinkRoom
 	waitmovement 0
-	hideobjectat LOCALID_PLAYER, 0
+	hideobjectat LOCALID_PLAYER, MAP_UNDEFINED
 	closedoor 9, 1
 	waitdooranim
 	release
@@ -1247,7 +1247,7 @@ CableClub_EventScript_EnterMinigame::
 	closemessage
 	applymovement LOCALID_PLAYER, Kanto_Movement_PlayerEnterMinigameRoom
 	waitmovement 0
-	hideobjectat LOCALID_PLAYER, 0
+	hideobjectat LOCALID_PLAYER, MAP_UNDEFINED
 	release
 	waitstate
 	end

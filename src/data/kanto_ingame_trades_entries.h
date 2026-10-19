@@ -1,4 +1,5 @@
 // Généré par tools/kanto/gen_script_menu.py — échanges en jeu de Rouge Feu (fin de sIngameTrades)
+#include "constants/kanto_script_menu.h"
 #define FIRERED
 #define TEXT_INGAME_TRADE_NICKNAME_MR_MIME      _("MARCI")
 #define TEXT_INGAME_TRADE_OTNAME_MR_MIME        _("NASSIM")
