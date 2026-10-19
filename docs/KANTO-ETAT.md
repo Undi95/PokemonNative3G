@@ -30,9 +30,7 @@ Outils : DEBUG > « Recevoir MEWTWO » (nv 70) ; l'état de test (build KANTO_DE
   contrôleur RF, sur la base de celui de Wally : même type de combat ; `IsOldManTutorialBattle()`).
   Testée avec `kanto_old_man` (nécessite VAR_KANTO_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN = 1, c.-à-d. le POKéDEX reçu).
   Sac : celui d'Émeraude en mode démonstration.
-Prochaine étape : remplacer les stubs de specials RF (`src/kanto_specials_stubs.c`, ~140) par le code RF,
-en commençant par ceux rencontrés en jeu (PC, magasins, Fame Checker, TV ABC…) ; versions dans
-`src/kanto_field_specials.c`. Données de save RF : `gSaveBlockKanto` (`include/kanto_save.h`).
+Specials RF : 18 portés dans `src/kanto_field_specials.c` (Pokédex, équipe, vélo forcé, secousse d'écran, espèce du starter, nom du dresseur d'origine…). Il reste ~120 stubs dans `src/kanto_specials_stubs.c`. Prochaine étape : les plus fréquents en jeu — ascenseurs (Animate/Draw/CloseElevator…), aide (SetHelpContext…), ListMenu, PC (AnimatePcTurnOn/Off), Combats légendaires (StartLegendaryBattle), VsSeeker, garderie Route 5, ferry Seagallop. Données de save RF : `gSaveBlockKanto` (`include/kanto_save.h`). Les tâches (Task) et fenêtres d'ascenseur/ListMenu demandent d'abord de lire les fonctions RF correspondantes.
 
 ## Dettes (provisoire → importer depuis RF)
 - Combat : conseils de Chen pendant le combat du labo NON importés (décision utilisateur : Kanto vient après Hoenn) ; rematchs RF (Cherche VS) ; Tour Dresseurs.
