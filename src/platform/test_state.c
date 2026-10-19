@@ -8,6 +8,7 @@
 #include "overworld.h"
 #include "palette.h"
 #include "script.h"
+#include "sprite.h"
 #include "constants/songs.h"
 #include "platform/test_state.h"
 
@@ -54,6 +55,26 @@ void WriteTestState(FILE *file, u32 frame)
                 object->currentCoords.y - MAP_OFFSET);
         first = FALSE;
     }
+#ifdef KANTO_DEBUG_START
+    // Build de test de Kanto : sprite de chaque objet (graphicsId, spriteId, inUse, invisible,
+    // priorité, palette, x, y, tuile)
+    fprintf(file, "], \"sprites\": [");
+    first = TRUE;
+    for (int i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        const struct ObjectEvent *object = &gObjectEvents[i];
+        const struct Sprite *sprite;
+
+        if (!object->active)
+            continue;
+        sprite = &gSprites[object->spriteId];
+        fprintf(file, "%s[%d, %d, %d, %d, %d, %d, %d, %d, %d]", first ? "" : ", ", object->graphicsId,
+                object->spriteId, sprite->inUse, sprite->invisible, sprite->oam.priority,
+                sprite->oam.paletteNum, sprite->x + sprite->x2 + sprite->centerToCornerVecX,
+                sprite->y + sprite->y2 + sprite->centerToCornerVecY, sprite->oam.tileNum);
+        first = FALSE;
+    }
+#endif
     fprintf(file, "]}\n");
     fflush(file);
 }

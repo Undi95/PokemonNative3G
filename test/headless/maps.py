@@ -39,13 +39,15 @@ _LAYOUTS = {layout["id"]: layout
 _GROUPS = json.load(open(os.path.join(REPO_DIR, "data", "maps", "map_groups.json")))
 # Tileset names to their metatile attribute files, through the Tileset structs
 _ATTRIBUTE_FILES = {}
-with open(os.path.join(REPO_DIR, "src", "data", "tilesets", "metatiles.h")) as f:
+for _name in ("metatiles.h", "kanto_metatiles.h"):
+  with open(os.path.join(REPO_DIR, "src", "data", "tilesets", _name)) as f:
     for line in f:
         match = re.search(r'(gMetatileAttributes_\w+)\[\] = INCBIN_U16\("([^"]+)"\)', line)
         if match:
             _ATTRIBUTE_FILES[match.group(1)] = match.group(2)
 _ATTRIBUTES = {}
-with open(os.path.join(REPO_DIR, "src", "data", "tilesets", "headers.h")) as f:
+for _name in ("headers.h", "kanto_headers.h"):
+  with open(os.path.join(REPO_DIR, "src", "data", "tilesets", _name)) as f:
     for match in re.finditer(r"struct Tileset (gTileset_\w+) =\s*\{(.*?)\};", f.read(), re.S):
         attributes = re.search(r"\.metatileAttributes = (\w+)", match.group(2))
         if attributes:

@@ -19,6 +19,9 @@
 #include "window.h"
 #include "constants/maps.h"
 #include "constants/songs.h"
+#include "constants/items.h"
+#include "constants/species.h"
+#include "event_data.h"
 
 bool8 gDebugNoClip = FALSE;
 bool8 gDebugNoEncounters = FALSE;
@@ -30,6 +33,7 @@ enum {
     DEBUG_NOCLIP,
     DEBUG_ENCOUNTERS,
     DEBUG_HEAL,
+    DEBUG_GIVE_MON,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -97,6 +101,7 @@ static const u8 sText_NoClipOff[] = _("Murs : normaux");
 static const u8 sText_EncOn[] = _("Rencontres : OUI");
 static const u8 sText_EncOff[] = _("Rencontres : NON");
 static const u8 sText_Heal[] = _("Soigner l'équipe");
+static const u8 sText_GiveMon[] = _("Recevoir MEWTWO");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -133,6 +138,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_NOCLIP].name = gDebugNoClip ? sText_NoClipOn : sText_NoClipOff;
         sItems[DEBUG_ENCOUNTERS].name = gDebugNoEncounters ? sText_EncOff : sText_EncOn;
         sItems[DEBUG_HEAL].name = sText_Heal;
+        sItems[DEBUG_GIVE_MON].name = sText_GiveMon;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -224,6 +230,11 @@ static void Task_DebugMenu(u8 taskId)
         break;
     case DEBUG_HEAL:
         HealPlayerParty();
+        PlaySE(SE_USE_ITEM);
+        break;
+    case DEBUG_GIVE_MON:
+        ScriptGiveMon(SPECIES_MEWTWO, 70, ITEM_NONE, 0, 0, 0);
+        FlagSet(FLAG_SYS_POKEMON_GET);
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_CLOSE:
