@@ -21,5 +21,13 @@
 #define MAP_BATTLE_SCENE_GLACIA       6
 #define MAP_BATTLE_SCENE_DRAKE        7
 #define MAP_BATTLE_SCENE_FRONTIER     8
+// Décors de Rouge Feu (MAP_BATTLE_SCENE_X de RF ; GYM et NORMAL sont communs)
+#define MAP_BATTLE_SCENE_KANTO_INDOOR_1 9 // Tour Pokémon, ruines Tanoby
+#define MAP_BATTLE_SCENE_KANTO_INDOOR_2 10 // Manoir, Centrale, repaire Rocket
+#define MAP_BATTLE_SCENE_KANTO_LORELEI  11
+#define MAP_BATTLE_SCENE_KANTO_BRUNO    12
+#define MAP_BATTLE_SCENE_KANTO_AGATHA   13
+#define MAP_BATTLE_SCENE_KANTO_LANCE    14
+#define MAP_BATTLE_SCENE_KANTO_LINK     15
 
 #endif  // GUARD_CONSTANTS_MAP_TYPES_H

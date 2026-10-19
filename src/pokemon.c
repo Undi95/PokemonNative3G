@@ -36,6 +36,7 @@
 #include "text.h"
 #include "trainer_hill.h"
 #include "util.h"
+#include "kanto_field_door.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_move_effects.h"
@@ -6466,6 +6467,9 @@ u16 GetBattleBGM(void)
     }
     else
     {
+        // MUS_VS_WILD de Rouge Feu sur les cartes de Kanto
+        if (IsKantoTilesetMap())
+            return MUS_RG_VS_WILD;
         return MUS_VS_WILD;
     }
 }

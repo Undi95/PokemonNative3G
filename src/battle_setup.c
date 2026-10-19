@@ -47,6 +47,8 @@
 #include "constants/trainers.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
+#include "kanto_battle_bg.h"
+#include "kanto_field_door.h"
 
 enum {
     TRANSITION_TYPE_NORMAL,
@@ -641,6 +643,9 @@ u8 BattleSetup_GetEnvironmentId(void)
 {
     u16 tileBehavior;
     s16 x, y;
+
+    if (IsKantoTilesetMap())
+        return Kanto_BattleSetup_GetTerrainId();
 
     PlayerGetDestCoords(&x, &y);
     tileBehavior = MapGridGetMetatileBehaviorAt(x, y);

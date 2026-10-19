@@ -33,16 +33,9 @@ FR_TILES_PRI, FR_MT_PRI, FR_PALS_PRI = 640, 640, 7
 # Cartes RF dont le nom existe aussi dans Émeraude mais qui sont différentes : préfixe Kanto.
 RENAME_PREFIXES = ('VictoryRoad', 'SafariZone')
 
-# Décors de combat RF absents d'Émeraude (Conseil 4 : décor d'Émeraude du même type)
-BATTLE_SCENE_ALIASES = {
-    'MAP_BATTLE_SCENE_INDOOR_1': 'MAP_BATTLE_SCENE_NORMAL',
-    'MAP_BATTLE_SCENE_INDOOR_2': 'MAP_BATTLE_SCENE_NORMAL',
-    'MAP_BATTLE_SCENE_LINK': 'MAP_BATTLE_SCENE_NORMAL',
-    'MAP_BATTLE_SCENE_LORELEI': 'MAP_BATTLE_SCENE_GLACIA',
-    'MAP_BATTLE_SCENE_AGATHA': 'MAP_BATTLE_SCENE_PHOEBE',
-    'MAP_BATTLE_SCENE_BRUNO': 'MAP_BATTLE_SCENE_SIDNEY',
-    'MAP_BATTLE_SCENE_LANCE': 'MAP_BATTLE_SCENE_DRAKE',
-}
+# Décors de combat propres à RF : MAP_BATTLE_SCENE_KANTO_X (include/constants/map_types.h)
+BATTLE_SCENE_ALIASES = {f'MAP_BATTLE_SCENE_{s}': f'MAP_BATTLE_SCENE_KANTO_{s}'
+                        for s in ('INDOOR_1', 'INDOOR_2', 'LORELEI', 'BRUNO', 'AGATHA', 'LANCE', 'LINK')}
 
 # Comportements RF sans homonyme dans Émeraude -> équivalent le plus proche.
 BEHAVIOR_ALIASES = {

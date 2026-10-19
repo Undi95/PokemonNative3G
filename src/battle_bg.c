@@ -24,6 +24,8 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
+#include "kanto_battle_bg.h"
+#include "kanto_field_door.h"
 
 struct BattleBackground
 {
@@ -759,6 +761,11 @@ void LoadBattleMenuWindowGfx(void)
 
 void DrawMainBattleBackground(void)
 {
+    if (IsKantoTilesetMap())
+    {
+        Kanto_DrawMainBattleBackground();
+        return;
+    }
     if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_RECORDED_LINK))
     {
         LZDecompressVram(gBattleEnvironmentTiles_Building, (void *)(BG_CHAR_ADDR(2)));
@@ -1140,6 +1147,10 @@ void DrawBattleEntryBackground(void)
         gBattle_BG2_Y = 0xFF5C;
         LoadCompressedSpriteSheetUsingHeap(&sVsLettersSpriteSheet);
     }
+    else if (IsKantoTilesetMap())
+    {
+        Kanto_DrawBattleEntryBackground();
+    }
     else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_EREADER_TRAINER))
     {
         if (!(gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) || gPartnerTrainerId == TRAINER_STEVEN_PARTNER)
@@ -1209,6 +1220,10 @@ void DrawBattleEntryBackground(void)
 bool8 LoadChosenBattleElement(u8 caseId)
 {
     bool8 ret = FALSE;
+
+    // Décor de RF sur les cartes de Kanto
+    if (caseId >= 3 && caseId <= 5 && IsKantoTilesetMap())
+        return Kanto_LoadChosenBattleElement(caseId);
 
     switch (caseId)
     {
