@@ -68,10 +68,16 @@ void WriteTestState(FILE *file, u32 frame)
         if (!object->active)
             continue;
         sprite = &gSprites[object->spriteId];
-        fprintf(file, "%s[%d, %d, %d, %d, %d, %d, %d, %d, %d]", first ? "" : ", ", object->graphicsId,
+        u32 tileSum = 0, palSum = 0;
+        for (int j = 0; j < 8 * 32; j++)
+            tileSum += ((u8 *)OBJ_VRAM0)[sprite->oam.tileNum * 32 + j];
+        for (int j = 1; j < 16; j++)
+            palSum += ((u16 *)OBJ_PLTT)[sprite->oam.paletteNum * 16 + j];
+        fprintf(file, "%s[%d, %d, %d, %d, %d, %d, %d, %d, %d, %u, %u, %d, %d]", first ? "" : ", ", object->graphicsId,
                 object->spriteId, sprite->inUse, sprite->invisible, sprite->oam.priority,
                 sprite->oam.paletteNum, sprite->x + sprite->x2 + sprite->centerToCornerVecX,
-                sprite->y + sprite->y2 + sprite->centerToCornerVecY, sprite->oam.tileNum);
+                sprite->y + sprite->y2 + sprite->centerToCornerVecY, sprite->oam.tileNum, tileSum, palSum,
+                sprite->subspriteMode, sprite->subspriteTableNum);
         first = FALSE;
     }
 #endif
