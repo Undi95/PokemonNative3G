@@ -23,6 +23,8 @@
 #include "main_menu.h"
 #include "berry_fix_program.h"
 #include "decompress.h"
+#include "clear_save_data_menu.h"
+#include "constants/rgb.h"
 #include "constants/songs.h"
 
 static const u16 gGraphics_TitleScreen_GameTitleLogoPals[] = INCGFX_U16("graphics/kanto/title_screen/firered/game_title_logo_fr.pal", ".gbapal");
@@ -653,15 +655,7 @@ static void SetTitleScreenScene_Cry(s16 *data)
     case 2:
         if (!gPaletteFade.active)
         {
-            SeedRngAndSetTrainerId();
-            SetSaveBlocksPointers();
-            ResetMenuAndMonGlobals();
-            Save_ResetSaveCounters();
-            LoadGameSave(SAVE_NORMAL);
-            if (gSaveFileStatus == SAVE_STATUS_EMPTY || gSaveFileStatus == SAVE_STATUS_INVALID)
-                Sav2_ClearSetDefault();
-            SetPokemonCryStereo(gSaveBlock2Ptr->optionsSound);
-            InitHeap(gHeap, HEAP_SIZE);
+            // RF recharge ici la sauvegarde ; Émeraude l'a déjà chargée au démarrage (CB2_GoToMainMenu)
             SetMainCallback2(CB2_InitMainMenu);
             DestroyTask(FindTaskIdByFunc(Task_TitleScreenMain));
         }

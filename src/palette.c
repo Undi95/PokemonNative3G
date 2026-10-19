@@ -976,7 +976,7 @@ void BlendPalettesGradually(uintptr_t selectedPalettes, s8 delay, u8 coeff, u8 c
     gTasks[taskId].func(taskId);
 }
 
-static bool32 UNUSED IsBlendPalettesGraduallyTaskActive(u8 id)
+bool32 IsBlendPalettesGraduallyTaskActive(u8 id) // utilisé par kanto_title_screen.c
 {
     int i;
 
@@ -989,7 +989,7 @@ static bool32 UNUSED IsBlendPalettesGraduallyTaskActive(u8 id)
     return FALSE;
 }
 
-static void UNUSED DestroyBlendPalettesGraduallyTask(void)
+void DestroyBlendPalettesGraduallyTask(void) // utilisé par kanto_title_screen.c
 {
     u8 taskId;
 
