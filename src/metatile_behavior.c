@@ -1453,3 +1453,20 @@ bool8 MetatileBehavior_IsDirectionalStairWarp(u8 metatileBehavior)
 
     return result;
 }
+
+// Rouge Feu
+bool8 MetatileBehavior_IsWarpPad(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_REGULAR_WARP)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsFallWarp(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_FALL_WARP)
+        return TRUE;
+    else
+        return FALSE;
+}

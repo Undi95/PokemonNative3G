@@ -778,6 +778,18 @@ static bool8 TryStartWarpEventScript(struct MapPosition *position, u16 metatileB
             DoMossdeepGymWarp();
             return TRUE;
         }
+        // Rouge Feu
+        if (MetatileBehavior_IsWarpPad(metatileBehavior) == TRUE)
+        {
+            DoTeleportWarp();
+            return TRUE;
+        }
+        if (MetatileBehavior_IsFallWarp(metatileBehavior) == TRUE)
+        {
+            ResetInitialPlayerAvatarState();
+            ScriptContext_SetupScript(EventScript_DoFallWarp);
+            return TRUE;
+        }
         DoWarp();
         return TRUE;
     }
@@ -795,7 +807,9 @@ static bool8 IsWarpMetatileBehavior(u16 metatileBehavior)
      && MetatileBehavior_IsAquaHideoutWarp(metatileBehavior) != TRUE
      && MetatileBehavior_IsMtPyreHole(metatileBehavior) != TRUE
      && MetatileBehavior_IsMossdeepGymWarp(metatileBehavior) != TRUE
-     && MetatileBehavior_IsUnionRoomWarp(metatileBehavior) != TRUE)
+     && MetatileBehavior_IsUnionRoomWarp(metatileBehavior) != TRUE
+     && MetatileBehavior_IsWarpPad(metatileBehavior) != TRUE   // Rouge Feu
+     && MetatileBehavior_IsFallWarp(metatileBehavior) != TRUE) // Rouge Feu
         return FALSE;
     return TRUE;
 }

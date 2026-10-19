@@ -536,6 +536,78 @@ void DoDoorWarp(void)
     CreateTask(Task_DoDoorWarp, 10);
 }
 
+// Rouge Feu (field_fadetransition.c) : téléporteurs
+// WaitWarpFadeOutScreen de RF = gPaletteFade.active ;
+// FieldFadeTransitionBackgroundEffectIsFinished de RF = WaitForWeatherFadeIn.
+static void Task_TeleportWarpIn(u8 taskId)
+{
+    switch (gTasks[taskId].data[0])
+    {
+    case 0:
+        FreezeObjectEvents();
+        LockPlayerFieldControls();
+        DoPlayerSpinEntrance(); // = StartTeleportInPlayerAnim de RF
+        gTasks[taskId].data[0]++;
+        break;
+    case 1:
+        if (WaitForWeatherFadeIn() && IsPlayerSpinEntranceActive() != TRUE)
+        {
+            UnfreezeObjectEvents();
+            UnlockPlayerFieldControls();
+            DestroyTask(taskId);
+        }
+        break;
+    }
+}
+
+static void FieldCB_TeleportWarpIn(void)
+{
+    Overworld_PlaySpecialMapMusic();
+    WarpFadeInScreen();
+    PlaySE(SE_WARP_OUT);
+    CreateTask(Task_TeleportWarpIn, 10);
+    LockPlayerFieldControls();
+}
+
+static void Task_TeleportWarp(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    switch (task->data[0])
+    {
+    case 0:
+        FreezeObjectEvents();
+        LockPlayerFieldControls();
+        PlaySE(SE_WARP_IN);
+        DoPlayerSpinExit(); // = StartTeleportWarpOutPlayerAnim de RF
+        task->data[0]++;
+        break;
+    case 1:
+        if (!IsPlayerSpinExitActive())
+        {
+            WarpFadeOutScreen();
+            task->data[0]++;
+        }
+        break;
+    case 2:
+        if (!gPaletteFade.active && BGMusicStopped())
+            task->data[0]++;
+        break;
+    case 3:
+        WarpIntoMap();
+        SetMainCallback2(CB2_LoadMap);
+        DestroyTask(taskId);
+        break;
+    }
+}
+
+void DoTeleportWarp(void)
+{
+    LockPlayerFieldControls();
+    TryFadeOutOldMapMusic();
+    CreateTask(Task_TeleportWarp, 10);
+    gFieldCallback = FieldCB_TeleportWarpIn;
+}
+
 void DoFallWarp(void)
 {
     DoDiveWarp();

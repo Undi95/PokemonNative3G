@@ -10,6 +10,18 @@ CaveHole_FixCrackedGround:
 #endif
 	end
 
+@ Rouge Feu (hole.inc) : la destination vient de l'événement warp de la case
+EventScript_DoFallWarp::
+	lockall
+	delay 20
+	applymovement LOCALID_PLAYER, Movement_SetInvisible
+	waitmovement 0
+	playse SE_FALL
+	delay 60
+	special DoFallWarp
+	waitstate
+	end
+
 EventScript_FallDownHole::
 	lockall
 	delay 20

@@ -31,6 +31,8 @@ bool8 MetatileBehavior_IsDirectionalUpLeftStairWarp(u8 metatileBehavior);
 bool8 MetatileBehavior_IsDirectionalDownRightStairWarp(u8 metatileBehavior);
 bool8 MetatileBehavior_IsDirectionalDownLeftStairWarp(u8 metatileBehavior);
 bool8 MetatileBehavior_IsDirectionalStairWarp(u8 metatileBehavior);
+bool8 MetatileBehavior_IsWarpPad(u8 metatileBehavior);
+bool8 MetatileBehavior_IsFallWarp(u8 metatileBehavior);
 bool8 MetatileBehavior_IsDeepSouthWarp(u8 metatileBehavior);
 bool8 MetatileBehavior_IsSurfableWaterOrUnderwater(u8 metatileBehavior);
 bool8 MetatileBehavior_IsEastArrowWarp(u8 metatileBehavior);

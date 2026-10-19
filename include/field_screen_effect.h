@@ -26,6 +26,7 @@ void DoWhiteFadeWarp(void);
 void DoDoorWarp(void);
 void DoStairWarp(u16 metatileBehavior, u16 delay); // Rouge Feu
 void DoFallWarp(void);
+void DoTeleportWarp(void);
 void DoEscalatorWarp(u8 metatileBehavior);
 void DoLavaridgeGymB1FWarp(void);
 void DoLavaridgeGym1FWarp(void);
