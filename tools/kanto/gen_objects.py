@@ -16,7 +16,7 @@ import os, re, shutil, sys
 
 fr, em = sys.argv[1], sys.argv[2]
 OBJ = 'src/data/object_events'
-FILES = ['object_event_graphics.h', 'object_event_pic_tables.h', 'object_event_anims.h',
+FILES = ['base_oam.h', 'object_event_graphics.h', 'object_event_pic_tables.h', 'object_event_anims.h',
          'object_event_subsprites.h', 'object_event_graphics_info.h']
 KANTO_PAL_TAG_BASE = 0x1180
 
@@ -52,7 +52,25 @@ for t in texts.values():
     defined |= set(re.findall(r'^(?:static )?const [^=;]*?\b([gs][A-Z]\w*)\s*\[', t, re.M))
 
 
+# Constantes d'animation (ANIM_*) de RF : celles absentes d'Émeraude sont définies avec la
+# valeur RF, celles qui existent avec une autre valeur sont renommées KANTO_ANIM_*.
+def anim_consts(path):
+    vals = {}
+    for n, expr in re.findall(r'#define (ANIM_\w+)\s+(.+)', read(path)):
+        expr = expr.split('//')[0].strip()
+        try:
+            vals[n] = eval(expr.replace('ANIM_STD_COUNT', str(vals.get('ANIM_STD_COUNT', 20))))
+        except Exception:
+            pass
+    return vals
+fr_anims = anim_consts(f'{fr}/include/constants/event_object_movement.h')
+em_anims = anim_consts(f'{em}/include/constants/event_object_movement.h')
+anim_rename = {n for n in fr_anims if n in em_anims and fr_anims[n] != em_anims[n]}
+anim_missing = {n for n in fr_anims if n not in em_anims}
+
+
 def kantoize(t):
+    t = re.sub(r'ANIM_\w+', lambda m: 'KANTO_' + m.group(0) if m.group(0) in anim_rename else m.group(0), t)
     t = re.sub(r'\b([gs])([A-Z]\w*)\b', lambda m: m.group(1) + 'Kanto' + m.group(2) if m.group(0) in defined else m.group(0), t)
     t = re.sub(r'\bOBJ_EVENT_PAL_TAG_(?!NONE\b)(\w+)', r'OBJ_EVENT_PAL_TAG_KANTO_\1', t)
     return t
@@ -73,6 +91,11 @@ def gfx_path(m):
 shutil.rmtree(f'{em}/graphics/kanto', ignore_errors=True)
 out = ['// Généré par tools/kanto/gen_objects.py depuis src/data/object_events/ de Rouge Feu.',
        '// Ne pas modifier à la main.', '']
+for n in sorted(anim_missing, key=lambda n: fr_anims[n]):
+    out.append(f'#define {n} {fr_anims[n]}')
+for n in sorted(anim_rename):
+    out.append(f'#define KANTO_{n} {fr_anims[n]}')
+out.append('')
 for f in FILES:
     t = kantoize(texts[f])
     t = re.sub(r'INCBIN_(U8|U16|U32)\("(graphics/[^"]+\.(?:4bpp|8bpp|gbapal))"\)', gfx_path, t)
