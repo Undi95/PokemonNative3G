@@ -53,6 +53,10 @@
 #define BAG_POKEBALLS_COUNT 16
 #define BAG_TMHM_COUNT 64
 #define BAG_BERRIES_COUNT 46
+// PokemonNative3G : poches Objets et Objets Rares agrandies (Hoenn + Kanto), stockées hors de
+// SaveBlock1 (gSaveBlockBag, kanto_save.c) ; bagPocket_Items/KeyItems de SaveBlock1 ne servent plus
+#define BIG_BAG_ITEMS_COUNT 160
+#define BIG_BAG_KEYITEMS_COUNT 80
 #define OBJECT_EVENT_TEMPLATES_COUNT 64
 #define DECOR_MAX_SECRET_BASE 16
 #define DECOR_MAX_PLAYERS_HOUSE 12

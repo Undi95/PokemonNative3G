@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_save.h"
 #include "item.h"
 #include "berry.h"
 #include "string_util.h"
@@ -60,11 +61,12 @@ void ApplyNewEncryptionKeyToBagItems_(u32 newKey) // really GF?
 
 void SetBagItemsPointers(void)
 {
-    gBagPockets[ITEMS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_Items;
-    gBagPockets[ITEMS_POCKET].capacity = BAG_ITEMS_COUNT;
+    // PokemonNative3G : poches agrandies (gSaveBlockBag, kanto_save.c)
+    gBagPockets[ITEMS_POCKET].itemSlots = gSaveBlockBag.items;
+    gBagPockets[ITEMS_POCKET].capacity = BIG_BAG_ITEMS_COUNT;
 
-    gBagPockets[KEYITEMS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_KeyItems;
-    gBagPockets[KEYITEMS_POCKET].capacity = BAG_KEYITEMS_COUNT;
+    gBagPockets[KEYITEMS_POCKET].itemSlots = gSaveBlockBag.keyItems;
+    gBagPockets[KEYITEMS_POCKET].capacity = BIG_BAG_KEYITEMS_COUNT;
 
     gBagPockets[BALLS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_PokeBalls;
     gBagPockets[BALLS_POCKET].capacity = BAG_POKEBALLS_COUNT;

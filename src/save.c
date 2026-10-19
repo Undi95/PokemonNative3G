@@ -1054,7 +1054,10 @@ u8 HandleSavingData(u8 saveType)
 
 #ifdef PORTABLE
     if (saveType != SAVE_LINK && saveType != SAVE_EREADER)
+    {
         KantoSave_Write();
+        BagSave_Write();
+    }
 	Platform_StoreSaveFile();
 #endif
 
@@ -1199,6 +1202,7 @@ u8 LoadGameSave(u8 saveType)
 #endif
         CopyPartyAndObjectsFromSave();
         KantoSave_Read();
+        BagSave_Read();
         gSaveFileStatus = status;
         gGameContinueCallback = NULL;
         break;

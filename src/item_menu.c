@@ -60,8 +60,8 @@
 // By default, the largest pocket is BAG_TMHM_COUNT at 64.
 #define MAX_POCKET_ITEMS  ((max(BAG_TMHM_COUNT,              \
                             max(BAG_BERRIES_COUNT,           \
-                            max(BAG_ITEMS_COUNT,             \
-                            max(BAG_KEYITEMS_COUNT,          \
+                            max(BIG_BAG_ITEMS_COUNT,         \
+                            max(BIG_BAG_KEYITEMS_COUNT,      \
                                 BAG_POKEBALLS_COUNT))))) + 1)
 
 // Up to 8 item slots can be visible at a time

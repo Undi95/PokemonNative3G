@@ -323,6 +323,24 @@ bool8 Platform_ReadExtraSave(void *data, u32 size)
     return fread(data, 1, size, sSaveFile) == size;
 }
 
+// Blocs supplémentaires après le bloc Kanto (offset relatif à la fin des 128 Ko de flash)
+void Platform_WriteExtraSaveAt(u32 offset, const void *data, u32 size)
+{
+    if (sSaveFile == NULL)
+        return;
+    fseek(sSaveFile, sizeof(FLASH_BASE) + offset, SEEK_SET);
+    fwrite(data, 1, size, sSaveFile);
+    fflush(sSaveFile);
+}
+
+bool8 Platform_ReadExtraSaveAt(u32 offset, void *data, u32 size)
+{
+    if (sSaveFile == NULL)
+        return FALSE;
+    fseek(sSaveFile, sizeof(FLASH_BASE) + offset, SEEK_SET);
+    return fread(data, 1, size, sSaveFile) == size;
+}
+
 void Platform_ReadFlash(u16 sectorNum, u32 offset, u8 *dest, u32 size)
 {
     DBGPRINTF("ReadFlash(sectorNum=0x%04X,offset=0x%08X,size=0x%02X)\n",sectorNum,offset,size);

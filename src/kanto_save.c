@@ -46,3 +46,41 @@ void KantoSave_Read(void)
         KantoSave_Clear();
 #endif
 }
+
+// --- Poches agrandies du sac ---------------------------------------------------
+#define BAG_SAVE_MAGIC 0x42414731 // "BAG1"
+
+EWRAM_DATA struct SaveBlockBag gSaveBlockBag = {0};
+
+static u32 BagSave_Checksum(void)
+{
+    const u8 *p = (const u8 *)&gSaveBlockBag;
+    u32 sum = 0x811C9DC5, i;
+    for (i = 0; i < offsetof(struct SaveBlockBag, checksum); i++)
+        sum = (sum ^ p[i]) * 0x01000193;
+    return sum;
+}
+
+void BagSave_Write(void)
+{
+#ifdef PORTABLE
+    gSaveBlockBag.magic = BAG_SAVE_MAGIC;
+    gSaveBlockBag.checksum = BagSave_Checksum();
+    Platform_WriteExtraSaveAt(SAVEBLOCK_BAG_OFFSET, &gSaveBlockBag, sizeof(gSaveBlockBag));
+#endif
+}
+
+// Sauvegarde sans ce bloc (antérieure) : on reprend les poches d'origine de SaveBlock1
+// (quantités chiffrées avec la même clé, copiées telles quelles).
+void BagSave_Read(void)
+{
+#ifdef PORTABLE
+    if (Platform_ReadExtraSaveAt(SAVEBLOCK_BAG_OFFSET, &gSaveBlockBag, sizeof(gSaveBlockBag))
+     && gSaveBlockBag.magic == BAG_SAVE_MAGIC
+     && gSaveBlockBag.checksum == BagSave_Checksum())
+        return;
+#endif
+    memset(&gSaveBlockBag, 0, sizeof(gSaveBlockBag));
+    memcpy(gSaveBlockBag.items, gSaveBlock1Ptr->bagPocket_Items, sizeof(gSaveBlock1Ptr->bagPocket_Items));
+    memcpy(gSaveBlockBag.keyItems, gSaveBlock1Ptr->bagPocket_KeyItems, sizeof(gSaveBlock1Ptr->bagPocket_KeyItems));
+}

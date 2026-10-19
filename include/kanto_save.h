@@ -32,8 +32,22 @@ struct SaveBlockKanto
 
 extern struct SaveBlockKanto gSaveBlockKanto;
 
+// Poches agrandies du sac (constants/global.h), écrites après le bloc Kanto
+#define SAVEBLOCK_BAG_OFFSET 4096
+struct SaveBlockBag
+{
+    u32 magic;
+    struct ItemSlot items[BIG_BAG_ITEMS_COUNT];
+    struct ItemSlot keyItems[BIG_BAG_KEYITEMS_COUNT];
+    u32 checksum;
+};
+
+extern struct SaveBlockBag gSaveBlockBag;
+
 void KantoSave_Clear(void);
 void KantoSave_Write(void);
 void KantoSave_Read(void);
+void BagSave_Write(void);
+void BagSave_Read(void);
 
 #endif // GUARD_KANTO_SAVE_H
