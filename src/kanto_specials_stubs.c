@@ -29,8 +29,6 @@ u16 Script_TryLoseFansFromPlayTimeAfterLinkBattle(void) { KantoSpecialStub("Scri
 u16 Script_TryLoseFansFromPlayTime(void) { KantoSpecialStub("Script_TryLoseFansFromPlayTime"); return 0; }
 u16 Script_SetPlayerGotFirstFans(void) { KantoSpecialStub("Script_SetPlayerGotFirstFans"); return 0; }
 u16 Script_UpdateTrainerFanClubGameClear(void) { KantoSpecialStub("Script_UpdateTrainerFanClubGameClear"); return 0; }
-u16 GetDaycareCost(void) { KantoSpecialStub("GetDaycareCost"); return 0; }
-u16 DaycareMonReceivedMail(void) { KantoSpecialStub("DaycareMonReceivedMail"); return 0; }
 u16 ShowBattleRecords(void) { KantoSpecialStub("ShowBattleRecords"); return 0; }
 u16 GetProfOaksRatingMessage(void) { KantoSpecialStub("GetProfOaksRatingMessage"); return 0; }
 u16 GetElevatorFloor(void) { KantoSpecialStub("GetElevatorFloor"); return 0; }
@@ -66,18 +64,12 @@ u16 ListMenu(void) { KantoSpecialStub("ListMenu"); return 0; }
 u16 ReturnToListMenu(void) { KantoSpecialStub("ReturnToListMenu"); return 0; }
 u16 DoPicboxCancel(void) { KantoSpecialStub("DoPicboxCancel"); return 0; }
 u16 SeafoamIslandsB4F_CurrentDumpsPlayerOnLand(void) { KantoSpecialStub("SeafoamIslandsB4F_CurrentDumpsPlayerOnLand"); return 0; }
-u16 GetDaycarePokemonCount(void) { KantoSpecialStub("GetDaycarePokemonCount"); return 0; }
 u16 CloseElevatorCurrentFloorWindow(void) { KantoSpecialStub("CloseElevatorCurrentFloorWindow"); return 0; }
 u16 VsSeekerResetObjectMovementAfterChargeComplete(void) { KantoSpecialStub("VsSeekerResetObjectMovementAfterChargeComplete"); return 0; }
 u16 SetWalkingIntoSignVars(void) { KantoSpecialStub("SetWalkingIntoSignVars"); return 0; }
 u16 DisableMsgBoxWalkaway(void) { KantoSpecialStub("DisableMsgBoxWalkaway"); return 0; }
 u16 VsSeekerFreezeObjectsAfterChargeComplete(void) { KantoSpecialStub("VsSeekerFreezeObjectsAfterChargeComplete"); return 0; }
 u16 OverworldWhiteOutGetMoneyLoss(void) { KantoSpecialStub("OverworldWhiteOutGetMoneyLoss"); return 0; }
-u16 PutMonInRoute5Daycare(void) { KantoSpecialStub("PutMonInRoute5Daycare"); return 0; }
-u16 GetCostToWithdrawRoute5DaycareMon(void) { KantoSpecialStub("GetCostToWithdrawRoute5DaycareMon"); return 0; }
-u16 IsThereMonInRoute5Daycare(void) { KantoSpecialStub("IsThereMonInRoute5Daycare"); return 0; }
-u16 GetNumLevelsGainedForRoute5DaycareMon(void) { KantoSpecialStub("GetNumLevelsGainedForRoute5DaycareMon"); return 0; }
-u16 TakePokemonFromRoute5Daycare(void) { KantoSpecialStub("TakePokemonFromRoute5Daycare"); return 0; }
 u16 DoSeagallopFerryScene(void) { KantoSpecialStub("DoSeagallopFerryScene"); return 0; }
 u16 OpenMuseumFossilPic(void) { KantoSpecialStub("OpenMuseumFossilPic"); return 0; }
 u16 CloseMuseumFossilPic(void) { KantoSpecialStub("CloseMuseumFossilPic"); return 0; }

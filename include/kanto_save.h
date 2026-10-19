@@ -22,7 +22,8 @@ struct SaveBlockKanto
     u16 vars[KANTO_VARS_COUNT];
     u8 rivalName[PLAYER_NAME_LENGTH + 1];
     struct FameCheckerSaveData fameChecker[NUM_FAMECHECKER_PERSONS];
-    u8 reserved[1024 - (PLAYER_NAME_LENGTH + 1) - NUM_FAMECHECKER_PERSONS * 2]; // place pour Johto, les îles Sevii, etc.
+    struct DaycareMon route5DayCareMon; // SaveBlock1 de RF (pension de la Route 5)
+    u8 reserved[1024 - (PLAYER_NAME_LENGTH + 1) - NUM_FAMECHECKER_PERSONS * 2 - sizeof(struct DaycareMon)]; // place pour Johto, les îles Sevii, etc.
     u32 checksum;
 };
 

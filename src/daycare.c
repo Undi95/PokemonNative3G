@@ -17,6 +17,7 @@
 #include "task.h"
 #include "window.h"
 #include "party_menu.h"
+#include "kanto_save.h"
 #include "list_menu.h"
 #include "overworld.h"
 #include "constants/items.h"
@@ -930,6 +931,8 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
 
 bool8 ShouldEggHatch(void)
 {
+    if (GetBoxMonData(&gSaveBlockKanto.route5DayCareMon.mon, MON_DATA_SANITY_HAS_SPECIES)) // Rouge Feu
+        gSaveBlockKanto.route5DayCareMon.steps++;
     return TryProduceOrHatchEgg(&gSaveBlock1Ptr->daycare);
 }
 
@@ -985,7 +988,7 @@ u8 GetDaycareState(void)
     return DAYCARE_NO_MONS;
 }
 
-static u8 UNUSED GetDaycarePokemonCount(void)
+u8 GetDaycarePokemonCount(void) // special de Rouge Feu
 {
     u8 ret = CountPokemonInDaycare(&gSaveBlock1Ptr->daycare);
     if (ret)
@@ -1295,4 +1298,65 @@ void ChooseSendDaycareMon(void)
 {
     ChooseMonForDaycare();
     gMain.savedCallback = CB2_ReturnToField;
+}
+
+// Rouge Feu (daycare.c) : specials des scripts de Kanto. Pension de l'Île 4 = pension d'Émeraude
+// (gSaveBlock1Ptr->daycare, comme dans RF) ; pension de la Route 5 dans gSaveBlockKanto.
+// GetDaycareCostForSelectedMon de RF = PrepareDaycareCostStringForSelectedMon d'Émeraude.
+static bool8 BufferDayCareMonReceivedMail(struct DayCare *daycare, u8 daycareId)
+{
+    u8 nick[0x20];
+    struct DaycareMon *daycareMon = &daycare->mons[daycareId];
+
+    GetBoxMonNickname(&daycareMon->mon, nick);
+    if (daycareMon->mail.message.itemId != ITEM_NONE
+        && (StringCompare(nick, daycareMon->mail.monName) != 0
+            || StringCompare(gSaveBlock2Ptr->playerName, daycareMon->mail.otName) != 0))
+    {
+        StringCopy(gStringVar1, nick);
+        StringCopy(gStringVar2, daycareMon->mail.otName);
+        StringCopy(gStringVar3, daycareMon->mail.monName);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+u16 DaycareMonReceivedMail(void)
+{
+    return BufferDayCareMonReceivedMail(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
+}
+
+void GetCostToWithdrawRoute5DaycareMon(void)
+{
+    u16 cost = PrepareDaycareCostStringForSelectedMon(&gSaveBlockKanto.route5DayCareMon);
+    gSpecialVar_0x8005 = cost;
+}
+
+void GetDaycareCost(void)
+{
+    gSpecialVar_0x8005 = PrepareDaycareCostStringForMon(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
+}
+
+u16 GetNumLevelsGainedForRoute5DaycareMon(void)
+{
+    return GetNumLevelsGainedForDaycareMon(&gSaveBlockKanto.route5DayCareMon);
+}
+
+u16 IsThereMonInRoute5Daycare(void)
+{
+    if (GetBoxMonData(&gSaveBlockKanto.route5DayCareMon.mon, MON_DATA_SPECIES) != SPECIES_NONE)
+        return TRUE;
+
+    return FALSE;
+}
+
+void PutMonInRoute5Daycare(void)
+{
+    u8 monIdx = GetCursorSelectionMonId();
+    StorePokemonInDaycare(&gPlayerParty[monIdx], &gSaveBlockKanto.route5DayCareMon);
+}
+
+u16 TakePokemonFromRoute5Daycare(void)
+{
+    return TakeSelectedPokemonFromDaycare(&gSaveBlockKanto.route5DayCareMon);
 }
