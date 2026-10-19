@@ -1332,7 +1332,7 @@ static void SetBattledTrainersFlags(void)
     FlagSet(GetTrainerAFlag());
 }
 
-static void UNUSED SetBattledTrainerFlag(void)
+void SetBattledTrainerFlag(void) // special de Rouge Feu (scripts de Kanto)
 {
     FlagSet(GetTrainerAFlag());
 }
@@ -2031,11 +2031,6 @@ u16 CountBattledRematchTeams(u16 trainerId)
 u16 Script_HasTrainerBeenFought(void)
 {
     return FlagGet(GetTrainerAFlag());
-}
-
-void SetBattledTrainerFlag(void)
-{
-    FlagSet(GetTrainerAFlag());
 }
 
 void SetUpTrainerMovement(void)
