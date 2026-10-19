@@ -30,6 +30,17 @@ FR_TILES_PRI, FR_MT_PRI, FR_PALS_PRI = 640, 640, 7
 # Cartes RF dont le nom existe aussi dans Émeraude mais qui sont différentes : préfixe Kanto.
 RENAME_PREFIXES = ('VictoryRoad', 'SafariZone')
 
+# Décors de combat RF absents d'Émeraude (Conseil 4 : décor d'Émeraude du même type)
+BATTLE_SCENE_ALIASES = {
+    'MAP_BATTLE_SCENE_INDOOR_1': 'MAP_BATTLE_SCENE_NORMAL',
+    'MAP_BATTLE_SCENE_INDOOR_2': 'MAP_BATTLE_SCENE_NORMAL',
+    'MAP_BATTLE_SCENE_LINK': 'MAP_BATTLE_SCENE_NORMAL',
+    'MAP_BATTLE_SCENE_LORELEI': 'MAP_BATTLE_SCENE_GLACIA',
+    'MAP_BATTLE_SCENE_AGATHA': 'MAP_BATTLE_SCENE_PHOEBE',
+    'MAP_BATTLE_SCENE_BRUNO': 'MAP_BATTLE_SCENE_SIDNEY',
+    'MAP_BATTLE_SCENE_LANCE': 'MAP_BATTLE_SCENE_DRAKE',
+}
+
 # Comportements RF sans homonyme dans Émeraude -> équivalent le plus proche.
 BEHAVIOR_ALIASES = {
     'MB_SIGNPOST': 'MB_NORMAL',              # Émeraude : panneaux = bg_events
@@ -324,6 +335,7 @@ class Importer:
             for k in ('requires_flash', 'weather', 'map_type', 'allow_cycling', 'allow_escaping',
                       'allow_running', 'show_map_name', 'battle_scene'):
                 out[k] = j[k]
+            out['battle_scene'] = BATTLE_SCENE_ALIASES.get(out['battle_scene'], out['battle_scene'])
             if out['region_map_section'] not in em_mapsecs:
                 self.warn('MAPSEC inconnu -> MAPSEC_NONE', out['region_map_section'])
                 out['region_map_section'] = 'MAPSEC_NONE'

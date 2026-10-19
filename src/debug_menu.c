@@ -42,17 +42,52 @@ struct DebugWarp
 };
 
 static const u8 sWarpName_PalletTown[] = _("BOURG PALETTE");
-static const u8 sWarpName_Route1[] = _("ROUTE 1");
+static const u8 sWarpName_Viridian[] = _("JADIELLE");
+static const u8 sWarpName_Pewter[] = _("ARGENTA");
+static const u8 sWarpName_Route4[] = _("ROUTE 4");
+static const u8 sWarpName_Cerulean[] = _("AZURIA");
+static const u8 sWarpName_Route10[] = _("ROUTE 10");
+static const u8 sWarpName_Lavender[] = _("LAVANVILLE");
+static const u8 sWarpName_Vermilion[] = _("CARMIN SUR MER");
+static const u8 sWarpName_Celadon[] = _("CÉLADOPOLE");
+static const u8 sWarpName_Saffron[] = _("SAFRANIA");
+static const u8 sWarpName_Fuchsia[] = _("PARMANIE");
+static const u8 sWarpName_Cinnabar[] = _("CRAMOIS'ÎLE");
+static const u8 sWarpName_Indigo[] = _("PLATEAU INDIGO");
+static const u8 sWarpName_OneIsland[] = _("ÎLE 1");
+static const u8 sWarpName_TwoIsland[] = _("ÎLE 2");
+static const u8 sWarpName_ThreeIsland[] = _("ÎLE 3");
+static const u8 sWarpName_FourIsland[] = _("ÎLE 4");
+static const u8 sWarpName_FiveIsland[] = _("ÎLE 5");
+static const u8 sWarpName_SixIsland[] = _("ÎLE 6");
+static const u8 sWarpName_SevenIsland[] = _("ÎLE 7");
 static const u8 sWarpName_Littleroot[] = _("BOURG-EN-VOL");
-static const u8 sWarpName_Route101[] = _("ROUTE 101");
 static const u8 sWarpName_Lilycove[] = _("NÉNUCRIQUE");
 
+// Kanto : points d'arrivée du Vol de Rouge Feu (heal_locations.json)
 static const struct DebugWarp sDebugWarps[] =
 {
-    {sWarpName_PalletTown, MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), 10, 8},
-    {sWarpName_Route1, MAP_GROUP(MAP_ROUTE1), MAP_NUM(MAP_ROUTE1), 11, 30},
+    {sWarpName_PalletTown, MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), 6, 8},
+    {sWarpName_Viridian, MAP_GROUP(MAP_VIRIDIAN_CITY), MAP_NUM(MAP_VIRIDIAN_CITY), 26, 27},
+    {sWarpName_Pewter, MAP_GROUP(MAP_PEWTER_CITY), MAP_NUM(MAP_PEWTER_CITY), 17, 26},
+    {sWarpName_Route4, MAP_GROUP(MAP_ROUTE4), MAP_NUM(MAP_ROUTE4), 12, 6},
+    {sWarpName_Cerulean, MAP_GROUP(MAP_CERULEAN_CITY), MAP_NUM(MAP_CERULEAN_CITY), 22, 20},
+    {sWarpName_Route10, MAP_GROUP(MAP_ROUTE10), MAP_NUM(MAP_ROUTE10), 13, 21},
+    {sWarpName_Lavender, MAP_GROUP(MAP_LAVENDER_TOWN), MAP_NUM(MAP_LAVENDER_TOWN), 6, 6},
+    {sWarpName_Vermilion, MAP_GROUP(MAP_VERMILION_CITY), MAP_NUM(MAP_VERMILION_CITY), 15, 7},
+    {sWarpName_Celadon, MAP_GROUP(MAP_CELADON_CITY), MAP_NUM(MAP_CELADON_CITY), 48, 12},
+    {sWarpName_Saffron, MAP_GROUP(MAP_SAFFRON_CITY), MAP_NUM(MAP_SAFFRON_CITY), 24, 39},
+    {sWarpName_Fuchsia, MAP_GROUP(MAP_FUCHSIA_CITY), MAP_NUM(MAP_FUCHSIA_CITY), 25, 32},
+    {sWarpName_Cinnabar, MAP_GROUP(MAP_CINNABAR_ISLAND), MAP_NUM(MAP_CINNABAR_ISLAND), 14, 12},
+    {sWarpName_Indigo, MAP_GROUP(MAP_INDIGO_PLATEAU_EXTERIOR), MAP_NUM(MAP_INDIGO_PLATEAU_EXTERIOR), 11, 7},
+    {sWarpName_OneIsland, MAP_GROUP(MAP_ONE_ISLAND), MAP_NUM(MAP_ONE_ISLAND), 14, 6},
+    {sWarpName_TwoIsland, MAP_GROUP(MAP_TWO_ISLAND), MAP_NUM(MAP_TWO_ISLAND), 21, 8},
+    {sWarpName_ThreeIsland, MAP_GROUP(MAP_THREE_ISLAND), MAP_NUM(MAP_THREE_ISLAND), 14, 28},
+    {sWarpName_FourIsland, MAP_GROUP(MAP_FOUR_ISLAND), MAP_NUM(MAP_FOUR_ISLAND), 18, 21},
+    {sWarpName_FiveIsland, MAP_GROUP(MAP_FIVE_ISLAND), MAP_NUM(MAP_FIVE_ISLAND), 18, 7},
+    {sWarpName_SixIsland, MAP_GROUP(MAP_SIX_ISLAND), MAP_NUM(MAP_SIX_ISLAND), 11, 12},
+    {sWarpName_SevenIsland, MAP_GROUP(MAP_SEVEN_ISLAND), MAP_NUM(MAP_SEVEN_ISLAND), 12, 4},
     {sWarpName_Littleroot, MAP_GROUP(MAP_LITTLEROOT_TOWN), MAP_NUM(MAP_LITTLEROOT_TOWN), 10, 10},
-    {sWarpName_Route101, MAP_GROUP(MAP_ROUTE101), MAP_NUM(MAP_ROUTE101), 10, 10},
     {sWarpName_Lilycove, MAP_GROUP(MAP_LILYCOVE_CITY), MAP_NUM(MAP_LILYCOVE_CITY), 20, 20},
 };
 
