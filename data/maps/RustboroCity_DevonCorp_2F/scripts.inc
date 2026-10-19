@@ -67,7 +67,7 @@ RustboroCity_DevonCorp_2F_EventScript_FossilScientist::
 	release
 	end
 
-@ This whole section has needless duplication and could be condensed considerably
+/* This whole section has needless duplication and could be condensed considerably*/
 RustboroCity_DevonCorp_2F_EventScript_NoticeRootFossil::
 	closemessage
 	playse SE_PIN
@@ -363,7 +363,7 @@ RustboroCity_DevonCorp_2F_Text_ReceivedMonFromResearcher:
 	.string "{PLAYER} reçoit {STR_VAR_2} de la part\n"
 	.string "du CHERCHEUR DE DEVON.$"
 
-@ Unused
+/* Unused*/
 RustboroCity_DevonCorp_2F_Text_TooManyPokemon:
 	.string "Uh-oh, you've got too many POKéMON.\n"
 	.string "You have no room for this one.$"

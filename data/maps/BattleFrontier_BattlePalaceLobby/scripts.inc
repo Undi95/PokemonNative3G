@@ -5,7 +5,7 @@ BattleFrontier_BattlePalaceLobby_MapScripts::
 
 BattleFrontier_BattlePalaceLobby_OnWarp:
 	map_script_2 VAR_TEMP_1, 0, BattleFrontier_BattlePalaceLobby_EventScript_TurnPlayerNorth
-	.2byte 0
+	.short 0
 
 BattleFrontier_BattlePalaceLobby_EventScript_TurnPlayerNorth::
 	setvar VAR_TEMP_1, 1
@@ -18,7 +18,7 @@ BattleFrontier_BattlePalaceLobby_OnFrame:
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattlePalaceLobby_EventScript_ResumeChallenge
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattlePalaceLobby_EventScript_WonChallenge
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattlePalaceLobby_EventScript_LostChallenge
-	.2byte 0
+	.short 0
 
 BattleFrontier_BattlePalaceLobby_EventScript_GetChallengeStatus::
 	frontier_getstatus
@@ -466,7 +466,7 @@ BattleFrontier_BattlePalaceLobby_Text_FeatWillBeRecorded:
 	.string "Votre résultat va être sauvegardé.\n"
 	.string "Je vous demande de patienter un peu.$"
 
-@ Unused
+/* Unused*/
 BattleFrontier_BattlePalaceLobby_Text_BattlePointsFor7WinStreak:
 	.string "For the feat of your 7-win streak,\n"
 	.string "we present you with Battle Point(s).$"
@@ -491,7 +491,7 @@ BattleFrontier_BattlePalaceLobby_Text_FailedToSaveBeforeEndingChallenge:
 	.string "C'est malheureux, mais nous avons dû\n"
 	.string "vous disqualifier.$"
 
-@ Unused
+/* Unused*/
 BattleFrontier_BattlePalaceLobby_Text_ReceivedPrize:
 	.string "{PLAYER} received the prize\n"
 	.string "{STR_VAR_1}.$"

@@ -437,7 +437,7 @@ BattleFrontier_ExchangeServiceCorner_Text_WelcomePleaseChoosePrize:
 	.string "contre de magnifiques prix.\p"
 	.string "Veuillez choisir un objet.$"
 
-@ Unused
+/* Unused*/
 BattleFrontier_ExchangeServiceCorner_Text_PleaseChoosePrize:
 	.string "Please choose a prize from this list.$"
 

@@ -109,7 +109,7 @@ BerryBlender_Text_DontHavePokeblockCase2:
 	.string "Trouve une BOITE {POKEBLOCK}S et\n"
 	.string "repasse nous voir.$"
 
-@ Unused
+/* Unused*/
 BerryBlender_Text_MakePokeblocksWithOurGroup:
 	.string "Oh, hello! Did you want to make some\n"
 	.string "{POKEBLOCK}S with our little group?$"
@@ -583,10 +583,10 @@ BerryBlender_EventScript_FourPlayerLink:
 	end
 
 BerryBlender_EventScript_DoLinkBerryBlending:
-	setvar VAR_0x8004, 0  @ number of opponents, 0 indicates Link
+	setvar VAR_0x8004, 0  /* number of opponents, 0 indicates Link*/
 	fadescreen FADE_TO_BLACK
-	removeobject 240 @ Unclear where these local IDs come from,
-	removeobject 239 @ but presumably they'd be the 4 link players
+	removeobject 240 /* Unclear where these local IDs come from,*/
+	removeobject 239 /* but presumably they'd be the 4 link players*/
 	removeobject 238
 	removeobject 237
 	special DoBerryBlending

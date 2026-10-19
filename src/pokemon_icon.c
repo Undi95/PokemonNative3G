@@ -917,9 +917,16 @@ const struct SpritePalette gMonIconPaletteTable[] =
 
 // There are only 3 actual palettes. The following are unused
 // and don't point to valid data.
+#ifdef UBFIX
+// They still take up palette slots when loaded, so keep them, with valid data
+    { gMonIconPalettes[0], POKE_ICON_BASE_PAL_TAG + 3 },
+    { gMonIconPalettes[0], POKE_ICON_BASE_PAL_TAG + 4 },
+    { gMonIconPalettes[0], POKE_ICON_BASE_PAL_TAG + 5 },
+#else
     { gMonIconPalettes[3], POKE_ICON_BASE_PAL_TAG + 3 },
     { gMonIconPalettes[4], POKE_ICON_BASE_PAL_TAG + 4 },
     { gMonIconPalettes[5], POKE_ICON_BASE_PAL_TAG + 5 },
+#endif
 };
 
 static const struct OamData sMonIconOamData =
@@ -1190,7 +1197,7 @@ const u8 *GetMonIconTiles(u16 species, bool32 handleDeoxys)
     const u8 *iconSprite = gMonIconTable[species];
     if (species == SPECIES_DEOXYS && handleDeoxys == TRUE)
     {
-        iconSprite = (const u8 *)(0x400 + (u32)iconSprite); // use the specific Deoxys form icon (Speed in this case)
+        iconSprite = (const u8 *)(0x400 + iconSprite); // use the specific Deoxys form icon (Speed in this case)
     }
     return iconSprite;
 }

@@ -1,4 +1,4 @@
-@ Interact with cuttable tree
+/* Interact with cuttable tree*/
 EventScript_CutTree::
 	lockall
 	goto_if_unset FLAG_BADGE01_GET, EventScript_CheckTreeCantCut
@@ -16,7 +16,7 @@ EventScript_CutTree::
 	goto EventScript_CutTreeDown
 	end
 
-@ Use cut from party menu
+/* Use cut from party menu*/
 EventScript_UseCut::
 	lockall
 	dofieldeffect FLDEFF_USE_CUT_ON_TREE
@@ -55,7 +55,7 @@ Text_MonUsedFieldMove:
 Text_CantCut:
 	.string "Cet arbre semble pouvoir être COUPE.$"
 
-@ Interact with smashable rock
+/* Interact with smashable rock*/
 EventScript_RockSmash::
 	lockall
 	goto_if_unset FLAG_BADGE03_GET, EventScript_CantSmashRock
@@ -73,7 +73,7 @@ EventScript_RockSmash::
 	goto EventScript_SmashRock
 	end
 
-@ Use rock smash from party menu
+/* Use rock smash from party menu*/
 EventScript_UseRockSmash::
 	lockall
 	dofieldeffect FLDEFF_USE_ROCK_SMASH

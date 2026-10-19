@@ -203,7 +203,7 @@ static EWRAM_DATA union
     struct WirelessLink_Group *group;
     struct WirelessLink_URoom *uRoom;
 } sWirelessLinkMain = {};
-static EWRAM_DATA u32 sUnused = 0;
+static EWRAM_DATA u32 UNUSED sUnused = 0;
 EWRAM_DATA struct RfuGameCompatibilityData gRfuPartnerCompatibilityData = {};
 EWRAM_DATA u16 gUnionRoomOfferedSpecies = 0;
 EWRAM_DATA u8 gUnionRoomRequestedMonType = 0;
@@ -3309,6 +3309,7 @@ void InitUnionRoom(void)
     sUnionRoomPlayerName[0] = EOS;
 }
 
+#ifndef PORTABLE
 static void Task_InitUnionRoom(u8 taskId)
 {
     s32 i;
@@ -3377,6 +3378,11 @@ static void Task_InitUnionRoom(u8 taskId)
         break;
     }
 }
+#else
+static void Task_InitUnionRoom(u8 taskId)
+{
+}
+#endif
 
 bool16 BufferUnionRoomPlayerName(void)
 {

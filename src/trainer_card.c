@@ -32,6 +32,9 @@
 #include "constants/rgb.h"
 #include "constants/trainers.h"
 #include "constants/union_room.h"
+#ifdef PORTABLE
+#include "menu_helpers.h"
+#endif
 
 enum {
     WIN_MSG,
@@ -363,6 +366,9 @@ static void CloseTrainerCard(u8 taskId)
     FreeAllWindowBuffers();
     FREE_AND_SET_NULL(sData);
     DestroyTask(taskId);
+#ifdef PORTABLE
+    SetVBlankHBlankCallbacksToNull(); // UB: fixes use after free of sData in VBlank callback
+#endif
 }
 
 // States for Task_TrainerCard. Skips the initial states, which are done once in order
@@ -1363,7 +1369,12 @@ static void LoadMonIconGfx(void)
 {
     u8 i;
 
+#ifdef UBFIX
+    // There are only 3 icon palettes, not PARTY_SIZE (see gMonIconPaletteTable)
+    CpuSet(gMonIconPalettes, sData->monIconPal, 3 * 16);
+#else
     CpuSet(gMonIconPalettes, sData->monIconPal, 0x60);
+#endif
     switch (sData->trainerCard.monIconTint)
     {
     case MON_ICON_TINT_NORMAL:

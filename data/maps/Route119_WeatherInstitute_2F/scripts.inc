@@ -134,7 +134,7 @@ Route119_WeatherInstitute_2F_EventScript_TryStartAbnormalWeather::
 	setvar VAR_0x8004, 0
 	call_if_set FLAG_DEFEATED_KYOGRE, Route119_WeatherInstitute_2F_EventScript_LegendaryDefeated
 	call_if_set FLAG_DEFEATED_GROUDON, Route119_WeatherInstitute_2F_EventScript_LegendaryDefeated
-	goto_if_eq VAR_0x8004, 2, Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather  @ Both defeated
+	goto_if_eq VAR_0x8004, 2, Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather  /* Both defeated*/
 	call_if_unset FLAG_TEMP_2, Route119_WeatherInstitute_2F_EventScript_CreateAbnormalWeather
 	specialvar VAR_RESULT, GetAbnormalWeatherMapNameAndType
 	goto_if_eq VAR_RESULT, 1, Route119_WeatherInstitute_2F_EventScript_KyogreWeather
@@ -282,7 +282,7 @@ Route119_WeatherInstitute_2F_Text_ThanksPleaseTakePokemon:
 	.string "C'est peut-être une drôle de façon de\n"
 	.string "te remercier, mais prends ce POKéMON.$"
 
-@ Unused
+/* Unused*/
 Route119_WeatherInstitute_2F_Text_NoRoomForPokemon:
 	.string "Hm? You don't seem to have any room\n"
 	.string "for this POKéMON.$"

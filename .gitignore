@@ -30,6 +30,7 @@ tools/compresSmol/
 *.sa*
 Thumbs.db
 build/
+SDL2/
 .DS_Store
 *.ddump
 .idea/
@@ -44,3 +45,22 @@ prefabs.json
 *.js
 /pokeemerald-*.png
 /pokeemerald_modern-*.png
+
+# PC builds
+/pokeemerald32
+/pokeemerald64
+# Settings, when the game is run from here next to a pokeemerald.sav
+/pokeemerald.ini
+/gamecontrollerdb.txt
+__pycache__/
+
+# Claude Code: .claude/ is ignored except the checked-in review agents, the
+# code-audit skill and the shared settings (the audit loop's Stop hook)
+.claude/*
+!.claude/agents/
+.claude/agents/*
+!.claude/agents/review/
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/code-audit/
+!.claude/settings.json

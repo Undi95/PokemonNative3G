@@ -60,51 +60,51 @@
 	.include "asm/macros/event.inc"
 	.include "constants/constants.inc"
 
-	.section script_data, "aw", %progbits
+	.section script_data, "aw"
 
 	.set ALLOCATE_SCRIPT_CMD_TABLE, 1
 	.include "data/script_cmd_table.inc"
 
 gSpecialVars::
-	.4byte gSpecialVar_0x8000
-	.4byte gSpecialVar_0x8001
-	.4byte gSpecialVar_0x8002
-	.4byte gSpecialVar_0x8003
-	.4byte gSpecialVar_0x8004
-	.4byte gSpecialVar_0x8005
-	.4byte gSpecialVar_0x8006
-	.4byte gSpecialVar_0x8007
-	.4byte gSpecialVar_0x8008
-	.4byte gSpecialVar_0x8009
-	.4byte gSpecialVar_0x800A
-	.4byte gSpecialVar_0x800B
-	.4byte gSpecialVar_Facing
-	.4byte gSpecialVar_Result
-	.4byte gSpecialVar_ItemId
-	.4byte gSpecialVar_LastTalked
-	.4byte gSpecialVar_ContestRank
-	.4byte gSpecialVar_ContestCategory
-	.4byte gSpecialVar_MonBoxId
-	.4byte gSpecialVar_MonBoxPos
-	.4byte gSpecialVar_Unused_0x8014
-	.4byte gTrainerBattleOpponent_A
+	ptrvalue gSpecialVar_0x8000
+	ptrvalue gSpecialVar_0x8001
+	ptrvalue gSpecialVar_0x8002
+	ptrvalue gSpecialVar_0x8003
+	ptrvalue gSpecialVar_0x8004
+	ptrvalue gSpecialVar_0x8005
+	ptrvalue gSpecialVar_0x8006
+	ptrvalue gSpecialVar_0x8007
+	ptrvalue gSpecialVar_0x8008
+	ptrvalue gSpecialVar_0x8009
+	ptrvalue gSpecialVar_0x800A
+	ptrvalue gSpecialVar_0x800B
+	ptrvalue gSpecialVar_Facing
+	ptrvalue gSpecialVar_Result
+	ptrvalue gSpecialVar_ItemId
+	ptrvalue gSpecialVar_LastTalked
+	ptrvalue gSpecialVar_ContestRank
+	ptrvalue gSpecialVar_ContestCategory
+	ptrvalue gSpecialVar_MonBoxId
+	ptrvalue gSpecialVar_MonBoxPos
+	ptrvalue gSpecialVar_Unused_0x8014
+	ptrvalue gTrainerBattleOpponent_A
 
 	.purgem def_special
 	.set ALLOCATE_SPECIAL_TABLE, 1
 	.include "data/specials.inc"
 
 gStdScripts::
-	.4byte Std_ObtainItem              @ STD_OBTAIN_ITEM
-	.4byte Std_FindItem                @ STD_FIND_ITEM
-	.4byte Std_MsgboxNPC               @ MSGBOX_NPC
-	.4byte Std_MsgboxSign              @ MSGBOX_SIGN
-	.4byte Std_MsgboxDefault           @ MSGBOX_DEFAULT
-	.4byte Std_MsgboxYesNo             @ MSGBOX_YESNO
-	.4byte Std_MsgboxAutoclose         @ MSGBOX_AUTOCLOSE
-	.4byte Std_ObtainDecoration        @ STD_OBTAIN_DECORATION
-	.4byte Std_RegisteredInMatchCall   @ STD_REGISTER_MATCH_CALL
-	.4byte Std_MsgboxGetPoints         @ MSGBOX_GETPOINTS
-	.4byte Std_MsgboxPokenav           @ MSGBOX_POKENAV
+	ptrvalue Std_ObtainItem              /* STD_OBTAIN_ITEM*/
+	ptrvalue Std_FindItem                /* STD_FIND_ITEM*/
+	ptrvalue Std_MsgboxNPC               /* MSGBOX_NPC*/
+	ptrvalue Std_MsgboxSign              /* MSGBOX_SIGN*/
+	ptrvalue Std_MsgboxDefault           /* MSGBOX_DEFAULT*/
+	ptrvalue Std_MsgboxYesNo             /* MSGBOX_YESNO*/
+	ptrvalue Std_MsgboxAutoclose         /* MSGBOX_AUTOCLOSE*/
+	ptrvalue Std_ObtainDecoration        /* STD_OBTAIN_DECORATION*/
+	ptrvalue Std_RegisteredInMatchCall   /* STD_REGISTER_MATCH_CALL*/
+	ptrvalue Std_MsgboxGetPoints         /* MSGBOX_GETPOINTS*/
+	ptrvalue Std_MsgboxPokenav           /* MSGBOX_POKENAV*/
 gStdScripts_End::
 
 	.include "data/maps/PetalburgCity/scripts.inc"
@@ -658,7 +658,7 @@ EventScript_SetBrineyLocation_Route109::
 	.include "data/scripts/record_mix.inc"
 	.include "data/scripts/pc.inc"
 
-@ scripts/notices.inc? signs.inc? See comment about text/notices.inc
+/* scripts/notices.inc? signs.inc? See comment about text/notices.inc*/
 Common_EventScript_ShowPokemartSign::
 	msgbox gText_PokemartSign, MSGBOX_SIGN
 	end
@@ -748,7 +748,7 @@ Common_EventScript_StopBrineysBoatMusic::
 
 	.include "data/scripts/prof_birch.inc"
 
-@ Below could be split as ferry.inc aside from the Rusturf tunnel script
+/* Below could be split as ferry.inc aside from the Rusturf tunnel script*/
 Common_EventScript_FerryDepart::
 	delay 60
 	applymovement VAR_0x8004, Movement_FerryDepart
@@ -835,7 +835,7 @@ Common_EventScript_PlayerHandedOverTheItem::
 	.include "data/text/mart_clerk.inc"
 	.include "data/text/obtain_item.inc"
 
-@ The below and surf.inc could be split into some text/notices.inc
+/* The below and surf.inc could be split into some text/notices.inc*/
 gText_PokemartSign::
     .string "“Objets sélectionnés pour\n"
     .string "votre commodité!”\l"
@@ -928,12 +928,12 @@ gText_UndergoingAdjustments::
     .string "Ils sont en train d'effectuer\n"
     .string "des réglages…$"
 
-@ Unused
+/* Unused*/
 gText_SorryTradeCenterInspections::
 	.string "I'm terribly sorry. The TRADE CENTER\n"
 	.string "is undergoing inspections.$"
 
-@ Unused
+/* Unused*/
 gText_SorryRecordCornerPreparation::
 	.string "I'm terribly sorry. The RECORD CORNER\n"
 	.string "is under preparation.$"
@@ -970,7 +970,7 @@ EventScript_SelectWithoutRegisteredItem::
 Common_EventScript_NopReturn::
 	return
 
-@ Unused
+/* Unused*/
 EventScript_CableClub_SetVarResult1::
 	setvar VAR_RESULT, 1
 	return

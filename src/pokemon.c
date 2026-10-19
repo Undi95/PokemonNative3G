@@ -2582,7 +2582,7 @@ void CreateMonWithEVSpreadNatureOTID(struct Pokemon *mon, u16 species, u8 level,
         evsBits >>= 1;
     }
 
-    evAmount = MAX_TOTAL_EVS / statCount;
+    evAmount = SAFE_DIV(MAX_TOTAL_EVS, statCount);
     evsBits = 1;
     for (i = 0; i < NUM_STATS; i++)
     {
@@ -3113,7 +3113,7 @@ s32 CalculateBaseDamage(struct BattlePokemon *attacker, struct BattlePokemon *de
     u16 attack, defense;
     u16 spAttack, spDefense;
     u8 defenderHoldEffect;
-    u8 defenderHoldEffectParam;
+    u8 UNUSED defenderHoldEffectParam;
     u8 attackerHoldEffect;
     u8 attackerHoldEffectParam;
 
@@ -3554,51 +3554,51 @@ static void DecryptBoxMon(struct BoxPokemon *boxMon)
     }
 }
 
-#define SUBSTRUCT_CASE(n, v1, v2, v3, v4)                               \
-case n:                                                                 \
-    {                                                                   \
-    union PokemonSubstruct *substructs0 = boxMon->secure.substructs;    \
-    union PokemonSubstruct *substructs1 = boxMon->secure.substructs;    \
-    union PokemonSubstruct *substructs2 = boxMon->secure.substructs;    \
-    union PokemonSubstruct *substructs3 = boxMon->secure.substructs;    \
-    union PokemonSubstruct *substructs4 = boxMon->secure.substructs;    \
-    union PokemonSubstruct *substructs5 = boxMon->secure.substructs;    \
-    union PokemonSubstruct *substructs6 = boxMon->secure.substructs;    \
-    union PokemonSubstruct *substructs7 = boxMon->secure.substructs;    \
-    union PokemonSubstruct *substructs8 = boxMon->secure.substructs;    \
-    union PokemonSubstruct *substructs9 = boxMon->secure.substructs;    \
-    union PokemonSubstruct *substructs10 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs11 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs12 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs13 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs14 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs15 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs16 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs17 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs18 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs19 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs20 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs21 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs22 = boxMon->secure.substructs;   \
-    union PokemonSubstruct *substructs23 = boxMon->secure.substructs;   \
-                                                                        \
-        switch (substructType)                                          \
-        {                                                               \
-        case 0:                                                         \
-            substruct = &substructs ## n [v1];                          \
-            break;                                                      \
-        case 1:                                                         \
-            substruct = &substructs ## n [v2];                          \
-            break;                                                      \
-        case 2:                                                         \
-            substruct = &substructs ## n [v3];                          \
-            break;                                                      \
-        case 3:                                                         \
-            substruct = &substructs ## n [v4];                          \
-            break;                                                      \
-        }                                                               \
-        break;                                                          \
-    }                                                                   \
+#define SUBSTRUCT_CASE(n, v1, v2, v3, v4)                                    \
+case n:                                                                      \
+    {                                                                        \
+    union PokemonSubstruct UNUSED *substructs0 = boxMon->secure.substructs;  \
+    union PokemonSubstruct UNUSED *substructs1 = boxMon->secure.substructs;  \
+    union PokemonSubstruct UNUSED *substructs2 = boxMon->secure.substructs;  \
+    union PokemonSubstruct UNUSED *substructs3 = boxMon->secure.substructs;  \
+    union PokemonSubstruct UNUSED *substructs4 = boxMon->secure.substructs;  \
+    union PokemonSubstruct UNUSED *substructs5 = boxMon->secure.substructs;  \
+    union PokemonSubstruct UNUSED *substructs6 = boxMon->secure.substructs;  \
+    union PokemonSubstruct UNUSED *substructs7 = boxMon->secure.substructs;  \
+    union PokemonSubstruct UNUSED *substructs8 = boxMon->secure.substructs;  \
+    union PokemonSubstruct UNUSED *substructs9 = boxMon->secure.substructs;  \
+    union PokemonSubstruct UNUSED *substructs10 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs11 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs12 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs13 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs14 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs15 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs16 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs17 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs18 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs19 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs20 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs21 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs22 = boxMon->secure.substructs; \
+    union PokemonSubstruct UNUSED *substructs23 = boxMon->secure.substructs; \
+                                                                             \
+        switch (substructType)                                               \
+        {                                                                    \
+        case 0:                                                              \
+            substruct = &substructs ## n [v1];                               \
+            break;                                                           \
+        case 1:                                                              \
+            substruct = &substructs ## n [v2];                               \
+            break;                                                           \
+        case 2:                                                              \
+            substruct = &substructs ## n [v3];                               \
+            break;                                                           \
+        case 3:                                                              \
+            substruct = &substructs ## n [v4];                               \
+            break;                                                           \
+        }                                                                    \
+        break;                                                               \
+    }                                                                        \
 
 
 static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 personality, u8 substructType)
@@ -6749,16 +6749,9 @@ const u8 *GetTrainerPartnerName(void)
     }
 }
 
-#define READ_PTR_FROM_TASK(taskId, dataId)                      \
-    (void *)(                                                   \
-    ((u16)(gTasks[taskId].data[dataId]) |                       \
-    ((u16)(gTasks[taskId].data[dataId + 1]) << 16)))
+#define READ_PTR_FROM_TASK(taskId) gTasks[taskId].ptr.genericPtr[0]
 
-#define STORE_PTR_IN_TASK(ptr, taskId, dataId)                 \
-{                                                              \
-    gTasks[taskId].data[dataId] = (u32)(ptr);                  \
-    gTasks[taskId].data[dataId + 1] = (u32)(ptr) >> 16;        \
-}
+#define STORE_PTR_IN_TASK(pointer, taskId) gTasks[taskId].ptr.genericPtr[0] = (void*)(pointer)
 
 #define sAnimId    data[2]
 #define sAnimDelay data[3]
@@ -6767,7 +6760,7 @@ static void Task_AnimateAfterDelay(u8 taskId)
 {
     if (--gTasks[taskId].sAnimDelay == 0)
     {
-        LaunchAnimationTaskForFrontSprite(READ_PTR_FROM_TASK(taskId, 0), gTasks[taskId].sAnimId);
+        LaunchAnimationTaskForFrontSprite(READ_PTR_FROM_TASK(taskId), gTasks[taskId].sAnimId);
         DestroyTask(taskId);
     }
 }
@@ -6776,7 +6769,7 @@ static void Task_PokemonSummaryAnimateAfterDelay(u8 taskId)
 {
     if (--gTasks[taskId].sAnimDelay == 0)
     {
-        StartMonSummaryAnimation(READ_PTR_FROM_TASK(taskId, 0), gTasks[taskId].sAnimId);
+        StartMonSummaryAnimation(READ_PTR_FROM_TASK(taskId), gTasks[taskId].sAnimId);
         SummaryScreen_SetAnimDelayTaskId(TASK_NONE);
         DestroyTask(taskId);
     }
@@ -6824,7 +6817,7 @@ void DoMonFrontSpriteAnimation(struct Sprite *sprite, u16 species, bool8 noCry, 
         {
             // Animation has delay, start delay task
             u8 taskId = CreateTask(Task_AnimateAfterDelay, 0);
-            STORE_PTR_IN_TASK(sprite, taskId, 0);
+            STORE_PTR_IN_TASK(sprite, taskId);
             gTasks[taskId].sAnimId = sMonFrontAnimIdsTable[species - 1];
             gTasks[taskId].sAnimDelay = sMonAnimationDelayTable[species - 1];
         }
@@ -6845,7 +6838,7 @@ void PokemonSummaryDoMonAnimation(struct Sprite *sprite, u16 species, bool8 oneF
     {
         // Animation has delay, start delay task
         u8 taskId = CreateTask(Task_PokemonSummaryAnimateAfterDelay, 0);
-        STORE_PTR_IN_TASK(sprite, taskId, 0);
+        STORE_PTR_IN_TASK(sprite, taskId);
         gTasks[taskId].sAnimId = sMonFrontAnimIdsTable[species - 1];
         gTasks[taskId].sAnimDelay = sMonAnimationDelayTable[species - 1];
         SummaryScreen_SetAnimDelayTaskId(taskId);

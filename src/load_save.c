@@ -71,7 +71,12 @@ void SetSaveBlocksPointers(u16 offset)
 {
     struct SaveBlock1 **sav1_LocalVar = &gSaveBlock1Ptr;
 
+#ifdef PORTABLE
+    // Keep the save blocks 8-byte aligned, for their pointers
+    offset = (offset + Random()) & (SAVEBLOCK_MOVE_RANGE - 8);
+#else
     offset = (offset + Random()) & (SAVEBLOCK_MOVE_RANGE - 4);
+#endif
 
     gSaveBlock2Ptr = (void *)(&gSaveblock2) + offset;
     *sav1_LocalVar = (void *)(&gSaveblock1) + offset;
@@ -101,9 +106,15 @@ void MoveSaveBlocks_ResetHeap(void)
     pokemonStorageCopy = (struct PokemonStorage *)(gHeap + sizeof(struct SaveBlock2) + sizeof(struct SaveBlock1));
 
     // backup the saves.
+#ifdef PORTABLE
+    CpuCopy32(gSaveBlock2Ptr, saveBlock2Copy, sizeof(*gSaveBlock2Ptr));
+    CpuCopy32(gSaveBlock1Ptr, saveBlock1Copy, sizeof(*gSaveBlock1Ptr));
+    CpuCopy32(gPokemonStoragePtr, pokemonStorageCopy, sizeof(*gPokemonStoragePtr));
+#else
     *saveBlock2Copy = *gSaveBlock2Ptr;
     *saveBlock1Copy = *gSaveBlock1Ptr;
     *pokemonStorageCopy = *gPokemonStoragePtr;
+#endif
 
     // change saveblocks' pointers
     // argument is a sum of the individual trainerId bytes
@@ -114,9 +125,15 @@ void MoveSaveBlocks_ResetHeap(void)
       saveBlock2Copy->playerTrainerId[3]);
 
     // restore saveblock data since the pointers changed
+#ifdef PORTABLE
+    CpuCopy32(saveBlock2Copy, gSaveBlock2Ptr, sizeof(*saveBlock2Copy));
+    CpuCopy32(saveBlock1Copy, gSaveBlock1Ptr, sizeof(*saveBlock1Copy));
+    CpuCopy32(pokemonStorageCopy, gPokemonStoragePtr, sizeof(*pokemonStorageCopy));
+#else
     *gSaveBlock2Ptr = *saveBlock2Copy;
     *gSaveBlock1Ptr = *saveBlock1Copy;
     *gPokemonStoragePtr = *pokemonStorageCopy;
+#endif
 
     // heap was destroyed in the copying process, so reset it
     InitHeap(gHeap, HEAP_SIZE);

@@ -2,7 +2,11 @@
 	.if ALLOCATE_SPECIAL_TABLE
 	.global SPECIAL_\ptr
 	.set SPECIAL_\ptr, __special__
-	.4byte \ptr
+	ptrvalue \ptr
+	.else
+	/* Define the id locally too, so scripts outside event_scripts.s don't need a
+	   16-bit relocation against it (not allowed in position-independent builds). */
+	.set SPECIAL_\ptr, __special__
 	.endif
 	.set SPECIAL_WAITSTATE_\ptr, \waitstate
 	.set __special__, __special__ + 1
@@ -10,7 +14,7 @@
 
 .set __special__, 0
 .if ALLOCATE_SPECIAL_TABLE
-		.align 2
+		ptr_align
 gSpecials::
 .endif
 	def_special HealPlayerParty
@@ -287,7 +291,7 @@ gSpecials::
 	def_special CheckLeadMonSmart
 	def_special CheckLeadMonTough
 	def_special LookThroughPorthole, waitstate=1
-	def_special DoSoftReset
+/*	def_special DoSoftReset*/
 	def_special GameClear, waitstate=1
 	def_special MoveElevator, waitstate=1
 	def_special ShowGlassWorkshopMenu
@@ -521,7 +525,7 @@ gSpecials::
 	def_special LinkRetireStatusWithBattleTowerPartner, waitstate=1
 	def_special BattleTowerReconnectLink
 	def_special CallTrainerHillFunction
-	def_special Script_DoRayquazaScene, waitstate=1 @ Listed twice
+	def_special Script_DoRayquazaScene, waitstate=1 /* Listed twice*/
 	def_special LoopWingFlapSE
 	def_special DestroyMewEmergingGrassSprite
 	def_special ShowBerryCrushRankings, waitstate=1

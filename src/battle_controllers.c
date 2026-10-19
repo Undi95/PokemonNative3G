@@ -1326,6 +1326,7 @@ void BtlController_EmitDataTransfer(u8 bufferId, u16 size, void *data)
     PrepareBufferDataTransfer(bufferId, sBattleBuffersTransferData, size + 4);
 }
 
+#ifndef VER_64BIT
 static void UNUSED BtlController_EmitDMA3Transfer(u8 bufferId, void *dst, u16 size, void *data)
 {
     s32 i;
@@ -1341,6 +1342,7 @@ static void UNUSED BtlController_EmitDMA3Transfer(u8 bufferId, void *dst, u16 si
         sBattleBuffersTransferData[7 + i] = *(u8 *)(data++);
     PrepareBufferDataTransfer(bufferId, sBattleBuffersTransferData, size + 7);
 }
+#endif
 
 static void UNUSED BtlController_EmitPlayBGM(u8 bufferId, u16 songId, void *data)
 {
@@ -1384,8 +1386,14 @@ void BtlController_EmitChosenMonReturnValue(u8 bufferId, u8 partyId, u8 *battleP
 
     sBattleBuffersTransferData[0] = CONTROLLER_CHOSENMONRETURNVALUE;
     sBattleBuffersTransferData[1] = partyId;
+#ifdef UBFIX
+    if (battlePartyOrder != NULL)
+#endif
+    {
     for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
         sBattleBuffersTransferData[2 + i] = battlePartyOrder[i];
+    }
+
     PrepareBufferDataTransfer(bufferId, sBattleBuffersTransferData, 5);
 }
 

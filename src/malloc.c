@@ -4,7 +4,9 @@
 static void *sHeapStart;
 static u32 sHeapSize;
 
-EWRAM_DATA u8 gHeap[HEAP_SIZE] = {0};
+#ifndef PORTABLE
+ALIGNED(4) EWRAM_DATA u8 gHeap[HEAP_SIZE] = {0};
+#endif
 
 #define MALLOC_SYSTEM_ID 0xA3A3
 
@@ -52,8 +54,13 @@ void *AllocInternal(void *heapStart, u32 size)
     u32 foundBlockSize;
 
     // Alignment
+#ifdef PORTABLE
+    // 8 bytes on PC, for the pointers in what gets allocated
+    size = (size + 7) & ~7;
+#else
     if (size & 3)
         size = 4 * ((size / 4) + 1);
+#endif
 
     for (;;)
     {

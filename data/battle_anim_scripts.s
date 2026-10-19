@@ -8,418 +8,418 @@
 	.include "asm/macros/battle_anim_script.inc"
 	.include "constants/constants.inc"
 
-	.section script_data, "aw", %progbits
+	.section script_data, "aw"
 
-	.align 2
+	ptr_align
 gMovesWithQuietBGM::
-	.2byte MOVE_SING, MOVE_PERISH_SONG, MOVE_GRASS_WHISTLE, 0xFFFF
+	.short MOVE_SING, MOVE_PERISH_SONG, MOVE_GRASS_WHISTLE, 0xFFFF
 
-	.align 2
+	ptr_align
 gBattleAnims_Moves::
-	.4byte Move_NONE
-	.4byte Move_POUND
-	.4byte Move_KARATE_CHOP
-	.4byte Move_DOUBLE_SLAP
-	.4byte Move_COMET_PUNCH
-	.4byte Move_MEGA_PUNCH
-	.4byte Move_PAY_DAY
-	.4byte Move_FIRE_PUNCH
-	.4byte Move_ICE_PUNCH
-	.4byte Move_THUNDER_PUNCH
-	.4byte Move_SCRATCH
-	.4byte Move_VICE_GRIP
-	.4byte Move_GUILLOTINE
-	.4byte Move_RAZOR_WIND
-	.4byte Move_SWORDS_DANCE
-	.4byte Move_CUT
-	.4byte Move_GUST
-	.4byte Move_WING_ATTACK
-	.4byte Move_WHIRLWIND
-	.4byte Move_FLY
-	.4byte Move_BIND
-	.4byte Move_SLAM
-	.4byte Move_VINE_WHIP
-	.4byte Move_STOMP
-	.4byte Move_DOUBLE_KICK
-	.4byte Move_MEGA_KICK
-	.4byte Move_JUMP_KICK
-	.4byte Move_ROLLING_KICK
-	.4byte Move_SAND_ATTACK
-	.4byte Move_HEADBUTT
-	.4byte Move_HORN_ATTACK
-	.4byte Move_FURY_ATTACK
-	.4byte Move_HORN_DRILL
-	.4byte Move_TACKLE
-	.4byte Move_BODY_SLAM
-	.4byte Move_WRAP
-	.4byte Move_TAKE_DOWN
-	.4byte Move_THRASH
-	.4byte Move_DOUBLE_EDGE
-	.4byte Move_TAIL_WHIP
-	.4byte Move_POISON_STING
-	.4byte Move_TWINEEDLE
-	.4byte Move_PIN_MISSILE
-	.4byte Move_LEER
-	.4byte Move_BITE
-	.4byte Move_GROWL
-	.4byte Move_ROAR
-	.4byte Move_SING
-	.4byte Move_SUPERSONIC
-	.4byte Move_SONIC_BOOM
-	.4byte Move_DISABLE
-	.4byte Move_ACID
-	.4byte Move_EMBER
-	.4byte Move_FLAMETHROWER
-	.4byte Move_MIST
-	.4byte Move_WATER_GUN
-	.4byte Move_HYDRO_PUMP
-	.4byte Move_SURF
-	.4byte Move_ICE_BEAM
-	.4byte Move_BLIZZARD
-	.4byte Move_PSYBEAM
-	.4byte Move_BUBBLE_BEAM
-	.4byte Move_AURORA_BEAM
-	.4byte Move_HYPER_BEAM
-	.4byte Move_PECK
-	.4byte Move_DRILL_PECK
-	.4byte Move_SUBMISSION
-	.4byte Move_LOW_KICK
-	.4byte Move_COUNTER
-	.4byte Move_SEISMIC_TOSS
-	.4byte Move_STRENGTH
-	.4byte Move_ABSORB
-	.4byte Move_MEGA_DRAIN
-	.4byte Move_LEECH_SEED
-	.4byte Move_GROWTH
-	.4byte Move_RAZOR_LEAF
-	.4byte Move_SOLAR_BEAM
-	.4byte Move_POISON_POWDER
-	.4byte Move_STUN_SPORE
-	.4byte Move_SLEEP_POWDER
-	.4byte Move_PETAL_DANCE
-	.4byte Move_STRING_SHOT
-	.4byte Move_DRAGON_RAGE
-	.4byte Move_FIRE_SPIN
-	.4byte Move_THUNDER_SHOCK
-	.4byte Move_THUNDERBOLT
-	.4byte Move_THUNDER_WAVE
-	.4byte Move_THUNDER
-	.4byte Move_ROCK_THROW
-	.4byte Move_EARTHQUAKE
-	.4byte Move_FISSURE
-	.4byte Move_DIG
-	.4byte Move_TOXIC
-	.4byte Move_CONFUSION
-	.4byte Move_PSYCHIC
-	.4byte Move_HYPNOSIS
-	.4byte Move_MEDITATE
-	.4byte Move_AGILITY
-	.4byte Move_QUICK_ATTACK
-	.4byte Move_RAGE
-	.4byte Move_TELEPORT
-	.4byte Move_NIGHT_SHADE
-	.4byte Move_MIMIC
-	.4byte Move_SCREECH
-	.4byte Move_DOUBLE_TEAM
-	.4byte Move_RECOVER
-	.4byte Move_HARDEN
-	.4byte Move_MINIMIZE
-	.4byte Move_SMOKESCREEN
-	.4byte Move_CONFUSE_RAY
-	.4byte Move_WITHDRAW
-	.4byte Move_DEFENSE_CURL
-	.4byte Move_BARRIER
-	.4byte Move_LIGHT_SCREEN
-	.4byte Move_HAZE
-	.4byte Move_REFLECT
-	.4byte Move_FOCUS_ENERGY
-	.4byte Move_BIDE
-	.4byte Move_METRONOME
-	.4byte Move_MIRROR_MOVE @ doesnt have an actual animation
-	.4byte Move_SELF_DESTRUCT
-	.4byte Move_EGG_BOMB
-	.4byte Move_LICK
-	.4byte Move_SMOG
-	.4byte Move_SLUDGE
-	.4byte Move_BONE_CLUB
-	.4byte Move_FIRE_BLAST
-	.4byte Move_WATERFALL
-	.4byte Move_CLAMP
-	.4byte Move_SWIFT
-	.4byte Move_SKULL_BASH
-	.4byte Move_SPIKE_CANNON
-	.4byte Move_CONSTRICT
-	.4byte Move_AMNESIA
-	.4byte Move_KINESIS
-	.4byte Move_SOFT_BOILED
-	.4byte Move_HI_JUMP_KICK
-	.4byte Move_GLARE
-	.4byte Move_DREAM_EATER
-	.4byte Move_POISON_GAS
-	.4byte Move_BARRAGE
-	.4byte Move_LEECH_LIFE
-	.4byte Move_LOVELY_KISS
-	.4byte Move_SKY_ATTACK
-	.4byte Move_TRANSFORM
-	.4byte Move_BUBBLE
-	.4byte Move_DIZZY_PUNCH
-	.4byte Move_SPORE
-	.4byte Move_FLASH
-	.4byte Move_PSYWAVE
-	.4byte Move_SPLASH
-	.4byte Move_ACID_ARMOR
-	.4byte Move_CRABHAMMER
-	.4byte Move_EXPLOSION
-	.4byte Move_FURY_SWIPES
-	.4byte Move_BONEMERANG
-	.4byte Move_REST
-	.4byte Move_ROCK_SLIDE
-	.4byte Move_HYPER_FANG
-	.4byte Move_SHARPEN
-	.4byte Move_CONVERSION
-	.4byte Move_TRI_ATTACK
-	.4byte Move_SUPER_FANG
-	.4byte Move_SLASH
-	.4byte Move_SUBSTITUTE
-	.4byte Move_STRUGGLE
-	.4byte Move_SKETCH
-	.4byte Move_TRIPLE_KICK
-	.4byte Move_THIEF
-	.4byte Move_SPIDER_WEB
-	.4byte Move_MIND_READER
-	.4byte Move_NIGHTMARE
-	.4byte Move_FLAME_WHEEL
-	.4byte Move_SNORE
-	.4byte Move_CURSE
-	.4byte Move_FLAIL
-	.4byte Move_CONVERSION_2
-	.4byte Move_AEROBLAST
-	.4byte Move_COTTON_SPORE
-	.4byte Move_REVERSAL
-	.4byte Move_SPITE
-	.4byte Move_POWDER_SNOW
-	.4byte Move_PROTECT
-	.4byte Move_MACH_PUNCH
-	.4byte Move_SCARY_FACE
-	.4byte Move_FAINT_ATTACK
-	.4byte Move_SWEET_KISS
-	.4byte Move_BELLY_DRUM
-	.4byte Move_SLUDGE_BOMB
-	.4byte Move_MUD_SLAP
-	.4byte Move_OCTAZOOKA
-	.4byte Move_SPIKES
-	.4byte Move_ZAP_CANNON
-	.4byte Move_FORESIGHT
-	.4byte Move_DESTINY_BOND
-	.4byte Move_PERISH_SONG
-	.4byte Move_ICY_WIND
-	.4byte Move_DETECT
-	.4byte Move_BONE_RUSH
-	.4byte Move_LOCK_ON
-	.4byte Move_OUTRAGE
-	.4byte Move_SANDSTORM
-	.4byte Move_GIGA_DRAIN
-	.4byte Move_ENDURE
-	.4byte Move_CHARM
-	.4byte Move_ROLLOUT
-	.4byte Move_FALSE_SWIPE
-	.4byte Move_SWAGGER
-	.4byte Move_MILK_DRINK
-	.4byte Move_SPARK
-	.4byte Move_FURY_CUTTER
-	.4byte Move_STEEL_WING
-	.4byte Move_MEAN_LOOK
-	.4byte Move_ATTRACT
-	.4byte Move_SLEEP_TALK
-	.4byte Move_HEAL_BELL
-	.4byte Move_RETURN
-	.4byte Move_PRESENT
-	.4byte Move_FRUSTRATION
-	.4byte Move_SAFEGUARD
-	.4byte Move_PAIN_SPLIT
-	.4byte Move_SACRED_FIRE
-	.4byte Move_MAGNITUDE
-	.4byte Move_DYNAMIC_PUNCH
-	.4byte Move_MEGAHORN
-	.4byte Move_DRAGON_BREATH
-	.4byte Move_BATON_PASS
-	.4byte Move_ENCORE
-	.4byte Move_PURSUIT
-	.4byte Move_RAPID_SPIN
-	.4byte Move_SWEET_SCENT
-	.4byte Move_IRON_TAIL
-	.4byte Move_METAL_CLAW
-	.4byte Move_VITAL_THROW
-	.4byte Move_MORNING_SUN
-	.4byte Move_SYNTHESIS
-	.4byte Move_MOONLIGHT
-	.4byte Move_HIDDEN_POWER
-	.4byte Move_CROSS_CHOP
-	.4byte Move_TWISTER
-	.4byte Move_RAIN_DANCE
-	.4byte Move_SUNNY_DAY
-	.4byte Move_CRUNCH
-	.4byte Move_MIRROR_COAT
-	.4byte Move_PSYCH_UP
-	.4byte Move_EXTREME_SPEED
-	.4byte Move_ANCIENT_POWER
-	.4byte Move_SHADOW_BALL
-	.4byte Move_FUTURE_SIGHT
-	.4byte Move_ROCK_SMASH
-	.4byte Move_WHIRLPOOL
-	.4byte Move_BEAT_UP
-	.4byte Move_FAKE_OUT
-	.4byte Move_UPROAR
-	.4byte Move_STOCKPILE
-	.4byte Move_SPIT_UP
-	.4byte Move_SWALLOW
-	.4byte Move_HEAT_WAVE
-	.4byte Move_HAIL
-	.4byte Move_TORMENT
-	.4byte Move_FLATTER
-	.4byte Move_WILL_O_WISP
-	.4byte Move_MEMENTO
-	.4byte Move_FACADE
-	.4byte Move_FOCUS_PUNCH
-	.4byte Move_SMELLING_SALT
-	.4byte Move_FOLLOW_ME
-	.4byte Move_NATURE_POWER
-	.4byte Move_CHARGE
-	.4byte Move_TAUNT
-	.4byte Move_HELPING_HAND
-	.4byte Move_TRICK
-	.4byte Move_ROLE_PLAY
-	.4byte Move_WISH
-	.4byte Move_ASSIST
-	.4byte Move_INGRAIN
-	.4byte Move_SUPERPOWER
-	.4byte Move_MAGIC_COAT
-	.4byte Move_RECYCLE
-	.4byte Move_REVENGE
-	.4byte Move_BRICK_BREAK
-	.4byte Move_YAWN
-	.4byte Move_KNOCK_OFF
-	.4byte Move_ENDEAVOR
-	.4byte Move_ERUPTION
-	.4byte Move_SKILL_SWAP
-	.4byte Move_IMPRISON
-	.4byte Move_REFRESH
-	.4byte Move_GRUDGE
-	.4byte Move_SNATCH
-	.4byte Move_SECRET_POWER
-	.4byte Move_DIVE
-	.4byte Move_ARM_THRUST
-	.4byte Move_CAMOUFLAGE
-	.4byte Move_TAIL_GLOW
-	.4byte Move_LUSTER_PURGE
-	.4byte Move_MIST_BALL
-	.4byte Move_FEATHER_DANCE
-	.4byte Move_TEETER_DANCE
-	.4byte Move_BLAZE_KICK
-	.4byte Move_MUD_SPORT
-	.4byte Move_ICE_BALL
-	.4byte Move_NEEDLE_ARM
-	.4byte Move_SLACK_OFF
-	.4byte Move_HYPER_VOICE
-	.4byte Move_POISON_FANG
-	.4byte Move_CRUSH_CLAW
-	.4byte Move_BLAST_BURN
-	.4byte Move_HYDRO_CANNON
-	.4byte Move_METEOR_MASH
-	.4byte Move_ASTONISH
-	.4byte Move_WEATHER_BALL
-	.4byte Move_AROMATHERAPY
-	.4byte Move_FAKE_TEARS
-	.4byte Move_AIR_CUTTER
-	.4byte Move_OVERHEAT
-	.4byte Move_ODOR_SLEUTH
-	.4byte Move_ROCK_TOMB
-	.4byte Move_SILVER_WIND
-	.4byte Move_METAL_SOUND
-	.4byte Move_GRASS_WHISTLE
-	.4byte Move_TICKLE
-	.4byte Move_COSMIC_POWER
-	.4byte Move_WATER_SPOUT
-	.4byte Move_SIGNAL_BEAM
-	.4byte Move_SHADOW_PUNCH
-	.4byte Move_EXTRASENSORY
-	.4byte Move_SKY_UPPERCUT
-	.4byte Move_SAND_TOMB
-	.4byte Move_SHEER_COLD
-	.4byte Move_MUDDY_WATER
-	.4byte Move_BULLET_SEED
-	.4byte Move_AERIAL_ACE
-	.4byte Move_ICICLE_SPEAR
-	.4byte Move_IRON_DEFENSE
-	.4byte Move_BLOCK
-	.4byte Move_HOWL
-	.4byte Move_DRAGON_CLAW
-	.4byte Move_FRENZY_PLANT
-	.4byte Move_BULK_UP
-	.4byte Move_BOUNCE
-	.4byte Move_MUD_SHOT
-	.4byte Move_POISON_TAIL
-	.4byte Move_COVET
-	.4byte Move_VOLT_TACKLE
-	.4byte Move_MAGICAL_LEAF
-	.4byte Move_WATER_SPORT
-	.4byte Move_CALM_MIND
-	.4byte Move_LEAF_BLADE
-	.4byte Move_DRAGON_DANCE
-	.4byte Move_ROCK_BLAST
-	.4byte Move_SHOCK_WAVE
-	.4byte Move_WATER_PULSE
-	.4byte Move_DOOM_DESIRE
-	.4byte Move_PSYCHO_BOOST
-	.4byte Move_COUNT @ cannot be reached, because last move is Psycho Boost
+	ptrvalue Move_NONE
+	ptrvalue Move_POUND
+	ptrvalue Move_KARATE_CHOP
+	ptrvalue Move_DOUBLE_SLAP
+	ptrvalue Move_COMET_PUNCH
+	ptrvalue Move_MEGA_PUNCH
+	ptrvalue Move_PAY_DAY
+	ptrvalue Move_FIRE_PUNCH
+	ptrvalue Move_ICE_PUNCH
+	ptrvalue Move_THUNDER_PUNCH
+	ptrvalue Move_SCRATCH
+	ptrvalue Move_VICE_GRIP
+	ptrvalue Move_GUILLOTINE
+	ptrvalue Move_RAZOR_WIND
+	ptrvalue Move_SWORDS_DANCE
+	ptrvalue Move_CUT
+	ptrvalue Move_GUST
+	ptrvalue Move_WING_ATTACK
+	ptrvalue Move_WHIRLWIND
+	ptrvalue Move_FLY
+	ptrvalue Move_BIND
+	ptrvalue Move_SLAM
+	ptrvalue Move_VINE_WHIP
+	ptrvalue Move_STOMP
+	ptrvalue Move_DOUBLE_KICK
+	ptrvalue Move_MEGA_KICK
+	ptrvalue Move_JUMP_KICK
+	ptrvalue Move_ROLLING_KICK
+	ptrvalue Move_SAND_ATTACK
+	ptrvalue Move_HEADBUTT
+	ptrvalue Move_HORN_ATTACK
+	ptrvalue Move_FURY_ATTACK
+	ptrvalue Move_HORN_DRILL
+	ptrvalue Move_TACKLE
+	ptrvalue Move_BODY_SLAM
+	ptrvalue Move_WRAP
+	ptrvalue Move_TAKE_DOWN
+	ptrvalue Move_THRASH
+	ptrvalue Move_DOUBLE_EDGE
+	ptrvalue Move_TAIL_WHIP
+	ptrvalue Move_POISON_STING
+	ptrvalue Move_TWINEEDLE
+	ptrvalue Move_PIN_MISSILE
+	ptrvalue Move_LEER
+	ptrvalue Move_BITE
+	ptrvalue Move_GROWL
+	ptrvalue Move_ROAR
+	ptrvalue Move_SING
+	ptrvalue Move_SUPERSONIC
+	ptrvalue Move_SONIC_BOOM
+	ptrvalue Move_DISABLE
+	ptrvalue Move_ACID
+	ptrvalue Move_EMBER
+	ptrvalue Move_FLAMETHROWER
+	ptrvalue Move_MIST
+	ptrvalue Move_WATER_GUN
+	ptrvalue Move_HYDRO_PUMP
+	ptrvalue Move_SURF
+	ptrvalue Move_ICE_BEAM
+	ptrvalue Move_BLIZZARD
+	ptrvalue Move_PSYBEAM
+	ptrvalue Move_BUBBLE_BEAM
+	ptrvalue Move_AURORA_BEAM
+	ptrvalue Move_HYPER_BEAM
+	ptrvalue Move_PECK
+	ptrvalue Move_DRILL_PECK
+	ptrvalue Move_SUBMISSION
+	ptrvalue Move_LOW_KICK
+	ptrvalue Move_COUNTER
+	ptrvalue Move_SEISMIC_TOSS
+	ptrvalue Move_STRENGTH
+	ptrvalue Move_ABSORB
+	ptrvalue Move_MEGA_DRAIN
+	ptrvalue Move_LEECH_SEED
+	ptrvalue Move_GROWTH
+	ptrvalue Move_RAZOR_LEAF
+	ptrvalue Move_SOLAR_BEAM
+	ptrvalue Move_POISON_POWDER
+	ptrvalue Move_STUN_SPORE
+	ptrvalue Move_SLEEP_POWDER
+	ptrvalue Move_PETAL_DANCE
+	ptrvalue Move_STRING_SHOT
+	ptrvalue Move_DRAGON_RAGE
+	ptrvalue Move_FIRE_SPIN
+	ptrvalue Move_THUNDER_SHOCK
+	ptrvalue Move_THUNDERBOLT
+	ptrvalue Move_THUNDER_WAVE
+	ptrvalue Move_THUNDER
+	ptrvalue Move_ROCK_THROW
+	ptrvalue Move_EARTHQUAKE
+	ptrvalue Move_FISSURE
+	ptrvalue Move_DIG
+	ptrvalue Move_TOXIC
+	ptrvalue Move_CONFUSION
+	ptrvalue Move_PSYCHIC
+	ptrvalue Move_HYPNOSIS
+	ptrvalue Move_MEDITATE
+	ptrvalue Move_AGILITY
+	ptrvalue Move_QUICK_ATTACK
+	ptrvalue Move_RAGE
+	ptrvalue Move_TELEPORT
+	ptrvalue Move_NIGHT_SHADE
+	ptrvalue Move_MIMIC
+	ptrvalue Move_SCREECH
+	ptrvalue Move_DOUBLE_TEAM
+	ptrvalue Move_RECOVER
+	ptrvalue Move_HARDEN
+	ptrvalue Move_MINIMIZE
+	ptrvalue Move_SMOKESCREEN
+	ptrvalue Move_CONFUSE_RAY
+	ptrvalue Move_WITHDRAW
+	ptrvalue Move_DEFENSE_CURL
+	ptrvalue Move_BARRIER
+	ptrvalue Move_LIGHT_SCREEN
+	ptrvalue Move_HAZE
+	ptrvalue Move_REFLECT
+	ptrvalue Move_FOCUS_ENERGY
+	ptrvalue Move_BIDE
+	ptrvalue Move_METRONOME
+	ptrvalue Move_MIRROR_MOVE /* doesnt have an actual animation*/
+	ptrvalue Move_SELF_DESTRUCT
+	ptrvalue Move_EGG_BOMB
+	ptrvalue Move_LICK
+	ptrvalue Move_SMOG
+	ptrvalue Move_SLUDGE
+	ptrvalue Move_BONE_CLUB
+	ptrvalue Move_FIRE_BLAST
+	ptrvalue Move_WATERFALL
+	ptrvalue Move_CLAMP
+	ptrvalue Move_SWIFT
+	ptrvalue Move_SKULL_BASH
+	ptrvalue Move_SPIKE_CANNON
+	ptrvalue Move_CONSTRICT
+	ptrvalue Move_AMNESIA
+	ptrvalue Move_KINESIS
+	ptrvalue Move_SOFT_BOILED
+	ptrvalue Move_HI_JUMP_KICK
+	ptrvalue Move_GLARE
+	ptrvalue Move_DREAM_EATER
+	ptrvalue Move_POISON_GAS
+	ptrvalue Move_BARRAGE
+	ptrvalue Move_LEECH_LIFE
+	ptrvalue Move_LOVELY_KISS
+	ptrvalue Move_SKY_ATTACK
+	ptrvalue Move_TRANSFORM
+	ptrvalue Move_BUBBLE
+	ptrvalue Move_DIZZY_PUNCH
+	ptrvalue Move_SPORE
+	ptrvalue Move_FLASH
+	ptrvalue Move_PSYWAVE
+	ptrvalue Move_SPLASH
+	ptrvalue Move_ACID_ARMOR
+	ptrvalue Move_CRABHAMMER
+	ptrvalue Move_EXPLOSION
+	ptrvalue Move_FURY_SWIPES
+	ptrvalue Move_BONEMERANG
+	ptrvalue Move_REST
+	ptrvalue Move_ROCK_SLIDE
+	ptrvalue Move_HYPER_FANG
+	ptrvalue Move_SHARPEN
+	ptrvalue Move_CONVERSION
+	ptrvalue Move_TRI_ATTACK
+	ptrvalue Move_SUPER_FANG
+	ptrvalue Move_SLASH
+	ptrvalue Move_SUBSTITUTE
+	ptrvalue Move_STRUGGLE
+	ptrvalue Move_SKETCH
+	ptrvalue Move_TRIPLE_KICK
+	ptrvalue Move_THIEF
+	ptrvalue Move_SPIDER_WEB
+	ptrvalue Move_MIND_READER
+	ptrvalue Move_NIGHTMARE
+	ptrvalue Move_FLAME_WHEEL
+	ptrvalue Move_SNORE
+	ptrvalue Move_CURSE
+	ptrvalue Move_FLAIL
+	ptrvalue Move_CONVERSION_2
+	ptrvalue Move_AEROBLAST
+	ptrvalue Move_COTTON_SPORE
+	ptrvalue Move_REVERSAL
+	ptrvalue Move_SPITE
+	ptrvalue Move_POWDER_SNOW
+	ptrvalue Move_PROTECT
+	ptrvalue Move_MACH_PUNCH
+	ptrvalue Move_SCARY_FACE
+	ptrvalue Move_FAINT_ATTACK
+	ptrvalue Move_SWEET_KISS
+	ptrvalue Move_BELLY_DRUM
+	ptrvalue Move_SLUDGE_BOMB
+	ptrvalue Move_MUD_SLAP
+	ptrvalue Move_OCTAZOOKA
+	ptrvalue Move_SPIKES
+	ptrvalue Move_ZAP_CANNON
+	ptrvalue Move_FORESIGHT
+	ptrvalue Move_DESTINY_BOND
+	ptrvalue Move_PERISH_SONG
+	ptrvalue Move_ICY_WIND
+	ptrvalue Move_DETECT
+	ptrvalue Move_BONE_RUSH
+	ptrvalue Move_LOCK_ON
+	ptrvalue Move_OUTRAGE
+	ptrvalue Move_SANDSTORM
+	ptrvalue Move_GIGA_DRAIN
+	ptrvalue Move_ENDURE
+	ptrvalue Move_CHARM
+	ptrvalue Move_ROLLOUT
+	ptrvalue Move_FALSE_SWIPE
+	ptrvalue Move_SWAGGER
+	ptrvalue Move_MILK_DRINK
+	ptrvalue Move_SPARK
+	ptrvalue Move_FURY_CUTTER
+	ptrvalue Move_STEEL_WING
+	ptrvalue Move_MEAN_LOOK
+	ptrvalue Move_ATTRACT
+	ptrvalue Move_SLEEP_TALK
+	ptrvalue Move_HEAL_BELL
+	ptrvalue Move_RETURN
+	ptrvalue Move_PRESENT
+	ptrvalue Move_FRUSTRATION
+	ptrvalue Move_SAFEGUARD
+	ptrvalue Move_PAIN_SPLIT
+	ptrvalue Move_SACRED_FIRE
+	ptrvalue Move_MAGNITUDE
+	ptrvalue Move_DYNAMIC_PUNCH
+	ptrvalue Move_MEGAHORN
+	ptrvalue Move_DRAGON_BREATH
+	ptrvalue Move_BATON_PASS
+	ptrvalue Move_ENCORE
+	ptrvalue Move_PURSUIT
+	ptrvalue Move_RAPID_SPIN
+	ptrvalue Move_SWEET_SCENT
+	ptrvalue Move_IRON_TAIL
+	ptrvalue Move_METAL_CLAW
+	ptrvalue Move_VITAL_THROW
+	ptrvalue Move_MORNING_SUN
+	ptrvalue Move_SYNTHESIS
+	ptrvalue Move_MOONLIGHT
+	ptrvalue Move_HIDDEN_POWER
+	ptrvalue Move_CROSS_CHOP
+	ptrvalue Move_TWISTER
+	ptrvalue Move_RAIN_DANCE
+	ptrvalue Move_SUNNY_DAY
+	ptrvalue Move_CRUNCH
+	ptrvalue Move_MIRROR_COAT
+	ptrvalue Move_PSYCH_UP
+	ptrvalue Move_EXTREME_SPEED
+	ptrvalue Move_ANCIENT_POWER
+	ptrvalue Move_SHADOW_BALL
+	ptrvalue Move_FUTURE_SIGHT
+	ptrvalue Move_ROCK_SMASH
+	ptrvalue Move_WHIRLPOOL
+	ptrvalue Move_BEAT_UP
+	ptrvalue Move_FAKE_OUT
+	ptrvalue Move_UPROAR
+	ptrvalue Move_STOCKPILE
+	ptrvalue Move_SPIT_UP
+	ptrvalue Move_SWALLOW
+	ptrvalue Move_HEAT_WAVE
+	ptrvalue Move_HAIL
+	ptrvalue Move_TORMENT
+	ptrvalue Move_FLATTER
+	ptrvalue Move_WILL_O_WISP
+	ptrvalue Move_MEMENTO
+	ptrvalue Move_FACADE
+	ptrvalue Move_FOCUS_PUNCH
+	ptrvalue Move_SMELLING_SALT
+	ptrvalue Move_FOLLOW_ME
+	ptrvalue Move_NATURE_POWER
+	ptrvalue Move_CHARGE
+	ptrvalue Move_TAUNT
+	ptrvalue Move_HELPING_HAND
+	ptrvalue Move_TRICK
+	ptrvalue Move_ROLE_PLAY
+	ptrvalue Move_WISH
+	ptrvalue Move_ASSIST
+	ptrvalue Move_INGRAIN
+	ptrvalue Move_SUPERPOWER
+	ptrvalue Move_MAGIC_COAT
+	ptrvalue Move_RECYCLE
+	ptrvalue Move_REVENGE
+	ptrvalue Move_BRICK_BREAK
+	ptrvalue Move_YAWN
+	ptrvalue Move_KNOCK_OFF
+	ptrvalue Move_ENDEAVOR
+	ptrvalue Move_ERUPTION
+	ptrvalue Move_SKILL_SWAP
+	ptrvalue Move_IMPRISON
+	ptrvalue Move_REFRESH
+	ptrvalue Move_GRUDGE
+	ptrvalue Move_SNATCH
+	ptrvalue Move_SECRET_POWER
+	ptrvalue Move_DIVE
+	ptrvalue Move_ARM_THRUST
+	ptrvalue Move_CAMOUFLAGE
+	ptrvalue Move_TAIL_GLOW
+	ptrvalue Move_LUSTER_PURGE
+	ptrvalue Move_MIST_BALL
+	ptrvalue Move_FEATHER_DANCE
+	ptrvalue Move_TEETER_DANCE
+	ptrvalue Move_BLAZE_KICK
+	ptrvalue Move_MUD_SPORT
+	ptrvalue Move_ICE_BALL
+	ptrvalue Move_NEEDLE_ARM
+	ptrvalue Move_SLACK_OFF
+	ptrvalue Move_HYPER_VOICE
+	ptrvalue Move_POISON_FANG
+	ptrvalue Move_CRUSH_CLAW
+	ptrvalue Move_BLAST_BURN
+	ptrvalue Move_HYDRO_CANNON
+	ptrvalue Move_METEOR_MASH
+	ptrvalue Move_ASTONISH
+	ptrvalue Move_WEATHER_BALL
+	ptrvalue Move_AROMATHERAPY
+	ptrvalue Move_FAKE_TEARS
+	ptrvalue Move_AIR_CUTTER
+	ptrvalue Move_OVERHEAT
+	ptrvalue Move_ODOR_SLEUTH
+	ptrvalue Move_ROCK_TOMB
+	ptrvalue Move_SILVER_WIND
+	ptrvalue Move_METAL_SOUND
+	ptrvalue Move_GRASS_WHISTLE
+	ptrvalue Move_TICKLE
+	ptrvalue Move_COSMIC_POWER
+	ptrvalue Move_WATER_SPOUT
+	ptrvalue Move_SIGNAL_BEAM
+	ptrvalue Move_SHADOW_PUNCH
+	ptrvalue Move_EXTRASENSORY
+	ptrvalue Move_SKY_UPPERCUT
+	ptrvalue Move_SAND_TOMB
+	ptrvalue Move_SHEER_COLD
+	ptrvalue Move_MUDDY_WATER
+	ptrvalue Move_BULLET_SEED
+	ptrvalue Move_AERIAL_ACE
+	ptrvalue Move_ICICLE_SPEAR
+	ptrvalue Move_IRON_DEFENSE
+	ptrvalue Move_BLOCK
+	ptrvalue Move_HOWL
+	ptrvalue Move_DRAGON_CLAW
+	ptrvalue Move_FRENZY_PLANT
+	ptrvalue Move_BULK_UP
+	ptrvalue Move_BOUNCE
+	ptrvalue Move_MUD_SHOT
+	ptrvalue Move_POISON_TAIL
+	ptrvalue Move_COVET
+	ptrvalue Move_VOLT_TACKLE
+	ptrvalue Move_MAGICAL_LEAF
+	ptrvalue Move_WATER_SPORT
+	ptrvalue Move_CALM_MIND
+	ptrvalue Move_LEAF_BLADE
+	ptrvalue Move_DRAGON_DANCE
+	ptrvalue Move_ROCK_BLAST
+	ptrvalue Move_SHOCK_WAVE
+	ptrvalue Move_WATER_PULSE
+	ptrvalue Move_DOOM_DESIRE
+	ptrvalue Move_PSYCHO_BOOST
+	ptrvalue Move_COUNT /* cannot be reached, because last move is Psycho Boost*/
 
-	.align 2
+	ptr_align
 gBattleAnims_StatusConditions::
-	.4byte Status_Poison                    @ B_ANIM_STATUS_PSN
-	.4byte Status_Confusion                 @ B_ANIM_STATUS_CONFUSION
-	.4byte Status_Burn                      @ B_ANIM_STATUS_BRN
-	.4byte Status_Infatuation               @ B_ANIM_STATUS_INFATUATION
-	.4byte Status_Sleep                     @ B_ANIM_STATUS_SLP
-	.4byte Status_Paralysis                 @ B_ANIM_STATUS_PRZ
-	.4byte Status_Freeze                    @ B_ANIM_STATUS_FRZ
-	.4byte Status_Curse                     @ B_ANIM_STATUS_CURSED
-	.4byte Status_Nightmare                 @ B_ANIM_STATUS_NIGHTMARE
+	ptrvalue Status_Poison                    /* B_ANIM_STATUS_PSN*/
+	ptrvalue Status_Confusion                 /* B_ANIM_STATUS_CONFUSION*/
+	ptrvalue Status_Burn                      /* B_ANIM_STATUS_BRN*/
+	ptrvalue Status_Infatuation               /* B_ANIM_STATUS_INFATUATION*/
+	ptrvalue Status_Sleep                     /* B_ANIM_STATUS_SLP*/
+	ptrvalue Status_Paralysis                 /* B_ANIM_STATUS_PRZ*/
+	ptrvalue Status_Freeze                    /* B_ANIM_STATUS_FRZ*/
+	ptrvalue Status_Curse                     /* B_ANIM_STATUS_CURSED*/
+	ptrvalue Status_Nightmare                 /* B_ANIM_STATUS_NIGHTMARE*/
 
-	.align 2
+	ptr_align
 gBattleAnims_General::
-	.4byte General_CastformChange           @ B_ANIM_CASTFORM_CHANGE
-	.4byte General_StatsChange              @ B_ANIM_STATS_CHANGE
-	.4byte General_SubstituteFade           @ B_ANIM_SUBSTITUTE_FADE
-	.4byte General_SubstituteAppear         @ B_ANIM_SUBSTITUTE_APPEAR
-	.4byte General_PokeblockThrow           @ B_ANIM_POKEBLOCK_THROW
-	.4byte General_ItemKnockoff             @ B_ANIM_ITEM_KNOCKOFF
-	.4byte General_TurnTrap                 @ B_ANIM_TURN_TRAP
-	.4byte General_HeldItemEffect           @ B_ANIM_HELD_ITEM_EFFECT
-	.4byte General_SmokeballEscape          @ B_ANIM_SMOKEBALL_ESCAPE
-	.4byte General_FocusBand                @ B_ANIM_FOCUS_BAND
-	.4byte General_Rain                     @ B_ANIM_RAIN_CONTINUES
-	.4byte General_Sun                      @ B_ANIM_SUN_CONTINUES
-	.4byte General_Sandstorm                @ B_ANIM_SANDSTORM_CONTINUES
-	.4byte General_Hail                     @ B_ANIM_HAIL_CONTINUES
-	.4byte General_LeechSeedDrain           @ B_ANIM_LEECH_SEED_DRAIN
-	.4byte General_MonHit                   @ B_ANIM_MON_HIT
-	.4byte General_ItemSteal                @ B_ANIM_ITEM_STEAL
-	.4byte General_SnatchMove               @ B_ANIM_SNATCH_MOVE
-	.4byte General_FutureSightHit           @ B_ANIM_FUTURE_SIGHT_HIT
-	.4byte General_DoomDesireHit            @ B_ANIM_DOOM_DESIRE_HIT
-	.4byte General_FocusPunchSetUp          @ B_ANIM_FOCUS_PUNCH_SETUP
-	.4byte General_IngrainHeal              @ B_ANIM_INGRAIN_HEAL
-	.4byte General_WishHeal                 @ B_ANIM_WISH_HEAL
+	ptrvalue General_CastformChange           /* B_ANIM_CASTFORM_CHANGE*/
+	ptrvalue General_StatsChange              /* B_ANIM_STATS_CHANGE*/
+	ptrvalue General_SubstituteFade           /* B_ANIM_SUBSTITUTE_FADE*/
+	ptrvalue General_SubstituteAppear         /* B_ANIM_SUBSTITUTE_APPEAR*/
+	ptrvalue General_PokeblockThrow           /* B_ANIM_POKEBLOCK_THROW*/
+	ptrvalue General_ItemKnockoff             /* B_ANIM_ITEM_KNOCKOFF*/
+	ptrvalue General_TurnTrap                 /* B_ANIM_TURN_TRAP*/
+	ptrvalue General_HeldItemEffect           /* B_ANIM_HELD_ITEM_EFFECT*/
+	ptrvalue General_SmokeballEscape          /* B_ANIM_SMOKEBALL_ESCAPE*/
+	ptrvalue General_FocusBand                /* B_ANIM_FOCUS_BAND*/
+	ptrvalue General_Rain                     /* B_ANIM_RAIN_CONTINUES*/
+	ptrvalue General_Sun                      /* B_ANIM_SUN_CONTINUES*/
+	ptrvalue General_Sandstorm                /* B_ANIM_SANDSTORM_CONTINUES*/
+	ptrvalue General_Hail                     /* B_ANIM_HAIL_CONTINUES*/
+	ptrvalue General_LeechSeedDrain           /* B_ANIM_LEECH_SEED_DRAIN*/
+	ptrvalue General_MonHit                   /* B_ANIM_MON_HIT*/
+	ptrvalue General_ItemSteal                /* B_ANIM_ITEM_STEAL*/
+	ptrvalue General_SnatchMove               /* B_ANIM_SNATCH_MOVE*/
+	ptrvalue General_FutureSightHit           /* B_ANIM_FUTURE_SIGHT_HIT*/
+	ptrvalue General_DoomDesireHit            /* B_ANIM_DOOM_DESIRE_HIT*/
+	ptrvalue General_FocusPunchSetUp          /* B_ANIM_FOCUS_PUNCH_SETUP*/
+	ptrvalue General_IngrainHeal              /* B_ANIM_INGRAIN_HEAL*/
+	ptrvalue General_WishHeal                 /* B_ANIM_WISH_HEAL*/
 
-	.align 2
+	ptr_align
 gBattleAnims_Special::
-	.4byte Special_LevelUp                  @ B_ANIM_LVL_UP
-	.4byte Special_SwitchOutPlayerMon       @ B_ANIM_SWITCH_OUT_PLAYER_MON
-	.4byte Special_SwitchOutOpponentMon     @ B_ANIM_SWITCH_OUT_OPPONENT_MON
-	.4byte Special_BallThrow                @ B_ANIM_BALL_THROW
-	.4byte Special_BallThrowWithTrainer     @ B_ANIM_BALL_THROW_WITH_TRAINER
-	.4byte Special_SubstituteToMon          @ B_ANIM_SUBSTITUTE_TO_MON
-	.4byte Special_MonToSubstitute          @ B_ANIM_MON_TO_SUBSTITUTE
+	ptrvalue Special_LevelUp                  /* B_ANIM_LVL_UP*/
+	ptrvalue Special_SwitchOutPlayerMon       /* B_ANIM_SWITCH_OUT_PLAYER_MON*/
+	ptrvalue Special_SwitchOutOpponentMon     /* B_ANIM_SWITCH_OUT_OPPONENT_MON*/
+	ptrvalue Special_BallThrow                /* B_ANIM_BALL_THROW*/
+	ptrvalue Special_BallThrowWithTrainer     /* B_ANIM_BALL_THROW_WITH_TRAINER*/
+	ptrvalue Special_SubstituteToMon          /* B_ANIM_SUBSTITUTE_TO_MON*/
+	ptrvalue Special_MonToSubstitute          /* B_ANIM_MON_TO_SUBSTITUTE*/
 
 Move_NONE:
 Move_MIRROR_MOVE:
@@ -694,7 +694,7 @@ Move_FLAME_WHEEL:
 	clearmonbg ANIM_DEF_PARTNER
 	end
 
-FlameWheel1: @ Unused
+FlameWheel1: /* Unused*/
 	createsprite gFireSpiralOutwardSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 50
 	delay 4
 	return
@@ -2074,9 +2074,9 @@ Move_LOCK_ON:
 	createsprite gLockOnMoveTargetSpriteTemplate, ANIM_ATTACKER, 40, 1
 	createsprite gLockOnMoveTargetSpriteTemplate, ANIM_ATTACKER, 40, 2
 	createsprite gLockOnMoveTargetSpriteTemplate, ANIM_ATTACKER, 40, 3
-	createsprite gLockOnMoveTargetSpriteTemplate, ANIM_ATTACKER, 40, 4  @ Also transitions to red target
+	createsprite gLockOnMoveTargetSpriteTemplate, ANIM_ATTACKER, 40, 4  /* Also transitions to red target*/
 	delay 120
-	setarg 7, 0xFFFF  @ Signal target to flash/disappear
+	setarg 7, 0xFFFF  /* Signal target to flash/disappear*/
 	waitforvisualfinish
 	end
 
@@ -3486,7 +3486,7 @@ Move_HEAT_WAVE:
 	createsprite gFlyingSandCrescentSpriteTemplate, ANIM_ATTACKER, 40, 60, 2560, 96, 1
 	end
 
-@ Also used by Hail weather
+/* Also used by Hail weather*/
 Move_HAIL:
 	loadspritegfx ANIM_TAG_HAIL
 	loadspritegfx ANIM_TAG_ICE_CRYSTALS
@@ -4204,7 +4204,7 @@ Move_AIR_CUTTER:
 	monbg ANIM_DEF_PARTNER
 	setalpha 12, 8
 	delay 0
-	createvisualtask AnimTask_AirCutterProjectile, 2, 32, -24, 6 * 256, 2, 128  @ 6 * 256 == Q_8_8(6)
+	createvisualtask AnimTask_AirCutterProjectile, 2, 32, -24, 6 * 256, 2, 128  /* 6 * 256 == Q_8_8(6)*/
 	waitforvisualfinish
 	playsewithpan SE_M_CUT, SOUND_PAN_TARGET
 	createsprite gAirCutterSliceSpriteTemplate, ANIM_ATTACKER, 2, 40, -32, 0, 2
@@ -6341,7 +6341,7 @@ FlamethrowerCreateFlames:
 	delay 2
 	return
 
-@ Also used by Sandstorm weather
+/* Also used by Sandstorm weather*/
 Move_SANDSTORM:
 	loadspritegfx ANIM_TAG_FLYING_DIRT
 	playsewithpan SE_M_SANDSTORM, 0
@@ -6722,7 +6722,7 @@ SubmissionHit:
 	delay 8
 	return
 
-@ Also used by Sunny weather
+/* Also used by Sunny weather*/
 Move_SUNNY_DAY:
 	loadspritegfx ANIM_TAG_SUNLIGHT
 	monbg ANIM_ATK_PARTNER
@@ -6870,7 +6870,7 @@ Move_RAZOR_LEAF:
 	end
 
 Move_NATURE_POWER:
-	@ No actual animation, uses the animation of a move from sNaturePowerMoves instead
+	/* No actual animation, uses the animation of a move from sNaturePowerMoves instead*/
 
 Move_ANCIENT_POWER:
 	loadspritegfx ANIM_TAG_ROCKS
@@ -9997,7 +9997,7 @@ IceCrystalEffectLong:
 	playsewithpan SE_M_ICY_WIND, SOUND_PAN_TARGET
 	return
 
-IceSpikesEffectShort: @ Unused
+IceSpikesEffectShort: /* Unused*/
 	loopsewithpan SE_M_ICY_WIND, SOUND_PAN_TARGET, 6, 4
 	createsprite gIceGroundSpikeSpriteTemplate, ANIM_TARGET, 2, 0, 24, 0
 	delay 4
@@ -10550,7 +10550,7 @@ General_MonHit:
 General_ItemSteal:
 	loadspritegfx ANIM_TAG_ITEM_BAG
 	createvisualtask AnimTask_SetAnimAttackerAndTargetForEffectAtk, 2
-	createvisualtask AnimTask_SetTargetToEffectBattler, 2  @ Redundant with above
+	createvisualtask AnimTask_SetTargetToEffectBattler, 2  /* Redundant with above*/
 	delay 1
 	create_item_steal_sprite ANIM_ATTACKER, 2, initial_x=0, initial_y=-5, unk2=10, unk3=2, unk4=-1
 	end
@@ -10700,7 +10700,7 @@ SnatchMoveSwapMonForSubstitute:
 	waitforvisualfinish
 	goto SnatchMoveTrySwapToSubstituteEnd
 
-@ Healthbox blue flash effect on level up
+/* Healthbox blue flash effect on level up*/
 Special_LevelUp:
 	playsewithpan SE_EXP_MAX, 0
 	createvisualtask AnimTask_LoadHealthboxPalsForLevelUp, 2

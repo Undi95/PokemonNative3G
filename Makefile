@@ -5,6 +5,9 @@ MAKER_CODE  := 01
 REVISION    := 0
 MODERN      ?= 0
 KEEP_TEMPS  ?= 0
+PORTABLE    ?= 0
+IS64BIT     ?= 1
+TARGET_OS       ?= NONE
 
 # `File name`.gba ('_modern' will be appended to the modern builds)
 FILE_NAME := pokeemeraude
@@ -20,6 +23,34 @@ ifeq (modern,$(MAKECMDGOALS))
 endif
 ifeq (compare,$(MAKECMDGOALS))
   COMPARE := 1
+endif
+ifeq (winwsl,$(MAKECMDGOALS))
+  PORTABLE := 1
+  TARGET_OS := WINDOWS
+endif
+ifeq (linux,$(MAKECMDGOALS))
+  PORTABLE := 1
+  TARGET_OS := LINUX
+endif
+ifeq (macos,$(MAKECMDGOALS))
+  PORTABLE := 1
+  TARGET_OS := MACOS
+endif
+
+# The PC builds' C compiler: gcc, or clang (the default on macOS)
+ifeq ($(TARGET_OS),MACOS)
+  COMPILER ?= clang
+else
+  COMPILER ?= gcc
+endif
+ifneq ($(PORTABLE),1)
+  override COMPILER := gcc
+endif
+
+#Enable MODERN if compiling portable version
+ifeq ($(PORTABLE), 1)
+  MODERN := 1
+  COMPARE := 0
 endif
 
 # Default make rule
@@ -39,15 +70,129 @@ ifneq (,$(TOOLCHAIN))
   endif
 endif
 
-PREFIX := arm-none-eabi-
+BIT_WIDTH := 32
+OTHER_BIT_WIDTH := 64
+ASFLAGS64 :=
+CPPFLAGS64 :=
+
+# 64 bit specific stuff goes here
+ifeq ($(IS64BIT),1)
+  BIT_WIDTH := 64
+  OTHER_BIT_WIDTH := 32
+  ASFLAGS64 :=
+  CPPFLAGS64 := -D VER_64BIT
+endif
+
+PORTABLE_DIR_PREFIX := linux
+ifeq ($(PORTABLE),1)
+  ifeq ($(TARGET_OS),WINDOWS)
+    PORTABLE_DIR_PREFIX := win
+    ifeq ($(IS64BIT),1)
+      PREFIX := x86_64-w64-mingw32-
+    else
+      PREFIX := i686-w64-mingw32-
+    endif # IS64BIT
+  else ifeq ($(TARGET_OS),MACOS)
+    PORTABLE_DIR_PREFIX := macos
+    PREFIX :=
+  else # LINUX
+    PREFIX :=
+  endif # TARGET_OS
+else
+  PREFIX := arm-none-eabi-
+endif
+
 OBJCOPY := $(PREFIX)objcopy
 OBJDUMP := $(PREFIX)objdump
+WINDRES := $(PREFIX)windres
 AS := $(PREFIX)as
 LD := $(PREFIX)ld
 
 EXE :=
 ifeq ($(OS),Windows_NT)
   EXE := .exe
+endif
+
+ifeq ($(PORTABLE),1)
+  ifeq ($(IS64BIT),1)
+    ifeq ($(TARGET_OS),WINDOWS)
+      SDL_DIR := ./SDL2/x86_64-w64-mingw32
+    endif
+    ASM_PSEUDO_OP_CONV := sed -e 's/\.4byte/\.int/g;s/\.2byte/\.short/g'
+    FIX_UNDERSCORE := $(OBJCOPY)
+    LEADING_UNDERSCORE_FLAG :=
+  else
+    SDL_DIR := ./SDL2/i686-w64-mingw32
+    ASM_PSEUDO_OP_CONV := sed -e 's/\.4byte/\.int/g;s/\.2byte/\.short/g'
+    #FIX_UNDERSCORE is required for 32 bit windows
+    ifeq ($(TARGET_OS),WINDOWS)
+      FIX_UNDERSCORE := $(OBJCOPY) --prefix-symbol _
+      LEADING_UNDERSCORE_FLAG := -fleading-underscore
+    else
+      FIX_UNDERSCORE := $(OBJCOPY)
+      LEADING_UNDERSCORE_FLAG :=
+    endif
+  endif
+
+  PLATFORM_LFLAGS :=
+  PLATFORM_INCLUDES :=
+  PLATFORM_CFLAGS :=
+  BUILD_FEXTENSION :=
+  OS_CFLAGS :=
+  OS_LFLAGS :=
+
+  ifeq ($(TARGET_OS),WINDOWS)
+    OS_CFLAGS :=
+    # xinput9_1_0.dll comes with every Windows since Vista; -lxinput would need
+    # xinput1_3.dll from the old DirectX redistributable
+    OS_LFLAGS := -lwinmm -lxinput9_1_0
+    BUILD_FEXTENSION := .exe
+  else ifeq ($(TARGET_OS),MACOS)
+    # The game's data is assembled by GNU as, like on Linux, and converted to
+    # Mach-O objects: clang's assembler can't evaluate some of the script
+    # macros. Homebrew's x86_64-elf-binutils has it.
+    AS := x86_64-elf-as
+    MACOS_ARCH ?= $(shell uname -m)
+    FIX_UNDERSCORE := tools/elf2macho/elf2macho$(EXE) --arch $(MACOS_ARCH)
+    # The data has pointers at any address, like inside scripts, which chained
+    # fixups can't hold
+    OS_LFLAGS := -Wl,-no_fixup_chains
+  else ifeq ($(IS64BIT),1)
+    # Build position independent, so nothing can rely on addresses fitting in 32 bits
+    OS_CFLAGS := -fPIE
+    OS_LFLAGS := -pie -Wl,-z,text
+    # Assembled data holds absolute pointers that get relocated at load time.
+    # Keep it in .data.rel.ro (read-only once relocated) rather than .rodata,
+    # which would need text relocations.
+    FIX_UNDERSCORE += --rename-section .rodata=.data.rel.ro,alloc,load,contents,data
+  else
+    OS_CFLAGS :=
+    OS_LFLAGS := -no-pie
+  endif
+
+  #Windows only
+  ifeq ($(TARGET_OS),WINDOWS)
+    PLATFORM_LFLAGS += -lmingw32
+  endif
+
+  # SDL2
+  ifeq ($(TARGET_OS),MACOS)
+    # From Homebrew. SDL2main isn't needed on macOS.
+    SDL_PREFIX := $(shell sdl2-config --prefix)
+    ifeq ($(SDL_PREFIX),)
+      $(error SDL2 isn't installed: brew install sdl2)
+    endif
+    PLATFORM_INCLUDES += -I$(SDL_PREFIX)/include
+    PLATFORM_LFLAGS += -L$(SDL_PREFIX)/lib -lSDL2 -lm
+  else
+    PLATFORM_LFLAGS += -lSDL2main -lSDL2 -lm
+  endif
+  ifeq ($(IS64BIT),0)
+    PLATFORM_INCLUDES += -DSDL_DISABLE_IMMINTRIN_H -DSDL_DISABLE_MMINTRIN_H -DSDL_DISABLE_XMMINTRIN_H -DSDL_DISABLE_EMMINTRIN_H -DSDL_DISABLE_PMMINTRIN_H
+  endif
+else
+  ASM_PSEUDO_OP_CONV := cat
+  FIX_UNDERSCORE := $(OBJCOPY)
 endif
 
 # use arm-none-eabi-cpp for macOS
@@ -68,9 +213,12 @@ else
 endif
 
 ROM_NAME := $(FILE_NAME).gba
+
 OBJ_DIR_NAME := $(BUILD_DIR)/emerald
 MODERN_ROM_NAME := $(FILE_NAME)_modern.gba
 MODERN_OBJ_DIR_NAME := $(BUILD_DIR)/modern
+PORTABLE_ROM_NAME := $(FILE_NAME)$(BIT_WIDTH)$(BUILD_FEXTENSION)
+PORTABLE_OBJ_DIR_NAME := $(BUILD_DIR)/$(PORTABLE_DIR_PREFIX)$(BIT_WIDTH)
 ASSETS_DIR_NAME := $(BUILD_DIR)/assets
 
 ELF_NAME := $(ROM_NAME:.gba=.elf)
@@ -82,6 +230,9 @@ MODERN_MAP_NAME := $(MODERN_ROM_NAME:.gba=.map)
 ifeq ($(MODERN),0)
   ROM := $(ROM_NAME)
   OBJ_DIR := $(OBJ_DIR_NAME)
+else ifeq ($(PORTABLE),1)
+  ROM := $(PORTABLE_ROM_NAME)
+  OBJ_DIR := $(PORTABLE_OBJ_DIR_NAME)
 else
   ROM := $(MODERN_ROM_NAME)
   OBJ_DIR := $(MODERN_OBJ_DIR_NAME)
@@ -105,7 +256,16 @@ MID_BUILDDIR = $(OBJ_DIR)/$(MID_SUBDIR)
 SHELL := bash -o pipefail
 
 # Set flags for tools
-ASFLAGS := -mcpu=arm7tdmi --defsym MODERN=$(MODERN)
+ifeq ($(PORTABLE),1)
+  ASFLAGS := --$(BIT_WIDTH) $(ASFLAGS64) --defsym VER_64BIT=$(IS64BIT) --defsym MODERN=$(MODERN) --defsym PORTABLE=1 --defsym UBFIX=1
+  ifeq ($(TARGET_OS),MACOS)
+    # x86_64-elf-as takes / as the start of a comment, like SVR4, which would
+    # quietly cut short the songs' expressions. The Linux one doesn't.
+    ASFLAGS += --divide
+  endif
+else
+  ASFLAGS := -mcpu=arm7tdmi --defsym MODERN=$(MODERN)
+endif
 
 INCLUDE_DIRS := include
 INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
@@ -114,11 +274,59 @@ INCLUDE_SCANINC_ARGS := $(INCLUDE_DIRS:%=-I %)
 O_LEVEL ?= 2
 CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=$(MODERN)
 ifeq ($(MODERN),0)
-  CPPFLAGS += -I tools/agbcc/include -I tools/agbcc -nostdinc -undef -std=gnu89
+  CPPFLAGS += -std=gnu99 -I tools/agbcc/include -I tools/agbcc -nostdinc -undef -std=gnu89
   CC1 := tools/agbcc/bin/agbcc$(EXE)
   override CFLAGS += -mthumb-interwork -Wimplicit -Wparentheses -Werror -O$(O_LEVEL) -fhex-asm -g
   LIBPATH := -L ../../tools/agbcc/lib
   LIB := $(LIBPATH) -lgcc -lc -L../../libagbsyscall -lagbsyscall
+else ifeq ($(PORTABLE),1)
+  CPPFLAGS += -std=gnu99 -D NONMATCHING -D PORTABLE -D UBFIX $(CPPFLAGS64) $(PLATFORM_INCLUDES)
+  ifneq ($(SDL_DIR),)
+    CPPFLAGS += -I$(SDL_DIR)/include
+  endif
+  ifeq ($(COMPILER),clang)
+    # clang compiles straight to objects (see the rule for .c files)
+    MODERNCC := clang
+    CPP := clang -E -x c -Wno-unicode
+    CC1 :=
+  else
+    MODERNCC := $(PREFIX)gcc
+    CPP := $(PREFIX)cpp -m$(BIT_WIDTH)
+    CC1 	:= $(shell $(PREFIX)gcc --print-prog-name=cc1) -quiet
+  endif
+  PATH_MODERNCC := PATH="$(PATH)" $(MODERNCC)
+  override CFLAGS += $(OS_CFLAGS) $(PLATFORM_CFLAGS) -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=int-conversion -Werror=pointer-to-int-cast -Werror=int-to-pointer-cast -Wno-trigraphs -Wimplicit -Wparentheses -Wunused -m$(BIT_WIDTH) -std=gnu99 $(LEADING_UNDERSCORE_FLAG) -fno-common -fno-builtin -Wno-unused-function -DPORTABLE -DNONMATCHING -D UBFIX -DMODERN=$(MODERN)
+  # The same floating point results everywhere, which the tests' frame hashes
+  # need: on ARM, compilers would otherwise fuse multiplies and adds
+  override CFLAGS += -ffp-contract=off
+  ifeq ($(COMPILER),clang)
+    # clang reports GNU C that gcc takes as it is, and that pret's code is full
+    # of: __alignof__ of expressions, unused tables, u8 and char strings mixed,
+    # calls through pointers to functions without prototypes, and constants
+    # meant to wrap around in signed types and bitfields. Older clangs don't
+    # know all of these warnings.
+    override CFLAGS += -Wno-unknown-warning-option -Wno-gnu-alignof-expression -Wno-unused-const-variable -Wno-pointer-sign
+    override CFLAGS += -Wno-deprecated-non-prototype -Wno-constant-conversion -Wno-bitfield-constant-conversion -Wno-single-bit-bitfield-constant-conversion
+  endif
+  ifeq ($(COMPILER),gcc)
+    override CFLAGS += -fno-dce
+    # GCC reports writes it can't rule out on paths the game never takes, like
+    # GetMonData filling in a name with no buffer to write to, and which ones it
+    # reports changes between versions
+    override CFLAGS += -Wno-stringop-overflow
+  endif
+  # CI builds with WERROR=1, so that new warnings fail the build. The
+  # preprocessor runs on its own, so it needs the flag too.
+  ifeq ($(WERROR),1)
+    override CFLAGS += -Werror
+    CPPFLAGS += -Werror
+  endif
+  # e.g. SANITIZE=address,undefined (Linux only). GCC defines shifting into the
+  # sign bit (it's everywhere in GBA code), so that isn't reported.
+  ifneq ($(SANITIZE),)
+    override CFLAGS += -fsanitize=$(SANITIZE) -fno-sanitize=shift-base -fno-omit-frame-pointer
+  endif
+  LIB := $(LIBPATH) -lgcc -lc
 else
 # Note: The makefile must be set up to not call these if modern == 0
   MODERNCC := $(PREFIX)gcc
@@ -128,9 +336,18 @@ else
   LIBPATH := -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_MODERNCC) -mthumb -print-file-name=libc.a))"
   LIB := $(LIBPATH) -lc -lnosys -lgcc -L../../libagbsyscall -lagbsyscall
 endif
+
 # Enable debug info if set
 ifeq ($(DINFO),1)
   override CFLAGS += -g
+endif
+
+ifeq ($(PORTABLE),1)
+  ifeq ($(DINFO),1)
+    override CFLAGS += -O0
+  else
+    override CFLAGS += -O3
+  endif
 endif
 
 # Variable filled out in other make files
@@ -160,7 +377,7 @@ MAKEFLAGS += --no-print-directory
 .DELETE_ON_ERROR:
 
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidynonmodern generated clean-generated
-.PHONY: all rom modern compare
+.PHONY: all rom modern compare winwsl linux macos
 .PHONY: $(RULES_NO_SCAN)
 
 infoshell = $(foreach line, $(shell $1 | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
@@ -210,15 +427,37 @@ DATA_ASM_OBJS := $(patsubst $(DATA_ASM_SUBDIR)/%.s,$(DATA_ASM_BUILDDIR)/%.o,$(DA
 MID_SRCS := $(wildcard $(MID_SUBDIR)/*.mid)
 MID_OBJS := $(patsubst $(MID_SUBDIR)/%.mid,$(MID_BUILDDIR)/%.o,$(MID_SRCS))
 
-OBJS     := $(C_OBJS) $(C_ASM_OBJS) $(ASM_OBJS) $(DATA_ASM_OBJS) $(MID_OBJS)
+ifeq ($(PORTABLE),1)
+  OBJS     := $(C_OBJS) $(ASM_OBJS) $(DATA_ASM_OBJS) $(MID_OBJS)
+else
+  OBJS     := $(C_OBJS) $(C_ASM_OBJS) $(ASM_OBJS) $(DATA_ASM_OBJS) $(MID_OBJS)
+endif
+
+ifeq ($(TARGET_OS),WINDOWS)
+  OBJS += $(OBJ_DIR)/res.o
+endif
+
 OBJS_REL := $(patsubst $(OBJ_DIR)/%,%,$(OBJS))
 
 SUBDIRS  := $(sort $(dir $(OBJS)))
 $(shell mkdir -p $(SUBDIRS))
 
+# Make only compares timestamps, so rebuild everything when the flags change
+ifeq ($(SETUP_PREREQS),1)
+  BUILD_FLAGS := $(strip $(MODERNCC) $(CC1) $(CPP) $(CPPFLAGS) $(CFLAGS) $(AS) $(ASFLAGS) $(PLATFORM_LFLAGS) $(OS_LFLAGS))
+  BUILD_FLAGS_FILE := $(OBJ_DIR)/build_flags.txt
+  ifneq ($(BUILD_FLAGS),$(strip $(shell cat $(BUILD_FLAGS_FILE) 2>/dev/null)))
+    $(shell printf '%s\n' '$(BUILD_FLAGS)' > $(BUILD_FLAGS_FILE))
+  endif
+  $(OBJS): $(BUILD_FLAGS_FILE)
+endif
+
 # Pretend rules that are actually flags defer to `make all`
 modern: all
 compare: all
+winwsl: all
+linux: all
+macos: all
 
 # Other rules
 rom: $(ROM)
@@ -240,7 +479,7 @@ clean-assets:
 	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
 
-tidy: tidynonmodern tidymodern
+tidy: tidynonmodern tidymodern tidyportable
 
 tidynonmodern:
 	rm -f $(ROM_NAME) $(ELF_NAME) $(MAP_NAME)
@@ -249,6 +488,21 @@ tidynonmodern:
 tidymodern:
 	rm -f $(MODERN_ROM_NAME) $(MODERN_ELF_NAME) $(MODERN_MAP_NAME)
 	rm -rf $(MODERN_OBJ_DIR_NAME)
+
+tidyportable:
+	rm -f $(FILE_NAME)win32.exe
+	rm -f $(FILE_NAME)win64.exe
+	rm -f $(FILE_NAME)linux32
+	rm -f $(FILE_NAME)linux64
+	rm -rf $(BUILD_DIR)/win32
+	rm -rf $(BUILD_DIR)/win64
+	rm -rf $(BUILD_DIR)/linux32
+	rm -rf $(BUILD_DIR)/linux64
+	rm -rf $(BUILD_DIR)/macos64
+
+clean-platform:
+	rm -f $(PORTABLE_ROM_NAME)
+	rm -rf $(PORTABLE_OBJ_DIR_NAME)/src/platform
 
 # Other rules
 include graphics_file_rules.mk
@@ -290,7 +544,7 @@ $(C_BUILDDIR)/m4a.o: CC1 := tools/agbcc/bin/old_agbcc$(EXE)
 $(C_BUILDDIR)/record_mixing.o: CFLAGS += -ffreestanding
 $(C_BUILDDIR)/librfu_intr.o: CC1 := $(TOOLS_DIR)/agbcc/bin/agbcc_arm$(EXE)
 $(C_BUILDDIR)/librfu_intr.o: CFLAGS := -O2 -mthumb-interwork -quiet
-else
+else ifneq ($(PORTABLE),1)
 $(C_BUILDDIR)/librfu_intr.o: CFLAGS := -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast
 $(C_BUILDDIR)/berry_crush.o: override CFLAGS += -Wno-address-of-packed-member
 endif
@@ -298,18 +552,37 @@ endif
 # Dependency rules (for the *.c & *.s sources to .o files)
 # Have to be explicit or else missing files won't be reported.
 
+ifeq ($(PORTABLE),1)
+# The game's variables, which all start out zeroed, get a section of their own,
+# so that a soft reset can clear them like the GBA clears its RAM (see
+# RegisterRamReset in src/platform/system.c). The platform code's stay in .bss.
+# objcopy renames the section after gcc; clang puts them there itself.
+ifeq ($(COMPILER),clang)
+GAME_RAM_CPPFLAGS = -include include/platform/gba_ram.h
+$(C_BUILDDIR)/platform/%.o: GAME_RAM_CPPFLAGS =
+else
+GAME_RAM_SECTION = $(OBJCOPY) --rename-section .bss=gba_ram $@
+$(C_BUILDDIR)/platform/%.o: GAME_RAM_SECTION =
+endif
+endif
+
 # As a side effect, they're evaluated immediately instead of when the rule is invoked.
 # It doesn't look like $(shell) can be deferred so there might not be a better way (Icedude_907: there is soon).
 
 $(C_BUILDDIR)/%.o: $(C_SUBDIR)/%.c
-ifneq ($(KEEP_TEMPS),1)
+ifeq ($(COMPILER),clang)
+	@echo "$(MODERNCC) <flags> -o $@ $<"
+	@$(CPP) $(CPPFLAGS) $(GAME_RAM_CPPFLAGS) $< | $(PREPROC) -i -g $(ASSETS_DIR_NAME) $< charmap.txt | $(MODERNCC) $(CFLAGS) -x c -c -o $@ -
+else ifneq ($(KEEP_TEMPS),1)
 	@echo "$(CC1) <flags> -o $@ $<"
 	@$(CPP) $(CPPFLAGS) $< | $(PREPROC) -i -g $(ASSETS_DIR_NAME) $< charmap.txt | $(CC1) $(CFLAGS) -o - - | cat - <(echo -e ".text\n\t.align\t2, 0") | $(AS) $(ASFLAGS) -o $@ -
+	@$(GAME_RAM_SECTION)
 else
 	@$(CPP) $(CPPFLAGS) $< -o $(C_BUILDDIR)/$*.i
 	@$(PREPROC) -g $(ASSETS_DIR_NAME) $(C_BUILDDIR)/$*.i charmap.txt | $(CC1) $(CFLAGS) -o $(C_BUILDDIR)/$*.s
 	@echo -e ".text\n\t.align\t2, 0\n" >> $(C_BUILDDIR)/$*.s
 	$(AS) $(ASFLAGS) -o $@ $(C_BUILDDIR)/$*.s
+	@$(GAME_RAM_SECTION)
 endif
 
 $(C_BUILDDIR)/%.d: $(C_SUBDIR)/%.c
@@ -321,6 +594,7 @@ endif
 
 $(ASM_BUILDDIR)/%.o: $(ASM_SUBDIR)/%.s
 	$(AS) $(ASFLAGS) -o $@ $<
+	$(FIX_UNDERSCORE) $@
 
 $(ASM_BUILDDIR)/%.d: $(ASM_SUBDIR)/%.s
 	$(SCANINC) -M $@ -g $(ASSETS_DIR_NAME) $(INCLUDE_SCANINC_ARGS) -I "" $<
@@ -340,7 +614,8 @@ ifneq ($(NODEP),1)
 endif
 
 $(DATA_ASM_BUILDDIR)/%.o: $(DATA_ASM_SUBDIR)/%.s
-	$(PREPROC) $< charmap.txt | $(CPP) $(INCLUDE_SCANINC_ARGS) - | $(PREPROC) -ie $< charmap.txt | $(AS) $(ASFLAGS) -o $@
+	$(PREPROC) $< charmap.txt | $(CPP) $(INCLUDE_SCANINC_ARGS) - | $(PREPROC) -ie $< charmap.txt | $(ASM_PSEUDO_OP_CONV) | $(AS) $(ASFLAGS) -o $@
+	$(FIX_UNDERSCORE) $@
 
 $(DATA_ASM_BUILDDIR)/%.d: $(DATA_ASM_SUBDIR)/%.s
 	$(SCANINC) -M $@ -g $(ASSETS_DIR_NAME) $(INCLUDE_SCANINC_ARGS) -I "" $<
@@ -358,6 +633,9 @@ $(OBJ_DIR)/sym_common.ld: sym_common.txt $(C_OBJS) $(wildcard common_syms/*.txt)
 $(OBJ_DIR)/sym_ewram.ld: sym_ewram.txt
 	$(RAMSCRGEN) ewram_data $< ENGLISH > $@
 
+$(OBJ_DIR)/res.o: $(C_SUBDIR)/platform/win32res/res.rc $(C_SUBDIR)/platform/win32res/icon.ico
+	$(WINDRES) $< -o $@
+
 # Linker script
 ifeq ($(MODERN),0)
 LD_SCRIPT := ld_script.ld
@@ -372,6 +650,7 @@ endif
 libagbsyscall:
 	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=$(MODERN)
 
+ifneq ($(PORTABLE),1)
 # Elf from object files
 LDFLAGS = -Map ../../$(MAP)
 $(ELF): $(LD_SCRIPT) $(LD_SCRIPT_DEPS) $(OBJS) libagbsyscall
@@ -387,3 +666,12 @@ $(ROM): $(ELF)
 # Symbol file (`make syms`)
 $(SYM): $(ELF)
 	$(OBJDUMP) -t $< | sort -u | grep -E "^0[2389]" | $(PERL) -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$$/\1 \2 \3 \4/g' > $@
+else ifeq ($(TARGET_OS),MACOS)
+# ld warns about each of the 28000 pointers that aren't aligned, which is fine
+# without chained fixups (see -no_fixup_chains)
+$(ROM): $(OBJS)
+	$(MODERNCC) $(CFLAGS) $^ $(PLATFORM_LFLAGS) $(OS_LFLAGS) -o $@ 2>&1 | sed '/ld: warning: pointer not aligned/d'
+else
+$(ROM): $(OBJS)
+	$(MODERNCC) $(CFLAGS) -Wl,--demangle $^ -static-libgcc -L$(SDL_DIR)/lib $(PLATFORM_LFLAGS) $(OS_LFLAGS) -o $@
+endif

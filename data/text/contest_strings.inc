@@ -1,4 +1,4 @@
-@ Contest move effect descriptions
+/* Contest move effect descriptions*/
 
 gText_HighlyAppealingMove::
     .string "Une démonstration qui\n"
@@ -192,7 +192,7 @@ gText_TemporarilyStopCrowdExcited::
     .string "Empêche provisoirement le\n"
     .string "public d'être enthousiaste.$"
 
-@ Unused move names
+/* Unused move names*/
 
 gText_RainDance::
     .string "DANSE PLUIE$"
@@ -233,7 +233,7 @@ gText_DefenseCurl::
 gText_LockOn::
     .string "VERROUILLAGE$"
 
-@ Contest type names
+/* Contest type names*/
 
 gContestMoveTypeCoolText::
     .string "SG-FD$"
@@ -270,7 +270,7 @@ gText_AllOutOfAppealTime::
     .string "Le concours est \n"
     .string "terminé!{PAUSE 15}{PAUSE 15}{PAUSE 15}{PAUSE 15}$"
 
-@ Unused appeal result texts
+/* Unused appeal result texts*/
 
 gText_ButAppealWasJammed::
     .string "Mais la démonstration\n"
@@ -316,6 +316,8 @@ gText_WorkedRatherWell::
 gText_WorkedLittleBetterThanUsual::
     .string "C'était un peu mieux\n"
     .string "que d'habitude.$"
+
+/* Round result texts*/
 
 gText_MonFailedToStandOutAtAll::
     .string "{STR_VAR_1} n'a pas été\n"
@@ -436,7 +438,7 @@ gText_EveryonesAppealsMadeSame::
     .string "Toutes les démonstra-\n"
     .string "tions se ressemblent.$"
 
-@ Appeal result texts
+/* Appeal result texts*/
 
 gText_BecameMoreConsciousOfOtherMons::
     .string "Il est plus conscient\n"

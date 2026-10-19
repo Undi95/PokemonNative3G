@@ -8,7 +8,7 @@ MauvilleCity_PokemonCenter_1F_EventScript_MauvilleOldMan::
 	case MAUVILLE_MAN_GIDDY, MauvilleCity_PokemonCenter_1F_EventScript_Giddy
 	end
 
-@ Bard
+/* Bard*/
 MauvilleCity_PokemonCenter_1F_EventScript_Bard::
 	lock
 	faceplayer
@@ -60,7 +60,7 @@ MauvilleCity_PokemonCenter_1F_EventScript_DeclineWritingLyrics::
 	release
 	end
 
-@ Hipster
+/* Hipster*/
 MauvilleCity_PokemonCenter_1F_EventScript_Hipster::
 	lock
 	faceplayer
@@ -85,7 +85,7 @@ MauvilleCity_PokemonCenter_1F_EventScript_TeachWord::
 	release
 	end
 
-@ Trader
+/* Trader*/
 MauvilleCity_PokemonCenter_1F_Text_WantToTradeDecor:
 	.string "Salut, je suis le BROCANTEUR. Tu veux\n"
 	.string "échanger des décorations avec moi?$"
@@ -229,7 +229,7 @@ MauvilleCity_PokemonCenter_1F_EventScript_NoRoomForDecor::
 	release
 	end
 
-@ Storyteller
+/* Storyteller*/
 MauvilleCity_PokemonCenter_1F_Text_WillYouHearMyTale:
 	.string "Je suis le CONTEUR.\n"
 	.string "Je peux te raconter l'histoire de\l"
@@ -268,7 +268,7 @@ MauvilleCity_PokemonCenter_1F_Text_HaveYouAnyLegendaryTales:
 	.string "Alors dis-moi, as-tu des histoires à me\n"
 	.string "raconter, même vaguement légendaires?$"
 
-@ Unused
+/* Unused*/
 MauvilleCity_PokemonCenter_1F_Text_HearAnotherLegendaryTale:
 	.string "Incidentally… Would you care to hear\n"
 	.string "another legendary tale?$"
@@ -842,7 +842,7 @@ MauvilleCity_PokemonCenter_1F_EventScript_DeclineStoryteller::
 	release
 	end
 
-@ Unused
+/* Unused*/
 MauvilleCity_PokemonCenter_1F_EventScript_WaitingForRecordMix::
 	msgbox MauvilleCity_PokemonCenter_1F_Text_IWishMorePeopleWereInterested, MSGBOX_DEFAULT
 	release
@@ -852,7 +852,7 @@ MauvilleCity_PokemonCenter_1F_EventScript_StorytellerEnd::
 	release
 	end
 
-@ Giddy
+/* Giddy*/
 MauvilleCity_PokemonCenter_1F_Text_HearMyStory:
 	.string "Je m'appelle PAPOTEUR!\n"
 	.string "J'ai une super histoire à te raconter!\p"
@@ -895,8 +895,8 @@ MauvilleCity_PokemonCenter_1F_EventScript_GiddyStartNewTale::
 	goto MauvilleCity_PokemonCenter_1F_EventScript_GiddyTellTale
 	end
 
-@ Giddy will continue to tell stories regardless of whether yes or no is selected below.
-@ Each story there is a 10% chance it will be his last. Otherwise he will stop at 10 stories.
+/* Giddy will continue to tell stories regardless of whether yes or no is selected below.*/
+/* Each story there is a 10% chance it will be his last. Otherwise he will stop at 10 stories.*/
 MauvilleCity_PokemonCenter_1F_EventScript_GiddyTellTale::
 	special GenerateGiddyLine
 	special ShowFieldMessageStringVar4

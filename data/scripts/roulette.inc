@@ -57,7 +57,7 @@ Roulette_Text_KeepPlaying::
 Roulette_Text_BoardWillBeCleared::
 	.string "La ROULETTE va être relancée.$"
 
-@ Unused
+/* Unused*/
 Roulette_Text_YouDontHaveACoinCase::
 	.string "You don't have a COIN CASE.$"
 
