@@ -30,6 +30,9 @@ Outils : DEBUG > « Recevoir MEWTWO » (nv 70) ; l'état de test (build KANTO_DE
   contrôleur RF, sur la base de celui de Wally : même type de combat ; `IsOldManTutorialBattle()`).
   Testée avec `kanto_old_man` (nécessite VAR_KANTO_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN = 1, c.-à-d. le POKéDEX reçu).
   Sac : celui d'Émeraude en mode démonstration.
+Prochaine étape : remplacer les stubs de specials RF (`src/kanto_specials_stubs.c`, ~140) par le code RF,
+en commençant par ceux rencontrés en jeu (PC, magasins, Fame Checker, TV ABC…) ; versions dans
+`src/kanto_field_specials.c`. Données de save RF : `gSaveBlockKanto` (`include/kanto_save.h`).
 
 ## Dettes (provisoire → importer depuis RF)
 - Combat : conseils de Chen pendant le combat du labo NON importés (décision utilisateur : Kanto vient après Hoenn) ; rematchs RF (Cherche VS) ; Tour Dresseurs.
