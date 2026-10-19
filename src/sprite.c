@@ -819,7 +819,8 @@ void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFram
         sSpriteCopyRequestCount++;
     }
 #if defined(PORTABLE) && defined(KANTO_DEBUG_START)
-    DebugPrintfStderr("SPRDBG %u req tile %d size %d count %d\n", gMain.vblankCounter1, tileNum, images[index].size, sSpriteCopyRequestCount);
+    { u32 j, sum = 0; for (j = 0; j < images[index].size; j++) sum += ((const u8 *)images[index].data)[j];
+    DebugPrintfStderr("SPRDBG %u req tile %d size %d count %d srcsum %u index %d\n", gMain.vblankCounter1, tileNum, images[index].size, sSpriteCopyRequestCount, sum, index); }
 #endif
 }
 
