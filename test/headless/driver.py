@@ -60,7 +60,7 @@ class Game:
         if save:
             shutil.copyfile(save, self.save_path)
 
-        cmd = [os.path.abspath(binary), "--save", self.save_path, "--test-input", "-", "--test-state", "-",
+        cmd = [os.path.abspath(binary), "--kanto-start", os.environ.get("KANTO_START", "1"), "--save", self.save_path, "--test-input", "-", "--test-state", "-",
                "--test-hashes", self.hashes_path]
         if config:
             cmd += ["--config", config]

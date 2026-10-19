@@ -141,10 +141,13 @@ static void ClearFrontierRecord(void)
 static void WarpToTruck(void)
 {
 #ifdef KANTO_DEBUG_START
-    SetWarpDestination(MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), WARP_ID_NONE, 10, 8);
-#else
-    SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
+    // Départ à Bourg Palette seulement avec --kanto-start 1 (tests) ; sinon l'intro d'Émeraude
+    extern bool8 gKantoStart;
+    if (gKantoStart)
+        SetWarpDestination(MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), WARP_ID_NONE, 10, 8);
+    else
 #endif
+    SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
     WarpIntoMap();
 }
 

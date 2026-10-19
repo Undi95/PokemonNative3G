@@ -51,6 +51,8 @@ static char *sDataDir;
 
 // Headless test mode, see RunTestMode()
 static bool sTestMode = false;
+// --kanto-start 1 : une nouvelle partie démarre à Bourg Palette (builds KANTO_DEBUG=1, tests)
+bool8 gKantoStart = FALSE;
 static FILE *sTestInput;
 static FILE *sTestHashes;
 static const char *sTestShotDir;
@@ -618,6 +620,10 @@ static bool ParseArgs(int argc, char **argv)
         if (strcmp(arg, "--save") == 0)
         {
             sSavePath = value;
+        }
+        else if (strcmp(arg, "--kanto-start") == 0)
+        {
+            gKantoStart = (strcmp(value, "0") != 0);
         }
         else if (strcmp(arg, "--config") == 0)
         {

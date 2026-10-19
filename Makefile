@@ -337,7 +337,7 @@ else
   LIB := $(LIBPATH) -lc -lnosys -lgcc -L../../libagbsyscall -lagbsyscall
 endif
 
-# KANTO_DEBUG=1 : une nouvelle partie démarre à Bourg Palette (test de l'import de Kanto)
+# KANTO_DEBUG=1 : menu DEBUG ; avec --kanto-start 1, une nouvelle partie démarre à Bourg Palette (tests)
 ifeq ($(KANTO_DEBUG),1)
   override CFLAGS += -DKANTO_DEBUG_START
   CPPFLAGS += -DKANTO_DEBUG_START
