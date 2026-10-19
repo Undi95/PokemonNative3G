@@ -1,7 +1,7 @@
 #!/bin/bash
 # Usage (dans le conteneur) : build.sh linux|winwsl
 # /repo = dépôt monté en lecture, /work = volume interne (build rapide), /out = sortie
-set -e
+set -eo pipefail
 TARGET=${1:-linux}
 if [ ! -d /work/src/.git ]; then git clone -q /repo /work/src; fi
 cd /work/src

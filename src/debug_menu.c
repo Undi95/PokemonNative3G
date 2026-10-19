@@ -41,14 +41,19 @@ struct DebugWarp
     s8 x, y;
 };
 
+static const u8 sWarpName_PalletTown[] = _("BOURG PALETTE");
+static const u8 sWarpName_Route1[] = _("ROUTE 1");
+static const u8 sWarpName_Littleroot[] = _("BOURG-EN-VOL");
+static const u8 sWarpName_Route101[] = _("ROUTE 101");
+static const u8 sWarpName_Lilycove[] = _("NÉNUCRIQUE");
+
 static const struct DebugWarp sDebugWarps[] =
 {
-    {_("BOURG PALETTE"),   MAP_GROUP(MAP_PALLET_TOWN),     MAP_NUM(MAP_PALLET_TOWN),     10, 8},
-    {_("ROUTE 1"),         MAP_GROUP(MAP_ROUTE1),          MAP_NUM(MAP_ROUTE1),          11, 30},
-    {_("BOURG-EN-VOL"),    MAP_GROUP(MAP_LITTLEROOT_TOWN), MAP_NUM(MAP_LITTLEROOT_TOWN), 10, 10},
-    {_("ROUTE 101"),       MAP_GROUP(MAP_ROUTE101),        MAP_NUM(MAP_ROUTE101),        10, 10},
-    {_("ROUTE 104 (port)"),MAP_GROUP(MAP_ROUTE104),        MAP_NUM(MAP_ROUTE104),        10, 60},
-    {_("NÉNUCRIQUE"),      MAP_GROUP(MAP_LILYCOVE_CITY),   MAP_NUM(MAP_LILYCOVE_CITY),   20, 20},
+    {sWarpName_PalletTown, MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), 10, 8},
+    {sWarpName_Route1, MAP_GROUP(MAP_ROUTE1), MAP_NUM(MAP_ROUTE1), 11, 30},
+    {sWarpName_Littleroot, MAP_GROUP(MAP_LITTLEROOT_TOWN), MAP_NUM(MAP_LITTLEROOT_TOWN), 10, 10},
+    {sWarpName_Route101, MAP_GROUP(MAP_ROUTE101), MAP_NUM(MAP_ROUTE101), 10, 10},
+    {sWarpName_Lilycove, MAP_GROUP(MAP_LILYCOVE_CITY), MAP_NUM(MAP_LILYCOVE_CITY), 20, 20},
 };
 
 static const u8 sText_Warp[] = _("Téléportation");
