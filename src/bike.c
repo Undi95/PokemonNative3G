@@ -233,6 +233,16 @@ static void MachBikeTransition_TrySpeedUp(u8 direction)
         }
         else
         {
+            // Rouge Feu : sur un escalier de roche, le vélo avance en PlayerWalkFast (bike.c de RF) ;
+            // le Vélo Course y est donc bridé à sa 2e vitesse et perd son élan.
+            if (PlayerIsMovingOnRockStairs(direction))
+            {
+                if (gPlayerAvatar.bikeFrameCounter > 1)
+                    gPlayerAvatar.bikeFrameCounter = 1;
+                PlayerWalkFast(direction);
+                gPlayerAvatar.bikeSpeed = gPlayerAvatar.bikeFrameCounter + (gPlayerAvatar.bikeFrameCounter >> 1);
+                return;
+            }
             // we did not hit anything that can slow us down, so perform the advancement callback depending on the bikeFrameCounter and try to increase the mach bike's speed.
             sMachBikeSpeedCallbacks[gPlayerAvatar.bikeFrameCounter](direction);
             gPlayerAvatar.bikeSpeed = gPlayerAvatar.bikeFrameCounter + (gPlayerAvatar.bikeFrameCounter >> 1); // same as dividing by 2, but compiler is insistent on >> 1
