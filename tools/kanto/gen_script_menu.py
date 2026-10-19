@@ -91,3 +91,33 @@ c += ['', '#endif', '']
 write(f'{em}/include/constants/kanto_script_menu.h', '\n'.join(c))
 print(f'{len(entries)} menus RF (à partir de {multi_start}), {len(std_new)} chaînes standard RF (à partir de {std_start})')
 print('STDSTRING RF propres :', [n for n, _ in std_new])
+
+# --- échanges en jeu de RF : ajoutés à la fin de sIngameTrades / sIngameTradeMail -------------
+em_trade = read(f'{em}/src/data/trade.h')
+em_trades = cpp_defines(em, 'constants/trade.h', 'INGAME_TRADE_')
+trade_start = max(em_trades.values()) + 1
+mail_block = em_trade[em_trade.index('sIngameTradeMail['):]
+mail_block = mail_block[:mail_block.index('\n};')]
+mail_start = len(re.findall(r'^\s{4}\{', mail_block, re.M))
+fr_trade = read(f'{fr}/src/data/ingame_trades.h')
+defines = ''.join(l + '\n' for l in fr_trade.splitlines() if l.startswith('#define TEXT_INGAME_TRADE_'))
+body = fr_trade[fr_trade.index('sInGameTrades[] = {') + len('sInGameTrades[] = {'):]
+body = body[:body.index('\n};')]
+body = re.sub(r'\[INGAME_TRADE_', '[KANTO_INGAME_TRADE_', body)
+body = re.sub(r'\.mailNum = (\d+)', lambda m: f'.mailNum = {m.group(1) if m.group(1) == "255" else int(m.group(1)) + mail_start}', body)
+mails = fr_trade[fr_trade.index('sInGameTradeMailMessages[][10] = {') + len('sInGameTradeMailMessages[][10] = {'):]
+mails = mails[:mails.index('\n};')]
+fr_trades = cpp_defines(fr, 'constants/trade.h', 'INGAME_TRADE_')
+write(f'{em}/src/data/kanto_ingame_trades_entries.h',
+      '// Généré par tools/kanto/gen_script_menu.py — échanges en jeu de Rouge Feu (fin de sIngameTrades)\n'
+      '#define FIRERED\n' + defines + body.rstrip().rstrip(',') + ',\n#undef FIRERED\n')
+write(f'{em}/src/data/kanto_ingame_trade_mail_entries.h',
+      '// Généré par tools/kanto/gen_script_menu.py — lettres des échanges de Rouge Feu (fin de sIngameTradeMail)\n'
+      + mails.rstrip().rstrip(',') + ',\n')
+with open(f'{em}/include/constants/kanto_script_menu.h', encoding='utf-8') as f:
+    c = f.read().replace('\n#endif\n', '')
+c += f'\n#define KANTO_INGAME_TRADE_START {trade_start}\n'
+c += ''.join(f'#define KANTO_{n} (KANTO_INGAME_TRADE_START + {v})\n' for n, v in sorted(fr_trades.items(), key=lambda x: x[1]) if n != 'INGAME_TRADE_COUNT')
+c += '\n#endif\n'
+write(f'{em}/include/constants/kanto_script_menu.h', c)
+print(f'{len(fr_trades)} échanges RF (à partir de {trade_start}), lettres à partir de {mail_start}')

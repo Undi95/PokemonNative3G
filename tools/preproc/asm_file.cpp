@@ -352,6 +352,11 @@ int AsmFile::ReadBraille(unsigned char* s)
         { ' ', BRAILLE_CHAR_SPACE },
         { ',', BRAILLE_CHAR_COMMA },
         { '.', BRAILLE_CHAR_PERIOD },
+        // Rouge Feu (braille de Kanto)
+        { '=', BRAILLE_CHAR_EQUAL },
+        { '*', BRAILLE_CHAR_ASTERISK },
+        { '@', BRAILLE_CHAR_A_DIAERESIS },
+        { '^', BRAILLE_CHAR_U_DIAERESIS },
         { '?', BRAILLE_CHAR_QUESTION_MARK },
         { '!', BRAILLE_CHAR_EXCL_MARK },
         { ':', BRAILLE_CHAR_COLON },

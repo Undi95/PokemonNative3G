@@ -1,4 +1,4 @@
-.equ TRAINER_KANTO_VISITING, VAR_TEMP_1
+.equ TRAINER_VISITING, VAR_TEMP_1
 
 SevenIsland_House_Room1_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SevenIsland_House_Room1_OnTransition
@@ -12,7 +12,7 @@ SevenIsland_House_Room1_OnTransition::
 	end
 
 SevenIsland_House_Room1_EventScript_SetTrainerVisitingLayout::
-	setvar TRAINER_KANTO_VISITING, TRUE
+	setvar TRAINER_VISITING, TRUE
 	setobjectxyperm LOCALID_KANTO_SEVEN_ISLAND_HOUSE_OLD_WOMAN, 4, 2
 	setobjectmovementtype LOCALID_KANTO_SEVEN_ISLAND_HOUSE_OLD_WOMAN, MOVEMENT_TYPE_FACE_DOWN
 	setmaplayoutindex LAYOUT_SEVEN_ISLAND_HOUSE_ROOM1_DOOR_OPEN
@@ -73,7 +73,7 @@ SevenIsland_House_Room1_EventScript_OldWoman::
 	faceplayer
 	special ValidateEReaderTrainer
 	call_if_eq VAR_RESULT, 1, SevenIsland_House_Room1_EventScript_InvalidVisitingTrainer
-	goto_if_eq TRAINER_KANTO_VISITING, TRUE, SevenIsland_House_Room1_EventScript_TrainerVisiting
+	goto_if_eq TRAINER_VISITING, TRUE, SevenIsland_House_Room1_EventScript_TrainerVisiting
 	msgbox SevenIsland_House_Room1_Text_OnlyEnjoymentWatchingBattles
 	release
 	end

@@ -85,6 +85,10 @@ class ScriptConverter:
 
     # --- renommage des labels ---------------------------------------------------------
     def plan_labels(self):
+        # noms définis localement par .equ / .set : jamais renommés
+        self.local_names = set()
+        for t in [self.master] + list(self.files.values()):
+            self.local_names |= set(re.findall(r'^\s*\.(?:equ|set)\s+(\w+)\s*,', t, re.M))
         fr_labels = set(LABEL_RE.findall(self.master))
         for t in self.files.values():
             fr_labels |= set(LABEL_RE.findall(t))
@@ -109,11 +113,13 @@ class ScriptConverter:
     def token(self, m):
         t = m.group(0)
         n = self.names
+        if t in self.local_names:
+            return t
         if t in self.labels_rename:
             return self.labels_rename[t]
         if t in self.const_rename:
             return self.const_rename[t]
-        if t.startswith('MULTICHOICE_'):
+        if t.startswith('MULTICHOICE_') or t.startswith('INGAME_TRADE_'):
             return 'KANTO_' + t
         if t.startswith('STDSTRING_') and t not in self.em_std:
             return 'STDSTRING_KANTO_' + t[len('STDSTRING_'):]
@@ -148,6 +154,8 @@ class ScriptConverter:
             if ci >= 0:
                 code, comment = line[:ci], line[ci + 1:].strip()
             code = re.sub(r'\b[A-Za-z_]\w*\b', self.token, code)
+            # l'assembleur x86 coupe les arguments de macro aux espaces : pas d'espaces dans ( )
+            code = re.sub(r'\(([^()]*)\)', lambda m: '(' + m.group(1).replace(' ', '') + ')', code)
             m = re.match(r'^(\s*)\.4byte\s+([A-Za-z_]\w*)\s*$', code)
             if m and m.group(2) in self.fr_labels | set(self.labels_rename.values()):
                 code = f'{m.group(1)}ptrvalue {m.group(2)}'

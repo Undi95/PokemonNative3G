@@ -306,6 +306,10 @@
 #define BRAILLE_CHAR_Q               0x1F
 //
 #define BRAILLE_CHAR_PERIOD          0x2C
+#define BRAILLE_CHAR_ASTERISK        0x10 // Rouge Feu (braille de Kanto)
+#define BRAILLE_CHAR_A_DIAERESIS     0x1A // Rouge Feu (braille de Kanto)
+#define BRAILLE_CHAR_U_DIAERESIS     0x2D // Rouge Feu (braille de Kanto)
+#define BRAILLE_CHAR_EQUAL           0x3F // Rouge Feu (braille de Kanto)
 //
 #define BRAILLE_CHAR_W               0x2E
 //
