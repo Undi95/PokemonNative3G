@@ -52,3 +52,20 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 ## Démarrage
 - [ ] Nouvelle partie : ID dresseur différent à chaque partie (avant : partie basse toujours 0 sur PC)
 - [ ] Rencontres / shiny : résultats différents d'un lancement à l'autre (graine aléatoire corrigée)
+
+## Vagabonds
+- [ ] Île 1 (après le Réseau Sevii) : Raikou, Entei et Suicune lâchés tous les trois à Kanto, N.50
+- [ ] Les rencontrer sur les routes de Kanto ; ils changent de route ; PV/statut gardés entre deux combats
+- [ ] Un chien qui utilise Hurlement : il reste en liberté (avant : disparu pour toujours)
+- [ ] IV des chiens normaux (pas seulement PV/Attaque)
+- [ ] Hoenn : Latios ou Latias (choix à la TV) toujours là, indépendant des chiens
+
+## Carte dresseur
+- [ ] À Hoenn : carte d'Émeraude + badges de Hoenn ; SELECT → carte de Kanto + badges de Kanto
+- [ ] À Kanto : l'inverse ; BRICE/FLORA sur la carte de Kanto, RED/LEAF sur celle de Hoenn
+- [ ] Verso des deux cartes (A)
+
+## Écran titre
+- [ ] Options → TITRE = R.FEU, sauvegarder, relancer : écran titre de Rouge Feu (Dracaufeu, flammes, cri)
+- [ ] Depuis cet écran : START → menu principal ; Haut+Select+B → effacer la sauvegarde ; attente → intro
+- [ ] Intro de Groudon/Kyogre (fonds 8bpp) toujours correcte après la correction du rendu 8bpp
