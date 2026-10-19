@@ -242,6 +242,16 @@
 #define MOVEMENT_ACTION_FIGURE_8                        0x9B
 #define MOVEMENT_ACTION_FLY_UP                          0x9C
 #define MOVEMENT_ACTION_FLY_DOWN                        0x9D
+// Rouge Feu : marche lente (MOVEMENT_ACTION_WALK_SLOW_* de RF, 2 frames sur 3 ;
+// le WALK_SLOW d'Émeraude = WALK_SLOWER de RF) et course lente, pour les escaliers de roche
+#define MOVEMENT_ACTION_KANTO_WALK_SLOW_DOWN            0x9E
+#define MOVEMENT_ACTION_KANTO_WALK_SLOW_UP              0x9F
+#define MOVEMENT_ACTION_KANTO_WALK_SLOW_LEFT            0xA0
+#define MOVEMENT_ACTION_KANTO_WALK_SLOW_RIGHT           0xA1
+#define MOVEMENT_ACTION_PLAYER_RUN_DOWN_SLOW            0xA2
+#define MOVEMENT_ACTION_PLAYER_RUN_UP_SLOW              0xA3
+#define MOVEMENT_ACTION_PLAYER_RUN_LEFT_SLOW            0xA4
+#define MOVEMENT_ACTION_PLAYER_RUN_RIGHT_SLOW           0xA5
 
 #define MOVEMENT_ACTION_STEP_END 0xFE
 #define MOVEMENT_ACTION_NONE     0xFF

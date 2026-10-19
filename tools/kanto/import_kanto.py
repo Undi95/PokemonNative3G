@@ -42,7 +42,6 @@ BEHAVIOR_ALIASES = {
     'MB_SIGNPOST': 'MB_NORMAL',              # Émeraude : panneaux = bg_events
     'MB_POKEMART_SIGN': 'MB_NORMAL',
     'MB_POKEMON_CENTER_SIGN': 'MB_NORMAL',
-    'MB_ROCK_STAIRS': 'MB_NORMAL',
     'MB_WARP_DOOR': 'MB_ANIMATED_DOOR',      # animations : src/kanto_field_door.c
     'MB_CAVE_DOOR': 'MB_NON_ANIMATED_DOOR',
     'MB_FAST_WATER': 'MB_OCEAN_WATER',

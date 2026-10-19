@@ -36,4 +36,8 @@ void ClearPoisonStepCounter(void);
 // Rouge Feu
 bool8 IsDirectionalStairWarpMetatileBehavior(u16 metatileBehavior, u8 playerDirection);
 
+// Rouge Feu
+void HandleBoulderFallThroughHole(struct ObjectEvent *object);
+void HandleBoulderActivateVictoryRoadSwitch(u16 x, u16 y);
+
 #endif // GUARD_FIELDCONTROLAVATAR_H

@@ -12,6 +12,9 @@ u8 GetPlayerFacingDirection(void);
 u8 GetPlayerMovementDirection(void);
 u8 PlayerGetCopyableMovement(void);
 void PlayerWalkNormal(u8 direction);
+void PlayerWalkSlow(u8 direction);   // Rouge Feu
+void PlayerRunSlow(u8 direction);    // Rouge Feu
+bool32 PlayerIsMovingOnRockStairs(u8 direction); // Rouge Feu
 void PlayerWalkFast(u8 direction);
 void PlayerRideWaterCurrent(u8 direction);
 void PlayerWalkFaster(u8 direction);

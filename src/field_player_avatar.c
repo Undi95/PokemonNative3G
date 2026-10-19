@@ -649,13 +649,40 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER) && (heldKeys & B_BUTTON) && FlagGet(FLAG_SYS_B_DASH)
      && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0)
     {
-        PlayerRun(direction);
+        if (PlayerIsMovingOnRockStairs(direction)) // Rouge Feu
+            PlayerRunSlow(direction);
+        else
+            PlayerRun(direction);
         gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_DASH;
         return;
     }
     else
     {
-        PlayerWalkNormal(direction);
+        if (PlayerIsMovingOnRockStairs(direction)) // Rouge Feu
+            PlayerWalkSlow(direction);
+        else
+            PlayerWalkNormal(direction);
+    }
+}
+
+// Rouge Feu
+bool32 PlayerIsMovingOnRockStairs(u8 direction)
+{
+    struct ObjectEvent *objectEvent;
+    s16 x, y;
+
+    objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    x = objectEvent->currentCoords.x;
+    y = objectEvent->currentCoords.y;
+    switch (direction)
+    {
+    case DIR_NORTH:
+        return MetatileBehavior_IsRockStairs(MapGridGetMetatileBehaviorAt(x, y));
+    case DIR_SOUTH:
+        MoveCoords(DIR_SOUTH, &x, &y);
+        return MetatileBehavior_IsRockStairs(MapGridGetMetatileBehaviorAt(x, y));
+    default:
+        return FALSE;
     }
 }
 
@@ -756,8 +783,9 @@ static bool8 TryPushBoulder(s16 x, s16 y, u8 direction)
             x = gObjectEvents[objectEventId].currentCoords.x;
             y = gObjectEvents[objectEventId].currentCoords.y;
             MoveCoords(direction, &x, &y);
-            if (GetCollisionAtCoords(&gObjectEvents[objectEventId], x, y, direction) == COLLISION_NONE
-             && MetatileBehavior_IsNonAnimDoor(MapGridGetMetatileBehaviorAt(x, y)) == FALSE)
+            if (MapGridGetMetatileBehaviorAt(x, y) == MB_FALL_WARP // Rouge Feu
+             || (GetCollisionAtCoords(&gObjectEvents[objectEventId], x, y, direction) == COLLISION_NONE
+             && MetatileBehavior_IsNonAnimDoor(MapGridGetMetatileBehaviorAt(x, y)) == FALSE))
             {
                 StartStrengthAnim(objectEventId, direction);
                 return TRUE;
@@ -991,6 +1019,17 @@ void PlayerWalkFaster(u8 direction)
 static void PlayerRun(u8 direction)
 {
     PlayerSetAnimId(GetPlayerRunMovementAction(direction), COPY_MOVE_WALK);
+}
+
+// Rouge Feu : PlayerWalkSlow de RF (WALK_SLOW de RF, plus rapide que celui d'Émeraude)
+void PlayerWalkSlow(u8 direction)
+{
+    PlayerSetAnimId(GetKantoWalkSlowMovementAction(direction), COPY_MOVE_WALK);
+}
+
+void PlayerRunSlow(u8 direction)
+{
+    PlayerSetAnimId(GetPlayerRunSlowMovementAction(direction), COPY_MOVE_WALK);
 }
 
 void PlayerOnBikeCollide(u8 direction)
@@ -1524,6 +1563,8 @@ static bool8 PushBoulder_End(struct Task *task, struct ObjectEvent *player, stru
     {
         ObjectEventClearHeldMovementIfFinished(player);
         ObjectEventClearHeldMovementIfFinished(boulder);
+        HandleBoulderFallThroughHole(boulder);                                          // Rouge Feu
+        HandleBoulderActivateVictoryRoadSwitch(boulder->currentCoords.x, boulder->currentCoords.y); // Rouge Feu
         gPlayerAvatar.preventStep = FALSE;
         UnlockPlayerFieldControls();
         DestroyTask(FindTaskIdByFunc(Task_PushBoulder));

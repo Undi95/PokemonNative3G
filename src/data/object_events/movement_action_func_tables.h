@@ -262,6 +262,15 @@ u8 MovementAction_Fly_Finish(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_FlyDown_Step0(struct ObjectEvent *, struct Sprite *);
 u8 MovementAction_FlyDown_Step1(struct ObjectEvent *, struct Sprite *);
 
+// Rouge Feu (définies dans event_object_movement.c)
+u8 (*const gMovementActionFuncs_KantoWalkSlowDown[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_KantoWalkSlowUp[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_KantoWalkSlowLeft[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_KantoWalkSlowRight[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_PlayerRunDownSlow[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_PlayerRunUpSlow[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_PlayerRunLeftSlow[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_PlayerRunRightSlow[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_FaceDown[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_FaceUp[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_FaceLeft[])(struct ObjectEvent *, struct Sprite *);
@@ -580,6 +589,14 @@ u8 (*const *const gMovementActionFuncs[])(struct ObjectEvent *, struct Sprite *)
     [MOVEMENT_ACTION_FIGURE_8] = gMovementActionFuncs_Figure8,
     [MOVEMENT_ACTION_FLY_UP] = gMovementActionFuncs_FlyUp,
     [MOVEMENT_ACTION_FLY_DOWN] = gMovementActionFuncs_FlyDown,
+    [MOVEMENT_ACTION_KANTO_WALK_SLOW_DOWN] = gMovementActionFuncs_KantoWalkSlowDown,
+    [MOVEMENT_ACTION_KANTO_WALK_SLOW_UP] = gMovementActionFuncs_KantoWalkSlowUp,
+    [MOVEMENT_ACTION_KANTO_WALK_SLOW_LEFT] = gMovementActionFuncs_KantoWalkSlowLeft,
+    [MOVEMENT_ACTION_KANTO_WALK_SLOW_RIGHT] = gMovementActionFuncs_KantoWalkSlowRight,
+    [MOVEMENT_ACTION_PLAYER_RUN_DOWN_SLOW] = gMovementActionFuncs_PlayerRunDownSlow,
+    [MOVEMENT_ACTION_PLAYER_RUN_UP_SLOW] = gMovementActionFuncs_PlayerRunUpSlow,
+    [MOVEMENT_ACTION_PLAYER_RUN_LEFT_SLOW] = gMovementActionFuncs_PlayerRunLeftSlow,
+    [MOVEMENT_ACTION_PLAYER_RUN_RIGHT_SLOW] = gMovementActionFuncs_PlayerRunRightSlow,
 };
 
 u8 (*const gMovementActionFuncs_FaceDown[])(struct ObjectEvent *, struct Sprite *) = {

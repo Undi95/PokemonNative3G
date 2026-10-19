@@ -9061,3 +9061,334 @@ u8 MovementAction_Fly_Finish(struct ObjectEvent *objectEvent, struct Sprite *spr
 {
     return TRUE;
 }
+
+// Rouge Feu (event_object_movement.c) : marche lente (WALK_SLOW de RF) et course lente
+// du joueur sur les escaliers de roche. Données du sprite comme SetWalkSlowSpriteData :
+// data[3] = direction, data[4] = délai, data[5] = pas.
+#define tDirection data[3]
+#define tDelay     data[4]
+#define tStepNo    data[5]
+
+static const u8 sKantoWalkSlowMovementActions[] = {
+    [DIR_NONE]  = MOVEMENT_ACTION_KANTO_WALK_SLOW_DOWN,
+    [DIR_SOUTH] = MOVEMENT_ACTION_KANTO_WALK_SLOW_DOWN,
+    [DIR_NORTH] = MOVEMENT_ACTION_KANTO_WALK_SLOW_UP,
+    [DIR_WEST]  = MOVEMENT_ACTION_KANTO_WALK_SLOW_LEFT,
+    [DIR_EAST]  = MOVEMENT_ACTION_KANTO_WALK_SLOW_RIGHT,
+};
+
+static const u8 sPlayerRunSlowMovementActions[] = {
+    [DIR_NONE]  = MOVEMENT_ACTION_PLAYER_RUN_DOWN_SLOW,
+    [DIR_SOUTH] = MOVEMENT_ACTION_PLAYER_RUN_DOWN_SLOW,
+    [DIR_NORTH] = MOVEMENT_ACTION_PLAYER_RUN_UP_SLOW,
+    [DIR_WEST]  = MOVEMENT_ACTION_PLAYER_RUN_LEFT_SLOW,
+    [DIR_EAST]  = MOVEMENT_ACTION_PLAYER_RUN_RIGHT_SLOW,
+};
+
+dirn_to_anim(GetKantoWalkSlowMovementAction, sKantoWalkSlowMovementActions);
+dirn_to_anim(GetPlayerRunSlowMovementAction, sPlayerRunSlowMovementActions);
+
+static void SetKantoWalkSlowSpriteData(struct Sprite *sprite, u8 direction)
+{
+    sprite->tDirection = direction;
+    sprite->tDelay = 0;
+    sprite->tStepNo = 0;
+}
+
+static bool8 UpdateKantoWalkSlowAnim(struct Sprite *sprite)
+{
+    if (++sprite->tDelay < 3)
+    {
+        Step1(sprite, sprite->tDirection);
+        sprite->tStepNo++;
+    }
+    else
+        sprite->tDelay = 0;
+
+    if (sprite->tStepNo > 15)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+static void SetRunSlowSpriteData(struct Sprite *sprite, u8 direction)
+{
+    sprite->tDirection = direction;
+    sprite->tDelay = 0;
+    sprite->tStepNo = 0;
+}
+
+static bool8 UpdateRunSlowAnim(struct Sprite *sprite)
+{
+    if ((++sprite->tDelay) & 1)
+    {
+        Step1(sprite, sprite->tDirection);
+        sprite->tStepNo++;
+    }
+    else
+    {
+        Step2(sprite, sprite->tDirection);
+        sprite->tStepNo += 2;
+    }
+
+    if (sprite->tStepNo > 15)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+#undef tStepNo
+#undef tDelay
+#undef tDirection
+
+static void InitNpcForKantoWalkSlow(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction)
+{
+    s16 x;
+    s16 y;
+
+    x = objectEvent->currentCoords.x;
+    y = objectEvent->currentCoords.y;
+    SetObjectEventDirection(objectEvent, direction);
+    MoveCoords(direction, &x, &y);
+    ShiftObjectEventCoords(objectEvent, x, y);
+    SetKantoWalkSlowSpriteData(sprite, direction);
+    sprite->animPaused = FALSE;
+    objectEvent->triggerGroundEffectsOnMove = TRUE;
+    sprite->sActionFuncId = 1;
+}
+
+static void InitKantoWalkSlow(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction)
+{
+    InitNpcForKantoWalkSlow(objectEvent, sprite, direction);
+    SetStepAnimHandleAlternation(objectEvent, sprite, GetMoveDirectionAnimNum(objectEvent->facingDirection));
+}
+
+static bool8 UpdateKantoWalkSlow(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateKantoWalkSlowAnim(sprite))
+    {
+        ShiftStillObjectEventCoords(objectEvent);
+        objectEvent->triggerGroundEffectsOnStop = TRUE;
+        sprite->animPaused = TRUE;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static void InitNpcForRunSlow(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction)
+{
+    s16 x;
+    s16 y;
+
+    x = objectEvent->currentCoords.x;
+    y = objectEvent->currentCoords.y;
+    SetObjectEventDirection(objectEvent, direction);
+    MoveCoords(direction, &x, &y);
+    ShiftObjectEventCoords(objectEvent, x, y);
+    SetRunSlowSpriteData(sprite, direction);
+    sprite->animPaused = FALSE;
+    objectEvent->triggerGroundEffectsOnMove = TRUE;
+    sprite->sActionFuncId = 1;
+}
+
+static void InitRunSlow(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction)
+{
+    InitNpcForRunSlow(objectEvent, sprite, direction);
+    SetStepAnimHandleAlternation(objectEvent, sprite, GetRunningDirectionAnimNum(objectEvent->facingDirection));
+}
+
+static bool8 UpdateRunSlow(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateRunSlowAnim(sprite))
+    {
+        ShiftStillObjectEventCoords(objectEvent);
+        objectEvent->triggerGroundEffectsOnStop = TRUE;
+        sprite->animPaused = TRUE;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 MovementAction_KantoWalkSlowDown_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateKantoWalkSlow(objectEvent, sprite))
+    {
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 MovementAction_KantoWalkSlowDown_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitKantoWalkSlow(objectEvent, sprite, DIR_SOUTH);
+    return MovementAction_KantoWalkSlowDown_Step1(objectEvent, sprite);
+}
+
+u8 (*const gMovementActionFuncs_KantoWalkSlowDown[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_KantoWalkSlowDown_Step0,
+    MovementAction_KantoWalkSlowDown_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+static bool8 MovementAction_KantoWalkSlowUp_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateKantoWalkSlow(objectEvent, sprite))
+    {
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 MovementAction_KantoWalkSlowUp_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitKantoWalkSlow(objectEvent, sprite, DIR_NORTH);
+    return MovementAction_KantoWalkSlowUp_Step1(objectEvent, sprite);
+}
+
+u8 (*const gMovementActionFuncs_KantoWalkSlowUp[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_KantoWalkSlowUp_Step0,
+    MovementAction_KantoWalkSlowUp_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+static bool8 MovementAction_KantoWalkSlowLeft_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateKantoWalkSlow(objectEvent, sprite))
+    {
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 MovementAction_KantoWalkSlowLeft_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitKantoWalkSlow(objectEvent, sprite, DIR_WEST);
+    return MovementAction_KantoWalkSlowLeft_Step1(objectEvent, sprite);
+}
+
+u8 (*const gMovementActionFuncs_KantoWalkSlowLeft[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_KantoWalkSlowLeft_Step0,
+    MovementAction_KantoWalkSlowLeft_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+static bool8 MovementAction_KantoWalkSlowRight_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateKantoWalkSlow(objectEvent, sprite))
+    {
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 MovementAction_KantoWalkSlowRight_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitKantoWalkSlow(objectEvent, sprite, DIR_EAST);
+    return MovementAction_KantoWalkSlowRight_Step1(objectEvent, sprite);
+}
+
+u8 (*const gMovementActionFuncs_KantoWalkSlowRight[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_KantoWalkSlowRight_Step0,
+    MovementAction_KantoWalkSlowRight_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+static bool8 MovementAction_PlayerRunDownSlow_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateRunSlow(objectEvent, sprite))
+    {
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 MovementAction_PlayerRunDownSlow_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitRunSlow(objectEvent, sprite, DIR_SOUTH);
+    return MovementAction_PlayerRunDownSlow_Step1(objectEvent, sprite);
+}
+
+u8 (*const gMovementActionFuncs_PlayerRunDownSlow[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_PlayerRunDownSlow_Step0,
+    MovementAction_PlayerRunDownSlow_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+static bool8 MovementAction_PlayerRunUpSlow_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateRunSlow(objectEvent, sprite))
+    {
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 MovementAction_PlayerRunUpSlow_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitRunSlow(objectEvent, sprite, DIR_NORTH);
+    return MovementAction_PlayerRunUpSlow_Step1(objectEvent, sprite);
+}
+
+u8 (*const gMovementActionFuncs_PlayerRunUpSlow[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_PlayerRunUpSlow_Step0,
+    MovementAction_PlayerRunUpSlow_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+static bool8 MovementAction_PlayerRunLeftSlow_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateRunSlow(objectEvent, sprite))
+    {
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 MovementAction_PlayerRunLeftSlow_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitRunSlow(objectEvent, sprite, DIR_WEST);
+    return MovementAction_PlayerRunLeftSlow_Step1(objectEvent, sprite);
+}
+
+u8 (*const gMovementActionFuncs_PlayerRunLeftSlow[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_PlayerRunLeftSlow_Step0,
+    MovementAction_PlayerRunLeftSlow_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+static bool8 MovementAction_PlayerRunRightSlow_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateRunSlow(objectEvent, sprite))
+    {
+        sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 MovementAction_PlayerRunRightSlow_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitRunSlow(objectEvent, sprite, DIR_SOUTH);
+    return MovementAction_PlayerRunRightSlow_Step1(objectEvent, sprite);
+}
+
+u8 (*const gMovementActionFuncs_PlayerRunRightSlow[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_PlayerRunRightSlow_Step0,
+    MovementAction_PlayerRunRightSlow_Step1,
+    MovementAction_PauseSpriteAnim,
+};
+
+// Rouge Feu
+u16 GetBoulderRevealFlagByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
+{
+    // Pushable boulder object events store the flag to reveal the boulder
+    // on the floor below in their trainer type field.
+    return GetObjectEventTemplateByLocalIdAndMap(localId, mapNum, mapGroup)->trainerType;
+}

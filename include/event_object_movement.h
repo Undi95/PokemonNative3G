@@ -112,6 +112,7 @@ u8 GetObjectEventIdByXY(s16 x, s16 y);
 void SetObjectEventDirection(struct ObjectEvent *objectEvent, u8 direction);
 u8 GetFirstInactiveObjectEventId(void);
 void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup);
+u16 GetBoulderRevealFlagByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup); // Rouge Feu
 void LoadPlayerObjectReflectionPalette(u16 tag, u8 slot);
 void LoadSpecialObjectReflectionPalette(u16 tag, u8 slot);
 void TryMoveObjectEventToMapCoords(u8 localId, u8 mapNum, u8 mapGroup, s16 x, s16 y);
@@ -168,6 +169,8 @@ u8 GetWalkFastMovementAction(u32);
 u8 GetRideWaterCurrentMovementAction(u32);
 u8 GetWalkFasterMovementAction(u32);
 u8 GetPlayerRunMovementAction(u32);
+u8 GetKantoWalkSlowMovementAction(u32);   // Rouge Feu
+u8 GetPlayerRunSlowMovementAction(u32);   // Rouge Feu
 u8 GetJumpInPlaceMovementAction(u32);
 u8 GetAcroWheelieFaceDirectionMovementAction(u32);
 u8 GetAcroPopWheelieFaceDirectionMovementAction(u32);

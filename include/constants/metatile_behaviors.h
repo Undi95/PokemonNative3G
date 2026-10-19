@@ -89,8 +89,8 @@ enum {
     MB_UNUSED_54,
     MB_UNUSED_55,
     MB_UNUSED_56,
-    MB_UNUSED_57,
-    MB_UNUSED_58,
+    MB_STRENGTH_BUTTON, // Rouge Feu (interrupteurs de la Route Victoire)
+    MB_ROCK_STAIRS,     // Rouge Feu (escaliers de roche, marche lente)
     MB_FALL_WARP,       // Rouge Feu (trous)
     MB_REGULAR_WARP,    // Rouge Feu (téléporteurs)
     MB_UP_RIGHT_STAIR_WARP,   // Rouge Feu (escaliers latéraux)
