@@ -1,4 +1,5 @@
 #include "global.h"
+#include "debug_menu.h"
 #include "battle_setup.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
@@ -554,7 +555,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
     u16 headerId;
     struct Roamer *roamer;
 
-    if (sWildEncountersDisabled == TRUE)
+    if (sWildEncountersDisabled == TRUE || gDebugNoEncounters)
         return FALSE;
 
     headerId = GetCurrentMapWildMonHeaderId();
