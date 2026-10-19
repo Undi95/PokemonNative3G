@@ -26,6 +26,7 @@ Prochaine étape : parcourir les intérieurs / routes (combat sauvage, dresseurs
 - Std msgbox RF (Kanto_Std_*), scénario (mamans, Rocket…) ; le choix du nom du rival (oak_speech) : plus tard avec l'utilisateur.
 - Bateau Nénucrique → Kanto ; son pas fluide.
 - {RIVAL} à Kanto = `gSaveBlockKanto.rivalName`, « BLUE » par défaut. Fame Checker (drapeaux) dans `gSaveBlockKanto`.
+- Objets cachés renouvelables de RF (`renewable_hidden_items.c`, `SetAllRenewableItemFlags` à la nouvelle partie) non importés.
 - Journal (Quest Log) de RF non importé : `GetQuestLogState` = 0, `SetUsedPkmnCenterQuestLogEvent` sans effet (`src/kanto_field_specials.c`).
 - Normal, pas un bug : pas de musique au départ debug à Bourg Palette (on y arrive normalement par le camion), scène du rival à l'Île 4 (on y arrive en bateau).
 
