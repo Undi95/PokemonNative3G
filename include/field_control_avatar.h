@@ -37,6 +37,8 @@ void ClearPoisonStepCounter(void);
 bool8 IsDirectionalStairWarpMetatileBehavior(u16 metatileBehavior, u8 playerDirection);
 
 // Rouge Feu
+void RunMassageCooldownStepCounter(void);      // kanto_specials.c
+void IncrementResortGorgeousStepCounter(void); // kanto_specials.c
 void HandleBoulderFallThroughHole(struct ObjectEvent *object);
 void HandleBoulderActivateVictoryRoadSwitch(u16 x, u16 y);
 

@@ -156,6 +156,8 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->tookStep)
     {
         IncrementGameStat(GAME_STAT_STEPS);
+        RunMassageCooldownStepCounter();      // Rouge Feu
+        IncrementResortGorgeousStepCounter(); // Rouge Feu
         IncrementBirthIslandRockStepCount();
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
             return TRUE;
