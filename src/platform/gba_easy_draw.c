@@ -131,7 +131,8 @@ static void RenderBGScanline(int bgNum, uint16_t control, uint16_t hoffs, uint16
                 line[x] = pal[16 * paletteNum + pixel] | 0x8000;
         }
         else {
-            line[x] = pal[pixel] | 0x8000;
+            if (pixel != 0) // couleur 0 transparente aussi en 8bpp (écran titre de Rouge Feu)
+                line[x] = pal[pixel] | 0x8000;
         }
     }
 }
