@@ -1,7 +1,7 @@
 #ifndef GUARD_TEXT_WINDOW_H
 #define GUARD_TEXT_WINDOW_H
 
-#define WINDOW_FRAMES_COUNT 20
+#define WINDOW_FRAMES_COUNT 29 // 20 d'Émeraude + 9 de Rouge Feu (son type 2 = cadre 2 d'Émeraude)
 
 struct TilesPal
 {

@@ -57,6 +57,26 @@ static const u16 sTextWindowPalettes[][16] =
     INCGFX_U16("graphics/text_window/text_pal4.pal", ".gbapal")
 };
 
+// Rouge Feu (text_window_graphics.c) : cadres type1, 3-10 (type2 identique au cadre 2)
+static const u8 sKantoTextWindowFrame1_Gfx[] = INCGFX_U8("graphics/kanto/text_window/type1.png", ".4bpp");
+static const u16 sKantoTextWindowFrame1_Pal[] = INCGFX_U16("graphics/kanto/text_window/type1.png", ".gbapal");
+static const u8 sKantoTextWindowFrame3_Gfx[] = INCGFX_U8("graphics/kanto/text_window/type3.png", ".4bpp");
+static const u16 sKantoTextWindowFrame3_Pal[] = INCGFX_U16("graphics/kanto/text_window/type3.png", ".gbapal");
+static const u8 sKantoTextWindowFrame4_Gfx[] = INCGFX_U8("graphics/kanto/text_window/type4.png", ".4bpp");
+static const u16 sKantoTextWindowFrame4_Pal[] = INCGFX_U16("graphics/kanto/text_window/type4.png", ".gbapal");
+static const u8 sKantoTextWindowFrame5_Gfx[] = INCGFX_U8("graphics/kanto/text_window/type5.png", ".4bpp");
+static const u16 sKantoTextWindowFrame5_Pal[] = INCGFX_U16("graphics/kanto/text_window/type5.png", ".gbapal");
+static const u8 sKantoTextWindowFrame6_Gfx[] = INCGFX_U8("graphics/kanto/text_window/type6.png", ".4bpp");
+static const u16 sKantoTextWindowFrame6_Pal[] = INCGFX_U16("graphics/kanto/text_window/type6.png", ".gbapal");
+static const u8 sKantoTextWindowFrame7_Gfx[] = INCGFX_U8("graphics/kanto/text_window/type7.png", ".4bpp");
+static const u16 sKantoTextWindowFrame7_Pal[] = INCGFX_U16("graphics/kanto/text_window/type7.png", ".gbapal");
+static const u8 sKantoTextWindowFrame8_Gfx[] = INCGFX_U8("graphics/kanto/text_window/type8.png", ".4bpp");
+static const u16 sKantoTextWindowFrame8_Pal[] = INCGFX_U16("graphics/kanto/text_window/type8.png", ".gbapal");
+static const u8 sKantoTextWindowFrame9_Gfx[] = INCGFX_U8("graphics/kanto/text_window/type9.png", ".4bpp");
+static const u16 sKantoTextWindowFrame9_Pal[] = INCGFX_U16("graphics/kanto/text_window/type9.png", ".gbapal");
+static const u8 sKantoTextWindowFrame10_Gfx[] = INCGFX_U8("graphics/kanto/text_window/type10.png", ".4bpp");
+static const u16 sKantoTextWindowFrame10_Pal[] = INCGFX_U16("graphics/kanto/text_window/type10.png", ".gbapal");
+
 static const struct TilesPal sWindowFrames[WINDOW_FRAMES_COUNT] =
 {
     {gTextWindowFrame1_Gfx, gTextWindowFrame1_Pal},
@@ -78,7 +98,16 @@ static const struct TilesPal sWindowFrames[WINDOW_FRAMES_COUNT] =
     {sTextWindowFrame17_Gfx, sTextWindowFrame17_Pal},
     {sTextWindowFrame18_Gfx, sTextWindowFrame18_Pal},
     {sTextWindowFrame19_Gfx, sTextWindowFrame19_Pal},
-    {sTextWindowFrame20_Gfx, sTextWindowFrame20_Pal}
+    {sTextWindowFrame20_Gfx, sTextWindowFrame20_Pal},
+    {sKantoTextWindowFrame1_Gfx, sKantoTextWindowFrame1_Pal},
+    {sKantoTextWindowFrame3_Gfx, sKantoTextWindowFrame3_Pal},
+    {sKantoTextWindowFrame4_Gfx, sKantoTextWindowFrame4_Pal},
+    {sKantoTextWindowFrame5_Gfx, sKantoTextWindowFrame5_Pal},
+    {sKantoTextWindowFrame6_Gfx, sKantoTextWindowFrame6_Pal},
+    {sKantoTextWindowFrame7_Gfx, sKantoTextWindowFrame7_Pal},
+    {sKantoTextWindowFrame8_Gfx, sKantoTextWindowFrame8_Pal},
+    {sKantoTextWindowFrame9_Gfx, sKantoTextWindowFrame9_Pal},
+    {sKantoTextWindowFrame10_Gfx, sKantoTextWindowFrame10_Pal}
 };
 
 // code
