@@ -56,23 +56,114 @@ static void OldManHandleSuccessBallThrowAnim(void);
 static void OldManHandleBallThrowAnim(void);
 static void OldManHandlePause(void);
 static void OldManHandleMoveAnimation(void);
-static void OldManHandlePrintString(void)
-{
-    u16 *stringId;
+static void OldManHandlePrintString(void);
+static void OldManHandlePrintSelectionString(void);
+static void OldManHandleChooseAction(void);
+static void OldManHandleYesNoBox(void);
+static void OldManHandleChooseMove(void);
+static void OldManHandleChooseItem(void);
+static void OldManHandleChoosePokemon(void);
+static void OldManHandleCmd23(void);
+static void OldManHandleHealthBarUpdate(void);
+static void OldManHandleExpUpdate(void);
+static void OldManHandleStatusIconUpdate(void);
+static void OldManHandleStatusAnimation(void);
+static void OldManHandleStatusXor(void);
+static void OldManHandleDataTransfer(void);
+static void OldManHandleDMA3Transfer(void);
+static void OldManHandlePlayBGM(void);
+static void OldManHandleCmd32(void);
+static void OldManHandleTwoReturnValues(void);
+static void OldManHandleChosenMonReturnValue(void);
+static void OldManHandleOneReturnValue(void);
+static void OldManHandleOneReturnValue_Duplicate(void);
+static void OldManHandleClearUnkVar(void);
+static void OldManHandleSetUnkVar(void);
+static void OldManHandleClearUnkFlag(void);
+static void OldManHandleToggleUnkFlag(void);
+static void OldManHandleHitAnimation(void);
+static void OldManHandleCantSwitch(void);
+static void OldManHandlePlaySE(void);
+static void OldManHandlePlayFanfareOrBGM(void);
+static void OldManHandleFaintingCry(void);
+static void OldManHandleIntroSlide(void);
+static void OldManHandleIntroTrainerBallThrow(void);
+static void OldManHandleDrawPartyStatusSummary(void);
+static void OldManHandleHidePartyStatusSummary(void);
+static void OldManHandleEndBounceEffect(void);
+static void OldManHandleSpriteInvisibility(void);
+static void OldManHandleBattleAnimation(void);
+static void OldManHandleLinkStandbyMsg(void);
+static void OldManHandleResetActionMoveSelection(void);
+static void OldManHandleEndLinkBattle(void);
+static void OldManCmdEnd(void);
 
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-    stringId = (u16 *)(&gBattleBufferA[gActiveBattler][2]);
-    if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL && *stringId == 1)
-    {
-        OldManBufferExecCompleted();
-    }
-    else
-    {
-        BufferStringBattle(*stringId);
-        BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MSG);
-        gBattlerControllerFuncs[gActiveBattler] = CompleteOnInactiveTextPrinter;
-    }
+static void OldManBufferRunCommand(void);
+static void OldManBufferExecCompleted(void);
+static void CompleteOnChosenItem(void);
+static u32 CopyOldManMonData(u8 monId, u8 *dst);
+static void SetOldManMonData(u8 monId);
+static void OldManDoMoveAnimation(void);
+
+static void (*const sOldManBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
+{
+    [CONTROLLER_GETMONDATA]               = OldManHandleGetMonData,
+    [CONTROLLER_GETRAWMONDATA]            = OldManHandleGetRawMonData,
+    [CONTROLLER_SETMONDATA]               = OldManHandleSetMonData,
+    [CONTROLLER_SETRAWMONDATA]            = OldManHandleSetRawMonData,
+    [CONTROLLER_LOADMONSPRITE]            = OldManHandleLoadMonSprite,
+    [CONTROLLER_SWITCHINANIM]             = OldManHandleSwitchInAnim,
+    [CONTROLLER_RETURNMONTOBALL]          = OldManHandleReturnMonToBall,
+    [CONTROLLER_DRAWTRAINERPIC]           = OldManHandleDrawTrainerPic,
+    [CONTROLLER_TRAINERSLIDE]             = OldManHandleTrainerSlide,
+    [CONTROLLER_TRAINERSLIDEBACK]         = OldManHandleTrainerSlideBack,
+    [CONTROLLER_FAINTANIMATION]           = OldManHandleFaintAnimation,
+    [CONTROLLER_PALETTEFADE]              = OldManHandlePaletteFade,
+    [CONTROLLER_SUCCESSBALLTHROWANIM]     = OldManHandleSuccessBallThrowAnim,
+    [CONTROLLER_BALLTHROWANIM]            = OldManHandleBallThrowAnim,
+    [CONTROLLER_PAUSE]                    = OldManHandlePause,
+    [CONTROLLER_MOVEANIMATION]            = OldManHandleMoveAnimation,
+    [CONTROLLER_PRINTSTRING]              = OldManHandlePrintString,
+    [CONTROLLER_PRINTSTRINGPLAYERONLY]    = OldManHandlePrintSelectionString,
+    [CONTROLLER_CHOOSEACTION]             = OldManHandleChooseAction,
+    [CONTROLLER_YESNOBOX]                 = OldManHandleYesNoBox,
+    [CONTROLLER_CHOOSEMOVE]               = OldManHandleChooseMove,
+    [CONTROLLER_OPENBAG]                  = OldManHandleChooseItem,
+    [CONTROLLER_CHOOSEPOKEMON]            = OldManHandleChoosePokemon,
+    [CONTROLLER_23]                       = OldManHandleCmd23,
+    [CONTROLLER_HEALTHBARUPDATE]          = OldManHandleHealthBarUpdate,
+    [CONTROLLER_EXPUPDATE]                = OldManHandleExpUpdate,
+    [CONTROLLER_STATUSICONUPDATE]         = OldManHandleStatusIconUpdate,
+    [CONTROLLER_STATUSANIMATION]          = OldManHandleStatusAnimation,
+    [CONTROLLER_STATUSXOR]                = OldManHandleStatusXor,
+    [CONTROLLER_DATATRANSFER]             = OldManHandleDataTransfer,
+    [CONTROLLER_DMA3TRANSFER]             = OldManHandleDMA3Transfer,
+    [CONTROLLER_PLAYBGM]                  = OldManHandlePlayBGM,
+    [CONTROLLER_32]                       = OldManHandleCmd32,
+    [CONTROLLER_TWORETURNVALUES]          = OldManHandleTwoReturnValues,
+    [CONTROLLER_CHOSENMONRETURNVALUE]     = OldManHandleChosenMonReturnValue,
+    [CONTROLLER_ONERETURNVALUE]           = OldManHandleOneReturnValue,
+    [CONTROLLER_ONERETURNVALUE_DUPLICATE] = OldManHandleOneReturnValue_Duplicate,
+    [CONTROLLER_CLEARUNKVAR]              = OldManHandleClearUnkVar,
+    [CONTROLLER_SETUNKVAR]                = OldManHandleSetUnkVar,
+    [CONTROLLER_CLEARUNKFLAG]             = OldManHandleClearUnkFlag,
+    [CONTROLLER_TOGGLEUNKFLAG]            = OldManHandleToggleUnkFlag,
+    [CONTROLLER_HITANIMATION]             = OldManHandleHitAnimation,
+    [CONTROLLER_CANTSWITCH]               = OldManHandleCantSwitch,
+    [CONTROLLER_PLAYSE]                   = OldManHandlePlaySE,
+    [CONTROLLER_PLAYFANFAREORBGM]         = OldManHandlePlayFanfareOrBGM,
+    [CONTROLLER_FAINTINGCRY]              = OldManHandleFaintingCry,
+    [CONTROLLER_INTROSLIDE]               = OldManHandleIntroSlide,
+    [CONTROLLER_INTROTRAINERBALLTHROW]    = OldManHandleIntroTrainerBallThrow,
+    [CONTROLLER_DRAWPARTYSTATUSSUMMARY]   = OldManHandleDrawPartyStatusSummary,
+    [CONTROLLER_HIDEPARTYSTATUSSUMMARY]   = OldManHandleHidePartyStatusSummary,
+    [CONTROLLER_ENDBOUNCE]                = OldManHandleEndBounceEffect,
+    [CONTROLLER_SPRITEINVISIBILITY]       = OldManHandleSpriteInvisibility,
+    [CONTROLLER_BATTLEANIMATION]          = OldManHandleBattleAnimation,
+    [CONTROLLER_LINKSTANDBYMSG]           = OldManHandleLinkStandbyMsg,
+    [CONTROLLER_RESETACTIONMOVESELECTION] = OldManHandleResetActionMoveSelection,
+    [CONTROLLER_ENDLINKBATTLE]            = OldManHandleEndLinkBattle,
+    [CONTROLLER_TERMINATOR_NOP]           = OldManCmdEnd
 };
 
 static void UNUSED SpriteCB_Null7(void)
@@ -1004,9 +1095,16 @@ static void OldManHandlePrintString(void)
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
     stringId = (u16 *)(&gBattleBufferA[gActiveBattler][2]);
-    BufferStringBattle(*stringId);
-    BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MSG);
-    gBattlerControllerFuncs[gActiveBattler] = CompleteOnInactiveTextPrinter;
+    if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL && *stringId == 1)
+    {
+        OldManBufferExecCompleted();
+    }
+    else
+    {
+        BufferStringBattle(*stringId);
+        BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MSG);
+        gBattlerControllerFuncs[gActiveBattler] = CompleteOnInactiveTextPrinter;
+    }
 }
 
 static void OldManHandlePrintSelectionString(void)
