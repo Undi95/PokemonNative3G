@@ -370,8 +370,8 @@ static void BuildDoorTiles(u16 *tiles, u16 tileNum, const u8 *paletteNums)
 static void Task_AnimateDoor(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    const struct DoorAnimFrame *frames = (struct DoorAnimFrame *)((u16)tFramesHi << 16 | (u16)tFramesLo);
-    const struct DoorGraphics *gfx = (struct DoorGraphics *)((u16)tGfxHi << 16 | (u16)tGfxLo);
+    const struct DoorAnimFrame *frames = gTasks[taskId].ptr.genericPtr[0];
+    const struct DoorGraphics *gfx = gTasks[taskId].ptr.genericPtr[1];
     if (!AnimateDoorFrame(gfx, frames, data))
         DestroyTask(taskId);
 }
@@ -418,10 +418,8 @@ static s8 StartDoorAnimationTask(const struct DoorGraphics *gfx, const struct Do
 
     tX = x;
     tY = y;
-    tFramesLo = (uintptr_t)frames;
-    tFramesHi = (uintptr_t)frames >> 16;
-    tGfxLo = (uintptr_t)gfx;
-    tGfxHi = (uintptr_t)gfx >> 16;
+    gTasks[taskId].ptr.genericPtr[0] = (void *)frames;
+    gTasks[taskId].ptr.genericPtr[1] = (void *)gfx;
     return taskId;
 }
 

@@ -37,6 +37,19 @@ for fn in ('FieldSetDoorOpened', 'FieldSetDoorClosed', 'FieldAnimateDoorClose', 
            'FieldIsDoorAnimationRunning', 'GetDoorSoundEffect'):
     src = re.sub(rf'^(\w[\w ]*?)\b{fn}\(', rf'\1Kanto_{fn}(', src, flags=re.M)
 
+# Pointeurs rangés dans deux cases s16 : faux en 64 bits -> ptr.genericPtr, comme le port le fait dans Émeraude
+for a, b in (
+    ('const struct DoorAnimFrame *frames = (struct DoorAnimFrame *)((u16)tFramesHi << 16 | (u16)tFramesLo);',
+     'const struct DoorAnimFrame *frames = gTasks[taskId].ptr.genericPtr[0];'),
+    ('const struct DoorGraphics *gfx = (struct DoorGraphics *)((u16)tGfxHi << 16 | (u16)tGfxLo);',
+     'const struct DoorGraphics *gfx = gTasks[taskId].ptr.genericPtr[1];'),
+    ('    tFramesLo = (uintptr_t)frames;\n    tFramesHi = (uintptr_t)frames >> 16;\n'
+     '    tGfxLo = (uintptr_t)gfx;\n    tGfxHi = (uintptr_t)gfx >> 16;\n',
+     '    gTasks[taskId].ptr.genericPtr[0] = (void *)frames;\n    gTasks[taskId].ptr.genericPtr[1] = (void *)gfx;\n'),
+):
+    assert a in src, a
+    src = src.replace(a, b)
+
 header = ('// Généré par tools/kanto/gen_door.py depuis src/field_door.c de Rouge Feu.\n'
           '// Ne pas modifier à la main : relancer le générateur.\n')
 with open(f'{em}/src/kanto_field_door.c', 'w', encoding='utf-8', newline='\n') as f:
