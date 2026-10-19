@@ -319,10 +319,8 @@ static void WindowFunc_DrawStandardFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u
 // Rouge Feu (menu.c : WindowFunc_DrawDialogFrameWithCustomTileAndPalette, tuiles DLG_WINDOW_BASE_TILE_NUM).
 // Le cadre de RF déborde d'une colonne à droite de la fenêtre : la fenêtre d'Émeraude étant plus large
 // d'une colonne, l'intérieur est réduit d'une colonne (width - 1) pour rester dans l'écran.
-static void WindowFunc_DrawKantoDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
+static void DrawKantoDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u16 t, u8 p)
 {
-    u16 t = DLG_WINDOW_BASE_TILE_NUM;
-    u8 p = DLG_WINDOW_PALETTE_NUM;
     width--;
     FillBgTilemapBufferRect(bg, t,                      tilemapLeft - 2,         tilemapTop - 1, 1,     1, p);
     FillBgTilemapBufferRect(bg, t + 1,                  tilemapLeft - 1,         tilemapTop - 1, 1,     1, p);
@@ -356,7 +354,7 @@ static void WindowFunc_DrawDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u
 {
     if (gSaveBlock2Ptr->optionsDialogStyle)
     {
-        WindowFunc_DrawKantoDialogueFrame(bg, tilemapLeft, tilemapTop, width, height, paletteNum);
+        DrawKantoDialogueFrame(bg, tilemapLeft, tilemapTop, width, DLG_WINDOW_BASE_TILE_NUM, DLG_WINDOW_PALETTE_NUM);
         return;
     }
     FillBgTilemapBufferRect(bg,
@@ -617,6 +615,11 @@ static void UNUSED DrawDialogFrameWithCustomTile(u8 windowId, bool8 copyToVram, 
 
 static void WindowFunc_DrawDialogFrameWithCustomTileAndPalette(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
 {
+    if (gSaveBlock2Ptr->optionsDialogStyle) // option DIALOGUE = KANTO (gfx de RF chargés par LoadMessageBoxGfx)
+    {
+        DrawKantoDialogueFrame(bg, tilemapLeft, tilemapTop, width, sTileNum, sPaletteNum);
+        return;
+    }
     FillBgTilemapBufferRect(bg,
                             sTileNum + 1,
                             tilemapLeft - 2,
