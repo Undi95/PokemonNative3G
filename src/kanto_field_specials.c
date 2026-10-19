@@ -30,6 +30,18 @@ bool8 IsPlayerNotInTrainerTowerLobby(void)
 }
 
 // fame_checker.c (données dans gSaveBlockKanto au lieu de SaveBlock1)
+void ResetFameChecker(void)
+{
+    u8 i;
+    for (i = 0; i < NUM_FAMECHECKER_PERSONS; i++)
+    {
+        gSaveBlockKanto.fameChecker[i].pickState = FCPICKSTATE_NO_DRAW;
+        gSaveBlockKanto.fameChecker[i].flavorTextFlags = 0;
+        gSaveBlockKanto.fameChecker[i].unk_0_E = 0;
+    }
+    gSaveBlockKanto.fameChecker[FAMECHECKER_OAK].pickState = FCPICKSTATE_COLORED;
+}
+
 void UpdatePickStateFromSpecialVar8005(void)
 {
     if (gSpecialVar_0x8004 < NUM_FAMECHECKER_PERSONS && gSpecialVar_0x8005 < 3)

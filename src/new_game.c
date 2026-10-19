@@ -48,6 +48,8 @@
 #include "constants/items.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
+extern const u8 Kanto_EventScript_ResetAllMapFlags[];
+void ResetFameChecker(void);
 
 static void ClearFrontierRecord(void);
 static void WarpToTruck(void);
@@ -211,6 +213,9 @@ void NewGameInitData(void)
     ResetLotteryCorner();
     WarpToTruck();
     RunScriptImmediately(EventScript_ResetAllMapFlags);
+    // Nouvelle partie de Rouge Feu (new_game.c de RF)
+    RunScriptImmediately(Kanto_EventScript_ResetAllMapFlags);
+    ResetFameChecker();
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();
     InitLilycoveLady();
