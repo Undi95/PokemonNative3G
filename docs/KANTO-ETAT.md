@@ -21,14 +21,20 @@ Outils : DEBUG > « Recevoir MEWTWO » (nv 70) ; l'état de test (build KANTO_DE
 - rencontres sauvages RF (`tools/kanto/gen_wild.py`, version Rouge Feu) ; combat sauvage complet (`kanto_wild`)
   avec décor et musique RF (`tools/kanto/gen_battle_bg.py`, `src/kanto_battle_bg.c`, scènes
   `MAP_BATTLE_SCENE_KANTO_*`).
-Prochaine étape : importer les dresseurs RF (combat de dresseur, rival du labo).
+- dresseurs RF (`tools/kanto/gen_trainers.py`) : 743 dresseurs, équipes, classes, portraits, après ceux
+  d'Émeraude (`TRAINER_KANTO_*`, `TRAINER_CLASS_KANTO_*`, `TRAINER_PIC_KANTO_*`) ; drapeaux « battu » à leur
+  place RF dans le bloc Kanto ; musiques RF (approche, combat, victoire) ; nom du rival en combat ;
+  `TRAINER_BATTLE_EARLY_RIVAL` (13) de RF. Testés : arène d'Argenta (`kanto_trainer`), rival du labo (`kanto_rival`) ;
+- pas des PNJ RF alternés (`sKantoStepAnimTables` dans `GetStepAnimTable`).
+Prochaine étape : contrôleur de combat « Chen / vieil homme » de RF (tutoriel du combat du labo,
+démonstration de capture à Jadielle).
 
 ## Dettes (provisoire → importer depuis RF)
-- Dresseurs : `TRAINER_KANTO_*` = TRAINER_NONE (478) — importer dresseurs, classes, sprites, `TRAINER_BATTLE_EARLY_RIVAL`, flags dresseurs Kanto, décors de combat du Conseil 4 + transitions.
+- Combat : `RIVAL_BATTLE_TUTORIAL` sans les conseils de Chen (contrôleur `battle_controller_oak_old_man.c` de RF à porter) ; rematchs RF (Cherche VS) ; Tour Dresseurs.
 - 142 specials RF en stubs (`src/kanto_specials_stubs.c`, log console).
 - Polices homme/femme RF (FONT_MALE/FEMALE → police normale), textcolor/signmsg (couleur/style boîte RF), système d'aide RF, `walk_slower_*` → walk_slow.
 - Objets « clone » RF, objets cachés quantité/underfoot, comportements de tuiles décoratifs/énigmes (BEHAVIOR_ALIASES), anims de tilesets (callback NULL), effets de terrain RF.
-- Combat à Kanto : interface d'Émeraude (boîte de texte, jauges) au lieu de celle de RF, transitions d'Émeraude, lettres des ZARBI de Tanoby (choix par chambre de RF) non importées.
+- Graphismes présents dans les deux jeux (boîtes, interface de combat, transitions, sprites du joueur, de Red…) : choix dans les options plus tard (décision utilisateur). Combat : lettres des ZARBI de Tanoby (choix par chambre de RF) non importées.
 - Std msgbox RF (Kanto_Std_*), scénario (mamans, Rocket…) ; le choix du nom du rival (oak_speech) : plus tard avec l'utilisateur.
 - Bateau Nénucrique → Kanto ; son pas fluide.
 - {RIVAL} à Kanto = `gSaveBlockKanto.rivalName`, « BLUE » par défaut. Fame Checker (drapeaux) dans `gSaveBlockKanto`.
