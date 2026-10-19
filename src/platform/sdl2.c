@@ -327,6 +327,16 @@ static u64 HashBytes(u64 hash, const void *data, size_t size)
 
 void Platform_QueueAudio(float *audioBuffer, s32 samplesPerFrame)
 {
+    // The first frames can hold garbage (values up to 1e20) before the mixer is
+    // set up. A float device gets them as they are, and on Windows that can leave
+    // the stream silent, so keep every sample finite and within [-1, 1].
+    for (s32 i = 0; i < samplesPerFrame / (s32)sizeof(float); i++)
+    {
+        float s = audioBuffer[i];
+        if (!(s >= -1.0f && s <= 1.0f))
+            audioBuffer[i] = (s > 1.0f) ? 1.0f : (s < -1.0f) ? -1.0f : 0.0f;
+    }
+
     if (sTestMode)
     {
         sTestAudioHash = HashBytes(sTestAudioHash, audioBuffer, samplesPerFrame);
