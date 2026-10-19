@@ -3,6 +3,8 @@
 
 void SetBerryPowder(u32 *powder, u32 amount);
 void ApplyNewEncryptionKeyToBerryPowder(u32 encryptionKey);
+bool8 HasEnoughBerryPowder(void);
+bool8 TakeBerryPowder(void);
 bool8 GiveBerryPowder(u32 amountToAdd);
 u32 GetBerryPowder(void);
 

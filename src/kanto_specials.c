@@ -25,6 +25,7 @@
 #include "tv.h"
 #include "constants/game_stat.h"
 #include "constants/items.h"
+#include "constants/rgb.h"
 #include "constants/maps.h"
 #include "constants/moves.h"
 #include "constants/species.h"
