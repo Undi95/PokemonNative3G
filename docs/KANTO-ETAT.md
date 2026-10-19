@@ -32,6 +32,8 @@ Outils : DEBUG > « Recevoir MEWTWO » (nv 70) ; l'état de test (build KANTO_DE
   Sac : celui d'Émeraude en mode démonstration.
 Specials RF : 18 portés dans `src/kanto_field_specials.c` (Pokédex, équipe, vélo forcé, secousse d'écran, espèce du starter, nom du dresseur d'origine…). Il reste ~120 stubs dans `src/kanto_specials_stubs.c`. Prochaine étape : les plus fréquents en jeu — ascenseurs (Animate/Draw/CloseElevator…), aide (SetHelpContext…), ListMenu, PC (AnimatePcTurnOn/Off), Combats légendaires (StartLegendaryBattle), VsSeeker, garderie Route 5, ferry Seagallop. Données de save RF : `gSaveBlockKanto` (`include/kanto_save.h`). Les tâches (Task) et fenêtres d'ascenseur/ListMenu demandent d'abord de lire les fonctions RF correspondantes.
 
+Warps RF : escaliers latéraux (`MB_*_STAIR_WARP`) portés tels quels (field_screen_effect.c, scénario `kanto_stairs`). Encore approximés dans `BEHAVIOR_ALIASES` de tools/kanto/import_kanto.py : téléporteurs `MB_REGULAR_WARP` (RF : DoTeleportWarp, animation de rotation, Sylphe SARL / arène de Safrania), trous `MB_FALL_WARP` (RF : EventScript_DoFallWarp + special DoFallWarp), `MB_ROCK_STAIRS` (marche lente, PlayerIsMovingOnRockStairs), `MB_CAVE_DOOR` -> porte non animée (équivalent).
+
 ## Dettes (provisoire → importer depuis RF)
 - Combat : conseils de Chen pendant le combat du labo NON importés (décision utilisateur : Kanto vient après Hoenn) ; rematchs RF (Cherche VS) ; Tour Dresseurs.
 - 142 specials RF en stubs (`src/kanto_specials_stubs.c`, log console).
