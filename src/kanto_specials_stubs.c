@@ -62,6 +62,7 @@ u16 SaveBattleTowerProgress(void) { KantoSpecialStub("SaveBattleTowerProgress");
 u16 BattleTower_SoftReset(void) { KantoSpecialStub("BattleTower_SoftReset"); return 0; }
 u16 DetermineBattleTowerPrize(void) { KantoSpecialStub("DetermineBattleTowerPrize"); return 0; }
 u16 GiveBattleTowerPrize(void) { KantoSpecialStub("GiveBattleTowerPrize"); return 0; }
+u16 AwardBattleTowerRibbons(void) { KantoSpecialStub("AwardBattleTowerRibbons"); return 0; }
 u16 ChooseBattleTowerPlayerParty(void) { KantoSpecialStub("ChooseBattleTowerPlayerParty"); return 0; }
 u16 ReducePlayerPartyToThree(void) { KantoSpecialStub("ReducePlayerPartyToThree"); return 0; }
 u16 ShowTownMap(void) { KantoSpecialStub("ShowTownMap"); return 0; }
@@ -94,6 +95,7 @@ u16 SetVermilionTrashCans(void) { KantoSpecialStub("SetVermilionTrashCans"); ret
 u16 SeafoamIslandsB4F_CurrentDumpsPlayerOnLand(void) { KantoSpecialStub("SeafoamIslandsB4F_CurrentDumpsPlayerOnLand"); return 0; }
 u16 SampleResortGorgeousMonAndReward(void) { KantoSpecialStub("SampleResortGorgeousMonAndReward"); return 0; }
 u16 CheckAddCoins(void) { KantoSpecialStub("CheckAddCoins"); return 0; }
+u16 GetDaycarePokemonCount(void) { KantoSpecialStub("GetDaycarePokemonCount"); return 0; }
 u16 CloseElevatorCurrentFloorWindow(void) { KantoSpecialStub("CloseElevatorCurrentFloorWindow"); return 0; }
 u16 ForcePlayerToStartSurfing(void) { KantoSpecialStub("ForcePlayerToStartSurfing"); return 0; }
 u16 GetStarterSpecies(void) { KantoSpecialStub("GetStarterSpecies"); return 0; }
@@ -124,6 +126,7 @@ u16 GetQuestLogState(void) { KantoSpecialStub("GetQuestLogState"); return 0; }
 u16 QuestLog_CutRecording(void) { KantoSpecialStub("QuestLog_CutRecording"); return 0; }
 u16 OpenMuseumFossilPic(void) { KantoSpecialStub("OpenMuseumFossilPic"); return 0; }
 u16 CloseMuseumFossilPic(void) { KantoSpecialStub("CloseMuseumFossilPic"); return 0; }
+u16 SetBattledTrainerFlag(void) { KantoSpecialStub("SetBattledTrainerFlag"); return 0; }
 u16 SetHelpContextForMap(void) { KantoSpecialStub("SetHelpContextForMap"); return 0; }
 u16 DoSSAnneDepartureCutscene(void) { KantoSpecialStub("DoSSAnneDepartureCutscene"); return 0; }
 u16 CallTrainerTowerFunc(void) { KantoSpecialStub("CallTrainerTowerFunc"); return 0; }

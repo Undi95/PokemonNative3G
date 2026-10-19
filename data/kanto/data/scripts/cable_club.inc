@@ -1099,7 +1099,7 @@ Kanto_CableClub_EventScript_OpenUnionRoomBarrier::
 	return
 
 Kanto_CableClub_EventScript_CloseUnionRoomBarrier::
-	setmetatile 5, 3, METATILE_PokemonCenter_CounterBarrier, 1
+	setmetatile 5, 3, KANTO_METATILE_PokemonCenter_CounterBarrier, 1
 	return
 
 Kanto_CableClub_EventScript_OpenDirectCornerBarrier::
@@ -1107,7 +1107,7 @@ Kanto_CableClub_EventScript_OpenDirectCornerBarrier::
 	return
 
 Kanto_CableClub_EventScript_CloseDirectCornerBarrier::
-	setmetatile 9, 3, METATILE_PokemonCenter_CounterBarrier, 1
+	setmetatile 9, 3, KANTO_METATILE_PokemonCenter_CounterBarrier, 1
 	return
 
 CableClub_EventScript_OpenGameCornerBarrier::

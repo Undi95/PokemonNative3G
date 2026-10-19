@@ -72,6 +72,8 @@ gFieldEffectScriptPointers::
 	ptrvalue gFieldEffectScript_RayquazaSpotlight         /* FLDEFF_RAYQUAZA_SPOTLIGHT*/
 	ptrvalue gFieldEffectScript_DestroyDeoxysRock         /* FLDEFF_DESTROY_DEOXYS_ROCK*/
 	ptrvalue gFieldEffectScript_MoveDeoxysRock            /* FLDEFF_MOVE_DEOXYS_ROCK*/
+	ptrvalue gFieldEffectScript_KantoNoop                 /* FLDEFF_PHOTO_FLASH (RF, TODO Kanto) */
+	ptrvalue gFieldEffectScript_KantoNoop                 /* FLDEFF_SMILEY_FACE_ICON (RF, TODO Kanto) */
 
 gFieldEffectScript_ExclamationMarkIcon1::
 	field_eff_callnative FldEff_ExclamationMarkIcon
@@ -342,4 +344,7 @@ gFieldEffectScript_DestroyDeoxysRock::
 
 gFieldEffectScript_MoveDeoxysRock::
 	field_eff_callnative FldEff_MoveDeoxysRock
+	field_eff_end
+
+gFieldEffectScript_KantoNoop::
 	field_eff_end

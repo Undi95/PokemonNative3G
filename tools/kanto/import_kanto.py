@@ -313,11 +313,8 @@ class Importer:
         tok = lambda v: re.sub(r'\b[A-Za-z_]\w*\b', self.sc.token, str(v))
 
         made, pairs, sec_primary, layouts_done, kanto_maps = [], {}, {}, set(), []
-        for m, j in self.fr_maps.items():
-            if m in self.skip:
-                continue
-            em_name = self.map_rename.get(m, m)
-            lay = self.fr_layouts[j['layout']]
+
+        def import_layout(lay):
             em_lid = self.layout_rename.get(lay['id'], lay['id'])
             if em_lid not in layouts_done:
                 pair = (lay['primary_tileset'], lay['secondary_tileset'])
@@ -325,7 +322,7 @@ class Importer:
                     # un secondaire RF utilisé avec deux primaires donne deux secondaires Kanto
                     variant = '' if sec_primary.setdefault(pair[1], pair[0]) == pair[0] else pair[0][len('gTileset_'):]
                     pairs[pair] = self.import_tileset_pair(*pair, variant)
-                    made += pairs[pair][2]
+                    made.extend(pairs[pair][2])
                 pname, sname, _ = pairs[pair]
                 ldir = f'data/layouts/Kanto_{os.path.basename(os.path.dirname(lay["blockdata_filepath"]))}'
                 os.makedirs(f'{self.em}/{ldir}', exist_ok=True)
@@ -337,6 +334,21 @@ class Importer:
                     'primary_tileset': pname, 'secondary_tileset': sname,
                     'border_filepath': f'{ldir}/border.bin', 'blockdata_filepath': f'{ldir}/map.bin'})
                 layouts_done.add(em_lid)
+
+            return em_lid
+
+        # layouts de remplacement posés par setmaplayoutindex (aucune carte ne les utilise)
+        for lid in sorted(set(re.findall(r'setmaplayoutindex (LAYOUT_\w+)', ' '.join(
+                open(f'{self.fr}/data/maps/{m}/scripts.inc', encoding='utf-8').read() for m in self.fr_maps
+                if os.path.exists(f'{self.fr}/data/maps/{m}/scripts.inc'))))):
+            import_layout(self.fr_layouts[lid])
+
+        for m, j in self.fr_maps.items():
+            if m in self.skip:
+                continue
+            em_name = self.map_rename.get(m, m)
+            lay = self.fr_layouts[j['layout']]
+            em_lid = import_layout(lay)
 
             out = {'id': self.em_map_id(j['id']), 'name': em_name, 'layout': em_lid, 'music': self.music(j['music']),
                    'region_map_section': j['region_map_section']}

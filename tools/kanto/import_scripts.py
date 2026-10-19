@@ -10,7 +10,7 @@ français) et l'écrit sous data/kanto/, avec :
   - les spécificités 64 bits du port : `.4byte label` -> ptrvalue, `.align 2` -> ptr_align,
     commentaires `@` -> /* */.
 """
-import os, re, subprocess
+import json, os, re, subprocess
 
 from kanto_names import Names
 
@@ -190,6 +190,22 @@ class ScriptConverter:
             write(f'{self.em}/include/constants/kanto/{h}', '// Copié de Rouge Feu par tools/kanto/import_scripts.py\n' + text)
         tutors = re.findall(r'^#define MOVETUTOR_\w+\s+\d+', read(f'{self.fr}/include/constants/moves.h'), re.M)
         write(f'{self.em}/include/constants/kanto/move_tutors.h', '// Copié de Rouge Feu\n' + '\n'.join(tutors) + '\n// Poche de CT de RF = poche CT/CS d\'Émeraude\n#define POCKET_TM_CASE POCKET_TM_HM\n#define POCKET_BERRY_POUCH POCKET_BERRIES\n')
+        # lieux de soin de RF : ajoutés à la fin de la table d'Émeraude (sans le PNJ de réanimation)
+        heal = json.load(open(f'{self.fr}/src/data/heal_locations.json', encoding='utf-8'))['heal_locations']
+        hp = f'{self.em}/src/data/heal_locations.json'
+        hj = json.load(open(hp, encoding='utf-8'))
+        rf_ids = {h['id'] for h in heal}
+        hj['heal_locations'] = [h for h in hj['heal_locations'] if h['id'] not in rf_ids] + \
+            [{k: v for k, v in h.items() if k != 'respawn_npc'} for h in heal]
+        with open(hp, 'w', encoding='utf-8', newline='\n') as f:
+            json.dump(hj, f, indent=2, ensure_ascii=False)
+            f.write('\n')
+        # alias RF -> Émeraude utilisés par les scripts de Kanto
+        write(f'{self.em}/include/constants/kanto/script_aliases.h', '// Alias RF -> Émeraude (tools/kanto/import_scripts.py)\n'
+              '#define NPC_TEXT_COLOR_MALE 0\n#define NPC_TEXT_COLOR_FEMALE 1\n#define NPC_TEXT_COLOR_MON 2\n#define NPC_TEXT_COLOR_NEUTRAL 3\n'
+              '#define SE_RS_DOOR SE_DOOR\n#define SE_RS_SHOP SE_SHOP\n'
+              '#define MOVEMENT_TYPE_WANDER_AROUND_SLOWER MOVEMENT_TYPE_WANDER_AROUND\n'
+              '#define STEP_CB_ICE STEP_CB_DUMMY // TODO Kanto : glace de la Grotte Glaciale\n')
         em_std = set(re.findall(r'#define (STDSTRING_\w+)', read(f'{self.em}/include/constants/script_menu.h')))
         self.em_std = em_std
 
@@ -206,7 +222,7 @@ class ScriptConverter:
             for f in os.listdir(f'{self.em}/{d}'):
                 if f.endswith('.c') and f != 'kanto_specials_stubs.c':
                     em_c += read(f'{self.em}/{d}/{f}')
-        defined = set(re.findall(r'^[A-Za-z_][\w \*]*?\b(\w+)\s*\([^;{]*\)\s*\{', em_c, re.M))
+        defined = set(re.findall(r'^(?!static\b)[A-Za-z_][\w \*]*?\b(\w+)\s*\([^;{]*\)\s*\{', em_c, re.M))
         stubs = [n for n in new if n not in defined]
         write(f'{self.em}/data/kanto/kanto_specials.inc',
               '/* Specials de Rouge Feu (tools/kanto/import_scripts.py) */\n'
@@ -243,7 +259,7 @@ class ScriptConverter:
 
 
 # En-têtes de constantes de RF absents d'Émeraude (copiés dans include/constants/kanto/)
-FR_ONLY_HEADERS = ['fame_checker.h', 'help_system.h', 'menu.h', 'quest_log.h', 'seagallop.h',
+FR_ONLY_HEADERS = ['fame_checker.h', 'help_system.h', 'menu.h', 'metatile_labels.h', 'quest_log.h', 'seagallop.h',
                    'trainer_card.h', 'trainer_fan_club.h', 'trainer_tower.h']
 
 # Constantes TRAINER_* qui ne sont pas des dresseurs

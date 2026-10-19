@@ -4412,6 +4412,54 @@
       "blockdata_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/map.bin"
     },
     {
+      "id": "LAYOUT_SEAFOAM_ISLANDS_B3F_CURRENT_STOPPED",
+      "name": "Kanto_SeafoamIslands_B3F_CurrentStopped_Layout",
+      "width": 38,
+      "height": 24,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_KantoGeneral",
+      "secondary_tileset": "gTileset_KantoSeafoamIslands",
+      "border_filepath": "data/layouts/Kanto_SeafoamIslands_B3F_CurrentStopped/border.bin",
+      "blockdata_filepath": "data/layouts/Kanto_SeafoamIslands_B3F_CurrentStopped/map.bin"
+    },
+    {
+      "id": "LAYOUT_SEAFOAM_ISLANDS_B4F_CURRENT_STOPPED",
+      "name": "Kanto_SeafoamIslands_B4F_CurrentStopped_Layout",
+      "width": 38,
+      "height": 24,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_KantoGeneral",
+      "secondary_tileset": "gTileset_KantoSeafoamIslands",
+      "border_filepath": "data/layouts/Kanto_SeafoamIslands_B4F_CurrentStopped/border.bin",
+      "blockdata_filepath": "data/layouts/Kanto_SeafoamIslands_B4F_CurrentStopped/map.bin"
+    },
+    {
+      "id": "LAYOUT_SEVEN_ISLAND_HOUSE_ROOM1_DOOR_OPEN",
+      "name": "Kanto_SevenIsland_House_Room1_DoorOpen_Layout",
+      "width": 11,
+      "height": 9,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_KantoBuilding",
+      "secondary_tileset": "gTileset_KantoGenericBuilding2",
+      "border_filepath": "data/layouts/Kanto_SevenIsland_House_Room1_DoorOpen/border.bin",
+      "blockdata_filepath": "data/layouts/Kanto_SevenIsland_House_Room1_DoorOpen/map.bin"
+    },
+    {
+      "id": "LAYOUT_THREE_ISLAND_DUNSPARCE_TUNNEL_DUG_OUT",
+      "name": "Kanto_ThreeIsland_DunsparceTunnel_DugOut_Layout",
+      "width": 30,
+      "height": 7,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_KantoGeneral",
+      "secondary_tileset": "gTileset_KantoCave",
+      "border_filepath": "data/layouts/Kanto_ThreeIsland_DunsparceTunnel_DugOut/border.bin",
+      "blockdata_filepath": "data/layouts/Kanto_ThreeIsland_DunsparceTunnel_DugOut/map.bin"
+    },
+    {
       "id": "LAYOUT_VIRIDIAN_FOREST",
       "name": "Kanto_ViridianForest_Layout",
       "width": 54,
