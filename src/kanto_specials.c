@@ -8,6 +8,9 @@
 #include "hall_of_fame.h"
 #include "money.h"
 #include "palette.h"
+#include "party_menu.h"
+#include "script_menu.h"
+#include "start_menu.h"
 #include "save_location.h"
 #include "script.h"
 #include "event_data.h"
@@ -32,6 +35,7 @@
 #include "constants/songs.h"
 #include "constants/kanto/metatile_labels.h"
 #include "constants/kanto/move_tutors.h"
+#include "constants/kanto/seagallop.h"
 
 u8 GetLeadMonIndex(void);
 
@@ -727,4 +731,77 @@ void HallOfFamePCBeginFade(void)
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
     LockPlayerFieldControls();
     CreateTask(Task_WaitFadeAndSetCallback, 0);
+}
+
+// party_menu_specials.c : RF ouvre son résumé en PSS_MODE_FORGET_MOVE ; même rôle que
+// MoveDeleterChooseMoveToForget d'Émeraude (résumé en SUMMARY_MODE_SELECT_MOVE)
+void SelectMoveDeleterMove(void)
+{
+    MoveDeleterChooseMoveToForget();
+}
+
+// start_menu.c : Field_AskSaveTheGame de RF = special SaveGame d'Émeraude (même dialogue de sauvegarde)
+void Field_AskSaveTheGame(void)
+{
+    SaveGame();
+}
+
+// script_menu.c : CreatePCMenu de RF = ScriptMenu_CreatePCMultichoice d'Émeraude
+u16 CreatePCMenu(void)
+{
+    return ScriptMenu_CreatePCMultichoice();
+}
+
+// seagallop.c
+u16 IsPlayerLeftOfVermilionSailor(void)
+{
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_VERMILION_CITY)
+       && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_VERMILION_CITY)
+       && gSaveBlock1Ptr->pos.x < 24)
+        return TRUE;
+
+    return FALSE;
+}
+
+// field_specials.c
+u16 GetSeagallopNumber(void)
+{
+    u16 originId, destId;
+
+    originId = gSpecialVar_0x8004;
+    destId = gSpecialVar_0x8006;
+
+    if (originId == SEAGALLOP_CINNABAR_ISLAND || destId == SEAGALLOP_CINNABAR_ISLAND)
+        return 1;
+
+    if (originId == SEAGALLOP_VERMILION_CITY || destId == SEAGALLOP_VERMILION_CITY)
+        return 7;
+
+    if (originId == SEAGALLOP_NAVEL_ROCK || destId == SEAGALLOP_NAVEL_ROCK)
+        return 10;
+
+    if (originId == SEAGALLOP_BIRTH_ISLAND || destId == SEAGALLOP_BIRTH_ISLAND)
+        return 12;
+
+    if ((originId == SEAGALLOP_ONE_ISLAND
+      || originId == SEAGALLOP_TWO_ISLAND
+      || originId == SEAGALLOP_THREE_ISLAND)
+      && (destId == SEAGALLOP_ONE_ISLAND
+       || destId == SEAGALLOP_TWO_ISLAND
+       || destId == SEAGALLOP_THREE_ISLAND))
+        return 2;
+
+    if ((originId == SEAGALLOP_FOUR_ISLAND
+      || originId == SEAGALLOP_FIVE_ISLAND)
+      && (destId == SEAGALLOP_FOUR_ISLAND
+       || destId == SEAGALLOP_FIVE_ISLAND))
+        return 3;
+
+    if ((originId == SEAGALLOP_SIX_ISLAND
+      || originId == SEAGALLOP_SEVEN_ISLAND)
+      && (destId == SEAGALLOP_SIX_ISLAND
+       || destId == SEAGALLOP_SEVEN_ISLAND))
+        return 5;
+
+    return 6;
 }

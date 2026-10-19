@@ -14,13 +14,11 @@ u16 EnterTradeSeat(void) { KantoSpecialStub("EnterTradeSeat"); return 0; }
 u16 StartWiredCableClubTrade(void) { KantoSpecialStub("StartWiredCableClubTrade"); return 0; }
 u16 CableClub_AskSaveTheGame(void) { KantoSpecialStub("CableClub_AskSaveTheGame"); return 0; }
 u16 TryContestLinkup(void) { KantoSpecialStub("TryContestLinkup"); return 0; }
-u16 Field_AskSaveTheGame(void) { KantoSpecialStub("Field_AskSaveTheGame"); return 0; }
 u16 ShowEasyChatMessage(void) { KantoSpecialStub("ShowEasyChatMessage"); return 0; }
 u16 BufferRandomHobbyOrLifestyleString(void) { KantoSpecialStub("BufferRandomHobbyOrLifestyleString"); return 0; }
 u16 ShowBattleRecords(void) { KantoSpecialStub("ShowBattleRecords"); return 0; }
 u16 GetProfOaksRatingMessage(void) { KantoSpecialStub("GetProfOaksRatingMessage"); return 0; }
 u16 GetElevatorFloor(void) { KantoSpecialStub("GetElevatorFloor"); return 0; }
-u16 SelectMoveDeleterMove(void) { KantoSpecialStub("SelectMoveDeleterMove"); return 0; }
 u16 BattleTowerMapScript2(void) { KantoSpecialStub("BattleTowerMapScript2"); return 0; }
 u16 ChooseNextBattleTowerTrainer(void) { KantoSpecialStub("ChooseNextBattleTowerTrainer"); return 0; }
 u16 CheckPartyBattleTowerBanlist(void) { KantoSpecialStub("CheckPartyBattleTowerBanlist"); return 0; }
@@ -38,12 +36,10 @@ u16 AwardBattleTowerRibbons(void) { KantoSpecialStub("AwardBattleTowerRibbons");
 u16 ChooseBattleTowerPlayerParty(void) { KantoSpecialStub("ChooseBattleTowerPlayerParty"); return 0; }
 u16 ReducePlayerPartyToThree(void) { KantoSpecialStub("ReducePlayerPartyToThree"); return 0; }
 u16 ShowTownMap(void) { KantoSpecialStub("ShowTownMap"); return 0; }
-u16 CreatePCMenu(void) { KantoSpecialStub("CreatePCMenu"); return 0; }
 u16 ShowDiploma(void) { KantoSpecialStub("ShowDiploma"); return 0; }
 u16 EnterHallOfFame(void) { KantoSpecialStub("EnterHallOfFame"); return 0; }
 u16 AnimateElevator(void) { KantoSpecialStub("AnimateElevator"); return 0; }
 u16 DrawElevatorCurrentFloorWindow(void) { KantoSpecialStub("DrawElevatorCurrentFloorWindow"); return 0; }
-u16 SetIcefallCaveCrackedIceMetatiles(void) { KantoSpecialStub("SetIcefallCaveCrackedIceMetatiles"); return 0; }
 u16 Dummy_TryEnableBravoTrainerBattleTower(void) { KantoSpecialStub("Dummy_TryEnableBravoTrainerBattleTower"); return 0; }
 u16 StartMarowakBattle(void) { KantoSpecialStub("StartMarowakBattle"); return 0; }
 u16 ListMenu(void) { KantoSpecialStub("ListMenu"); return 0; }
@@ -61,10 +57,8 @@ u16 DoPokemonLeagueLightingEffect(void) { KantoSpecialStub("DoPokemonLeagueLight
 u16 DoCredits(void) { KantoSpecialStub("DoCredits"); return 0; }
 u16 DrawSeagallopDestinationMenu(void) { KantoSpecialStub("DrawSeagallopDestinationMenu"); return 0; }
 u16 GetSelectedSeagallopDestination(void) { KantoSpecialStub("GetSelectedSeagallopDestination"); return 0; }
-u16 GetSeagallopNumber(void) { KantoSpecialStub("GetSeagallopNumber"); return 0; }
 u16 DoDeoxysTriangleInteraction(void) { KantoSpecialStub("DoDeoxysTriangleInteraction"); return 0; }
 u16 SetDeoxysTrianglePalette(void) { KantoSpecialStub("SetDeoxysTrianglePalette"); return 0; }
-u16 IsPlayerLeftOfVermilionSailor(void) { KantoSpecialStub("IsPlayerLeftOfVermilionSailor"); return 0; }
 u16 ReadTrainerTowerAndValidate(void) { KantoSpecialStub("ReadTrainerTowerAndValidate"); return 0; }
 u16 BrailleCursorToggle(void) { KantoSpecialStub("BrailleCursorToggle"); return 0; }
 u16 AnimateTeleporterHousing(void) { KantoSpecialStub("AnimateTeleporterHousing"); return 0; }
