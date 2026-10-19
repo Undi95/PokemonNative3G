@@ -16,13 +16,19 @@ sous Windows l'exe tourne directement) :
   `#ifdef BUGFIX`, cases PNJ remplies avec les palettes RF sur les cartes Kanto).
 Outils : DEBUG > « Recevoir MEWTWO » (nv 70) ; l'état de test (build KANTO_DEBUG) donne aussi les sprites
 (graphicsId, spriteId, inUse, invisible, priorité, palette, x, y, tuile, somme tuiles, somme palette…).
-Prochaine étape : parcourir les intérieurs / routes (combat sauvage, dresseurs provisoires), relever les plantages.
+- nouvelle partie RF (`Kanto_EventScript_ResetAllMapFlags`, `ResetFameChecker`) : Chen caché, scène de Chen
+  à la sortie vers la Route 1 jouée jusqu'au labo ;
+- rencontres sauvages RF (`tools/kanto/gen_wild.py`, version Rouge Feu) ; combat sauvage complet (`kanto_wild`)
+  avec décor et musique RF (`tools/kanto/gen_battle_bg.py`, `src/kanto_battle_bg.c`, scènes
+  `MAP_BATTLE_SCENE_KANTO_*`).
+Prochaine étape : importer les dresseurs RF (combat de dresseur, rival du labo).
 
 ## Dettes (provisoire → importer depuis RF)
 - Dresseurs : `TRAINER_KANTO_*` = TRAINER_NONE (478) — importer dresseurs, classes, sprites, `TRAINER_BATTLE_EARLY_RIVAL`, flags dresseurs Kanto, décors de combat du Conseil 4 + transitions.
 - 142 specials RF en stubs (`src/kanto_specials_stubs.c`, log console).
 - Polices homme/femme RF (FONT_MALE/FEMALE → police normale), textcolor/signmsg (couleur/style boîte RF), système d'aide RF, `walk_slower_*` → walk_slow.
-- Objets « clone » RF, objets cachés quantité/underfoot, comportements de tuiles décoratifs/énigmes (BEHAVIOR_ALIASES), anims de tilesets (callback NULL), rencontres sauvages, effets de terrain RF.
+- Objets « clone » RF, objets cachés quantité/underfoot, comportements de tuiles décoratifs/énigmes (BEHAVIOR_ALIASES), anims de tilesets (callback NULL), effets de terrain RF.
+- Combat à Kanto : interface d'Émeraude (boîte de texte, jauges) au lieu de celle de RF, transitions d'Émeraude, lettres des ZARBI de Tanoby (choix par chambre de RF) non importées.
 - Std msgbox RF (Kanto_Std_*), scénario (mamans, Rocket…) ; le choix du nom du rival (oak_speech) : plus tard avec l'utilisateur.
 - Bateau Nénucrique → Kanto ; son pas fluide.
 - {RIVAL} à Kanto = `gSaveBlockKanto.rivalName`, « BLUE » par défaut. Fame Checker (drapeaux) dans `gSaveBlockKanto`.
