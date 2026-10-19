@@ -104,6 +104,22 @@ static const union AnimCmd *const sBackAnims_RubySapphireMay[] =
     sAnimCmd_RubySapphireMay_1,
 };
 
+// Rouge Feu (back_pic_anims.h de RF)
+static const union AnimCmd sAnimCmd_KantoOldMan_1[] =
+{
+    ANIMCMD_FRAME(1, 24),
+    ANIMCMD_FRAME(2, 9),
+    ANIMCMD_FRAME(3, 24),
+    ANIMCMD_FRAME(0, 9),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sBackAnims_KantoOldMan[] =
+{
+    sAnim_GeneralFrame0,
+    sAnimCmd_KantoOldMan_1,
+};
+
 static const union AnimCmd *const sBackAnims_Wally[] =
 {
     sAnim_GeneralFrame3,
@@ -126,4 +142,5 @@ const union AnimCmd *const *const gTrainerBackAnimsPtrTable[] =
     [TRAINER_BACK_PIC_RUBY_SAPPHIRE_MAY] = sBackAnims_RubySapphireMay,
     [TRAINER_BACK_PIC_WALLY] = sBackAnims_Wally,
     [TRAINER_BACK_PIC_STEVEN] = sBackAnims_Steven,
+    [TRAINER_BACK_PIC_KANTO_OLD_MAN] = sBackAnims_KantoOldMan,
 };

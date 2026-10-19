@@ -107,6 +107,7 @@ extern const struct SpriteFrameImage gTrainerBackPicTable_Leaf[];
 extern const struct SpriteFrameImage gTrainerBackPicTable_RubySapphireBrendan[];
 extern const struct SpriteFrameImage gTrainerBackPicTable_RubySapphireMay[];
 extern const struct SpriteFrameImage gTrainerBackPicTable_Wally[];
+extern const struct SpriteFrameImage gKantoTrainerBackPicTable_OldMan[];
 extern const struct SpriteFrameImage gTrainerBackPicTable_Steven[];
 
 extern const union AffineAnimCmd *const gAffineAnims_BattleSpritePlayerSide[];

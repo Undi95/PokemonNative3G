@@ -96,6 +96,15 @@ const struct SpriteFrameImage gTrainerBackPicTable_RubySapphireMay[] =
     {gTrainerBackPic_RubySapphireMay + TRAINER_PIC_SIZE * 3, TRAINER_PIC_SIZE},
 };
 
+// Rouge Feu
+const struct SpriteFrameImage gKantoTrainerBackPicTable_OldMan[] =
+{
+    {gKantoTrainerBackPic_OldMan + TRAINER_PIC_SIZE * 0, TRAINER_PIC_SIZE},
+    {gKantoTrainerBackPic_OldMan + TRAINER_PIC_SIZE * 1, TRAINER_PIC_SIZE},
+    {gKantoTrainerBackPic_OldMan + TRAINER_PIC_SIZE * 2, TRAINER_PIC_SIZE},
+    {gKantoTrainerBackPic_OldMan + TRAINER_PIC_SIZE * 3, TRAINER_PIC_SIZE},
+};
+
 const struct SpriteFrameImage gTrainerBackPicTable_Wally[] =
 {
     {gTrainerBackPic_Wally + TRAINER_PIC_SIZE * 0, TRAINER_PIC_SIZE},

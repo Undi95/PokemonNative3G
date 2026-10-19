@@ -324,6 +324,9 @@ void SetControllerToSafari(void);
 
 // wally controller
 void SetControllerToWally(void);
+// Rouge Feu (battle_controller_old_man.c)
+void SetControllerToOldMan(void);
+bool32 IsOldManTutorialBattle(void);
 
 // recorded opponent controller
 void SetControllerToRecordedOpponent(void);

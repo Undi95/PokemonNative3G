@@ -31,7 +31,6 @@ u16 RegisteredItemHandleBikeSwap(void) { KantoSpecialStub("RegisteredItemHandleB
 u16 GetPlayerXY(void) { KantoSpecialStub("GetPlayerXY"); return 0; }
 u16 BufferBigGuyOrBigGirlString(void) { KantoSpecialStub("BufferBigGuyOrBigGirlString"); return 0; }
 u16 BufferSonOrDaughterString(void) { KantoSpecialStub("BufferSonOrDaughterString"); return 0; }
-u16 StartOldManTutorialBattle(void) { KantoSpecialStub("StartOldManTutorialBattle"); return 0; }
 u16 Script_IsFanClubMemberFanOfPlayer(void) { KantoSpecialStub("Script_IsFanClubMemberFanOfPlayer"); return 0; }
 u16 Script_GetNumFansOfPlayerInTrainerFanClub(void) { KantoSpecialStub("Script_GetNumFansOfPlayerInTrainerFanClub"); return 0; }
 u16 Script_BufferFanClubTrainerName(void) { KantoSpecialStub("Script_BufferFanClubTrainerName"); return 0; }

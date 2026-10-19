@@ -507,6 +507,16 @@ void StartWallyTutorialBattle(void)
     CreateBattleStartTask(B_TRANSITION_SLICE, 0);
 }
 
+// Rouge Feu : démonstration de capture du vieil homme de Jadielle (battle_setup.c de RF)
+void StartOldManTutorialBattle(void)
+{
+    CreateMaleMon(&gEnemyParty[0], SPECIES_WEEDLE, 5);
+    LockPlayerFieldControls();
+    gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
+    gBattleTypeFlags = BATTLE_TYPE_WALLY_TUTORIAL; // BATTLE_TYPE_OLD_MAN_TUTORIAL de RF
+    CreateBattleStartTask(B_TRANSITION_SLICE, 0);
+}
+
 void BattleSetup_StartScriptedWildBattle(void)
 {
     LockPlayerFieldControls();

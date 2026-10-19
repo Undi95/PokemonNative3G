@@ -165,6 +165,8 @@ static void InitSinglePlayerBtlControllers(void)
 
         if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
             gBattlerControllerFuncs[B_BATTLER_0] = SetControllerToSafari;
+        else if (IsOldManTutorialBattle())
+            gBattlerControllerFuncs[B_BATTLER_0] = SetControllerToOldMan; // Rouge Feu
         else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
             gBattlerControllerFuncs[B_BATTLER_0] = SetControllerToWally;
         else

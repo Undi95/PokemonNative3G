@@ -379,8 +379,9 @@
 #define STRINGID_TRAINER1WINTEXT            379
 #define STRINGID_TRAINER2WINTEXT            380
 #define STRINGID_TRAINER1MON1COMEBACK       381 // Rouge Feu
+#define STRINGID_GOTCHAPKMNCAUGHT2          382 // Rouge Feu (vieil homme)
 
-#define BATTLESTRINGS_COUNT                 382
+#define BATTLESTRINGS_COUNT                 383
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,

@@ -514,6 +514,7 @@ static const u8 sText_ForfeitedMatch[];
 static const u8 sText_Trainer1WinText[];
 static const u8 sText_Trainer2WinText[];
 static const u8 sText_Trainer1RecallPkmn1[];
+static const u8 sText_GotchaPkmnCaught2[];
 static const u8 sText_TwoInGameTrainersDefeated[];
 static const u8 sText_Trainer2LoseText[];
 
@@ -889,6 +890,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT - BATTLESTRINGS_TABLE_ST
     [STRINGID_TRAINER1WINTEXT - BATTLESTRINGS_TABLE_START] = sText_Trainer1WinText,
     [STRINGID_TRAINER2WINTEXT - BATTLESTRINGS_TABLE_START] = sText_Trainer2WinText,
     [STRINGID_TRAINER1MON1COMEBACK - BATTLESTRINGS_TABLE_START] = sText_Trainer1RecallPkmn1,
+    [STRINGID_GOTCHAPKMNCAUGHT2 - BATTLESTRINGS_TABLE_START] = sText_GotchaPkmnCaught2,
 };
 
 const u16 gMissStringIds[] =
@@ -1275,6 +1277,7 @@ const u8 gText_EllipsisQuestionMark[] = _("……?\p");
 const u8 gText_WhatWillPkmnDo[] = _("Que doit faire\n{B_ACTIVE_NAME_WITH_PREFIX}?");
 const u8 gText_WhatWillPkmnDo2[] = _("Que doit faire\n{B_PLAYER_NAME}?");
 const u8 gText_WhatWillWallyDo[] = _("Que doit faire\nTIMMY?");
+const u8 gText_WhatWillOldManDo[] = _("Que va faire\nle vieil homme?"); // Rouge Feu
 const u8 gText_LinkStandby[] = _("{PAUSE 16}Connexion en cours…");
 const u8 gText_BattleMenu[] = _("ATTAQUE{CLEAR_TO 56}SAC\nPOKéMON{CLEAR_TO 56}FUITE");
 const u8 gText_SafariZoneMenu[] = _("BALL{CLEAR_TO 56}{POKEBLOCK}\nSE RAP.{CLEAR_TO 56}FUITE");
@@ -1429,6 +1432,7 @@ static const u8 sText_Trainer1WinText[] = _("{B_TRAINER1_WIN_TEXT}");
 static const u8 sText_Trainer2WinText[] = _("{B_TRAINER2_WIN_TEXT}");
 // Rouge Feu (battle_message_1_fr.h)
 static const u8 sText_Trainer1RecallPkmn1[] = _("{B_TRAINER1_NAME}: Reviens, {B_OPPONENT_MON1_NAME}!");
+static const u8 sText_GotchaPkmnCaught2[] = _("Et hop!\n{B_OPPONENT_MON1_NAME} est attrapé!{WAIT_SE}{PLAY_BGM MUS_RG_CAUGHT}{PAUSE 127}");
 static const u8 sText_Trainer1Fled[] = _("{PLAY_SE SE_FLEE}{B_TRAINER1_CLASS} {B_TRAINER1_NAME} fled!");
 static const u8 sText_PlayerLostAgainstTrainer1[] = _("{B_TRAINER1_CLASS} {B_TRAINER1_NAME} a\ngagné!");
 static const u8 sText_PlayerBattledToDrawTrainer1[] = _("Egalité avec \n{B_TRAINER1_CLASS} {B_TRAINER1_NAME}!");

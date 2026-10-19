@@ -86,6 +86,13 @@ BattleScript_SuccessBallThrowEnd::
 	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
 	finishturn
 
+@ Rouge Feu : capture du vieil homme
+BattleScript_OldMan_Pokedude_CaughtMessage::
+	printstring STRINGID_GOTCHAPKMNCAUGHT2
+	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
+	endlinkbattle
+	finishturn
+
 BattleScript_WallyBallThrow::
 	printstring STRINGID_GOTCHAPKMNCAUGHTWALLY
 	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
