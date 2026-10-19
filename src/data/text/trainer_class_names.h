@@ -65,4 +65,5 @@ const u8 gTrainerClassNames[][13] = {
     [TRAINER_CLASS_PIKE_QUEEN] = _("REINE VENIN"),
     [TRAINER_CLASS_PYRAMID_KING] = _("ROI PYRAMIDE"),
     [TRAINER_CLASS_RS_PROTAG] = _("DRESSEUR"),
+#include "data/kanto/trainer_class_names.h"
 };

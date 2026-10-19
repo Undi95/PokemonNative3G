@@ -136,7 +136,6 @@ class ScriptConverter:
         if t.startswith('MUS_'):
             return self.imp.music(t)
         if t.startswith('TRAINER_') and t not in KEEP_TRAINER_TOKENS:
-            self.note('dresseurs (TRAINER_KANTO_* provisoires)', t)
             return 'TRAINER_KANTO_' + t[len('TRAINER_'):]
         return t
 
@@ -246,13 +245,7 @@ class ScriptConverter:
         write(f'{self.em}/data/kanto/scripts.inc', header + self.transform(self.master))
         write(f'{self.em}/include/constants/kanto_flags_vars.h', self.names.kanto_header())
         self.write_specials()
-        # Dresseurs : PROVISOIRE (TRAINER_NONE) en attendant l'import des dresseurs de RF
-        trainers = sorted(self.missing.get('dresseurs (TRAINER_KANTO_* provisoires)', ()))
-        write(f'{self.em}/include/constants/kanto_trainers.h',
-              '// Généré par tools/kanto/import_scripts.py — PROVISOIRE : dresseurs RF pas encore importés.\n'
-              '#ifndef GUARD_CONSTANTS_KANTO_TRAINERS_H\n#define GUARD_CONSTANTS_KANTO_TRAINERS_H\n\n'
-              + ''.join(f'#define {"TRAINER_KANTO_" + t[len("TRAINER_"):]} TRAINER_NONE\n' for t in trainers)
-              + '\n#endif\n')
+        # Dresseurs : include/constants/kanto_trainers.h est écrit par tools/kanto/gen_trainers.py
         print(f'scripts : {len(self.files)} fichiers, {len(self.labels_rename)} labels renommés')
         for k, v in list(self.names.problems.items()) + list(self.missing.items()):
             print(f'{k} ({len(v)}) : {sorted(v)[:12]}{" …" if len(v) > 12 else ""}')

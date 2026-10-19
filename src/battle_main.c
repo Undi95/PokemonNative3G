@@ -528,6 +528,7 @@ const struct TrainerMoney gTrainerMoneyTable[] =
     {TRAINER_CLASS_HIKER, 10},
     {TRAINER_CLASS_YOUNG_COUPLE, 8},
     {TRAINER_CLASS_WINSTRATE, 10},
+#include "data/kanto/trainer_money.h"
     {0xFF, 5}, // Any trainer class not listed above uses this
 };
 
@@ -4985,7 +4986,21 @@ static void HandleEndTurn_BattleWon(void)
         BattleStopLowHpSound();
         gBattlescriptCurrInstr = BattleScript_LocalTrainerBattleWon;
 
-        switch (gTrainers[gTrainerBattleOpponent_A].trainerClass)
+        // Dresseurs de Rouge Feu (battle_main.c de RF)
+        if (IS_KANTO_TRAINER(gTrainerBattleOpponent_A))
+        {
+            switch (gTrainers[gTrainerBattleOpponent_A].trainerClass)
+            {
+            case TRAINER_CLASS_KANTO_LEADER:
+            case TRAINER_CLASS_KANTO_CHAMPION:
+                PlayBGM(MUS_RG_VICTORY_GYM_LEADER);
+                break;
+            default:
+                PlayBGM(MUS_RG_VICTORY_TRAINER);
+                break;
+            }
+        }
+        else switch (gTrainers[gTrainerBattleOpponent_A].trainerClass)
         {
         case TRAINER_CLASS_ELITE_FOUR:
         case TRAINER_CLASS_CHAMPION:

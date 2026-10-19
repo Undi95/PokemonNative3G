@@ -867,4 +867,6 @@
 // Dresseurs de Kanto (tools/kanto)
 #include "constants/kanto_trainers.h"
 
+#include "constants/kanto_trainers.h"
+
 #endif  // GUARD_CONSTANTS_OPPONENTS_H

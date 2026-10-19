@@ -12434,3 +12434,5 @@ static const struct TrainerMonNoItemDefaultMoves sParty_MayLinkPlaceholder[] = {
     .species = SPECIES_KYOGRE,
     }
 };
+
+#include "data/kanto/trainer_parties.h"

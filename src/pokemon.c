@@ -6420,6 +6420,20 @@ u16 GetBattleBGM(void)
     {
         return MUS_VS_TRAINER;
     }
+    else if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && IS_KANTO_TRAINER(gTrainerBattleOpponent_A))
+    {
+        // Dresseurs de Rouge Feu (GetBattleBGM de RF)
+        switch (gTrainers[gTrainerBattleOpponent_A].trainerClass)
+        {
+        case TRAINER_CLASS_KANTO_CHAMPION:
+            return MUS_RG_VS_CHAMPION;
+        case TRAINER_CLASS_KANTO_LEADER:
+        case TRAINER_CLASS_KANTO_ELITE_FOUR:
+            return MUS_RG_VS_GYM_LEADER;
+        default:
+            return MUS_RG_VS_TRAINER;
+        }
+    }
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         u8 trainerClass;

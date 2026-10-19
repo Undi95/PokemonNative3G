@@ -67,9 +67,9 @@ static u8 GetBattleTerrainOverride(void)
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
-        if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_LEADER)
+        if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_KANTO_LEADER)
             return KANTO_BATTLE_TERRAIN_LEADER;
-        else if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_CHAMPION)
+        else if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_KANTO_CHAMPION)
             return KANTO_BATTLE_TERRAIN_CHAMPION;
     }
     battleScene = GetCurrentMapBattleScene();
@@ -97,12 +97,12 @@ void Kanto_DrawBattleEntryBackground(void)
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         {
             u8 trainerClass = gTrainers[gTrainerBattleOpponent_A].trainerClass;
-            if (trainerClass == TRAINER_CLASS_LEADER)
+            if (trainerClass == TRAINER_CLASS_KANTO_LEADER)
             {
                 LoadBattleTerrainEntryGfx(KANTO_BATTLE_TERRAIN_BUILDING);
                 return;
             }
-            else if (trainerClass == TRAINER_CLASS_CHAMPION)
+            else if (trainerClass == TRAINER_CLASS_KANTO_CHAMPION)
             {
                 LoadBattleTerrainEntryGfx(KANTO_BATTLE_TERRAIN_BUILDING);
                 return;

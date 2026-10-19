@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_save.h"
 #include "malloc.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -2617,6 +2618,14 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst)
                 else if (gTrainerBattleOpponent_A == TRAINER_UNION_ROOM)
                 {
                     toCpy = gLinkPlayers[multiplayerId ^ BIT_SIDE].name;
+                }
+                else if (IS_KANTO_TRAINER(gTrainerBattleOpponent_A)
+                      && (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_KANTO_RIVAL_EARLY
+                       || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_KANTO_RIVAL_LATE
+                       || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_KANTO_CHAMPION))
+                {
+                    // Rival de Rouge Feu : le nom choisi pour lui (battle_message.c de RF)
+                    toCpy = gSaveBlockKanto.rivalName;
                 }
                 else if (gTrainerBattleOpponent_A == TRAINER_FRONTIER_BRAIN)
                 {
