@@ -186,7 +186,7 @@ class ScriptConverter:
                 if n in em_defs and not n.startswith('GUARD_'):
                     self.const_rename[n] = 'KANTO_' + n
             text = re.sub(r'\b[A-Za-z_]\w*\b', lambda m: self.const_rename.get(m.group(0), m.group(0)), text)
-            text = text.replace('GUARD_CONSTANTS_', 'GUARD_CONSTANTS_KANTO_')
+            text = text.replace('GUARD_CONSTANTS_', 'GUARD_CONSTANTS_KANTO_').replace('GUARD_METATILE_LABELS_H', 'GUARD_KANTO_METATILE_LABELS_H')
             write(f'{self.em}/include/constants/kanto/{h}', '// Copié de Rouge Feu par tools/kanto/import_scripts.py\n' + text)
         tutors = re.findall(r'^#define MOVETUTOR_\w+\s+\d+', read(f'{self.fr}/include/constants/moves.h'), re.M)
         write(f'{self.em}/include/constants/kanto/move_tutors.h', '// Copié de Rouge Feu\n' + '\n'.join(tutors) + '\n// Poche de CT de RF = poche CT/CS d\'Émeraude\n#define POCKET_TM_CASE POCKET_TM_HM\n#define POCKET_BERRY_POUCH POCKET_BERRIES\n')

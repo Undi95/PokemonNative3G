@@ -1,6 +1,6 @@
 // Copié de Rouge Feu par tools/kanto/import_scripts.py
-#ifndef GUARD_METATILE_LABELS_H
-#define GUARD_METATILE_LABELS_H
+#ifndef GUARD_KANTO_METATILE_LABELS_H
+#define GUARD_KANTO_METATILE_LABELS_H
 
 // gTileset_Building
 #define METATILE_Building_PCOff  0x062
@@ -304,4 +304,4 @@
 #define METATILE_RSCave_CrackedFloor                     0x22F
 #define METATILE_RSCave_CrackedFloor_Hole                0x206
 
-#endif // GUARD_METATILE_LABELS_H
+#endif // GUARD_KANTO_METATILE_LABELS_H
