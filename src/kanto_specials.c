@@ -9,6 +9,7 @@
 #include "field_player_avatar.h"
 #include "fieldmap.h"
 #include "mail.h"
+#include "overworld.h"
 #include "pokedex.h"
 #include "pokemon.h"
 #include "random.h"
