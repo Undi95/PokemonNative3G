@@ -712,6 +712,7 @@
 	.include "data/kanto/data/text/legendary_cry.inc"
 
 Kanto_EventScript_ResetAllMapFlags::
+	setflag FLAG_KANTO_HIDE_POKEDEX
 	setflag FLAG_KANTO_HIDE_OAK_IN_HIS_LAB
 	setflag FLAG_KANTO_HIDE_OAK_IN_PALLET_TOWN
 	setflag FLAG_KANTO_HIDE_BILL_HUMAN_SEA_COTTAGE

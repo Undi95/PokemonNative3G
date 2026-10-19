@@ -246,7 +246,14 @@ class ScriptConverter:
             write(f'{self.em}/data/kanto/{path}', self.transform(text))
         header = ('/* Scripts et textes de Kanto, convertis depuis data/event_scripts.s de Rouge Feu\n'
                   '   par tools/kanto/import_scripts.py — ne pas modifier à la main. */\n')
-        write(f'{self.em}/data/kanto/scripts.inc', header + self.transform(self.master))
+        master = self.transform(self.master)
+        # Kanto vient après Hoenn : le Pokédex est déjà acquis, les exemplaires du labo restent cachés
+        master = master.replace('Kanto_EventScript_ResetAllMapFlags::
+',
+                                'Kanto_EventScript_ResetAllMapFlags::
+	setflag FLAG_KANTO_HIDE_POKEDEX
+', 1)
+        write(f'{self.em}/data/kanto/scripts.inc', header + master)
         write(f'{self.em}/include/constants/kanto_flags_vars.h', self.names.kanto_header())
         self.write_specials()
         # Dresseurs : include/constants/kanto_trainers.h est écrit par tools/kanto/gen_trainers.py
