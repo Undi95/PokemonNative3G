@@ -192,3 +192,42 @@ void CompareLotadSize(void)
 
     gSpecialVar_Result = CompareMonSize(SPECIES_LOTAD, sizeRecord);
 }
+
+// Rouge Feu (pokemon_size_record.c) : records de Scarabrute et de Magicarpe (Kanto)
+void InitHeracrossSizeRecord(void)
+{
+    VarSet(VAR_KANTO_HERACROSS_SIZE_RECORD, DEFAULT_MAX_SIZE);
+}
+
+void GetHeracrossSizeRecordInfo(void)
+{
+    u16 *sizeRecord = GetVarPointer(VAR_KANTO_HERACROSS_SIZE_RECORD);
+
+    GetMonSizeRecordInfo(SPECIES_HERACROSS, sizeRecord);
+}
+
+void CompareHeracrossSize(void)
+{
+    u16 *sizeRecord = GetVarPointer(VAR_KANTO_HERACROSS_SIZE_RECORD);
+
+    gSpecialVar_Result = CompareMonSize(SPECIES_HERACROSS, sizeRecord);
+}
+
+void InitMagikarpSizeRecord(void)
+{
+    VarSet(VAR_KANTO_MAGIKARP_SIZE_RECORD, DEFAULT_MAX_SIZE);
+}
+
+void GetMagikarpSizeRecordInfo(void)
+{
+    u16 *sizeRecord = GetVarPointer(VAR_KANTO_MAGIKARP_SIZE_RECORD);
+
+    GetMonSizeRecordInfo(SPECIES_MAGIKARP, sizeRecord);
+}
+
+void CompareMagikarpSize(void)
+{
+    u16 *sizeRecord = GetVarPointer(VAR_KANTO_MAGIKARP_SIZE_RECORD);
+
+    gSpecialVar_Result = CompareMonSize(SPECIES_MAGIKARP, sizeRecord);
+}

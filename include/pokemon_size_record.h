@@ -9,4 +9,7 @@ void InitLotadSizeRecord(void);
 void GetLotadSizeRecordInfo(void);
 void CompareLotadSize(void);
 
+void InitHeracrossSizeRecord(void); // Rouge Feu
+void InitMagikarpSizeRecord(void);  // Rouge Feu
+
 #endif // GUARD_POKEMON_SIZE_RECORD_H

@@ -5,6 +5,7 @@
 #include "pokemon.h"
 #include "roamer.h"
 #include "pokemon_size_record.h"
+void ResetTrainerFanClub(void); // kanto_trainer_fan_club.c
 #include "script.h"
 #include "lottery_corner.h"
 #include "play_time.h"
@@ -199,6 +200,9 @@ void NewGameInitData(void)
     ClearPlayerLinkBattleRecords();
     InitSeedotSizeRecord();
     InitLotadSizeRecord();
+    InitHeracrossSizeRecord(); // Rouge Feu
+    InitMagikarpSizeRecord();  // Rouge Feu
+    ResetTrainerFanClub();     // Rouge Feu (Fan Club de Safrania)
     gPlayerPartyCount = 0;
     ZeroPlayerPartyMons();
     ResetPokemonStorageSystem();

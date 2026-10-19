@@ -15,6 +15,7 @@
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "field_specials.h"
+#include "kanto_field_door.h"
 #include "field_weather.h"
 #include "graphics.h"
 #include "international_string_util.h"
@@ -4276,5 +4277,9 @@ void SetPlayerGotFirstFans(void)
 // return value is always ignored
 u8 Script_TryGainNewFanFromCounter(void)
 {
+    // Kanto : Fan Club de Safrania (kanto_trainer_fan_club.c, Rouge Feu)
+    extern u8 Kanto_Script_TryGainNewFanFromCounter(void);
+    if (IsKantoTilesetMap())
+        return Kanto_Script_TryGainNewFanFromCounter();
     return TryGainNewFanFromCounter(gSpecialVar_0x8004);
 }
