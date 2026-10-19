@@ -74,12 +74,12 @@ c = ['// Généré par tools/kanto/gen_trainers.py — dresseurs de Rouge Feu.',
      f'#define KANTO_TRAINERS_COUNT {max(trainer_ids.values()) + 1}',
      '#define IS_KANTO_TRAINER(trainerId) ((trainerId) >= KANTO_TRAINERS_START)',
      '// Drapeaux « battu » : ceux de RF (TRAINER_FLAGS_START 0x500 de RF) dans le bloc Kanto',
-     '#define KANTO_TRAINER_FLAGS_START (KANTO_FLAGS_START + 0x500)', '']
-c += [f'#define {k_trainer(n)} (KANTO_TRAINERS_START + {v})' for n, v in sorted(trainer_ids.items(), key=lambda x: x[1])]
+     '#define KANTO_TRAINER_FLAGS_START (KANTO_FLAGS_START+0x500)', '']
+c += [f'#define {k_trainer(n)} (KANTO_TRAINERS_START+{v})' for n, v in sorted(trainer_ids.items(), key=lambda x: x[1])]
 c += ['']
-c += [f'#define {k_class(n)} (KANTO_TRAINER_CLASS_START + {v})' for n, v in sorted(classes.items(), key=lambda x: x[1])]
+c += [f'#define {k_class(n)} (KANTO_TRAINER_CLASS_START+{v})' for n, v in sorted(classes.items(), key=lambda x: x[1])]
 c += ['']
-c += [f'#define {k_pic(n)} (KANTO_TRAINER_PIC_START + {v})' for n, v in sorted(pics.items(), key=lambda x: x[1])]
+c += [f'#define {k_pic(n)} (KANTO_TRAINER_PIC_START+{v})' for n, v in sorted(pics.items(), key=lambda x: x[1])]
 c += ['', '#endif', '']
 write(f'{em}/include/constants/kanto_trainers.h', '\n'.join(c))
 
