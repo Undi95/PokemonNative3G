@@ -163,7 +163,7 @@ class ScriptConverter:
                 code = f'{m.group(1)}ptrvalue {m.group(2)}'
             code = re.sub(r'^(\s*)\.align\s+2\s*$', r'\1ptr_align', code)
             # RF : virgule oubliée (« call_if_not_defeated TRAINER_X Label »)
-            code = re.sub(r'^(\s*call_if_(?:not_)?defeated\s+\S+?)\s+(\w+)\s*$', r'\1, \2', code)
+            code = re.sub(r'^(\s*call_if_(?:not_)?defeated\s+[^\s,]+)\s+(\w+)\s*$', r'\1, \2', code)
             # RF : « hideobjectat id, 0 » = carte courante ; Émeraude exige une carte
             code = re.sub(r'^(\s*(?:hide|show)objectat\s+[^,]+,\s*)0\s*$', r'\1MAP_UNDEFINED', code)
             if comment:

@@ -4,7 +4,7 @@ FiveIsland_LostCave_Room10_MapScripts::
 	.byte 0
 
 FiveIsland_LostCave_Room10_OnResume::
-	call_if_defeated TRAINER_KANTO_LADY_SELPHY,, FiveIsland_LostCave_Room10_EventScript_StopSelphySceneTrigger
+	call_if_defeated TRAINER_KANTO_LADY_SELPHY, FiveIsland_LostCave_Room10_EventScript_StopSelphySceneTrigger
 	end
 
 FiveIsland_LostCave_Room10_EventScript_StopSelphySceneTrigger::
