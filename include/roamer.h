@@ -15,5 +15,6 @@ void SetRoamerInactive(void);
 void GetRoamerLocation(u8 *mapGroup, u8 *mapNum);
 
 u16 GetRoamerLocationMapSectionId(void); // Rouge Feu
+struct Roamer *GetCurrentRoamer(void);    // PokemonNative3G
 
 #endif // GUARD_ROAMER_H

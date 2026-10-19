@@ -604,7 +604,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
 
             if (TryStartRoamerEncounter() == TRUE)
             {
-                roamer = &gSaveBlock1Ptr->roamer;
+                roamer = GetCurrentRoamer(); // PokemonNative3G : vagabond rencontré
                 if (!IsWildLevelAllowedByRepel(roamer->level))
                     return FALSE;
 
@@ -643,7 +643,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
 
             if (TryStartRoamerEncounter() == TRUE)
             {
-                roamer = &gSaveBlock1Ptr->roamer;
+                roamer = GetCurrentRoamer(); // PokemonNative3G : vagabond rencontré
                 if (!IsWildLevelAllowedByRepel(roamer->level))
                     return FALSE;
 

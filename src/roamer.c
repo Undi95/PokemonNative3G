@@ -7,16 +7,21 @@
 #include "kanto_save.h"
 #include "overworld.h"
 #include "constants/region_map_sections.h"
+#include "fieldmap.h"
 
-// PokemonNative3G : deux vagabonds. Hoenn = Latios/Latias d'Émeraude (gSaveBlock1Ptr->roamer) ;
-// Kanto = chien de Rouge Feu (roamer.c de RF, gSaveBlockKanto.roamer), choisi selon la carte courante.
-u16 GetStarterSpecies(void); // kanto_field_specials.c (starter de Kanto)
-#define IS_KANTO_ROAMER() (IsKantoTilesetMap() ? 1 : 0)
+// PokemonNative3G : quatre vagabonds simultanés.
+//   n°0 : Hoenn, Latios ou Latias (choix du joueur, roamer.c d'Émeraude, gSaveBlock1Ptr->roamer)
+//   n°1-3 : Kanto, Raikou / Entei / Suicune tous les trois (roamer.c de RF : N.50, lieux de RF ;
+//           RF n'en lâchait qu'un, selon le starter), gSaveBlockKanto.roamers[]
+// Les fonctions publiques agissent sur les vagabonds de la région de la carte courante ; après une
+// rencontre, sCurRoamer désigne celui qui est combattu.
 
 // Despite having a variable to track it, the roamer is
 // hard-coded to only ever be in map group 0
 // (Kanto : groupe des routes de Kanto, 3 dans RF)
-#define ROAMER_MAP_GROUP (IS_KANTO_ROAMER() ? MAP_GROUP(MAP_ROUTE1) : 0)
+#define HOENN_ROAMER_MAP_GROUP 0
+#define KANTO_ROAMER_MAP_GROUP MAP_GROUP(MAP_ROUTE1)
+#define NUM_ROAMERS (1 + NUM_KANTO_ROAMERS)
 
 enum
 {
@@ -24,11 +29,15 @@ enum
     MAP_NUM, // map number
 };
 
-#define ROAMER (IS_KANTO_ROAMER() ? &gSaveBlockKanto.roamer : &gSaveBlock1Ptr->roamer)
+EWRAM_DATA static u8 sCurRoamer = 0;
 EWRAM_DATA static u8 sRegionLocationHistory[2][3][2] = {0};
-EWRAM_DATA static u8 sRegionRoamerLocation[2][2] = {0};
+EWRAM_DATA static u8 sRoamerLocations_[NUM_ROAMERS][2] = {0};
+
+#define IS_KANTO_ROAMER() (sCurRoamer != 0)
+#define ROAMER (GetCurrentRoamer())
+#define ROAMER_MAP_GROUP (IS_KANTO_ROAMER() ? KANTO_ROAMER_MAP_GROUP : HOENN_ROAMER_MAP_GROUP)
 #define sLocationHistory sRegionLocationHistory[IS_KANTO_ROAMER()]
-#define sRoamerLocation sRegionRoamerLocation[IS_KANTO_ROAMER()]
+#define sRoamerLocation sRoamerLocations_[sCurRoamer]
 
 #define ___ MAP_NUM(MAP_UNDEFINED) // For empty spots in the location table
 
@@ -106,80 +115,72 @@ static const u8 sKantoRoamerLocations[][7] = {
 #define NUM_LOCATIONS_PER_SET (IS_KANTO_ROAMER() ? ARRAY_COUNT(sKantoRoamerLocations[0]) : ARRAY_COUNT(sRoamerLocations[0]))
 #define ROAMER_LOCATION(set, i) (IS_KANTO_ROAMER() ? sKantoRoamerLocations[set][i] : sRoamerLocations[set][i])
 
+static const u16 sKantoRoamerSpecies[NUM_KANTO_ROAMERS] = {SPECIES_RAIKOU, SPECIES_ENTEI, SPECIES_SUICUNE};
+
+struct Roamer *GetCurrentRoamer(void)
+{
+    if (sCurRoamer == 0)
+        return &gSaveBlock1Ptr->roamer;
+    return &gSaveBlockKanto.roamers[sCurRoamer - 1];
+}
+
+// Région de la carte courante (aucune carte chargée, ex. nouvelle partie : Hoenn)
+static bool8 InKanto(void)
+{
+    return gMapHeader.mapLayout != NULL && IsKantoTilesetMap();
+}
+
+// Premier / dernier vagabond de la région de la carte courante
+static u8 FirstRoamerOfRegion(void)
+{
+    return InKanto() ? 1 : 0;
+}
+
+static u8 LastRoamerOfRegion(void)
+{
+    return InKanto() ? NUM_KANTO_ROAMERS : 0;
+}
+
+#define FOR_EACH_REGION_ROAMER for (sCurRoamer = FirstRoamerOfRegion(); sCurRoamer <= LastRoamerOfRegion(); sCurRoamer++)
+
+static void ClearRoamerData_(void)
+{
+    memset(ROAMER, 0, sizeof(*ROAMER));
+    if (!IS_KANTO_ROAMER())
+        ROAMER->species = SPECIES_LATIAS;
+}
+
 void ClearRoamerData(void)
 {
-    if (IS_KANTO_ROAMER())
-    {
-        memset(ROAMER, 0, sizeof(*ROAMER)); // RF : *ROAMER = (struct Roamer){}
-        return;
-    }
-    memset(ROAMER, 0, sizeof(*ROAMER));
-    ROAMER->species = SPECIES_LATIAS;
+    FOR_EACH_REGION_ROAMER
+        ClearRoamerData_();
+    sCurRoamer = FirstRoamerOfRegion();
 }
 
 void ClearRoamerLocationData(void)
 {
     u8 i;
 
+    sCurRoamer = FirstRoamerOfRegion();
     for (i = 0; i < ARRAY_COUNT(sLocationHistory); i++)
     {
         sLocationHistory[i][MAP_GRP] = 0;
         sLocationHistory[i][MAP_NUM] = 0;
     }
 
-    sRoamerLocation[MAP_GRP] = 0;
-    sRoamerLocation[MAP_NUM] = 0;
-}
-
-// Rouge Feu : le chien dépend du starter de Kanto
-static u16 GetKantoRoamerSpecies(void)
-{
-    u16 a;
-    switch (GetStarterSpecies())
+    FOR_EACH_REGION_ROAMER
     {
-    default:
-        a = SPECIES_RAIKOU;
-        break;
-    case SPECIES_BULBASAUR:
-        a = SPECIES_ENTEI;
-        break;
-    case SPECIES_CHARMANDER:
-        a = SPECIES_SUICUNE;
-        break;
+        sRoamerLocation[MAP_GRP] = 0;
+        sRoamerLocation[MAP_NUM] = 0;
     }
-    return a;
+    sCurRoamer = FirstRoamerOfRegion();
 }
 
-static void CreateInitialKantoRoamerMon(void)
+static void CreateInitialRoamerMon(u16 species, u8 level)
 {
-    struct Pokemon *mon = &gEnemyParty[0];
-    u16 species = GetKantoRoamerSpecies();
-    CreateMon(mon, species, 50, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+    CreateMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
     ROAMER->species = species;
-    ROAMER->level = 50;
-    ROAMER->status = 0;
-    ROAMER->active = TRUE;
-    ROAMER->ivs = GetMonData(mon, MON_DATA_IVS);
-    ROAMER->personality = GetMonData(mon, MON_DATA_PERSONALITY);
-    ROAMER->hp = GetMonData(mon, MON_DATA_MAX_HP);
-    ROAMER->cool = GetMonData(mon, MON_DATA_COOL);
-    ROAMER->beauty = GetMonData(mon, MON_DATA_BEAUTY);
-    ROAMER->cute = GetMonData(mon, MON_DATA_CUTE);
-    ROAMER->smart = GetMonData(mon, MON_DATA_SMART);
-    ROAMER->tough = GetMonData(mon, MON_DATA_TOUGH);
-    sRoamerLocation[MAP_GRP] = ROAMER_MAP_GROUP;
-    sRoamerLocation[MAP_NUM] = ROAMER_LOCATION(Random() % NUM_LOCATION_SETS, 0);
-}
-
-static void CreateInitialRoamerMon(bool16 createLatios)
-{
-    if (!createLatios)
-        ROAMER->species = SPECIES_LATIAS;
-    else
-        ROAMER->species = SPECIES_LATIOS;
-
-    CreateMon(&gEnemyParty[0], ROAMER->species, 40, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
-    ROAMER->level = 40;
+    ROAMER->level = level;
     ROAMER->status = 0;
     ROAMER->active = TRUE;
     ROAMER->ivs = GetMonData(&gEnemyParty[0], MON_DATA_IVS);
@@ -194,19 +195,25 @@ static void CreateInitialRoamerMon(bool16 createLatios)
     sRoamerLocation[MAP_NUM] = ROAMER_LOCATION(Random() % NUM_LOCATION_SETS, 0);
 }
 
-// gSpecialVar_0x8004 here corresponds to the options in the multichoice MULTI_TV_LATI (0 for 'Red', 1 for 'Blue')
+// Hoenn : gSpecialVar_0x8004 here corresponds to the options in the multichoice MULTI_TV_LATI (0 for 'Red', 1 for 'Blue')
+// Kanto : les trois chiens (Île 1, après le Réseau Sevii)
 void InitRoamer(void)
 {
     ClearRoamerData();
     ClearRoamerLocationData();
-    if (IS_KANTO_ROAMER())
-        CreateInitialKantoRoamerMon();
-    else
-        CreateInitialRoamerMon(gSpecialVar_0x8004);
+    FOR_EACH_REGION_ROAMER
+    {
+        if (IS_KANTO_ROAMER())
+            CreateInitialRoamerMon(sKantoRoamerSpecies[sCurRoamer - 1], 50);
+        else
+            CreateInitialRoamerMon(gSpecialVar_0x8004 ? SPECIES_LATIOS : SPECIES_LATIAS, 40);
+    }
+    sCurRoamer = FirstRoamerOfRegion();
 }
 
 void UpdateLocationHistoryForRoamer(void)
 {
+    sCurRoamer = FirstRoamerOfRegion();
     sLocationHistory[2][MAP_GRP] = sLocationHistory[1][MAP_GRP];
     sLocationHistory[2][MAP_NUM] = sLocationHistory[1][MAP_NUM];
 
@@ -217,7 +224,7 @@ void UpdateLocationHistoryForRoamer(void)
     sLocationHistory[0][MAP_NUM] = gSaveBlock1Ptr->location.mapNum;
 }
 
-void RoamerMoveToOtherLocationSet(void)
+static void RoamerMoveToOtherLocationSet_(void)
 {
     u8 mapNum = 0;
 
@@ -239,13 +246,20 @@ void RoamerMoveToOtherLocationSet(void)
     }
 }
 
-void RoamerMove(void)
+void RoamerMoveToOtherLocationSet(void)
+{
+    FOR_EACH_REGION_ROAMER
+        RoamerMoveToOtherLocationSet_();
+    sCurRoamer = FirstRoamerOfRegion();
+}
+
+static void RoamerMove_(void)
 {
     u8 locSet = 0;
 
     if ((Random() % 16) == 0)
     {
-        RoamerMoveToOtherLocationSet();
+        RoamerMoveToOtherLocationSet_();
     }
     else
     {
@@ -276,12 +290,30 @@ void RoamerMove(void)
     }
 }
 
-bool8 IsRoamerAt(u8 mapGroup, u8 mapNum)
+void RoamerMove(void)
+{
+    FOR_EACH_REGION_ROAMER
+        RoamerMove_();
+    sCurRoamer = FirstRoamerOfRegion();
+}
+
+static bool8 IsRoamerAt_(u8 mapGroup, u8 mapNum)
 {
     if (ROAMER->active && mapGroup == sRoamerLocation[MAP_GRP] && mapNum == sRoamerLocation[MAP_NUM])
         return TRUE;
     else
         return FALSE;
+}
+
+bool8 IsRoamerAt(u8 mapGroup, u8 mapNum)
+{
+    FOR_EACH_REGION_ROAMER
+    {
+        if (IsRoamerAt_(mapGroup, mapNum))
+            return TRUE;
+    }
+    sCurRoamer = FirstRoamerOfRegion();
+    return FALSE;
 }
 
 void CreateRoamerMonInstance(void)
@@ -292,12 +324,9 @@ void CreateRoamerMonInstance(void)
     CreateMonWithIVsPersonality(mon, ROAMER->species, ROAMER->level, ROAMER->ivs, ROAMER->personality);
 // The roamer's status field is u8, but SetMonData expects status to be u32, so will set the roamer's status
 // using the status field and the following 3 bytes (cool, beauty, and cute).
-#if defined(BUGFIX) || defined(PORTABLE) // PokemonNative3G : bug corrigé
+// PokemonNative3G : bug corrigé
     status = ROAMER->status;
     SetMonData(mon, MON_DATA_STATUS, &status);
-#else
-    SetMonData(mon, MON_DATA_STATUS, &ROAMER->status);
-#endif
     SetMonData(mon, MON_DATA_HP, &ROAMER->hp);
     SetMonData(mon, MON_DATA_COOL, &ROAMER->cool);
     SetMonData(mon, MON_DATA_BEAUTY, &ROAMER->beauty);
@@ -306,25 +335,37 @@ void CreateRoamerMonInstance(void)
     SetMonData(mon, MON_DATA_TOUGH, &ROAMER->tough);
 }
 
+// Plusieurs chiens peuvent être sur la même route : l'un d'eux est tiré au hasard
 bool8 TryStartRoamerEncounter(void)
 {
-    if (IsRoamerAt(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) == TRUE && (Random() % 4) == 0)
+    u8 found[NUM_ROAMERS];
+    u8 n = 0;
+
+    FOR_EACH_REGION_ROAMER
     {
+        if (IsRoamerAt_(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+            found[n++] = sCurRoamer;
+    }
+    if (n != 0 && (Random() % 4) == 0)
+    {
+        sCurRoamer = found[Random() % n];
         CreateRoamerMonInstance();
         return TRUE;
     }
     else
     {
+        sCurRoamer = FirstRoamerOfRegion();
         return FALSE;
     }
 }
 
+// Après le combat : sCurRoamer = vagabond rencontré (TryStartRoamerEncounter)
 void UpdateRoamerHPStatus(struct Pokemon *mon)
 {
     ROAMER->hp = GetMonData(mon, MON_DATA_HP);
     ROAMER->status = GetMonData(mon, MON_DATA_STATUS);
 
-    RoamerMoveToOtherLocationSet();
+    RoamerMoveToOtherLocationSet_();
 }
 
 void SetRoamerInactive(void)
