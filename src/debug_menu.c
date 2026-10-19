@@ -68,6 +68,7 @@ static const u8 sWarpName_SixIsland[] = _("ÎLE 6");
 static const u8 sWarpName_SevenIsland[] = _("ÎLE 7");
 static const u8 sWarpName_Littleroot[] = _("BOURG-EN-VOL");
 static const u8 sWarpName_Lilycove[] = _("NÉNUCRIQUE");
+static const u8 sWarpName_SaffronGym[] = _("ARÈNE SAFRANIA");
 
 // Kanto : points d'arrivée du Vol de Rouge Feu (heal_locations.json)
 static const struct DebugWarp sDebugWarps[] =
@@ -94,6 +95,7 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_SevenIsland, MAP_GROUP(MAP_SEVEN_ISLAND), MAP_NUM(MAP_SEVEN_ISLAND), 12, 4},
     {sWarpName_Littleroot, MAP_GROUP(MAP_LITTLEROOT_TOWN), MAP_NUM(MAP_LITTLEROOT_TOWN), 10, 10},
     {sWarpName_Lilycove, MAP_GROUP(MAP_LILYCOVE_CITY), MAP_NUM(MAP_LILYCOVE_CITY), 20, 20},
+    {sWarpName_SaffronGym, MAP_GROUP(MAP_SAFFRON_CITY_GYM), MAP_NUM(MAP_SAFFRON_CITY_GYM), 14, 22}, // téléporteurs
 };
 
 static const u8 sText_Warp[] = _("Téléportation");
