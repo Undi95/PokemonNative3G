@@ -571,6 +571,13 @@ static void VBlankCB(void)
 
 void CB2_InitTitleScreen(void)
 {
+    // PokemonNative3G : écran titre de Rouge Feu si choisi dans les Options
+    extern void CB2_InitKantoTitleScreen(void);
+    if (gMain.state == 0 && gSaveBlock2Ptr->optionsTitleScreen)
+    {
+        SetMainCallback2(CB2_InitKantoTitleScreen);
+        return;
+    }
     switch (gMain.state)
     {
     default:

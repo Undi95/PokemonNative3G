@@ -321,6 +321,9 @@ extern const u8 gText_CharacterBrendan[];
 extern const u8 gText_CharacterMay[];
 extern const u8 gText_CharacterRed[];
 extern const u8 gText_CharacterLeaf[];
+extern const u8 gText_TitleScreen[];
+extern const u8 gText_TitleScreenEmerald[];
+extern const u8 gText_TitleScreenFireRed[];
 extern const u8 gText_ButtonMode[];
 
 extern const u8 gText_MaleSymbol[];

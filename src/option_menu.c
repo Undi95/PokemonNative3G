@@ -24,6 +24,7 @@
 #define tButtonMode data[5]
 #define tWindowFrameType data[6]
 #define tCharacter data[7]
+#define tTitleScreen data[8]
 
 enum
 {
@@ -34,6 +35,7 @@ enum
     MENUITEM_BUTTONMODE,
     MENUITEM_FRAMETYPE,
     MENUITEM_CHARACTER,
+    MENUITEM_TITLESCREEN,
     MENUITEM_CANCEL,
     MENUITEM_COUNT,
 };
@@ -54,6 +56,7 @@ enum
 #define YPOS_BUTTONMODE   OPTION_YPOS(MENUITEM_BUTTONMODE)
 #define YPOS_FRAMETYPE    OPTION_YPOS(MENUITEM_FRAMETYPE)
 #define YPOS_CHARACTER    OPTION_YPOS(MENUITEM_CHARACTER)
+#define YPOS_TITLESCREEN  OPTION_YPOS(MENUITEM_TITLESCREEN)
 
 static void Task_OptionMenuFadeIn(u8 taskId);
 static void Task_OptionMenuProcessInput(u8 taskId);
@@ -74,6 +77,7 @@ static u8 ButtonMode_ProcessInput(u8 selection);
 static void ButtonMode_DrawChoices(u8 selection);
 static u8 Character_ProcessInput(u8 selection);
 static void Character_DrawChoices(u8 selection);
+static void TitleScreen_DrawChoices(u8 selection);
 static void DrawOptionMenuChoices(u8 taskId);
 static void ScrollOptionMenu(u8 taskId);
 static void DrawHeaderText(void);
@@ -96,6 +100,7 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
     [MENUITEM_BUTTONMODE]  = gText_ButtonMode,
     [MENUITEM_FRAMETYPE]   = gText_Frame,
     [MENUITEM_CHARACTER]   = gText_Character,
+    [MENUITEM_TITLESCREEN] = gText_TitleScreen,
     [MENUITEM_CANCEL]      = gText_OptionMenuCancel,
 };
 
@@ -247,6 +252,7 @@ void CB2_InitOptionMenu(void)
         gTasks[taskId].tButtonMode = gSaveBlock2Ptr->optionsButtonMode;
         gTasks[taskId].tWindowFrameType = gSaveBlock2Ptr->optionsWindowFrameType;
         gTasks[taskId].tCharacter = gSaveBlock2Ptr->optionsPlayerCharacter;
+        gTasks[taskId].tTitleScreen = gSaveBlock2Ptr->optionsTitleScreen;
 
         DrawOptionMenuChoices(taskId);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
@@ -353,6 +359,13 @@ static void Task_OptionMenuProcessInput(u8 taskId)
             if (previousOption != gTasks[taskId].tCharacter)
                 Character_DrawChoices(gTasks[taskId].tCharacter);
             break;
+        case MENUITEM_TITLESCREEN:
+            previousOption = gTasks[taskId].tTitleScreen;
+            gTasks[taskId].tTitleScreen = Character_ProcessInput(gTasks[taskId].tTitleScreen);
+
+            if (previousOption != gTasks[taskId].tTitleScreen)
+                TitleScreen_DrawChoices(gTasks[taskId].tTitleScreen);
+            break;
         default:
             return;
         }
@@ -374,6 +387,7 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsButtonMode = gTasks[taskId].tButtonMode;
     gSaveBlock2Ptr->optionsWindowFrameType = gTasks[taskId].tWindowFrameType;
     gSaveBlock2Ptr->optionsPlayerCharacter = gTasks[taskId].tCharacter;
+    gSaveBlock2Ptr->optionsTitleScreen = gTasks[taskId].tTitleScreen;
     sScrollOffset = 0;
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
@@ -716,6 +730,19 @@ static void Character_DrawChoices(u8 selection)
     DrawOptionMenuChoice(kanto, GetStringRightAlignXOffset(FONT_NORMAL, kanto, 198), YPOS_CHARACTER, styles[1]);
 }
 
+// PokemonNative3G : écran titre d'Émeraude ou de Rouge Feu
+static void TitleScreen_DrawChoices(u8 selection)
+{
+    u8 styles[2];
+
+    styles[0] = 0;
+    styles[1] = 0;
+    styles[selection] = 1;
+
+    DrawOptionMenuChoice(gText_TitleScreenEmerald, 104, YPOS_TITLESCREEN, styles[0]);
+    DrawOptionMenuChoice(gText_TitleScreenFireRed, GetStringRightAlignXOffset(FONT_NORMAL, gText_TitleScreenFireRed, 198), YPOS_TITLESCREEN, styles[1]);
+}
+
 // Choix des lignes visibles (défilement)
 static void DrawOptionMenuChoices(u8 taskId)
 {
@@ -745,6 +772,9 @@ static void DrawOptionMenuChoices(u8 taskId)
             break;
         case MENUITEM_CHARACTER:
             Character_DrawChoices(gTasks[taskId].tCharacter);
+            break;
+        case MENUITEM_TITLESCREEN:
+            TitleScreen_DrawChoices(gTasks[taskId].tTitleScreen);
             break;
         }
     }

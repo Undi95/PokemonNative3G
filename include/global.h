@@ -582,6 +582,7 @@ struct SaveBlock2
              u16 optionsBattleSceneOff:1; // whether battle animations are disabled
              u16 regionMapZoom:1; // whether the map is zoomed in
              u16 optionsPlayerCharacter:1; // PokemonNative3G : 0 = Brice/Flora (Émeraude), 1 = Red/Leaf (Rouge Feu)
+             u16 optionsTitleScreen:1;     // PokemonNative3G : 0 = écran titre d'Émeraude, 1 = de Rouge Feu
              //u16 padding1:4;
              //u16 padding2;
     /*0x18*/ struct Pokedex pokedex;
