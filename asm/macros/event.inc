@@ -778,6 +778,9 @@
 	.elseif \type == TRAINER_BATTLE_HILL
 		ptrvalue \pointer1 /* text*/
 		ptrvalue \pointer2 /* text*/
+	.elseif \type == TRAINER_BATTLE_EARLY_RIVAL
+		ptrvalue \pointer1 /* text*/
+		ptrvalue \pointer2 /* text*/
 	.endif
 	.endm
 

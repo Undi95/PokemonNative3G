@@ -513,6 +513,7 @@ static const u8 sText_QuestionForfeitMatch[];
 static const u8 sText_ForfeitedMatch[];
 static const u8 sText_Trainer1WinText[];
 static const u8 sText_Trainer2WinText[];
+static const u8 sText_Trainer1RecallPkmn1[];
 static const u8 sText_TwoInGameTrainersDefeated[];
 static const u8 sText_Trainer2LoseText[];
 
@@ -887,6 +888,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT - BATTLESTRINGS_TABLE_ST
     [STRINGID_PKMNBOXLANETTESPCFULL - BATTLESTRINGS_TABLE_START] = gText_PkmnTransferredLanettesPCBoxFull,
     [STRINGID_TRAINER1WINTEXT - BATTLESTRINGS_TABLE_START] = sText_Trainer1WinText,
     [STRINGID_TRAINER2WINTEXT - BATTLESTRINGS_TABLE_START] = sText_Trainer2WinText,
+    [STRINGID_TRAINER1MON1COMEBACK - BATTLESTRINGS_TABLE_START] = sText_Trainer1RecallPkmn1,
 };
 
 const u16 gMissStringIds[] =
@@ -1425,6 +1427,8 @@ static const u8 sText_QuestionForfeitMatch[] = _("Voulez-vous abandonner et\nqui
 static const u8 sText_ForfeitedMatch[] = _("{B_PLAYER_NAME} abandonne le match!");
 static const u8 sText_Trainer1WinText[] = _("{B_TRAINER1_WIN_TEXT}");
 static const u8 sText_Trainer2WinText[] = _("{B_TRAINER2_WIN_TEXT}");
+// Rouge Feu (battle_message_1_fr.h)
+static const u8 sText_Trainer1RecallPkmn1[] = _("{B_TRAINER1_NAME}: Reviens, {B_OPPONENT_MON1_NAME}!");
 static const u8 sText_Trainer1Fled[] = _("{PLAY_SE SE_FLEE}{B_TRAINER1_CLASS} {B_TRAINER1_NAME} fled!");
 static const u8 sText_PlayerLostAgainstTrainer1[] = _("{B_TRAINER1_CLASS} {B_TRAINER1_NAME} a\ngagné!");
 static const u8 sText_PlayerBattledToDrawTrainer1[] = _("Egalité avec \n{B_TRAINER1_CLASS} {B_TRAINER1_NAME}!");

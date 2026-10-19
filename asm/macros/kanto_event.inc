@@ -70,10 +70,9 @@
 	call EventScript_BrailleCursorWaitButton
 	.endm
 
-	/* PROVISOIRE : le type TRAINER_BATTLE_EARLY_RIVAL de RF (défaite sans perte) sera porté
-	   avec les dresseurs ; en attendant, combat simple. */
+	/* Combat contre le rival avec texte de victoire s'il gagne ; flags : RIVAL_BATTLE_* */
 	.macro trainerbattle_earlyrival trainer:req, flags:req, defeat_text:req, victory_text:req
-	trainerbattle TRAINER_BATTLE_SINGLE, \trainer, 0, \defeat_text, \victory_text
+	trainerbattle TRAINER_BATTLE_EARLY_RIVAL, \trainer, \flags, \defeat_text, \victory_text
 	.endm
 
 	/* PROVISOIRE : mouvements « encore plus lents » de RF (MOVEMENT_ACTION_WALK_SLOWER_*) pas encore

@@ -14,5 +14,7 @@
 #define TRAINER_BATTLE_SET_TRAINER_A                    10
 #define TRAINER_BATTLE_SET_TRAINER_B                    11
 #define TRAINER_BATTLE_HILL                             12
+// Rouge Feu (9 dans RF) : premier combat contre le rival, défaite possible sans perte
+#define TRAINER_BATTLE_EARLY_RIVAL                      13
 
 #endif // GUARD_CONSTANTS_BATTLE_SETUP_H

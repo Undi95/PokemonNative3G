@@ -114,6 +114,7 @@ EWRAM_DATA static u8 *sTrainerABattleScriptRetAddr = NULL;
 EWRAM_DATA static u8 *sTrainerBBattleScriptRetAddr = NULL;
 EWRAM_DATA static bool8 sShouldCheckTrainerBScript = FALSE;
 EWRAM_DATA static u8 sNoOfPossibleTrainerRetScripts = 0;
+EWRAM_DATA static u16 sRivalBattleFlags = 0; // Rouge Feu
 
 // The first transition is used if the enemy Pokémon are lower level than our Pokémon.
 // Otherwise, the second transition is used.
@@ -212,6 +213,20 @@ static const struct TrainerBattleParameter sOrdinaryNoIntroBattleParams[] =
     {&sTrainerAIntroSpeech,         TRAINER_PARAM_CLEAR_VAL_POINTER},
     {&sTrainerADefeatSpeech,        TRAINER_PARAM_LOAD_VAL_POINTER},
     {&sTrainerVictorySpeech,        TRAINER_PARAM_CLEAR_VAL_POINTER},
+    {&sTrainerCannotBattleSpeech,   TRAINER_PARAM_CLEAR_VAL_POINTER},
+    {&sTrainerABattleScriptRetAddr, TRAINER_PARAM_CLEAR_VAL_POINTER},
+    {&sTrainerBattleEndScript,      TRAINER_PARAM_LOAD_SCRIPT_RET_ADDR},
+};
+
+// Rouge Feu
+static const struct TrainerBattleParameter sEarlyRivalBattleParams[] =
+{
+    {&sTrainerBattleMode,           TRAINER_PARAM_LOAD_VAL_8BIT},
+    {&gTrainerBattleOpponent_A,     TRAINER_PARAM_LOAD_VAL_16BIT},
+    {&sRivalBattleFlags,            TRAINER_PARAM_LOAD_VAL_16BIT},
+    {&sTrainerAIntroSpeech,         TRAINER_PARAM_CLEAR_VAL_POINTER},
+    {&sTrainerADefeatSpeech,        TRAINER_PARAM_LOAD_VAL_POINTER},
+    {&sTrainerVictorySpeech,        TRAINER_PARAM_LOAD_VAL_POINTER},
     {&sTrainerCannotBattleSpeech,   TRAINER_PARAM_CLEAR_VAL_POINTER},
     {&sTrainerABattleScriptRetAddr, TRAINER_PARAM_CLEAR_VAL_POINTER},
     {&sTrainerBattleEndScript,      TRAINER_PARAM_LOAD_SCRIPT_RET_ADDR},
@@ -1056,6 +1071,7 @@ static void InitTrainerBattleVariables(void)
     sTrainerVictorySpeech = NULL;
     sTrainerCannotBattleSpeech = NULL;
     sTrainerBattleEndScript = NULL;
+    sRivalBattleFlags = 0;
 }
 
 static inline void SetU8(void *ptr, u8 value)
@@ -1158,6 +1174,9 @@ const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data)
     {
     case TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT:
         TrainerBattleLoadArgs(sOrdinaryNoIntroBattleParams, data);
+        return EventScript_DoNoIntroTrainerBattle;
+    case TRAINER_BATTLE_EARLY_RIVAL:
+        TrainerBattleLoadArgs(sEarlyRivalBattleParams, data);
         return EventScript_DoNoIntroTrainerBattle;
     case TRAINER_BATTLE_DOUBLE:
         TrainerBattleLoadArgs(sDoubleBattleParams, data);
@@ -1281,6 +1300,11 @@ u8 GetTrainerBattleMode(void)
     return sTrainerBattleMode;
 }
 
+u16 GetRivalBattleFlags(void)
+{
+    return sRivalBattleFlags;
+}
+
 bool8 GetTrainerFlag(void)
 {
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
@@ -1375,6 +1399,32 @@ void BattleSetup_StartTrainerBattle(void)
 
 static void CB2_EndTrainerBattle(void)
 {
+    // Rouge Feu (CB2_EndTrainerBattle de RF)
+    if (sTrainerBattleMode == TRAINER_BATTLE_EARLY_RIVAL)
+    {
+        if (IsPlayerDefeated(gBattleOutcome) == TRUE)
+        {
+            gSpecialVar_Result = TRUE;
+            if (sRivalBattleFlags & RIVAL_BATTLE_HEAL_AFTER)
+            {
+                HealPlayerParty();
+            }
+            else
+            {
+                SetMainCallback2(CB2_WhiteOut);
+                return;
+            }
+            SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+            SetBattledTrainersFlags();
+        }
+        else
+        {
+            gSpecialVar_Result = FALSE;
+            SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+            SetBattledTrainersFlags();
+        }
+        return;
+    }
     if (gTrainerBattleOpponent_A == TRAINER_SECRET_BASE)
     {
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);

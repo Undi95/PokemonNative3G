@@ -385,4 +385,8 @@ enum BattlerId
 // Indicator for the party summary bar to display an empty slot.
 #define HP_EMPTY_SLOT 0xFFFF
 
+// Options de TRAINER_BATTLE_EARLY_RIVAL (Rouge Feu)
+#define RIVAL_BATTLE_HEAL_AFTER  1
+#define RIVAL_BATTLE_TUTORIAL    3
+
 #endif // GUARD_CONSTANTS_BATTLE_H
