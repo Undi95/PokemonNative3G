@@ -14,9 +14,9 @@ contenu dans un seul jeu.
 - [x] Carte dresseur : les deux (Hoenn / Kanto), SELECT pour passer de l'une à l'autre
 - [x] Cadres de menus : 20 d'Émeraude + 9 de Rouge Feu (type 2 de RF = cadre 2 d'Émeraude) = 29 (option CADRE)
 - [x] Sac : poches agrandies pour contenir les objets des deux jeux
+- [x] Fonds des boîtes du PC : 16 d'Émeraude + 16 de Rouge Feu (tous différents), catégorie KANTO (non testé en jeu)
 
 ## À faire — contenu à réunir (listes)
-- [ ] Fonds d'écran des boîtes du PC (16 + 16, comparer)
 - [ ] Musiques : jukebox / choix des thèmes ? (à voir avec l'utilisateur)
 - [ ] Animations de capacités / transitions de combat présentes en double
 
