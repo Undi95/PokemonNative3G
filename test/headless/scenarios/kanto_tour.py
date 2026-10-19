@@ -14,6 +14,13 @@ def debug_warp(game, index):
     wait_until(game, lambda s: s.free)
 
 
+def give_mewtwo(game):
+    wait_until(game, lambda s: s.free); game.wait(30)
+    game.tap("START"); game.wait(30); game.tap("A"); game.wait(30)
+    game.tap("DOWN", 4); game.tap("A"); game.wait(30); game.tap("B"); game.wait(30)
+    wait_until(game, lambda s: s.free)
+
+
 def play(game):
     game.wait(300); game.tap("START"); game.wait(120); game.tap("START"); game.wait(90); game.tap("A")
     game.wait(120)
@@ -29,6 +36,7 @@ def play(game):
     walk_to(game, 16, 14); leave_map(game, "UP"); log(game, "labo")
     walk_to(game, 3, 12); talk_to(game, "UP"); log(game, "assistant")
     walk_to(game, 6, 11); leave_map(game, "DOWN"); log(game, "dehors")
+    give_mewtwo(game)
     debug_warp(game, 1); log(game, "Jadielle")
     walk_to(game, 26, 27); leave_map(game, "UP"); log(game, "Centre Pokémon")
     walk_to(game, 7, 4); talk_to(game, "UP"); log(game, "infirmière")

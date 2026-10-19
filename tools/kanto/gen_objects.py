@@ -76,6 +76,25 @@ def kantoize(t):
     return t
 
 
+def gfx_rules():
+    """Options gbagfx de RF par image (spritesheet_rules.mk, graphics_file_rules.mk) : -mwidth/-mheight
+    découpent la feuille en vignettes ; sans elles les tuiles sont rangées ligne par ligne."""
+    rules = {}
+    for mk in ('spritesheet_rules.mk', 'graphics_file_rules.mk'):
+        if not os.path.exists(f'{fr}/{mk}'):
+            continue
+        text = read(f'{fr}/{mk}')
+        dirs = dict(re.findall(r'^(\w+)\s*:=\s*(\S+)', text, re.M))
+        for targets, cmd in re.findall(r'^(\S[^\n]*?):\s*%\.\w+:\s*%\.png[ \t]*\n\t\$\(GFX\) \$< \$@ ([^\n]*)', text, re.M):
+            for t in targets.split():
+                t = re.sub(r'\$\((\w+)\)', lambda d: dirs.get(d.group(1), d.group(0)), t)
+                rules[t] = cmd.strip()
+    return rules
+
+
+GFX_RULES = gfx_rules()
+
+
 def gfx_path(m):
     """Copie l'image/palette RF sous graphics/kanto/ et renvoie l'INCGFX équivalent."""
     path = m.group(2)
@@ -85,6 +104,9 @@ def gfx_path(m):
     rel = 'graphics/kanto/' + base[len('graphics/'):]
     os.makedirs(os.path.dirname(f'{em}/{rel}'), exist_ok=True)
     shutil.copy(f'{fr}/{base}{src_ext}', f'{em}/{rel}{src_ext}')
+    flags = GFX_RULES.get(path)
+    if flags:
+        return f'INCGFX_{m.group(1)}("{rel}{src_ext}", "{ext}", "{flags}")'
     return f'INCGFX_{m.group(1)}("{rel}{src_ext}", "{ext}")'
 
 

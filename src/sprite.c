@@ -2,10 +2,6 @@
 #include "sprite.h"
 #include "main.h"
 #include "palette.h"
-#if defined(PORTABLE) && defined(KANTO_DEBUG_START)
-#include <stdio.h>
-#define DebugPrintfStderr(...) fprintf(stderr, __VA_ARGS__)
-#endif
 
 #define MAX_SPRITE_COPY_REQUESTS 64
 
@@ -651,9 +647,6 @@ void ClearSpriteCopyRequests(void)
 {
     u8 i;
 
-#if defined(PORTABLE) && defined(KANTO_DEBUG_START)
-    DebugPrintfStderr("SPRDBG %u clear %d\n", gMain.vblankCounter1, sSpriteCopyRequestCount);
-#endif
     sShouldProcessSpriteCopyRequests = FALSE;
     sSpriteCopyRequestCount = 0;
 
@@ -795,9 +788,6 @@ void ProcessSpriteCopyRequests(void)
     {
         u8 i = 0;
 
-#if defined(PORTABLE) && defined(KANTO_DEBUG_START)
-        DebugPrintfStderr("SPRDBG %u process %d\n", gMain.vblankCounter1, sSpriteCopyRequestCount);
-#endif
         while (sSpriteCopyRequestCount > 0)
         {
             CpuCopy16(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].size);
@@ -818,10 +808,6 @@ void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFram
         sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[index].size;
         sSpriteCopyRequestCount++;
     }
-#if defined(PORTABLE) && defined(KANTO_DEBUG_START)
-    { u32 j, sum = 0; for (j = 0; j < images[index].size; j++) sum += ((const u8 *)images[index].data)[j];
-    DebugPrintfStderr("SPRDBG %u req tile %d size %d count %d srcsum %u index %d\n", gMain.vblankCounter1, tileNum, images[index].size, sSpriteCopyRequestCount, sum, index); }
-#endif
 }
 
 void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size)
