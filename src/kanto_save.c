@@ -2,8 +2,12 @@
 #include "kanto_save.h"
 #include "platform.h"
 #include "save.h"
+#include "string_util.h"
 
 #define KANTO_SAVE_MAGIC 0x4B414E54 // "KANT"
+
+// Nom du rival de Kanto en attendant la scène de RF où on le choisit (oak_speech.c)
+static const u8 sText_KantoRivalDefaultName[] = _("BLUE");
 
 EWRAM_DATA struct SaveBlockKanto gSaveBlockKanto = {0};
 
@@ -19,6 +23,7 @@ static u32 KantoSave_Checksum(void)
 void KantoSave_Clear(void)
 {
     memset(&gSaveBlockKanto, 0, sizeof(gSaveBlockKanto));
+    StringCopy(gSaveBlockKanto.rivalName, sText_KantoRivalDefaultName);
 }
 
 void KantoSave_Write(void)

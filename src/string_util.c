@@ -2,6 +2,8 @@
 #include "string_util.h"
 #include "text.h"
 #include "strings.h"
+#include "kanto_field_door.h"
+#include "kanto_save.h"
 
 EWRAM_DATA u8 gStringVar1[0x100] = {0};
 EWRAM_DATA u8 gStringVar2[0x100] = {0};
@@ -455,6 +457,9 @@ static const u8 *ExpandPlaceholder_KunChan(void)
 
 static const u8 *ExpandPlaceholder_RivalName(void)
 {
+    // À Kanto, le rival est celui de RF (gSaveBlock1Ptr->rivalName dans RF)
+    if (IsKantoTilesetMap())
+        return gSaveBlockKanto.rivalName;
     if (gSaveBlock2Ptr->playerGender == MALE)
         return gText_ExpandedPlaceholder_May;
     else

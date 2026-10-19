@@ -23,11 +23,11 @@ Prochaine étape : parcourir les intérieurs / routes (combat sauvage, dresseurs
 - 142 specials RF en stubs (`src/kanto_specials_stubs.c`, log console).
 - Polices homme/femme RF (FONT_MALE/FEMALE → police normale), textcolor/signmsg (couleur/style boîte RF), système d'aide RF, `walk_slower_*` → walk_slow.
 - Objets « clone » RF, objets cachés quantité/underfoot, comportements de tuiles décoratifs/énigmes (BEHAVIOR_ALIASES), anims de tilesets (callback NULL), rencontres sauvages, effets de terrain RF.
-- Std msgbox RF (Kanto_Std_*), {RIVAL}=nom du rival de Kanto, scénario (mamans, Rocket…) : plus tard avec l'utilisateur.
+- Std msgbox RF (Kanto_Std_*), scénario (mamans, Rocket…) ; le choix du nom du rival (oak_speech) : plus tard avec l'utilisateur.
 - Bateau Nénucrique → Kanto ; son pas fluide.
-- Pas de musique à l'arrivée d'une nouvelle partie à Bourg Palette (bgm -1 jusqu'au 1er changement de carte).
-- {RIVAL} à Kanto affiche le rival d'Émeraude (« FLORA ») ; scène du rival de l'Île 4 se déclenche sans les flags du scénario.
-- Specials RF en stub rencontrés : GetQuestLogState, SetUsedPkmnCenterQuestLogEvent, IsPlayerNotInTrainerTowerLobby, SetFlavorTextFlagFromSpecialVars.
+- {RIVAL} à Kanto = `gSaveBlockKanto.rivalName`, « BLUE » par défaut. Fame Checker (drapeaux) dans `gSaveBlockKanto`.
+- Journal (Quest Log) de RF non importé : `GetQuestLogState` = 0, `SetUsedPkmnCenterQuestLogEvent` sans effet (`src/kanto_field_specials.c`).
+- Normal, pas un bug : pas de musique au départ debug à Bourg Palette (on y arrive normalement par le camion), scène du rival à l'Île 4 (on y arrive en bateau).
 
 ## Pièges
 - Python Windows écrit en CRLF → `newline=''` ; heredoc bash mange les `\\` → utiliser Edit/Write.

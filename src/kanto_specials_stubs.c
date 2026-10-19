@@ -103,12 +103,9 @@ u16 SetSeenMon(void) { KantoSpecialStub("SetSeenMon"); return 0; }
 u16 VsSeekerResetObjectMovementAfterChargeComplete(void) { KantoSpecialStub("VsSeekerResetObjectMovementAfterChargeComplete"); return 0; }
 u16 UpdateTrainerCardPhotoIcons(void) { KantoSpecialStub("UpdateTrainerCardPhotoIcons"); return 0; }
 u16 StickerManGetBragFlags(void) { KantoSpecialStub("StickerManGetBragFlags"); return 0; }
-u16 SetUsedPkmnCenterQuestLogEvent(void) { KantoSpecialStub("SetUsedPkmnCenterQuestLogEvent"); return 0; }
 u16 SetWalkingIntoSignVars(void) { KantoSpecialStub("SetWalkingIntoSignVars"); return 0; }
 u16 DisableMsgBoxWalkaway(void) { KantoSpecialStub("DisableMsgBoxWalkaway"); return 0; }
 u16 VsSeekerFreezeObjectsAfterChargeComplete(void) { KantoSpecialStub("VsSeekerFreezeObjectsAfterChargeComplete"); return 0; }
-u16 SetFlavorTextFlagFromSpecialVars(void) { KantoSpecialStub("SetFlavorTextFlagFromSpecialVars"); return 0; }
-u16 UpdatePickStateFromSpecialVar8005(void) { KantoSpecialStub("UpdatePickStateFromSpecialVar8005"); return 0; }
 u16 OverworldWhiteOutGetMoneyLoss(void) { KantoSpecialStub("OverworldWhiteOutGetMoneyLoss"); return 0; }
 u16 PutMonInRoute5Daycare(void) { KantoSpecialStub("PutMonInRoute5Daycare"); return 0; }
 u16 GetCostToWithdrawRoute5DaycareMon(void) { KantoSpecialStub("GetCostToWithdrawRoute5DaycareMon"); return 0; }
@@ -122,7 +119,6 @@ u16 BackupHelpContext(void) { KantoSpecialStub("BackupHelpContext"); return 0; }
 u16 RestoreHelpContext(void) { KantoSpecialStub("RestoreHelpContext"); return 0; }
 u16 QuestLog_StartRecordingInputsAfterDeferredEvent(void) { KantoSpecialStub("QuestLog_StartRecordingInputsAfterDeferredEvent"); return 0; }
 u16 GetMartClerkObjectId(void) { KantoSpecialStub("GetMartClerkObjectId"); return 0; }
-u16 GetQuestLogState(void) { KantoSpecialStub("GetQuestLogState"); return 0; }
 u16 QuestLog_CutRecording(void) { KantoSpecialStub("QuestLog_CutRecording"); return 0; }
 u16 OpenMuseumFossilPic(void) { KantoSpecialStub("OpenMuseumFossilPic"); return 0; }
 u16 CloseMuseumFossilPic(void) { KantoSpecialStub("CloseMuseumFossilPic"); return 0; }
@@ -146,7 +142,6 @@ u16 DoDeoxysTriangleInteraction(void) { KantoSpecialStub("DoDeoxysTriangleIntera
 u16 SetDeoxysTrianglePalette(void) { KantoSpecialStub("SetDeoxysTrianglePalette"); return 0; }
 u16 IsPlayerLeftOfVermilionSailor(void) { KantoSpecialStub("IsPlayerLeftOfVermilionSailor"); return 0; }
 u16 ReadTrainerTowerAndValidate(void) { KantoSpecialStub("ReadTrainerTowerAndValidate"); return 0; }
-u16 IsPlayerNotInTrainerTowerLobby(void) { KantoSpecialStub("IsPlayerNotInTrainerTowerLobby"); return 0; }
 u16 BrailleCursorToggle(void) { KantoSpecialStub("BrailleCursorToggle"); return 0; }
 u16 PlayerPartyContainsSpeciesWithPlayerID(void) { KantoSpecialStub("PlayerPartyContainsSpeciesWithPlayerID"); return 0; }
 u16 AnimateTeleporterHousing(void) { KantoSpecialStub("AnimateTeleporterHousing"); return 0; }
