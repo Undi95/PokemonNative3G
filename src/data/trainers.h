@@ -10260,5 +10260,5 @@ const struct Trainer gTrainers[] = {
         .aiFlags = 0,
         .party = NO_ITEM_DEFAULT_MOVES(sParty_MayLinkPlaceholder),
     },
-#include "data/kanto/trainers.h"
+#include "kanto/trainers.h"
 };

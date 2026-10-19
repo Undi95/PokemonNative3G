@@ -12435,4 +12435,4 @@ static const struct TrainerMonNoItemDefaultMoves sParty_MayLinkPlaceholder[] = {
     }
 };
 
-#include "data/kanto/trainer_parties.h"
+#include "kanto/trainer_parties.h"

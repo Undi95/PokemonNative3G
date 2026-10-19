@@ -371,7 +371,7 @@ static const union AnimCmd *const sAnims_RubySapphireMay[] ={
 };
 
 #include "kanto_trainer_graphics.h"
-#include "data/kanto/trainer_front_pic_anim_defs.h"
+#include "../kanto/trainer_front_pic_anim_defs.h"
 
 const union AnimCmd *const *const gTrainerFrontAnimsPtrTable[] =
 {
@@ -468,5 +468,5 @@ const union AnimCmd *const *const gTrainerFrontAnimsPtrTable[] =
     [TRAINER_PIC_LEAF] = sAnims_Leaf,
     [TRAINER_PIC_RS_BRENDAN] = sAnims_RubySapphireBrendan,
     [TRAINER_PIC_RS_MAY] = sAnims_RubySapphireMay,
-#include "data/kanto/trainer_front_pic_anims.h"
+#include "../kanto/trainer_front_pic_anims.h"
 };
