@@ -61,6 +61,7 @@
 #include "constants/kanto/fame_checker.h"
 #include "constants/kanto/help_system.h"
 #include "constants/kanto/menu.h"
+#include "constants/kanto/move_tutors.h"
 #include "constants/kanto/quest_log.h"
 #include "constants/kanto/seagallop.h"
 #include "constants/kanto/trainer_card.h"
