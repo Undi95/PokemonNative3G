@@ -3,7 +3,7 @@ FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential git make python3 pkg-config ca-certificates curl \
-        libpng-dev libsdl2-dev g++-mingw-w64-x86-64 binutils-mingw-w64-x86-64 \
+        libpng-dev libsdl2-dev python3-pil g++-mingw-w64-x86-64 binutils-mingw-w64-x86-64 \
     && rm -rf /var/lib/apt/lists/*
 # SDL2 pour mingw (cible Windows), depuis les releases officielles libsdl-org
 ARG SDL_VER=2.30.9

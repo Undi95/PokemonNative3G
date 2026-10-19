@@ -33,7 +33,8 @@
     "gMapGroup_IndoorRoute113",
     "gMapGroup_IndoorRoute123",
     "gMapGroup_IndoorRoute119",
-    "gMapGroup_IndoorRoute124"
+    "gMapGroup_IndoorRoute124",
+    "gMapGroup_KantoTownsAndRoutes"
   ],
   "gMapGroup_TownsAndRoutes": [
     "PetalburgCity",
@@ -686,6 +687,12 @@
     "SafariZone_Northeast",
     "SafariZone_Southeast",
     "BattleFrontier_OutsideWest",
-    "BattleFrontier_OutsideEast"
+    "BattleFrontier_OutsideEast",
+    "PalletTown",
+    "Route1"
+  ],
+  "gMapGroup_KantoTownsAndRoutes": [
+    "PalletTown",
+    "Route1"
   ]
 }
