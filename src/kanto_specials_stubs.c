@@ -118,7 +118,6 @@ u16 BackupHelpContext(void) { KantoSpecialStub("BackupHelpContext"); return 0; }
 u16 RestoreHelpContext(void) { KantoSpecialStub("RestoreHelpContext"); return 0; }
 u16 QuestLog_StartRecordingInputsAfterDeferredEvent(void) { KantoSpecialStub("QuestLog_StartRecordingInputsAfterDeferredEvent"); return 0; }
 u16 GetMartClerkObjectId(void) { KantoSpecialStub("GetMartClerkObjectId"); return 0; }
-u16 QuestLog_CutRecording(void) { KantoSpecialStub("QuestLog_CutRecording"); return 0; }
 u16 OpenMuseumFossilPic(void) { KantoSpecialStub("OpenMuseumFossilPic"); return 0; }
 u16 CloseMuseumFossilPic(void) { KantoSpecialStub("CloseMuseumFossilPic"); return 0; }
 u16 SetBattledTrainerFlag(void) { KantoSpecialStub("SetBattledTrainerFlag"); return 0; }

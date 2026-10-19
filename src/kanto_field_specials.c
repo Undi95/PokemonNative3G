@@ -20,6 +20,11 @@ void SetUsedPkmnCenterQuestLogEvent(void)
 {
 }
 
+// quest_log.c : coupe l'enregistrement en cours ; sans effet tant que le journal n'est pas importé.
+void QuestLog_CutRecording(void)
+{
+}
+
 // field_specials.c
 bool8 IsPlayerNotInTrainerTowerLobby(void)
 {
