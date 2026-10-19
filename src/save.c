@@ -73,8 +73,8 @@ static u8 HandleReplaceSector(u16, const struct SaveSectorLocation *);
 struct SavedObjectEventTemplate
 {
     u8 localId;
-    u8 graphicsId;
     u8 kind;
+    u16 graphicsId;
     s16 x;
     s16 y;
     u8 elevation;

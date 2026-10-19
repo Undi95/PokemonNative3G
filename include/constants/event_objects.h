@@ -308,4 +308,7 @@
 #define OBJ_EVENT_ID_CAMERA LOCALID_CAMERA
 #define OBJ_EVENT_ID_PLAYER LOCALID_PLAYER
 
+// Sprites importés de Rouge Feu (tools/kanto/gen_objects.py)
+#include "constants/kanto_event_objects.h"
+
 #endif  // GUARD_CONSTANTS_EVENT_OBJECTS_H

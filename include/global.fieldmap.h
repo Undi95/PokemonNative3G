@@ -92,9 +92,8 @@ struct BackupMapLayout
 struct ObjectEventTemplate
 {
     /*0x00*/ u8 localId;
-    /*0x01*/ u8 graphicsId;
-    /*0x02*/ u8 kind; // Always OBJ_KIND_NORMAL in Emerald.
-    /*0x03*/ //u8 padding1;
+    /*0x01*/ u8 kind; // Always OBJ_KIND_NORMAL in Emerald.
+    /*0x02*/ u16 graphicsId; // 16 bits : sprites de Kanto à partir de 0x100 (constants/kanto.h)
     /*0x04*/ s16 x;
     /*0x06*/ s16 y;
     /*0x08*/ u8 elevation;
@@ -222,10 +221,9 @@ struct ObjectEvent
              u32 fixedPriority:1;
              u32 hideReflection:1;
              //u32 padding:4;
-    /*0x04*/ u8 spriteId;
-    /*0x05*/ u8 graphicsId;
-    /*0x06*/ u8 movementType;
-    /*0x07*/ u8 trainerType;
+    /*0x04*/ u16 graphicsId; // 16 bits : sprites de Kanto à partir de 0x100 (constants/kanto.h)
+    /*0x06*/ u8 spriteId;
+    /*0x07*/ u8 movementType;
     /*0x08*/ u8 localId;
     /*0x09*/ u8 mapNum;
     /*0x0A*/ u8 mapGroup;
@@ -250,7 +248,7 @@ struct ObjectEvent
     /*0x20*/ u8 previousMovementDirection;
     /*0x21*/ u8 directionSequenceIndex;
     /*0x22*/ u8 playerCopyableMovement; // COPY_MOVE_*
-    /*0x23*/ //u8 padding2;
+    /*0x23*/ u8 trainerType; // déplacé ici pour faire de la place à graphicsId (16 bits)
     /*size = 0x24*/
 };
 
