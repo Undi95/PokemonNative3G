@@ -9,7 +9,7 @@ Produit :
   include/constants/kanto_event_objects.h   OBJ_EVENT_GFX_KANTO_X = KANTO_OBJ_EVENT_GFX_START + id RF
   src/data/object_events/kanto_object_events.h          images, tables, animations, infos, pointeurs
   src/data/object_events/kanto_object_event_palettes.h  entrées de sObjectEventSpritePalettes
-  graphics/object_events/kanto/...                       images et palettes copiées de RF
+  graphics/kanto/...                                     images et palettes copiées de RF
 Les identifiants sont sur 16 bits (graphicsId), donc sans collision avec Émeraude.
 """
 import os, re, shutil, sys
@@ -59,24 +59,23 @@ def kantoize(t):
 
 
 def gfx_path(m):
-    path = m.group(2)  # graphics/object_events/....4bpp ou .gbapal
+    """Copie l'image/palette RF sous graphics/kanto/ et renvoie l'INCGFX équivalent."""
+    path = m.group(2)
     base, ext = os.path.splitext(path)
-    src_png = f'{fr}/{base}.png' if ext == '.4bpp' else f'{fr}/{base}.pal'
-    rel = base.replace('graphics/object_events/', 'graphics/object_events/kanto/', 1)
-    dst = f'{em}/{rel}' + ('.png' if ext == '.4bpp' else '.pal')
-    os.makedirs(os.path.dirname(dst), exist_ok=True)
-    shutil.copy(src_png, dst)
-    if ext == '.4bpp':
-        return f'INCGFX_{m.group(1)}("{rel}.png", ".4bpp")'
-    return f'INCGFX_{m.group(1)}("{rel}.pal", ".gbapal")'
+    # une palette .gbapal vient d'un .pal, ou à défaut de la palette du .png
+    src_ext = '.png' if ext in ('.4bpp', '.8bpp') or not os.path.exists(f'{fr}/{base}.pal') else '.pal'
+    rel = 'graphics/kanto/' + base[len('graphics/'):]
+    os.makedirs(os.path.dirname(f'{em}/{rel}'), exist_ok=True)
+    shutil.copy(f'{fr}/{base}{src_ext}', f'{em}/{rel}{src_ext}')
+    return f'INCGFX_{m.group(1)}("{rel}{src_ext}", "{ext}")'
 
 
-shutil.rmtree(f'{em}/graphics/object_events/kanto', ignore_errors=True)
+shutil.rmtree(f'{em}/graphics/kanto', ignore_errors=True)
 out = ['// Généré par tools/kanto/gen_objects.py depuis src/data/object_events/ de Rouge Feu.',
        '// Ne pas modifier à la main.', '']
 for f in FILES:
     t = kantoize(texts[f])
-    t = re.sub(r'INCBIN_(U8|U16|U32)\("(graphics/object_events/[^"]+\.(?:4bpp|gbapal))"\)', gfx_path, t)
+    t = re.sub(r'INCBIN_(U8|U16|U32)\("(graphics/[^"]+\.(?:4bpp|8bpp|gbapal))"\)', gfx_path, t)
     out += [f'// ---- {f} ----', t, '']
 
 # 4. table des pointeurs Kanto
