@@ -19,3 +19,4 @@
 #define MOVETUTOR_HYDRO_CANNON 17
 // Poche de CT de RF = poche CT/CS d'Émeraude
 #define POCKET_TM_CASE POCKET_TM_HM
+#define POCKET_BERRY_POUCH POCKET_BERRIES
