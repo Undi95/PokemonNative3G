@@ -42,6 +42,7 @@ struct LinkPlayerObjectEvent
 
 extern struct WarpData gLastUsedWarp;
 extern struct LinkPlayerObjectEvent gLinkPlayerObjectEvents[4];
+extern bool8 gExitStairsMovementDisabled; // Rouge Feu
 
 extern u16 *gOverworldTilemapBuffer_Bg2;
 extern u16 *gOverworldTilemapBuffer_Bg1;

@@ -248,11 +248,8 @@ class ScriptConverter:
                   '   par tools/kanto/import_scripts.py — ne pas modifier à la main. */\n')
         master = self.transform(self.master)
         # Kanto vient après Hoenn : le Pokédex est déjà acquis, les exemplaires du labo restent cachés
-        master = master.replace('Kanto_EventScript_ResetAllMapFlags::
-',
-                                'Kanto_EventScript_ResetAllMapFlags::
-	setflag FLAG_KANTO_HIDE_POKEDEX
-', 1)
+        master = master.replace('Kanto_EventScript_ResetAllMapFlags::\n',
+                                'Kanto_EventScript_ResetAllMapFlags::\n\tsetflag FLAG_KANTO_HIDE_POKEDEX\n', 1)
         write(f'{self.em}/data/kanto/scripts.inc', header + master)
         write(f'{self.em}/include/constants/kanto_flags_vars.h', self.names.kanto_header())
         self.write_specials()

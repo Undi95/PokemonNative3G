@@ -46,11 +46,8 @@ BEHAVIOR_ALIASES = {
     'MB_WARP_DOOR': 'MB_ANIMATED_DOOR',      # animations : src/kanto_field_door.c
     'MB_CAVE_DOOR': 'MB_NON_ANIMATED_DOOR',
     'MB_FAST_WATER': 'MB_OCEAN_WATER',
-    # Escaliers latéraux, trous, warps simples de RF -> warp classique d'Émeraude
-    'MB_UP_LEFT_STAIR_WARP': 'MB_NON_ANIMATED_DOOR',
-    'MB_UP_RIGHT_STAIR_WARP': 'MB_NON_ANIMATED_DOOR',
-    'MB_DOWN_LEFT_STAIR_WARP': 'MB_NON_ANIMATED_DOOR',
-    'MB_DOWN_RIGHT_STAIR_WARP': 'MB_NON_ANIMATED_DOOR',
+    # Trous, warps simples de RF -> warp classique d'Émeraude
+    # (les escaliers latéraux MB_*_STAIR_WARP existent tels quels : field_screen_effect.c)
     'MB_REGULAR_WARP': 'MB_NON_ANIMATED_DOOR',
     'MB_FALL_WARP': 'MB_NON_ANIMATED_DOOR',
 }

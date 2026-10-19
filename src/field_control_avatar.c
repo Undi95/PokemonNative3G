@@ -688,6 +688,7 @@ static bool8 CheckStandardWildEncounter(u16 metatileBehavior)
 static bool8 TryArrowWarp(struct MapPosition *position, u16 metatileBehavior, u8 direction)
 {
     s8 warpEventId = GetWarpEventAtMapPosition(&gMapHeader, position);
+    u16 delay;
 
     if (IsArrowWarpMetatileBehavior(metatileBehavior, direction) == TRUE && warpEventId != WARP_ID_NONE)
     {
@@ -695,6 +696,41 @@ static bool8 TryArrowWarp(struct MapPosition *position, u16 metatileBehavior, u8
         SetupWarp(&gMapHeader, warpEventId, position);
         DoWarp();
         return TRUE;
+    }
+    // Rouge Feu : escaliers latéraux
+    else if (IsDirectionalStairWarpMetatileBehavior(metatileBehavior, direction) == TRUE && warpEventId != WARP_ID_NONE)
+    {
+        delay = 0;
+        if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+        {
+            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+            delay = 12;
+        }
+        StoreInitialPlayerAvatarState();
+        SetupWarp(&gMapHeader, warpEventId, position);
+        DoStairWarp(metatileBehavior, delay);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+// Rouge Feu (field_control_avatar.c)
+bool8 IsDirectionalStairWarpMetatileBehavior(u16 metatileBehavior, u8 playerDirection)
+{
+    switch (playerDirection)
+    {
+    case DIR_WEST:
+        if (MetatileBehavior_IsDirectionalUpLeftStairWarp(metatileBehavior))
+            return TRUE;
+        if (MetatileBehavior_IsDirectionalDownLeftStairWarp(metatileBehavior))
+            return TRUE;
+        break;
+    case DIR_EAST:
+        if (MetatileBehavior_IsDirectionalUpRightStairWarp(metatileBehavior))
+            return TRUE;
+        if (MetatileBehavior_IsDirectionalDownRightStairWarp(metatileBehavior))
+            return TRUE;
+        break;
     }
     return FALSE;
 }

@@ -25,6 +25,12 @@ bool8 MetatileBehavior_IsDoor(u8 metatileBehavior);
 bool8 MetatileBehavior_IsEscalator(u8 metatileBehavior);
 bool8 MetatileBehavior_IsLadder(u8 metatileBehavior);
 bool8 MetatileBehavior_IsNonAnimDoor(u8 metatileBehavior);
+// Rouge Feu
+bool8 MetatileBehavior_IsDirectionalUpRightStairWarp(u8 metatileBehavior);
+bool8 MetatileBehavior_IsDirectionalUpLeftStairWarp(u8 metatileBehavior);
+bool8 MetatileBehavior_IsDirectionalDownRightStairWarp(u8 metatileBehavior);
+bool8 MetatileBehavior_IsDirectionalDownLeftStairWarp(u8 metatileBehavior);
+bool8 MetatileBehavior_IsDirectionalStairWarp(u8 metatileBehavior);
 bool8 MetatileBehavior_IsDeepSouthWarp(u8 metatileBehavior);
 bool8 MetatileBehavior_IsSurfableWaterOrUnderwater(u8 metatileBehavior);
 bool8 MetatileBehavior_IsEastArrowWarp(u8 metatileBehavior);

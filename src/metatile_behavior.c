@@ -1400,3 +1400,56 @@ bool8 MetatileBehavior_IsTrainerHillTimer(u8 metatileBehavior)
     else
         return FALSE;
 }
+
+// Rouge Feu : escaliers latéraux (metatile_behavior.c de RF)
+bool8 MetatileBehavior_IsDirectionalUpRightStairWarp(u8 metatileBehavior)
+{
+    u8 result = FALSE;
+
+    if (metatileBehavior == MB_UP_RIGHT_STAIR_WARP)
+        result = TRUE;
+
+    return result;
+}
+
+bool8 MetatileBehavior_IsDirectionalUpLeftStairWarp(u8 metatileBehavior)
+{
+    u8 result = FALSE;
+
+    if (metatileBehavior == MB_UP_LEFT_STAIR_WARP)
+        result = TRUE;
+
+    return result;
+}
+
+bool8 MetatileBehavior_IsDirectionalDownRightStairWarp(u8 metatileBehavior)
+{
+    u8 result = FALSE;
+
+    if (metatileBehavior == MB_DOWN_RIGHT_STAIR_WARP)
+        result = TRUE;
+
+    return result;
+}
+
+bool8 MetatileBehavior_IsDirectionalDownLeftStairWarp(u8 metatileBehavior)
+{
+    u8 result = FALSE;
+
+    if (metatileBehavior == MB_DOWN_LEFT_STAIR_WARP)
+        result = TRUE;
+
+    return result;
+}
+
+bool8 MetatileBehavior_IsDirectionalStairWarp(u8 metatileBehavior)
+{
+    bool8 result = FALSE;
+
+    if (metatileBehavior >= MB_UP_RIGHT_STAIR_WARP && metatileBehavior <= MB_DOWN_LEFT_STAIR_WARP)
+        result = TRUE;
+    else
+        result = FALSE;
+
+    return result;
+}
