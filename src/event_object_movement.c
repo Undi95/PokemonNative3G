@@ -5,6 +5,7 @@
 #include "decoration.h"
 #include "event_data.h"
 #include "event_object_movement.h"
+#include "kanto_field_door.h"
 #include "event_scripts.h"
 #include "faraway_island.h"
 #include "field_camera.h"
@@ -515,8 +516,9 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_Lugia,                 OBJ_EVENT_PAL_TAG_LUGIA},
     {gObjectEventPal_RubySapphireBrendan,   OBJ_EVENT_PAL_TAG_RS_BRENDAN},
     {gObjectEventPal_RubySapphireMay,       OBJ_EVENT_PAL_TAG_RS_MAY},
-#ifdef BUGFIX
+// Palettes des sprites de Rouge Feu (hors du #ifdef : elles doivent être dans la table)
 #include "data/object_events/kanto_object_event_palettes.h"
+#ifdef BUGFIX
     {NULL,                                  OBJ_EVENT_PAL_TAG_NONE},
 #else
     {}, // BUG: FindObjectEventPaletteIndexByTag looks for OBJ_EVENT_PAL_TAG_NONE and not 0x0.
@@ -704,6 +706,35 @@ static const u16 *const sObjectPaletteTagSets[] = {
     sObjectPaletteTags2,
     sObjectPaletteTags3,
 };
+
+// Cartes de Kanto : les cases PNJ prennent les palettes de Rouge Feu (sObjectPaletteTags de RF,
+// identiques pour ses 4 jeux). Les cases du joueur restent celles d'Émeraude.
+static const u16 sKantoNpcPaletteTags[] = {
+    [PALSLOT_NPC_1]             = OBJ_EVENT_PAL_TAG_KANTO_NPC_BLUE,
+    [PALSLOT_NPC_2]             = OBJ_EVENT_PAL_TAG_KANTO_NPC_PINK,
+    [PALSLOT_NPC_3]             = OBJ_EVENT_PAL_TAG_KANTO_NPC_GREEN,
+    [PALSLOT_NPC_4]             = OBJ_EVENT_PAL_TAG_KANTO_NPC_WHITE,
+    [PALSLOT_NPC_1_REFLECTION]  = OBJ_EVENT_PAL_TAG_KANTO_NPC_BLUE_REFLECTION,
+    [PALSLOT_NPC_2_REFLECTION]  = OBJ_EVENT_PAL_TAG_KANTO_NPC_PINK_REFLECTION,
+    [PALSLOT_NPC_3_REFLECTION]  = OBJ_EVENT_PAL_TAG_KANTO_NPC_GREEN_REFLECTION,
+    [PALSLOT_NPC_4_REFLECTION]  = OBJ_EVENT_PAL_TAG_KANTO_NPC_WHITE_REFLECTION,
+};
+
+static u16 GetObjectPaletteTagForSlot(u8 palSlot)
+{
+    if (palSlot >= PALSLOT_NPC_1 && palSlot <= PALSLOT_NPC_4_REFLECTION && IsKantoTilesetMap())
+        return sKantoNpcPaletteTags[palSlot];
+    return sObjectPaletteTagSets[sCurrentReflectionType][palSlot];
+}
+
+static void PatchObjectPaletteSlots(u8 startSlot, u8 endSlot)
+{
+    while (startSlot < endSlot)
+    {
+        PatchObjectPalette(GetObjectPaletteTagForSlot(startSlot), startSlot);
+        startSlot++;
+    }
+}
 
 #include "data/object_events/berry_tree_graphics_tables.h"
 #include "data/field_effects/field_effect_objects.h"
@@ -2541,12 +2572,12 @@ void InitObjectEventPalettes(u8 reflectionType)
     sCurrentReflectionType = reflectionType;
     if (reflectionType == 1)
     {
-        PatchObjectPaletteRange(sObjectPaletteTagSets[sCurrentReflectionType], PALSLOT_PLAYER, PALSLOT_NPC_4 + 1);
+        PatchObjectPaletteSlots(PALSLOT_PLAYER, PALSLOT_NPC_4 + 1);
         gReservedSpritePaletteCount = 8;
     }
     else
     {
-        PatchObjectPaletteRange(sObjectPaletteTagSets[sCurrentReflectionType], PALSLOT_PLAYER, PALSLOT_NPC_4_REFLECTION + 1);
+        PatchObjectPaletteSlots(PALSLOT_PLAYER, PALSLOT_NPC_4_REFLECTION + 1);
     }
 }
 
@@ -2555,7 +2586,7 @@ u16 GetObjectPaletteTag(u8 palSlot)
     u8 i;
 
     if (palSlot < PALSLOT_NPC_SPECIAL)
-        return sObjectPaletteTagSets[sCurrentReflectionType][palSlot];
+        return GetObjectPaletteTagForSlot(palSlot);
 
     for (i = 0; sSpecialObjectReflectionPaletteSets[i].tag != OBJ_EVENT_PAL_TAG_NONE; i++)
     {
