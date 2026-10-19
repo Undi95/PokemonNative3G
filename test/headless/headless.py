@@ -108,7 +108,7 @@ def run_scenario(binary, scenario, out_dir, save=None, shot_every=0, params=None
     if save:
         shutil.copyfile(save, run.save_path)
 
-    cmd = [os.path.abspath(binary), "--save", run.save_path, "--test-input", input_path,
+    cmd = [os.path.abspath(binary), "--kanto-start", os.environ.get("KANTO_START", "1"), "--save", run.save_path, "--test-input", input_path,
            "--test-hashes", run.hashes_path]
     if config:
         cmd += ["--config", config]
