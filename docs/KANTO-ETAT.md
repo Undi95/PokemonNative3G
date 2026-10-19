@@ -8,9 +8,15 @@
 - graphicsId 16 bits ; 152 sprites RF (`gen_objects.py`, ids 0x100+). Non-régression Hoenn vérifiée (`compare.py` = identique).
 - Conversion scripts/textes RF (`import_scripts.py`, appelé par import_kanto) : labels, flags/vars, sprites, localid, musiques, macros RF (`asm/macros/kanto_event.inc`), commandes RF (`src/kanto_scrcmd.c`, opcodes 0xc7-0xcc/0xd0/0xe3), menus/chaînes/échanges RF ajoutés en fin de tables (`gen_script_menu.py`), braille RF.
 
-## En cours (2026-10-19) : le build winwsl passe, à tester
-Le .exe est produit (`out/winwsl/pokeemeraude64.exe`, KANTO_DEBUG=1). Symboles ajoutés : METATILE_* RF (`include/constants/kanto/metatile_labels.h`), lieux de soin RF (fin de `src/data/heal_locations.json`), alias de scripts (`kanto/script_aliases.h` : NPC_TEXT_COLOR, SE_RS_*, STEP_CB_ICE provisoire), FLDEFF_PHOTO_FLASH/SMILEY_FACE_ICON (ids 67/68, scripts vides), layouts de remplacement (setmaplayoutindex), 3 specials en stubs.
-Prochaine étape : lancer le .exe, tester le menu DEBUG (Start) puis marcher dans Kanto, corriger les plantages.
+## En cours (2026-10-19) : le jeu tourne dans Kanto
+Testé en headless (`test/headless/run.py out/winwsl/pokeemeraude64.exe kanto_tour|kanto_warps --shots 60`,
+sous Windows l'exe tourne directement) :
+- les 22 téléports DEBUG s'affichent sans gel ; Bourg Palette, maison, labo, Centre de Jadielle (soin) jouables ;
+- PNJ Kanto visibles et aux couleurs RF (corrigé : découpe -mwidth/-mheight des sprites, palettes RF hors
+  `#ifdef BUGFIX`, cases PNJ remplies avec les palettes RF sur les cartes Kanto).
+Outils : DEBUG > « Recevoir MEWTWO » (nv 70) ; l'état de test (build KANTO_DEBUG) donne aussi les sprites
+(graphicsId, spriteId, inUse, invisible, priorité, palette, x, y, tuile, somme tuiles, somme palette…).
+Prochaine étape : parcourir les intérieurs / routes (combat sauvage, dresseurs provisoires), relever les plantages.
 
 ## Dettes (provisoire → importer depuis RF)
 - Dresseurs : `TRAINER_KANTO_*` = TRAINER_NONE (478) — importer dresseurs, classes, sprites, `TRAINER_BATTLE_EARLY_RIVAL`, flags dresseurs Kanto, décors de combat du Conseil 4 + transitions.
@@ -19,6 +25,9 @@ Prochaine étape : lancer le .exe, tester le menu DEBUG (Start) puis marcher dan
 - Objets « clone » RF, objets cachés quantité/underfoot, comportements de tuiles décoratifs/énigmes (BEHAVIOR_ALIASES), anims de tilesets (callback NULL), rencontres sauvages, effets de terrain RF.
 - Std msgbox RF (Kanto_Std_*), {RIVAL}=nom du rival de Kanto, scénario (mamans, Rocket…) : plus tard avec l'utilisateur.
 - Bateau Nénucrique → Kanto ; son pas fluide.
+- Pas de musique à l'arrivée d'une nouvelle partie à Bourg Palette (bgm -1 jusqu'au 1er changement de carte).
+- {RIVAL} à Kanto affiche le rival d'Émeraude (« FLORA ») ; scène du rival de l'Île 4 se déclenche sans les flags du scénario.
+- Specials RF en stub rencontrés : GetQuestLogState, SetUsedPkmnCenterQuestLogEvent, IsPlayerNotInTrainerTowerLobby, SetFlavorTextFlagFromSpecialVars.
 
 ## Pièges
 - Python Windows écrit en CRLF → `newline=''` ; heredoc bash mange les `\\` → utiliser Edit/Write.
