@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_field_door.h"
 #include "scanline_effect.h"
 #include "palette.h"
 #include "task.h"
@@ -360,8 +361,17 @@ static void CB2_TrainerCard(void)
     UpdatePaletteFade();
 }
 
+// PokemonNative3G : deux cartes pour le joueur. Carte de Hoenn (Émeraude, badges de Hoenn) et carte
+// de Kanto (style Rouge Feu, badges de Kanto). À l'ouverture : celle de la région de la carte courante ;
+// SELECT passe à l'autre.
+EWRAM_DATA static bool8 sOwnCardKanto = FALSE;
+EWRAM_DATA static bool8 sReopenOwnCard = FALSE;
+
+static void ShowPlayerTrainerCard_(void (*callback)(void));
+
 static void CloseTrainerCard(u8 taskId)
 {
+    void (*callback)(void) = sData->callback2;
     SetMainCallback2(sData->callback2);
     FreeAllWindowBuffers();
     FREE_AND_SET_NULL(sData);
@@ -369,6 +379,11 @@ static void CloseTrainerCard(u8 taskId)
 #ifdef PORTABLE
     SetVBlankHBlankCallbacksToNull(); // UB: fixes use after free of sData in VBlank callback
 #endif
+    if (sReopenOwnCard)
+    {
+        sReopenOwnCard = FALSE;
+        ShowPlayerTrainerCard_(callback);
+    }
 }
 
 // States for Task_TrainerCard. Skips the initial states, which are done once in order
@@ -454,6 +469,14 @@ static void Task_TrainerCard(u8 taskId)
             FlipTrainerCard();
             PlaySE(SE_RG_CARD_FLIP);
             sData->mainState = STATE_WAIT_FLIP_TO_BACK;
+        }
+        else if (JOY_NEW(SELECT_BUTTON) && !sData->isLink) // PokemonNative3G : autre région
+        {
+            sOwnCardKanto = !sOwnCardKanto;
+            sReopenOwnCard = TRUE;
+            PlaySE(SE_RG_CARD_FLIP);
+            BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, sData->blendColor);
+            sData->mainState = STATE_CLOSE_CARD;
         }
         else if (JOY_NEW(B_BUTTON))
         {
@@ -768,6 +791,8 @@ static void TrainerCard_GenerateCardForPlayer(struct TrainerCard *trainerCard)
     memset(trainerCard, 0, sizeof(struct TrainerCard));
     trainerCard->version = GAME_VERSION;
     SetPlayerCardData(trainerCard, CARD_TYPE_EMERALD);
+    if (sOwnCardKanto)
+        trainerCard->version = VERSION_FIRE_RED; // carte de Kanto : style Rouge Feu
     trainerCard->hasAllFrontierSymbols = HasAllFrontierSymbols();
     trainerCard->frontierBP = gSaveBlock2Ptr->frontier.cardBattlePoints;
     if (trainerCard->hasAllFrontierSymbols)
@@ -845,6 +870,15 @@ static void SetDataFromTrainerCard(void)
     if (sData->trainerCard.battleTowerWins || sData->trainerCard.battleTowerStraightWins)
         sData->hasBattleTowerWins++;
 
+    if (!sData->isLink && sOwnCardKanto) // carte de Kanto : badges de Kanto
+    {
+        for (i = 0, badgeFlag = FLAG_KANTO_BADGE01_GET; badgeFlag < FLAG_KANTO_BADGE01_GET + NUM_BADGES; badgeFlag++, i++)
+        {
+            if (FlagGet(badgeFlag))
+                sData->badgeCount[i]++;
+        }
+        return;
+    }
     for (i = 0, badgeFlag = FLAG_BADGE01_GET; badgeFlag < FLAG_BADGE01_GET + NUM_BADGES; badgeFlag++, i++)
     {
         if (FlagGet(badgeFlag))
@@ -1775,6 +1809,13 @@ static bool8 Task_EndCardFlip(struct Task *task)
 
 void ShowPlayerTrainerCard(void (*callback)(void))
 {
+    sOwnCardKanto = (gMapHeader.mapLayout != NULL && IsKantoTilesetMap());
+    sReopenOwnCard = FALSE;
+    ShowPlayerTrainerCard_(callback);
+}
+
+static void ShowPlayerTrainerCard_(void (*callback)(void))
+{
     sData = AllocZeroed(sizeof(*sData));
     sData->callback2 = callback;
     if (callback == CB2_ReshowFrontierPass)
@@ -1873,10 +1914,11 @@ static void CreateTrainerCardTrainerPic(void)
         // PokemonNative3G : sur sa propre carte, Red/Leaf si choisis dans les options
         u8 cardType = sData->cardType;
         u8 isHoenn = sData->isHoenn;
-        if (!sData->isLink && cardType == CARD_TYPE_EMERALD && gSaveBlock2Ptr->optionsPlayerCharacter)
+        // (Brice/Flora sur la carte de Kanto : sprites d'Émeraude)
+        if (!sData->isLink)
         {
-            cardType = CARD_TYPE_FRLG;
-            isHoenn = FALSE;
+            cardType = gSaveBlock2Ptr->optionsPlayerCharacter ? CARD_TYPE_FRLG : CARD_TYPE_EMERALD;
+            isHoenn = !gSaveBlock2Ptr->optionsPlayerCharacter;
         }
         CreateTrainerCardTrainerPicSprite(FacilityClassToPicIndex(sTrainerPicFacilityClass[cardType][sData->trainerCard.gender]),
                     TRUE,
