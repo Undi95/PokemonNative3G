@@ -1047,7 +1047,7 @@ static const struct InGameTrade sIngameTrades[] =
         .otGender = FEMALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_SKITTY
-    }
+    },
 #include "kanto_ingame_trades_entries.h"
 };
 
@@ -1083,7 +1083,7 @@ static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =
         EC_WORD_A,
         EC_WORD_SUPER,
         EC_WORD_CRY
-    }
+    },
 #include "kanto_ingame_trade_mail_entries.h"
 };
 

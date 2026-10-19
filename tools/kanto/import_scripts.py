@@ -156,6 +156,7 @@ class ScriptConverter:
             code = re.sub(r'\b[A-Za-z_]\w*\b', self.token, code)
             # l'assembleur x86 coupe les arguments de macro aux espaces : pas d'espaces dans ( )
             code = re.sub(r'\(([^()]*)\)', lambda m: '(' + m.group(1).replace(' ', '') + ')', code)
+            code = re.sub(r'\)\s+([-+*/|&])\s+(?=[\w(])', r')', code)
             m = re.match(r'^(\s*)\.4byte\s+([A-Za-z_]\w*)\s*$', code)
             if m and m.group(2) in self.fr_labels | set(self.labels_rename.values()):
                 code = f'{m.group(1)}ptrvalue {m.group(2)}'

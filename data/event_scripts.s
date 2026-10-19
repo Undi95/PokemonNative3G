@@ -38,6 +38,7 @@
 #include "constants/map_scripts.h"
 #include "constants/maps.h"
 #include "constants/mauville_old_man.h"
+#include "constants/mystery_gift.h"
 #include "constants/metatile_labels.h"
 #include "constants/moves.h"
 #include "constants/party_menu.h"
