@@ -213,7 +213,7 @@ Kanto_CableClub_EventScript_UnusedWelcomeToCableClub::
 
 Kanto_CableClub_EventScript_SelectCableClubRoom::
 	setvar VAR_0x8004, 0
-	multichoice 0, 0, MULTICHOICE_TRADE_CENTER_COLOSSEUM, FALSE
+	multichoice 0, 0, KANTO_MULTICHOICE_TRADE_CENTER_COLOSSEUM, FALSE
 	switch VAR_RESULT
 	case 0, Kanto_CableClub_EventScript_TradeCenter
 	case 1, Kanto_CableClub_EventScript_Colosseum
@@ -229,7 +229,7 @@ Kanto_CableClub_EventScript_Colosseum::
 Kanto_CableClub_EventScript_SelectBattleMode::
 	message Kanto_CableClub_Text_PlayWhichBattleMode
 	waitmessage
-	multichoice 0, 0, MULTICHOICE_SINGLE_DOUBLE_MULTI_INFO_EXIT, FALSE
+	multichoice 0, 0, KANTO_MULTICHOICE_SINGLE_DOUBLE_MULTI_INFO_EXIT, FALSE
 	switch VAR_RESULT
 	case 0, Kanto_CableClub_EventScript_SingleBattleMode
 	case 1, Kanto_CableClub_EventScript_DoubleBattleMode
@@ -753,7 +753,7 @@ Kanto_CableClub_EventScript_UnionRoomAttendant::
 	end
 
 CableClub_EventScript_AskEnterUnionRoom::
-	multichoice 18, 6, MULTICHOICE_YES_NO_INFO, FALSE
+	multichoice 18, 6, KANTO_MULTICHOICE_YES_NO_INFO, FALSE
 	switch VAR_RESULT
 	case 0, Kanto_CableClub_EventScript_EnterUnionRoom
 	case 1, Kanto_CableClub_EventScript_AbortLink
@@ -857,7 +857,7 @@ Kanto_CableClub_EventScript_DirectCornerAttendant::
 
 Kanto_CableClub_EventScript_DirectCornerSelectService::
 	goto_if_unset FLAG_KANTO_GOT_POWDER_JAR, Kanto_CableClub_EventScript_DirectCornerNoBerry
-	multichoice 0, 0, MULTICHOICE_TRADE_COLOSSEUM_CRUSH, FALSE
+	multichoice 0, 0, KANTO_MULTICHOICE_TRADE_COLOSSEUM_CRUSH, FALSE
 	switch VAR_RESULT
 	case 0, Kanto_CableClub_EventScript_WirelessTrade
 	case 1, Kanto_CableClub_EventScript_WirelessBattleSelect
@@ -867,7 +867,7 @@ Kanto_CableClub_EventScript_DirectCornerSelectService::
 	end
 
 Kanto_CableClub_EventScript_DirectCornerNoBerry::
-	multichoice 0, 0, MULTICHOICE_TRADE_COLOSSEUM_2, FALSE
+	multichoice 0, 0, KANTO_MULTICHOICE_TRADE_COLOSSEUM_2, FALSE
 	switch VAR_RESULT
 	case 0, Kanto_CableClub_EventScript_WirelessTrade
 	case 1, Kanto_CableClub_EventScript_WirelessBattleSelect
@@ -887,7 +887,7 @@ Kanto_CableClub_EventScript_WirelessTrade::
 Kanto_CableClub_EventScript_WirelessBattleSelect::
 	message Kanto_CableClub_Text_PlayWhichBattleMode
 	waitmessage
-	multichoice 0, 0, MULTICHOICE_SINGLE_DOUBLE_MULTI_INFO_EXIT, FALSE
+	multichoice 0, 0, KANTO_MULTICHOICE_SINGLE_DOUBLE_MULTI_INFO_EXIT, FALSE
 	switch VAR_RESULT
 	case 0, Kanto_CableClub_EventScript_WirelessSingleBattle
 	case 1, Kanto_CableClub_EventScript_WirelessDoubleBattle
@@ -954,7 +954,7 @@ Kanto_CableClub_EventScript_ChooseLinkLeaderFrom2::
 	message Kanto_CableClub_Text_ChooseGroupLeaderOfTwo
 	waitmessage
 	call EventScript_RestorePrevTextColor
-	multichoice 13, 6, MULTICHOICE_JOIN_OR_LEAD, FALSE
+	multichoice 13, 6, KANTO_MULTICHOICE_JOIN_OR_LEAD, FALSE
 	switch VAR_RESULT
 	case 0, Kanto_CableClub_EventScript_TryJoinGroup2Players
 	case 1, Kanto_CableClub_EventScript_TryLeadGroup2Players
@@ -983,7 +983,7 @@ Kanto_CableClub_EventScript_ChooseLinkLeaderFrom4::
 	message Kanto_CableClub_Text_ChooseGroupLeaderOfFour
 	waitmessage
 	call EventScript_RestorePrevTextColor
-	multichoice 13, 6, MULTICHOICE_JOIN_OR_LEAD, FALSE
+	multichoice 13, 6, KANTO_MULTICHOICE_JOIN_OR_LEAD, FALSE
 	switch VAR_RESULT
 	case 0, Kanto_CableClub_EventScript_TryJoinGroup4Players
 	case 1, Kanto_CableClub_EventScript_TryLeadGroup4Players
@@ -1012,7 +1012,7 @@ Kanto_CableClub_EventScript_ChooseLinkLeader::
 	message Kanto_CableClub_Text_ChooseGroupLeader
 	waitmessage
 	call EventScript_RestorePrevTextColor
-	multichoice 13, 6, MULTICHOICE_JOIN_OR_LEAD, FALSE
+	multichoice 13, 6, KANTO_MULTICHOICE_JOIN_OR_LEAD, FALSE
 	switch VAR_RESULT
 	case 0, Kanto_CableClub_EventScript_TryJoinGroupXPlayers
 	case 1, Kanto_CableClub_EventScript_TryLeadGroupXPlayers
@@ -1129,7 +1129,7 @@ JoyfulGameCorner_EventScript_InfoMan2::
 	faceplayer
 	message Text_DescribeWhichGame
 	waitmessage
-	multichoice 0, 0, MULTICHOICE_POKEJUMP_DODRIO, FALSE
+	multichoice 0, 0, KANTO_MULTICHOICE_POKEJUMP_DODRIO, FALSE
 	switch VAR_RESULT
 	case 0, CableClub_EventScript_PokemonJumpInfo
 	case 1, CableClub_EventScript_DodrioBerryPickingInfo
@@ -1165,7 +1165,7 @@ JoyfulGameCorner_EventScript_MinigameAttendant::
 	special HelpSystem_Disable
 	message Text_PlayWhichGame
 	waitmessage
-	multichoice 0, 0, MULTICHOICE_POKEJUMP_DODRIO, FALSE
+	multichoice 0, 0, KANTO_MULTICHOICE_POKEJUMP_DODRIO, FALSE
 	switch VAR_RESULT
 	case 0, CableClub_EventScript_PlayPokemonJump
 	case 1, CableClub_EventScript_PlayDodrioBerryPicking
@@ -1208,7 +1208,7 @@ CableClub_EventScript_ChooseLinkLeaderMinigame::
 	message Kanto_CableClub_Text_ChooseGroupLeader
 	waitmessage
 	call EventScript_RestorePrevTextColor
-	multichoice 13, 6, MULTICHOICE_JOIN_OR_LEAD, FALSE
+	multichoice 13, 6, KANTO_MULTICHOICE_JOIN_OR_LEAD, FALSE
 	switch VAR_RESULT
 	case 0, CableClub_EventScript_TryJoinMinigameLinkGroup
 	case 1, CableClub_EventScript_TryBecomeMinigameLinkLeader

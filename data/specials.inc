@@ -544,3 +544,5 @@ gSpecials::
 	def_special RemoveRecordsWindow
 	def_special CloseDeptStoreElevatorWindow
 	def_special TrySetBattleTowerLinkType
+
+	.include "data/kanto/kanto_specials.inc"

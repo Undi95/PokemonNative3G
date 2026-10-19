@@ -2,7 +2,7 @@ EventScript_PkmnCenterNurse::
 	goto_if_questlog EventScript_ReleaseEnd
 	message Text_WelcomeWantToHealPkmn
 	waitmessage
-	multichoice 19, 8, MULTICHOICE_YES_NO, FALSE | (TRUE << 1)
+	multichoice 19, 8, KANTO_MULTICHOICE_YES_NO, FALSE | (TRUE << 1)
 	switch VAR_RESULT
 	case 0, Kanto_EventScript_PkmnCenterNurse_HealPkmn
 	case 1 Kanto_EventScript_PkmnCenterNurse_Goodbye

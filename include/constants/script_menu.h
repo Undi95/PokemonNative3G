@@ -165,4 +165,7 @@
 #define STDSTRING_BATTLE_PIKE      28
 #define STDSTRING_BATTLE_PYRAMID   29
 
+// Menus et chaînes de Rouge Feu ajoutés à la fin des tables (tools/kanto/gen_script_menu.py)
+#include "constants/kanto_script_menu.h"
+
 #endif //GUARD_SCRIPT_MENU_CONSTANTS_H

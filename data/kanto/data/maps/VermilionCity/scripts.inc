@@ -95,7 +95,7 @@ VermilionCity_EventScript_HasMysticTicket::
 	call_if_unset FLAG_KANTO_SHOWN_MYSTIC_TICKET, VermilionCity_EventScript_ShowMysticTicket
 	message VermilionCity_Text_BoardSeagallopFerry
 	waitmessage
-	multichoice 17, 6, MULTICHOICE_SEVII_NAVEL, FALSE
+	multichoice 17, 6, KANTO_MULTICHOICE_SEVII_NAVEL, FALSE
 	switch VAR_RESULT
 	case 0, EventScript_SeviiDestinationsPage1
 	case 1, EventScript_SailToNavelRock
@@ -112,7 +112,7 @@ VermilionCity_EventScript_HasAuroraTicket::
 	call_if_unset FLAG_KANTO_SHOWN_AURORA_TICKET, VermilionCity_EventScript_ShowAuroraTicket
 	message VermilionCity_Text_BoardSeagallopFerry
 	waitmessage
-	multichoice 13, 6, MULTICHOICE_SEVII_BIRTH, FALSE
+	multichoice 13, 6, KANTO_MULTICHOICE_SEVII_BIRTH, FALSE
 	switch VAR_RESULT
 	case 0, EventScript_SeviiDestinationsPage1
 	case 1, EventScript_SailToBirthIsland
@@ -130,7 +130,7 @@ VermilionCity_EventScript_HasMysticAndAuroraTickets::
 	call_if_unset FLAG_KANTO_SHOWN_AURORA_TICKET, VermilionCity_EventScript_ShowAuroraTicket
 	message VermilionCity_Text_BoardSeagallopFerry
 	waitmessage
-	multichoice 13, 5, MULTICHOICE_SEVII_NAVEL_BIRTH, FALSE
+	multichoice 13, 5, KANTO_MULTICHOICE_SEVII_NAVEL_BIRTH, FALSE
 	switch VAR_RESULT
 	case 0, EventScript_SeviiDestinationsPage1
 	case 1, EventScript_SailToNavelRock
@@ -157,7 +157,7 @@ VermilionCity_EventScript_ChooseSeagallopDestTriPass::
 	message VermilionCity_Text_BoardSeagallopTriPass
 	waitmessage
 	setvar VAR_0x8004, SEAGALLOP_VERMILION_CITY
-	multichoice 19, 5, MULTICHOICE_SEAGALLOP_123, FALSE
+	multichoice 19, 5, KANTO_MULTICHOICE_SEAGALLOP_123, FALSE
 	switch VAR_RESULT
 	case 0, EventScript_SailToOneIsland2
 	case 1, EventScript_SailToTwoIsland2

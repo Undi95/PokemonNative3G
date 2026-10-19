@@ -56,8 +56,19 @@
 #include "constants/union_room.h"
 #include "constants/vars.h"
 #include "constants/weather.h"
+// Constantes propres à Rouge Feu (scripts de Kanto)
+#include "constants/kanto/fame_checker.h"
+#include "constants/kanto/help_system.h"
+#include "constants/kanto/menu.h"
+#include "constants/kanto/quest_log.h"
+#include "constants/kanto/seagallop.h"
+#include "constants/kanto/trainer_card.h"
+#include "constants/kanto/trainer_fan_club.h"
+#include "constants/kanto/trainer_tower.h"
 	.include "asm/macros.inc"
 	.include "asm/macros/event.inc"
+	.include "asm/macros/kanto_event.inc"
+	.include "asm/macros/kanto_trainer_tower.inc"
 	.include "constants/constants.inc"
 
 	.section script_data, "aw"
@@ -107,6 +118,8 @@ gStdScripts::
 	ptrvalue Std_RegisteredInMatchCall   /* STD_REGISTER_MATCH_CALL*/
 	ptrvalue Std_MsgboxGetPoints         /* MSGBOX_GETPOINTS*/
 	ptrvalue Std_MsgboxPokenav           /* MSGBOX_POKENAV*/
+	ptrvalue Std_PutItemAway             /* STD_PUT_ITEM_AWAY (Rouge Feu)*/
+	ptrvalue Std_ReceivedItem            /* STD_RECEIVED_ITEM (Rouge Feu)*/
 gStdScripts_End::
 
 	.include "data/maps/PetalburgCity/scripts.inc"

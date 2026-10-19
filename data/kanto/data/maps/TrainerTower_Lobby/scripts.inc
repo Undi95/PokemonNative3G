@@ -65,7 +65,7 @@ TrainerTower_Lobby_EventScript_Enter::
 	setvar VAR_TEMP_0, 1
 	ttower_getchallengestatus
 	switch VAR_RESULT
-	case CHALLENGE_STATUS_LOST, TrainerTower_Lobby_EventScript_LostChallenge
+	case KANTO_CHALLENGE_STATUS_LOST, TrainerTower_Lobby_EventScript_LostChallenge
 	case CHALLENGE_STATUS_UNK, TrainerTower_Lobby_EventScript_ExitChallengeSpeakToReceptionist
 	case CHALLENGE_STATUS_NORMAL, TrainerTower_Lobby_EventScript_EnterEnd
 
@@ -155,7 +155,7 @@ TrainerTower_Lobby_EventScript_AllFloorsUsed::
 TrainerTower_Lobby_EventScript_AskEnterChallenge::
 	message TrainerTower_Lobby_Text_LikeToChallengeTrainers
 	waitmessage
-	multichoice 18, 6, MULTICHOICE_YES_NO_INFO, FALSE
+	multichoice 18, 6, KANTO_MULTICHOICE_YES_NO_INFO, FALSE
 	switch VAR_RESULT
 	case 0, TrainerTower_Lobby_EventScript_ChooseChallenge
 	case 1, TrainerTower_Lobby_EventScript_DeclineChallenge
@@ -169,7 +169,7 @@ TrainerTower_Lobby_EventScript_ChallengeInfo::
 	end
 
 TrainerTower_Lobby_EventScript_ChooseChallenge::
-	multichoice 13, 3, MULTICHOICE_TRAINER_TOWER_MODE, FALSE
+	multichoice 13, 3, KANTO_MULTICHOICE_TRAINER_TOWER_MODE, FALSE
 	switch VAR_RESULT
 	case 0, TrainerTower_Lobby_EventScript_BeginChallenge
 	case 1, TrainerTower_Lobby_EventScript_BeginChallenge

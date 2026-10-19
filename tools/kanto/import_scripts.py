@@ -10,7 +10,7 @@ français) et l'écrit sous data/kanto/, avec :
   - les spécificités 64 bits du port : `.4byte label` -> ptrvalue, `.align 2` -> ptr_align,
     commentaires `@` -> /* */.
 """
-import os, re
+import os, re, subprocess
 
 from kanto_names import Names
 
@@ -65,6 +65,7 @@ class ScriptConverter:
 
     # --- lecture de la partie scripts de event_scripts.s ----------------------------
     def collect(self):
+        self.prepare_fr_headers()
         text = read(f'{self.fr}/data/event_scripts.s')
         tail = text[text.index('gStdScriptsEnd::') + len('gStdScriptsEnd::'):]
         skip_dirs = tuple(f'data/maps/{m}/' for m in self.imp.skip)
@@ -110,6 +111,12 @@ class ScriptConverter:
         n = self.names
         if t in self.labels_rename:
             return self.labels_rename[t]
+        if t in self.const_rename:
+            return self.const_rename[t]
+        if t.startswith('MULTICHOICE_'):
+            return 'KANTO_' + t
+        if t.startswith('STDSTRING_') and t not in self.em_std:
+            return 'STDSTRING_KANTO_' + t[len('STDSTRING_'):]
         if t.startswith('FLAG_'):
             return n.flag(t)
         if t.startswith('VAR_'):
@@ -148,6 +155,56 @@ class ScriptConverter:
             out.append(code)
         return '\n'.join(out) + '\n'
 
+    # --- en-têtes de constantes propres à RF -------------------------------------------
+    def prepare_fr_headers(self):
+        """Copie les en-têtes RF absents d'Émeraude dans include/constants/kanto/ ; une constante
+        qui existe aussi dans Émeraude (avec un autre sens) y est préfixée KANTO_."""
+        em_defs = set()
+        for h in os.listdir(f'{self.em}/include/constants'):
+            if h.endswith('.h'):
+                em_defs |= set(re.findall(r'#define\s+([A-Za-z_]\w*)', read(f'{self.em}/include/constants/{h}')))
+        self.const_rename = {}
+        for h in FR_ONLY_HEADERS:
+            text = read(f'{self.fr}/include/constants/{h}')
+            if h == 'menu.h':  # menus et chaînes : tools/kanto/gen_script_menu.py
+                text = re.sub(r'^#define (MULTICHOICE|STDSTRING)_\w+.*\n', '', text, flags=re.M)
+            names = set(re.findall(r'#define\s+([A-Za-z_]\w*)', text)) | set(re.findall(r'^\s+([A-Z][A-Z0-9_]+)\s*[,=]', text, re.M))
+            for n in names:
+                if n in em_defs and not n.startswith('GUARD_'):
+                    self.const_rename[n] = 'KANTO_' + n
+            text = re.sub(r'\b[A-Za-z_]\w*\b', lambda m: self.const_rename.get(m.group(0), m.group(0)), text)
+            text = text.replace('GUARD_CONSTANTS_', 'GUARD_CONSTANTS_KANTO_')
+            write(f'{self.em}/include/constants/kanto/{h}', '// Copié de Rouge Feu par tools/kanto/import_scripts.py\n' + text)
+        em_std = set(re.findall(r'#define (STDSTRING_\w+)', read(f'{self.em}/include/constants/script_menu.h')))
+        self.em_std = em_std
+
+    # --- specials de RF ------------------------------------------------------------------
+    def write_specials(self):
+        """data/kanto/kanto_specials.inc : def_special des specials RF absents d'Émeraude.
+        src/kanto_specials_stubs.c : fonctions PROVISOIRES pour ceux qui n'existent pas en C
+        dans Émeraude (à remplacer par le code RF porté)."""
+        fr_sp = re.findall(r'def_special\s+(\w+)', read(f'{self.fr}/data/specials.inc'))
+        em_sp = set(re.findall(r'def_special\s+(\w+)', read(f'{self.em}/data/specials.inc')))
+        new = [n for n in dict.fromkeys(fr_sp) if n not in em_sp]
+        em_c = ''
+        for d in ('src',):
+            for f in os.listdir(f'{self.em}/{d}'):
+                if f.endswith('.c') and f != 'kanto_specials_stubs.c':
+                    em_c += read(f'{self.em}/{d}/{f}')
+        defined = set(re.findall(r'^[A-Za-z_][\w \*]*?\b(\w+)\s*\([^;{]*\)\s*\{', em_c, re.M))
+        stubs = [n for n in new if n not in defined]
+        write(f'{self.em}/data/kanto/kanto_specials.inc',
+              '/* Specials de Rouge Feu (tools/kanto/import_scripts.py) */\n'
+              + ''.join(f'\tdef_special {n}\n' for n in new))
+        c = ['// Généré par tools/kanto/import_scripts.py — PROVISOIRE : specials de Rouge Feu',
+             '// pas encore portés. Chaque appel est signalé dans la console.', '#include "global.h"', '',
+             '#ifdef PORTABLE', '#include <stdio.h>',
+             'static void KantoSpecialStub(const char *name) { fprintf(stderr, "[Kanto] special RF non porte : %s\\n", name); }',
+             '#else', 'static void KantoSpecialStub(const char *name) { }', '#endif', '']
+        c += [f'u16 {n}(void) {{ KantoSpecialStub("{n}"); return 0; }}' for n in stubs]
+        write(f'{self.em}/src/kanto_specials_stubs.c', '\n'.join(c) + '\n')
+        print(f'specials RF : {len(new)} ajoutés, dont {len(stubs)} provisoires (src/kanto_specials_stubs.c)')
+
     def run(self):
         self.collect()
         self.plan_labels()
@@ -157,6 +214,7 @@ class ScriptConverter:
                   '   par tools/kanto/import_scripts.py — ne pas modifier à la main. */\n')
         write(f'{self.em}/data/kanto/scripts.inc', header + self.transform(self.master))
         write(f'{self.em}/include/constants/kanto_flags_vars.h', self.names.kanto_header())
+        self.write_specials()
         # Dresseurs : PROVISOIRE (TRAINER_NONE) en attendant l'import des dresseurs de RF
         trainers = sorted(self.missing.get('dresseurs (TRAINER_KANTO_* provisoires)', ()))
         write(f'{self.em}/include/constants/kanto_trainers.h',
@@ -168,6 +226,10 @@ class ScriptConverter:
         for k, v in list(self.names.problems.items()) + list(self.missing.items()):
             print(f'{k} ({len(v)}) : {sorted(v)[:12]}{" …" if len(v) > 12 else ""}')
 
+
+# En-têtes de constantes de RF absents d'Émeraude (copiés dans include/constants/kanto/)
+FR_ONLY_HEADERS = ['fame_checker.h', 'help_system.h', 'menu.h', 'quest_log.h', 'seagallop.h',
+                   'trainer_card.h', 'trainer_fan_club.h', 'trainer_tower.h']
 
 # Constantes TRAINER_* qui ne sont pas des dresseurs
 KEEP_TRAINER_TOKENS = {

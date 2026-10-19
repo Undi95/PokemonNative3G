@@ -214,16 +214,16 @@ gScriptCmdTable::
 	script_cmd_table_entry SCR_OP_SETESCAPEWARP                 ScrCmd_setescapewarp                  @ 0xc4
 	script_cmd_table_entry SCR_OP_WAITMONCRY                    ScrCmd_waitmoncry                     @ 0xc5
 	script_cmd_table_entry SCR_OP_BUFFERBOXNAME                 ScrCmd_bufferboxname                  @ 0xc6
-	script_cmd_table_entry SCR_OP_TEXTCOLOR                     ScrCmd_nop1                           @ 0xc7
-	script_cmd_table_entry SCR_OP_LOADHELP                      ScrCmd_nop1                           @ 0xc8
-	script_cmd_table_entry SCR_OP_UNLOADHELP                    ScrCmd_nop1                           @ 0xc9
-	script_cmd_table_entry SCR_OP_SIGNMSG                       ScrCmd_nop1                           @ 0xca
-	script_cmd_table_entry SCR_OP_NORMALMSG                     ScrCmd_nop1                           @ 0xcb
-	script_cmd_table_entry SCR_OP_COMPAREHIDDENVAR              ScrCmd_nop1                           @ 0xcc
+	script_cmd_table_entry SCR_OP_TEXTCOLOR                     ScrCmd_textcolor                           @ 0xc7
+	script_cmd_table_entry SCR_OP_LOADHELP                      ScrCmd_loadhelp                           @ 0xc8
+	script_cmd_table_entry SCR_OP_UNLOADHELP                    ScrCmd_unloadhelp                           @ 0xc9
+	script_cmd_table_entry SCR_OP_SIGNMSG                       ScrCmd_signmsg                           @ 0xca
+	script_cmd_table_entry SCR_OP_NORMALMSG                     ScrCmd_normalmsg                           @ 0xcb
+	script_cmd_table_entry SCR_OP_COMPAREHIDDENVAR              ScrCmd_comparestat                           @ 0xcc
 	script_cmd_table_entry SCR_OP_SETMODERNFATEFULENCOUNTER     ScrCmd_setmodernfatefulencounter      @ 0xcd
 	script_cmd_table_entry SCR_OP_CHECKMODERNFATEFULENCOUNTER   ScrCmd_checkmodernfatefulencounter    @ 0xce
 	script_cmd_table_entry SCR_OP_TRYWONDERCARDSCRIPT           ScrCmd_trywondercardscript            @ 0xcf
-	script_cmd_table_entry SCR_OP_SETWORLDMAPFLAG               ScrCmd_nop1                           @ 0xd0
+	script_cmd_table_entry SCR_OP_SETWORLDMAPFLAG               ScrCmd_setworldmapflag                           @ 0xd0
 	script_cmd_table_entry SCR_OP_WARPSPINENTER                 ScrCmd_warpspinenter                  @ 0xd1
 	script_cmd_table_entry SCR_OP_SETMONMETLOCATION             ScrCmd_setmonmetlocation              @ 0xd2
 	script_cmd_table_entry SCR_OP_MOVEROTATINGTILEOBJECTS       ScrCmd_moverotatingtileobjects        @ 0xd3
@@ -242,6 +242,7 @@ gScriptCmdTable::
 	script_cmd_table_entry SCR_OP_WARPWHITEFADE                 ScrCmd_warpwhitefade                  @ 0xe0
 	script_cmd_table_entry SCR_OP_BUFFERCONTESTNAME             ScrCmd_buffercontestname              @ 0xe1
 	script_cmd_table_entry SCR_OP_BUFFERITEMNAMEPLURAL          ScrCmd_bufferitemnameplural           @ 0xe2
+	script_cmd_table_entry SCR_OP_GETBRAILLESTRINGWIDTH       ScrCmd_getbraillestringwidth          @ 0xe3 (Rouge Feu)
 
 	.if ALLOCATE_SCRIPT_CMD_TABLE
 gScriptCmdTableEnd::

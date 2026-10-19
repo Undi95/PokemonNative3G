@@ -34,27 +34,27 @@ EventScript_BufferPocketNameTryFanfare::
 	end
 
 Kanto_EventScript_BufferItemsPocket::
-	bufferstdstring STR_VAR_3, STDSTRING_ITEMS_POCKET
+	bufferstdstring STR_VAR_3, STDSTRING_KANTO_ITEMS_POCKET
 	call_if_eq VAR_0x8007, TRUE, Kanto_EventScript_PlayFanfareObtainedItem
 	return
 
 Kanto_EventScript_BufferKeyItemsPocket::
-	bufferstdstring STR_VAR_3, STDSTRING_KEY_ITEMS_POCKET
+	bufferstdstring STR_VAR_3, STDSTRING_KANTO_KEY_ITEMS_POCKET
 	call_if_eq VAR_0x8007, TRUE, Kanto_EventScript_PlayFanfareObtainedItem
 	return
 
 EventScript_BufferPokeBallsPocket::
-	bufferstdstring STR_VAR_3, STDSTRING_POKEBALLS_POCKET
+	bufferstdstring STR_VAR_3, STDSTRING_KANTO_POKEBALLS_POCKET
 	call_if_eq VAR_0x8007, TRUE, Kanto_EventScript_PlayFanfareObtainedItem
 	return
 
 EventScript_BufferTMCase::
-	bufferstdstring STR_VAR_3, STDSTRING_TM_CASE
+	bufferstdstring STR_VAR_3, STDSTRING_KANTO_TM_CASE
 	call_if_eq VAR_0x8007, TRUE, Kanto_EventScript_PlayFanfareObtainedTMHM
 	return
 
 EventScript_BufferBerryPouch::
-	bufferstdstring STR_VAR_3, STDSTRING_BERRY_POUCH
+	bufferstdstring STR_VAR_3, STDSTRING_KANTO_BERRY_POUCH
 	call_if_eq VAR_0x8007, TRUE, Kanto_EventScript_PlayFanfareObtainedItem
 	return
 
@@ -200,7 +200,7 @@ EventScript_TryPickUpHiddenCoins::
 	specialvar VAR_RESULT, CheckAddCoins
 	goto_if_eq VAR_RESULT, FALSE, EventScript_HiddenCoinsButCaseIsFull
 	addcoins VAR_0x8006
-	bufferstdstring STR_VAR_2, STDSTRING_COINS
+	bufferstdstring STR_VAR_2, STDSTRING_KANTO_COINS
 	call Kanto_EventScript_PlayFanfareObtainedItem
 	call EventScript_FoundCoins
 	waitfanfare
@@ -212,7 +212,7 @@ EventScript_TryPickUpHiddenCoins::
 
 EventScript_HiddenCoinsButCaseIsFull::
 	buffernumberstring STR_VAR_1, VAR_0x8006
-	bufferstdstring STR_VAR_2, STDSTRING_COINS
+	bufferstdstring STR_VAR_2, STDSTRING_KANTO_COINS
 	msgbox Text_FoundXCoins
 	msgbox Text_CoinCaseIsFull
 	setvar VAR_RESULT, 0
@@ -221,7 +221,7 @@ EventScript_HiddenCoinsButCaseIsFull::
 
 EventScript_NoCaseForHiddenCoins::
 	buffernumberstring STR_VAR_1, VAR_0x8006
-	bufferstdstring STR_VAR_2, STDSTRING_COINS
+	bufferstdstring STR_VAR_2, STDSTRING_KANTO_COINS
 	msgbox Text_FoundXCoins
 	msgbox Text_NothingToPutThemIn
 	setvar VAR_RESULT, 0

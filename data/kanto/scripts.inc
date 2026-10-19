@@ -982,23 +982,23 @@ EventScript_BufferPutAwayPocketName::
 	end
 
 EventScript_BufferPutAwayPocketItems::
-	bufferstdstring STR_VAR_3, STDSTRING_ITEMS_POCKET
+	bufferstdstring STR_VAR_3, STDSTRING_KANTO_ITEMS_POCKET
 	return
 
 EventScript_BufferPutAwayPocketKeyItems::
-	bufferstdstring STR_VAR_3, STDSTRING_KEY_ITEMS_POCKET
+	bufferstdstring STR_VAR_3, STDSTRING_KANTO_KEY_ITEMS_POCKET
 	return
 
 EventScript_BufferPutAwayPocketPokeBalls::
-	bufferstdstring STR_VAR_3, STDSTRING_POKEBALLS_POCKET
+	bufferstdstring STR_VAR_3, STDSTRING_KANTO_POKEBALLS_POCKET
 	return
 
 EventScript_BufferPutAwayPocketTMCase::
-	bufferstdstring STR_VAR_3, STDSTRING_TM_CASE
+	bufferstdstring STR_VAR_3, STDSTRING_KANTO_TM_CASE
 	return
 
 EventScript_BufferPutAwayPocketBerryPouch::
-	bufferstdstring STR_VAR_3, STDSTRING_BERRY_POUCH
+	bufferstdstring STR_VAR_3, STDSTRING_KANTO_BERRY_POUCH
 	return
 
 	.include "data/kanto/data/scripts/seagallop.inc"
