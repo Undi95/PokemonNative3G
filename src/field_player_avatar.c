@@ -23,6 +23,7 @@
 #include "task.h"
 #include "tv.h"
 #include "wild_encounter.h"
+#include "constants/metatile_behaviors.h"
 #include "constants/abilities.h"
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
