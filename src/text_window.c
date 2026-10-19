@@ -119,8 +119,19 @@ const struct TilesPal *GetWindowFrameTilesPal(u8 id)
         return &sWindowFrames[id];
 }
 
+// Rouge Feu (new_menu_helpers.c / text_window.c) : boîte de dialogue (option DIALOGUE = KANTO)
+static const u16 sKantoMenuMessageWindow_Gfx[] = INCGFX_U16("graphics/kanto/text_window/menu_message.png", ".4bpp");
+static const u16 sKantoStdPal0[] = INCGFX_U16("graphics/kanto/text_window/stdpal_0.pal", ".gbapal");
+
 void LoadMessageBoxGfx(u8 windowId, u16 destOffset, u8 palOffset)
 {
+    if (gSaveBlock2Ptr->optionsDialogStyle)
+    {
+        // LoadMenuMessageWindowGfx de RF
+        LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), sKantoMenuMessageWindow_Gfx, 0x280, destOffset);
+        LoadPalette(sKantoStdPal0, palOffset, PLTT_SIZE_4BPP);
+        return;
+    }
     LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), gMessageBox_Gfx, 0x1C0, destOffset);
     LoadPalette(GetOverworldTextboxPalettePtr(), palOffset, PLTT_SIZE_4BPP);
 }

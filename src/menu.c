@@ -316,8 +316,49 @@ static void WindowFunc_DrawStandardFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u
                             STD_WINDOW_PALETTE_NUM);
 }
 
+// Rouge Feu (menu.c : WindowFunc_DrawDialogFrameWithCustomTileAndPalette, tuiles DLG_WINDOW_BASE_TILE_NUM).
+// Le cadre de RF déborde d'une colonne à droite de la fenêtre : la fenêtre d'Émeraude étant plus large
+// d'une colonne, l'intérieur est réduit d'une colonne (width - 1) pour rester dans l'écran.
+static void WindowFunc_DrawKantoDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
+{
+    u16 t = DLG_WINDOW_BASE_TILE_NUM;
+    u8 p = DLG_WINDOW_PALETTE_NUM;
+    width--;
+    FillBgTilemapBufferRect(bg, t,                      tilemapLeft - 2,         tilemapTop - 1, 1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 1,                  tilemapLeft - 1,         tilemapTop - 1, 1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 2,                  tilemapLeft,             tilemapTop - 1, width, 1, p);
+    FillBgTilemapBufferRect(bg, t + 3,                  tilemapLeft + width,     tilemapTop - 1, 1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 4,                  tilemapLeft + width + 1, tilemapTop - 1, 1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 5,                  tilemapLeft - 2,         tilemapTop,     1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 6,                  tilemapLeft - 1,         tilemapTop,     1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 8,                  tilemapLeft + width,     tilemapTop,     1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 9,                  tilemapLeft + width + 1, tilemapTop,     1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 10,                 tilemapLeft - 2,         tilemapTop + 1, 1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 11,                 tilemapLeft - 1,         tilemapTop + 1, 1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 12,                 tilemapLeft + width,     tilemapTop + 1, 1,     1, p);
+    FillBgTilemapBufferRect(bg, t + 13,                 tilemapLeft + width + 1, tilemapTop + 1, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 10), tilemapLeft - 2,         tilemapTop + 2, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 11), tilemapLeft - 1,         tilemapTop + 2, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 12), tilemapLeft + width,     tilemapTop + 2, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 13), tilemapLeft + width + 1, tilemapTop + 2, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 5),  tilemapLeft - 2,         tilemapTop + 3, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 6),  tilemapLeft - 1,         tilemapTop + 3, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 8),  tilemapLeft + width,     tilemapTop + 3, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 9),  tilemapLeft + width + 1, tilemapTop + 3, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t),      tilemapLeft - 2,         tilemapTop + 4, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 1),  tilemapLeft - 1,         tilemapTop + 4, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 2),  tilemapLeft,             tilemapTop + 4, width, 1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 3),  tilemapLeft + width,     tilemapTop + 4, 1,     1, p);
+    FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(t + 4),  tilemapLeft + width + 1, tilemapTop + 4, 1,     1, p);
+}
+
 static void WindowFunc_DrawDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
 {
+    if (gSaveBlock2Ptr->optionsDialogStyle)
+    {
+        WindowFunc_DrawKantoDialogueFrame(bg, tilemapLeft, tilemapTop, width, height, paletteNum);
+        return;
+    }
     FillBgTilemapBufferRect(bg,
                             DLG_WINDOW_BASE_TILE_NUM + 1,
                             tilemapLeft - 2,

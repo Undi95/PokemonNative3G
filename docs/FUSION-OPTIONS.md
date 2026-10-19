@@ -17,8 +17,8 @@ contenu dans un seul jeu.
 - [x] Fonds des boîtes du PC : 16 d'Émeraude + 16 de Rouge Feu (tous différents), catégorie KANTO (non testé en jeu)
 
 ## À faire — contenu à réunir (listes)
-- [ ] Musiques : jukebox / choix des thèmes ? (à voir avec l'utilisateur)
-- [ ] Animations de capacités / transitions de combat présentes en double
+- Décision : musiques, animations et transitions de combat = celles de la région, comme dans les jeux officiels (pas d'option).
+- Options : menu ergonomique (sous-menus / pages) si la liste devient trop longue.
 
 ## À faire — choix HOENN / KANTO dans les Options
 - [ ] Pokédex (écran complet de chaque jeu, avec ses fonctions : Hoenn = zones/tailles, Kanto = habitats/catégories)
