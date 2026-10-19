@@ -18,7 +18,6 @@ u16 ShowEasyChatMessage(void) { KantoSpecialStub("ShowEasyChatMessage"); return 
 u16 BufferRandomHobbyOrLifestyleString(void) { KantoSpecialStub("BufferRandomHobbyOrLifestyleString"); return 0; }
 u16 ShowBattleRecords(void) { KantoSpecialStub("ShowBattleRecords"); return 0; }
 u16 GetProfOaksRatingMessage(void) { KantoSpecialStub("GetProfOaksRatingMessage"); return 0; }
-u16 GetElevatorFloor(void) { KantoSpecialStub("GetElevatorFloor"); return 0; }
 u16 BattleTowerMapScript2(void) { KantoSpecialStub("BattleTowerMapScript2"); return 0; }
 u16 ChooseNextBattleTowerTrainer(void) { KantoSpecialStub("ChooseNextBattleTowerTrainer"); return 0; }
 u16 CheckPartyBattleTowerBanlist(void) { KantoSpecialStub("CheckPartyBattleTowerBanlist"); return 0; }
@@ -38,14 +37,9 @@ u16 ReducePlayerPartyToThree(void) { KantoSpecialStub("ReducePlayerPartyToThree"
 u16 ShowTownMap(void) { KantoSpecialStub("ShowTownMap"); return 0; }
 u16 ShowDiploma(void) { KantoSpecialStub("ShowDiploma"); return 0; }
 u16 EnterHallOfFame(void) { KantoSpecialStub("EnterHallOfFame"); return 0; }
-u16 AnimateElevator(void) { KantoSpecialStub("AnimateElevator"); return 0; }
-u16 DrawElevatorCurrentFloorWindow(void) { KantoSpecialStub("DrawElevatorCurrentFloorWindow"); return 0; }
 u16 Dummy_TryEnableBravoTrainerBattleTower(void) { KantoSpecialStub("Dummy_TryEnableBravoTrainerBattleTower"); return 0; }
 u16 StartMarowakBattle(void) { KantoSpecialStub("StartMarowakBattle"); return 0; }
-u16 ListMenu(void) { KantoSpecialStub("ListMenu"); return 0; }
-u16 ReturnToListMenu(void) { KantoSpecialStub("ReturnToListMenu"); return 0; }
 u16 DoPicboxCancel(void) { KantoSpecialStub("DoPicboxCancel"); return 0; }
-u16 CloseElevatorCurrentFloorWindow(void) { KantoSpecialStub("CloseElevatorCurrentFloorWindow"); return 0; }
 u16 VsSeekerResetObjectMovementAfterChargeComplete(void) { KantoSpecialStub("VsSeekerResetObjectMovementAfterChargeComplete"); return 0; }
 u16 VsSeekerFreezeObjectsAfterChargeComplete(void) { KantoSpecialStub("VsSeekerFreezeObjectsAfterChargeComplete"); return 0; }
 u16 DoSeagallopFerryScene(void) { KantoSpecialStub("DoSeagallopFerryScene"); return 0; }
@@ -63,4 +57,3 @@ u16 ReadTrainerTowerAndValidate(void) { KantoSpecialStub("ReadTrainerTowerAndVal
 u16 BrailleCursorToggle(void) { KantoSpecialStub("BrailleCursorToggle"); return 0; }
 u16 AnimateTeleporterHousing(void) { KantoSpecialStub("AnimateTeleporterHousing"); return 0; }
 u16 AnimateTeleporterCable(void) { KantoSpecialStub("AnimateTeleporterCable"); return 0; }
-u16 InitElevatorFloorSelectMenuPos(void) { KantoSpecialStub("InitElevatorFloorSelectMenuPos"); return 0; }
