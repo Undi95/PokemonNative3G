@@ -3,10 +3,20 @@
 #include "pokemon.h"
 #include "random.h"
 #include "roamer.h"
+#include "kanto_field_door.h"
+#include "kanto_save.h"
+#include "overworld.h"
+#include "constants/region_map_sections.h"
+
+// PokemonNative3G : deux vagabonds. Hoenn = Latios/Latias d'Émeraude (gSaveBlock1Ptr->roamer) ;
+// Kanto = chien de Rouge Feu (roamer.c de RF, gSaveBlockKanto.roamer), choisi selon la carte courante.
+u16 GetStarterSpecies(void); // kanto_field_specials.c (starter de Kanto)
+#define IS_KANTO_ROAMER() (IsKantoTilesetMap() ? 1 : 0)
 
 // Despite having a variable to track it, the roamer is
 // hard-coded to only ever be in map group 0
-#define ROAMER_MAP_GROUP 0
+// (Kanto : groupe des routes de Kanto, 3 dans RF)
+#define ROAMER_MAP_GROUP (IS_KANTO_ROAMER() ? MAP_GROUP(MAP_ROUTE1) : 0)
 
 enum
 {
@@ -14,9 +24,11 @@ enum
     MAP_NUM, // map number
 };
 
-#define ROAMER (&gSaveBlock1Ptr->roamer)
-EWRAM_DATA static u8 sLocationHistory[3][2] = {0};
-EWRAM_DATA static u8 sRoamerLocation[2] = {0};
+#define ROAMER (IS_KANTO_ROAMER() ? &gSaveBlockKanto.roamer : &gSaveBlock1Ptr->roamer)
+EWRAM_DATA static u8 sRegionLocationHistory[2][3][2] = {0};
+EWRAM_DATA static u8 sRegionRoamerLocation[2][2] = {0};
+#define sLocationHistory sRegionLocationHistory[IS_KANTO_ROAMER()]
+#define sRoamerLocation sRegionRoamerLocation[IS_KANTO_ROAMER()]
 
 #define ___ MAP_NUM(MAP_UNDEFINED) // For empty spots in the location table
 
@@ -57,12 +69,50 @@ static const u8 sRoamerLocations[][6] =
     { ___, ___, ___, ___, ___, ___ },
 };
 
+// Rouge Feu (roamer.c)
+static const u8 sKantoRoamerLocations[][7] = {
+    {MAP_NUM(MAP_ROUTE1), MAP_NUM(MAP_ROUTE2), MAP_NUM(MAP_ROUTE21_NORTH), MAP_NUM(MAP_ROUTE22), ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE2), MAP_NUM(MAP_ROUTE1), MAP_NUM(MAP_ROUTE3), MAP_NUM(MAP_ROUTE22), ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE3), MAP_NUM(MAP_ROUTE2), MAP_NUM(MAP_ROUTE4), ___, ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE4), MAP_NUM(MAP_ROUTE3), MAP_NUM(MAP_ROUTE5), MAP_NUM(MAP_ROUTE9), MAP_NUM(MAP_ROUTE24), ___, ___},
+    {MAP_NUM(MAP_ROUTE5), MAP_NUM(MAP_ROUTE4), MAP_NUM(MAP_ROUTE6), MAP_NUM(MAP_ROUTE7), MAP_NUM(MAP_ROUTE8), MAP_NUM(MAP_ROUTE9), MAP_NUM(MAP_ROUTE24)},
+    {MAP_NUM(MAP_ROUTE6), MAP_NUM(MAP_ROUTE5), MAP_NUM(MAP_ROUTE7), MAP_NUM(MAP_ROUTE8), MAP_NUM(MAP_ROUTE11), ___, ___},
+    {MAP_NUM(MAP_ROUTE7), MAP_NUM(MAP_ROUTE5), MAP_NUM(MAP_ROUTE6), MAP_NUM(MAP_ROUTE8), MAP_NUM(MAP_ROUTE16), ___, ___},
+    {MAP_NUM(MAP_ROUTE8), MAP_NUM(MAP_ROUTE5), MAP_NUM(MAP_ROUTE6), MAP_NUM(MAP_ROUTE7), MAP_NUM(MAP_ROUTE10), MAP_NUM(MAP_ROUTE12), ___},
+    {MAP_NUM(MAP_ROUTE9), MAP_NUM(MAP_ROUTE4), MAP_NUM(MAP_ROUTE5), MAP_NUM(MAP_ROUTE10), MAP_NUM(MAP_ROUTE24), ___, ___},
+    {MAP_NUM(MAP_ROUTE10), MAP_NUM(MAP_ROUTE8), MAP_NUM(MAP_ROUTE9), MAP_NUM(MAP_ROUTE12), ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE11), MAP_NUM(MAP_ROUTE6), MAP_NUM(MAP_ROUTE12), ___, ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE12), MAP_NUM(MAP_ROUTE10), MAP_NUM(MAP_ROUTE11), MAP_NUM(MAP_ROUTE13), ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE13), MAP_NUM(MAP_ROUTE12), MAP_NUM(MAP_ROUTE14), ___, ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE14), MAP_NUM(MAP_ROUTE13), MAP_NUM(MAP_ROUTE15), ___, ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE15), MAP_NUM(MAP_ROUTE14), MAP_NUM(MAP_ROUTE18), MAP_NUM(MAP_ROUTE19), ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE16), MAP_NUM(MAP_ROUTE7), MAP_NUM(MAP_ROUTE17), ___, ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE17), MAP_NUM(MAP_ROUTE16), MAP_NUM(MAP_ROUTE18), ___, ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE18), MAP_NUM(MAP_ROUTE15), MAP_NUM(MAP_ROUTE17), MAP_NUM(MAP_ROUTE19), ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE19), MAP_NUM(MAP_ROUTE15), MAP_NUM(MAP_ROUTE18), MAP_NUM(MAP_ROUTE20), ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE20), MAP_NUM(MAP_ROUTE19), MAP_NUM(MAP_ROUTE21_NORTH), ___, ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE21_NORTH), MAP_NUM(MAP_ROUTE1), MAP_NUM(MAP_ROUTE20), ___, ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE22), MAP_NUM(MAP_ROUTE1), MAP_NUM(MAP_ROUTE2), MAP_NUM(MAP_ROUTE23), ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE23), MAP_NUM(MAP_ROUTE22), MAP_NUM(MAP_ROUTE2), ___, ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE24), MAP_NUM(MAP_ROUTE4), MAP_NUM(MAP_ROUTE5), MAP_NUM(MAP_ROUTE9), ___, ___, ___},
+    {MAP_NUM(MAP_ROUTE25), MAP_NUM(MAP_ROUTE24), MAP_NUM(MAP_ROUTE9), ___, ___, ___, ___},
+    {___, ___, ___, ___, ___, ___, ___}
+};
+
 #undef ___
-#define NUM_LOCATION_SETS (ARRAY_COUNT(sRoamerLocations) - 1)
-#define NUM_LOCATIONS_PER_SET (ARRAY_COUNT(sRoamerLocations[0]))
+#define NUM_HOENN_LOCATION_SETS (ARRAY_COUNT(sRoamerLocations) - 1)
+#define NUM_KANTO_LOCATION_SETS (ARRAY_COUNT(sKantoRoamerLocations) - 1)
+#define NUM_LOCATION_SETS (IS_KANTO_ROAMER() ? NUM_KANTO_LOCATION_SETS : NUM_HOENN_LOCATION_SETS)
+#define NUM_LOCATIONS_PER_SET (IS_KANTO_ROAMER() ? ARRAY_COUNT(sKantoRoamerLocations[0]) : ARRAY_COUNT(sRoamerLocations[0]))
+#define ROAMER_LOCATION(set, i) (IS_KANTO_ROAMER() ? sKantoRoamerLocations[set][i] : sRoamerLocations[set][i])
 
 void ClearRoamerData(void)
 {
+    if (IS_KANTO_ROAMER())
+    {
+        memset(ROAMER, 0, sizeof(*ROAMER)); // RF : *ROAMER = (struct Roamer){}
+        return;
+    }
     memset(ROAMER, 0, sizeof(*ROAMER));
     ROAMER->species = SPECIES_LATIAS;
 }
@@ -79,6 +129,46 @@ void ClearRoamerLocationData(void)
 
     sRoamerLocation[MAP_GRP] = 0;
     sRoamerLocation[MAP_NUM] = 0;
+}
+
+// Rouge Feu : le chien dépend du starter de Kanto
+static u16 GetKantoRoamerSpecies(void)
+{
+    u16 a;
+    switch (GetStarterSpecies())
+    {
+    default:
+        a = SPECIES_RAIKOU;
+        break;
+    case SPECIES_BULBASAUR:
+        a = SPECIES_ENTEI;
+        break;
+    case SPECIES_CHARMANDER:
+        a = SPECIES_SUICUNE;
+        break;
+    }
+    return a;
+}
+
+static void CreateInitialKantoRoamerMon(void)
+{
+    struct Pokemon *mon = &gEnemyParty[0];
+    u16 species = GetKantoRoamerSpecies();
+    CreateMon(mon, species, 50, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+    ROAMER->species = species;
+    ROAMER->level = 50;
+    ROAMER->status = 0;
+    ROAMER->active = TRUE;
+    ROAMER->ivs = GetMonData(mon, MON_DATA_IVS);
+    ROAMER->personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    ROAMER->hp = GetMonData(mon, MON_DATA_MAX_HP);
+    ROAMER->cool = GetMonData(mon, MON_DATA_COOL);
+    ROAMER->beauty = GetMonData(mon, MON_DATA_BEAUTY);
+    ROAMER->cute = GetMonData(mon, MON_DATA_CUTE);
+    ROAMER->smart = GetMonData(mon, MON_DATA_SMART);
+    ROAMER->tough = GetMonData(mon, MON_DATA_TOUGH);
+    sRoamerLocation[MAP_GRP] = ROAMER_MAP_GROUP;
+    sRoamerLocation[MAP_NUM] = ROAMER_LOCATION(Random() % NUM_LOCATION_SETS, 0);
 }
 
 static void CreateInitialRoamerMon(bool16 createLatios)
@@ -101,7 +191,7 @@ static void CreateInitialRoamerMon(bool16 createLatios)
     ROAMER->smart = GetMonData(&gEnemyParty[0], MON_DATA_SMART);
     ROAMER->tough = GetMonData(&gEnemyParty[0], MON_DATA_TOUGH);
     sRoamerLocation[MAP_GRP] = ROAMER_MAP_GROUP;
-    sRoamerLocation[MAP_NUM] = sRoamerLocations[Random() % NUM_LOCATION_SETS][0];
+    sRoamerLocation[MAP_NUM] = ROAMER_LOCATION(Random() % NUM_LOCATION_SETS, 0);
 }
 
 // gSpecialVar_0x8004 here corresponds to the options in the multichoice MULTI_TV_LATI (0 for 'Red', 1 for 'Blue')
@@ -109,7 +199,10 @@ void InitRoamer(void)
 {
     ClearRoamerData();
     ClearRoamerLocationData();
-    CreateInitialRoamerMon(gSpecialVar_0x8004);
+    if (IS_KANTO_ROAMER())
+        CreateInitialKantoRoamerMon();
+    else
+        CreateInitialRoamerMon(gSpecialVar_0x8004);
 }
 
 void UpdateLocationHistoryForRoamer(void)
@@ -137,7 +230,7 @@ void RoamerMoveToOtherLocationSet(void)
     // different from the roamer's current map
     while (1)
     {
-        mapNum = sRoamerLocations[Random() % NUM_LOCATION_SETS][0];
+        mapNum = ROAMER_LOCATION(Random() % NUM_LOCATION_SETS, 0);
         if (sRoamerLocation[MAP_NUM] != mapNum)
         {
             sRoamerLocation[MAP_NUM] = mapNum;
@@ -162,14 +255,14 @@ void RoamerMove(void)
         while (locSet < NUM_LOCATION_SETS)
         {
             // Find the location set that starts with the roamer's current map
-            if (sRoamerLocation[MAP_NUM] == sRoamerLocations[locSet][0])
+            if (sRoamerLocation[MAP_NUM] == ROAMER_LOCATION(locSet, 0))
             {
                 u8 mapNum;
                 while (1)
                 {
                     // Choose a new map (excluding the first) within this set
                     // Also exclude a map if the roamer was there 2 moves ago
-                    mapNum = sRoamerLocations[locSet][(Random() % (NUM_LOCATIONS_PER_SET - 1)) + 1];
+                    mapNum = ROAMER_LOCATION(locSet, (Random() % (NUM_LOCATIONS_PER_SET - 1)) + 1);
                     if (!(sLocationHistory[2][MAP_GRP] == ROAMER_MAP_GROUP
                        && sLocationHistory[2][MAP_NUM] == mapNum)
                        && mapNum != MAP_NUM(MAP_UNDEFINED))
@@ -193,13 +286,13 @@ bool8 IsRoamerAt(u8 mapGroup, u8 mapNum)
 
 void CreateRoamerMonInstance(void)
 {
-    u32 UNUSED status;
+    u32 status;
     struct Pokemon *mon = &gEnemyParty[0];
     ZeroEnemyPartyMons();
     CreateMonWithIVsPersonality(mon, ROAMER->species, ROAMER->level, ROAMER->ivs, ROAMER->personality);
 // The roamer's status field is u8, but SetMonData expects status to be u32, so will set the roamer's status
 // using the status field and the following 3 bytes (cool, beauty, and cute).
-#ifdef BUGFIX
+#if defined(BUGFIX) || defined(PORTABLE) // PokemonNative3G : bug corrigé
     status = ROAMER->status;
     SetMonData(mon, MON_DATA_STATUS, &status);
 #else
@@ -243,4 +336,12 @@ void GetRoamerLocation(u8 *mapGroup, u8 *mapNum)
 {
     *mapGroup = sRoamerLocation[MAP_GRP];
     *mapNum = sRoamerLocation[MAP_NUM];
+}
+
+// Rouge Feu (Pokédex : zone du vagabond)
+u16 GetRoamerLocationMapSectionId(void)
+{
+    if (!ROAMER->active)
+        return MAPSEC_NONE;
+    return Overworld_GetMapHeaderByGroupAndId(sRoamerLocation[MAP_GRP], sRoamerLocation[MAP_NUM])->regionMapSectionId;
 }

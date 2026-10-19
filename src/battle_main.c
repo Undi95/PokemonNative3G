@@ -5273,7 +5273,7 @@ static void ReturnFromBattleToOverworld(void)
     {
         UpdateRoamerHPStatus(&gEnemyParty[0]);
 
-#ifndef BUGFIX
+#if !defined(BUGFIX) && !defined(PORTABLE) // PokemonNative3G : bug corrigé (chiens de RF, Latios/Latias)
         // Bug: When Roar is used by a roamer, gBattleOutcome is B_OUTCOME_PLAYER_TELEPORTED (5),
         // which deactivates the roamer.
         if ((gBattleOutcome & B_OUTCOME_WON) || gBattleOutcome == B_OUTCOME_CAUGHT)
