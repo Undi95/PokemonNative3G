@@ -11,6 +11,7 @@
 #include "malloc.h"
 #include "menu.h"
 #include "menu_helpers.h"
+#include "palette.h"
 #include "script.h"
 #include "sound.h"
 #include "string_util.h"
@@ -68,6 +69,12 @@ static EWRAM_DATA u16 sElevatorScroll = 0;
 static EWRAM_DATA u16 sElevatorCursorPos = 0;
 static EWRAM_DATA struct ListMenuItem * sListMenuItems = NULL;
 static EWRAM_DATA u16 sListMenuLastScrollPosition = 0;
+static EWRAM_DATA struct ListMenuTemplate sFieldSpecialsListMenuTemplate = {0};
+static EWRAM_DATA u16 sFieldSpecialsListMenuScrollBuffer = 0;
+
+// strings de RF
+static const u8 gOtherText_Exit[] = _("RETOUR");
+static const u8 gOtherText_Quit[] = _("QUITTER");
 
 static void Task_ElevatorShake(u8 taskId);
 static void AnimateElevatorWindowView(u16 nfloors, bool8 direction);
@@ -456,7 +463,7 @@ void DrawElevatorCurrentFloorWindow(void)
     u32 strwidth;
 
     sElevatorCurrentFloorWindowId = AddWindow(&sElevatorCurrentFloorWindowTemplate);
-    LoadStdWindowGfx(sElevatorCurrentFloorWindowId, 0x21D, BG_PLTT_ID(13));
+    LoadUserWindowBorderGfx(sElevatorCurrentFloorWindowId, 0x21D, BG_PLTT_ID(13)); // LoadStdWindowGfx de RF
     DrawStdFrameWithCustomTileAndPalette(sElevatorCurrentFloorWindowId, FALSE, 0x21D, 13);
     AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_NORMAL, sText_NowOn, 0, 2, 0xFF, NULL);
     floorname = sFloorNamePointers[gSpecialVar_0x8005];
@@ -699,18 +706,18 @@ static void Task_CreateScriptListMenu(u8 taskId)
     mwidth = 0;
     for (i = 0; i < task->data[1]; i++)
     {
-        sListMenuItems[i].label = sListMenuLabels[gSpecialVar_0x8004][i];
-        sListMenuItems[i].index = i;
-        width = GetStringWidth(FONT_NORMAL, sListMenuItems[i].label, 0);
+        sListMenuItems[i].name = sListMenuLabels[gSpecialVar_0x8004][i];
+        sListMenuItems[i].id = i;
+        width = GetStringWidth(FONT_NORMAL, sListMenuItems[i].name, 0);
         if (width > mwidth)
             mwidth = width;
     }
     task->data[4] = (mwidth + 9) / 8 + 1;
     if (task->data[2] + task->data[4] > 29)
         task->data[2] = 29 - task->data[4];
-    template = SetWindowTemplateFields(0, task->data[2], task->data[3], task->data[4], task->data[5], 15, 0x038);
+    template = CreateWindowTemplate(0, task->data[2], task->data[3], task->data[4], task->data[5], 15, 0x038);
     task->data[13] = windowId = AddWindow(&template);
-    SetStdWindowBorderStyle(task->data[13], 0);
+    SetStandardWindowBorderStyle(task->data[13], 0);
     sFieldSpecialsListMenuTemplate.totalItems = task->data[1];
     sFieldSpecialsListMenuTemplate.maxShowed = task->data[0];
     sFieldSpecialsListMenuTemplate.windowId = task->data[13];
