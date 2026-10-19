@@ -53,6 +53,17 @@ static char *sDataDir;
 static bool sTestMode = false;
 // --kanto-start 1 : une nouvelle partie démarre à Bourg Palette (builds KANTO_DEBUG=1, tests)
 bool8 gKantoStart = FALSE;
+
+// Source d'aléa pour la graine du RNG et l'ID dresseur : le timer de la GBA (REG_TM1CNT_L)
+// n'est pas émulé. En mode test : 0, pour garder les scénarios reproductibles.
+u32 Platform_GetEntropy(void)
+{
+    u64 c;
+    if (sTestMode)
+        return 0;
+    c = SDL_GetPerformanceCounter() ^ ((u64)time(NULL) << 16);
+    return (u32)(c ^ (c >> 32));
+}
 static FILE *sTestInput;
 static FILE *sTestHashes;
 static const char *sTestShotDir;

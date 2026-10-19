@@ -156,8 +156,8 @@ void AgbMain(void)
     CheckForFlashMemory();
     InitMainCallbacks();
     InitMapMusic();
-#ifdef BUGFIX
-    SeedRngWithRtc(); // see comment at SeedRngWithRtc definition below
+#if defined(BUGFIX) || defined(PORTABLE)
+    SeedRngWithRtc(); // see comment at SeedRngWithRtc definition below (PokemonNative3G : bug corrigé)
 #endif
     ClearDma3Requests();
     ResetBgs();
@@ -226,9 +226,17 @@ void StartTimer1(void)
     REG_TM1CNT_H = 0x80;
 }
 
+#ifdef PORTABLE
+extern u32 Platform_GetEntropy(void); // src/platform/sdl2.c
+#endif
+
 void SeedRngAndSetTrainerId(void)
 {
+#ifdef PORTABLE
+    u16 val = Platform_GetEntropy(); // REG_TM1CNT_L : timer GBA non émulé sur PC (valait toujours 0)
+#else
     u16 val = REG_TM1CNT_L;
+#endif
     SeedRng(val);
     REG_TM1CNT_H = 0;
     sTrainerId = val;
@@ -247,12 +255,19 @@ void EnableVCountIntrAtLine150(void)
 }
 
 // FRLG commented this out to remove RTC, however Emerald didn't undo this!
-#ifdef BUGFIX
+// PokemonNative3G : corrigé (graine toujours 0 au démarrage dans Émeraude). Sur PC, graine 32 bits
+// tirée de l'horloge haute résolution plutôt que des minutes de la RTC.
+#if defined(BUGFIX) || defined(PORTABLE)
 static void SeedRngWithRtc(void)
 {
+#ifdef PORTABLE
+    SeedRng(0);
+    gRngValue = Platform_GetEntropy();
+#else
     u32 seed = RtcGetMinuteCount();
     seed = (seed >> 16) ^ (seed & 0xFFFF);
     SeedRng(seed);
+#endif
 }
 #endif
 
