@@ -26,11 +26,13 @@ Outils : DEBUG > « Recevoir MEWTWO » (nv 70) ; l'état de test (build KANTO_DE
   place RF dans le bloc Kanto ; musiques RF (approche, combat, victoire) ; nom du rival en combat ;
   `TRAINER_BATTLE_EARLY_RIVAL` (13) de RF. Testés : arène d'Argenta (`kanto_trainer`), rival du labo (`kanto_rival`) ;
 - pas des PNJ RF alternés (`sKantoStepAnimTables` dans `GetStepAnimTable`).
-Prochaine étape : contrôleur de combat « Chen / vieil homme » de RF (tutoriel du combat du labo,
-démonstration de capture à Jadielle).
+- démonstration de capture du vieil homme de Jadielle (`src/battle_controller_old_man.c`, d'après le
+  contrôleur RF, sur la base de celui de Wally : même type de combat ; `IsOldManTutorialBattle()`).
+  Testée avec `kanto_old_man` (nécessite VAR_KANTO_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN = 1, c.-à-d. le POKéDEX reçu).
+  Sac : celui d'Émeraude en mode démonstration.
 
 ## Dettes (provisoire → importer depuis RF)
-- Combat : `RIVAL_BATTLE_TUTORIAL` sans les conseils de Chen (contrôleur `battle_controller_oak_old_man.c` de RF à porter) ; rematchs RF (Cherche VS) ; Tour Dresseurs.
+- Combat : conseils de Chen pendant le combat du labo NON importés (décision utilisateur : Kanto vient après Hoenn) ; rematchs RF (Cherche VS) ; Tour Dresseurs.
 - 142 specials RF en stubs (`src/kanto_specials_stubs.c`, log console).
 - Polices homme/femme RF (FONT_MALE/FEMALE → police normale), textcolor/signmsg (couleur/style boîte RF), système d'aide RF, `walk_slower_*` → walk_slow.
 - Objets « clone » RF, objets cachés quantité/underfoot, comportements de tuiles décoratifs/énigmes (BEHAVIOR_ALIASES), anims de tilesets (callback NULL), effets de terrain RF.
