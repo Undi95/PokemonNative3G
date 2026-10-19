@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_field_door.h"
 #include "event_data.h"
 #include "field_door.h"
 #include "field_camera.h"
@@ -508,20 +509,41 @@ static void UNUSED Debug_FieldAnimateDoorOpen(u32 x, u32 y)
     StartDoorOpenAnimation(sDoorAnimGraphicsTable, x, y);
 }
 
+// Les cartes importées de Kanto utilisent les portes de Rouge Feu (src/kanto_field_door.c).
+extern const struct Tileset gTileset_KantoGeneral, gTileset_KantoBuilding;
+
+bool32 IsKantoTilesetMap(void)
+{
+    const struct Tileset *primary = gMapHeader.mapLayout->primaryTileset;
+    return primary == &gTileset_KantoGeneral || primary == &gTileset_KantoBuilding;
+}
+
 void FieldSetDoorOpened(u32 x, u32 y)
 {
+    if (IsKantoTilesetMap())
+    {
+        Kanto_FieldSetDoorOpened(x, y);
+        return;
+    }
     if (MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))
         DrawOpenedDoor(sDoorAnimGraphicsTable, x, y);
 }
 
 void FieldSetDoorClosed(u32 x, u32 y)
 {
+    if (IsKantoTilesetMap())
+    {
+        Kanto_FieldSetDoorClosed(x, y);
+        return;
+    }
     if (MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))
         DrawClosedDoor(sDoorAnimGraphicsTable, x, y);
 }
 
 s8 FieldAnimateDoorClose(u32 x, u32 y)
 {
+    if (IsKantoTilesetMap())
+        return Kanto_FieldAnimateDoorClose(x, y);
     if (!MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))
         return -1;
     else
@@ -530,6 +552,8 @@ s8 FieldAnimateDoorClose(u32 x, u32 y)
 
 s8 FieldAnimateDoorOpen(u32 x, u32 y)
 {
+    if (IsKantoTilesetMap())
+        return Kanto_FieldAnimateDoorOpen(x, y);
     if (!MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))
         return -1;
     else
@@ -538,11 +562,15 @@ s8 FieldAnimateDoorOpen(u32 x, u32 y)
 
 bool8 FieldIsDoorAnimationRunning(void)
 {
+    if (Kanto_FieldIsDoorAnimationRunning())
+        return TRUE;
     return FuncIsActiveTask(Task_AnimateDoor);
 }
 
 u32 GetDoorSoundEffect(u32 x, u32 y)
 {
+    if (IsKantoTilesetMap())
+        return Kanto_GetDoorSoundEffect(x, y);
     int sound = GetDoorSoundType(sDoorAnimGraphicsTable, x, y);
 
     if (sound == DOOR_SOUND_NORMAL)
