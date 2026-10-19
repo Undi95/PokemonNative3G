@@ -828,6 +828,7 @@ static bool32 WaitForWallpaperGfxLoad(void);
 static void DrawWallpaper(const void *, s8, u8);
 static void TrimOldWallpaper(void *);
 static void AddWallpaperSetsMenu(void);
+static void AddKantoWallpaperSetsMenu(void);
 static void AddWallpapersMenu(u8);
 static u8 GetBoxWallpaper(u8);
 static void SetBoxWallpaper(u8, u8);
