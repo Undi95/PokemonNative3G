@@ -8,15 +8,9 @@
 - graphicsId 16 bits ; 152 sprites RF (`gen_objects.py`, ids 0x100+). Non-régression Hoenn vérifiée (`compare.py` = identique).
 - Conversion scripts/textes RF (`import_scripts.py`, appelé par import_kanto) : labels, flags/vars, sprites, localid, musiques, macros RF (`asm/macros/kanto_event.inc`), commandes RF (`src/kanto_scrcmd.c`, opcodes 0xc7-0xcc/0xd0/0xe3), menus/chaînes/échanges RF ajoutés en fin de tables (`gen_script_menu.py`), braille RF.
 
-## En cours (2026-10-19) : assemblage OK, reste l'édition de liens
-Les 5 points précédents sont soldés (event_scripts.o et trade.o compilent). Build : `TAILN=100000` dans `docker run -e` donne tout le log ; `grep -oE "undefined reference to .[A-Za-z0-9_]+"` liste les symboles.
-Symboles non définis à l'édition de liens (~150), à générer/importer depuis RF dans les générateurs (import_scripts / import_kanto) :
-1. `NPC_TEXT_COLOR_{MALE,FEMALE,NEUTRAL,MON}` (constantes RF de textcolor).
-2. `METATILE_*` (SilphCo, PokemonMansion, CinnabarGym, VermilionGym, PokemonLeague, GameCorner, Cave_*, PokemonCenter_*, Mart_*, TrainerTower, SeviiIslands, MtEmber) : copier include/constants/metatile_labels.h de RF (préfixer KANTO_ si collision, valeurs = numéros RF).
-3. `HEAL_LOCATION_*` de Kanto (19 villes) : étendre la table de heal_locations d'Émeraude à la fin.
-4. `LAYOUT_*` utilisés par les scripts (THREE_ISLAND_DUNSPARCE_TUNNEL_DUG_OUT, SEVEN_ISLAND_HOUSE_ROOM1_DOOR_OPEN, SEAFOAM_ISLANDS_B3F/B4F_CURRENT_STOPPED) : noms de layouts Kanto à mapper.
-5. Divers : `FLDEFF_PHOTO_FLASH`, `FLDEFF_SMILEY_FACE_ICON`, `SE_RS_DOOR`, `SE_RS_SHOP`, `MOVEMENT_TYPE_WANDER_AROUND_SLOWER` (alias de WANDER_AROUND), `STEP_CB_ICE`, fonctions `SetBattledTrainerFlag`, `GetDaycarePokemonCount`, `AwardBattleTowerRibbons` (stubs).
-Puis : régénérer (gen_script_menu puis import_kanto --all, nécessite `pip install pillow` sous Windows), commit, build Docker winwsl.
+## En cours (2026-10-19) : le build winwsl passe, à tester
+Le .exe est produit (`out/winwsl/pokeemeraude64.exe`, KANTO_DEBUG=1). Symboles ajoutés : METATILE_* RF (`include/constants/kanto/metatile_labels.h`), lieux de soin RF (fin de `src/data/heal_locations.json`), alias de scripts (`kanto/script_aliases.h` : NPC_TEXT_COLOR, SE_RS_*, STEP_CB_ICE provisoire), FLDEFF_PHOTO_FLASH/SMILEY_FACE_ICON (ids 67/68, scripts vides), layouts de remplacement (setmaplayoutindex), 3 specials en stubs.
+Prochaine étape : lancer le .exe, tester le menu DEBUG (Start) puis marcher dans Kanto, corriger les plantages.
 
 ## Dettes (provisoire → importer depuis RF)
 - Dresseurs : `TRAINER_KANTO_*` = TRAINER_NONE (478) — importer dresseurs, classes, sprites, `TRAINER_BATTLE_EARLY_RIVAL`, flags dresseurs Kanto, décors de combat du Conseil 4 + transitions.
