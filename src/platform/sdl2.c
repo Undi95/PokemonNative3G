@@ -484,6 +484,16 @@ void ProcessEvents(void)
     // Fast-forward while it's held
     Input_GetButtons(&speedUp);
     timeScale = speedUp ? 5.0 : 1.0;
+
+    // Soft reset when its key (key_reset in the settings, F5 by default) goes down
+    {
+        static bool sWasResetHeld;
+        bool resetHeld = Input_IsResetHeld();
+
+        if (resetHeld && !sWasResetHeld && !sTestMode)
+            RequestSoftReset();
+        sWasResetHeld = resetHeld;
+    }
 }
 
 static void ToggleFullscreen(void)

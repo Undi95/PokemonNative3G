@@ -20,6 +20,8 @@ void LoadSettings(const char *path);
 void Input_HandleEvent(const SDL_Event *event);
 // The GBA buttons held on the keyboard and the controllers, as KEYINPUT bits
 u16 Input_GetButtons(bool *speedUp);
+// Whether the soft reset key was held at the last Input_GetButtons
+bool Input_IsResetHeld(void);
 
 // The headless test mode's keyboard and controller. Input names are "key:" and
 // a key, or "pad:" and a controller input, like in the settings file.

@@ -8,7 +8,7 @@
 #include "platform/settings.h"
 
 // What the keyboard and controllers can do: the GBA buttons, in the order of
-// their bits in KEYINPUT, and fast-forward
+// their bits in KEYINPUT, fast-forward and the soft reset
 enum
 {
     BINDING_A,
@@ -22,11 +22,12 @@ enum
     BINDING_R,
     BINDING_L,
     BINDING_SPEEDUP,
+    BINDING_RESET,
     NUM_BINDINGS
 };
 
 static const char *const sBindingNames[NUM_BINDINGS] = {
-    "a", "b", "select", "start", "right", "left", "up", "down", "r", "l", "speedup",
+    "a", "b", "select", "start", "right", "left", "up", "down", "r", "l", "speedup", "reset",
 };
 
 #define MAX_BINDING_INPUTS 4
@@ -82,6 +83,8 @@ static const char sDefaultSettings[] =
     "key_left = Left\n"
     "key_right = Right\n"
     "key_speedup = Space\n"
+    "# Soft reset (back to the title screen, like A+B+START+SELECT)\n"
+    "key_reset = F5\n"
     "\n"
     "# The controller inputs for each button: a, b, x and y (where they are on an\n"
     "# Xbox controller), back, start, guide, leftshoulder, rightshoulder,\n"
@@ -280,6 +283,12 @@ void LoadSettings(const char *path)
     text[size] = '\0';
     fclose(file);
     ParseSettings(text, path);
+    // Settings files from older versions lack the reset key: add its default line
+    if (strstr(text, "key_reset") == NULL && (file = fopen(path, "ab")) != NULL)
+    {
+        fputs("\n# Soft reset (back to the title screen, like A+B+START+SELECT)\nkey_reset = F5\n", file);
+        fclose(file);
+    }
     free(text);
 }
 
@@ -358,6 +367,13 @@ static u32 BindingsHeld(const Uint8 *keyboard, const struct PadState *pads, int 
     return held;
 }
 
+static bool sResetHeld;
+
+bool Input_IsResetHeld(void)
+{
+    return sResetHeld;
+}
+
 u16 Input_GetButtons(bool *speedUp)
 {
     struct PadState pads[MAX_CONTROLLERS];
@@ -378,6 +394,7 @@ u16 Input_GetButtons(bool *speedUp)
     held = BindingsHeld(SDL_GetKeyboardState(NULL), pads, numPads);
     if (speedUp != NULL)
         *speedUp = (held >> BINDING_SPEEDUP) & 1;
+    sResetHeld = (held >> BINDING_RESET) & 1;
     return held & KEYS_MASK;
 }
 
