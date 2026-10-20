@@ -8,6 +8,8 @@ carte et la carte dresseur, intro du camion / `--kanto-start`, palette du dos de
 rival dans son texte de victoire, téléporteur de l'arène de Safrania, marche lente sur les escaliers de
 roche (Plateau Indigo), dresseurs d'Argenta.
 
+- [ ] F5 = reset du jeu (retour à l'écran titre) ; touche modifiable via `key_reset` dans pokeemerald.ini (ligne ajoutée automatiquement aux .ini existants)
+
 ## Option PERSO (RED / LEAF)
 - [ ] LEAF partout : carte, carte dresseur, dos en combat (et ses frames de lancer)
 - [ ] RED / LEAF : vélo (Course et Cross), surf, pêche, capacité de terrain (Coupe, Éclate-Roc…)
