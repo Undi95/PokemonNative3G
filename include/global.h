@@ -584,6 +584,7 @@ struct SaveBlock2
              u16 optionsPlayerCharacter:1; // PokemonNative3G : 0 = Brice/Flora (Émeraude), 1 = Red/Leaf (Rouge Feu)
              u16 optionsTitleScreen:1;     // PokemonNative3G : 0 = écran titre d'Émeraude, 1 = de Rouge Feu
              u16 optionsDialogStyle:1;     // PokemonNative3G : boîte de dialogue 0 = Hoenn (Émeraude), 1 = Kanto (Rouge Feu)
+             u16 optionsPokedexStyle:1;    // PokemonNative3G : Pokédex 0 = Hoenn (Émeraude), 1 = Kanto (Rouge Feu)
              u16 optionsBattleUI:1;        // PokemonNative3G : boîtes de combat 0 = Hoenn (Émeraude), 1 = Kanto (Rouge Feu)
     /*0x18*/ struct Pokedex pokedex;
     /*0x90*/ u8 filler_90[0x8];
