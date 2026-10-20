@@ -15,7 +15,7 @@ def play(game):
     give_mewtwo(game)
     game.wait(30); game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
     game.tap("DOWN", 10, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
-    game.wait(60); game.tap("UP", 5, gap=20); game.wait(60)    # menu Start : POKéMON
+    game.wait(120); game.tap("UP", 4, gap=40); game.wait(60)   # menu Start : POKéMON
     game.tap("A"); game.wait(240)                                # équipe
     game.tap("A"); game.wait(60); game.tap("A"); game.wait(240)  # RÉSUMÉ
     game.tap("B"); game.wait(200); game.tap("B"); game.wait(200)

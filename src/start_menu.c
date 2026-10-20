@@ -546,6 +546,9 @@ static bool32 InitStartMenuStep(void)
         break;
     case 2:
         LoadMessageBoxAndBorderGfx();
+        // Rouge Feu : bande de description, dessinée avant le menu (plus haut dans Émeraude) qui passe devant
+        ResetHelpMessageWindowId();
+        PrintStartMenuDescription();
         DrawStdWindowFrame(AddStartMenuWindow(sNumStartMenuActions), FALSE);
         sInitStartMenuData[1] = 0;
         sInitStartMenuData[0]++;
@@ -564,8 +567,6 @@ static bool32 InitStartMenuStep(void)
     case 5:
         sStartMenuCursorPos = InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 9, 16, sNumStartMenuActions, sStartMenuCursorPos);
         CopyWindowToVram(GetStartMenuWindowId(), COPYWIN_MAP);
-        ResetHelpMessageWindowId();
-        PrintStartMenuDescription();
         return TRUE;
     }
 
