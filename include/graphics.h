@@ -4098,6 +4098,7 @@ extern const u32 gHealthboxSinglesOpponentGfx[];
 extern const u32 gHealthboxDoublesPlayerGfx[];
 extern const u32 gHealthboxDoublesOpponentGfx[];
 extern const u32 gHealthboxSafariGfx[];
+extern const u32 gKantoPartyMenuBg_Pal[];
 extern const u32 gKantoBattleTextboxTiles[];
 extern const u32 gKantoBattleTextboxPalette[];
 extern const u16 gKantoBattleInterface_Healthbox_Pal[];

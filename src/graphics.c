@@ -1122,6 +1122,8 @@ const u32 gBattleAnimSpritePal_WhiteShadow[] = INCGFX_U32("graphics/battle_anims
 
 const u32 gPartyMenuBg_Gfx[] = INCGFX_U32("graphics/party_menu/bg.png", ".4bpp.lz", "-num_tiles 62 -Wnum_tiles");
 const u32 gPartyMenuBg_Pal[] = INCGFX_U32("graphics/party_menu/bg.pal", ".gbapal.lz");
+// Rouge Feu : mêmes tuiles, palettes 1 et 2 différentes (option MENUS = KANTO)
+const u32 gKantoPartyMenuBg_Pal[] = INCGFX_U32("graphics/kanto/party_menu/bg.png", ".gbapal.lz");
 const u32 gPartyMenuBg_Tilemap[] = INCGFX_U32("graphics/party_menu/bg.bin", ".lz");
 
 const u32 gPartyMenuPokeball_Gfx[] = INCGFX_U32("graphics/party_menu/pokeball.png", ".4bpp.lz");

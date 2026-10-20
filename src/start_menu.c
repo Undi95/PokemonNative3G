@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_help_message.h"
 #include "kanto_pokedex.h"
 #include "constants/kanto.h"
 #include "battle_pike.h"
@@ -141,6 +142,48 @@ static void SaveGameTask(u8 taskId);
 static void Task_SaveAfterLinkBattle(u8 taskId);
 static void Task_WaitForBattleTowerLinkSave(u8 taskId);
 static bool8 FieldCB_ReturnToFieldStartMenu(void);
+
+// Rouge Feu (strings_1_fr.h) : descriptions du menu Start (option MENUS = KANTO)
+static const u8 gStartMenuDesc_Pokedex[] = _("Un appareil enregistrant les infos sur\nles POKéMON lors d'une rencontre.");
+static const u8 gStartMenuDesc_Pokemon[] = _("Examiner et organiser les POKéMON\nde votre équipe.");
+static const u8 gStartMenuDesc_Bag[] = _("Avec des poches pour ranger les\nobjets collectés.");
+static const u8 gStartMenuDesc_Player[] = _("Vérifier vos comptes et d'autres\ndonnées.");
+static const u8 gStartMenuDesc_Save[] = _("Sauvegarder toute votre partie\npour faire une pause.");
+static const u8 gStartMenuDesc_Option[] = _("Régler les paramètres de jeu.");
+static const u8 gStartMenuDesc_Exit[] = _("Fermer ce menu.");
+static const u8 gStartMenuDesc_Retire[] = _("Quitter le JEU SAFARI et retourner\nà l'accueil.");
+// PokemonNative3G : entrées d'Émeraude absentes de RF
+static const u8 gStartMenuDesc_PokeNav[] = _("Un appareil multifonction avec carte
+et appels.");
+static const u8 gStartMenuDesc_Debug[] = _("Menu de test.");
+
+static const u8 *const sStartMenuDescPointers[] =
+{
+    [MENU_ACTION_POKEDEX]         = gStartMenuDesc_Pokedex,
+    [MENU_ACTION_POKEMON]         = gStartMenuDesc_Pokemon,
+    [MENU_ACTION_BAG]             = gStartMenuDesc_Bag,
+    [MENU_ACTION_POKENAV]         = gStartMenuDesc_PokeNav,
+    [MENU_ACTION_PLAYER]          = gStartMenuDesc_Player,
+    [MENU_ACTION_SAVE]            = gStartMenuDesc_Save,
+    [MENU_ACTION_OPTION]          = gStartMenuDesc_Option,
+    [MENU_ACTION_EXIT]            = gStartMenuDesc_Exit,
+    [MENU_ACTION_RETIRE_SAFARI]   = gStartMenuDesc_Retire,
+    [MENU_ACTION_PLAYER_LINK]     = gStartMenuDesc_Player,
+    [MENU_ACTION_REST_FRONTIER]   = gStartMenuDesc_Save,
+    [MENU_ACTION_RETIRE_FRONTIER] = gStartMenuDesc_Retire,
+    [MENU_ACTION_PYRAMID_BAG]     = gStartMenuDesc_Bag,
+    [MENU_ACTION_DEBUG]           = gStartMenuDesc_Debug,
+};
+
+// Rouge Feu (start_menu.c) : description de l'entrée sélectionnée
+static void PrintStartMenuDescription(void)
+{
+    if (gSaveBlock2Ptr->optionsMenuStyle && !IsOverworldLinkActive())
+    {
+        CreateHelpMessageWindow();
+        PrintTextOnHelpMessageWindow(sStartMenuDescPointers[sCurrentStartMenuActions[sStartMenuCursorPos]], COPYWIN_FULL);
+    }
+}
 
 static const struct WindowTemplate sWindowTemplate_SafariBalls = {
     .bg = 0,
@@ -444,6 +487,7 @@ static void ShowPyramidFloorWindow(void)
 
 static void RemoveExtraStartMenuWindows(void)
 {
+    DestroyHelpMessageWindow(COPYWIN_FULL); // Rouge Feu (option MENUS = KANTO)
     if (GetSafariZoneFlag())
     {
         ClearStdWindowAndFrameToTransparent(sSafariBallsWindowId, FALSE);
@@ -521,6 +565,8 @@ static bool32 InitStartMenuStep(void)
     case 5:
         sStartMenuCursorPos = InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 9, 16, sNumStartMenuActions, sStartMenuCursorPos);
         CopyWindowToVram(GetStartMenuWindowId(), COPYWIN_MAP);
+        ResetHelpMessageWindowId();
+        PrintStartMenuDescription();
         return TRUE;
     }
 
@@ -607,12 +653,14 @@ static bool8 HandleStartMenuInput(void)
     {
         PlaySE(SE_SELECT);
         sStartMenuCursorPos = Menu_MoveCursor(-1);
+        PrintStartMenuDescription();
     }
 
     if (JOY_NEW(DPAD_DOWN))
     {
         PlaySE(SE_SELECT);
         sStartMenuCursorPos = Menu_MoveCursor(1);
+        PrintStartMenuDescription();
     }
 
     if (JOY_NEW(A_BUTTON))
