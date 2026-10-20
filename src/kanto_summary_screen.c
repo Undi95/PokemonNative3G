@@ -1,5 +1,6 @@
 // Rouge Feu : pokemon_summary_screen.c (option MENUS = KANTO). Textes et graphismes de RF.
 #include "global.h"
+#include <stdio.h> // DEBUG
 #include "battle_anim.h"
 #include "battle_interface.h"
 #include "battle_main.h"
@@ -3128,14 +3129,18 @@ static void Task_DestroyResourcesOnExit(u8 taskId)
 
     FREE_AND_SET_NULL_IF_SET(sMonSummaryScreen);
     FREE_AND_SET_NULL_IF_SET(sMonSkillsPrinterXpos);
+    fprintf(stderr, "X\n"); fflush(stderr); // DEBUG
 }
 
 static void CB2_RunPokemonSummaryScreen(void)
 {
     RunTasks();
+    fprintf(stderr, "C1\n"); fflush(stderr); // DEBUG
     AnimateSprites();
+    fprintf(stderr, "C2\n"); fflush(stderr); // DEBUG
     BuildOamBuffer();
     UpdatePaletteFade();
+    fprintf(stderr, "C3\n"); fflush(stderr); // DEBUG
 }
 
 static void PokeSum_FlipPages_SlideHpExpBarsOut(void)
@@ -3256,6 +3261,7 @@ static void PokeSum_FlipPages_HandleHpExpBarSprites(void)
 
 static void VBlankCB_PokemonSummaryScreen(void)
 {
+    fprintf(stderr, "V\n"); fflush(stderr); // DEBUG
     LoadOam();
     ProcessSpriteCopyRequests();
     TransferPlttBuffer();
