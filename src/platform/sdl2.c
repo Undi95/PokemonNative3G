@@ -144,7 +144,7 @@ int main(int argc, char **argv)
     }
 
     videoScale = gSettings.scale;
-    sdlWindow = SDL_CreateWindow("pokeemerald", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DISPLAY_WIDTH * videoScale, DISPLAY_HEIGHT * videoScale,
+    sdlWindow = SDL_CreateWindow("PokemonNative3G", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DISPLAY_WIDTH * videoScale, DISPLAY_HEIGHT * videoScale,
                                  SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | (gSettings.fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
     if (sdlWindow == NULL)
     {
