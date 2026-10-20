@@ -1,6 +1,8 @@
 #ifndef GUARD_KANTO_SUMMARY_SCREEN_H
 #define GUARD_KANTO_SUMMARY_SCREEN_H
 
+#include "main.h"
+
 // Rouge Feu : pokemon_summary_screen.h (option MENUS = KANTO)
 // The Pokemon Summary Screen can operate in different modes. Certain features,
 // such as move re-ordering, are available in the different modes.
