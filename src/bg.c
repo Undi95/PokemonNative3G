@@ -293,9 +293,62 @@ bool8 IsInvalidBg(u8 bg)
         return FALSE;
 }
 
-// From FRLG. Dummied out.
+// PokemonNative3G : version de Rouge Feu (bg.c), utilisée seulement quand gWindowTileAutoAllocEnabled
+// (écrans de RF, ex. le Pokédex : ResetBgsAndClearDma3BusyFlags(TRUE)).
+static u8 sGpuTileAllocationMapBg[0x100];
+
 int BgTileAllocOp(int bg, int offset, int count, int mode)
 {
+    int start, end;
+    int blockSize;
+    int blockStart;
+    int i;
+
+    switch (mode)
+    {
+    case 0:
+        start = GetBgControlAttribute(bg, BG_CTRL_ATTR_CHARBASEINDEX) * (BG_CHAR_SIZE / TILE_SIZE_4BPP);
+        end = start + 0x400;
+        if (end > 0x800)
+            end = 0x800;
+        blockSize = 0;
+        blockStart = 0;
+        for (i = start, offset = 0; i < end; i++, offset++)
+        {
+            if (!((sGpuTileAllocationMapBg[i / 8] >> (i % 8)) & 1))
+            {
+                if (blockSize)
+                {
+                    blockSize++;
+                    if (blockSize == count)
+                        return blockStart;
+                }
+                else
+                {
+                    blockStart = offset;
+                    blockSize = 1;
+                }
+            }
+            else
+            {
+                blockSize = 0;
+            }
+        }
+        return -1;
+    case 1:
+        start = GetBgControlAttribute(bg, BG_CTRL_ATTR_CHARBASEINDEX) * (BG_CHAR_SIZE / TILE_SIZE_4BPP) + offset;
+        end = start + count;
+        for (i = start; i < end; i++)
+            sGpuTileAllocationMapBg[i / 8] |= 1 << (i % 8);
+        break;
+    case 2:
+        start = GetBgControlAttribute(bg, BG_CTRL_ATTR_CHARBASEINDEX) * (BG_CHAR_SIZE / TILE_SIZE_4BPP) + offset;
+        end = start + count;
+        for (i = start; i < end; i++)
+            sGpuTileAllocationMapBg[i / 8] &= ~(1 << (i % 8));
+        break;
+    }
+
     return 0;
 }
 
@@ -310,6 +363,9 @@ void ResetBgsAndClearDma3BusyFlags(u32 leftoverFireRedLeafGreenVariable)
     }
 
     gWindowTileAutoAllocEnabled = leftoverFireRedLeafGreenVariable;
+
+    for (i = 0; i < (int)ARRAY_COUNT(sGpuTileAllocationMapBg); i++)
+        sGpuTileAllocationMapBg[i] = 0;
 }
 
 void InitBgsFromTemplates(u8 bgMode, const struct BgTemplate *templates, u8 numTemplates)
@@ -341,6 +397,8 @@ void InitBgsFromTemplates(u8 bgMode, const struct BgTemplate *templates, u8 numT
             sGpuBgConfigs2[bg].tilemap = NULL;
             sGpuBgConfigs2[bg].bg_x = 0;
             sGpuBgConfigs2[bg].bg_y = 0;
+
+            sGpuTileAllocationMapBg[(templates[i].charBaseIndex * (BG_CHAR_SIZE / TILE_SIZE_4BPP)) / 8] = 1; // RF
         }
     }
 }
@@ -367,6 +425,8 @@ void InitBgFromTemplate(const struct BgTemplate *template)
         sGpuBgConfigs2[bg].tilemap = NULL;
         sGpuBgConfigs2[bg].bg_x = 0;
         sGpuBgConfigs2[bg].bg_y = 0;
+
+        sGpuTileAllocationMapBg[(template->charBaseIndex * (BG_CHAR_SIZE / TILE_SIZE_4BPP)) / 8] = 1; // RF
     }
 }
 
