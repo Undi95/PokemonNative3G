@@ -17,6 +17,9 @@ static u16 RenderText(struct TextPrinter *);
 static u32 RenderFont(struct TextPrinter *);
 static u16 FontFunc_Small(struct TextPrinter *);
 static u16 FontFunc_Normal(struct TextPrinter *);
+static u16 FontFunc_Kanto(struct TextPrinter *);
+static u32 GetGlyphWidth_Kanto(u16, bool32);
+static void DecompressGlyph_Kanto(u16);
 static u16 FontFunc_Short(struct TextPrinter *);
 static u16 FontFunc_ShortCopy1(struct TextPrinter *);
 static u16 FontFunc_ShortCopy2(struct TextPrinter *);
@@ -89,7 +92,8 @@ static const struct GlyphWidthFunc sGlyphWidthFuncs[] =
     { FONT_SHORT_COPY_3, GetGlyphWidth_Short },
     { FONT_BRAILLE,      GetGlyphWidth_Braille },
     { FONT_NARROW,       GetGlyphWidth_Narrow },
-    { FONT_SMALL_NARROW, GetGlyphWidth_SmallNarrow }
+    { FONT_SMALL_NARROW, GetGlyphWidth_SmallNarrow },
+    { FONT_KANTO,        GetGlyphWidth_Kanto }
 };
 
 struct
@@ -217,6 +221,16 @@ static const struct FontInfo sFontInfos[] =
         .fgColor = 1,
         .bgColor = 2,
         .shadowColor = 15,
+    },
+    [FONT_KANTO] = {
+        .fontFunction = FontFunc_Kanto,
+        .maxLetterWidth = 6,
+        .maxLetterHeight = 16,
+        .letterSpacing = 0,
+        .lineSpacing = 0,
+        .fgColor = 2,
+        .bgColor = 1,
+        .shadowColor = 3,
     }
 };
 
@@ -231,7 +245,8 @@ static const u8 sMenuCursorDimensions[][2] =
     [FONT_BRAILLE]      = { 8,  16 },
     [FONT_NARROW]       = { 8,  15 },
     [FONT_SMALL_NARROW] = { 8,   8 },
-    [FONT_BOLD]         = {}
+    [FONT_BOLD]         = {},
+    [FONT_KANTO]        = { 8,  15 },
 };
 
 static const u16 sFontBoldJapaneseGlyphs[] = INCGFX_U16("graphics/fonts/japanese_bold.png", ".hwjpnfont");
@@ -697,6 +712,18 @@ static u16 FontFunc_Normal(struct TextPrinter *textPrinter)
     return RenderText(textPrinter);
 }
 
+static u16 FontFunc_Kanto(struct TextPrinter *textPrinter)
+{
+    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
+
+    if (subStruct->hasFontIdBeenSet == FALSE)
+    {
+        subStruct->fontId = FONT_KANTO;
+        subStruct->hasFontIdBeenSet = TRUE;
+    }
+    return RenderText(textPrinter);
+}
+
 static u16 FontFunc_Short(struct TextPrinter *textPrinter)
 {
     struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
@@ -1127,6 +1154,9 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             break;
         case FONT_NORMAL:
             DecompressGlyph_Normal(currChar, textPrinter->japanese);
+            break;
+        case FONT_KANTO:
+            DecompressGlyph_Kanto(currChar);
             break;
         case FONT_SHORT:
         case FONT_SHORT_COPY_1:
@@ -1890,6 +1920,24 @@ static u32 GetGlyphWidth_Normal(u16 glyphId, bool32 isJapanese)
         return 8;
     else
         return gFontNormalLatinGlyphWidths[glyphId];
+}
+
+// Rouge Feu (text.c : DecompressGlyphFont2, branche latine)
+static void DecompressGlyph_Kanto(u16 glyphId)
+{
+    const u16 *glyphs = gFontKantoLatinGlyphs + (0x20 * glyphId);
+
+    gCurGlyph.width = gFontKantoLatinGlyphWidths[glyphId];
+    DecompressGlyphTile(glyphs, gCurGlyph.gfxBufferTop);
+    DecompressGlyphTile(glyphs + 0x8, gCurGlyph.gfxBufferTop + 8);
+    DecompressGlyphTile(glyphs + 0x10, gCurGlyph.gfxBufferBottom);
+    DecompressGlyphTile(glyphs + 0x18, gCurGlyph.gfxBufferBottom + 8);
+    gCurGlyph.height = 14;
+}
+
+static u32 GetGlyphWidth_Kanto(u16 glyphId, bool32 isJapanese)
+{
+    return gFontKantoLatinGlyphWidths[glyphId];
 }
 
 static void DecompressGlyph_Bold(u16 glyphId)

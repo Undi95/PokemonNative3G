@@ -18,6 +18,7 @@ enum {
     FONT_NARROW,
     FONT_SMALL_NARROW, // Very similar to FONT_SMALL, some glyphs are narrower
     FONT_BOLD, // JP glyph set only
+    FONT_KANTO, // PokemonNative3G : police normale de Rouge Feu (option DIALOGUE = KANTO)
 };
 
 // Return values for font functions

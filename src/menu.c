@@ -142,7 +142,12 @@ static const struct MenuInfoIcon sMenuInfoIcons[] =
 
 void InitStandardTextBoxWindows(void)
 {
-    InitWindows(sStandardTextBox_WindowTemplates);
+    struct WindowTemplate templates[ARRAY_COUNT(sStandardTextBox_WindowTemplates)];
+
+    memcpy(templates, sStandardTextBox_WindowTemplates, sizeof(templates));
+    if (gSaveBlock2Ptr->optionsDialogStyle)
+        templates[0].width = 26; // Rouge Feu
+    InitWindows(templates);
     sStartMenuWindowId = WINDOW_NONE;
     sMapNamePopupWindowId = WINDOW_NONE;
 }
@@ -188,17 +193,35 @@ bool16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 sp
     return AddTextPrinter(&printer, speed, callback);
 }
 
+// PokemonNative3G : option DIALOGUE = KANTO -> police de Rouge Feu, sauf si le texte (écrit pour la police
+// d'Émeraude, plus étroite) dépasse la fenêtre.
+u8 GetDialogueFontId(const u8 *str)
+{
+    static u8 sLines[1000];
+    u32 i;
+
+    if (!gSaveBlock2Ptr->optionsDialogStyle)
+        return FONT_NORMAL;
+    // GetStringWidth ne coupe les lignes que sur CHAR_NEWLINE : \l et \p deviennent des retours à la ligne
+    for (i = 0; i < sizeof(sLines) - 1 && str[i] != EOS; i++)
+        sLines[i] = (str[i] == CHAR_PROMPT_SCROLL || str[i] == CHAR_PROMPT_CLEAR) ? CHAR_NEWLINE : str[i];
+    sLines[i] = EOS;
+    if (GetStringWidth(FONT_KANTO, sLines, 0) <= GetWindowAttribute(0, WINDOW_WIDTH) * 8)
+        return FONT_KANTO;
+    return FONT_NORMAL;
+}
+
 void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
 {
     TextPrinterCallback callback = NULL;
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), callback, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, GetDialogueFontId(gStringVar4), gStringVar4, GetPlayerTextSpeedDelay(), callback, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 void AddTextPrinterForMessage_2(bool8 allowSkippingDelayWithButtonPress)
 {
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, GetDialogueFontId(gStringVar4), gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 void AddTextPrinterWithCustomSpeedForMessage(bool8 allowSkippingDelayWithButtonPress, u8 speed)
@@ -321,7 +344,6 @@ static void WindowFunc_DrawStandardFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u
 // d'une colonne, l'intérieur est réduit d'une colonne (width - 1) pour rester dans l'écran.
 static void DrawKantoDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u16 t, u8 p)
 {
-    width--;
     FillBgTilemapBufferRect(bg, t,                      tilemapLeft - 2,         tilemapTop - 1, 1,     1, p);
     FillBgTilemapBufferRect(bg, t + 1,                  tilemapLeft - 1,         tilemapTop - 1, 1,     1, p);
     FillBgTilemapBufferRect(bg, t + 2,                  tilemapLeft,             tilemapTop - 1, width, 1, p);
