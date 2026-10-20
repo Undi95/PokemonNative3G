@@ -4986,17 +4986,28 @@ static void ShowShinyStarObjIfMonShiny(void)
 
 static void PokeSum_DestroySprites(void)
 {
-    DestroyMoveSelectionCursorObjs();
-    DestroyHpBarObjs();
-    DestroyExpBarObjs();
-    PokeSum_DestroyMonPicSprite();
-    PokeSum_DestroyMonIconSprite();
-    DestroyBallIconObj();
-    PokeSum_DestroyMonMarkingsSprite();
-    DestroyMonStatusIconObj();
-    DestroyPokerusIconObj();
-    DestroyShinyStarObj();
-    ResetSpriteData();
+    DestroyMoveSelectionCursorObjs(); fprintf(stderr, "D0
+"); fflush(stderr); // DEBUG
+    DestroyHpBarObjs(); fprintf(stderr, "D1
+"); fflush(stderr); // DEBUG
+    DestroyExpBarObjs(); fprintf(stderr, "D2
+"); fflush(stderr); // DEBUG
+    PokeSum_DestroyMonPicSprite(); fprintf(stderr, "D3
+"); fflush(stderr); // DEBUG
+    PokeSum_DestroyMonIconSprite(); fprintf(stderr, "D4
+"); fflush(stderr); // DEBUG
+    DestroyBallIconObj(); fprintf(stderr, "D5
+"); fflush(stderr); // DEBUG
+    PokeSum_DestroyMonMarkingsSprite(); fprintf(stderr, "D6
+"); fflush(stderr); // DEBUG
+    DestroyMonStatusIconObj(); fprintf(stderr, "D7
+"); fflush(stderr); // DEBUG
+    DestroyPokerusIconObj(); fprintf(stderr, "D8
+"); fflush(stderr); // DEBUG
+    DestroyShinyStarObj(); fprintf(stderr, "D9
+"); fflush(stderr); // DEBUG
+    ResetSpriteData(); fprintf(stderr, "D10
+"); fflush(stderr); // DEBUG
 }
 
 static void PokeSum_CreateSprites(void)
