@@ -83,6 +83,27 @@ static const struct SpritePalette sSpritePalettes_HealthBoxHealthBar[2] =
     {gBattleInterface_BallDisplayPal, TAG_HEALTHBAR_PAL}
 };
 
+// PokemonNative3G : boîtes de Rouge Feu (option BOITES COMBAT = KANTO)
+static const struct CompressedSpriteSheet sKantoSpriteSheet_SinglesPlayerHealthbox = {gKantoHealthboxSinglesPlayerGfx, 0x1000, TAG_HEALTHBOX_PLAYER1_TILE};
+static const struct CompressedSpriteSheet sKantoSpriteSheet_SinglesOpponentHealthbox = {gKantoHealthboxSinglesOpponentGfx, 0x1000, TAG_HEALTHBOX_OPPONENT1_TILE};
+static const struct CompressedSpriteSheet sKantoSpriteSheets_DoublesPlayerHealthbox[2] =
+{
+    {gKantoHealthboxDoublesPlayerGfx, 0x800, TAG_HEALTHBOX_PLAYER1_TILE},
+    {gKantoHealthboxDoublesPlayerGfx, 0x800, TAG_HEALTHBOX_PLAYER2_TILE}
+};
+static const struct CompressedSpriteSheet sKantoSpriteSheets_DoublesOpponentHealthbox[2] =
+{
+    {gKantoHealthboxDoublesOpponentGfx, 0x800, TAG_HEALTHBOX_OPPONENT1_TILE},
+    {gKantoHealthboxDoublesOpponentGfx, 0x800, TAG_HEALTHBOX_OPPONENT2_TILE}
+};
+static const struct CompressedSpriteSheet sKantoSpriteSheet_SafariHealthbox = {gKantoHealthboxSafariGfx, 0x1000, TAG_HEALTHBOX_SAFARI_TILE};
+static const struct SpritePalette sKantoSpritePalettes_HealthBoxHealthBar[2] =
+{
+    {gKantoBattleInterface_Healthbox_Pal, TAG_HEALTHBOX_PAL},
+    {gKantoBattleInterface_Healthbar_Pal, TAG_HEALTHBAR_PAL}
+};
+#define KANTO_UI(hoenn) (gSaveBlock2Ptr->optionsBattleUI ? sKanto##hoenn : s##hoenn)
+
 // code
 void AllocateBattleSpritesData(void)
 {
@@ -740,20 +761,20 @@ void BattleLoadAllHealthBoxesGfxAtOnce(void)
     u8 numberOfBattlers = 0;
     u8 i;
 
-    LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
-    LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);
+    LoadSpritePalette(&KANTO_UI(SpritePalettes_HealthBoxHealthBar)[0]);
+    LoadSpritePalette(&KANTO_UI(SpritePalettes_HealthBoxHealthBar)[1]);
     if (!IsDoubleBattle())
     {
-        LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
-        LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
+        LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheet_SinglesPlayerHealthbox));
+        LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheet_SinglesOpponentHealthbox));
         numberOfBattlers = 2;
     }
     else
     {
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[0]);
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[1]);
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[0]);
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[1]);
+        LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheets_DoublesPlayerHealthbox)[0]);
+        LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheets_DoublesPlayerHealthbox)[1]);
+        LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheets_DoublesOpponentHealthbox)[0]);
+        LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheets_DoublesOpponentHealthbox)[1]);
         numberOfBattlers = MAX_BATTLERS_COUNT;
     }
     for (i = 0; i < numberOfBattlers; i++)
@@ -768,21 +789,21 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
     {
         if (state == 1)
         {
-            LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
-            LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);
+            LoadSpritePalette(&KANTO_UI(SpritePalettes_HealthBoxHealthBar)[0]);
+            LoadSpritePalette(&KANTO_UI(SpritePalettes_HealthBoxHealthBar)[1]);
         }
         else if (!IsDoubleBattle())
         {
             if (state == 2)
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SafariHealthbox);
+                    LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheet_SafariHealthbox));
                 else
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
+                    LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheet_SinglesPlayerHealthbox));
             }
             else if (state == 3)
             {
-                LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
+                LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheet_SinglesOpponentHealthbox));
             }
             else if (state == 4)
             {
@@ -800,13 +821,13 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
         else
         {
             if (state == 2)
-                LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[0]);
+                LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheets_DoublesPlayerHealthbox)[0]);
             else if (state == 3)
-                LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[1]);
+                LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheets_DoublesPlayerHealthbox)[1]);
             else if (state == 4)
-                LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[0]);
+                LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheets_DoublesOpponentHealthbox)[0]);
             else if (state == 5)
-                LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[1]);
+                LoadCompressedSpriteSheet(&KANTO_UI(SpriteSheets_DoublesOpponentHealthbox)[1]);
             else if (state == 6)
                 LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[gBattlerPositions[B_BATTLER_0]]);
             else if (state == 7)

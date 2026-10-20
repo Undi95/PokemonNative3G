@@ -972,6 +972,8 @@ u8 CreateSafariPlayerHealthboxSprites(void)
 
 static const u8 *GetHealthboxElementGfxPtr(u8 elementId)
 {
+    if (gSaveBlock2Ptr->optionsBattleUI)
+        return gKantoHealthboxElementsGfxTable[elementId];
     return gHealthboxElementsGfxTable[elementId];
 }
 
