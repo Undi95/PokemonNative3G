@@ -32,4 +32,11 @@ void InitTilesetAnim_EliteFour(void);
 void InitTilesetAnim_BattleDome(void);
 void InitTilesetAnim_BattlePyramid(void);
 
+void InitTilesetAnim_KantoGeneral(void); // Rouge Feu
+void InitTilesetAnim_KantoCeladonCity(void); // Rouge Feu
+void InitTilesetAnim_KantoSilphCo(void); // Rouge Feu
+void InitTilesetAnim_KantoMtEmber(void); // Rouge Feu
+void InitTilesetAnim_KantoVermilionGym(void); // Rouge Feu
+void InitTilesetAnim_KantoCeladonGym(void); // Rouge Feu
+
 #endif // GUARD_TILESET_ANIMS_H

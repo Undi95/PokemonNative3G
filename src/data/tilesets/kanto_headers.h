@@ -63,7 +63,7 @@ const struct Tileset gTileset_KantoCeladonCity =
     .palettes = gTilesetPalettes_KantoCeladonCity,
     .metatiles = gMetatiles_KantoCeladonCity,
     .metatileAttributes = gMetatileAttributes_KantoCeladonCity,
-    .callback = NULL,
+    .callback = InitTilesetAnim_KantoCeladonCity,
 };
 
 const struct Tileset gTileset_KantoCeladonGym =
@@ -74,7 +74,7 @@ const struct Tileset gTileset_KantoCeladonGym =
     .palettes = gTilesetPalettes_KantoCeladonGym,
     .metatiles = gMetatiles_KantoCeladonGym,
     .metatileAttributes = gMetatileAttributes_KantoCeladonGym,
-    .callback = NULL,
+    .callback = InitTilesetAnim_KantoCeladonGym,
 };
 
 const struct Tileset gTileset_KantoCeruleanCave =
@@ -217,7 +217,7 @@ const struct Tileset gTileset_KantoGeneral =
     .palettes = gTilesetPalettes_KantoGeneral,
     .metatiles = gMetatiles_KantoGeneral,
     .metatileAttributes = gMetatileAttributes_KantoGeneral,
-    .callback = NULL,
+    .callback = InitTilesetAnim_KantoGeneral,
 };
 
 const struct Tileset gTileset_KantoGenericBuilding1 =
@@ -316,7 +316,7 @@ const struct Tileset gTileset_KantoMtEmber =
     .palettes = gTilesetPalettes_KantoMtEmber,
     .metatiles = gMetatiles_KantoMtEmber,
     .metatileAttributes = gMetatileAttributes_KantoMtEmber,
-    .callback = NULL,
+    .callback = InitTilesetAnim_KantoMtEmber,
 };
 
 const struct Tileset gTileset_KantoMuseum =
@@ -580,7 +580,7 @@ const struct Tileset gTileset_KantoSilphCo =
     .palettes = gTilesetPalettes_KantoSilphCo,
     .metatiles = gMetatiles_KantoSilphCo,
     .metatileAttributes = gMetatileAttributes_KantoSilphCo,
-    .callback = NULL,
+    .callback = InitTilesetAnim_KantoSilphCo,
 };
 
 const struct Tileset gTileset_KantoTanobyRuins =
@@ -635,7 +635,7 @@ const struct Tileset gTileset_KantoVermilionGym =
     .palettes = gTilesetPalettes_KantoVermilionGym,
     .metatiles = gMetatiles_KantoVermilionGym,
     .metatileAttributes = gMetatileAttributes_KantoVermilionGym,
-    .callback = NULL,
+    .callback = InitTilesetAnim_KantoVermilionGym,
 };
 
 const struct Tileset gTileset_KantoViridianCity =
