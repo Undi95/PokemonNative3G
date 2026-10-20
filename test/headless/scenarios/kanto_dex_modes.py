@@ -23,4 +23,9 @@ def play(game):
     game.tap("DOWN"); game.wait(20); game.tap("A"); game.wait(200)        # 1er habitat
     game.tap("A"); game.wait(200)        # fiche du 1er Pokémon
     game.tap("A"); game.wait(200)        # page suivante (zone)
-    game.tap("B"); game.wait(150); game.tap("B"); game.wait(150); game.tap("B"); game.wait(150); game.tap("B"); game.wait(200)
+    game.tap("B"); game.wait(150); game.tap("B"); game.wait(150); game.tap("B"); game.wait(200)
+    game.tap("DOWN", 9, gap=10); game.wait(20)
+    for i in range(4):                   # A à Z, type, poids, taille : liste puis 1re fiche
+        game.tap("A"); game.wait(200); game.tap("A"); game.wait(200)
+        game.tap("B"); game.wait(150); game.tap("B"); game.wait(200); game.tap("DOWN"); game.wait(20)
+    game.tap("B"); game.wait(200)
