@@ -1,5 +1,6 @@
 // Rouge Feu : pokemon_summary_screen.c (option MENUS = KANTO). Textes et graphismes de RF.
 #include "global.h"
+#include <stdio.h> // DEBUG
 #include "battle_anim.h"
 #include "battle_interface.h"
 #include "battle_main.h"
@@ -2026,6 +2027,8 @@ static void PokeSum_CopyNewBgTilemapBeforePageFlip(void)
 
 static void CB2_SetUpPSS(void)
 {
+    fprintf(stderr, "PSS step %d
+", sMonSummaryScreen->summarySetupStep); fflush(stderr); // DEBUG
     switch (sMonSummaryScreen->summarySetupStep)
     {
     case 0:

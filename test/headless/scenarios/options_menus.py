@@ -1,4 +1,4 @@
-# Build KANTO_DEBUG=1 : MEWTWO, Options > MENUS = KANTO, puis menu Start (description de RF en bas)
+# Build KANTO_DEBUG=1 : MEWTWO, 2 POKéDEX (menu Start à 8 entrées), Options > MENUS = KANTO, puis menu Start (description de RF en bas)
 # et équipe (couleurs de RF).
 import os, sys
 import driver
@@ -13,6 +13,9 @@ def play(game):
     game.tap("A", 210, hold=4, gap=26)
     wait_until(game, lambda s: s.free)
     give_mewtwo(game)
+    game.tap("START"); game.wait(30); game.tap("A"); game.wait(30)       # menu DEBUG : Débloquer les 2 POKéDEX
+    game.tap("DOWN", 6); game.tap("A"); game.wait(30); game.tap("B"); game.wait(30)
+    wait_until(game, lambda s: s.free)
     game.wait(30); game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
     game.tap("DOWN", 10, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
     game.wait(120); game.tap("UP", 4, gap=40); game.wait(60)   # menu Start : POKéMON
