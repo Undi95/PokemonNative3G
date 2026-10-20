@@ -1,6 +1,8 @@
 // Rouge Feu : pokedex_area_markers.c + wild_pokemon_area.c (zones du Pokédex de Kanto)
 #include "global.h"
+#include "bg.h"
 #include "decompress.h"
+#include "gpu_regs.h"
 #include "event_data.h"
 #include "kanto_pokedex.h"
 #include "malloc.h"
@@ -14,6 +16,12 @@
 #include "constants/region_map_sections.h"
 #include "constants/maps.h"
 #include "constants/kanto_flags_vars.h"
+
+// Rouge Feu (wild_encounter.h)
+#define LAND_WILD_COUNT     12
+#define WATER_WILD_COUNT    5
+#define ROCK_WILD_COUNT     5
+#define FISH_WILD_COUNT     10
 
 
 /*
@@ -518,10 +526,8 @@ static s32 GetRoamerPokedexAreaMarkers(u16 species, struct Subsprite * subsprite
     roamerIdx = GetRoamerIndex(species);
     if (roamerIdx < 0)
         return 0;
-    if (sRoamerPairs[roamerIdx].starter != GetStarterSpecies())
-        return 0;
-
-    mapSecId = GetRoamerLocationMapSectionId();
+    // PokemonNative3G : les 3 chiens errent, quel que soit le starter
+    mapSecId = GetKantoRoamerLocationMapSectionId(species);
     tableIndex = 0;
     if (FindDexAreaByMapSec(mapSecId, sDexAreas_Kanto, ARRAY_COUNT(sDexAreas_Kanto), &tableIndex, &dexArea))
     {
