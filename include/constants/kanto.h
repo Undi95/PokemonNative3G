@@ -14,4 +14,8 @@
 #define KANTO_VARS_COUNT    0x100
 #define KANTO_VARS_END      (KANTO_VARS_START + KANTO_VARS_COUNT - 1)
 
+// PokemonNative3G : Pokédex de Kanto reçu du Prof. Chen (numéro de FLAG_SYS_POKEDEX_GET dans Rouge Feu,
+// libre dans le bloc Kanto). FLAG_SYS_POKEDEX_GET est partagé avec Hoenn : celui-ci débloque la vue KANTO.
+#define FLAG_KANTO_SYS_POKEDEX_GET (KANTO_FLAGS_START + 0x829)
+
 #endif // GUARD_CONSTANTS_KANTO_H

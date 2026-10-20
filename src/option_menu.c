@@ -1,4 +1,6 @@
 #include "global.h"
+#include "event_data.h"
+#include "constants/kanto.h"
 #include "option_menu.h"
 #include "bg.h"
 #include "gpu_regs.h"
@@ -54,7 +56,31 @@ enum
 
 // Le menu défile : MAX_VISIBLE_ITEMS lignes affichées à partir de sScrollOffset
 #define MAX_VISIBLE_ITEMS 7
-#define OPTION_YPOS(item) (((item) - sScrollOffset) * 16)
+#define OPTION_YPOS(item) ((OptionRow(item) - sScrollOffset) * 16)
+
+// PokemonNative3G : options masquées tant qu'elles ne sont pas débloquées en jeu
+// (POKéDEX : vue KANTO débloquée quand le Prof. Chen donne le Pokédex)
+static bool8 IsOptionHidden(u8 item)
+{
+    if (item == MENUITEM_POKEDEXSTYLE)
+        return !FlagGet(FLAG_KANTO_SYS_POKEDEX_GET);
+    return FALSE;
+}
+
+// Ligne affichée d'une option (les options masquées ne prennent pas de ligne)
+static u8 OptionRow(u8 item)
+{
+    u8 i, row = 0;
+
+    for (i = 0; i < item; i++)
+    {
+        if (!IsOptionHidden(i))
+            row++;
+    }
+    return row;
+}
+
+#define IS_OPTION_ROW_VISIBLE(item) (!IsOptionHidden(item) && OptionRow(item) >= sScrollOffset && OptionRow(item) < sScrollOffset + MAX_VISIBLE_ITEMS)
 #define YPOS_TEXTSPEED    OPTION_YPOS(MENUITEM_TEXTSPEED)
 #define YPOS_BATTLESCENE  OPTION_YPOS(MENUITEM_BATTLESCENE)
 #define YPOS_BATTLESTYLE  OPTION_YPOS(MENUITEM_BATTLESTYLE)
@@ -304,19 +330,25 @@ static void Task_OptionMenuProcessInput(u8 taskId)
     }
     else if (JOY_NEW(DPAD_UP))
     {
-        if (gTasks[taskId].tMenuSelection > 0)
-            gTasks[taskId].tMenuSelection--;
-        else
-            gTasks[taskId].tMenuSelection = MENUITEM_CANCEL;
+        do
+        {
+            if (gTasks[taskId].tMenuSelection > 0)
+                gTasks[taskId].tMenuSelection--;
+            else
+                gTasks[taskId].tMenuSelection = MENUITEM_CANCEL;
+        } while (IsOptionHidden(gTasks[taskId].tMenuSelection));
         ScrollOptionMenu(taskId);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
     }
     else if (JOY_NEW(DPAD_DOWN))
     {
-        if (gTasks[taskId].tMenuSelection < MENUITEM_CANCEL)
-            gTasks[taskId].tMenuSelection++;
-        else
-            gTasks[taskId].tMenuSelection = 0;
+        do
+        {
+            if (gTasks[taskId].tMenuSelection < MENUITEM_CANCEL)
+                gTasks[taskId].tMenuSelection++;
+            else
+                gTasks[taskId].tMenuSelection = 0;
+        } while (IsOptionHidden(gTasks[taskId].tMenuSelection));
         ScrollOptionMenu(taskId);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
     }
@@ -447,7 +479,7 @@ static void Task_OptionMenuFadeOut(u8 taskId)
 static void HighlightOptionMenuItem(u8 index)
 {
     SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(16, DISPLAY_WIDTH - 16));
-    index -= sScrollOffset;
+    index = OptionRow(index) - sScrollOffset;
     SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(index * 16 + 40, index * 16 + 56));
 }
 
@@ -704,8 +736,9 @@ static void DrawOptionMenuTexts(void)
     u8 i;
 
     FillWindowPixelBuffer(WIN_OPTIONS, PIXEL_FILL(1));
-    for (i = sScrollOffset; i < MENUITEM_COUNT && i < sScrollOffset + MAX_VISIBLE_ITEMS; i++)
-        AddTextPrinterParameterized(WIN_OPTIONS, FONT_NORMAL, sOptionMenuItemsNames[i], 8, OPTION_YPOS(i) + 1, TEXT_SKIP_DRAW, NULL);
+    for (i = 0; i < MENUITEM_COUNT; i++)
+        if (IS_OPTION_ROW_VISIBLE(i))
+            AddTextPrinterParameterized(WIN_OPTIONS, FONT_NORMAL, sOptionMenuItemsNames[i], 8, OPTION_YPOS(i) + 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
 }
 
@@ -801,8 +834,10 @@ static void DrawOptionMenuChoices(u8 taskId)
 {
     u8 i;
 
-    for (i = sScrollOffset; i < MENUITEM_COUNT && i < sScrollOffset + MAX_VISIBLE_ITEMS; i++)
+    for (i = 0; i < MENUITEM_COUNT; i++)
     {
+        if (!IS_OPTION_ROW_VISIBLE(i))
+            continue;
         switch (i)
         {
         case MENUITEM_TEXTSPEED:
@@ -844,7 +879,7 @@ static void DrawOptionMenuChoices(u8 taskId)
 
 static void ScrollOptionMenu(u8 taskId)
 {
-    u8 selection = gTasks[taskId].tMenuSelection;
+    u8 selection = OptionRow(gTasks[taskId].tMenuSelection);
     u8 offset = sScrollOffset;
 
     if (selection < offset)

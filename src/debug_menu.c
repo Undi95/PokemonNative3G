@@ -24,6 +24,7 @@
 #include "event_data.h"
 #include "pokemon.h"
 #include "pokedex.h"
+#include "constants/kanto.h"
 #include "item.h"
 #include "constants/characters.h"
 
@@ -39,6 +40,7 @@ enum {
     DEBUG_HEAL,
     DEBUG_GIVE_MON,
     DEBUG_GIVE_ITEMS,
+    DEBUG_UNLOCK_DEXES,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -132,6 +134,7 @@ static const u8 sText_EncOff[] = _("Rencontres : NON");
 static const u8 sText_Heal[] = _("Soigner l'équipe");
 static const u8 sText_GiveMon[] = _("Recevoir MEWTWO");
 static const u8 sText_GiveItems[] = _("Ajout objets");
+static const u8 sText_UnlockDexes[] = _("Débloquer les 2 POKéDEX");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -170,6 +173,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_HEAL].name = sText_Heal;
         sItems[DEBUG_GIVE_MON].name = sText_GiveMon;
         sItems[DEBUG_GIVE_ITEMS].name = sText_GiveItems;
+        sItems[DEBUG_UNLOCK_DEXES].name = sText_UnlockDexes;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -276,8 +280,13 @@ static void Task_DebugMenu(u8 taskId)
             SetMonData(mon, MON_DATA_PP4, &pp1);
         }
         FlagSet(FLAG_SYS_POKEMON_GET);
-        // Pokédex pour les tests : les 151 de Kanto vus, un sur deux attrapé
+        PlaySE(SE_USE_ITEM);
+        break;
+    case DEBUG_UNLOCK_DEXES:
+        // Pokédex de Hoenn (Prof. Seko) et de Kanto (Prof. Chen : vue KANTO dans les options) ;
+        // pour les tests : les 151 de Kanto vus, un sur deux attrapé
         FlagSet(FLAG_SYS_POKEDEX_GET);
+        FlagSet(FLAG_KANTO_SYS_POKEDEX_GET);
         {
             u16 i;
             for (i = 1; i <= KANTO_DEX_COUNT; i++)

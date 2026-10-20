@@ -1,5 +1,6 @@
 #include "global.h"
 #include "kanto_pokedex.h"
+#include "constants/kanto.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
@@ -655,7 +656,7 @@ static bool8 StartMenuPokedexCallback(void)
         PlayRainStoppingSoundEffect();
         RemoveExtraStartMenuWindows();
         CleanupOverworldWindowsAndTilemaps();
-        if (gSaveBlock2Ptr->optionsPokedexStyle)
+        if (gSaveBlock2Ptr->optionsPokedexStyle && FlagGet(FLAG_KANTO_SYS_POKEDEX_GET))
             SetMainCallback2(CB2_KantoOpenPokedexFromStartMenu); // Rouge Feu
         else
             SetMainCallback2(CB2_OpenPokedex);

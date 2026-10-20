@@ -1,5 +1,6 @@
 #include "global.h"
 #include "kanto_pokedex.h"
+#include "constants/kanto.h"
 #include "battle.h"
 #include "battle_message.h"
 #include "battle_anim.h"
@@ -10146,7 +10147,7 @@ static void Cmd_displaydexinfo(void)
         if (!gPaletteFade.active)
         {
             FreeAllWindowBuffers();
-            if (gSaveBlock2Ptr->optionsPokedexStyle) // Rouge Feu
+            if (gSaveBlock2Ptr->optionsPokedexStyle && FlagGet(FLAG_KANTO_SYS_POKEDEX_GET)) // Rouge Feu
                 gBattleCommunication[TASK_ID] = KantoDexScreen_RegisterMonToPokedex(species);
             else
             gBattleCommunication[TASK_ID] = DisplayCaughtMonDexPage(SpeciesToNationalPokedexNum(species),
@@ -10160,7 +10161,7 @@ static void Cmd_displaydexinfo(void)
             && gMain.callback2 == BattleMainCB2
             && !gTasks[gBattleCommunication[TASK_ID]].isActive)
         {
-            if (gSaveBlock2Ptr->optionsPokedexStyle) // Rouge Feu
+            if (gSaveBlock2Ptr->optionsPokedexStyle && FlagGet(FLAG_KANTO_SYS_POKEDEX_GET)) // Rouge Feu
                 CpuFill32(0, (void *)VRAM, VRAM_SIZE);
             SetVBlankCallback(VBlankCB_Battle);
             gBattleCommunication[0]++;
