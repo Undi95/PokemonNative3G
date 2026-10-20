@@ -2027,8 +2027,7 @@ static void PokeSum_CopyNewBgTilemapBeforePageFlip(void)
 
 static void CB2_SetUpPSS(void)
 {
-    fprintf(stderr, "PSS step %d
-", sMonSummaryScreen->summarySetupStep); fflush(stderr); // DEBUG
+    fprintf(stderr, "PSS step %d\n",sMonSummaryScreen->summarySetupStep); fflush(stderr); // DEBUG
     switch (sMonSummaryScreen->summarySetupStep)
     {
     case 0:
