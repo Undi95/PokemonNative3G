@@ -45,7 +45,7 @@
 #define DexScreen_RegisterMonToPokedex KantoDexScreen_RegisterMonToPokedex
 #define DoClosePokedex KantoDex_DoClosePokedex
 #define CB2_ClosePokedex KantoDex_CB2_ClosePokedex
-#define FONT_NORMAL FONT_KANTO
+#define FONT_NORMAL 1 // TEST
 #define FONT_NORMAL_COPY_1 FONT_KANTO
 #define JOY_REPT(button) (gMain.newAndRepeatedKeys & (button))
 #ifndef FREE_IF_NOT_NULL
