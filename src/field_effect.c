@@ -1,4 +1,5 @@
 #include "global.h"
+#include <stdio.h> // DEBUG
 #include "kanto_field_door.h"
 #include "decompress.h"
 #include "event_object_movement.h"
@@ -1325,6 +1326,7 @@ static u8 CreatePokecenterMonitorSprite(s16 x, s16 y)
         spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoPokecenterMonitor, 128, y, 0);
         gSprites[spriteId].oam.priority = 2;
         gSprites[spriteId].invisible = TRUE;
+        fprintf(stderr, "MON pal=%d tag=%d c9=%04x c12=%04x\n", gSprites[spriteId].oam.paletteNum, IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_POKEBALL_GLOW), gPlttBufferUnfaded[OBJ_PLTT_ID(gSprites[spriteId].oam.paletteNum) + 9], gPlttBufferUnfaded[OBJ_PLTT_ID(gSprites[spriteId].oam.paletteNum) + 12]); // DEBUG
         return spriteId;
     }
     spriteId = CreateSpriteAtEnd(&sSpriteTemplate_PokecenterMonitor, x, y, 0);
