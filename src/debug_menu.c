@@ -23,6 +23,7 @@
 #include "constants/species.h"
 #include "event_data.h"
 #include "pokemon.h"
+#include "pokedex.h"
 #include "item.h"
 #include "constants/characters.h"
 
@@ -275,6 +276,17 @@ static void Task_DebugMenu(u8 taskId)
             SetMonData(mon, MON_DATA_PP4, &pp1);
         }
         FlagSet(FLAG_SYS_POKEMON_GET);
+        // Pokédex pour les tests : les 151 de Kanto vus, un sur deux attrapé
+        FlagSet(FLAG_SYS_POKEDEX_GET);
+        {
+            u16 i;
+            for (i = 1; i <= KANTO_DEX_COUNT; i++)
+            {
+                GetSetPokedexFlag(i, FLAG_SET_SEEN);
+                if (i % 2)
+                    GetSetPokedexFlag(i, FLAG_SET_CAUGHT);
+            }
+        }
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_GIVE_ITEMS:
