@@ -26,6 +26,11 @@ contenu dans un seul jeu.
 
 ## À faire — choix HOENN / KANTO dans les Options
 - [ ] Menus (option MENUS) : menu Start, équipe et résumé faits ; sac à porter
+  - Plan du sac (analyse 2026-10-20) : item_menu.c de RF (2400 l.) + bag.c + item_menu_icons.c, et tm_case.c + berry_pouch.c
+    pour les poches CT/Baies d'Émeraude. Point dur : les fonctions d'usage d'objets d'Émeraude (item_use.c :
+    SetUpItemUseCallback, DisplayItemMessage, gBagMenu) supposent le sac d'Émeraude ; il faut un aiguillage
+    (sac RF actif -> équivalents RF de item_use.c) ou porter item_use.c de RF. Outils : scratchpad rfport.py
+    (copie graphismes, chaînes renommées, prototypes). Pièges : pointeurs NULL lus par RF, type u16/u32 des extern.
 - [ ] Interface du PC (stockage)
 - [ ] Écran de nom (clavier)
 - [ ] Intro (Flygon / Nidorino-Ectoplasma), crédits, Panthéon
