@@ -1,6 +1,5 @@
 // Rouge Feu : pokemon_summary_screen.c (option MENUS = KANTO). Textes et graphismes de RF.
 #include "global.h"
-#include <stdio.h> // DEBUG
 #include "battle_anim.h"
 #include "battle_interface.h"
 #include "battle_main.h"
@@ -2027,7 +2026,6 @@ static void PokeSum_CopyNewBgTilemapBeforePageFlip(void)
 
 static void CB2_SetUpPSS(void)
 {
-    fprintf(stderr, "PSS step %d\n",sMonSummaryScreen->summarySetupStep); fflush(stderr); // DEBUG
     switch (sMonSummaryScreen->summarySetupStep)
     {
     case 0:
@@ -3115,30 +3113,21 @@ static void CommitStaticWindowTilemaps(void)
 static void Task_DestroyResourcesOnExit(u8 taskId)
 {
     PokeSum_DestroySprites();
-    fprintf(stderr, "E0\n"); fflush(stderr); // DEBUG
     FreeAllSpritePalettes();
-    fprintf(stderr, "E1\n"); fflush(stderr); // DEBUG
 
     if (IsCryPlayingOrClearCrySongs() == TRUE)
         StopCryAndClearCrySongs();
 
     PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
-    fprintf(stderr, "E2\n"); fflush(stderr); // DEBUG
     FreeAllWindowBuffers();
-    fprintf(stderr, "E3\n"); fflush(stderr); // DEBUG
     DestroyTask(taskId);
-    fprintf(stderr, "E4\n"); fflush(stderr); // DEBUG
     SetMainCallback2(sMonSummaryScreen->savedCallback);
-    fprintf(stderr, "E5\n"); fflush(stderr); // DEBUG
 
     sLastViewedMonIndex = GetLastViewedMonIndex();
-    fprintf(stderr, "E6\n"); fflush(stderr); // DEBUG
     gLastViewedMonIndex = sLastViewedMonIndex; // lu par les écrans d'Émeraude au retour
 
     FREE_AND_SET_NULL_IF_SET(sMonSummaryScreen);
-    fprintf(stderr, "E7\n"); fflush(stderr); // DEBUG
     FREE_AND_SET_NULL_IF_SET(sMonSkillsPrinterXpos);
-    fprintf(stderr, "E8\n"); fflush(stderr); // DEBUG
 }
 
 static void CB2_RunPokemonSummaryScreen(void)
@@ -3271,7 +3260,9 @@ static void VBlankCB_PokemonSummaryScreen(void)
     ProcessSpriteCopyRequests();
     TransferPlttBuffer();
 
-    if (sMonSummaryScreen->flippingPages == FALSE)
+    // PORTABLE : à la sortie, ce VBlank tourne encore une fois après la libération de sMonSummaryScreen
+    // (sur GBA, lire l'adresse 0 ne plante pas)
+    if (sMonSummaryScreen == NULL || sMonSummaryScreen->flippingPages == FALSE)
         return;
 
     PokeSum_FlipPages_HandleBgHofs();
@@ -4995,17 +4986,6 @@ static void ShowShinyStarObjIfMonShiny(void)
 
 static void PokeSum_DestroySprites(void)
 {
-    DestroyMoveSelectionCursorObjs(); fprintf(stderr, "D0\n"); fflush(stderr); // DEBUG
-    DestroyHpBarObjs(); fprintf(stderr, "D1\n"); fflush(stderr); // DEBUG
-    DestroyExpBarObjs(); fprintf(stderr, "D2\n"); fflush(stderr); // DEBUG
-    PokeSum_DestroyMonPicSprite(); fprintf(stderr, "D3\n"); fflush(stderr); // DEBUG
-    PokeSum_DestroyMonIconSprite(); fprintf(stderr, "D4\n"); fflush(stderr); // DEBUG
-    DestroyBallIconObj(); fprintf(stderr, "D5\n"); fflush(stderr); // DEBUG
-    PokeSum_DestroyMonMarkingsSprite(); fprintf(stderr, "D6\n"); fflush(stderr); // DEBUG
-    DestroyMonStatusIconObj(); fprintf(stderr, "D7\n"); fflush(stderr); // DEBUG
-    DestroyPokerusIconObj(); fprintf(stderr, "D8\n"); fflush(stderr); // DEBUG
-    DestroyShinyStarObj(); fprintf(stderr, "D9\n"); fflush(stderr); // DEBUG
-    ResetSpriteData(); fprintf(stderr, "D10\n"); fflush(stderr); // DEBUG
 }
 
 static void PokeSum_CreateSprites(void)

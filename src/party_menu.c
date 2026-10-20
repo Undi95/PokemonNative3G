@@ -1,5 +1,4 @@
 #include "global.h"
-#include <stdio.h> // DEBUG
 #include "malloc.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -563,46 +562,38 @@ static bool8 ShowPartyMenu(void)
     switch (gMain.state)
     {
     case 0:
-        fprintf(stderr, "P0\n"); fflush(stderr); // DEBUG
         SetVBlankHBlankCallbacksToNull();
         ResetVramOamAndBgCntRegs();
         ClearScheduledBgCopiesToVram();
         gMain.state++;
         break;
     case 1:
-        fprintf(stderr, "P1\n"); fflush(stderr); // DEBUG
         ScanlineEffect_Stop();
         gMain.state++;
         break;
     case 2:
-        fprintf(stderr, "P2\n"); fflush(stderr); // DEBUG
         ResetPaletteFade();
         gPaletteFade.bufferTransferDisabled = TRUE;
         gMain.state++;
         break;
     case 3:
-        fprintf(stderr, "P3\n"); fflush(stderr); // DEBUG
         ResetSpriteData();
         gMain.state++;
         break;
     case 4:
-        fprintf(stderr, "P4\n"); fflush(stderr); // DEBUG
         FreeAllSpritePalettes();
         gMain.state++;
         break;
     case 5:
-        fprintf(stderr, "P5\n"); fflush(stderr); // DEBUG
         if (!MenuHelpers_IsLinkActive())
             ResetTasks();
         gMain.state++;
         break;
     case 6:
-        fprintf(stderr, "P6\n"); fflush(stderr); // DEBUG
         SetPartyMonsAllowedInMinigame();
         gMain.state++;
         break;
     case 7:
-        fprintf(stderr, "P7\n"); fflush(stderr); // DEBUG
         if (!AllocPartyMenuBg())
         {
             ExitPartyMenu();
@@ -615,43 +606,35 @@ static bool8 ShowPartyMenu(void)
         }
         break;
     case 8:
-        fprintf(stderr, "P8\n"); fflush(stderr); // DEBUG
         if (AllocPartyMenuBgGfx())
             gMain.state++;
         break;
     case 9:
-        fprintf(stderr, "P9\n"); fflush(stderr); // DEBUG
         InitPartyMenuWindows(gPartyMenu.layout);
         gMain.state++;
         break;
     case 10:
-        fprintf(stderr, "P10\n"); fflush(stderr); // DEBUG
         InitPartyMenuBoxes(gPartyMenu.layout);
         sPartyMenuInternal->data[0] = 0;
         gMain.state++;
         break;
     case 11:
-        fprintf(stderr, "P11\n"); fflush(stderr); // DEBUG
         LoadHeldItemIcons();
         gMain.state++;
         break;
     case 12:
-        fprintf(stderr, "P12\n"); fflush(stderr); // DEBUG
         LoadPartyMenuPokeballGfx();
         gMain.state++;
         break;
     case 13:
-        fprintf(stderr, "P13\n"); fflush(stderr); // DEBUG
         LoadPartyMenuAilmentGfx();
         gMain.state++;
         break;
     case 14:
-        fprintf(stderr, "P14\n"); fflush(stderr); // DEBUG
         LoadMonIconPalettes();
         gMain.state++;
         break;
     case 15:
-        fprintf(stderr, "P15\n"); fflush(stderr); // DEBUG
         if (CreatePartyMonSpritesLoop())
         {
             sPartyMenuInternal->data[0] = 0;
@@ -659,7 +642,6 @@ static bool8 ShowPartyMenu(void)
         }
         break;
     case 16:
-        fprintf(stderr, "P16\n"); fflush(stderr); // DEBUG
         if (RenderPartyMenuBoxes())
         {
             sPartyMenuInternal->data[0] = 0;
@@ -667,33 +649,27 @@ static bool8 ShowPartyMenu(void)
         }
         break;
     case 17:
-        fprintf(stderr, "P17\n"); fflush(stderr); // DEBUG
         CreateCancelConfirmPokeballSprites();
         gMain.state++;
         break;
     case 18:
-        fprintf(stderr, "P18\n"); fflush(stderr); // DEBUG
         CreateCancelConfirmWindows(sPartyMenuInternal->chooseHalf);
         gMain.state++;
         break;
     case 19:
-        fprintf(stderr, "P19\n"); fflush(stderr); // DEBUG
         gMain.state++;
         break;
     case 20:
-        fprintf(stderr, "P20\n"); fflush(stderr); // DEBUG
         CreateTask(sPartyMenuInternal->task, 0);
         DisplayPartyMenuStdMessage(sPartyMenuInternal->messageId);
         gMain.state++;
         break;
     case 21:
-        fprintf(stderr, "P21\n"); fflush(stderr); // DEBUG
         BlendPalettes(PALETTES_ALL, 16, 0);
         gPaletteFade.bufferTransferDisabled = FALSE;
         gMain.state++;
         break;
     case 22:
-        fprintf(stderr, "P22\n"); fflush(stderr); // DEBUG
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
         gMain.state++;
         break;
@@ -2815,7 +2791,6 @@ static void CB2_ShowPokemonSummaryScreen(void)
 
 static void CB2_ReturnToPartyMenuFromSummaryScreen(void)
 {
-    fprintf(stderr, "R0\n"); fflush(stderr); // DEBUG
     gPaletteFade.bufferTransferDisabled = TRUE;
     gPartyMenu.slotId = gLastViewedMonIndex;
     InitPartyMenu(gPartyMenu.menuType, KEEP_PARTY_LAYOUT, gPartyMenu.action, TRUE, PARTY_MSG_DO_WHAT_WITH_MON, Task_TryCreateSelectionWindow, gPartyMenu.exitCallback);
