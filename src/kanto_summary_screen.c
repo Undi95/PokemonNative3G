@@ -98,7 +98,7 @@ static bool8 IsActiveOverworldLinkBusy(void)
 
 // Rouge Feu (graphics.c)
 static const u32 gSummaryScreen_Bg_Gfx[] = INCGFX_U32("graphics/kanto/summary_screen/bg.png", ".4bpp.lz");
-static const u32 gSummaryScreen_Bg_Pal[] = INCGFX_U32("graphics/kanto/summary_screen/bg.png", ".gbapal");
+static const u16 gSummaryScreen_Bg_Pal[] = INCGFX_U16("graphics/kanto/summary_screen/bg.png", ".gbapal");
 static const u32 gSummaryScreen_ExpBar_Gfx[] = INCGFX_U32("graphics/kanto/summary_screen/exp_bar.png", ".4bpp.lz");
 static const u32 gSummaryScreen_HpBar_Gfx[] = INCGFX_U32("graphics/kanto/summary_screen/hp_bar.png", ".4bpp.lz");
 static const u16 gSummaryScreen_HpExpBar_Pal[] = INCGFX_U16("graphics/kanto/summary_screen/exp_bar.png", ".gbapal"); // hp bar uses this too
