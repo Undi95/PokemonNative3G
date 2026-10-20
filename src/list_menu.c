@@ -63,9 +63,9 @@ static void ListMenuUpdateRedOutlineCursorObject(u8 taskId, u16 x, u16 y);
 static void ListMenuUpdateRedArrowCursorObject(u8 taskId, u16 x, u16 y);
 static void ListMenuRemoveRedOutlineCursorObject(u8 taskId);
 static void ListMenuRemoveRedArrowCursorObject(u8 taskId);
-static u8 ListMenuAddCursorObjectInternal(struct CursorStruct *cursor, u32 cursorObjId);
-static void ListMenuUpdateCursorObject(u8 taskId, u16 x, u16 y, u32 cursorObjId);
-static void ListMenuRemoveCursorObject(u8 taskId, u32 cursorObjId);
+u8 ListMenuAddCursorObjectInternal(struct CursorStruct *cursor, u32 cursorObjId);
+void ListMenuUpdateCursorObject(u8 taskId, u16 x, u16 y, u32 cursorObjId);
+void ListMenuRemoveCursorObject(u8 taskId, u32 cursorObjId);
 static void SpriteCallback_ScrollIndicatorArrow(struct Sprite *sprite);
 static void SpriteCallback_RedArrowCursor(struct Sprite *sprite);
 
@@ -1181,7 +1181,7 @@ void RemoveScrollIndicatorArrowPair(u8 taskId)
     DestroyTask(taskId);
 }
 
-static u8 ListMenuAddCursorObjectInternal(struct CursorStruct *cursor, u32 cursorObjId)
+u8 ListMenuAddCursorObjectInternal(struct CursorStruct *cursor, u32 cursorObjId)
 {
     switch (cursorObjId)
     {
@@ -1193,7 +1193,7 @@ static u8 ListMenuAddCursorObjectInternal(struct CursorStruct *cursor, u32 curso
     }
 }
 
-static void ListMenuUpdateCursorObject(u8 taskId, u16 x, u16 y, u32 cursorObjId)
+void ListMenuUpdateCursorObject(u8 taskId, u16 x, u16 y, u32 cursorObjId)
 {
     switch (cursorObjId)
     {
@@ -1206,7 +1206,7 @@ static void ListMenuUpdateCursorObject(u8 taskId, u16 x, u16 y, u32 cursorObjId)
     }
 }
 
-static void ListMenuRemoveCursorObject(u8 taskId, u32 cursorObjId)
+void ListMenuRemoveCursorObject(u8 taskId, u32 cursorObjId)
 {
     switch (cursorObjId)
     {

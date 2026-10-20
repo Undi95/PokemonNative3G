@@ -379,6 +379,21 @@ void GetRoamerLocation(u8 *mapGroup, u8 *mapNum)
     *mapNum = sRoamerLocation[MAP_NUM];
 }
 
+// PokemonNative3G : zone d'un chien de Kanto pour le Pokédex de RF (les 3 chiens errent, quel que soit le starter)
+u16 GetKantoRoamerLocationMapSectionId(u16 species)
+{
+    u16 mapSec = MAPSEC_NONE;
+    u8 saved = sCurRoamer;
+
+    for (sCurRoamer = 1; sCurRoamer <= NUM_KANTO_ROAMERS; sCurRoamer++)
+    {
+        if (ROAMER->active && ROAMER->species == species)
+            mapSec = Overworld_GetMapHeaderByGroupAndId(sRoamerLocation[MAP_GRP], sRoamerLocation[MAP_NUM])->regionMapSectionId;
+    }
+    sCurRoamer = saved;
+    return mapSec;
+}
+
 // Rouge Feu (Pokédex : zone du vagabond)
 u16 GetRoamerLocationMapSectionId(void)
 {
