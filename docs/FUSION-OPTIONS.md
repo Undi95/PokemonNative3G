@@ -15,7 +15,7 @@ contenu dans un seul jeu.
 - [x] Cadres de menus : 20 d'Émeraude + 9 de Rouge Feu (type 2 de RF = cadre 2 d'Émeraude) = 29 (option CADRE)
 - [x] Sac : poches agrandies pour contenir les objets des deux jeux
 - [x] Fonds des boîtes du PC : 16 d'Émeraude + 16 de Rouge Feu (tous différents), catégorie KANTO (non testé en jeu)
-- [x] Boîte de dialogue : HOENN / KANTO (option DIALOGUE) — panneaux de RF (signpost) pas encore
+- [x] Boîte de dialogue : HOENN / KANTO (option DIALOGUE : cadre, fenêtre et police de RF) — panneaux de RF (signpost) pas encore
 
 ## À faire — contenu à réunir (listes)
 - Décision : musiques, animations et transitions de combat = celles de la région, comme dans les jeux officiels (pas d'option).
