@@ -1304,32 +1304,8 @@ static const u16 *const sTilesetAnims_KantoCeladonGym_Flowers[] = {
     sTilesetAnims_KantoCeladonGym_Flowers_Frame1
 };
 
-static void ResetTilesetAnimBuffer(void)
-{
-    sTilesetDMA3TransferBufferSize = 0;
-    CpuFill32(0, sTilesetDMA3TransferBuffer, sizeof sTilesetDMA3TransferBuffer);
-}
 
-static void AppendTilesetAnimToBuffer(const u16 *src, u16 *dest, u16 size)
-{
-    if (sTilesetDMA3TransferBufferSize < 20)
-    {
-        sTilesetDMA3TransferBuffer[sTilesetDMA3TransferBufferSize].src = src;
-        sTilesetDMA3TransferBuffer[sTilesetDMA3TransferBufferSize].dest = dest;
-        sTilesetDMA3TransferBuffer[sTilesetDMA3TransferBufferSize].size = size;
-        sTilesetDMA3TransferBufferSize++;
-    }
-}
 
-void TransferTilesetAnimsBuffer(void)
-{
-    int i;
-
-    for (i = 0; i < sTilesetDMA3TransferBufferSize; i++)
-        DmaCopy16(3, sTilesetDMA3TransferBuffer[i].src, sTilesetDMA3TransferBuffer[i].dest, sTilesetDMA3TransferBuffer[i].size);
-
-    sTilesetDMA3TransferBufferSize = 0;
-}
 
 static void QueueAnimTiles_KantoGeneral_Flower(u16 timer)
 {
