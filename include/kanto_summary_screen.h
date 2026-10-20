@@ -14,6 +14,7 @@ enum KantoPokemonSummaryScreenMode
     PSS_MODE_BOX,
 };
 
+#ifdef KANTO_SUMMARY_SCREEN_INTERNAL // noms aussi utilisés par le résumé d'Émeraude
 enum PokemonSummaryScreenPage
 {
     PSS_PAGE_INFO,
@@ -54,7 +55,7 @@ enum PokemonSummaryScreenStat
 #define TAG_PSS_UNK_8C 0x8C
 #define TAG_PSS_UNK_96 0x96
 #define TAG_PSS_UNK_A0 0xA0
-
+#endif
 
 void KantoShowPokemonSummaryScreen(struct Pokemon * party, u8 cursorPos, u8 lastIdx, MainCallback savedCallback, u8 mode);
 void KantoShowSelectMovePokemonSummaryScreen(struct Pokemon * party, u8 cursorPos, u8 lastIdx, MainCallback savedCallback, u16 a4);

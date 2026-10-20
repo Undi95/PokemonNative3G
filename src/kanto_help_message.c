@@ -1,5 +1,6 @@
 // Rouge Feu : help_message.c (bande de description du menu Start, option MENUS = KANTO)
 #include "global.h"
+#include "palette.h"
 #include "malloc.h"
 #include "menu.h"
 #include "text.h"
@@ -9,6 +10,7 @@
 static EWRAM_DATA u8 sHelpMessageWindowId = WINDOW_NONE;
 
 static const u8 gHelpMessageWindow_Gfx[] = INCGFX_U8("graphics/kanto/help_system/msg_window.png", ".4bpp");
+static const u16 sHelpMessageWindow_Pal[] = INCGFX_U16("graphics/kanto/text_window/stdpal_2.pal", ".gbapal"); // GetTextWindowPalette(2)
 
 void ResetHelpMessageWindowId(void)
 {
@@ -32,6 +34,8 @@ u8 CreateHelpMessageWindow(void)
     {
         sHelpMessageWindowId = AddWindow(&sHelpMessageWindowTemplate);
         PutWindowTilemap(sHelpMessageWindowId);
+        // RF (text_window.c : LoadHelpMessageWindowGfx) : palette de la bande
+        LoadPalette(sHelpMessageWindow_Pal, BG_PLTT_ID(sHelpMessageWindowTemplate.paletteNum), PLTT_SIZE_4BPP);
     }
     return sHelpMessageWindowId;
 }

@@ -175,8 +175,9 @@ static const u8 *const sStartMenuDescPointers[] =
 };
 
 // Rouge Feu (start_menu.c) : entrées tous les 15 px depuis y = 0, police de RF.
-// Émeraude peut avoir 8 entrées (POKéNAV) : 13 px pour laisser la bande de description visible.
-#define KANTO_START_MENU_SPACING (sNumStartMenuActions > 7 ? 13 : 15)
+// Émeraude peut avoir plus de 7 entrées (POKéNAV, DEBUG) : elles se resserrent dans les 13 lignes
+// au-dessus de la bande de description, qui reste toujours visible.
+#define KANTO_START_MENU_SPACING (sNumStartMenuActions > 7 ? (13 * 8) / sNumStartMenuActions : 15)
 #define START_MENU_FONT (gSaveBlock2Ptr->optionsMenuStyle ? FONT_KANTO : FONT_NORMAL)
 #define START_MENU_ITEM_Y(index) (gSaveBlock2Ptr->optionsMenuStyle ? (index) * KANTO_START_MENU_SPACING : ((index) << 4) + 9)
 

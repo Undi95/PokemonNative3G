@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_summary_screen.h"
 #include "main.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -1097,8 +1098,39 @@ static const struct SpriteTemplate sSpriteTemplate_StatusCondition =
 static const u16 sMarkings_Pal[] = INCGFX_U16("graphics/summary_screen/markings.pal", ".gbapal");
 
 // code
+// PokemonNative3G : option MENUS = KANTO -> résumé de Rouge Feu (src/kanto_summary_screen.c)
+static EWRAM_DATA bool8 sKantoSummaryScreen = FALSE;
+
+static bool8 TryShowKantoSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void), u16 newMove)
+{
+    sKantoSummaryScreen = gSaveBlock2Ptr->optionsMenuStyle;
+    if (!sKantoSummaryScreen)
+        return FALSE;
+    switch (mode)
+    {
+    case SUMMARY_MODE_NORMAL:
+    default:
+        KantoShowPokemonSummaryScreen(mons, monIndex, maxMonIndex, callback, PSS_MODE_NORMAL);
+        break;
+    case SUMMARY_MODE_LOCK_MOVES: // RF : NORMAL dans l'équipe en combat, TRADE ailleurs (échange, Usine de Combat)
+        KantoShowPokemonSummaryScreen(mons, monIndex, maxMonIndex, callback, gMain.inBattle ? PSS_MODE_NORMAL : PSS_MODE_TRADE);
+        break;
+    case SUMMARY_MODE_BOX:
+        KantoShowPokemonSummaryScreen(mons, monIndex, maxMonIndex, callback, PSS_MODE_BOX);
+        break;
+    case SUMMARY_MODE_SELECT_MOVE:
+        KantoShowSelectMovePokemonSummaryScreen(mons, monIndex, maxMonIndex, callback, newMove);
+        if (newMove == MOVE_NONE) // RF (party_menu_specials.c : SelectMoveDeleterMove)
+            KantoSetPokemonSummaryScreenMode(PSS_MODE_FORGET_MOVE);
+        break;
+    }
+    return TRUE;
+}
+
 void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void))
 {
+    if (TryShowKantoSummaryScreen(mode, mons, monIndex, maxMonIndex, callback, MOVE_NONE))
+        return;
     sMonSummaryScreen = AllocZeroed(sizeof(*sMonSummaryScreen));
     sMonSummaryScreen->mode = mode;
     sMonSummaryScreen->monList.mons = mons;
@@ -1141,12 +1173,16 @@ void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, 
 
 void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void), u16 newMove)
 {
+    if (TryShowKantoSummaryScreen(SUMMARY_MODE_SELECT_MOVE, mons, monIndex, maxMonIndex, callback, newMove))
+        return;
     ShowPokemonSummaryScreen(SUMMARY_MODE_SELECT_MOVE, mons, monIndex, maxMonIndex, callback);
     sMonSummaryScreen->newMove = newMove;
 }
 
 void ShowPokemonSummaryScreenHandleDeoxys(u8 mode, struct BoxPokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void))
 {
+    if (TryShowKantoSummaryScreen(mode, mons, monIndex, maxMonIndex, callback, MOVE_NONE))
+        return;
     ShowPokemonSummaryScreen(mode, mons, monIndex, maxMonIndex, callback);
     sMonSummaryScreen->handleDeoxys = TRUE;
 }
@@ -2332,6 +2368,8 @@ static void Task_HandleInputCantForgetHMsMoves(u8 taskId)
 
 u8 GetMoveSlotToReplace(void)
 {
+    if (sKantoSummaryScreen)
+        return KantoGetMoveSlotToReplace();
     return sMoveSlotToReplace;
 }
 

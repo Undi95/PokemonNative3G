@@ -13,6 +13,7 @@
 #include "graphics.h"
 #include "international_string_util.h"
 #include "item.h"
+#define KANTO_SUMMARY_SCREEN_INTERNAL
 #include "kanto_summary_screen.h"
 #include "link.h"
 #include "main.h"
@@ -172,7 +173,7 @@ void SetPokemonSummaryScreenMode(u8 mode);
 
 
 // needs conflicting header to match (curIndex is s8 in the function, but has to be defined as u8 here)
-extern s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, u8 curIndex, u8 maxIndex, u8 flags);
+#define SeekToNextMonInBox AdvanceStorageMonIndex // nom d'Émeraude
 
 static void BufferSelectedMonData(struct Pokemon * mon);
 static void CB2_SetUpPSS(void);
@@ -3123,6 +3124,7 @@ static void Task_DestroyResourcesOnExit(u8 taskId)
     SetMainCallback2(sMonSummaryScreen->savedCallback);
 
     sLastViewedMonIndex = GetLastViewedMonIndex();
+    gLastViewedMonIndex = sLastViewedMonIndex; // lu par les écrans d'Émeraude au retour
 
     FREE_AND_SET_NULL_IF_SET(sMonSummaryScreen);
     FREE_AND_SET_NULL_IF_SET(sMonSkillsPrinterXpos);
