@@ -15,5 +15,5 @@ def play(game):
     debug_warp(game, 1)
     walk_to(game, 26, 27); leave_map(game, "UP"); log(game, "Centre Pokémon")
     walk_to(game, 7, 4); talk_to(game, "UP"); log(game, "soin")
-    walk_to(game, 13, 4); game.tap("UP"); game.wait(20); game.tap("A"); game.wait(240); log(game, "PC")
+    walk_to(game, 11, 2); game.tap("UP"); game.wait(20); game.tap("A"); game.wait(240); log(game, "PC")
     game.tap("B", 4, gap=60); game.wait(120)

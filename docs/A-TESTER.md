@@ -80,4 +80,5 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Option POKéDEX absente des Options tant que le Prof. Chen n'a pas donné son Pokédex (labo de Bourg Palette), présente ensuite. Debug : « Débloquer les 2 POKéDEX » (MEWTWO ne donne plus le Pokédex)
 - [ ] Options > MENUS = KANTO : menu Start de RF (police, espacement, bande de description bleue en bas qui suit le curseur ; 8 entrées avec le POKéNAV : resserrées, la bande reste visible), équipe aux couleurs de RF, résumé du Pokémon de RF (pages INFOS/STATS/CAPACITÉS, changer de Pokémon, depuis l'équipe, le PC, l'échange ; apprendre une capacité au niveau supérieur, Maître des capacités / Effaceur)
 - [ ] Animations des tuiles de Kanto (RF) : fleurs, eau et sable des rivages, fontaines de Céladopole et de Sylphe SARL, vapeur du Mont Braise, fleurs de l'arène de Céladopole, porte motorisée de l'arène de Carmin
+- [ ] Centre Pokémon de Kanto : moniteur de soin qui clignote (RF), écran du PC qui s'allume/s'éteint (RF), aussi le PC de la chambre
 - [ ] À FAIRE : sac de Kanto (RF) + Boîte CT et Sac à Baies de RF pour les poches CT/Baies d'Émeraude
