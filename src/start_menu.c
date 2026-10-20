@@ -174,6 +174,12 @@ static const u8 *const sStartMenuDescPointers[] =
     [MENU_ACTION_DEBUG]           = gStartMenuDesc_Debug,
 };
 
+// Rouge Feu (start_menu.c) : entrées tous les 15 px depuis y = 0, police de RF.
+// Émeraude peut avoir 8 entrées (POKéNAV) : 13 px pour laisser la bande de description visible.
+#define KANTO_START_MENU_SPACING (sNumStartMenuActions > 7 ? 13 : 15)
+#define START_MENU_FONT (gSaveBlock2Ptr->optionsMenuStyle ? FONT_KANTO : FONT_NORMAL)
+#define START_MENU_ITEM_Y(index) (gSaveBlock2Ptr->optionsMenuStyle ? (index) * KANTO_START_MENU_SPACING : ((index) << 4) + 9)
+
 // Rouge Feu (start_menu.c) : description de l'entrée sélectionnée
 static void PrintStartMenuDescription(void)
 {
@@ -508,12 +514,12 @@ static bool32 PrintStartMenuActions(s8 *pIndex, u32 count)
     {
         if (sStartMenuItems[sCurrentStartMenuActions[index]].func.u8_void == StartMenuPlayerNameCallback)
         {
-            PrintPlayerNameOnWindow(GetStartMenuWindowId(), sStartMenuItems[sCurrentStartMenuActions[index]].text, 8, (index << 4) + 9);
+            PrintPlayerNameOnWindow(GetStartMenuWindowId(), sStartMenuItems[sCurrentStartMenuActions[index]].text, 8, START_MENU_ITEM_Y(index));
         }
         else
         {
             StringExpandPlaceholders(gStringVar4, sStartMenuItems[sCurrentStartMenuActions[index]].text);
-            AddTextPrinterParameterized(GetStartMenuWindowId(), FONT_NORMAL, gStringVar4, 8, (index << 4) + 9, TEXT_SKIP_DRAW, NULL);
+            AddTextPrinterParameterized(GetStartMenuWindowId(), START_MENU_FONT, gStringVar4, 8, START_MENU_ITEM_Y(index), TEXT_SKIP_DRAW, NULL);
         }
 
         index++;
@@ -565,7 +571,10 @@ static bool32 InitStartMenuStep(void)
             sInitStartMenuData[0]++;
         break;
     case 5:
-        sStartMenuCursorPos = InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 9, 16, sNumStartMenuActions, sStartMenuCursorPos);
+        if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu : Menu_InitCursor(..., 0, 0, 15, ...)
+            sStartMenuCursorPos = InitMenuNormal(GetStartMenuWindowId(), FONT_KANTO, 0, 0, KANTO_START_MENU_SPACING, sNumStartMenuActions, sStartMenuCursorPos);
+        else
+            sStartMenuCursorPos = InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 9, 16, sNumStartMenuActions, sStartMenuCursorPos);
         CopyWindowToVram(GetStartMenuWindowId(), COPYWIN_MAP);
         return TRUE;
     }

@@ -551,7 +551,12 @@ u8 GetPlayerTextSpeedDelay(void)
 u8 AddStartMenuWindow(u8 numActions)
 {
     if (sStartMenuWindowId == WINDOW_NONE)
-        sStartMenuWindowId = AddWindowParameterized(0, 22, 1, 7, (numActions * 2) + 2, 15, 0x139);
+    {
+        if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu (CreateStartMenuWindow) : entrées tous les 15 px
+            sStartMenuWindowId = AddWindowParameterized(0, 22, 1, 7, numActions > 7 ? 13 : numActions * 2 - 1, 15, 0x139);
+        else
+            sStartMenuWindowId = AddWindowParameterized(0, 22, 1, 7, (numActions * 2) + 2, 15, 0x139);
+    }
     return sStartMenuWindowId;
 }
 
