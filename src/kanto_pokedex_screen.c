@@ -1,5 +1,6 @@
 // Rouge Feu : pokedex_screen.c (option POKEDEX = KANTO). Textes et données de RF.
 #include "global.h"
+#include <stdio.h> // DEBUG
 #include "bg.h"
 #include "blit.h"
 #include "decompress.h"
@@ -45,7 +46,7 @@
 #define DexScreen_RegisterMonToPokedex KantoDexScreen_RegisterMonToPokedex
 #define DoClosePokedex KantoDex_DoClosePokedex
 #define CB2_ClosePokedex KantoDex_CB2_ClosePokedex
-#define FONT_NORMAL 1 // TEST
+#define FONT_NORMAL FONT_KANTO
 #define FONT_NORMAL_COPY_1 FONT_KANTO
 #define JOY_REPT(button) (gMain.newAndRepeatedKeys & (button))
 #ifndef FREE_IF_NOT_NULL
@@ -2310,6 +2311,8 @@ static void DexScreen_AddTextPrinterParameterized(u8 windowId, u8 fontId, const 
         break;
     }
     AddTextPrinterParameterized4(windowId, fontId, x, y, fontId == FONT_SMALL ? 0 : 1, 0, textColor, -1, str);
+    fprintf(stderr, "DEXTXT win=%d bg=%d base=%d font=%d x=%d c0=%02x
+", windowId, GetWindowAttribute(windowId, WINDOW_BG), GetWindowAttribute(windowId, WINDOW_BASE_BLOCK), fontId, x, str[0]); // DEBUG
 }
 
 static void DexScreen_PrintNum3LeadingZeroes(u8 windowId, u8 fontId, u16 num, u8 x, u8 y, u8 colorIdx)
