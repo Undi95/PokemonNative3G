@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_field_door.h"
 #include "decompress.h"
 #include "event_object_movement.h"
 #include "field_camera.h"
@@ -1282,10 +1283,49 @@ static void SpriteCB_PokeballGlow(struct Sprite *sprite)
     }
 }
 
+// Rouge Feu (field_effect.c) : moniteur du Centre Pokémon de Kanto (32x16, 4 images, sans sous-sprites)
+static const u16 sKantoPokecenterMonitor_Gfx[] = INCGFX_U16("graphics/kanto/field_effects/pokemoncenter_monitor.png", ".4bpp");
+static const struct SpriteFrameImage sPicTable_KantoPokecenterMonitor[] = {
+    {sKantoPokecenterMonitor_Gfx + 0x000, 0x100},
+    {sKantoPokecenterMonitor_Gfx + 0x080, 0x100},
+    {sKantoPokecenterMonitor_Gfx + 0x100, 0x100},
+    {sKantoPokecenterMonitor_Gfx + 0x180, 0x100}
+};
+static const struct OamData sOam_KantoMonitor = {.shape = SPRITE_SHAPE(32x16), .size = SPRITE_SIZE(32x16)};
+static const union AnimCmd sAnim_KantoMonitorStatic[] = {ANIMCMD_FRAME(0, 1), ANIMCMD_JUMP(0)};
+static const union AnimCmd sAnim_KantoMonitorFlicker[] = {
+    ANIMCMD_FRAME(1, 5),
+    ANIMCMD_FRAME(2, 5),
+    ANIMCMD_FRAME(3, 7),
+    ANIMCMD_FRAME(2, 5),
+    ANIMCMD_FRAME(1, 5),
+    ANIMCMD_FRAME(0, 5),
+    ANIMCMD_LOOP(3),
+    ANIMCMD_END
+};
+static const union AnimCmd *const sAnims_KantoMonitor[] = {sAnim_KantoMonitorStatic, sAnim_KantoMonitorFlicker};
+static const struct SpriteTemplate sSpriteTemplate_KantoPokecenterMonitor = {
+    .tileTag = TAG_NONE,
+    .paletteTag = 4103,
+    .oam = &sOam_KantoMonitor,
+    .anims = sAnims_KantoMonitor,
+    .images = sPicTable_KantoPokecenterMonitor,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_PokecenterMonitor
+};
+
 static u8 CreatePokecenterMonitorSprite(s16 x, s16 y)
 {
     u8 spriteId;
     struct Sprite *sprite;
+
+    if (IsKantoTilesetMap()) // Rouge Feu : CreatePokecenterMonitorSprite(128, 24)
+    {
+        spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoPokecenterMonitor, 128, y, 0);
+        gSprites[spriteId].oam.priority = 2;
+        gSprites[spriteId].invisible = TRUE;
+        return spriteId;
+    }
     spriteId = CreateSpriteAtEnd(&sSpriteTemplate_PokecenterMonitor, x, y, 0);
     sprite = &gSprites[spriteId];
     sprite->oam.priority = 2;

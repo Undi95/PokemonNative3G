@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/kanto/metatile_labels.h"
 #include "malloc.h"
 #include "battle.h"
 #include "battle_tower.h"
@@ -1050,7 +1051,9 @@ static void PCTurnOnEffect_SetMetatile(s16 isScreenOn, s8 dx, s8 dy)
     if (isScreenOn)
     {
         // Screen is on, set it off
-        if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
+        if (IsKantoTilesetMap()) // Rouge Feu (AnimatePcTurnOn)
+            metatileId = gSpecialVar_0x8004 == PC_LOCATION_OTHER ? METATILE_Building_PCOff : METATILE_GenericBuilding1_PlayersPCOff;
+        else if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
             metatileId = METATILE_Building_PC_Off;
         else if (gSpecialVar_0x8004 == PC_LOCATION_BRENDANS_HOUSE)
             metatileId = METATILE_BrendansMaysHouse_BrendanPC_Off;
@@ -1060,7 +1063,9 @@ static void PCTurnOnEffect_SetMetatile(s16 isScreenOn, s8 dx, s8 dy)
     else
     {
         // Screen is off, set it on
-        if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
+        if (IsKantoTilesetMap())
+            metatileId = gSpecialVar_0x8004 == PC_LOCATION_OTHER ? METATILE_Building_PCOn : METATILE_GenericBuilding1_PlayersPCOn;
+        else if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
             metatileId = METATILE_Building_PC_On;
         else if (gSpecialVar_0x8004 == PC_LOCATION_BRENDANS_HOUSE)
             metatileId = METATILE_BrendansMaysHouse_BrendanPC_On;
@@ -1100,7 +1105,9 @@ static void PCTurnOffEffect(void)
         break;
     }
 
-    if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
+    if (IsKantoTilesetMap()) // Rouge Feu (AnimatePcTurnOff)
+        metatileId = gSpecialVar_0x8004 == PC_LOCATION_OTHER ? METATILE_Building_PCOff : METATILE_GenericBuilding1_PlayersPCOff;
+    else if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
         metatileId = METATILE_Building_PC_Off;
     else if (gSpecialVar_0x8004 == PC_LOCATION_BRENDANS_HOUSE)
         metatileId = METATILE_BrendansMaysHouse_BrendanPC_Off;
