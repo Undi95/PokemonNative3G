@@ -69,6 +69,21 @@
 #define SetHelpContext(x)
 #define Overworld_LinkRecvQueueLengthMoreThan2 Overworld_IsRecvQueueAtMax
 #define CB2_ReturnToTradeMenuFromSummary CB2_ReturnToTradeMenu
+#define GetMapNameGeneric_ GetMapNameGeneric
+#define IsUpdateLinkStateCBActive IsOverworldLinkActive
+#define DestroyMonIcon FreeAndDestroyMonIconSprite
+#define free Free
+#define DEOXYS_CHECK_TRADE_MAIN 3
+u16 CreateMonPicSprite(u16 species, u32 otId, u32 personality, bool8 isFrontPic, s16 x, s16 y, u8 paletteSlot, u16 paletteTag, bool8 ignoreDeoxys);
+void DestroySpriteAndFreeResources_Ball(struct Sprite *sprite);
+void SafeLoadMonIconPalette(u16 species);
+void SafeFreeMonIconPalette(u16 species);
+
+// Rouge Feu (field_specials.c)
+static u32 GetPlayerTrainerId(void)
+{
+    return (gSaveBlock2Ptr->playerTrainerId[3] << 24) | (gSaveBlock2Ptr->playerTrainerId[2] << 16) | (gSaveBlock2Ptr->playerTrainerId[1] << 8) | gSaveBlock2Ptr->playerTrainerId[0];
+}
 void CB2_ReturnToTradeMenu(void);
 
 // Rouge Feu (menu_helpers.c)
