@@ -67,6 +67,18 @@
 #define FREE_IF_NOT_NULL(ptr) do { if (ptr != NULL) { Free(ptr); ptr = NULL; } } while (0)
 #endif
 #define SetHelpContext(x)
+#define Overworld_LinkRecvQueueLengthMoreThan2 Overworld_IsRecvQueueAtMax
+#define CB2_ReturnToTradeMenuFromSummary CB2_ReturnToTradeMenu
+void CB2_ReturnToTradeMenu(void);
+
+// Rouge Feu (menu_helpers.c)
+static bool8 IsActiveOverworldLinkBusy(void)
+{
+    if (!MenuHelpers_IsLinkActive())
+        return FALSE;
+    else
+        return (u8)Overworld_LinkRecvQueueLengthMoreThan2();
+}
 
 // Rouge Feu (graphics.c)
 static const u32 gSummaryScreen_Bg_Gfx[] = INCGFX_U32("graphics/kanto/summary_screen/bg.png", ".4bpp.lz");

@@ -706,7 +706,7 @@ static void CB2_CreateTradeMenu(void)
     UpdatePaletteFade();
 }
 
-static void CB2_ReturnToTradeMenu(void)
+void CB2_ReturnToTradeMenu(void)
 {
     int i;
     struct SpriteTemplate temp;
