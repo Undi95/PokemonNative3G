@@ -18,13 +18,13 @@ contenu dans un seul jeu.
 - [x] Boîte de dialogue : HOENN / KANTO (option DIALOGUE : cadre, fenêtre et police de RF) — panneaux de RF (signpost) pas encore
 
 - [x] Interface de combat : boîtes de PV/EXP et boîte de texte de combat HOENN / KANTO (option BOITES COMBAT) — barre de l'équipe (balls) encore celle d'Émeraude
+- [x] Pokédex HOENN / KANTO (option POKéDEX) : écran complet de RF (pokedex_screen.c porté, textes/descriptions de RF, zones de Kanto)
 
 ## À faire — contenu à réunir (listes)
 - Décision : musiques, animations et transitions de combat = celles de la région, comme dans les jeux officiels (pas d'option).
 - Options : menu ergonomique (sous-menus / pages) si la liste devient trop longue.
 
 ## À faire — choix HOENN / KANTO dans les Options
-- [ ] Pokédex (écran complet de chaque jeu, avec ses fonctions : Hoenn = zones/tailles, Kanto = habitats/catégories)
 - [ ] Menu Start, écran du sac, menu de l'équipe, résumé du Pokémon
 - [ ] Interface du PC (stockage)
 - [ ] Écran de nom (clavier)
@@ -33,5 +33,6 @@ contenu dans un seul jeu.
 - [ ] Carte de la région / Vol : chaque région garde la sienne (pas une option : Kanto = carte RF)
 
 ## Notes
+- Piste (utilisateur) : Émeraude a été construit à partir de Rouge Feu ; il garde des fonctions vidées et des entrées inutilisées de RF (ex. BgTileAllocOp « Dummied out », LoadMonPicInWindow UNUSED). Les rétablir avec le code de RF avant de réinventer.
 - Comparaison des cadres : script PIL (pixels RGB identiques) ; refaire de même pour chaque liste.
 - Les choix d'option sont dans gSaveBlock2Ptr (bits libres) ; au-delà, gSaveBlockKanto.

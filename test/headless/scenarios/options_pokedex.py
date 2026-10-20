@@ -19,5 +19,5 @@ def play(game):
     game.tap("START"); game.wait(30); game.tap("UP", 5, gap=10); game.wait(10); game.tap("A"); game.wait(240)
     game.tap("A"); game.wait(200)        # 1re entrée du sommaire : liste numérique
     game.tap("A"); game.wait(200)        # fiche du 1er Pokémon
-    game.tap("RIGHT"); game.wait(200)    # page suivante (zone)
+    game.tap("A"); game.wait(200)        # page suivante (zone)
     game.tap("B"); game.wait(150); game.tap("B"); game.wait(150); game.tap("B"); game.wait(150); game.tap("B"); game.wait(200)
