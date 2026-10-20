@@ -102,7 +102,7 @@ static const struct SpritePalette sKantoSpritePalettes_HealthBoxHealthBar[2] =
     {gKantoBattleInterface_Healthbox_Pal, TAG_HEALTHBOX_PAL},
     {gKantoBattleInterface_Healthbar_Pal, TAG_HEALTHBAR_PAL}
 };
-#define KANTO_UI(hoenn) (gSaveBlock2Ptr->optionsBattleUI ? sKanto##hoenn : s##hoenn)
+#define KANTO_UI(hoenn) (*(gSaveBlock2Ptr->optionsBattleUI ? &sKanto##hoenn : &s##hoenn))
 
 // code
 void AllocateBattleSpritesData(void)
