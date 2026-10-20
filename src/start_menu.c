@@ -153,8 +153,7 @@ static const u8 gStartMenuDesc_Option[] = _("Régler les paramètres de jeu.");
 static const u8 gStartMenuDesc_Exit[] = _("Fermer ce menu.");
 static const u8 gStartMenuDesc_Retire[] = _("Quitter le JEU SAFARI et retourner\nà l'accueil.");
 // PokemonNative3G : entrées d'Émeraude absentes de RF
-static const u8 gStartMenuDesc_PokeNav[] = _("Un appareil multifonction avec carte
-et appels.");
+static const u8 gStartMenuDesc_PokeNav[] = _("Un appareil multifonction avec carte\net appels.");
 static const u8 gStartMenuDesc_Debug[] = _("Menu de test.");
 
 static const u8 *const sStartMenuDescPointers[] =
