@@ -5018,7 +5018,8 @@ static void PokeSum_CreateMonMarkingsSprite(void)
 {
     u32 markings = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_MARKINGS);
 
-    DestroySpriteAndFreeResources(sMonSummaryScreen->markingSprite);
+    if (sMonSummaryScreen->markingSprite != NULL) // PORTABLE : sur GBA, lire l'adresse 0 ne plante pas
+        DestroySpriteAndFreeResources(sMonSummaryScreen->markingSprite);
     sMonSummaryScreen->markingSprite = CreateMonMarkingAllCombosSprite(TAG_PSS_UNK_8C, TAG_PSS_UNK_8C, sMonMarkingSpritePalette);
 
     if (sMonSummaryScreen->markingSprite != NULL)
