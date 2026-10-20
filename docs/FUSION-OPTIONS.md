@@ -17,13 +17,14 @@ contenu dans un seul jeu.
 - [x] Fonds des boîtes du PC : 16 d'Émeraude + 16 de Rouge Feu (tous différents), catégorie KANTO (non testé en jeu)
 - [x] Boîte de dialogue : HOENN / KANTO (option DIALOGUE : cadre, fenêtre et police de RF) — panneaux de RF (signpost) pas encore
 
+- [x] Interface de combat : boîtes de PV/EXP et boîte de texte de combat HOENN / KANTO (option BOITES COMBAT) — barre de l'équipe (balls) encore celle d'Émeraude
+
 ## À faire — contenu à réunir (listes)
 - Décision : musiques, animations et transitions de combat = celles de la région, comme dans les jeux officiels (pas d'option).
 - Options : menu ergonomique (sous-menus / pages) si la liste devient trop longue.
 
 ## À faire — choix HOENN / KANTO dans les Options
 - [ ] Pokédex (écran complet de chaque jeu, avec ses fonctions : Hoenn = zones/tailles, Kanto = habitats/catégories)
-- [ ] Interface de combat : boîtes de vie, barres de PV et d'EXP, boîte de texte de combat
 - [ ] Menu Start, écran du sac, menu de l'équipe, résumé du Pokémon
 - [ ] Interface du PC (stockage)
 - [ ] Écran de nom (clavier)

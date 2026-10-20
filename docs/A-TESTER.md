@@ -75,3 +75,4 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] PC > boîte > FONDS > KANTO > KANTO 1-4 : les 16 fonds de Rouge Feu, titre de boîte lisible, sauvegardés
 - [ ] Options > DIALOGUE = KANTO : boîte de dialogue de Rouge Feu partout (PNJ, panneaux, combats ? non concernés) ; texte lisible, pas de reste de cadre à la fermeture
 - [ ] DIALOGUE = KANTO : fenêtre de RF (26 colonnes, 4 coins) + police de RF. Les textes d'Émeraude trop larges pour la police de RF (~4 % des lignes) gardent la police d'Émeraude automatiquement ; une soixantaine de lignes d'Émeraude dépassent même 26 colonnes : signaler si un texte est coupé à droite
+- [ ] Options > BOITES COMBAT = KANTO : boîtes de PV/EXP, barres, statuts et boîte de texte de combat de Rouge Feu (simple, double, Safari) ; le menu ATTAQUE/SAC/POKéMON/FUITE et le choix des attaques restent lisibles
