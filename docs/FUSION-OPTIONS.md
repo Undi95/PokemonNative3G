@@ -25,7 +25,7 @@ contenu dans un seul jeu.
 - Options : menu ergonomique (sous-menus / pages) si la liste devient trop longue.
 
 ## À faire — choix HOENN / KANTO dans les Options
-- [ ] Menus (option MENUS) : menu Start et équipe faits ; résumé du Pokémon et sac à porter
+- [ ] Menus (option MENUS) : menu Start, équipe et résumé faits ; sac à porter
 - [ ] Interface du PC (stockage)
 - [ ] Écran de nom (clavier)
 - [ ] Intro (Flygon / Nidorino-Ectoplasma), crédits, Panthéon
