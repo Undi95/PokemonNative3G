@@ -353,7 +353,8 @@ u16 FreeAndDestroyMonPicSprite(u16 spriteId)
 
 u16 LoadMonPicInWindow(u16 species, u32 otId, u32 personality, bool8 isFrontPic, u8 paletteSlot, u8 windowId)
 {
-    return LoadPicSpriteInWindow(species, otId, personality, isFrontPic, paletteSlot, windowId, FALSE);
+    // Rouge Feu : passe par un tampon (la décompression directe déborde de la fenêtre)
+    return CreateTrainerCardSprite(species, otId, personality, isFrontPic, 0, 0, paletteSlot, windowId, FALSE);
 }
 
 // Unused, FRLG only
