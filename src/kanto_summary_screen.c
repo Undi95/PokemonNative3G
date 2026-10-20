@@ -3129,7 +3129,7 @@ static void Task_DestroyResourcesOnExit(u8 taskId)
 
     FREE_AND_SET_NULL_IF_SET(sMonSummaryScreen);
     FREE_AND_SET_NULL_IF_SET(sMonSkillsPrinterXpos);
-    fprintf(stderr, "X\n"); fflush(stderr); // DEBUG
+    { int i; for (i = 0; i < MAX_SPRITES; i++) if (gSprites[i].inUse) fprintf(stderr, "S%d cb=%p anims=%p\n", i, (void*)gSprites[i].callback, (void*)gSprites[i].anims); fprintf(stderr, "X\n"); fflush(stderr); } // DEBUG
 }
 
 static void CB2_RunPokemonSummaryScreen(void)
