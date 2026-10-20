@@ -3115,21 +3115,30 @@ static void CommitStaticWindowTilemaps(void)
 static void Task_DestroyResourcesOnExit(u8 taskId)
 {
     PokeSum_DestroySprites();
+    fprintf(stderr, "E0\n"); fflush(stderr); // DEBUG
     FreeAllSpritePalettes();
+    fprintf(stderr, "E1\n"); fflush(stderr); // DEBUG
 
     if (IsCryPlayingOrClearCrySongs() == TRUE)
         StopCryAndClearCrySongs();
 
     PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
+    fprintf(stderr, "E2\n"); fflush(stderr); // DEBUG
     FreeAllWindowBuffers();
+    fprintf(stderr, "E3\n"); fflush(stderr); // DEBUG
     DestroyTask(taskId);
+    fprintf(stderr, "E4\n"); fflush(stderr); // DEBUG
     SetMainCallback2(sMonSummaryScreen->savedCallback);
+    fprintf(stderr, "E5\n"); fflush(stderr); // DEBUG
 
     sLastViewedMonIndex = GetLastViewedMonIndex();
+    fprintf(stderr, "E6\n"); fflush(stderr); // DEBUG
     gLastViewedMonIndex = sLastViewedMonIndex; // lu par les écrans d'Émeraude au retour
 
     FREE_AND_SET_NULL_IF_SET(sMonSummaryScreen);
+    fprintf(stderr, "E7\n"); fflush(stderr); // DEBUG
     FREE_AND_SET_NULL_IF_SET(sMonSkillsPrinterXpos);
+    fprintf(stderr, "E8\n"); fflush(stderr); // DEBUG
 }
 
 static void CB2_RunPokemonSummaryScreen(void)
