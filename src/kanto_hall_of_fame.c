@@ -1579,6 +1579,8 @@ static bool8 Hof_SpawnConfetti(void)
     return FALSE;
 }
 
+extern bool8 gKantoHasHallOfFameRecords; // src/kanto_credits.c
+
 // ---- Rouge Feu (post_battle_event_funcs.c) : special EnterHallOfFame, salle du Panthéon de Kanto ----
 bool8 EnterHallOfFame(void)
 {
@@ -1587,6 +1589,7 @@ bool8 EnterHallOfFame(void)
     int i;
 
     HealPlayerParty();
+    gKantoHasHallOfFameRecords = FlagGet(FLAG_KANTO_SYS_GAME_CLEAR);
     FlagSet(FLAG_KANTO_SYS_GAME_CLEAR);
     if (GetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME) == 0)
         SetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME, (gSaveBlock2Ptr->playTimeHours << 16) | (gSaveBlock2Ptr->playTimeMinutes << 8) | gSaveBlock2Ptr->playTimeSeconds);
