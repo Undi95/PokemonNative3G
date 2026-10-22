@@ -7,13 +7,28 @@
 #include "script_menu.h"
 #include "task.h"
 #include "constants/rgb.h"
+#include "event_data.h"
+#include "kanto_field_door.h"
+#include "constants/flags.h"
+#include "constants/kanto_flags_vars.h"
 
 static void ReshowPCMenuAfterHallOfFamePC(void);
 static void Task_WaitForPaletteFade(u8);
 
+// PokemonNative3G : chaque région montre son Panthéon (Kanto : celui de Rouge Feu, src/kanto_hall_of_fame.c)
+bool8 HasHallOfFameInThisRegion(void)
+{
+    if (IsKantoTilesetMap())
+        return FlagGet(FLAG_KANTO_SYS_GAME_CLEAR);
+    return FlagGet(FLAG_SYS_GAME_CLEAR);
+}
+
 void AccessHallOfFamePC(void)
 {
-    SetMainCallback2(CB2_DoHallOfFamePC);
+    if (IsKantoTilesetMap())
+        SetMainCallback2(KantoCB2_InitHofPC);
+    else
+        SetMainCallback2(CB2_DoHallOfFamePC);
     LockPlayerFieldControls();
 }
 

@@ -55,7 +55,8 @@ EventScript_TurnOffPC::
 	end
 
 EventScript_AccessHallOfFame::
-	goto_if_unset FLAG_SYS_GAME_CLEAR, EventScript_TurnOffPC
+	specialvar VAR_RESULT, HasHallOfFameInThisRegion
+	goto_if_eq VAR_RESULT, FALSE, EventScript_TurnOffPC
 	playse SE_PC_LOGIN
 	special AccessHallOfFamePC
 	goto EventScript_AccessPC

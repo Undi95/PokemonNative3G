@@ -84,3 +84,43 @@ void BagSave_Read(void)
     memcpy(gSaveBlockBag.items, gSaveBlock1Ptr->bagPocket_Items, sizeof(gSaveBlock1Ptr->bagPocket_Items));
     memcpy(gSaveBlockBag.keyItems, gSaveBlock1Ptr->bagPocket_KeyItems, sizeof(gSaveBlock1Ptr->bagPocket_KeyItems));
 }
+
+// Panthéon de Kanto (src/kanto_hall_of_fame.c) : ses équipes, à part de celles de Hoenn,
+// écrites après le sac dans le bloc annexe
+#define KANTO_HOF_OFFSET 8192
+#define KANTO_HOF_MAGIC  0x464F484B // "KHOF"
+
+static u32 KantoHallOfFame_Checksum(const void *data, u32 size)
+{
+    const u8 *p = data;
+    u32 sum = 0x811C9DC5, i;
+
+    for (i = 0; i < size; i++)
+        sum = (sum ^ p[i]) * 0x01000193;
+    return sum;
+}
+
+void KantoHallOfFame_Write(const void *data, u32 size)
+{
+#ifdef PORTABLE
+    u32 header[2] = {KANTO_HOF_MAGIC, KantoHallOfFame_Checksum(data, size)};
+
+    Platform_WriteExtraSaveAt(KANTO_HOF_OFFSET, header, sizeof(header));
+    Platform_WriteExtraSaveAt(KANTO_HOF_OFFSET + sizeof(header), data, size);
+#endif
+}
+
+// Toujours TRUE : sans Panthéon de Kanto enregistré, les équipes sont vides
+bool8 KantoHallOfFame_Read(void *data, u32 size)
+{
+#ifdef PORTABLE
+    u32 header[2];
+
+    if (Platform_ReadExtraSaveAt(KANTO_HOF_OFFSET, header, sizeof(header)) && header[0] == KANTO_HOF_MAGIC
+     && Platform_ReadExtraSaveAt(KANTO_HOF_OFFSET + sizeof(header), data, size)
+     && header[1] == KantoHallOfFame_Checksum(data, size))
+        return TRUE;
+#endif
+    memset(data, 0, size);
+    return TRUE;
+}

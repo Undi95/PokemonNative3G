@@ -49,5 +49,7 @@ void KantoSave_Write(void);
 void KantoSave_Read(void);
 void BagSave_Write(void);
 void BagSave_Read(void);
+void KantoHallOfFame_Write(const void *data, u32 size);
+bool8 KantoHallOfFame_Read(void *data, u32 size);
 
 #endif // GUARD_KANTO_SAVE_H

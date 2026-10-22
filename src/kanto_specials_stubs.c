@@ -36,7 +36,6 @@ u16 ChooseBattleTowerPlayerParty(void) { KantoSpecialStub("ChooseBattleTowerPlay
 u16 ReducePlayerPartyToThree(void) { KantoSpecialStub("ReducePlayerPartyToThree"); return 0; }
 u16 ShowTownMap(void) { KantoSpecialStub("ShowTownMap"); return 0; }
 u16 ShowDiploma(void) { KantoSpecialStub("ShowDiploma"); return 0; }
-u16 EnterHallOfFame(void) { KantoSpecialStub("EnterHallOfFame"); return 0; }
 u16 Dummy_TryEnableBravoTrainerBattleTower(void) { KantoSpecialStub("Dummy_TryEnableBravoTrainerBattleTower"); return 0; }
 u16 StartMarowakBattle(void) { KantoSpecialStub("StartMarowakBattle"); return 0; }
 u16 DoPicboxCancel(void) { KantoSpecialStub("DoPicboxCancel"); return 0; }

@@ -8,6 +8,7 @@
 #include "palette.h"
 #include "script.h"
 #include "script_menu.h"
+#include "hall_of_fame.h"
 #include "sound.h"
 #include "string_util.h"
 #include "strings.h"
@@ -339,15 +340,15 @@ static void CreatePCMultichoice(void)
         pixelWidth = DisplayTextAndGetWidth(sPCNameStrings[i], pixelWidth);
     }
 
-    if (FlagGet(FLAG_SYS_GAME_CLEAR))
+    if (HasHallOfFameInThisRegion())
     {
         pixelWidth = DisplayTextAndGetWidth(gText_HallOfFame, pixelWidth);
     }
 
     width = ConvertPixelWidthToTileWidth(pixelWidth);
 
-    // Include Hall of Fame option if player is champion
-    if (FlagGet(FLAG_SYS_GAME_CLEAR))
+    // Include Hall of Fame option if player is champion (PokemonNative3G : de la région)
+    if (HasHallOfFameInThisRegion())
     {
         numChoices = 4;
         windowId = CreateWindowFromRect(0, 0, width, 8);
