@@ -180,7 +180,9 @@ ifeq ($(PORTABLE),1)
     SDL_DIR := /opt/sdl-android
     OS_CFLAGS := -fPIC
     OS_LFLAGS := -shared -Wl,-z,text -llog -landroid
-    FIX_UNDERSCORE += --rename-section .rodata=.data.rel.ro,alloc,load,contents,data
+    # aarch64's as keeps the names that the macros' .if compare (STR_VAR_1...) as
+    # undefined symbols, which the library would then ask the system for
+    FIX_UNDERSCORE += --rename-section .rodata=.data.rel.ro,alloc,load,contents,data --strip-unneeded
     BUILD_FEXTENSION := .so
   else ifeq ($(IS64BIT),1)
     # Build position independent, so nothing can rely on addresses fitting in 32 bits
