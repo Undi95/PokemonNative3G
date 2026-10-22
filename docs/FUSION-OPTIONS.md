@@ -34,7 +34,7 @@ contenu dans un seul jeu.
   suivent le sac ouvert, ou le Sac à Baies pour une baie (comme item_use.c de RF). Boîte à CT et Sac à Baies
   ajoutés en tête des Objets rares à l'ouverture du sac de RF, retirés à celle du sac d'Émeraude.
   Retirés de RF : tutoriels (Vieil Homme, Télé Pokémon), journal des quêtes.
-- [ ] Interface du PC (stockage)
+- [-] Interface du PC (stockage) : abandonné (choix utilisateur 2026-10-23) — on garde celle d'Émeraude, qui a déjà les fonds des deux versions
 - [ ] Écran de nom (clavier)
 - [ ] Intro (Flygon / Nidorino-Ectoplasma), crédits, Panthéon
 - [ ] Sprites des Pokémon (de face/de dos : Émeraude animés, Rouge Feu fixes et parfois différents)
