@@ -13,5 +13,5 @@ STAMP="build/.flags_$TARGET"; mkdir -p build
 if [ "$(cat "$STAMP" 2>/dev/null)" != "$MAKEFLAGS_EXTRA" ]; then touch src/new_game.c; echo "$MAKEFLAGS_EXTRA" > "$STAMP"; fi
 make "$TARGET" -j"$(nproc)" $MAKEFLAGS_EXTRA 2>&1 | tail -n "${TAILN:-40}"
 mkdir -p /out/$TARGET
-cp -v pokeemeraude64* /out/$TARGET/
+if [ "$TARGET" = winwsl ]; then cp -v pokeemeraude64.exe /out/$TARGET/; else cp -v pokeemeraude64 /out/$TARGET/; fi
 if [ "$TARGET" = winwsl ]; then cp -v /opt/SDL2/x86_64-w64-mingw32/bin/SDL2.dll /out/$TARGET/; fi

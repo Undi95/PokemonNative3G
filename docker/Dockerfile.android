@@ -1,0 +1,36 @@
+# Build Android (APK arm64-v8a), au-dessus de l'image pn3g-build (outils du jeu).
+#   docker build -t pn3g-build docker
+#   docker build -t pn3g-android -f docker/Dockerfile.android docker
+FROM pn3g-build
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        openjdk-17-jdk-headless unzip cmake ninja-build binutils-aarch64-linux-gnu \
+    && rm -rf /var/lib/apt/lists/*
+
+# SDK Android : outils en ligne de commande, plateforme, build-tools, NDK
+ENV ANDROID_HOME=/opt/android-sdk
+ARG NDK_VER=27.2.12479018
+RUN mkdir -p $ANDROID_HOME/cmdline-tools \
+    && curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o /tmp/clt.zip \
+    && unzip -q /tmp/clt.zip -d $ANDROID_HOME/cmdline-tools && mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest \
+    && rm /tmp/clt.zip \
+    && yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null \
+    && $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0" "ndk;${NDK_VER}" > /dev/null
+ENV ANDROID_NDK_HOME=$ANDROID_HOME/ndk/${NDK_VER}
+ENV PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
+
+# Gradle
+ARG GRADLE_VER=8.7
+RUN curl -fsSL https://services.gradle.org/distributions/gradle-${GRADLE_VER}-bin.zip -o /tmp/g.zip \
+    && unzip -q /tmp/g.zip -d /opt && mv /opt/gradle-${GRADLE_VER} /opt/gradle && rm /tmp/g.zip
+ENV PATH=/opt/gradle/bin:$PATH
+
+# SDL2 pour Android : libSDL2.so (arm64-v8a) + en-têtes + classes Java (org.libsdl.app)
+ARG SDL_VER=2.30.9
+RUN curl -fsSL https://github.com/libsdl-org/SDL/releases/download/release-${SDL_VER}/SDL2-${SDL_VER}.tar.gz | tar -xz -C /opt \
+    && mv /opt/SDL2-${SDL_VER} /opt/SDL2-src \
+    && cmake -S /opt/SDL2-src -B /tmp/sdl-build -G Ninja \
+         -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
+         -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-24 -DCMAKE_BUILD_TYPE=Release \
+         -DSDL_SHARED=ON -DSDL_STATIC=OFF -DSDL_TEST=OFF -DCMAKE_INSTALL_PREFIX=/opt/sdl-android \
+    && cmake --build /tmp/sdl-build && cmake --install /tmp/sdl-build && rm -rf /tmp/sdl-build
+WORKDIR /src

@@ -36,6 +36,22 @@ ifeq (macos,$(MAKECMDGOALS))
   PORTABLE := 1
   TARGET_OS := MACOS
 endif
+# Android (arm64-v8a): libmain.so for SDL's Java activity, built with the NDK's
+# clang; the data is assembled by GNU as for aarch64 (see docker/Dockerfile.android)
+ifeq (android,$(MAKECMDGOALS))
+  PORTABLE := 1
+  TARGET_OS := ANDROID
+  COMPILER := clang
+  CLANG := aarch64-linux-android24-clang
+endif
+CLANG ?= clang
+
+# -m64 / -m32 (not for Android, whose compiler only targets arm64)
+ifeq ($(TARGET_OS),ANDROID)
+  BIT_WIDTH_FLAG :=
+else
+  BIT_WIDTH_FLAG = -m$(BIT_WIDTH)
+endif
 
 # The PC builds' C compiler: gcc, or clang (the default on macOS)
 ifeq ($(TARGET_OS),MACOS)
@@ -95,6 +111,9 @@ ifeq ($(PORTABLE),1)
   else ifeq ($(TARGET_OS),MACOS)
     PORTABLE_DIR_PREFIX := macos
     PREFIX :=
+  else ifeq ($(TARGET_OS),ANDROID)
+    PORTABLE_DIR_PREFIX := android
+    PREFIX := aarch64-linux-gnu-
   else # LINUX
     PREFIX :=
   endif # TARGET_OS
@@ -157,6 +176,12 @@ ifeq ($(PORTABLE),1)
     # The data has pointers at any address, like inside scripts, which chained
     # fixups can't hold
     OS_LFLAGS := -Wl,-no_fixup_chains
+  else ifeq ($(TARGET_OS),ANDROID)
+    SDL_DIR := /opt/sdl-android
+    OS_CFLAGS := -fPIC
+    OS_LFLAGS := -shared -Wl,-z,text -llog -landroid
+    FIX_UNDERSCORE += --rename-section .rodata=.data.rel.ro,alloc,load,contents,data
+    BUILD_FEXTENSION := .so
   else ifeq ($(IS64BIT),1)
     # Build position independent, so nothing can rely on addresses fitting in 32 bits
     OS_CFLAGS := -fPIE
@@ -184,6 +209,8 @@ ifeq ($(PORTABLE),1)
     endif
     PLATFORM_INCLUDES += -I$(SDL_PREFIX)/include
     PLATFORM_LFLAGS += -L$(SDL_PREFIX)/lib -lSDL2 -lm
+  else ifeq ($(TARGET_OS),ANDROID)
+    PLATFORM_LFLAGS += -lSDL2 -lm
   else
     PLATFORM_LFLAGS += -lSDL2main -lSDL2 -lm
   endif
@@ -257,7 +284,12 @@ SHELL := bash -o pipefail
 
 # Set flags for tools
 ifeq ($(PORTABLE),1)
-  ASFLAGS := --$(BIT_WIDTH) $(ASFLAGS64) --defsym VER_64BIT=$(IS64BIT) --defsym MODERN=$(MODERN) --defsym PORTABLE=1 --defsym UBFIX=1
+  ifeq ($(TARGET_OS),ANDROID)
+    ASFLAGS := $(ASFLAGS64)
+  else
+    ASFLAGS := --$(BIT_WIDTH) $(ASFLAGS64)
+  endif
+  ASFLAGS += --defsym VER_64BIT=$(IS64BIT) --defsym MODERN=$(MODERN) --defsym PORTABLE=1 --defsym UBFIX=1
   ifeq ($(TARGET_OS),MACOS)
     # x86_64-elf-as takes / as the start of a comment, like SVR4, which would
     # quietly cut short the songs' expressions. The Linux one doesn't.
@@ -286,8 +318,8 @@ else ifeq ($(PORTABLE),1)
   endif
   ifeq ($(COMPILER),clang)
     # clang compiles straight to objects (see the rule for .c files)
-    MODERNCC := clang
-    CPP := clang -E -x c -Wno-unicode
+    MODERNCC := $(CLANG)
+    CPP := $(CLANG) -E -x c -Wno-unicode
     CC1 :=
   else
     MODERNCC := $(PREFIX)gcc
@@ -295,7 +327,7 @@ else ifeq ($(PORTABLE),1)
     CC1 	:= $(shell $(PREFIX)gcc --print-prog-name=cc1) -quiet
   endif
   PATH_MODERNCC := PATH="$(PATH)" $(MODERNCC)
-  override CFLAGS += $(OS_CFLAGS) $(PLATFORM_CFLAGS) -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=int-conversion -Werror=pointer-to-int-cast -Werror=int-to-pointer-cast -Wno-trigraphs -Wimplicit -Wparentheses -Wunused -m$(BIT_WIDTH) -std=gnu99 $(LEADING_UNDERSCORE_FLAG) -fno-common -fno-builtin -Wno-unused-function -DPORTABLE -DNONMATCHING -D UBFIX -DMODERN=$(MODERN)
+  override CFLAGS += $(OS_CFLAGS) $(PLATFORM_CFLAGS) -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=int-conversion -Werror=pointer-to-int-cast -Werror=int-to-pointer-cast -Wno-trigraphs -Wimplicit -Wparentheses -Wunused $(BIT_WIDTH_FLAG) -std=gnu99 $(LEADING_UNDERSCORE_FLAG) -fno-common -fno-builtin -Wno-unused-function -DPORTABLE -DNONMATCHING -D UBFIX -DMODERN=$(MODERN)
   # The same floating point results everywhere, which the tests' frame hashes
   # need: on ARM, compilers would otherwise fuse multiplies and adds
   override CFLAGS += -ffp-contract=off
@@ -383,7 +415,7 @@ MAKEFLAGS += --no-print-directory
 .DELETE_ON_ERROR:
 
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidynonmodern generated clean-generated
-.PHONY: all rom modern compare winwsl linux macos
+.PHONY: all rom modern compare winwsl linux macos android
 .PHONY: $(RULES_NO_SCAN)
 
 infoshell = $(foreach line, $(shell $1 | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
@@ -464,6 +496,7 @@ compare: all
 winwsl: all
 linux: all
 macos: all
+android: all
 
 # Other rules
 rom: $(ROM)

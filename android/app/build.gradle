@@ -1,0 +1,40 @@
+// APK de PokemonNative3G : libmain.so (le jeu, `make android`) + libSDL2.so dans jniLibs/,
+// classes Java de SDL (org.libsdl.app) prises dans les sources de SDL (SDL_JAVA_DIR).
+// Construit par docker/build-android.sh.
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'fr.undi.pokemonnative3g'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'fr.undi.pokemonnative3g'
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName '0.1'
+        ndk { abiFilters 'arm64-v8a' }
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs += [System.getenv('SDL_JAVA_DIR') ?: '/opt/SDL2-src/android-project/app/src/main/java']
+            jniLibs.srcDirs = ['jniLibs']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // Clé de debug (gardée dans le volume Docker pn3g-android-home) : APK installable directement
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
