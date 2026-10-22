@@ -7940,7 +7940,7 @@ const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_SSAnne = {
 };
 
 
-#include "data/object_events/kanto_player_extra.h"
+#include "kanto_player_extra.h"
 
 const struct ObjectEventGraphicsInfo *const gKantoObjectEventGraphicsInfoPointers[NUM_KANTO_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_KANTO_RED_NORMAL - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_RedNormal,
