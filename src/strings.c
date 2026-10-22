@@ -1512,6 +1512,7 @@ const u8 gText_DialogStyle[] = _("DIALOGUE");
 const u8 gText_BattleUI[] = _("BOITES COMBAT");
 const u8 gText_PokedexStyle[] = _("POKéDEX");
 const u8 gText_MenuStyle[] = _("MENUS");
+const u8 gText_BagStyle[] = _("SAC");
 const u8 gText_RegionHoenn[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}HOENN");
 const u8 gText_RegionKanto[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}KANTO");
 const u8 gText_TitleScreenEmerald[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}ÉMERAUDE");

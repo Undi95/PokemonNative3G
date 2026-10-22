@@ -31,6 +31,7 @@
 #define tBattleUI data[10]
 #define tPokedexStyle data[11]
 #define tMenuStyle data[12]
+#define tBagStyle data[13]
 
 enum
 {
@@ -45,6 +46,7 @@ enum
     MENUITEM_DIALOGSTYLE,
     MENUITEM_BATTLEUI,
     MENUITEM_MENUSTYLE,
+    MENUITEM_BAGSTYLE,
     MENUITEM_POKEDEXSTYLE,
     MENUITEM_CANCEL,
     MENUITEM_COUNT,
@@ -95,6 +97,7 @@ static u8 OptionRow(u8 item)
 #define YPOS_BATTLEUI     OPTION_YPOS(MENUITEM_BATTLEUI)
 #define YPOS_POKEDEXSTYLE OPTION_YPOS(MENUITEM_POKEDEXSTYLE)
 #define YPOS_MENUSTYLE    OPTION_YPOS(MENUITEM_MENUSTYLE)
+#define YPOS_BAGSTYLE     OPTION_YPOS(MENUITEM_BAGSTYLE)
 
 static void Task_OptionMenuFadeIn(u8 taskId);
 static void Task_OptionMenuProcessInput(u8 taskId);
@@ -144,6 +147,7 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
     [MENUITEM_BATTLEUI] = gText_BattleUI,
     [MENUITEM_POKEDEXSTYLE] = gText_PokedexStyle,
     [MENUITEM_MENUSTYLE] = gText_MenuStyle,
+    [MENUITEM_BAGSTYLE] = gText_BagStyle,
     [MENUITEM_CANCEL]      = gText_OptionMenuCancel,
 };
 
@@ -300,6 +304,7 @@ void CB2_InitOptionMenu(void)
         gTasks[taskId].tBattleUI = gSaveBlock2Ptr->optionsBattleUI;
         gTasks[taskId].tPokedexStyle = gSaveBlock2Ptr->optionsPokedexStyle;
         gTasks[taskId].tMenuStyle = gSaveBlock2Ptr->optionsMenuStyle;
+        gTasks[taskId].tBagStyle = gSaveBlock2Ptr->optionsBagStyle;
 
         DrawOptionMenuChoices(taskId);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
@@ -447,6 +452,13 @@ static void Task_OptionMenuProcessInput(u8 taskId)
             if (previousOption != gTasks[taskId].tMenuStyle)
                 Region_DrawChoices(gTasks[taskId].tMenuStyle, YPOS_MENUSTYLE);
             break;
+        case MENUITEM_BAGSTYLE:
+            previousOption = gTasks[taskId].tBagStyle;
+            gTasks[taskId].tBagStyle = Character_ProcessInput(gTasks[taskId].tBagStyle);
+
+            if (previousOption != gTasks[taskId].tBagStyle)
+                Region_DrawChoices(gTasks[taskId].tBagStyle, YPOS_BAGSTYLE);
+            break;
         default:
             return;
         }
@@ -473,6 +485,7 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsBattleUI = gTasks[taskId].tBattleUI;
     gSaveBlock2Ptr->optionsPokedexStyle = gTasks[taskId].tPokedexStyle;
     gSaveBlock2Ptr->optionsMenuStyle = gTasks[taskId].tMenuStyle;
+    gSaveBlock2Ptr->optionsBagStyle = gTasks[taskId].tBagStyle;
     sScrollOffset = 0;
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
@@ -888,6 +901,9 @@ static void DrawOptionMenuChoices(u8 taskId)
             break;
         case MENUITEM_MENUSTYLE:
             Region_DrawChoices(gTasks[taskId].tMenuStyle, YPOS_MENUSTYLE);
+            break;
+        case MENUITEM_BAGSTYLE:
+            Region_DrawChoices(gTasks[taskId].tBagStyle, YPOS_BAGSTYLE);
             break;
         }
     }
