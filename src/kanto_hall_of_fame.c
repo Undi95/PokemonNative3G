@@ -341,6 +341,8 @@ static void Task_PCScreenEffect_TurnOff(u8 taskId)
 
 
 // Rouge Feu (strings_1_fr.h)
+static const u8 sKText_UPDOWNPick_ABUTTONNext_BBUTTONBack[] = _("{DPAD_UPDOWN}CHOIX {A_BUTTON}SUIV. {B_BUTTON}ANN.");
+static const u8 sKText_UPDOWNPick_ABUTTONBBUTTONCancel[] = _("{DPAD_UPDOWN}CHOIX {A_BUTTON}{B_BUTTON}ANNUL.");
 static const u8 sKText_Text_MainMenuTime[] = _("DUREE JEU");
 static const u8 sKText_Text_SavingDontTurnOffThePower2[] = _("SAUVEGARDE EN COURS…\nNE PAS ETEINDRE.");
 
@@ -1153,9 +1155,9 @@ static void Task_HofPC_DrawSpritesPrintText(u8 taskId)
     StringExpandPlaceholders(gStringVar4, gText_HOFNumber);
 
     if (gTasks[taskId].data[0] <= 0)
-        TopBarWindowPrintTwoStrings(gStringVar4, gText_UPDOWNPick_ABUTTONBBUTTONCancel, 0, 0, TRUE);
+        TopBarWindowPrintTwoStrings(gStringVar4, sKText_UPDOWNPick_ABUTTONBBUTTONCancel, 0, 0, TRUE);
     else
-        TopBarWindowPrintTwoStrings(gStringVar4, gText_UPDOWNPick_ABUTTONNext_BBUTTONBack, 0, 0, TRUE);
+        TopBarWindowPrintTwoStrings(gStringVar4, sKText_UPDOWNPick_ABUTTONNext_BBUTTONBack, 0, 0, TRUE);
 
     gTasks[taskId].func = Task_HofPC_PrintMonInfo;
 }
