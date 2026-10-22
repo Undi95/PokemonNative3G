@@ -4,6 +4,7 @@
 #include "data.h"
 #include "decompress.h"
 #include "field_screen_effect.h"
+#include "field_weather.h"
 #include "fieldmap.h"
 #include "gpu_regs.h"
 #include "graphics.h"
@@ -851,7 +852,7 @@ static void TMCaseSetup_GetTMCount(void)
     struct BagPocket * pocket = &gBagPockets[TMHM_POCKET];
     u16 i;
 
-    BagPocketCompaction(pocket->itemSlots, pocket->capacity);
+    CompactItemsInBagPocket(pocket);
     sTMCaseDynamicResources->numTMs = 0;
     for (i = 0; i < pocket->capacity; i++)
     {
