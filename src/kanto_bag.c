@@ -353,3 +353,53 @@ void BagDrawTextBoxOnWindow(u8 windowId)
 {
     DrawTextBorderOuter(windowId, 0x064, 14);
 }
+
+// ---- Rouge Feu : fonctions des autres fichiers dont le sac a besoin ----
+
+// menu_helpers.c
+bool8 IsActiveOverworldLinkBusy(void)
+{
+    if (!MenuHelpers_IsLinkActive())
+        return FALSE;
+    else
+        return (u8)Overworld_LinkRecvQueueLengthMoreThan2();
+}
+
+void ResetAllBgsCoordinatesAndBgCntRegs(void)
+{
+    SetGpuReg(REG_OFFSET_DISPCNT, 0);
+    SetGpuReg(REG_OFFSET_BG3CNT, 0);
+    SetGpuReg(REG_OFFSET_BG2CNT, 0);
+    SetGpuReg(REG_OFFSET_BG1CNT, 0);
+    SetGpuReg(REG_OFFSET_BG0CNT, 0);
+    ChangeBgX(0, 0, 0);
+    ChangeBgY(0, 0, 0);
+    ChangeBgX(1, 0, 0);
+    ChangeBgY(1, 0, 0);
+    ChangeBgX(2, 0, 0);
+    ChangeBgY(2, 0, 0);
+    ChangeBgX(3, 0, 0);
+    ChangeBgY(3, 0, 0);
+}
+
+// gflib (palette.c)
+void SetBackdropFromPalette(const u16 *palette)
+{
+    LoadPalette(palette, BG_PLTT_ID(0), PLTT_SIZEOF(1));
+}
+
+// text_window.c : cadre standard de RF
+static const u16 sStdTextWindow_Gfx[] = INCGFX_U16("graphics/kanto/text_window/std.png", ".4bpp");
+static const u16 sStdTextWindow_Pal[] = INCGFX_U16("graphics/kanto/text_window/stdpal_3.pal", ".gbapal");
+
+void LoadStdWindowGfx(u8 windowId, u16 destOffset, u8 palOffset)
+{
+    LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), sStdTextWindow_Gfx, 0x120, destOffset);
+    LoadPalette(sStdTextWindow_Pal, palOffset, PLTT_SIZE_4BPP);
+}
+
+// party_menu.c : retour au sac pour choisir l'objet à donner
+void CB2_SelectBagItemToGive(void)
+{
+    GoToBagMenu(ITEMMENULOCATION_PARTY, OPEN_BAG_LAST, CB2_GiveHoldItem);
+}

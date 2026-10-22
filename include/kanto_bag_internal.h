@@ -73,6 +73,7 @@ extern const u8 gKantoBagPocketToEmerald[NUM_BAG_POCKETS_NO_CASES];
 #define ITEMMENUACTION_DUMMY        11
 
 #define FONT_NORMAL FONT_KANTO
+#include "kanto_bag_compat.h"
 #define SetHelpContext(x)
 #define FREE_IF_SET(ptr) ({ if (ptr) Free(ptr); })
 
