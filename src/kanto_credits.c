@@ -29,6 +29,17 @@
 #define FONT_NORMAL_COPY_1 FONT_KANTO
 #define FONT_NORMAL_COPY_2 FONT_KANTO
 
+// Rouge Feu (graphics.c)
+static const u16 gCreditsCopyright_Pal[] = INCGFX_U16("graphics/kanto/credits/copyright.png", ".gbapal");
+static const u8 gCreditsCopyright_Tilemap[] = INCGFX_U8("graphics/kanto/credits/copyright.bin", ".lz");
+static const u8 gCreditsCopyright_Tiles[] = INCGFX_U8("graphics/kanto/credits/copyright.png", ".4bpp.lz");
+static const u16 gCreditsMonPokeball_Pals[][16] =
+static const u32 gCreditsMonPokeball_Tilemap[] = INCGFX_U32("graphics/kanto/credits/pokeball.bin", ".lz");
+static const u32 gCreditsMonPokeball_Tiles[] = INCGFX_U32("graphics/kanto/credits/pokeball.png", ".4bpp.lz");
+
+// Rouge Feu (palette.c) : fondu des palettes choisies
+#define FadeSelectedPals(mode, delay, pals) BeginNormalPaletteFade(pals, delay, (mode) ? 0 : 16, (mode) ? 16 : 0, RGB_BLACK)
+
 // Rouge Feu (strings_1_fr.h)
 static const u8 sKText_CreditsString_Akira_Kinashi[] = _("\n\n\nAkira Kinashi\n\n\n");
 static const u8 sKText_CreditsString_Art_Director_Battle_Director[] = _("\nArt Director\n\nBattle Director\n\n\n");
@@ -119,7 +130,7 @@ static const u8 sKText_String_PokemonFireRed_Staff[] = _("Equipe de\nPokémon ve
 static const u8 sKText_String_PokemonLeafGreen_Staff[] = _("Equipe de\nPokémon version Vert Feuille");
 
 
-#if defined(FIRERED)
+#if 1 // PokemonNative3G : Rouge Feu
 #define TITLE_TEXT sKText_String_PokemonFireRed_Staff
 #elif defined(LEAFGREEN)
 #define TITLE_TEXT sKText_String_PokemonLeafGreen_Staff
@@ -846,8 +857,7 @@ static void CB2_Credits(void)
         sCreditsMgr->unk_1D++;
         break;
     case 2:
-        FlagClear(FLAG_DONT_SHOW_MAP_NAME_POPUP);
-        gDisableMapMusicChangeOnMapLoad = MUSIC_DISABLE_OFF;
+        FlagClear(FLAG_HIDE_MAP_NAME_POPUP);
         Free(sCreditsMgr);
         SoftReset(RESET_ALL);
         // noreturn
@@ -893,13 +903,12 @@ static bool32 DoOverworldMapScrollScene(u8 whichMon)
     switch (sCreditsMgr->subseqno)
     {
     case 0:
-        FlagSet(FLAG_DONT_SHOW_MAP_NAME_POPUP);
-        gDisableMapMusicChangeOnMapLoad = MUSIC_DISABLE_KEEP;
+        FlagSet(FLAG_HIDE_MAP_NAME_POPUP);
         sCreditsMgr->ovwldseqno = 0;
         sCreditsMgr->subseqno++;
         // fallthrough
     case 1:
-        if (!Overworld_DoScrollSceneForCredits(&sCreditsMgr->ovwldseqno, sOverworldMapScenes[sCreditsMgr->whichMon], QL_TINT_NONE))
+        if (!Overworld_DoScrollSceneForCredits(&sCreditsMgr->ovwldseqno, sOverworldMapScenes[sCreditsMgr->whichMon], 0))
             return FALSE;
         CreateCreditsWindow();
         SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(0, DISPLAY_WIDTH));

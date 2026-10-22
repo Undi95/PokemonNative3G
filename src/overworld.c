@@ -1,6 +1,7 @@
 #include "global.h"
 #include "overworld.h"
 #include "kanto_credits.h"
+#include "constants/rgb.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
 #include "berry.h"
