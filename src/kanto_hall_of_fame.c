@@ -35,11 +35,310 @@
 #include "trainer_pokemon_sprites.h"
 #include "window.h"
 #include "constants/rgb.h"
+#include "constants/trainers.h"
 #include "constants/songs.h"
 #include "constants/kanto.h"
 #include "constants/kanto_flags_vars.h"
 #define FONT_NORMAL FONT_KANTO
 #define FONT_NORMAL_COPY_1 FONT_KANTO
+
+#include "field_screen_effect.h"
+#include "trig.h"
+#include "kanto_bag_compat.h" // LoadStdWindowGfx (cadre standard de RF, src/kanto_bag.c)
+#define FONT_NORMAL_COPY_2 FONT_KANTO
+static const u32 sKantoConfetti_Gfx[] = INCGFX_U32("graphics/kanto/misc/confetti.png", ".4bpp.lz");
+static const u32 sKantoConfetti_Pal[] = INCGFX_U32("graphics/kanto/misc/confetti.png", ".gbapal.lz");
+
+// PokemonNative3G : le dresseur de l'option PERSO (Red/Leaf ou Brice/Flora)
+static u16 KantoHof_PlayerTrainerPic(void)
+{
+    if (gSaveBlock2Ptr->optionsPlayerCharacter)
+        return gSaveBlock2Ptr->playerGender == MALE ? TRAINER_PIC_RED : TRAINER_PIC_LEAF;
+    return PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender);
+}
+
+// ---- Rouge Feu (menu.c) : barre de texte en haut de l'écran ----
+static EWRAM_DATA u8 sTopBarWindowId = 0;
+static const u8 sTopBarWindowTextColors[3] = {15, 1, 2};
+
+static u8 CreateTopBarWindowLoadPalette(u8 bg, u8 width, u8 yPos, u8 palette, u16 baseTile)
+{
+    struct WindowTemplate window;
+
+    memset(&window, 0, sizeof(window));
+    if (bg > 3)
+        window.bg = 0;
+    else
+        window.bg = bg;
+    window.tilemapTop = yPos;
+    window.height = 2;
+    window.tilemapLeft = 0x1E - width;
+    window.width = width;
+    window.paletteNum = palette;
+    window.baseBlock = baseTile;
+    sTopBarWindowId = AddWindow(&window);
+    if (palette > 15)
+        palette = BG_PLTT_ID(15);
+    else
+        palette = BG_PLTT_ID(palette);
+    LoadPalette(GetTextWindowPalette(2), palette, PLTT_SIZE_4BPP);
+    return sTopBarWindowId;
+}
+
+static void TopBarWindowPrintString(const u8 *string, u8 unused, bool8 copyToVram)
+{
+    s32 width;
+
+    if (sTopBarWindowId != 0xFF)
+    {
+        PutWindowTilemap(sTopBarWindowId);
+        FillWindowPixelBuffer(sTopBarWindowId, PIXEL_FILL(15));
+        width = GetStringWidth(FONT_SMALL, string, 0);
+        AddTextPrinterParameterized3(sTopBarWindowId, FONT_SMALL, -20 - width, 1, sTopBarWindowTextColors, 0, string);
+        if (copyToVram)
+            CopyWindowToVram(sTopBarWindowId, COPYWIN_FULL);
+    }
+}
+
+static void TopBarWindowPrintTwoStrings(const u8 *string, const u8 *string2, bool8 fgColorChooser, u8 unused, bool8 copyToVram)
+{
+    u8 color[3];
+    s32 fgColor, width;
+
+    if ( sTopBarWindowId != 0xFF )
+    {
+        if (fgColorChooser)
+        {
+            color[0] = 0;
+            color[1] = 1;
+            color[2] = 2;
+        }
+        else
+        {
+            color[0] = 15;
+            color[1] = 1;
+            color[2] = 2;
+        }
+
+        PutWindowTilemap(sTopBarWindowId);
+        FillWindowPixelBuffer(sTopBarWindowId, PIXEL_FILL(15));
+        if (string2)
+        {
+            width = GetStringWidth(FONT_SMALL, string2, 0);
+            AddTextPrinterParameterized3(sTopBarWindowId, FONT_SMALL, -20 - width, 1, color, 0, string2);
+        }
+        AddTextPrinterParameterized4(sTopBarWindowId, FONT_NORMAL_COPY_1, 4, 1, 0, 0, color, 0, string);
+        if (copyToVram)
+            CopyWindowToVram(sTopBarWindowId, COPYWIN_FULL);
+    }
+}
+
+// not used
+static void CopyTopBarWindowToVram(void)
+{
+    if (sTopBarWindowId != 0xFF)
+        CopyWindowToVram(sTopBarWindowId, COPYWIN_FULL);
+}
+
+static void ClearTopBarWindow(void)
+{
+    if (sTopBarWindowId != 0xFF)
+    {
+        FillWindowPixelBuffer(sTopBarWindowId, PIXEL_FILL(15));
+        CopyWindowToVram(sTopBarWindowId, COPYWIN_FULL);
+    }
+}
+
+static void DestroyTopBarWindow(void)
+{
+    if (sTopBarWindowId != 0xFF)
+    {
+        FillWindowPixelBuffer(sTopBarWindowId, PIXEL_FILL(0));
+        ClearWindowTilemap(sTopBarWindowId);
+        CopyWindowToVram(sTopBarWindowId, COPYWIN_FULL);
+        RemoveWindow(sTopBarWindowId);
+        sTopBarWindowId = 0xFF;
+    }
+}
+
+// ---- Rouge Feu (pc_screen_effect.c) : allumage / extinction façon écran cathodique ----
+
+/*
+ * Animates the screen as though it was a CRT monitor turning on or off.
+ */
+
+#define tState data[0]
+#define tXSpeed data[1]
+#define tYSpeed data[2]
+#define tWin0Left data[3]
+#define tWin0Right data[4]
+#define tWin0Top data[5]
+#define tWin0Bottom data[6]
+#define tBldCntBak data[7]
+#define tBldYBak data[8]
+
+static void BeginPCScreenEffect(TaskFunc func, u16 a2, u16 a3, u8 priority);
+static void Task_PCScreenEffect_TurnOn(u8 taskId);
+static void Task_PCScreenEffect_TurnOff(u8 taskId);
+
+static void BeginPCScreenEffect_TurnOn(u16 xspeed, u16 yspeed, u8 priority)
+{
+    BeginPCScreenEffect(Task_PCScreenEffect_TurnOn, xspeed, yspeed, priority);
+}
+
+static void BeginPCScreenEffect_TurnOff(u16 xspeed, u16 yspeed, u8 priority)
+{
+    BeginPCScreenEffect(Task_PCScreenEffect_TurnOff, xspeed, yspeed, priority);
+}
+
+static bool8 IsPCScreenEffectRunning_TurnOn(void)
+{
+    return FuncIsActiveTask(Task_PCScreenEffect_TurnOn);
+}
+
+static bool8 IsPCScreenEffectRunning_TurnOff(void)
+{
+    return FuncIsActiveTask(Task_PCScreenEffect_TurnOff);
+}
+
+static void BeginPCScreenEffect(TaskFunc func, u16 speed, u16 unused, u8 priority)
+{
+    u8 taskId = CreateTask(func, priority);
+
+    gTasks[taskId].tState = 0;
+    gTasks[taskId].tXSpeed = speed == 0 ? 16 : speed;
+    gTasks[taskId].tYSpeed = speed == 0 ? 20 : speed; // Bug? should be the unused param, not speed
+    gTasks[taskId].func(taskId);
+}
+
+static void Task_PCScreenEffect_TurnOn(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+
+    switch (task->tState)
+    {
+    case 0:
+        task->tWin0Left = 120;
+        task->tWin0Right = 120;
+        task->tWin0Top = 80;
+        task->tWin0Bottom = 81;
+        SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON);
+        SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(task->tWin0Left, task->tWin0Right));
+        SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(task->tWin0Top, task->tWin0Bottom));
+        SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR);
+        SetGpuReg(REG_OFFSET_WINOUT, 0);
+        break;
+    case 1:
+        task->tBldCntBak = GetGpuReg(REG_OFFSET_BLDCNT);
+        task->tBldYBak = GetGpuReg(REG_OFFSET_BLDY);
+        SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_TGT1_BG1 | BLDCNT_TGT1_BG2 | BLDCNT_TGT1_BG3 | BLDCNT_TGT1_OBJ | BLDCNT_TGT1_BD | BLDCNT_EFFECT_LIGHTEN);
+        SetGpuReg(REG_OFFSET_BLDY, 16);
+        break;
+    case 2:
+        task->tWin0Left -= task->tXSpeed;
+        task->tWin0Right += task->tXSpeed;
+        if (task->tWin0Left <= 0 || task->tWin0Right >= DISPLAY_WIDTH)
+        {
+            task->tWin0Left = 0;
+            task->tWin0Right = DISPLAY_WIDTH;
+            SetGpuReg(REG_OFFSET_BLDY, 0);
+            SetGpuReg(REG_OFFSET_BLDCNT, task->tBldCntBak);
+            BlendPalettes(PALETTES_ALL, 0, RGB_BLACK);
+            gPlttBufferFaded[BG_PLTT_ID(0)] = 0;
+        }
+        SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(task->tWin0Left, task->tWin0Right));
+        if (task->tWin0Left)
+            return;
+        break;
+    case 3:
+        task->tWin0Top -= task->tYSpeed;
+        task->tWin0Bottom += task->tYSpeed;
+        if (task->tWin0Top <= 0 || task->tWin0Bottom >= DISPLAY_HEIGHT)
+        {
+            task->tWin0Top = 0;
+            task->tWin0Bottom = DISPLAY_HEIGHT;
+            ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON);
+        }
+        SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(task->tWin0Top, task->tWin0Bottom));
+        if (task->tWin0Top)
+            return;
+        break;
+    default:
+        SetGpuReg(REG_OFFSET_BLDCNT, task->tBldCntBak);
+        DestroyTask(taskId);
+        return;
+    }
+    ++task->tState;
+}
+
+static void Task_PCScreenEffect_TurnOff(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+
+    switch (task->tState)
+    {
+    case 0:
+        gPlttBufferFaded[BG_PLTT_ID(0)] = 0;
+        break;
+    case 1:
+        task->tWin0Left = 0;
+        task->tWin0Right = DISPLAY_WIDTH;
+        task->tWin0Top = 0;
+        task->tWin0Bottom = DISPLAY_HEIGHT;
+        SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON);
+        SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(task->tWin0Left, task->tWin0Right));
+        SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(task->tWin0Top, task->tWin0Bottom));
+        SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR);
+        SetGpuReg(REG_OFFSET_WINOUT, 0);
+        break;
+    case 2:
+        task->tWin0Top += task->tYSpeed;
+        task->tWin0Bottom -= task->tYSpeed;
+        if (task->tWin0Top >= 80 || task->tWin0Bottom <= 81)
+        {
+            task->tWin0Top = 80;
+            task->tWin0Bottom = 81;
+            SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_TGT1_BG1 | BLDCNT_TGT1_BG2 | BLDCNT_TGT1_BG3 | BLDCNT_TGT1_OBJ | BLDCNT_TGT1_BD | BLDCNT_EFFECT_LIGHTEN);
+            SetGpuReg(REG_OFFSET_BLDY, 16);
+        }
+        SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(task->tWin0Top, task->tWin0Bottom));
+        if (task->tWin0Top != 80)
+            return;
+        break;
+    case 3:
+        task->tWin0Left += task->tXSpeed;
+        task->tWin0Right -= task->tXSpeed;
+        if (task->tWin0Left >= 120 || task->tWin0Right <= 120)
+        {
+            task->tWin0Left = 120;
+            task->tWin0Right = 120;
+            BlendPalettes(PALETTES_ALL, 0x10, RGB_BLACK);
+            gPlttBufferFaded[BG_PLTT_ID(0)] = 0;
+        }
+        SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(task->tWin0Left, task->tWin0Right));
+        if (task->tWin0Left != 120)
+            return;
+        break;
+    default:
+        ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON);
+        SetGpuReg(REG_OFFSET_BLDY, 0);
+        SetGpuReg(REG_OFFSET_BLDCNT, 0);
+        DestroyTask(taskId);
+        return;
+    }
+    ++task->tState;
+}
+
+#undef tBldYBak
+#undef tBldCntBak
+#undef tWin0Bottom
+#undef tWin0Top
+#undef tWin0Right
+#undef tWin0Left
+#undef tYSpeed
+#undef tXSpeed
+#undef tState
+
 
 // Rouge Feu (strings_1_fr.h)
 static const u8 sKText_Text_MainMenuTime[] = _("DUREE JEU");
@@ -159,12 +458,12 @@ static const u8 sTextColors[][4] = {
 };
 
 static const struct CompressedSpriteSheet sHallOfFame_ConfettiSpriteSheet[] = {
-    {gFile_graphics_misc_confetti_sheet, 0x220, 1001},
+    {sKantoConfetti_Gfx, 0x220, 1001},
     {}
 };
 
 static const struct CompressedSpritePalette sHallOfFame_ConfettiSpritePalette[] = {
-    {gFile_graphics_misc_confetti_palette, 1001},
+    {sKantoConfetti_Pal, 1001},
     {}
 };
 
@@ -338,7 +637,6 @@ static bool8 InitHallOfFameScreen(void)
     switch (gMain.state)
     {
     case 0:
-        gHelpSystemEnabled = FALSE;
         SetVBlankCallback(NULL);
         ClearVramOamPltt_LoadHofPal();
         sHofGfxPtr = AllocZeroed(sizeof(struct HofGfx));
@@ -631,7 +929,7 @@ static void Task_Hof_SpawnPlayerPic(u8 taskId)
     ShowBg(0);
     ShowBg(1);
     ShowBg(3);
-    gTasks[taskId].data[4] = CreateTrainerPicSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender, TRUE), TRUE, 0x78, 0x48, 6, 0xFFFF);
+    gTasks[taskId].data[4] = CreateTrainerPicSprite(KantoHof_PlayerTrainerPic(), TRUE, 0x78, 0x48, 6, 0xFFFF);
     AddWindow(&sWindowTemplate);
     LoadStdWindowGfx(1, 0x21D, BG_PLTT_ID(13));
     gTasks[taskId].data[3] = 120;
@@ -713,7 +1011,6 @@ static void SetWarpsToRollCredits(void)
 {
     VarSet(VAR_KANTO_MAP_SCENE_INDIGO_PLATEAU_EXTERIOR, 1);
     FlagSet(FLAG_HIDE_MAP_NAME_POPUP);
-    gDisableMapMusicChangeOnMapLoad = 2;
     SetWarpDestination(MAP_GROUP(MAP_INDIGO_PLATEAU_EXTERIOR), MAP_NUM(MAP_INDIGO_PLATEAU_EXTERIOR), -1, 11, 6);
     DoWarp();
     ResetInitialPlayerAvatarState();
@@ -981,7 +1278,7 @@ static void Task_HofPC_HandleExit(u8 taskId)
 
 static void Task_HofPC_PrintDataIsCorrupted(u8 taskId)
 {
-    TopBarWindowPrintString(gText_ABUTTONExit, 8, TRUE);
+    TopBarWindowPrintString(gText_AButtonExit, 8, TRUE);
     DrawDialogueFrame(0, 0);
     AddTextPrinterParameterized2(0, FONT_NORMAL, gText_HOFCorrupted, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
     CopyWindowToVram(0, COPYWIN_FULL);
@@ -1138,27 +1435,9 @@ static void ClearVramOamPltt_LoadHofPal(void)
     u32 vramOffset, oamOffset, plttOffset;
     u32 vramSize, oamSize, plttSize;
 
-    vramOffset = (VRAM);
-    vramSize = VRAM_SIZE;
-    while (TRUE)
-    {
-        DmaFill16(3, 0, vramOffset, 0x1000);
-        vramOffset += 0x1000;
-        vramSize -= 0x1000;
-        if (vramSize <= 0x1000)
-        {
-            DmaFill16(3, 0, vramOffset, vramSize);
-            break;
-        }
-    }
-
-    oamOffset = OAM;
-    oamSize = OAM_SIZE;
-    DmaFill32(3, 0, oamOffset, oamSize);
-
-    plttOffset = PLTT;
-    plttSize = PLTT_SIZE;
-    DmaFill16(3, 0, plttOffset, plttSize);
+    DmaFill16(3, 0, VRAM, VRAM_SIZE);
+    DmaFill32(3, 0, OAM, OAM_SIZE);
+    DmaFill16(3, 0, PLTT, PLTT_SIZE);
 
     ResetPaletteFade();
     LoadPalette(sHallOfFame_Pal, BG_PLTT_ID(0), sizeof(sHallOfFame_Pal));
