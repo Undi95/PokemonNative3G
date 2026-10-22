@@ -25,12 +25,15 @@ contenu dans un seul jeu.
 - Options : menu ergonomique (sous-menus / pages) si la liste devient trop longue.
 
 ## À faire — choix HOENN / KANTO dans les Options
-- [ ] Menus (option MENUS) : menu Start, équipe et résumé faits ; sac à porter
-  - Plan du sac (analyse 2026-10-20) : item_menu.c de RF (2400 l.) + bag.c + item_menu_icons.c, et tm_case.c + berry_pouch.c
-    pour les poches CT/Baies d'Émeraude. Point dur : les fonctions d'usage d'objets d'Émeraude (item_use.c :
-    SetUpItemUseCallback, DisplayItemMessage, gBagMenu) supposent le sac d'Émeraude ; il faut un aiguillage
-    (sac RF actif -> équivalents RF de item_use.c) ou porter item_use.c de RF. Outils : scratchpad rfport.py
-    (copie graphismes, chaînes renommées, prototypes). Pièges : pointeurs NULL lus par RF, type u16/u32 des extern.
+- [x] Menus (option MENUS) : menu Start, équipe et résumé
+- [x] Sac (option SAC, 2026-10-23) : sac de RF (kanto_item_menu.c, kanto_bag.c, kanto_item_menu_icons.c),
+  Boîte à CT (kanto_tm_case.c) et Sac à Baies (kanto_berry_pouch.c) pour les poches CT/CS et Baies d'Émeraude.
+  Aiguillage : GoToBagMenu d'Émeraude -> KantoBag_TryGoToBagMenu (terrain, combat, équipe, boutique, PC objets,
+  PC boîtes ; le reste garde le sac d'Émeraude : arbres à baies, mixeur, dames, apprenti) ; DisplayItemMessage,
+  CloseItemMessage, Task_FadeAndCloseBagMenu et SetBagMenuNewScreenCallback (ex-gBagMenu->newScreenCallback)
+  suivent le sac ouvert, ou le Sac à Baies pour une baie (comme item_use.c de RF). Boîte à CT et Sac à Baies
+  ajoutés en tête des Objets rares à l'ouverture du sac de RF, retirés à celle du sac d'Émeraude.
+  Retirés de RF : tutoriels (Vieil Homme, Télé Pokémon), journal des quêtes.
 - [ ] Interface du PC (stockage)
 - [ ] Écran de nom (clavier)
 - [ ] Intro (Flygon / Nidorino-Ectoplasma), crédits, Panthéon

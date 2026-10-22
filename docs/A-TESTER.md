@@ -11,6 +11,14 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] F5 = reset du jeu (retour à l'écran titre) ; touche modifiable via `key_reset` dans pokeemerald.ini (ligne ajoutée automatiquement aux .ini existants)
 
 
+
+## Option SAC (HOENN / KANTO)
+- [ ] Options > SAC = KANTO : sac de Rouge Feu depuis le menu Start (poches Objets / Objets rares / Balls, L/R ou gauche/droite, SELECT pour déplacer un objet, jeter, enregistrer). Vérifiés en headless : poches, menu d'un objet, Vélo depuis le sac, message du Seau Wailmer (`kanto_bag.py`)
+- [ ] Boîte à CT et Sac à Baies en tête des Objets rares (disparaissent avec SAC = HOENN) : liste, apprendre une CT (retour à la Boîte à CT), utiliser une baie (retour au Sac à Baies). Vérifiés en headless (`kanto_tm_case.py`, `kanto_berry_pouch.py`)
+- [ ] Sac de RF en combat : Balls (vérifié : MASTER BALL, `kanto_bag_battle.py`), POTION sur un Pokémon, Sac à Baies en combat (OUVRIR)
+- [ ] Sac de RF pour : donner un objet depuis l'équipe, vendre en boutique (et vendre des CT / baies depuis la Boîte à CT / le Sac à Baies), déposer au PC (objets), donner un objet depuis le PC (boîtes)
+- [ ] Boîte à CT / Sac à Baies enregistrés sur SELECT, ouverts depuis la carte
+- [ ] SAC = HOENN : le sac d'Émeraude comme avant (arbres à baies, mixeur, dames : toujours le sac d'Émeraude)
 ## Plateformes (docs/PLATEFORMES.md)
 - [ ] Android : installer `out/android/PokemonNative3G.apk` (autoriser les sources inconnues), le jeu démarre en paysage, son OK, icône = celle de Windows
 - [ ] Android : touches tactiles (croix 8 directions, A/B, L/R, SELECT / RESET / START ; RESET maintenu 1 s = retour à l'écran titre), plusieurs doigts à la fois
