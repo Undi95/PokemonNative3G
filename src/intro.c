@@ -1118,8 +1118,8 @@ static u8 SetUpCopyrightScreen(void)
     case COPYRIGHT_START_INTRO:
         if (UpdatePaletteFade())
             break;
-        // PokemonNative3G : option INTRO = KANTO, intro de Rouge Feu (src/kanto_intro.c)
-        if (gSaveBlock2Ptr->optionsIntro)
+        // PokemonNative3G : option INTRO = KANTO (par défaut), intro de Rouge Feu (src/kanto_intro.c)
+        if (!gSaveBlock2Ptr->optionsIntroHoenn)
         {
             SetMainCallback2(KantoIntro_Start);
             return 0;
@@ -1165,7 +1165,7 @@ void CB2_InitCopyrightScreenAfterBootup(void)
         SetPokemonCryStereo(gSaveBlock2Ptr->optionsSound);
         InitHeap(gHeap, HEAP_SIZE);
         // PokemonNative3G : au démarrage, l'option INTRO n'est lue qu'une fois la sauvegarde chargée
-        if (gSaveBlock2Ptr->optionsIntro)
+        if (!gSaveBlock2Ptr->optionsIntroHoenn)
             SetMainCallback2(KantoIntro_Start);
     }
 }

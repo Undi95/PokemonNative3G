@@ -309,7 +309,7 @@ void CB2_InitOptionMenu(void)
         gTasks[taskId].tPokedexStyle = gSaveBlock2Ptr->optionsPokedexStyle;
         gTasks[taskId].tMenuStyle = gSaveBlock2Ptr->optionsMenuStyle;
         gTasks[taskId].tBagStyle = gSaveBlock2Ptr->optionsBagStyle;
-        gTasks[taskId].tIntro = gSaveBlock2Ptr->optionsIntro;
+        gTasks[taskId].tIntro = !gSaveBlock2Ptr->optionsIntroHoenn; // 1 = KANTO dans le menu
 
         DrawOptionMenuChoices(taskId);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
@@ -498,7 +498,7 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsPokedexStyle = gTasks[taskId].tPokedexStyle;
     gSaveBlock2Ptr->optionsMenuStyle = gTasks[taskId].tMenuStyle;
     gSaveBlock2Ptr->optionsBagStyle = gTasks[taskId].tBagStyle;
-    gSaveBlock2Ptr->optionsIntro = gTasks[taskId].tIntro;
+    gSaveBlock2Ptr->optionsIntroHoenn = !gTasks[taskId].tIntro;
     sScrollOffset = 0;
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);

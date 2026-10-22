@@ -14,7 +14,7 @@ def play(game):
     game.tap("A", 210, hold=4, gap=26)
     wait_until(game, lambda s: s.free); game.wait(30)
     game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
-    game.tap("DOWN", 8, gap=10); game.wait(30); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
+    game.tap("DOWN", 8, gap=10); game.wait(30); game.tap("LEFT"); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
     close_menus(game)
     # SAUVER (le menu Start se rouvre sur OPTIONS, un cran en dessous de SAUVER)
     game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(90)
