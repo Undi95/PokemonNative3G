@@ -1118,6 +1118,12 @@ static u8 SetUpCopyrightScreen(void)
     case COPYRIGHT_START_INTRO:
         if (UpdatePaletteFade())
             break;
+        // PokemonNative3G : option INTRO = KANTO, intro de Rouge Feu (src/kanto_intro.c)
+        if (gSaveBlock2Ptr->optionsIntro)
+        {
+            SetMainCallback2(KantoIntro_Start);
+            return 0;
+        }
         CreateTask(Task_Scene1_Load, 0);
         SetMainCallback2(MainCB2_Intro);
         if (gMultibootProgramStruct.gcmb_field_2 != 0)
