@@ -1164,6 +1164,9 @@ void CB2_InitCopyrightScreenAfterBootup(void)
             Sav2_ClearSetDefault();
         SetPokemonCryStereo(gSaveBlock2Ptr->optionsSound);
         InitHeap(gHeap, HEAP_SIZE);
+        // PokemonNative3G : au démarrage, l'option INTRO n'est lue qu'une fois la sauvegarde chargée
+        if (gSaveBlock2Ptr->optionsIntro)
+            SetMainCallback2(KantoIntro_Start);
     }
 }
 
