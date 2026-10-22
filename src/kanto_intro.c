@@ -25,6 +25,74 @@
 #include "constants/songs.h"
 #include "constants/sound.h"
 
+#define RAND_MULT 1103515245 // Rouge Feu (random.h)
+
+// Rouge Feu (menu2.c) : fondu des calques
+#define tEvA data[0]
+#define tEvB data[1]
+#define tEvAEnd data[2]
+#define tEvBEnd data[3]
+#define tEvADelta data[4]
+#define tEvBDelta data[5]
+#define tEvWhich data[6]
+#define tEvStepCount data[8]
+
+static void Task_SmoothBlendLayers(u8 taskId)
+{
+    s16 * data = gTasks[taskId].data;
+
+    if (tEvStepCount != 0)
+    {
+        if (tEvWhich == 0)
+        {
+            tEvA += tEvADelta;
+            tEvWhich = 1;
+        }
+        else
+        {
+            if (--tEvStepCount != 0)
+            {
+                tEvB += tEvBDelta;
+            }
+            else
+            {
+                tEvA = tEvAEnd << 8;
+                tEvB = tEvBEnd << 8;
+            }
+            tEvWhich = 0;
+        }
+        SetGpuReg(REG_OFFSET_BLDALPHA, (tEvB & ~0xFF) | ((u16)tEvA >> 8));
+        if (tEvStepCount == 0)
+            DestroyTask(taskId);
+    }
+}
+
+static void StartBlendTask(u8 eva_start, u8 evb_start, u8 eva_end, u8 evb_end, u8 ev_step, u8 priority)
+{
+    u8 taskId = CreateTask(Task_SmoothBlendLayers, priority);
+    gTasks[taskId].tEvA = eva_start << 8;
+    gTasks[taskId].tEvB = evb_start << 8;
+    gTasks[taskId].tEvAEnd = eva_end;
+    gTasks[taskId].tEvBEnd = evb_end;
+    gTasks[taskId].tEvADelta = (eva_end - eva_start) * 256 / ev_step;
+    gTasks[taskId].tEvBDelta = (evb_end - evb_start) * 256 / ev_step;
+    gTasks[taskId].tEvStepCount = ev_step;
+    SetGpuReg(REG_OFFSET_BLDALPHA, (evb_start << 8) | eva_start);
+}
+
+static bool8 IsBlendTaskActive(void)
+{
+    return FuncIsActiveTask(Task_SmoothBlendLayers);
+}
+#undef tEvA
+#undef tEvB
+#undef tEvAEnd
+#undef tEvBEnd
+#undef tEvADelta
+#undef tEvBDelta
+#undef tEvWhich
+#undef tEvStepCount
+
 // Rouge Feu (graphics.c)
 static const u32 sPresents_Gfx[] = INCGFX_U32("graphics/kanto/intro/game_freak/presents.png", ".4bpp.lz");
 
@@ -163,7 +231,6 @@ struct IntroSequenceData
     u8 unused1[0x2080];
 }; // size: 0x28BC
 
-static EWRAM_DATA struct GcmbStruct sGcmb = {0};
 static EWRAM_DATA u16 sUnusedScene3Var0 = 0; // Set but never read
 static EWRAM_DATA u16 sUnusedScene3Var1 = 0; // Set but never read
 static EWRAM_DATA u16 sNidorinoJumpMult = 0;
@@ -902,113 +969,10 @@ static const struct SpritePalette sFightSceneSpritePalettes[] = {
 #endif
 };
 
-static void VBlankCB_Copyright(void)
-{
-    LoadOam();
-    ProcessSpriteCopyRequests();
-    TransferPlttBuffer();
-}
-
 void KantoIntro_Start(void)
 {
     if (!UpdatePaletteFade())
         SetMainCallback2(CB2_SetUpIntro);
-}
-
-static void LoadCopyrightGraphics(u16 charBase, u16 screenBase, u16 palOffset)
-{
-    LZ77UnCompVram(sCopyright_Gfx, (void *)BG_VRAM + charBase);
-    LZ77UnCompVram(sCopyright_Map, (void *)BG_VRAM + screenBase);
-    LoadPalette(sCopyright_Pal, palOffset, sizeof(sCopyright_Pal));
-}
-
-static void SerialCB_CopyrightScreen(void)
-{
-    GameCubeMultiBoot_HandleSerialInterrupt(&sGcmb);
-}
-
-static bool8 SetUpCopyrightScreen(void)
-{
-    switch (gMain.state)
-    {
-    case 0:
-        SetVBlankCallback(NULL);
-        SetGpuReg(REG_OFFSET_BLDCNT, 0);
-        SetGpuReg(REG_OFFSET_BLDALPHA, 0);
-        SetGpuReg(REG_OFFSET_BLDY, 0);
-// "Fade from white" instead is just pure black in Revision 10.
-#if REVISION >= 0xA
-        ((vu16*)PLTT)[0] = RGB_BLACK;
-#else
-        ((vu16*)PLTT)[0] = RGB_WHITE;
-#endif
-        SetGpuReg(REG_OFFSET_DISPCNT, 0);
-        SetGpuReg(REG_OFFSET_BG0HOFS, 0);
-        SetGpuReg(REG_OFFSET_BG0VOFS, 0);
-        DmaFill16(3, 0, VRAM, VRAM_SIZE);
-        DmaFill32(3, 0, OAM, OAM_SIZE);
-        DmaFill16(3, 0, PLTT + sizeof(vu16), PLTT_SIZE - sizeof(vu16));
-        ResetPaletteFade();
-        LoadCopyrightGraphics(0 * BG_CHAR_SIZE, 7 * BG_SCREEN_SIZE, BG_PLTT_ID(0));
-        ScanlineEffect_Stop();
-        ResetTasks();
-        ResetSpriteData();
-        FreeAllSpritePalettes();
-#if REVISION >= 0xA
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
-#else
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_WHITEALPHA);
-#endif
-        SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_16COLOR | BGCNT_SCREENBASE(7));
-        EnableInterrupts(INTR_FLAG_VBLANK);
-        SetVBlankCallback(VBlankCB_Copyright);
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON);
-        SetSerialCallback(SerialCB_CopyrightScreen);
-        GameCubeMultiBoot_Init(&sGcmb);
-        // fallthrough
-    default:
-        UpdatePaletteFade();
-        gMain.state++;
-        GameCubeMultiBoot_Main(&sGcmb);
-        break;
-    case 140:
-        GameCubeMultiBoot_Main(&sGcmb);
-        if (sGcmb.gcmb_field_2 != 1)
-        {
-            BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-            gMain.state++;
-        }
-        break;
-    case 141:
-        if (!UpdatePaletteFade())
-        {
-            gMain.state++;
-            if (sGcmb.gcmb_field_2 != 0)
-            {
-                if (sGcmb.gcmb_field_2 == 2)
-                {
-                    if (*(u32 *)(EWRAM_START + 0xAC) == COLOSSEUM_GAME_CODE)
-                    {
-                        CpuCopy16(gMultiBootProgram_PokemonColosseum_Start, (void *)EWRAM_START, 0x28000);
-                        *(u32 *)(EWRAM_START + 0xAC) = COLOSSEUM_GAME_CODE;
-                    }
-                    GameCubeMultiBoot_ExecuteProgram(&sGcmb);
-                }
-            }
-            else
-            {
-                GameCubeMultiBoot_Quit();
-                SetSerialCallback(SerialCB);
-            }
-            return FALSE;
-        }
-        break;
-    case 142:
-        ResetSerial();
-        SetMainCallback2(KantoIntro_Start);
-        break;
-    }
-    return TRUE;
 }
 
 static void CB2_SetUpIntro(void)
@@ -1167,7 +1131,7 @@ static void IntroCB_GF_Star(struct IntroSequenceData * this)
     switch (this->state)
     {
     case 0:
-        PlaySE(MUS_GAME_FREAK);
+        PlaySE(MUS_RG_GAME_FREAK);
         GFScene_LoadGfxCreateStar();
         this->timer = 0;
         this->state++;
@@ -1332,7 +1296,7 @@ static void IntroCB_Scene1(struct IntroSequenceData * this)
     case 3:
         if (!gPaletteFade.active)
         {
-            m4aSongNumStart(MUS_INTRO_FIGHT);
+            m4aSongNumStart(MUS_RG_INTRO_FIGHT);
             this->timer = 0;
             this->state++;
         }
