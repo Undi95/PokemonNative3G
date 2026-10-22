@@ -35,11 +35,11 @@ contenu dans un seul jeu.
   ajoutés en tête des Objets rares à l'ouverture du sac de RF, retirés à celle du sac d'Émeraude.
   Retirés de RF : tutoriels (Vieil Homme, Télé Pokémon), journal des quêtes.
 - [-] Interface du PC (stockage) : abandonné (choix utilisateur 2026-10-23) — on garde celle d'Émeraude, qui a déjà les fonds des deux versions
-- [ ] Écran de nom (option, décision 2026-10-23) : clavier de RF, avec le sprite du perso choisi (Brice/Flora ou Red/Leaf) ;
+- [x] Écran de nom (MENUS : police + icône PC de RF ; sprite selon PERSO ; Easy Chat gardé d'Émeraude) (option, décision 2026-10-23) : clavier de RF, avec le sprite du perso choisi (Brice/Flora ou Red/Leaf) ;
   aussi l'écran de sélection de mots (Easy Chat)
-- [ ] Intro : option INTRO HOENN/KANTO près de ÉCRAN TITRE (Flygon / Nidorino-Ectoplasma)
-- [ ] Crédits : ceux de la Ligue finie (Hoenn après Hoenn, Kanto après Kanto), pas d'option
-- [ ] Panthéon : deux Panthéons séparés ; le PC de Kanto montre celui de Kanto, le PC de Hoenn celui de Hoenn
+- [x] Intro (KANTO par défaut) : option INTRO HOENN/KANTO près de ÉCRAN TITRE (Flygon / Nidorino-Ectoplasma)
+- [~] Crédits (kanto_credits.c porté + caméra des cartes dans overworld.c, compile, NON TESTÉ) : ceux de la Ligue finie (Hoenn après Hoenn, Kanto après Kanto), pas d'option
+- [~] Panthéon (kanto_hall_of_fame.c porté, sauvegarde annexe @8192, PC par région, compile, NON TESTÉ ; test prévu : warp debug vers PokemonLeague_HallOfFame) : deux Panthéons séparés ; le PC de Kanto montre celui de Kanto, le PC de Hoenn celui de Hoenn
 - [ ] Sprites des Pokémon (option, combats sauvages compris) : Émeraude animés / Rouge Feu fixes
 - [ ] Carte de la région / Vol (pas d'option) : carte RF à Kanto (avec Sevii), carte d'Émeraude à Hoenn ; une touche
   bascule vers l'autre région et permet d'y voler (villes visitées). Bascule débloquée seulement quand la Ligue de
