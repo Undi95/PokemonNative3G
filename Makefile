@@ -178,7 +178,7 @@ ifeq ($(PORTABLE),1)
     OS_LFLAGS := -Wl,-no_fixup_chains
   else ifeq ($(TARGET_OS),ANDROID)
     SDL_DIR := /opt/sdl-android
-    OS_CFLAGS := -fPIC -Wno-error=incompatible-pointer-types-discards-qualifiers
+    OS_CFLAGS := -fPIC
     OS_LFLAGS := -shared -Wl,-z,text -llog -landroid
     FIX_UNDERSCORE += --rename-section .rodata=.data.rel.ro,alloc,load,contents,data
     BUILD_FEXTENSION := .so
@@ -328,6 +328,10 @@ else ifeq ($(PORTABLE),1)
   endif
   PATH_MODERNCC := PATH="$(PATH)" $(MODERNCC)
   override CFLAGS += $(OS_CFLAGS) $(PLATFORM_CFLAGS) -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=int-conversion -Werror=pointer-to-int-cast -Werror=int-to-pointer-cast -Wno-trigraphs -Wimplicit -Wparentheses -Wunused $(BIT_WIDTH_FLAG) -std=gnu99 $(LEADING_UNDERSCORE_FLAG) -fno-common -fno-builtin -Wno-unused-function -DPORTABLE -DNONMATCHING -D UBFIX -DMODERN=$(MODERN)
+  ifeq ($(TARGET_OS),ANDROID)
+    # clang counts the const dropped by code ported from Fire Red as incompatible pointers
+    override CFLAGS += -Wno-error=incompatible-pointer-types-discards-qualifiers
+  endif
   # The same floating point results everywhere, which the tests' frame hashes
   # need: on ARM, compilers would otherwise fuse multiplies and adds
   override CFLAGS += -ffp-contract=off
