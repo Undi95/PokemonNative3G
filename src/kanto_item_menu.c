@@ -2102,6 +2102,18 @@ bool8 KantoBag_TryGoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
     {
         if (!sKantoBagActive)
             return FALSE;
+        // Comme RF (party_menu.c, CB2_ReturnToBagMenu) : retour à la Boîte à CT ou au Sac à Baies
+        // si l'objet utilisé en vient
+        if (GetItemPocket(gSpecialVar_ItemId) == POCKET_TM_HM)
+        {
+            InitTMCase(TMCASE_REOPENING, NULL, TMCASE_KEEP_PREV);
+            return TRUE;
+        }
+        if (GetItemPocket(gSpecialVar_ItemId) == POCKET_BERRIES)
+        {
+            InitBerryPouch(BERRYPOUCH_NA, NULL, 0xFF);
+            return TRUE;
+        }
     }
     else
     {
@@ -2155,12 +2167,7 @@ void KantoBag_SetNewScreenCallback(MainCallback callback)
     ItemMenu_SetExitCallback(callback);
 }
 
-// PokemonNative3G : Boîte à CT et Sac à Baies de RF, pas encore portés : retour au sac
-void KantoInitTMCase(u8 type, void (*exitCallback)(void), bool8 allowSelectClose)
-{
-    SetMainCallback2(exitCallback);
-}
-
+// PokemonNative3G : Sac à Baies de RF, pas encore porté : retour au sac
 void KantoInitBerryPouch(u8 type, void (*savedCallback)(void), u8 allowSelect)
 {
     SetMainCallback2(savedCallback);

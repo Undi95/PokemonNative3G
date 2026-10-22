@@ -49,6 +49,8 @@ enum BerryPouchType
 void KantoInitTMCase(u8 type, void (*exitCallback)(void), bool8 allowSelectClose);
 void KantoInitBerryPouch(u8 type, void (*savedCallback)(void), u8 allowSelect);
 #define InitTMCase     KantoInitTMCase
+#define SortPocketAndPlaceHMsFirst KBag_SortPocketAndPlaceHMsFirst
+void SortPocketAndPlaceHMsFirst(struct BagPocket *pocket);
 #define InitBerryPouch KantoInitBerryPouch
 
 // Fonctions de RF : équivalents d'Émeraude, ou ajoutées dans src/kanto_bag.c
