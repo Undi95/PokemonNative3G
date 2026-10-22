@@ -47,7 +47,7 @@ u16 CloseMuseumFossilPic(void) { KantoSpecialStub("CloseMuseumFossilPic"); retur
 u16 DoSSAnneDepartureCutscene(void) { KantoSpecialStub("DoSSAnneDepartureCutscene"); return 0; }
 u16 CallTrainerTowerFunc(void) { KantoSpecialStub("CallTrainerTowerFunc"); return 0; }
 u16 DoPokemonLeagueLightingEffect(void) { KantoSpecialStub("DoPokemonLeagueLightingEffect"); return 0; }
-u16 DoCredits(void) { KantoSpecialStub("DoCredits"); return 0; }
+
 u16 DrawSeagallopDestinationMenu(void) { KantoSpecialStub("DrawSeagallopDestinationMenu"); return 0; }
 u16 GetSelectedSeagallopDestination(void) { KantoSpecialStub("GetSelectedSeagallopDestination"); return 0; }
 u16 DoDeoxysTriangleInteraction(void) { KantoSpecialStub("DoDeoxysTriangleInteraction"); return 0; }
