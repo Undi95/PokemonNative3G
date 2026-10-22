@@ -34,6 +34,12 @@ static const u16 gCreditsCopyright_Pal[] = INCGFX_U16("graphics/kanto/credits/co
 static const u8 gCreditsCopyright_Tilemap[] = INCGFX_U8("graphics/kanto/credits/copyright.bin", ".lz");
 static const u8 gCreditsCopyright_Tiles[] = INCGFX_U8("graphics/kanto/credits/copyright.png", ".4bpp.lz");
 static const u16 gCreditsMonPokeball_Pals[][16] =
+{
+    INCGFX_U16("graphics/kanto/credits/pokeball_charizard.pal", ".gbapal"),
+    INCGFX_U16("graphics/kanto/credits/pokeball_venusaur.pal", ".gbapal"),
+    INCGFX_U16("graphics/kanto/credits/pokeball_blastoise.pal", ".gbapal"),
+    INCGFX_U16("graphics/kanto/credits/pokeball_pikachu.pal", ".gbapal"),
+};
 static const u32 gCreditsMonPokeball_Tilemap[] = INCGFX_U32("graphics/kanto/credits/pokeball.bin", ".lz");
 static const u32 gCreditsMonPokeball_Tiles[] = INCGFX_U32("graphics/kanto/credits/pokeball.png", ".4bpp.lz");
 
