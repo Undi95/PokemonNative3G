@@ -117,9 +117,9 @@ static const union AnimCmd sAnim_Bag_OpenKeyItemsPocket[] = {
 };
 
 static const union AnimCmd *const sAnims_Bag[] = {
-    [POCKET_ITEMS - 1]      = sAnim_Bag_OpenItemsPocket,
-    [POCKET_KEY_ITEMS - 1]  = sAnim_Bag_OpenKeyItemsPocket,
-    [POCKET_POKE_BALLS - 1] = sAnim_Bag_OpenPokeBallsPocket,
+    [OPEN_BAG_ITEMS]     = sAnim_Bag_OpenItemsPocket,
+    [OPEN_BAG_KEYITEMS]  = sAnim_Bag_OpenKeyItemsPocket,
+    [OPEN_BAG_POKEBALLS] = sAnim_Bag_OpenPokeBallsPocket,
 };
 
 static const union AffineAnimCmd sAffineAnim_BagIdle[] = {
