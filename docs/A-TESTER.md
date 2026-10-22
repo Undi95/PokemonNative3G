@@ -10,6 +10,13 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 
 - [ ] F5 = reset du jeu (retour à l'écran titre) ; touche modifiable via `key_reset` dans pokeemerald.ini (ligne ajoutée automatiquement aux .ini existants)
 
+
+## Plateformes (docs/PLATEFORMES.md)
+- [ ] Android : installer `out/android/PokemonNative3G.apk` (autoriser les sources inconnues), le jeu démarre en paysage, son OK, icône = celle de Windows
+- [ ] Android : touches tactiles (croix 8 directions, A/B, L/R, SELECT / RESET / START ; RESET maintenu 1 s = retour à l'écran titre), plusieurs doigts à la fois
+- [ ] Android : sauvegarder, quitter l'appli, relancer → la sauvegarde est là ; mettre en arrière-plan puis revenir
+- [ ] Android : manette Bluetooth
+- [ ] Linux : `out/linux/pokeemeraude64` sur une vraie machine Linux (SDL2 installé), fenêtre + son + manette
 ## Option PERSO (RED / LEAF)
 - [ ] LEAF partout : carte, carte dresseur, dos en combat (et ses frames de lancer)
 - [ ] RED / LEAF : vélo (Course et Cross), surf, pêche, capacité de terrain (Coupe, Éclate-Roc…)
