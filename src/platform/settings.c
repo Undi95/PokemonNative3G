@@ -6,6 +6,7 @@
 
 #include "global.h"
 #include "platform/settings.h"
+#include "platform/touch.h"
 
 // What the keyboard and controllers can do: the GBA buttons, in the order of
 // their bits in KEYINPUT, fast-forward and the soft reset
@@ -391,7 +392,7 @@ u16 Input_GetButtons(bool *speedUp)
         numPads++;
     }
 
-    held = BindingsHeld(SDL_GetKeyboardState(NULL), pads, numPads);
+    held = BindingsHeld(SDL_GetKeyboardState(NULL), pads, numPads) | Touch_GetButtons();
     if (speedUp != NULL)
         *speedUp = (held >> BINDING_SPEEDUP) & 1;
     sResetHeld = (held >> BINDING_RESET) & 1;

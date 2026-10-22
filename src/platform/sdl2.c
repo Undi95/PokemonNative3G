@@ -23,6 +23,7 @@
 #include "platform/settings.h"
 #include "platform/system.h"
 #include "platform/test_state.h"
+#include "platform/touch.h"
 
 extern void (*const gIntrTable[])(void);
 
@@ -127,6 +128,8 @@ int main(int argc, char **argv)
         DBGPRINTF("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
+
+    Touch_Init();
 
     // Mappings for controllers SDL doesn't know, from https://github.com/mdqinc/SDL_GameControllerDB
     {
@@ -256,6 +259,7 @@ int main(int argc, char **argv)
         lastGameTime = curGameTime;
 
         SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+        Touch_Draw(sdlRenderer, sdlWindow);
         SDL_RenderPresent(sdlRenderer);
     }
 
@@ -455,6 +459,11 @@ void ProcessEvents(void)
                 break;
             }
             break;
+        case SDL_FINGERDOWN:
+        case SDL_FINGERMOTION:
+        case SDL_FINGERUP:
+            Touch_HandleEvent(&event, sdlWindow);
+            break;
         case SDL_CONTROLLERDEVICEADDED:
         case SDL_CONTROLLERDEVICEREMOVED:
             Input_HandleEvent(&event);
@@ -490,7 +499,7 @@ void ProcessEvents(void)
         static bool sWasResetHeld;
         bool resetHeld = Input_IsResetHeld();
 
-        if (resetHeld && !sWasResetHeld && !sTestMode)
+        if (((resetHeld && !sWasResetHeld) || Touch_ResetRequested()) && !sTestMode)
             RequestSoftReset();
         sWasResetHeld = resetHeld;
     }
