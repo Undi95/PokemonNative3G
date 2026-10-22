@@ -587,6 +587,7 @@ struct SaveBlock2
              u16 optionsPokedexStyle:1;    // PokemonNative3G : Pokédex 0 = Hoenn (Émeraude), 1 = Kanto (Rouge Feu)
              u16 optionsMenuStyle:1;       // PokemonNative3G : menus (Start, équipe, sac, résumé) 0 = Hoenn, 1 = Kanto
              u16 optionsBattleUI:1;        // PokemonNative3G : boîtes de combat 0 = Hoenn (Émeraude), 1 = Kanto (Rouge Feu)
+             u16 optionsBagStyle:1;        // PokemonNative3G : sac 0 = Hoenn (Émeraude), 1 = Kanto (Rouge Feu)
     /*0x18*/ struct Pokedex pokedex;
     /*0x90*/ u8 filler_90[0x8];
     /*0x98*/ struct Time localTimeOffset;

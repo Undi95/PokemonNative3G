@@ -97,6 +97,7 @@ void CB2_BagMenuFromStartMenu(void);
 u8 GetItemListPosition(u8 pocketId);
 bool8 UseRegisteredKeyItemOnField(void);
 void CB2_GoToSellMenu(void);
+void SetBagMenuNewScreenCallback(MainCallback callback);
 void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback);
 void DoWallyTutorialBagMenu(void);
 void ResetBagScrollPositions(void);

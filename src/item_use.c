@@ -104,7 +104,7 @@ static void SetUpItemUseCallback(u8 taskId)
         type = GetItemType(gSpecialVar_ItemId) - 1;
     if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
-        gBagMenu->newScreenCallback = sItemUseCallbacks[type];
+        SetBagMenuNewScreenCallback(sItemUseCallbacks[type]);
         Task_FadeAndCloseBagMenu(taskId);
     }
     else
@@ -193,7 +193,7 @@ static void CB2_CheckMail(void)
 
 void ItemUseOutOfBattle_Mail(u8 taskId)
 {
-    gBagMenu->newScreenCallback = CB2_CheckMail;
+    SetBagMenuNewScreenCallback(CB2_CheckMail);
     Task_FadeAndCloseBagMenu(taskId);
 }
 
@@ -614,7 +614,7 @@ void ItemUseOutOfBattle_PokeblockCase(u8 taskId)
     }
     else if (gTasks[taskId].tUsingRegisteredKeyItem != TRUE)
     {
-        gBagMenu->newScreenCallback = CB2_OpenPokeblockFromBag;
+        SetBagMenuNewScreenCallback(CB2_OpenPokeblockFromBag);
         Task_FadeAndCloseBagMenu(taskId);
     }
     else
@@ -676,7 +676,7 @@ void ItemUseOutOfBattle_Berry(u8 taskId)
     {
         sItemUseOnFieldCB = ItemUseOnFieldCB_Berry;
         gFieldCallback = FieldCB_UseItemOnField;
-        gBagMenu->newScreenCallback = CB2_ReturnToField;
+        SetBagMenuNewScreenCallback(CB2_ReturnToField);
         Task_FadeAndCloseBagMenu(taskId);
     }
     else
@@ -1002,7 +1002,7 @@ static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 {
     if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
-        gBagMenu->newScreenCallback = ChooseMonForInBattleItem;
+        SetBagMenuNewScreenCallback(ChooseMonForInBattleItem);
         Task_FadeAndCloseBagMenu(taskId);
     }
     else

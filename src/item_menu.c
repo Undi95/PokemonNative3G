@@ -1,5 +1,6 @@
 #include "global.h"
 #include "item_menu.h"
+#include "kanto_item_menu.h"
 #include "battle.h"
 #include "battle_controllers.h"
 #include "battle_pyramid.h"
@@ -616,6 +617,11 @@ void QuizLadyOpenBagMenu(void)
 
 void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
 {
+    // PokemonNative3G : option SAC = KANTO
+    if (KantoBag_TryGoToBagMenu(location, pocket, exitCallback))
+        return;
+    if (location != ITEMMENULOCATION_LAST)
+        KantoBag_RemoveCases();
     gBagMenu = AllocZeroed(sizeof(*gBagMenu));
     if (gBagMenu == NULL)
     {
@@ -1076,6 +1082,11 @@ static void FreeBagMenu(void)
 
 void Task_FadeAndCloseBagMenu(u8 taskId)
 {
+    if (KantoBag_IsActive())
+    {
+        KantoBag_FadeAndClose(taskId);
+        return;
+    }
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_CloseBagMenu;
 }
@@ -1166,6 +1177,11 @@ void DisplayItemMessage(u8 taskId, u8 fontId, const u8 *str, TaskFunc callback)
 {
     s16 *data = gTasks[taskId].data;
 
+    if (KantoBag_IsActive())
+    {
+        KantoBag_DisplayItemMessage(taskId, fontId, str, callback);
+        return;
+    }
     tMsgWindowId = AddItemMessageWindow(ITEMWIN_MESSAGE);
     FillWindowPixelBuffer(tMsgWindowId, PIXEL_FILL(1));
     DisplayMessageAndContinueTask(taskId, tMsgWindowId, 10, 13, fontId, GetPlayerTextSpeedDelay(), str, callback);
@@ -1177,6 +1193,12 @@ void CloseItemMessage(u8 taskId)
     s16 *data = gTasks[taskId].data;
     u16 *scrollPos = &gBagPosition.scrollPosition[gBagPosition.pocket];
     u16 *cursorPos = &gBagPosition.cursorPosition[gBagPosition.pocket];
+
+    if (KantoBag_IsActive())
+    {
+        KantoBag_CloseItemMessage(taskId);
+        return;
+    }
     RemoveItemMessageWindow(ITEMWIN_MESSAGE);
     DestroyListMenuTask(tListTaskId, scrollPos, cursorPos);
     UpdatePocketItemList(gBagPosition.pocket);
@@ -2528,6 +2550,15 @@ static void RemoveItemMessageWindow(u8 windowType)
         ScheduleBgCopyTilemapToVram(1);
         *windowId = WINDOW_NONE;
     }
+}
+
+// PokemonNative3G : écran ouvert à la fermeture du sac (celui d'Émeraude ou de Rouge Feu)
+void SetBagMenuNewScreenCallback(MainCallback callback)
+{
+    if (KantoBag_IsActive())
+        KantoBag_SetNewScreenCallback(callback);
+    else
+        gBagMenu->newScreenCallback = callback;
 }
 
 void BagMenu_YesNo(u8 taskId, u8 windowType, const struct YesNoFuncTable *funcTable)
