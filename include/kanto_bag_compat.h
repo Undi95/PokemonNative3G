@@ -52,6 +52,10 @@ void KantoInitBerryPouch(u8 type, void (*savedCallback)(void), u8 allowSelect);
 #define SortPocketAndPlaceHMsFirst KBag_SortPocketAndPlaceHMsFirst
 void SortPocketAndPlaceHMsFirst(struct BagPocket *pocket);
 #define InitBerryPouch KantoInitBerryPouch
+void BerryPouch_StartFadeToExitCallback(u8 taskId);
+void BerryPouch_SetExitCallback(void (*exitCallback)(void));
+void DisplayItemMessageInBerryPouch(u8 taskId, u8 fontId, const u8 * str, TaskFunc followUpFunc);
+void Task_BerryPouch_DestroyDialogueWindowAndRefreshListMenu(u8 taskId);
 
 // Fonctions de RF : équivalents d'Émeraude, ou ajoutées dans src/kanto_bag.c
 #define Menu_InitCursor                  InitMenuNormal

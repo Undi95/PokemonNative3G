@@ -2149,26 +2149,33 @@ bool8 KantoBag_TryGoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
 
 void KantoBag_DisplayItemMessage(u8 taskId, u8 fontId, const u8 *str, TaskFunc callback)
 {
-    DisplayItemMessageInBag(taskId, fontId, str, callback);
+    if (GetItemPocket(gSpecialVar_ItemId) == POCKET_BERRIES)
+        DisplayItemMessageInBerryPouch(taskId, fontId, str, callback);
+    else
+        DisplayItemMessageInBag(taskId, fontId, str, callback);
 }
 
 void KantoBag_CloseItemMessage(u8 taskId)
 {
-    Task_ReturnToBagFromContextMenu(taskId);
+    if (GetItemPocket(gSpecialVar_ItemId) == POCKET_BERRIES)
+        Task_BerryPouch_DestroyDialogueWindowAndRefreshListMenu(taskId);
+    else
+        Task_ReturnToBagFromContextMenu(taskId);
 }
 
 void KantoBag_FadeAndClose(u8 taskId)
 {
-    ItemMenu_StartFadeToExitCallback(taskId);
+    if (GetItemPocket(gSpecialVar_ItemId) == POCKET_BERRIES)
+        BerryPouch_StartFadeToExitCallback(taskId);
+    else
+        ItemMenu_StartFadeToExitCallback(taskId);
 }
 
 void KantoBag_SetNewScreenCallback(MainCallback callback)
 {
-    ItemMenu_SetExitCallback(callback);
+    if (GetItemPocket(gSpecialVar_ItemId) == POCKET_BERRIES)
+        BerryPouch_SetExitCallback(callback);
+    else
+        ItemMenu_SetExitCallback(callback);
 }
 
-// PokemonNative3G : Sac à Baies de RF, pas encore porté : retour au sac
-void KantoInitBerryPouch(u8 type, void (*savedCallback)(void), u8 allowSelect)
-{
-    SetMainCallback2(savedCallback);
-}

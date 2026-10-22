@@ -25,6 +25,7 @@ void ItemUseOutOfBattle_EnigmaBerry(u8 taskId);
 void ItemUseOutOfBattle_CannotUse(u8 taskId);
 void ItemUseOutOfBattle_TMCase(u8 taskId);    // Rouge Feu, src/kanto_tm_case.c
 void ItemUseOutOfBattle_BerryPouch(u8 taskId); // Rouge Feu, src/kanto_berry_pouch.c
+void ItemUseInBattle_BerryPouch(u8 taskId);    // Rouge Feu, src/kanto_berry_pouch.c
 void ItemUseInBattle_PokeBall(u8 taskId);
 void ItemUseInBattle_StatIncrease(u8 taskId);
 void ItemUseInBattle_Medicine(u8 taskId);
