@@ -1944,20 +1944,25 @@ static void SetBerryTreeGraphics(struct ObjectEvent *objectEvent, struct Sprite 
     }
 }
 
-// Sprites de Rouge Feu équivalents à ceux du joueur d'Émeraude (Rouge Feu n'a ni plongée ni arrosoir)
+// Sprites de Rouge Feu équivalents à ceux du joueur d'Émeraude. Vélo Cross, arrosoir et plongée,
+// absents de Rouge Feu : src/data/object_events/kanto_player_extra.h
 static u16 GetRedLeafGraphicsId(u16 graphicsId)
 {
     switch (graphicsId)
     {
     case OBJ_EVENT_GFX_BRENDAN_NORMAL:     return OBJ_EVENT_GFX_KANTO_RED_NORMAL;
-    case OBJ_EVENT_GFX_BRENDAN_MACH_BIKE:
-    case OBJ_EVENT_GFX_BRENDAN_ACRO_BIKE:  return OBJ_EVENT_GFX_KANTO_RED_BIKE;
+    case OBJ_EVENT_GFX_BRENDAN_MACH_BIKE:  return OBJ_EVENT_GFX_KANTO_RED_BIKE;
+    case OBJ_EVENT_GFX_BRENDAN_ACRO_BIKE:  return OBJ_EVENT_GFX_KANTO_RED_ACRO_BIKE;
+    case OBJ_EVENT_GFX_BRENDAN_WATERING:   return OBJ_EVENT_GFX_KANTO_RED_WATERING;
+    case OBJ_EVENT_GFX_BRENDAN_UNDERWATER: return OBJ_EVENT_GFX_KANTO_RED_UNDERWATER;
     case OBJ_EVENT_GFX_BRENDAN_SURFING:    return OBJ_EVENT_GFX_KANTO_RED_SURF;
     case OBJ_EVENT_GFX_BRENDAN_FIELD_MOVE: return OBJ_EVENT_GFX_KANTO_RED_FIELD_MOVE;
     case OBJ_EVENT_GFX_BRENDAN_FISHING:    return OBJ_EVENT_GFX_KANTO_RED_FISH;
     case OBJ_EVENT_GFX_MAY_NORMAL:         return OBJ_EVENT_GFX_KANTO_GREEN_NORMAL;
-    case OBJ_EVENT_GFX_MAY_MACH_BIKE:
-    case OBJ_EVENT_GFX_MAY_ACRO_BIKE:      return OBJ_EVENT_GFX_KANTO_GREEN_BIKE;
+    case OBJ_EVENT_GFX_MAY_MACH_BIKE:      return OBJ_EVENT_GFX_KANTO_GREEN_BIKE;
+    case OBJ_EVENT_GFX_MAY_ACRO_BIKE:      return OBJ_EVENT_GFX_KANTO_GREEN_ACRO_BIKE;
+    case OBJ_EVENT_GFX_MAY_WATERING:       return OBJ_EVENT_GFX_KANTO_GREEN_WATERING;
+    case OBJ_EVENT_GFX_MAY_UNDERWATER:     return OBJ_EVENT_GFX_KANTO_GREEN_UNDERWATER;
     case OBJ_EVENT_GFX_MAY_SURFING:        return OBJ_EVENT_GFX_KANTO_GREEN_SURF;
     case OBJ_EVENT_GFX_MAY_FIELD_MOVE:     return OBJ_EVENT_GFX_KANTO_GREEN_FIELD_MOVE;
     case OBJ_EVENT_GFX_MAY_FISHING:        return OBJ_EVENT_GFX_KANTO_GREEN_FISH;

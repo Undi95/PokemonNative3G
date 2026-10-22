@@ -7940,6 +7940,8 @@ const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_SSAnne = {
 };
 
 
+#include "data/object_events/kanto_player_extra.h"
+
 const struct ObjectEventGraphicsInfo *const gKantoObjectEventGraphicsInfoPointers[NUM_KANTO_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_KANTO_RED_NORMAL - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_RedNormal,
     [OBJ_EVENT_GFX_KANTO_RED_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_RedBike,
@@ -8093,4 +8095,10 @@ const struct ObjectEventGraphicsInfo *const gKantoObjectEventGraphicsInfoPointer
     [OBJ_EVENT_GFX_KANTO_DEOXYS_A - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_DeoxysA,
     [OBJ_EVENT_GFX_KANTO_DEOXYS_N - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_DeoxysN,
     [OBJ_EVENT_GFX_KANTO_SS_ANNE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_SSAnne,
+    [OBJ_EVENT_GFX_KANTO_RED_ACRO_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_RedAcroBike,
+    [OBJ_EVENT_GFX_KANTO_RED_WATERING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_RedWatering,
+    [OBJ_EVENT_GFX_KANTO_RED_UNDERWATER - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_RedUnderwater,
+    [OBJ_EVENT_GFX_KANTO_GREEN_ACRO_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_GreenAcroBike,
+    [OBJ_EVENT_GFX_KANTO_GREEN_WATERING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_GreenWatering,
+    [OBJ_EVENT_GFX_KANTO_GREEN_UNDERWATER - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_GreenUnderwater,
 };
