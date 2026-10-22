@@ -186,7 +186,7 @@ EWRAM_DATA static struct NamingScreenData *sNamingScreen = NULL;
 static const u8 sPCIconOff_Gfx[] = INCGFX_U8("graphics/naming_screen/pc_icon_off.png", ".4bpp");
 static const u8 sPCIconOn_Gfx[] = INCGFX_U8("graphics/naming_screen/pc_icon_on.png", ".4bpp");
 // PokemonNative3G : option MENUS = KANTO, l'écran de nom de Rouge Feu. C'est le même écran (mêmes fonds,
-// claviers et palettes) ; seuls changent la police, l'icône du PC et la place de deux textes.
+// claviers et palettes) ; seuls changent la police, l'icône du PC et la place du bandeau.
 static const u8 sKantoPCIconOff_Gfx[] = INCGFX_U8("graphics/kanto/naming_screen/pc_icon_off.png", ".4bpp");
 static const u8 sKantoPCIconOn_Gfx[] = INCGFX_U8("graphics/kanto/naming_screen/pc_icon_on.png", ".4bpp");
 #define NAMING_FONT (gSaveBlock2Ptr->optionsMenuStyle ? FONT_KANTO : FONT_NORMAL)
@@ -1726,7 +1726,7 @@ static void HandleDpadMovement(struct Task *task)
 static void DrawNormalTextEntryBox(void)
 {
     FillWindowPixelBuffer(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], PIXEL_FILL(1));
-    AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], NAMING_FONT, sNamingScreen->template->title, gSaveBlock2Ptr->optionsMenuStyle ? 1 : 8, 1, 0, 0);
+    AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], NAMING_FONT, sNamingScreen->template->title, 8, 1, 0, 0);
     PutWindowTilemap(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX]);
 }
 
@@ -1742,7 +1742,7 @@ static void DrawMonTextEntryBox(void)
     StringCopy(gStringVar1, gSpeciesNames[sNamingScreen->monSpecies]);
     StringExpandPlaceholders(buffer, sNamingScreen->template->title);
     FillWindowPixelBuffer(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], PIXEL_FILL(1));
-    AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], NAMING_FONT, buffer, gSaveBlock2Ptr->optionsMenuStyle ? 1 : 8, 1, 0, 0);
+    AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], NAMING_FONT, buffer, 8, 1, 0, 0);
     PutWindowTilemap(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX]);
 }
 
