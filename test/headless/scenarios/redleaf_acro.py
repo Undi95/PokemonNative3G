@@ -6,7 +6,15 @@ sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
 from driver import wait_until
 from kanto_tour import log
 
-ACRO_BIKE_ROW = 13   # place du Vélo Cross dans la poche Objets Rares, une fois tous les objets donnés
+ACRO_BIKE_ROW = 12   # place du Vélo Cross dans la poche Objets Rares, une fois tous les objets donnés
+
+
+def close_menus(game):
+    for _ in range(10):
+        if game.state.free:
+            break
+        game.tap("B"); game.wait(40)
+    wait_until(game, lambda s: s.free); game.wait(30)
 
 
 def play(game):
@@ -16,13 +24,13 @@ def play(game):
     wait_until(game, lambda s: s.free); game.wait(30)
     # Options > PERSO = Red
     game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
-    game.tap("DOWN", 6, gap=10); game.wait(30); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120); game.tap("B")
-    wait_until(game, lambda s: s.free); game.wait(30)
-    # DEBUG > objets
-    game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 5, gap=10); game.tap("A"); game.wait(60); game.tap("B")
-    wait_until(game, lambda s: s.free); game.wait(30)
+    game.tap("DOWN", 6, gap=10); game.wait(30); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
+    close_menus(game)
+    # DEBUG > objets (le menu Start se rouvre sur OPTIONS)
+    game.tap("START"); game.wait(30); game.tap("UP", 4, gap=10); game.tap("A"); game.wait(30); game.tap("DOWN", 5, gap=10); game.tap("A"); game.wait(60)
+    close_menus(game)
     # Sac > Objets Rares > Vélo Cross > Utiliser
-    game.tap("START"); game.wait(30); game.tap("UP", 4, gap=10); game.wait(10); game.tap("A"); game.wait(150)
+    game.tap("START"); game.wait(30); game.tap("DOWN"); game.wait(10); game.tap("A"); game.wait(150)
     game.tap("RIGHT", 4, gap=40); game.wait(60); game.tap("DOWN", ACRO_BIKE_ROW, gap=10); game.wait(60)
     log(game, "sac")
     game.tap("A"); game.wait(30); game.tap("A"); game.wait(200)

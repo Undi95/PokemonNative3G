@@ -18,6 +18,7 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Android : manette Bluetooth
 - [ ] Linux : `out/linux/pokeemeraude64` sur une vraie machine Linux (SDL2 installé), fenêtre + son + manette
 ## Option PERSO (RED / LEAF)
+- [ ] Sprites faits pour Red/Leaf (tools/redleaf_sprites.py, d'après Brendan/May) : Vélo Cross (roue arrière, sauts, plus de crash ; Red vérifié en headless, scénario `redleaf_acro.py`), arrosoir (baies), plongée (sous l'eau). Dire si une pose cloche
 - [ ] LEAF partout : carte, carte dresseur, dos en combat (et ses frames de lancer)
 - [ ] RED / LEAF : vélo (Course et Cross), surf, pêche, capacité de terrain (Coupe, Éclate-Roc…)
 - [ ] « ! », « ? » et flèches de sortie en blanc avec RED/LEAF, à Hoenn et à Kanto
