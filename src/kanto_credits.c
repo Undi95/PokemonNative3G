@@ -477,9 +477,9 @@ static const u32 sPikachu2_Tiles[] = INCGFX_U32("graphics/kanto/credits/pikachu_
 
 static const u32 sUnused = 0xF0;
 
-extern const u16 sTheEnd_Pal[];
-extern const u8 sTheEnd_Tiles[];
-extern const u8 sTheEnd_Tilemap[];
+static const u16 sTheEnd_Pal[] = INCGFX_U16("graphics/kanto/credits/the_end.png", ".gbapal");
+static const u8 sTheEnd_Tiles[] = INCGFX_U8("graphics/kanto/credits/the_end.png", ".4bpp.lz");
+static const u8 sTheEnd_Tilemap[] = INCGFX_U8("graphics/kanto/credits/the_end.bin", ".lz");
 
 static const struct CompressedGraphicsHeader sCopyrightOrTheEndGfxHeaders[] = {
     {
