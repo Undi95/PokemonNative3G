@@ -35,11 +35,17 @@ contenu dans un seul jeu.
   ajoutés en tête des Objets rares à l'ouverture du sac de RF, retirés à celle du sac d'Émeraude.
   Retirés de RF : tutoriels (Vieil Homme, Télé Pokémon), journal des quêtes.
 - [-] Interface du PC (stockage) : abandonné (choix utilisateur 2026-10-23) — on garde celle d'Émeraude, qui a déjà les fonds des deux versions
-- [ ] Écran de nom (clavier)
-- [ ] Intro (Flygon / Nidorino-Ectoplasma), crédits, Panthéon
-- [ ] Sprites des Pokémon (de face/de dos : Émeraude animés, Rouge Feu fixes et parfois différents)
-- [ ] Carte de la région / Vol : chaque région garde la sienne (pas une option : Kanto = carte RF)
-
+- [ ] Écran de nom (option, décision 2026-10-23) : clavier de RF, avec le sprite du perso choisi (Brice/Flora ou Red/Leaf) ;
+  aussi l'écran de sélection de mots (Easy Chat)
+- [ ] Intro : option INTRO HOENN/KANTO près de ÉCRAN TITRE (Flygon / Nidorino-Ectoplasma)
+- [ ] Crédits : ceux de la Ligue finie (Hoenn après Hoenn, Kanto après Kanto), pas d'option
+- [ ] Panthéon : deux Panthéons séparés ; le PC de Kanto montre celui de Kanto, le PC de Hoenn celui de Hoenn
+- [ ] Sprites des Pokémon (option, combats sauvages compris) : Émeraude animés / Rouge Feu fixes
+- [ ] Carte de la région / Vol (pas d'option) : carte RF à Kanto (avec Sevii), carte d'Émeraude à Hoenn ; une touche
+  bascule vers l'autre région et permet d'y voler (villes visitées). Bascule débloquée seulement quand la Ligue de
+  Kanto est finie ET le Rubis/Saphir rendu à Céladon (quête post-game RF qui relie le PC de Kanto à Hoenn :
+  sert de contexte, le joueur ne récupère pas ses Pokémon de Hoenn avant). POKéDEX Kanto : débloqué par le
+  Pokédex de Chen (déjà fait).
 ## Notes
 - Piste (utilisateur) : Émeraude a été construit à partir de Rouge Feu ; il garde des fonctions vidées et des entrées inutilisées de RF (ex. BgTileAllocOp « Dummied out », LoadMonPicInWindow UNUSED). Les rétablir avec le code de RF avant de réinventer.
 - Comparaison des cadres : script PIL (pixels RGB identiques) ; refaire de même pour chaque liste.
