@@ -29,6 +29,7 @@
 #include "main.h"
 #include "constants/event_objects.h"
 #include "constants/rgb.h"
+#include "constants/kanto_event_objects.h"
 
 enum {
     INPUT_NONE,
@@ -184,6 +185,11 @@ EWRAM_DATA static struct NamingScreenData *sNamingScreen = NULL;
 
 static const u8 sPCIconOff_Gfx[] = INCGFX_U8("graphics/naming_screen/pc_icon_off.png", ".4bpp");
 static const u8 sPCIconOn_Gfx[] = INCGFX_U8("graphics/naming_screen/pc_icon_on.png", ".4bpp");
+// PokemonNative3G : option MENUS = KANTO, l'écran de nom de Rouge Feu. C'est le même écran (mêmes fonds,
+// claviers et palettes) ; seuls changent la police, l'icône du PC et la place de deux textes.
+static const u8 sKantoPCIconOff_Gfx[] = INCGFX_U8("graphics/kanto/naming_screen/pc_icon_off.png", ".4bpp");
+static const u8 sKantoPCIconOn_Gfx[] = INCGFX_U8("graphics/kanto/naming_screen/pc_icon_on.png", ".4bpp");
+#define NAMING_FONT (gSaveBlock2Ptr->optionsMenuStyle ? FONT_KANTO : FONT_NORMAL)
 static const u16 sKeyboard_Pal[] = INCGFX_U16("graphics/naming_screen/keyboard.pal", ".gbapal");
 static const u16 sRival_Pal[] = INCGFX_U16("graphics/naming_screen/rival.pal", ".gbapal"); // Unused, leftover from FRLG rival
 
@@ -324,6 +330,7 @@ static const struct SpriteTemplate sSpriteTemplate_Cursor;
 static const struct SpriteTemplate sSpriteTemplate_InputArrow;
 static const struct SpriteTemplate sSpriteTemplate_Underscore;
 static const struct SpriteTemplate sSpriteTemplate_PCIcon;
+static const struct SpriteFrameImage sKantoImageTable_PCIcon[];
 static const u8 *const sNamingScreenKeyboardText[KBPAGE_COUNT][KBROW_COUNT];
 static const struct SpriteSheet sSpriteSheets[];
 static const struct SpritePalette sSpritePalettes[];
@@ -1403,10 +1410,13 @@ static void NamingScreen_NoIcon(void)
 
 static void NamingScreen_CreatePlayerIcon(void)
 {
-    u8 rivalGfxId;
+    u16 rivalGfxId;
     u8 spriteId;
 
     rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, sNamingScreen->monSpecies);
+    // PokemonNative3G : option PERSO = Red/Leaf
+    if (gSaveBlock2Ptr->optionsPlayerCharacter)
+        rivalGfxId = (sNamingScreen->monSpecies == MALE) ? OBJ_EVENT_GFX_KANTO_RED_NORMAL : OBJ_EVENT_GFX_KANTO_GREEN_NORMAL;
     spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
@@ -1416,7 +1426,11 @@ static void NamingScreen_CreatePCIcon(void)
 {
     u8 spriteId;
 
-    spriteId = CreateSprite(&sSpriteTemplate_PCIcon, 56, 41, 0);
+    struct SpriteTemplate template = sSpriteTemplate_PCIcon;
+
+    if (gSaveBlock2Ptr->optionsMenuStyle)
+        template.images = sKantoImageTable_PCIcon;
+    spriteId = CreateSprite(&template, 56, 41, 0);
     SetSubspriteTables(&gSprites[spriteId], sSubspriteTable_PCIcon);
     gSprites[spriteId].oam.priority = 3;
 }
@@ -1712,7 +1726,7 @@ static void HandleDpadMovement(struct Task *task)
 static void DrawNormalTextEntryBox(void)
 {
     FillWindowPixelBuffer(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], PIXEL_FILL(1));
-    AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], FONT_NORMAL, sNamingScreen->template->title, 8, 1, 0, 0);
+    AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], NAMING_FONT, sNamingScreen->template->title, gSaveBlock2Ptr->optionsMenuStyle ? 1 : 8, 1, 0, 0);
     PutWindowTilemap(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX]);
 }
 
@@ -1728,7 +1742,7 @@ static void DrawMonTextEntryBox(void)
     StringCopy(gStringVar1, gSpeciesNames[sNamingScreen->monSpecies]);
     StringExpandPlaceholders(buffer, sNamingScreen->template->title);
     FillWindowPixelBuffer(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], PIXEL_FILL(1));
-    AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], FONT_NORMAL, buffer, 8, 1, 0, 0);
+    AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], NAMING_FONT, buffer, gSaveBlock2Ptr->optionsMenuStyle ? 1 : 8, 1, 0, 0);
     PutWindowTilemap(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX]);
 }
 
@@ -1784,7 +1798,7 @@ static void DrawGenderIcon(void)
             StringCopy(text, gText_FemaleSymbol);
             isFemale = TRUE;
         }
-        AddTextPrinterParameterized3(sNamingScreen->windows[WIN_TEXT_ENTRY], FONT_NORMAL, (POKEMON_NAME_LENGTH * 4) + 64, 1, sGenderColors[isFemale], TEXT_SKIP_DRAW, text);
+        AddTextPrinterParameterized3(sNamingScreen->windows[WIN_TEXT_ENTRY], NAMING_FONT, (POKEMON_NAME_LENGTH * 4) + 64, 1, sGenderColors[isFemale], TEXT_SKIP_DRAW, text);
     }
 }
 
@@ -1924,7 +1938,7 @@ static void DrawTextEntry(void)
         temp[1] = gText_ExpandedPlaceholder_Empty[0];
         extraWidth = (IsWideLetter(temp[0]) == TRUE) ? 2 : 0;
 
-        AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY], FONT_NORMAL, temp, i * 8 + x + extraWidth, 1, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY], NAMING_FONT, temp, i * 8 + x + extraWidth, 1, TEXT_SKIP_DRAW, NULL);
     }
 
     TryDrawGenderIcon();
@@ -1967,7 +1981,7 @@ static void PrintKeyboardKeys(u8 window, u8 page)
     FillWindowPixelBuffer(window, sFillValues[page]);
 
     for (i = 0; i < KBROW_COUNT; i++)
-        AddTextPrinterParameterized3(window, FONT_NORMAL, 0, i * 16 + 1, sKeyboardTextColors[page], 0, sNamingScreenKeyboardText[page][i]);
+        AddTextPrinterParameterized3(window, NAMING_FONT, 0, i * 16 + 1, sKeyboardTextColors[page], 0, sNamingScreenKeyboardText[page][i]);
 
     PutWindowTilemap(window);
 }
@@ -2013,7 +2027,10 @@ static void PrintControls(void)
     const u8 color[3] = { TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY };
 
     FillWindowPixelBuffer(sNamingScreen->windows[WIN_BANNER], PIXEL_FILL(15));
-    AddTextPrinterParameterized3(sNamingScreen->windows[WIN_BANNER], FONT_SMALL, 2, 1, color, 0, gText_MoveOkBack);
+    if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu : à droite
+        AddTextPrinterParameterized3(sNamingScreen->windows[WIN_BANNER], FONT_SMALL, DISPLAY_WIDTH - 4 - GetStringWidth(FONT_SMALL, gText_MoveOkBack, 0), 0, color, 0, gText_MoveOkBack);
+    else
+        AddTextPrinterParameterized3(sNamingScreen->windows[WIN_BANNER], FONT_SMALL, 2, 1, color, 0, gText_MoveOkBack);
     PutWindowTilemap(sNamingScreen->windows[WIN_BANNER]);
     CopyWindowToVram(sNamingScreen->windows[WIN_BANNER], COPYWIN_FULL);
 }
@@ -2406,6 +2423,12 @@ static const struct SpriteFrameImage sImageTable_PCIcon[] =
 {
     {sPCIconOff_Gfx, sizeof(sPCIconOff_Gfx)},
     {sPCIconOn_Gfx, sizeof(sPCIconOn_Gfx)},
+};
+
+static const struct SpriteFrameImage sKantoImageTable_PCIcon[] =
+{
+    {sKantoPCIconOff_Gfx, sizeof(sKantoPCIconOff_Gfx)},
+    {sKantoPCIconOn_Gfx, sizeof(sKantoPCIconOn_Gfx)},
 };
 
 static const union AnimCmd sAnim_Loop[] =
