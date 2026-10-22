@@ -362,7 +362,7 @@ bool8 IsActiveOverworldLinkBusy(void)
     if (!MenuHelpers_IsLinkActive())
         return FALSE;
     else
-        return (u8)Overworld_LinkRecvQueueLengthMoreThan2();
+        return (u8)Overworld_IsRecvQueueAtMax();
 }
 
 void ResetAllBgsCoordinatesAndBgCntRegs(void)
