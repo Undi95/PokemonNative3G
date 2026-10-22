@@ -425,6 +425,39 @@ void CameraUpdate(void)
     gTotalCameraPixelOffsetY -= movementSpeedY;
 }
 
+// Rouge Feu (field_camera.c) : caméra des crédits de Kanto, qui défile sans personnages
+void CameraUpdateNoObjectRefresh(void)
+{
+    int deltaX = 0, deltaY = 0;
+    int movementSpeedX, movementSpeedY;
+
+    if (gFieldCamera.callback != NULL)
+        gFieldCamera.callback(&gFieldCamera);
+    movementSpeedX = gFieldCamera.movementSpeedX;
+    movementSpeedY = gFieldCamera.movementSpeedY;
+    if (gFieldCamera.x == 0 && movementSpeedX != 0)
+        deltaX = movementSpeedX > 0 ? 1 : -1;
+    if (gFieldCamera.y == 0 && movementSpeedY != 0)
+        deltaY = movementSpeedY > 0 ? 1 : -1;
+    if (gFieldCamera.x != 0 && gFieldCamera.x == -movementSpeedX)
+        deltaX = movementSpeedX > 0 ? 1 : -1;
+    if (gFieldCamera.y != 0 && gFieldCamera.y == -movementSpeedY)
+        deltaX = movementSpeedY > 0 ? 1 : -1;
+
+    gFieldCamera.x += movementSpeedX;
+    gFieldCamera.x = gFieldCamera.x - 16 * (gFieldCamera.x / 16);
+    gFieldCamera.y += movementSpeedY;
+    gFieldCamera.y = gFieldCamera.y - 16 * (gFieldCamera.y / 16);
+
+    if (deltaX != 0 || deltaY != 0)
+    {
+        CameraMove(deltaX, deltaY);
+        AddCameraTileOffset(&sFieldCameraOffset, deltaX * 2, deltaY * 2);
+        RedrawMapSlicesForCameraUpdate(&sFieldCameraOffset, deltaX * 2, deltaY * 2);
+    }
+    AddCameraPixelOffset(&sFieldCameraOffset, movementSpeedX, movementSpeedY);
+}
+
 void MoveCameraAndRedrawMap(int deltaX, int deltaY) //unused
 {
     CameraMove(deltaX, deltaY);
