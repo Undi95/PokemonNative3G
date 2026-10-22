@@ -1080,7 +1080,7 @@ static void IntroCB_Init(struct IntroSequenceData * this)
     {
     case 0:
         InitWindows(sWindowTemplates);
-        LZ77UnCompWram(sGameFreakText_Gfx, this->gameFreakTextGfx);
+        LZ77UnCompWram((const u32 *)sGameFreakText_Gfx, this->gameFreakTextGfx);
         LZ77UnCompWram(sGameFreakLogo_Gfx, this->gameFreakLogoGfx);
         FillBgTilemapBufferRect(BG_GF_TEXT_LOGO, 0x000, 0, 0, 32, 32, 17);
         FillWindowPixelBuffer(WIN_GF_TEXT_LOGO, PIXEL_FILL(0));
