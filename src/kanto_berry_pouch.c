@@ -659,7 +659,7 @@ static bool8 BerryPouchLoadGfx(void)
     case 1:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LZDecompressWram(gBerryPouchBg1Tilemap, sResources->bg1TilemapBuffer);
+            LZDecompressWram((const u32 *)gBerryPouchBg1Tilemap, sResources->bg1TilemapBuffer);
             sResources->data[0]++;
         }
         break;
@@ -684,7 +684,7 @@ static bool8 BerryPouchLoadGfx(void)
 
 static bool8 AllocateListMenuBuffers(void)
 {
-    sListMenuItems = Alloc(NUM_BERRIES * sizeof(struct ListMenuItem));
+    sListMenuItems = Alloc((BAG_BERRIES_COUNT + 1) * sizeof(struct ListMenuItem)) /* PokemonNative3G : poche Baies d'Émeraude + RETOUR */;
     if (sListMenuItems == NULL)
         return FALSE;
     sListMenuStrbuf = Alloc(sResources->listMenuNumItems * 27);
@@ -930,7 +930,8 @@ static void SortAndCountBerries(void)
     u16 i;
     u32 r2;
     struct BagPocket *pocket = &gBagPockets[BERRIES_POCKET];
-    SortAndCompactBagPocket(pocket);
+    CompactItemsInBagPocket(pocket);
+    SortBerriesOrTMHMs(pocket);
     sResources->listMenuNumItems = 0;
     for (i = 0; i < pocket->capacity; i++)
     {
@@ -1116,7 +1117,7 @@ static void Task_BerryPouch_Use(u8 taskId)
     if (sStaticCnt.type == BERRYPOUCH_FROMBATTLE)
     {
         if (ItemId_GetBattleFunc(gSpecialVar_ItemId) == NULL)
-            FieldUseFunc_OakStopsYou(taskId);
+            ItemUseOutOfBattle_CannotUse(taskId);
         else
             ItemId_GetBattleFunc(gSpecialVar_ItemId)(taskId);
     }
