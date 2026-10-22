@@ -178,7 +178,7 @@ ifeq ($(PORTABLE),1)
     OS_LFLAGS := -Wl,-no_fixup_chains
   else ifeq ($(TARGET_OS),ANDROID)
     SDL_DIR := /opt/sdl-android
-    OS_CFLAGS := -fPIC
+    OS_CFLAGS := -fPIC -Wno-error=incompatible-pointer-types-discards-qualifiers
     OS_LFLAGS := -shared -Wl,-z,text -llog -landroid
     FIX_UNDERSCORE += --rename-section .rodata=.data.rel.ro,alloc,load,contents,data
     BUILD_FEXTENSION := .so
