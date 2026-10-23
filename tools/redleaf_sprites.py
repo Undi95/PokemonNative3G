@@ -16,10 +16,12 @@ EM = 'graphics/object_events/pics/people/'
 RF = 'graphics/kanto/object_events/pics/people/'
 
 # Indices de la palette de Brendan/May -> indices de la palette du joueur de Rouge Feu
-BRENDAN_TO_RED = {0: 0, 1: 2, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 6, 8: 15, 9: 9, 10: 13, 11: 14, 12: 11, 13: 12, 14: 9, 15: 15}
-MAY_TO_LEAF = {0: 0, 1: 2, 2: 2, 3: 3, 4: 4, 5: 6, 6: 15, 7: 1, 8: 8, 9: 10, 10: 7, 11: 6, 12: 7, 13: 6, 14: 9, 15: 15}
+BRENDAN_TO_RED = {0: 0, 1: 2, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 6, 8: 6, 9: 9, 10: 13, 11: 14, 12: 11, 13: 12, 14: 9, 15: 15}
+MAY_TO_LEAF = {0: 0, 1: 2, 2: 2, 3: 3, 4: 4, 5: 6, 6: 6, 7: 1, 8: 8, 9: 10, 10: 7, 11: 6, 12: 7, 13: 6, 14: 9, 15: 15}
 # Sous l'eau : palette propre à la plongée, gardée telle quelle (seule la tête change de forme)
 HEAD_ROWS = 14
+# Vélo Cross : direction de chaque image (sAnimTable_AcroBike) ; 0-8 = vélo ordinaire
+ACRO_DIRS = 'SNWSSNNWW' + 'SSSSNNNNWWWWSSNNWW'
 
 
 def frames(img, w=32, h=32):
@@ -63,7 +65,7 @@ def head_distance(a, b):
     return d
 
 
-def build(src_path, ref_path, ref_dirs, red_head_path, red_dirs, colors, size=(32, 32), keep_palette=False):
+def build(src_path, ref_path, ref_dirs, red_head_path, red_dirs, colors, size=(32, 32), keep_palette=False, dirs=None, copy=0):
     src = Image.open(src_path)
     ref = Image.open(ref_path)
     red = Image.open(red_head_path)
@@ -85,11 +87,15 @@ def build(src_path, ref_path, ref_dirs, red_head_path, red_dirs, colors, size=(3
     out = Image.new('P', src.size, 0)
     out.putpalette((red if not keep_palette else src).getpalette())
     for n, fr in enumerate(frames(src, *size)):
+        if n < copy:
+            # images de vélo ordinaires : celles de Rouge Feu telles quelles
+            out.paste(red_frames[n], (n * size[0], 0))
+            continue
         px = pixels(fr)
         if top_row(px) is None:
             continue
         h = head(px)
-        d = min(ref_heads, key=lambda k: head_distance(h, ref_heads[k]))
+        d = dirs[n] if dirs else min(ref_heads, key=lambda k: head_distance(h, ref_heads[k]))
         t, cx, hp = h
         # corps : couleurs de Red/Leaf, tête de Brendan/May effacée
         body = [[colors.get(v, v) if not keep_palette else v for v in row] for row in px]
@@ -155,7 +161,7 @@ def main():
     for who, em, rf, colors in (('red', 'brendan', 'red', BRENDAN_TO_RED), ('green', 'may', 'green', MAY_TO_LEAF)):
         bike_dirs = {'S': 0, 'N': 1, 'W': 2}
         jobs.append((f'{who}_acro_bike', build(EM + f'{em}/acro_bike.png', EM + f'{em}/mach_bike.png', bike_dirs,
-                                               RF + f'{rf}_bike.png', bike_dirs, colors)))
+                                               RF + f'{rf}_bike.png', bike_dirs, colors, dirs=ACRO_DIRS, copy=9)))
         jobs.append((f'{who}_watering', build(EM + f'{em}/watering.png', EM + f'{em}/watering.png', {'S': 0, 'N': 2, 'W': 4},
                                               RF + f'{rf}_bike.png', bike_dirs, colors)))
         jobs.append((f'{who}_underwater', build_underwater(EM + f'{em}/underwater.png', RF + f'{rf}_normal.png')))
