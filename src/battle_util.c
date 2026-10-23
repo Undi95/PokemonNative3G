@@ -33,6 +33,11 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/songs.h"
+#include "constants/kanto_flags_vars.h"
+#include "kanto_field_door.h"
+
+// PokemonNative3G : à Kanto, l'obéissance dépend des badges de Kanto (mêmes paliers dans Rouge Feu)
+#define OBEDIENCE_BADGE(n) (IsKantoTilesetMap() ? FLAG_KANTO_BADGE0##n##_GET : FLAG_BADGE0##n##_GET)
 #include "constants/species.h"
 #include "constants/weather.h"
 
@@ -3918,16 +3923,16 @@ u8 IsMonDisobedient(void)
             return DISOBEDIENCE_OBEDIENT;
         if (!IsOtherTrainer(gBattleMons[gBattlerAttacker].otId, gBattleMons[gBattlerAttacker].otName))
             return DISOBEDIENCE_OBEDIENT;
-        if (FlagGet(FLAG_BADGE08_GET))
+        if (FlagGet(OBEDIENCE_BADGE(8)))
             return DISOBEDIENCE_OBEDIENT;
 
         obedienceLevel = 10;
 
-        if (FlagGet(FLAG_BADGE02_GET))
+        if (FlagGet(OBEDIENCE_BADGE(2)))
             obedienceLevel = 30;
-        if (FlagGet(FLAG_BADGE04_GET))
+        if (FlagGet(OBEDIENCE_BADGE(4)))
             obedienceLevel = 50;
-        if (FlagGet(FLAG_BADGE06_GET))
+        if (FlagGet(OBEDIENCE_BADGE(6)))
             obedienceLevel = 70;
     }
 
