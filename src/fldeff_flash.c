@@ -13,6 +13,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
+#include "bg.h"
 #include "kanto_map_preview_screen.h"
 #include "window.h"
 #include "constants/rgb.h"

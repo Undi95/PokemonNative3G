@@ -523,7 +523,7 @@ static void Task_RunMapPreviewScreenForest(u8 taskId)
         }
         break;
     case 2:
-        if (WaitForWeatherFadeIn())
+        if (IsWeatherNotFadingIn())
         {
             Overworld_PlaySpecialMapMusic();
             data[0]++;
