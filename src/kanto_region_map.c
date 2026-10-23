@@ -936,6 +936,11 @@ static const u32 sSwitchMapCursorLeft_Gfx[] = INCGFX_U32("graphics/kanto/region_
 static const u32 sSwitchMapCursorRight_Gfx[] = INCGFX_U32("graphics/kanto/region_map/switch_map_cursor_right.png", ".4bpp.lz");
 static const u32 sMapCursor_Gfx[] = INCGFX_U32("graphics/kanto/region_map/cursor.png", ".4bpp.lz");
 static const u32 sPlayerIcon_Red[] = INCGFX_U32("graphics/kanto/region_map/player_icon_red.png", ".4bpp.lz");
+// PokemonNative3G : icônes de Brice et Flora (carte d'Émeraude), pour l'option PERSO
+static const u16 sPlayerIcon_BrendanPal[] = INCGFX_U16("graphics/pokenav/region_map/brendan_icon.png", ".gbapal");
+static const u8 sPlayerIcon_BrendanGfx[] = INCGFX_U8("graphics/pokenav/region_map/brendan_icon.png", ".4bpp");
+static const u16 sPlayerIcon_MayPal[] = INCGFX_U16("graphics/pokenav/region_map/may_icon.png", ".gbapal");
+static const u8 sPlayerIcon_MayGfx[] = INCGFX_U8("graphics/pokenav/region_map/may_icon.png", ".4bpp");
 static const u32 sPlayerIcon_Leaf[] = INCGFX_U32("graphics/kanto/region_map/player_icon_leaf.png", ".4bpp.lz");
 static const u32 sRegionMap_Gfx[] = INCGFX_U32("graphics/kanto/region_map/region_map.png", ".4bpp.lz");
 static const u32 sMapEdge_Gfx[] = INCGFX_U32("graphics/kanto/region_map/map_edge.png", ".4bpp.lz");
@@ -4420,7 +4425,9 @@ static u8 GetSelectedMapSection(u8 whichMap, u8 layer, s16 y, s16 x)
 static void CreatePlayerIcon(u16 tileTag, u16 palTag)
 {
     sPlayerIcon = AllocZeroed(sizeof(struct PlayerIcon));
-    if (gSaveBlock2Ptr->playerGender == FEMALE)
+    if (!gSaveBlock2Ptr->optionsPlayerCharacter) // PokemonNative3G : Brice/Flora (icônes de la carte d'Émeraude)
+        CpuCopy16(gSaveBlock2Ptr->playerGender == FEMALE ? sPlayerIcon_MayGfx : sPlayerIcon_BrendanGfx, sPlayerIcon->tiles, sizeof(sPlayerIcon->tiles));
+    else if (gSaveBlock2Ptr->playerGender == FEMALE)
         LZ77UnCompWram(sPlayerIcon_Leaf, sPlayerIcon->tiles);
     else
         LZ77UnCompWram(sPlayerIcon_Red, sPlayerIcon->tiles);
@@ -4455,6 +4462,8 @@ static void CreatePlayerIconSprite(void)
 
     if (gSaveBlock2Ptr->playerGender == FEMALE)
         spritePalette.data = sPlayerIcon_LeafPal;
+    if (!gSaveBlock2Ptr->optionsPlayerCharacter) // PokemonNative3G : Brice/Flora
+        spritePalette.data = gSaveBlock2Ptr->playerGender == FEMALE ? sPlayerIcon_MayPal : sPlayerIcon_BrendanPal;
 
     LoadSpriteSheet(&spriteSheet);
     LoadSpritePalette(&spritePalette);

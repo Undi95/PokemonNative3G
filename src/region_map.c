@@ -127,6 +127,11 @@ static const u16 sRegionMapPlayerIcon_BrendanPal[] = INCGFX_U16("graphics/pokena
 static const u8 sRegionMapPlayerIcon_BrendanGfx[] = INCGFX_U8("graphics/pokenav/region_map/brendan_icon.png", ".4bpp");
 static const u16 sRegionMapPlayerIcon_MayPal[] = INCGFX_U16("graphics/pokenav/region_map/may_icon.png", ".gbapal");
 static const u8 sRegionMapPlayerIcon_MayGfx[] = INCGFX_U8("graphics/pokenav/region_map/may_icon.png", ".4bpp");
+// PokemonNative3G : icônes de Red et Leaf (carte de Rouge Feu), pour l'option PERSO
+static const u16 sRegionMapPlayerIcon_RedPal[] = INCGFX_U16("graphics/kanto/region_map/player_icon_red.pal", ".gbapal");
+static const u8 sRegionMapPlayerIcon_RedGfx[] = INCGFX_U8("graphics/kanto/region_map/player_icon_red.png", ".4bpp");
+static const u16 sRegionMapPlayerIcon_LeafPal[] = INCGFX_U16("graphics/kanto/region_map/player_icon_leaf.pal", ".gbapal");
+static const u8 sRegionMapPlayerIcon_LeafGfx[] = INCGFX_U8("graphics/kanto/region_map/player_icon_leaf.png", ".4bpp");
 
 #include "data/region_map/region_map_layout.h"
 #include "data/region_map/region_map_entries.h"
@@ -1469,6 +1474,11 @@ void CreateRegionMapPlayerIcon(u16 tileTag, u16 paletteTag)
     {
         sheet.data = sRegionMapPlayerIcon_MayGfx;
         palette.data = sRegionMapPlayerIcon_MayPal;
+    }
+    if (gSaveBlock2Ptr->optionsPlayerCharacter) // PokemonNative3G : Red/Leaf (option PERSO)
+    {
+        sheet.data = gSaveBlock2Ptr->playerGender == FEMALE ? sRegionMapPlayerIcon_LeafGfx : sRegionMapPlayerIcon_RedGfx;
+        palette.data = gSaveBlock2Ptr->playerGender == FEMALE ? sRegionMapPlayerIcon_LeafPal : sRegionMapPlayerIcon_RedPal;
     }
     LoadSpriteSheet(&sheet);
     LoadSpritePalette(&palette);
