@@ -676,6 +676,11 @@ struct
     [MENU_TRADE1] = {gText_Trade4, CursorCb_Trade1},
     [MENU_TRADE2] = {gText_Trade4, CursorCb_Trade2},
     [MENU_TOSS] = {gMenuText_Toss, CursorCb_Toss},
+    [MENU_DEOXYS_FORM] = {gText_DeoxysForm, CursorCb_DeoxysForm},
+    [MENU_DEOXYS_SPEED] = {gText_DeoxysFormSpeed, CursorCb_DeoxysSetForm},
+    [MENU_DEOXYS_NORMAL] = {gText_DeoxysFormNormal, CursorCb_DeoxysSetForm},
+    [MENU_DEOXYS_ATTACK] = {gText_DeoxysFormAttack, CursorCb_DeoxysSetForm},
+    [MENU_DEOXYS_DEFENSE] = {gText_DeoxysFormDefense, CursorCb_DeoxysSetForm},
     [MENU_FIELD_MOVES + FIELD_MOVE_CUT] = {gMoveNames[MOVE_CUT], CursorCb_FieldMove},
     [MENU_FIELD_MOVES + FIELD_MOVE_FLASH] = {gMoveNames[MOVE_FLASH], CursorCb_FieldMove},
     [MENU_FIELD_MOVES + FIELD_MOVE_ROCK_SMASH] = {gMoveNames[MOVE_ROCK_SMASH], CursorCb_FieldMove},
@@ -700,6 +705,7 @@ static const u8 sPartyMenuAction_EnterSummaryCancel[] = {MENU_ENTER, MENU_SUMMAR
 static const u8 sPartyMenuAction_NoEntrySummaryCancel[] = {MENU_NO_ENTRY, MENU_SUMMARY, MENU_CANCEL1};
 static const u8 sPartyMenuAction_StoreSummaryCancel[] = {MENU_STORE, MENU_SUMMARY, MENU_CANCEL1};
 static const u8 sPartyMenuAction_GiveTakeItemCancel[] = {MENU_GIVE, MENU_TAKE_ITEM, MENU_CANCEL2};
+static const u8 sPartyMenuAction_DeoxysForms[] = {MENU_DEOXYS_NORMAL, MENU_DEOXYS_ATTACK, MENU_DEOXYS_DEFENSE, MENU_DEOXYS_SPEED, MENU_CANCEL2};
 static const u8 sPartyMenuAction_ReadTakeMailCancel[] = {MENU_READ, MENU_TAKE_MAIL, MENU_CANCEL2};
 static const u8 sPartyMenuAction_RegisterSummaryCancel[] = {MENU_REGISTER, MENU_SUMMARY, MENU_CANCEL1};
 static const u8 sPartyMenuAction_TradeSummaryCancel1[] = {MENU_TRADE1, MENU_SUMMARY, MENU_CANCEL1};
@@ -722,6 +728,7 @@ static const u8 *const sPartyMenuActions[] =
     [ACTIONS_TRADE]         = sPartyMenuAction_TradeSummaryCancel1,
     [ACTIONS_SPIN_TRADE]    = sPartyMenuAction_TradeSummaryCancel2,
     [ACTIONS_TAKEITEM_TOSS] = sPartyMenuAction_TakeItemTossCancel,
+    [ACTIONS_DEOXYS_FORM]   = sPartyMenuAction_DeoxysForms,
 };
 
 static const u8 sPartyMenuActionCounts[] =
@@ -739,7 +746,8 @@ static const u8 sPartyMenuActionCounts[] =
     [ACTIONS_REGISTER]      = ARRAY_COUNT(sPartyMenuAction_RegisterSummaryCancel),
     [ACTIONS_TRADE]         = ARRAY_COUNT(sPartyMenuAction_TradeSummaryCancel1),
     [ACTIONS_SPIN_TRADE]    = ARRAY_COUNT(sPartyMenuAction_TradeSummaryCancel2),
-    [ACTIONS_TAKEITEM_TOSS] = ARRAY_COUNT(sPartyMenuAction_TakeItemTossCancel)
+    [ACTIONS_TAKEITEM_TOSS] = ARRAY_COUNT(sPartyMenuAction_TakeItemTossCancel),
+    [ACTIONS_DEOXYS_FORM]   = ARRAY_COUNT(sPartyMenuAction_DeoxysForms)
 };
 
 static const u16 sFieldMoves[FIELD_MOVES_COUNT + 1] =

@@ -1884,14 +1884,13 @@ const u8 gStatStageRatios[MAX_STAT_STAGE + 1][2] =
     {40, 10}, // +6, MAX_STAT_STAGE
 };
 
-static const u16 sDeoxysBaseStats[] =
+// PokemonNative3G : stats de base des 4 formes (Émeraude : Vitesse seulement)
+static const u16 sDeoxysBaseStats[DEOXYS_FORM_COUNT][NUM_STATS] =
 {
-    [STAT_HP]    = 50,
-    [STAT_ATK]   = 95,
-    [STAT_DEF]   = 90,
-    [STAT_SPEED] = 180,
-    [STAT_SPATK] = 95,
-    [STAT_SPDEF] = 90,
+    [DEOXYS_FORM_SPEED]   = {[STAT_HP] = 50, [STAT_ATK] =  95, [STAT_DEF] =  90, [STAT_SPEED] = 180, [STAT_SPATK] =  95, [STAT_SPDEF] =  90},
+    [DEOXYS_FORM_NORMAL]  = {[STAT_HP] = 50, [STAT_ATK] = 150, [STAT_DEF] =  50, [STAT_SPEED] = 150, [STAT_SPATK] = 150, [STAT_SPDEF] =  50},
+    [DEOXYS_FORM_ATTACK]  = {[STAT_HP] = 50, [STAT_ATK] = 180, [STAT_DEF] =  20, [STAT_SPEED] = 150, [STAT_SPATK] = 180, [STAT_SPDEF] =  20},
+    [DEOXYS_FORM_DEFENSE] = {[STAT_HP] = 50, [STAT_ATK] =  70, [STAT_DEF] = 160, [STAT_SPEED] =  90, [STAT_SPATK] =  70, [STAT_SPDEF] = 160},
 };
 
 // The classes used by other players in the Union Room.
@@ -2718,10 +2717,41 @@ static u16 GetDeoxysStat(struct Pokemon *mon, s32 statId)
 
     ivVal = GetMonData(mon, MON_DATA_HP_IV + statId, NULL);
     evVal = GetMonData(mon, MON_DATA_HP_EV + statId, NULL);
-    statValue = ((sDeoxysBaseStats[statId] * 2 + ivVal + evVal / 4) * mon->level) / 100 + 5;
+    statValue = ((sDeoxysBaseStats[gSaveBlock2Ptr->deoxysForm][statId] * 2 + ivVal + evVal / 4) * mon->level) / 100 + 5;
     nature = GetNature(mon);
     statValue = ModifyStatByNature(nature, statValue, (u8)statId);
     return statValue;
+}
+
+// PokemonNative3G : images de la forme choisie (2e image de la planche), NULL = forme Normale
+const u32 *GetDeoxysFormPic(bool8 isBackPic)
+{
+    switch (gSaveBlock2Ptr->deoxysForm)
+    {
+    case DEOXYS_FORM_SPEED:
+        return isBackPic ? gHoennMonBackPicTable[SPECIES_DEOXYS].data : gHoennMonFrontPicTable[SPECIES_DEOXYS].data;
+    case DEOXYS_FORM_ATTACK:
+        return isBackPic ? gKantoMonBackPicTable[SPECIES_DEOXYS].data : gKantoMonFrontPicTable[SPECIES_DEOXYS].data;
+    case DEOXYS_FORM_DEFENSE:
+        return isBackPic ? gKantoMonBackPic_DeoxysDefense : gKantoMonFrontPic_DeoxysDefense;
+    default:
+        return NULL;
+    }
+}
+
+// PokemonNative3G : palette du jeu d'où vient la forme (Vitesse : Émeraude, Attaque/Défense : Rouge Feu)
+const struct CompressedSpritePalette *GetDeoxysPaletteTable(bool8 shiny)
+{
+    switch (gSaveBlock2Ptr->deoxysForm)
+    {
+    case DEOXYS_FORM_SPEED:
+        return shiny ? gHoennMonShinyPaletteTable : gHoennMonPaletteTable;
+    case DEOXYS_FORM_ATTACK:
+    case DEOXYS_FORM_DEFENSE:
+        return shiny ? gKantoMonShinyPaletteTable : gKantoMonPaletteTable;
+    default:
+        return shiny ? gMonShinyPaletteTable : gMonPaletteTable;
+    }
 }
 
 void SetDeoxysStats(void)
@@ -6556,6 +6586,8 @@ const u32 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, u32 otId, u32 p
         return gMonPaletteTable[SPECIES_NONE].data;
 
     shinyValue = GET_SHINY_VALUE(otId, personality);
+    if (species == SPECIES_DEOXYS)
+        return GetDeoxysPaletteTable(shinyValue < SHINY_ODDS)[species].data;
     if (shinyValue < SHINY_ODDS)
         return gMonShinyPaletteTable[species].data;
     else
@@ -6575,6 +6607,8 @@ const struct CompressedSpritePalette *GetMonSpritePalStructFromOtIdPersonality(u
     u32 shinyValue;
 
     shinyValue = GET_SHINY_VALUE(otId, personality);
+    if (species == SPECIES_DEOXYS)
+        return &GetDeoxysPaletteTable(shinyValue < SHINY_ODDS)[species];
     if (shinyValue < SHINY_ODDS)
         return &gMonShinyPaletteTable[species];
     else

@@ -95,6 +95,11 @@ enum {
     MENU_TRADE1,
     MENU_TRADE2,
     MENU_TOSS,
+    MENU_DEOXYS_FORM,    // PokemonNative3G : choix de la forme de Deoxys
+    MENU_DEOXYS_SPEED,   // dans l'ordre de DEOXYS_FORM_*
+    MENU_DEOXYS_NORMAL,
+    MENU_DEOXYS_ATTACK,
+    MENU_DEOXYS_DEFENSE,
     MENU_FIELD_MOVES
 };
 
@@ -114,6 +119,7 @@ enum {
     ACTIONS_TRADE,
     ACTIONS_SPIN_TRADE,
     ACTIONS_TAKEITEM_TOSS,
+    ACTIONS_DEOXYS_FORM,
 };
 
 // PokemonNative3G : énumération FIELD_MOVE_* déplacée dans include/party_menu.h
@@ -460,6 +466,8 @@ static void CursorCb_Trade1(u8);
 static void CursorCb_Trade2(u8);
 static void CursorCb_Toss(u8);
 static void CursorCb_FieldMove(u8);
+static void CursorCb_DeoxysForm(u8);
+static void CursorCb_DeoxysSetForm(u8);
 static bool8 SetUpFieldMove_Surf(void);
 static bool8 SetUpFieldMove_Fly(void);
 static bool8 SetUpFieldMove_Waterfall(void);
@@ -2642,6 +2650,8 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
         else
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_ITEM);
     }
+    if (GetMonData(&mons[slotId], MON_DATA_SPECIES) == SPECIES_DEOXYS)
+        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_DEOXYS_FORM);
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_CANCEL1);
 }
 
@@ -3090,6 +3100,34 @@ static void CursorCb_Item(u8 taskId)
     DisplayPartyMenuStdMessage(PARTY_MSG_DO_WHAT_WITH_ITEM);
     gTasks[taskId].data[0] = 0xFF;
     gTasks[taskId].func = Task_HandleSelectionMenuInput;
+}
+
+// PokemonNative3G : sous-menu FORME de Deoxys (NORMALE / ATTAQUE / DÉFENSE / VITESSE)
+static void CursorCb_DeoxysForm(u8 taskId)
+{
+    PlaySE(SE_SELECT);
+    PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
+    PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
+    SetPartyMonSelectionActions(gPlayerParty, gPartyMenu.slotId, ACTIONS_DEOXYS_FORM);
+    DisplaySelectionWindow(SELECTWINDOW_ACTIONS);
+    DisplayPartyMenuStdMessage(PARTY_MSG_DO_WHAT_WITH_MON);
+    gTasks[taskId].data[0] = 0xFF;
+    gTasks[taskId].func = Task_HandleSelectionMenuInput;
+}
+
+static void CursorCb_DeoxysSetForm(u8 taskId)
+{
+    u8 form = sPartyMenuInternal->actions[Menu_GetCursorPos()] - MENU_DEOXYS_SPEED;
+
+    PlaySE(SE_SELECT);
+    PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
+    PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
+    gSaveBlock2Ptr->deoxysForm = form;
+    GetMonNickname(&gPlayerParty[gPartyMenu.slotId], gStringVar1);
+    StringCopy(gStringVar2, sCursorOptions[MENU_DEOXYS_SPEED + form].text);
+    StringExpandPlaceholders(gStringVar4, gText_DeoxysTookForm);
+    DisplayPartyMenuMessage(gStringVar4, TRUE);
+    gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
 }
 
 static void CursorCb_Give(u8 taskId)

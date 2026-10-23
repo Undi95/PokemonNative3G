@@ -61,6 +61,12 @@ def main():
         fmt = '.4bpp.lz' if ext == '4bpp' else '.gbapal.lz'
         decls.append('static const u32 gKantoMon%s_%s[] = INCGFX_U32("%s", "%s");' % (kind, name, dst, fmt))
 
+    # Deoxys forme Défense (Vert Feuille), au choix dans le menu de l'équipe
+    for kind in ('front', 'back'):
+        dst = OUT + 'deoxys/%s_def.png' % kind
+        shutil.copyfile(RF + 'graphics/pokemon/deoxys/%s_def.png' % kind, dst)
+        decls.append('const u32 gKantoMon%sPic_DeoxysDefense[] = INCGFX_U32("%s", ".4bpp.lz");' % (kind.capitalize(), dst))
+
     out = ['// Généré par tools/import_rf_mon_pics.py : sprites des Pokémon de Rouge Feu (option POKéMON = KANTO)',
            '// Inclus par src/data.c après les macros SPECIES_SPRITE / SPECIES_PAL.', ''] + decls + ['']
     for t in TABLES:

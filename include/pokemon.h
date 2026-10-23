@@ -410,6 +410,17 @@ void CreateMonWithEVSpreadNatureOTID(struct Pokemon *mon, u16 species, u8 level,
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest);
 bool8 ShouldIgnoreDeoxysForm(u8 caseId, u8 battler);
 void SetDeoxysStats(void);
+
+// PokemonNative3G : forme de Deoxys au choix (menu de l'équipe) ; Vitesse = celle d'Émeraude, par défaut
+enum {
+    DEOXYS_FORM_SPEED,   // Émeraude
+    DEOXYS_FORM_NORMAL,
+    DEOXYS_FORM_ATTACK,  // Rouge Feu
+    DEOXYS_FORM_DEFENSE, // Vert Feuille
+    DEOXYS_FORM_COUNT
+};
+const u32 *GetDeoxysFormPic(bool8 isBackPic);
+const struct CompressedSpritePalette *GetDeoxysPaletteTable(bool8 shiny);
 u16 GetUnionRoomTrainerPic(void);
 u16 GetUnionRoomTrainerClass(void);
 void CreateEnemyEventMon(void);

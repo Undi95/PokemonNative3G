@@ -1605,6 +1605,8 @@ static const u32 gKantoMonFrontPic_UnownExclamationMark[] = INCGFX_U32("graphics
 static const u32 gKantoMonBackPic_UnownExclamationMark[] = INCGFX_U32("graphics/kanto/pokemon/unown/exclamation_mark/back.png", ".4bpp.lz");
 static const u32 gKantoMonFrontPic_UnownQuestionMark[] = INCGFX_U32("graphics/kanto/pokemon/unown/question_mark/anim_front.png", ".4bpp.lz");
 static const u32 gKantoMonBackPic_UnownQuestionMark[] = INCGFX_U32("graphics/kanto/pokemon/unown/question_mark/back.png", ".4bpp.lz");
+const u32 gKantoMonFrontPic_DeoxysDefense[] = INCGFX_U32("graphics/kanto/pokemon/deoxys/front_def.png", ".4bpp.lz");
+const u32 gKantoMonBackPic_DeoxysDefense[] = INCGFX_U32("graphics/kanto/pokemon/deoxys/back_def.png", ".4bpp.lz");
 
 const struct CompressedSpriteSheet gKantoMonFrontPicTable[] =
 {

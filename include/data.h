@@ -148,6 +148,8 @@ extern const struct CompressedSpritePalette gKantoMonShinyPaletteTable[];
 extern const struct MonCoords gKantoMonFrontPicCoords[];
 extern const struct MonCoords gKantoMonBackPicCoords[];
 extern const u8 gKantoEnemyMonElevation[NUM_SPECIES];
+extern const u32 gKantoMonFrontPic_DeoxysDefense[];
+extern const u32 gKantoMonBackPic_DeoxysDefense[];
 #define MON_PICS_KANTO (gSaveBlock2Ptr->optionsMonSprites)
 #define gMonFrontPicTable (MON_PICS_KANTO ? gKantoMonFrontPicTable : gHoennMonFrontPicTable)
 #define gMonBackPicTable (MON_PICS_KANTO ? gKantoMonBackPicTable : gHoennMonBackPicTable)

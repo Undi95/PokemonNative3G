@@ -7,7 +7,7 @@
 
 EWRAM_DATA ALIGNED(4) u8 gDecompressionBuffer[0x4000] = {0};
 
-static void DuplicateDeoxysTiles(void *pointer, s32 species);
+static void DuplicateDeoxysTiles(void *pointer, s32 species, const struct CompressedSpriteSheet *src);
 
 void LZDecompressWram(const u32 *src, void *dest)
 {
@@ -67,7 +67,7 @@ void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffe
         LZ77UnCompWram(gMonFrontPicTable[0].data, buffer);
     else
         LZ77UnCompWram(src->data, buffer);
-    DuplicateDeoxysTiles(buffer, species);
+    DuplicateDeoxysTiles(buffer, species, src);
 }
 
 void HandleLoadSpecialPokePic(const struct CompressedSpriteSheet *src, void *dest, s32 species, u32 personality)
@@ -108,7 +108,7 @@ void LoadSpecialPokePic(const struct CompressedSpriteSheet *src, void *dest, s32
         LZ77UnCompWram(src->data, dest);
     }
 
-    DuplicateDeoxysTiles(dest, species);
+    DuplicateDeoxysTiles(dest, species, src);
     DrawSpindaSpots(species, personality, dest, isFrontPic);
 }
 
@@ -310,7 +310,7 @@ void DecompressPicFromTable_2(const struct CompressedSpriteSheet *src, void *buf
         LZ77UnCompWram(gMonFrontPicTable[0].data, buffer);
     else
         LZ77UnCompWram(src->data, buffer);
-    DuplicateDeoxysTiles(buffer, species);
+    DuplicateDeoxysTiles(buffer, species, src);
 }
 
 void LoadSpecialPokePic_2(const struct CompressedSpriteSheet *src, void *dest, s32 species, u32 personality, bool8 isFrontPic) // a copy of LoadSpecialPokePic
@@ -339,7 +339,7 @@ void LoadSpecialPokePic_2(const struct CompressedSpriteSheet *src, void *dest, s
         LZ77UnCompWram(src->data, dest);
     }
 
-    DuplicateDeoxysTiles(dest, species);
+    DuplicateDeoxysTiles(dest, species, src);
     DrawSpindaSpots(species, personality, dest, isFrontPic);
 }
 
@@ -404,8 +404,27 @@ void LoadSpecialPokePic_DontHandleDeoxys(const struct CompressedSpriteSheet *src
     DrawSpindaSpots(species, personality, dest, isFrontPic);
 }
 
-static void DuplicateDeoxysTiles(void *pointer, s32 species)
+// PokemonNative3G : les deux images prennent la forme choisie dans le menu de l'équipe
+static void DuplicateDeoxysTiles(void *pointer, s32 species, const struct CompressedSpriteSheet *src)
 {
-    if (species == SPECIES_DEOXYS)
-        CpuCopy32(pointer + MON_PIC_SIZE, pointer, MON_PIC_SIZE);
+    const u32 *form;
+    u8 *buffer;
+    bool8 isBackPic;
+
+    if (species != SPECIES_DEOXYS)
+        return;
+    isBackPic = (src->data == gHoennMonBackPicTable[SPECIES_DEOXYS].data || src->data == gKantoMonBackPicTable[SPECIES_DEOXYS].data);
+    form = GetDeoxysFormPic(isBackPic);
+    if (form == NULL)
+    {
+        CpuCopy32(pointer, pointer + MON_PIC_SIZE, MON_PIC_SIZE);
+        return;
+    }
+    buffer = Alloc(MON_PIC_SIZE * 2);
+    if (buffer == NULL)
+        return;
+    LZ77UnCompWram(form, buffer);
+    CpuCopy32(buffer + MON_PIC_SIZE, pointer, MON_PIC_SIZE);
+    CpuCopy32(buffer + MON_PIC_SIZE, pointer + MON_PIC_SIZE, MON_PIC_SIZE);
+    Free(buffer);
 }
