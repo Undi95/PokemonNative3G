@@ -53,6 +53,7 @@ enum {
     DEBUG_FLY_MAP,
     DEBUG_HOENN_REMATCHES,
     DEBUG_SEVII_PASSES,
+    DEBUG_SS_ANNE,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -162,6 +163,7 @@ static const u8 sText_UnlockDexes[] = _("Débloquer les 2 POKéDEX");
 static const u8 sText_FlyMap[] = _("Carte VOL (2 régions)");
 static const u8 sText_HoennRematches[] = _("Revanches PokéNav");
 static const u8 sText_SeviiPasses[] = _("Pass îles Sevii");
+static const u8 sText_SSAnne[] = _("Départ S.S. Anne");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -204,6 +206,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_FLY_MAP].name = sText_FlyMap;
         sItems[DEBUG_HOENN_REMATCHES].name = sText_HoennRematches;
         sItems[DEBUG_SEVII_PASSES].name = sText_SeviiPasses;
+        sItems[DEBUG_SS_ANNE].name = sText_SSAnne;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -377,6 +380,15 @@ static void Task_DebugMenu(u8 taskId)
             AddBagItem(ITEM_RAINBOW_PASS, 1);
         PlaySE(SE_USE_ITEM);
         break;
+    case DEBUG_SS_ANNE:
+        // CS Coupe reçue : en sortant sur le pont, le S.S. Anne quitte le port (cinématique de RF)
+        VarSet(VAR_KANTO_MAP_SCENE_VERMILION_CITY, 1);
+        DebugMenu_Erase(taskId);
+        FREE_AND_SET_NULL(sItems);
+        DestroyTask(taskId);
+        SetWarpDestination(MAP_GROUP(MAP_SSANNE_EXTERIOR), MAP_NUM(MAP_SSANNE_EXTERIOR), WARP_ID_NONE, 32, 13);
+        DoWarp();
+        return;
     case DEBUG_CLOSE:
     case LIST_CANCEL:
         DebugMenu_Close(taskId);
