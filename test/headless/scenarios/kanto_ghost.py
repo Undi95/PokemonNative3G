@@ -20,12 +20,12 @@ def play(game):
             break
         game.tap("UP", hold=16, gap=2); game.tap("DOWN", hold=16, gap=2)
     game.wait(400); log(game, "rencontre")
-    game.tap("A", 4, gap=60); game.wait(60); log(game, "menu")
-    game.tap("A"); game.wait(40); game.tap("A"); game.wait(600); log(game, "attaque")
-    game.tap("A", 3, gap=60); game.wait(200)
-    game.tap("DOWN"); game.wait(20); game.tap("RIGHT"); game.wait(20); game.tap("A"); game.wait(200); log(game, "fuite")
-    for _ in range(10):
+    game.tap("A", 4, gap=60); game.wait(700); log(game, "menu")
+    game.tap("A"); game.wait(300); game.tap("A"); game.wait(40); game.tap("A"); game.wait(600); log(game, "attaque")
+    game.tap("B", 6, gap=60); game.wait(300)
+    for _ in range(10):  # FUITE (en bas à droite du menu), jusqu'au retour sur le terrain
         if game.state.free:
             break
-        game.tap("A"); game.wait(60)
+        game.tap("DOWN"); game.wait(20); game.tap("RIGHT"); game.wait(20); game.tap("A"); game.wait(300)
+    log(game, "fuite")
     wait_until(game, lambda s: s.free); log(game, "fini")
