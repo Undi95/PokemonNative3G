@@ -5345,6 +5345,322 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
     return retVal;
 }
 
+// ---- Rouge Feu (pokemon.c) : PokemonItemUseNoEffect, l'effet d'un objet essayé sans rien changer
+// (scène de l'objet utilisé sur un Pokémon, sac de RF) ----
+static bool8 PartyMonHasStatus(struct Pokemon *mon, u32 unused, u32 healMask, u8 battleId)
+{
+    if ((GetMonData(mon, MON_DATA_STATUS, NULL) & healMask) != 0)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 PokemonItemUseNoEffect(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex)
+{
+    u32 data;
+    s32 tmp;
+    s32 cmdIndex;
+    bool8 retVal = TRUE;
+    const u8 *itemEffect;
+    u8 idx = ITEM_EFFECT_ARG_START;
+    u32 i;
+    s32 sp18 = 0;
+    u8 holdEffect;
+    u8 battlerId = MAX_BATTLERS_COUNT;
+    u16 heldItem;
+    u8 curEffect;
+    u32 curMoveId;
+
+    // Get item hold effect
+    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
+    if (heldItem == ITEM_ENIGMA_BERRY)
+    {
+        if (gMain.inBattle)
+            holdEffect = gEnigmaBerries[gBattlerInMenuId].holdEffect;
+        else
+            holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
+    }
+    else
+    {
+        holdEffect = ItemId_GetHoldEffect(heldItem);
+    }
+
+    // Get battler id (if relevant)
+    gPotentialItemEffectBattler = gBattlerInMenuId;
+    if (gMain.inBattle)
+    {
+        gActiveBattler = gBattlerInMenuId;
+        for (cmdIndex = GetBattlerSide(gActiveBattler) != B_SIDE_PLAYER;
+             cmdIndex < gBattlersCount;
+             cmdIndex += 2)
+        {
+            if (gBattlerPartyIndexes[cmdIndex] == partyIndex) 
+            {
+                battlerId = cmdIndex;
+                break;
+            }
+        }
+    }
+    else
+    {
+        gActiveBattler = 0;
+        battlerId = MAX_BATTLERS_COUNT;
+    }
+
+    // Skip using the item if it won't do anything
+    if (!IS_POKEMON_ITEM(item))
+        return TRUE;
+    if (gItemEffectTable[item - ITEM_POTION] == NULL && item != ITEM_ENIGMA_BERRY)
+        return TRUE;
+
+    // Get item effect
+    if (item == ITEM_ENIGMA_BERRY)
+    {
+        if (gMain.inBattle)
+            itemEffect = gEnigmaBerries[gActiveBattler].itemEffect;
+        else
+            itemEffect = gSaveBlock1Ptr->enigmaBerry.itemEffect;
+    }
+    else
+    {
+        itemEffect = gItemEffectTable[item - ITEM_POTION];
+    }
+
+    for (cmdIndex = 0; cmdIndex < ITEM_EFFECT_ARG_START; cmdIndex++)
+    {
+        switch (cmdIndex)
+        {
+        // status healing effects
+        case 0:
+            // Cure infatuation
+            if (itemEffect[cmdIndex] & ITEM0_INFATUATION && gMain.inBattle && battlerId != MAX_BATTLERS_COUNT && gBattleMons[battlerId].status2 & STATUS2_INFATUATION)
+                retVal = FALSE;
+
+            // Dire Hit
+            if (itemEffect[cmdIndex] & ITEM0_DIRE_HIT && !(gBattleMons[gActiveBattler].status2 & STATUS2_FOCUS_ENERGY))
+                retVal = FALSE;
+
+            // X Attack
+            if ((itemEffect[cmdIndex] & ITEM0_X_ATTACK)
+             && gBattleMons[gActiveBattler].statStages[STAT_ATK] < MAX_STAT_STAGE)
+                retVal = FALSE;
+            break;
+
+        // Handle ITEM1 effects (in-battle stat boosting effects)
+        case 1:
+            // X Defend
+            if ((itemEffect[cmdIndex] & ITEM1_X_DEFEND)
+             && gBattleMons[gActiveBattler].statStages[STAT_DEF] < MAX_STAT_STAGE)
+                retVal = FALSE;
+
+            // X Speed
+            if ((itemEffect[cmdIndex] & ITEM1_X_SPEED)
+             && gBattleMons[gActiveBattler].statStages[STAT_SPEED] < MAX_STAT_STAGE)
+                retVal = FALSE;
+            break;
+
+        // Handle ITEM2 effects (more stat boosting effects)
+        case 2:
+            // X Accuracy
+            if ((itemEffect[cmdIndex] & ITEM2_X_ACCURACY)
+             && gBattleMons[gActiveBattler].statStages[STAT_ACC] < MAX_STAT_STAGE)
+                retVal = FALSE;
+
+            // X Sp Attack
+            if ((itemEffect[cmdIndex] & ITEM2_X_SPATK)
+             && gBattleMons[gActiveBattler].statStages[STAT_SPATK] < MAX_STAT_STAGE)
+                retVal = FALSE;
+            break;
+
+        // Handle ITEM3 effects (Guard Spec, Rare Candy, cure status
+        case 3:
+            // Guard Spec
+            if ((itemEffect[cmdIndex] & ITEM3_GUARD_SPEC)
+             && gSideTimers[GetBattlerSide(gActiveBattler)].mistTimer == 0)
+                retVal = FALSE;
+
+            // Rare Candy
+            if ((itemEffect[cmdIndex] & ITEM3_LEVEL_UP)
+             && GetMonData(mon, MON_DATA_LEVEL, NULL) != MAX_LEVEL)
+                retVal = FALSE;
+
+            // Cure status
+            if ((itemEffect[cmdIndex] & ITEM3_SLEEP)
+             && PartyMonHasStatus(mon, partyIndex, STATUS1_SLEEP, battlerId))
+                retVal = FALSE;
+            if ((itemEffect[cmdIndex] & ITEM3_POISON) && PartyMonHasStatus(mon, partyIndex, STATUS1_PSN_ANY | STATUS1_TOXIC_COUNTER, battlerId))
+                retVal = FALSE;
+            if ((itemEffect[cmdIndex] & ITEM3_BURN) && PartyMonHasStatus(mon, partyIndex, STATUS1_BURN, battlerId))
+                retVal = FALSE;
+            if ((itemEffect[cmdIndex] & ITEM3_FREEZE) && PartyMonHasStatus(mon, partyIndex, STATUS1_FREEZE, battlerId))
+                retVal = FALSE;
+            if ((itemEffect[cmdIndex] & ITEM3_PARALYSIS) && PartyMonHasStatus(mon, partyIndex, STATUS1_PARALYSIS, battlerId))
+                retVal = FALSE;
+            if (itemEffect[cmdIndex] & ITEM3_CONFUSION // heal confusion
+             && gMain.inBattle && battlerId != MAX_BATTLERS_COUNT && (gBattleMons[battlerId].status2 & STATUS2_CONFUSION))
+                retVal = FALSE;
+            break;
+
+        // Handle ITEM4 effects (Change HP/Atk EVs, HP heal, PP heal, PP up, Revive, and evolution stones)
+        case 4:
+            curEffect = itemEffect[cmdIndex];
+            
+            // PP Up
+            if (curEffect & ITEM4_PP_UP)
+            {
+                curEffect &= ~ITEM4_PP_UP;
+                data = (GetMonData(mon, MON_DATA_PP_BONUSES, NULL) & gPPUpGetMask[moveIndex]) >> (moveIndex * 2);
+                i = CalculatePPWithBonus(GetMonData(mon, MON_DATA_MOVE1 + moveIndex, NULL), GetMonData(mon, MON_DATA_PP_BONUSES, NULL), moveIndex);
+                if (data < 3 && i > 4)
+                    retVal = FALSE;
+            }
+            i = 0;
+
+            // Loop through and try each of the remaining ITEM4 effects
+            while (curEffect)
+            {
+                if (curEffect & 1)
+                {
+                    switch (i)
+                    {
+                    case 0: // ITEM4_EV_HP
+                    case 1: // ITEM4_EV_ATK
+
+                        // Has EV increase limit already been reached?
+                        if (GetMonEVCount(mon) >= MAX_TOTAL_EVS)
+                            return TRUE;
+                        data = GetMonData(mon, sGetMonDataEVConstants[i], NULL);
+                        if (data < EV_ITEM_RAISE_LIMIT)
+                        {
+                            idx++;
+                            retVal = FALSE;
+                        }
+                        break;
+                    case 2: // ITEM4_HEAL_HP
+                        if (curEffect & (ITEM4_REVIVE >> 2))
+                        {
+                            if (GetMonData(mon, MON_DATA_HP, NULL) != 0)
+                            {
+                                idx++;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (GetMonData(mon, MON_DATA_HP, NULL) == 0)
+                            {
+                                idx++;
+                                break;
+                            }
+                        }
+                        if (GetMonData(mon, MON_DATA_MAX_HP, NULL) != GetMonData(mon, MON_DATA_HP, NULL))
+                            retVal = FALSE;
+                        idx++;
+                        curEffect &= ~(ITEM4_REVIVE >> 2);
+                        break;
+                    case 3:
+                        if (!(curEffect & (ITEM4_HEAL_PP_ONE >> 3)))
+                        {
+                            for (tmp = 0; tmp < MAX_MON_MOVES; tmp++)
+                            {
+                                data = GetMonData(mon, MON_DATA_PP1 + tmp, NULL);
+                                if (data != CalculatePPWithBonus(GetMonData(mon, MON_DATA_MOVE1 + tmp, NULL), GetMonData(mon, MON_DATA_PP_BONUSES, NULL), tmp))
+                                    retVal = FALSE;
+                            }
+                            idx++;
+                        }
+                        else
+                        {
+                            data = GetMonData(mon, MON_DATA_PP1 + moveIndex, NULL);
+                            curMoveId = GetMonData(mon, MON_DATA_MOVE1 + moveIndex, NULL);
+                            if (data != CalculatePPWithBonus(curMoveId, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), moveIndex))
+                            {
+                                idx++;
+                                retVal = FALSE;
+                            }
+                        }
+                        break;
+
+                    // cases 4-6 are ITEM4_HEAL_PP_ONE, ITEM4_PP_UP, and ITEM4_REVIVE, which
+                    // are already handled above by other cases or before the loop
+
+                    case 7: // ITEM4_EVO_STONE
+                        if (GetEvolutionTargetSpecies(mon, EVO_MODE_ITEM_USE, item) != SPECIES_NONE)
+                            return FALSE;
+                        break;
+                    }
+                }
+                i++;
+                curEffect >>= 1;
+            }
+            break;
+
+        // Handle ITEM5 effects (Change Def/SpDef/SpAtk/Speed EVs, PP Max, and friendship changes)
+        case 5:
+            curEffect = itemEffect[cmdIndex];
+            i = 0;
+
+            // Loop through and try each of the ITEM5 effects
+            while (curEffect)
+            {
+                if (curEffect & 1)
+                {
+                    switch (i)
+                    {
+                    case 0: // ITEM5_EV_DEF
+                    case 1: // ITEM5_EV_SPEED
+                    case 2: // ITEM5_EV_SPDEF
+                    case 3: // ITEM5_EV_SPATK
+                        if (GetMonEVCount(mon) >= MAX_TOTAL_EVS)
+                            return TRUE;
+                        data = GetMonData(mon, sGetMonDataEVConstants[i + 2], NULL);
+                        if (data < EV_ITEM_RAISE_LIMIT)
+                        {
+                            retVal = FALSE;
+                            idx++;
+                        }
+                        break;
+                    case 4: // ITEM5_PP_MAX
+                        data = (GetMonData(mon, MON_DATA_PP_BONUSES, NULL) & gPPUpGetMask[moveIndex]) >> (moveIndex * 2);
+                        tmp = CalculatePPWithBonus(GetMonData(mon, MON_DATA_MOVE1 + moveIndex, NULL), GetMonData(mon, MON_DATA_PP_BONUSES, NULL), moveIndex);
+
+                        // Check if 3 PP Ups have been applied already, and that the move has a total PP of at least 5 (excludes Sketch)
+                        if (data < 3 && tmp >= 5)
+                            retVal = FALSE;
+                        break;
+                    case 5: // ITEM5_FRIENDSHIP_LOW
+                        if (GetMonData(mon, MON_DATA_FRIENDSHIP, NULL) < 100
+                         && retVal == FALSE
+                         && sp18 == 0)
+                            sp18 = itemEffect[idx];
+                        idx++;
+                        break;
+                    case 6: // ITEM5_FRIENDSHIP_MID
+                        if (GetMonData(mon, MON_DATA_FRIENDSHIP, NULL) >= 100
+                         && GetMonData(mon, MON_DATA_FRIENDSHIP, NULL) < 200
+                         && retVal == FALSE
+                         && sp18 == 0)
+                            sp18 = itemEffect[idx];
+                        idx++;
+                        break;
+                    case 7: // ITEM5_FRIENDSHIP_HIGH
+                        if (GetMonData(mon, MON_DATA_FRIENDSHIP, NULL) >= 200
+                         && retVal == FALSE
+                         && sp18 == 0)
+                            sp18 = itemEffect[idx];
+                        idx++;
+                        break;
+                    }
+                }
+                i++;
+                curEffect >>= 1;
+            }
+            break;
+        }
+    }
+    return retVal;
+}
+
 bool8 HealStatusConditions(struct Pokemon *mon, u32 battlePartyId, u32 healMask, u8 battler)
 {
     u32 status = GetMonData(mon, MON_DATA_STATUS, 0);

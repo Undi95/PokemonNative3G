@@ -746,7 +746,7 @@ static void ItemUseOnFieldCB_WailmerPailSudowoodo(u8 taskId)
 
 void ItemUseOutOfBattle_Medicine(u8 taskId)
 {
-    gItemUseCB = ItemUseCB_Medicine;
+    gItemUseCB = gSaveBlock2Ptr->optionsBagStyle ? KantoItemUseCB_Medicine : ItemUseCB_Medicine; // sac de RF : scène de RF
     SetUpItemUseCallback(taskId);
 }
 
@@ -776,7 +776,7 @@ void ItemUseOutOfBattle_PPUp(u8 taskId)
 
 void ItemUseOutOfBattle_RareCandy(u8 taskId)
 {
-    gItemUseCB = ItemUseCB_RareCandy;
+    gItemUseCB = gSaveBlock2Ptr->optionsBagStyle ? KantoItemUseCB_RareCandy : ItemUseCB_RareCandy; // sac de RF : scène de RF
     SetUpItemUseCallback(taskId);
 }
 
@@ -811,7 +811,7 @@ static void UseTMHMYesNo(u8 taskId)
 
 static void UseTMHM(u8 taskId)
 {
-    gItemUseCB = ItemUseCB_TMHM;
+    gItemUseCB = gSaveBlock2Ptr->optionsBagStyle ? KantoItemUseCB_TMHM : ItemUseCB_TMHM; // sac de RF : scène de RF
     SetUpItemUseCallback(taskId);
 }
 
@@ -936,7 +936,7 @@ void ItemUseOutOfBattle_EscapeRope(u8 taskId)
 
 void ItemUseOutOfBattle_EvolutionStone(u8 taskId)
 {
-    gItemUseCB = ItemUseCB_EvolutionStone;
+    gItemUseCB = gSaveBlock2Ptr->optionsBagStyle ? KantoItemUseCB_EvolutionStone : ItemUseCB_EvolutionStone; // sac de RF : scène de RF
     SetUpItemUseCallback(taskId);
 }
 

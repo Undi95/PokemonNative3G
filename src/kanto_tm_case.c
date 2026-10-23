@@ -1095,7 +1095,7 @@ static void Action_Use(u8 taskId)
     else
     {
         // Chose a TM/HM to use, exit TM case for party menu
-        gItemUseCB = ItemUseCB_TMHM;
+        gItemUseCB = KantoItemUseCB_TMHM; // RF : ItemUseCB_TMHM (scène avant l'apprentissage)
         sTMCaseDynamicResources->nextScreenCallback = CB2_ShowPartyMenuForItemUse;
         Task_BeginFadeOutFromTMCase(taskId);
     }

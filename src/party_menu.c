@@ -42,6 +42,7 @@
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
+#include "kanto_pokemon_special_anim.h"
 #include "player_pc.h"
 #include "pokemon.h"
 #include "pokemon_icon.h"
@@ -394,6 +395,17 @@ static void Task_ShowSummaryScreenToForgetMove(u8);
 static void StopLearningMovePrompt(u8);
 static void CB2_ShowSummaryScreenToForgetMove(void);
 static void CB2_ReturnToPartyMenuWhileLearningMove(void);
+static void Task_DoUseItemAnim(u8 taskId);
+static void CB2_DoUseItemAnim(void);
+static void CB2_UseItem(void);
+static void CB2_UseTMHMAfterForgettingMove(void);
+static void CB2_UseEvolutionStone(void);
+static bool8 MonCanEvolve(void);
+static void TryUsePPItemOutsideBattle(u8 taskId);
+static void ItemUseCB_RestorePP(u8 taskId, TaskFunc func);
+static void ItemUseCB_LearnedMove(u8 taskId, TaskFunc func);
+static void ItemUseCB_ReplaceMoveWithTMHM(u8 taskId, TaskFunc func);
+static void Task_ReplaceMoveWithTMHM(u8 taskId);
 static void Task_ReturnToPartyMenuWhileLearningMove(u8);
 static void DisplayPartyMenuForgotMoveMessage(u8);
 static void Task_PartyMenuReplaceMove(u8);
@@ -4702,6 +4714,12 @@ static void TryUsePPItem(u8 taskId)
     struct PartyMenu *ptr = &gPartyMenu;
     struct Pokemon *mon;
 
+    if (gSaveBlock2Ptr->optionsBagStyle && gPartyMenu.menuType != PARTY_MENU_TYPE_IN_BATTLE)
+    {
+        TryUsePPItemOutsideBattle(taskId); // Rouge Feu (sac de RF)
+        return;
+    }
+
     if (ExecuteTableBasedItemEffect_(ptr->slotId, item, *moveSlot))
     {
         gPartyMenuUseExitCallback = FALSE;
@@ -4902,6 +4920,15 @@ static void CB2_ShowSummaryScreenToForgetMove(void)
 
 static void CB2_ReturnToPartyMenuWhileLearningMove(void)
 {
+    // Rouge Feu (sac de RF) : CT/CS, la scène montre « 1, 2 et… Tadaa ! » puis la nouvelle capacité
+    if (gSaveBlock2Ptr->optionsBagStyle && gPartyMenu.data[1] == 0 && GetMoveSlotToReplace() != MAX_MON_MOVES)
+    {
+        u16 move = GetMonData(&gPlayerParty[gPartyMenu.slotId], GetMoveSlotToReplace() + MON_DATA_MOVE1);
+        StartUseItemAnim_ForgetMoveAndLearnTMorHM(gPartyMenu.slotId, gSpecialVar_ItemId, move, CB2_UseTMHMAfterForgettingMove);
+        gItemUseCB = ItemUseCB_ReplaceMoveWithTMHM;
+        gPartyMenu.action = PARTY_ACTION_CHOOSE_MON;
+        return;
+    }
     InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_CHOOSE_MON, TRUE, PARTY_MSG_NONE, Task_ReturnToPartyMenuWhileLearningMove, gPartyMenu.exitCallback);
 }
 
@@ -5293,6 +5320,253 @@ void ItemUseCB_EvolutionStone(u8 taskId, TaskFunc task)
         RemoveBagItem(gSpecialVar_ItemId, 1);
         FreePartyPointers();
     }
+}
+
+// ---- Rouge Feu (party_menu.c) : avec le sac de RF (option SAC = KANTO), un objet utilisé sur un Pokémon hors
+// combat joue d'abord la scène de RF (kanto_pokemon_special_anim.c), puis son effet dans le menu d'équipe.
+// L'effet reste celui d'Émeraude : ItemUseCB_Medicine / ItemUseCB_RareCandy d'Émeraude = les « Step » de RF.
+// Données de gPartyMenu comme Émeraude : data[0] = capacité (RF : learnMoveId, ppMoveSlot), data[1] = 0 pour une CT.
+static void Task_DoUseItemAnim(u8 taskId)
+{
+    sPartyMenuInternal->exitCallback = CB2_DoUseItemAnim;
+    Task_ClosePartyMenu(taskId);
+}
+
+static void CB2_DoUseItemAnim(void)
+{
+    if (CheckIfItemIsTMHMOrEvolutionStone(gSpecialVar_ItemId) == 2) // Evolution stone
+    {
+        if (MonCanEvolve() == TRUE)
+            StartUseItemAnim_Normal(gPartyMenu.slotId, gSpecialVar_ItemId, CB2_UseEvolutionStone);
+        else
+            StartUseItemAnim_CantEvolve(gPartyMenu.slotId, gSpecialVar_ItemId, gPartyMenu.exitCallback);
+    }
+    else
+        StartUseItemAnim_Normal(gPartyMenu.slotId, gSpecialVar_ItemId, CB2_UseItem);
+}
+
+static void CB2_UseItem(void)
+{
+    if (GetItemPocket(gSpecialVar_ItemId) == POCKET_TM_HM && PSA_IsCancelDisabled() == TRUE)
+    {
+        GiveMoveToMon(&gPlayerParty[gPartyMenu.slotId], ItemIdToBattleMoveId(gSpecialVar_ItemId));
+        AdjustFriendship(&gPlayerParty[gPartyMenu.slotId], FRIENDSHIP_EVENT_LEARN_TMHM);
+        if (gSpecialVar_ItemId < ITEM_HM01)
+            RemoveBagItem(gSpecialVar_ItemId, 1);
+        SetMainCallback2(gPartyMenu.exitCallback);
+    }
+    else
+        InitPartyMenu(gPartyMenu.menuType, KEEP_PARTY_LAYOUT, PARTY_ACTION_CHOOSE_MON, gPartyMenu.slotId, PARTY_MSG_NONE, Task_SetSacredAshCB, gPartyMenu.exitCallback);
+}
+
+static void CB2_UseTMHMAfterForgettingMove(void)
+{
+    if (PSA_IsCancelDisabled() == TRUE)
+    {
+        struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+        u8 moveIdx = GetMoveSlotToReplace();
+
+        RemoveMonPPBonus(mon, moveIdx);
+        SetMonMoveSlot(mon, ItemIdToBattleMoveId(gSpecialVar_ItemId), moveIdx);
+        AdjustFriendship(mon, FRIENDSHIP_EVENT_LEARN_TMHM);
+        if (gSpecialVar_ItemId < ITEM_HM01)
+            RemoveBagItem(gSpecialVar_ItemId, 1);
+        SetMainCallback2(gPartyMenu.exitCallback);
+    }
+    else
+        InitPartyMenu(gPartyMenu.menuType, KEEP_PARTY_LAYOUT, PARTY_ACTION_CHOOSE_MON, gPartyMenu.slotId, PARTY_MSG_NONE, Task_SetSacredAshCB, gPartyMenu.exitCallback);
+}
+
+// RF : ItemUseCB_Medicine (la vérification, puis la scène ; l'effet = ItemUseCB_Medicine d'Émeraude)
+void KantoItemUseCB_Medicine(u8 taskId, TaskFunc func)
+{
+    u16 hp = 0;
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    u16 item = gSpecialVar_ItemId;
+    bool8 canHeal;
+
+    if (!NotUsingHPEVItemOnShedinja(mon, item))
+    {
+        canHeal = TRUE;
+    }
+    else
+    {
+        if (IsHPRecoveryItem(item) == TRUE)
+        {
+            hp = GetMonData(mon, MON_DATA_HP);
+            if (hp == GetMonData(mon, MON_DATA_MAX_HP))
+                canHeal = FALSE;
+        }
+        canHeal = PokemonItemUseNoEffect(mon, item, gPartyMenu.slotId, 0);
+    }
+    PlaySE(SE_SELECT);
+    if (canHeal)
+    {
+        gPartyMenuUseExitCallback = FALSE;
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = func;
+    }
+    else
+    {
+        Task_DoUseItemAnim(taskId);
+        gItemUseCB = ItemUseCB_Medicine; // RF : ItemUseCB_MedicineStep
+    }
+}
+
+static void TryUsePPItemOutsideBattle(u8 taskId)
+{
+    bool8 noEffect = PokemonItemUseNoEffect(&gPlayerParty[gPartyMenu.slotId],
+                                            gSpecialVar_ItemId,
+                                            gPartyMenu.slotId,
+                                            gPartyMenu.data[0]);
+    PlaySE(SE_SELECT);
+    if (noEffect)
+    {
+        gPartyMenuUseExitCallback = FALSE;
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = Task_ClosePartyMenuAfterText;
+    }
+    else
+    {
+        Task_DoUseItemAnim(taskId);
+        gItemUseCB = ItemUseCB_RestorePP;
+    }
+}
+
+static void ItemUseCB_RestorePP(u8 taskId, TaskFunc func)
+{
+    u16 move;
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+
+    ExecuteTableBasedItemEffect_(gPartyMenu.slotId, gSpecialVar_ItemId, (u8)gPartyMenu.data[0]);
+    gPartyMenuUseExitCallback = TRUE;
+    PlaySE(SE_USE_ITEM);
+    RemoveBagItem(gSpecialVar_ItemId, 1);
+    move = GetMonData(mon, gPartyMenu.data[0] + MON_DATA_MOVE1);
+    StringCopy(gStringVar1, gMoveNames[move]);
+    GetMedicineItemEffectMessage(gSpecialVar_ItemId);
+    DisplayPartyMenuMessage(gStringVar4, 1);
+    ScheduleBgCopyTilemapToVram(2);
+    gTasks[taskId].func = Task_ClosePartyMenuAfterText;
+}
+
+// RF : ItemUseCB_TMHM (la capacité est donnée, puis la scène)
+void KantoItemUseCB_TMHM(u8 taskId, TaskFunc func)
+{
+    struct Pokemon *mon;
+    s16 *move;
+    u16 item;
+
+    PlaySE(SE_SELECT);
+    mon = &gPlayerParty[gPartyMenu.slotId];
+    move = gPartyMenu.data;
+    item = gSpecialVar_ItemId;
+    GetMonNickname(mon, gStringVar1);
+    move[0] = ItemIdToBattleMoveId(item);
+    StringCopy(gStringVar2, gMoveNames[move[0]]);
+    move[1] = 0;
+    switch (CanMonLearnTMTutor(mon, item, 0))
+    {
+    case CANNOT_LEARN_MOVE:
+        DisplayLearnMoveMessageAndClose(taskId, gText_PkmnCantLearnMove);
+        return;
+    case ALREADY_KNOWS_MOVE:
+        DisplayLearnMoveMessageAndClose(taskId, gText_PkmnAlreadyKnows);
+        return;
+    }
+    if (GiveMoveToMon(mon, move[0]) != MON_HAS_MAX_MOVES)
+    {
+        Task_DoUseItemAnim(taskId);
+        gItemUseCB = ItemUseCB_LearnedMove;
+    }
+    else
+    {
+        DisplayLearnMoveMessage(gText_PkmnNeedsToReplaceMove);
+        gTasks[taskId].func = Task_ReplaceMoveYesNo;
+    }
+}
+
+static void ItemUseCB_LearnedMove(u8 taskId, TaskFunc func)
+{
+    Task_LearnedMove(taskId);
+}
+
+static void ItemUseCB_ReplaceMoveWithTMHM(u8 taskId, TaskFunc func)
+{
+    Task_ReplaceMoveWithTMHM(taskId);
+}
+
+static void Task_ReplaceMoveWithTMHM(u8 taskId)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    u8 moveIdx = GetMoveSlotToReplace();
+    u16 move = GetMonData(mon, moveIdx + MON_DATA_MOVE1);
+
+    GetMonNickname(mon, gStringVar1);
+    StringCopy(gStringVar2, gMoveNames[move]);
+    RemoveMonPPBonus(mon, moveIdx);
+    SetMonMoveSlot(mon, gPartyMenu.data[0], moveIdx);
+    Task_LearnedMove(taskId);
+}
+
+// RF : ItemUseCB_RareCandy (la vérification, puis la scène ; l'effet = ItemUseCB_RareCandy d'Émeraude)
+void KantoItemUseCB_RareCandy(u8 taskId, TaskFunc func)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    u16 item = gSpecialVar_ItemId;
+    bool8 noEffect;
+
+    if (GetMonData(mon, MON_DATA_LEVEL) != MAX_LEVEL)
+        noEffect = PokemonItemUseNoEffect(mon, item, gPartyMenu.slotId, 0);
+    else
+        noEffect = TRUE;
+    PlaySE(SE_SELECT);
+    if (noEffect)
+    {
+        gPartyMenuUseExitCallback = FALSE;
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = func;
+    }
+    else
+    {
+        Task_DoUseItemAnim(taskId);
+        gItemUseCB = ItemUseCB_RareCandy; // RF : ItemUseCB_RareCandyStep
+    }
+}
+
+// RF : ItemUseCB_EvolutionStone
+void KantoItemUseCB_EvolutionStone(u8 taskId, TaskFunc func)
+{
+    bool8 noEffect;
+
+    PlaySE(SE_SELECT);
+    noEffect = PokemonItemUseNoEffect(&gPlayerParty[gPartyMenu.slotId], gSpecialVar_ItemId, gPartyMenu.slotId, 0);
+    if (noEffect)
+    {
+        gPartyMenuUseExitCallback = FALSE;
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = func;
+    }
+    else
+        Task_DoUseItemAnim(taskId);
+}
+
+static void CB2_UseEvolutionStone(void)
+{
+    gCB2_AfterEvolution = gPartyMenu.exitCallback;
+    ExecuteTableBasedItemEffect_(gPartyMenu.slotId, gSpecialVar_ItemId, 0);
+    RemoveBagItem(gSpecialVar_ItemId, 1);
+}
+
+// RF : refuse une évolution hors du Pokédex de Kanto tant que le Pokédex national manque. La fusion garde la
+// règle d'Émeraude (pas de refus) : l'option SAC ne change que la présentation.
+static bool8 MonCanEvolve(void)
+{
+    return TRUE;
 }
 
 u8 GetItemEffectType(u16 item)
