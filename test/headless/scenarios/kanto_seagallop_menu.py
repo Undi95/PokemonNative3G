@@ -15,7 +15,7 @@ def play(game):
     game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 9, gap=10); game.tap("A"); game.wait(60)
     game.tap("B"); game.wait(30); game.tap("B"); wait_until(game, lambda s: s.free)
     debug_warp(game, 28); log(game, "port Île 1")
-    game.tap("UP"); game.wait(30); game.tap("A"); game.wait(400); log(game, "page 1")
+    game.tap("DOWN"); game.wait(30); game.tap("A"); game.wait(400); log(game, "page 1")
     game.tap("DOWN", 4, gap=20); game.wait(30); game.tap("A"); game.wait(200); log(game, "page 2")
     game.tap("DOWN", 2, gap=20); game.wait(30); game.tap("A"); game.wait(200)
     for _ in range(4):

@@ -13,7 +13,7 @@ def play(game):
     game.tap("A", 210, hold=4, gap=26)
     wait_until(game, lambda s: s.free); game.wait(30)
     debug_warp(game, 28); log(game, "port Île 1")
-    game.tap("UP"); game.wait(30); game.tap("A"); game.wait(200); log(game, "marin")
+    game.tap("DOWN"); game.wait(30); game.tap("A"); game.wait(200); log(game, "marin")
     for _ in range(3):
         game.tap("A"); game.wait(120)
     log(game, "menu")

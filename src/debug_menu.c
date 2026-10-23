@@ -125,7 +125,7 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_PokemonTower3F, MAP_GROUP(MAP_POKEMON_TOWER_3F), MAP_NUM(MAP_POKEMON_TOWER_3F), 17, 12}, // SPECTRES sauvages
     {sWarpName_PokemonTower6F, MAP_GROUP(MAP_POKEMON_TOWER_6F), MAP_NUM(MAP_POKEMON_TOWER_6F), 12, 13}, // 3 pas vers le bas : Ossatueur
     {sWarpName_RocketHideout, MAP_GROUP(MAP_ROCKET_HIDEOUT_B4F), MAP_NUM(MAP_ROCKET_HIDEOUT_B4F), 19, 5}, // sous Giovanni (Scope Sylph)
-    {sWarpName_OneIslandHarbor, MAP_GROUP(MAP_ONE_ISLAND_HARBOR), MAP_NUM(MAP_ONE_ISLAND_HARBOR), 8, 7}, // devant le marin du Seagallop
+    {sWarpName_OneIslandHarbor, MAP_GROUP(MAP_ONE_ISLAND_HARBOR), MAP_NUM(MAP_ONE_ISLAND_HARBOR), 8, 5}, // au-dessus du marin du Seagallop (arrivée du ferry)
 };
 
 // Tous les objets du jeu (Hoenn + Kanto) : 99 de chaque (1 pour les objets rares et les CS).
