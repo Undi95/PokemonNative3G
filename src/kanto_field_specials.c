@@ -1,5 +1,8 @@
 // Specials de Rouge Feu portés depuis le décomp RF (field_specials.c, fame_checker.c, quest_log.c).
 #include "global.h"
+#include "constants/easy_chat.h"
+#include "random.h"
+#include "easy_chat.h"
 #include "field_message_box.h"
 #include "constants/kanto_flags_vars.h"
 #include "event_data.h"
@@ -413,4 +416,19 @@ static const u8 *GetProfOaksRatingMessageByCount(u16 count)
 void GetProfOaksRatingMessage(void)
 {
     ShowFieldMessage(GetProfOaksRatingMessageByCount(gSpecialVar_0x8004));
+}
+
+// ---- Rouge Feu (easy_chat.c) ----
+// ShowEasyChatMessage : le ShowEasyChatProfile d'Émeraude sous son nom de RF (club Mystery Event)
+void ShowEasyChatMessage(void)
+{
+    ShowEasyChatProfile();
+}
+
+// GetRandomWordFromAnyGroup de RF = GetRandomEasyChatWordFromUnlockedGroup d'Émeraude (aucun script de RF ne l'appelle)
+void BufferRandomHobbyOrLifestyleString(void)
+{
+    int groupId = Random() & 1 ? EC_GROUP_HOBBIES : EC_GROUP_LIFESTYLE;
+    u16 easyChatWord = GetRandomEasyChatWordFromUnlockedGroup(groupId);
+    CopyEasyChatWord(gStringVar2, easyChatWord);
 }
