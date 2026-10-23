@@ -884,10 +884,6 @@ QL_GfxTransition_StartSurf, QL_GfxTransition_VSSeeker, Task_QLVSSeekerMovement, 
 QL_GfxTransition_StopSurfSouth, QL_GfxTransition_StopSurfNorth, QL_GfxTransition_StopSurfWest,
 QL_GfxTransition_StopSurfEast
 
-### renewable_hidden_items.c (RF seul, 4/4)
-SetAllRenewableItemFlags, IncrementRenewableHiddenItemStepCounter, TryRegenerateRenewableHiddenItems,
-SampleRenewableItemFlags
-
 ### reshow_battle_screen.c (commun, 1/1)
 ReshowBattleScreen_TurnOnDisplay
 

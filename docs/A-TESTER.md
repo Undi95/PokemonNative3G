@@ -121,3 +121,6 @@ roche (Plateau Indigo), dresseurs d'Argenta.
   Non vérifié : Ossatueur SANS Scope Sylph (fuite, le joueur est repoussé dans l'escalier) ; Ball lancée sur un SPECTRE (« Il a évité la BALL ! », la Ball rebondit) ; Pokédex : un SPECTRE non révélé ne doit pas être marqué « vu »
 - [ ] Cherche VS avec Red/Leaf : le sprite levant le Cherche VS était faux (numéro de sprite tronqué à 8 bits, corrigé)
 - [ ] Menu Options en 2 pages (L/R, vérifié en headless `options_pages.py`) : page 1 = réglages d'Émeraude, page 2 = choix HOENN/KANTO ; RETOUR sur chaque page. En mode boutons L=A, L sert aussi de A (R change toujours de page)
+- [ ] Objets cachés qui réapparaissent (Kanto, non testé) : Route 20, 21 Nord, souterrains, etc. (15 cartes de RF). Cachés en début de partie ; après 1 500 pas, en entrant sur une de ces cartes, un tirage en fait réapparaître (rares 10 %, peu communs 30 %, communs 60 %). Avec le Cherch'Objet de Kanto
+- [ ] Chen dans la salle du champion de Kanto : rappelle maintenant le starter choisi à Kanto (il lisait celui de Hoenn). Même correctif pour le special IsStarterFirstStageInParty
+

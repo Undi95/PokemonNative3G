@@ -63,7 +63,7 @@ contenu dans un seul jeu.
 ## Trouvé par la cartographie — décisions de l'utilisateur (2026-10-23)
 Contenu de RF à importer :
 - [x] Combat FANTÔME de la Tour Pokémon (SPECTRES sans Scope Sylph, Ossatueur révélé avec le Scope Sylph de Giovanni ; `gBattleGhostType`, plus de bit libre dans gBattleTypeFlags)
-- [ ] Objets cachés qui réapparaissent (renewable_hidden_items.c)
+- [x] Objets cachés qui réapparaissent (`src/kanto_renewable_hidden_items.c`, 2026-10-23)
 - [ ] Fame Checker (fame_checker.c ; sauvegarde déjà réservée dans gSaveBlockKanto)
 - [ ] Animation quand on utilise un objet sur un Pokémon (pokemon_special_anim*.c : CT, Super Bonbon…) : jouée avec le sac KANTO (option SAC), sac HOENN comme Émeraude
 - [ ] Note du Pokédex par Chen : même système que le PC du Prof. Seko (birch_pc.c), à intégrer à Kanto (prof_pc.c de RF : textes et compte du Pokédex de Kanto)
