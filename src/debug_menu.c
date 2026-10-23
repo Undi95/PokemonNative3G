@@ -32,6 +32,9 @@
 #include "kanto_region_map.h"
 #include "palette.h"
 #include "region_map.h"
+#include "battle_setup.h"
+#include "kanto_save.h"
+#include "constants/rematches.h"
 
 bool8 gDebugNoClip = FALSE;
 bool8 gDebugNoEncounters = FALSE;
@@ -47,6 +50,7 @@ enum {
     DEBUG_GIVE_ITEMS,
     DEBUG_UNLOCK_DEXES,
     DEBUG_FLY_MAP,
+    DEBUG_HOENN_REMATCHES,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -80,6 +84,7 @@ static const u8 sWarpName_SixIsland[] = _("ÎLE 6");
 static const u8 sWarpName_SevenIsland[] = _("ÎLE 7");
 static const u8 sWarpName_Littleroot[] = _("BOURG-EN-VOL");
 static const u8 sWarpName_Lilycove[] = _("NÉNUCRIQUE");
+static const u8 sWarpName_Route102[] = _("ROUTE 102");
 static const u8 sWarpName_SaffronGym[] = _("ARÈNE SAFRANIA");
 static const u8 sWarpName_KantoHof[] = _("PANTHÉON KANTO");
 
@@ -108,6 +113,7 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_SevenIsland, MAP_GROUP(MAP_SEVEN_ISLAND), MAP_NUM(MAP_SEVEN_ISLAND), 12, 4},
     {sWarpName_Littleroot, MAP_GROUP(MAP_LITTLEROOT_TOWN), MAP_NUM(MAP_LITTLEROOT_TOWN), 10, 10},
     {sWarpName_Lilycove, MAP_GROUP(MAP_LILYCOVE_CITY), MAP_NUM(MAP_LILYCOVE_CITY), 20, 20},
+    {sWarpName_Route102, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), 31, 14}, // à côté de Calvin (revanche)
     {sWarpName_SaffronGym, MAP_GROUP(MAP_SAFFRON_CITY_GYM), MAP_NUM(MAP_SAFFRON_CITY_GYM), 14, 22}, // téléporteurs
     {sWarpName_KantoHof, MAP_GROUP(MAP_POKEMON_LEAGUE_HALL_OF_FAME), MAP_NUM(MAP_POKEMON_LEAGUE_HALL_OF_FAME), 6, 19},
 };
@@ -144,6 +150,7 @@ static const u8 sText_GiveMon[] = _("Recevoir MEWTWO");
 static const u8 sText_GiveItems[] = _("Ajout objets");
 static const u8 sText_UnlockDexes[] = _("Débloquer les 2 POKéDEX");
 static const u8 sText_FlyMap[] = _("Carte VOL (2 régions)");
+static const u8 sText_HoennRematches[] = _("Revanches PokéNav");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -184,6 +191,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_GIVE_ITEMS].name = sText_GiveItems;
         sItems[DEBUG_UNLOCK_DEXES].name = sText_UnlockDexes;
         sItems[DEBUG_FLY_MAP].name = sText_FlyMap;
+        sItems[DEBUG_HOENN_REMATCHES].name = sText_HoennRematches;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -331,6 +339,21 @@ static void Task_DebugMenu(u8 taskId)
         LockPlayerFieldControls();
         FadeScreen(FADE_TO_BLACK, 0);
         CreateTask(Task_DebugOpenFlyMap, 0);
+        break;
+    case DEBUG_HOENN_REMATCHES:
+        // Cherche VS à Hoenn : dresseurs de la table des revanches combattus et inscrits au PokéNav, Cherche VS chargé
+        {
+            u16 i;
+            for (i = 0; i <= REMATCH_SPECIAL_TRAINER_START; i++)
+            {
+                FlagSet(TRAINER_FLAGS_START + gRematchTable[i].trainerIds[0]);
+                FlagSet(TRAINER_REGISTERED_FLAGS_START + i);
+            }
+        }
+        if (!CheckBagHasItem(ITEM_VS_SEEKER, 1))
+            AddBagItem(ITEM_VS_SEEKER, 1);
+        gSaveBlockKanto.trainerRematchStepCounter = (gSaveBlockKanto.trainerRematchStepCounter & 0xFF00) | 100;
+        PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_CLOSE:
     case LIST_CANCEL:
