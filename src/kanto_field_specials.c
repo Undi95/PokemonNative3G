@@ -1,5 +1,6 @@
 // Specials de Rouge Feu portés depuis le décomp RF (field_specials.c, fame_checker.c, quest_log.c).
 #include "global.h"
+#include "constants/kanto_flags_vars.h"
 #include "event_data.h"
 #include "kanto_save.h"
 #include "constants/kanto/fame_checker.h"
@@ -249,12 +250,12 @@ static u16 GetStarterSpeciesById(u16 idx)
 
 u16 GetStarterSpecies(void)
 {
-    return GetStarterSpeciesById(VarGet(VAR_STARTER_MON));
+    return GetStarterSpeciesById(VarGet(VAR_KANTO_STARTER_MON)); // starter de Kanto (VAR_STARTER_MON = celui de Hoenn)
 }
 
 u16 IsStarterFirstStageInParty(void)
 {
-    u16 species = GetStarterSpeciesById(VarGet(VAR_STARTER_MON));
+    u16 species = GetStarterSpeciesById(VarGet(VAR_KANTO_STARTER_MON)); // starter de Kanto (VAR_STARTER_MON = celui de Hoenn)
     u8 partyCount = CalculatePlayerPartyCount();
     u8 i;
     for (i = 0; i < partyCount; i++)
