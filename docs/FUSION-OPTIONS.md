@@ -48,8 +48,8 @@ contenu dans un seul jeu.
   Pokédex de Chen (déjà fait).
 ## À faire (liste de l'utilisateur, 2026-10-23)
 - [x] Cartes de région : icône du joueur selon le perso choisi (PERSO) sur les deux cartes
-- [ ] Cherche VS à Hoenn : rematchs du PokéNav déclenchables au Cherche VS (aujourd'hui à Hoenn il répond « pas de dresseur », sans planter)
-- [ ] Cherche VS : sprites de Brice/Flora levant le Cherche VS (à pied et à vélo), si faisable au pixel
+- [x] Cherche VS à Hoenn : il déclenche les revanches du PokéNav (dresseurs inscrits ; 70 % comme RF, 100 % si un appel l'avait déjà décidé) ; les dresseurs de Hoenn sautent au lieu de lever la main (pas d'image « main levée » dans les sprites d'Émeraude)
+- [-] Cherche VS : sprites de Brice/Flora levant le Cherche VS : pas faisable simplement (tout le corps change de pose dans les images de RF, il faudrait redessiner) ; Brice/Flora se tournent vers le bas, comme Red
 - [ ] Évolution par échange en solo (objet du genre « câble link »)
 - [ ] Pokémon exclusifs à Rubis, Saphir et Vert Feuille : les rendre obtenables
 - [ ] Légendaires manquants (vers la fin)
