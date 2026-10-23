@@ -65,18 +65,19 @@ Contenu de RF à importer :
 - [x] Combat FANTÔME de la Tour Pokémon (SPECTRES sans Scope Sylph, Ossatueur révélé avec le Scope Sylph de Giovanni ; `gBattleGhostType`, plus de bit libre dans gBattleTypeFlags)
 - [ ] Objets cachés qui réapparaissent (renewable_hidden_items.c)
 - [ ] Fame Checker (fame_checker.c ; sauvegarde déjà réservée dans gSaveBlockKanto)
-- [ ] Animation quand on utilise un objet sur un Pokémon (pokemon_special_anim*.c : CT, Super Bonbon…) — à importer (portée à préciser)
+- [ ] Animation quand on utilise un objet sur un Pokémon (pokemon_special_anim*.c : CT, Super Bonbon…) : jouée avec le sac KANTO (option SAC), sac HOENN comme Émeraude
 - [ ] Note du Pokédex par Chen : même système que le PC du Prof. Seko (birch_pc.c), à intégrer à Kanto (prof_pc.c de RF : textes et compte du Pokédex de Kanto)
 - [ ] TOUTES les cinématiques de RF : départ du S.S. Anne, ferry Seagallop, et les autres stubs de `kanto_specials_stubs.c` (éclairage de la Ligue, téléporteurs de Léo, triangle de Deoxys, fossiles du musée, diplôme…)
 - [ ] IA des légendaires de RF (`BATTLE_TYPE_LEGENDARY_FRLG` : état à part comme le FANTÔME)
 
 Choix HOENN / KANTO :
 - [ ] PC objets : interface de RF en option ; les objets stockés restent communs aux deux régions (même stockage)
-- [ ] Maîtres des capacités : un maître qui apprend une capacité limitée/exclusive le reste ; les autres sont fusionnés (plus de choix chez chacun)
+- [ ] Maître des capacités (réapprentissage) : interface de RF en option (learn_move.c), rendu seulement. Les deux proposent déjà les mêmes attaques (capacités par niveau, mêmes données) : rien à fusionner
+- Donneurs de capacités : chacun reste exclusif à sa région (pas de changement)
 - [ ] Boutique : interface de RF en option
 - [ ] Machine à sous : PAS d'option, chacune dans sa région (celle de RF au Casino de Céladopole, celle d'Émeraude à Lavandia)
 - [ ] Menu Start de RF : en option
-- [ ] Menu Options : classer les lignes par ordre d'importance (la liste s'allonge)
+- [ ] Menu Options en pages : page 1 = réglages d'Émeraude, page 2 (et suivantes) = choix HOENN/KANTO ; indiquer clairement qu'il y a d'autres pages (ex. « PAGE 1/2 » et flèches L/R dans le titre)
 
 ## Notes
 - Piste (utilisateur) : Émeraude a été construit à partir de Rouge Feu ; il garde des fonctions vidées et des entrées inutilisées de RF (ex. BgTileAllocOp « Dummied out », LoadMonPicInWindow UNUSED). Les rétablir avec le code de RF avant de réinventer.
