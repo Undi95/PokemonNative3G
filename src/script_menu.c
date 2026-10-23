@@ -1,4 +1,6 @@
 #include "global.h"
+#include "constants/kanto/seagallop.h"
+#include "constants/kanto/menu.h"
 #include "constants/kanto.h"
 #include "kanto_field_door.h"
 #include "main.h"
@@ -404,6 +406,137 @@ static void CreatePCMultichoice(void)
     InitMenuInUpperLeftCornerNormal(windowId, numChoices, 0);
     CopyWindowToVram(windowId, COPYWIN_FULL);
     InitMultichoiceCheckWrap(FALSE, numChoices, windowId, MULTI_PC);
+}
+
+// ---- Rouge Feu (script_menu.c) : menu des destinations du ferry Seagallop, une fois le Rainbow Pass obtenu ----
+static const u8 sKText_Vermilion[] = _("CARMIN SUR MER");
+static const u8 sKText_OneIsland[] = _("ILE 1");
+static const u8 sKText_TwoIsland[] = _("ILE 2");
+static const u8 sKText_ThreeIsland[] = _("ILE 3");
+static const u8 sKText_FourIsland[] = _("ILE 4");
+static const u8 sKText_FiveIsland[] = _("ILE 5");
+static const u8 sKText_SixIsland[] = _("ILE 6");
+static const u8 sKText_SevenIsland[] = _("ILE 7");
+static const u8 sKText_Other[] = _("AUTRES");
+static const u8 sKText_Exit[] = _("RETOUR");
+
+static const u8 *const sSeagallopDestStrings[] = {
+    [SEAGALLOP_VERMILION_CITY] = sKText_Vermilion,
+    [SEAGALLOP_ONE_ISLAND]     = sKText_OneIsland,
+    [SEAGALLOP_TWO_ISLAND]     = sKText_TwoIsland,
+    [SEAGALLOP_THREE_ISLAND]   = sKText_ThreeIsland,
+    [SEAGALLOP_FOUR_ISLAND]    = sKText_FourIsland,
+    [SEAGALLOP_FIVE_ISLAND]    = sKText_FiveIsland,
+    [SEAGALLOP_SIX_ISLAND]     = sKText_SixIsland,
+    [SEAGALLOP_SEVEN_ISLAND]   = sKText_SevenIsland,
+};
+
+#define LEFT_COORD 16
+#define WIDTH 12
+
+void DrawSeagallopDestinationMenu(void)
+{
+    // 8004 = Starting location
+    // 8005 = Page (0: Verm, One, Two, Three, Four, Other, Exit; 1: Four, Five, Six, Seven, Other, Exit)
+    u8 destinationId;
+    u8 top;
+    u8 numItems;
+    u8 windowId;
+    u8 i;
+    gSpecialVar_Result = 0xFF; // SCR_MENU_UNSET
+
+    if (gSpecialVar_0x8005 == 1)
+    {
+        if (gSpecialVar_0x8004 < SEAGALLOP_FIVE_ISLAND)
+            destinationId = SEAGALLOP_FIVE_ISLAND;
+        else
+            destinationId = SEAGALLOP_FOUR_ISLAND;
+        numItems = 5;
+        top = 2;
+    }
+    else
+    {
+        destinationId = SEAGALLOP_VERMILION_CITY;
+        numItems = 6;
+        top = 0;
+    }
+    windowId = CreateWindowFromRect(LEFT_COORD, top, WIDTH, numItems * 2);
+    SetStandardWindowBorderStyle(windowId, FALSE);
+
+    // -2 excludes "Other" and "Exit", appended after the loop
+    for (i = 0; i < numItems - 2; i++)
+    {
+        if (destinationId != gSpecialVar_0x8004)
+            AddTextPrinterParameterized(windowId, FONT_NORMAL, sSeagallopDestStrings[destinationId], 8, i * 16 + 1, TEXT_SKIP_DRAW, NULL);
+        else
+            i--;
+        destinationId++;
+
+        // Wrap around
+        if (destinationId == SEAGALLOP_SEVEN_ISLAND + 1)
+            destinationId = SEAGALLOP_VERMILION_CITY;
+    }
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, sKText_Other, 8, i * 16 + 1, TEXT_SKIP_DRAW, NULL);
+    i++;
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, sKText_Exit, 8, i * 16 + 1, TEXT_SKIP_DRAW, NULL);
+    // Émeraude : curseur et saisie des menus à choix (Menu_InitCursor / CreateMCMenuInputHandlerTask de RF)
+    InitMenuInUpperLeftCornerNormal(windowId, numItems, 0);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+    InitMultichoiceCheckWrap(FALSE, numItems, windowId, 0); // identifiant : ne sert qu'aux menus de link
+}
+#undef LEFT_COORD
+#undef WIDTH
+
+u16 GetSelectedSeagallopDestination(void)
+{
+    // 8004 = Starting location
+    // 8005 = Page (0: Verm, One, Two, Three, Four, Other, Exit; 1: Four, Five, Six, Seven, Other, Exit)
+    if (gSpecialVar_Result == MULTI_B_PRESSED)
+        return SCR_MENU_CANCEL;
+    if (gSpecialVar_0x8005 == 1)
+    {
+        if (gSpecialVar_Result == 3)
+        {
+            return SEAGALLOP_MORE;
+        }
+        else if (gSpecialVar_Result == 4)
+        {
+            return SCR_MENU_CANCEL;
+        }
+        else if (gSpecialVar_Result == 0)
+        {
+            if (gSpecialVar_0x8004 > SEAGALLOP_FOUR_ISLAND)
+                return SEAGALLOP_FOUR_ISLAND;
+            else
+                return SEAGALLOP_FIVE_ISLAND;
+        }
+        else if (gSpecialVar_Result == 1)
+        {
+            if (gSpecialVar_0x8004 > SEAGALLOP_FIVE_ISLAND)
+                return SEAGALLOP_FIVE_ISLAND;
+            else
+                return SEAGALLOP_SIX_ISLAND;
+        }
+        else if (gSpecialVar_Result == 2)
+        {
+            if (gSpecialVar_0x8004 > SEAGALLOP_SIX_ISLAND)
+                return SEAGALLOP_SIX_ISLAND;
+            else
+                return SEAGALLOP_SEVEN_ISLAND;
+        }
+    }
+    else
+    {
+        if (gSpecialVar_Result == 4)
+            return SEAGALLOP_MORE;
+        else if (gSpecialVar_Result == 5)
+            return SCR_MENU_CANCEL;
+        else if (gSpecialVar_Result >= gSpecialVar_0x8004)
+            return gSpecialVar_Result + 1;
+        else
+            return gSpecialVar_Result;
+    }
+    return SEAGALLOP_VERMILION_CITY;
 }
 
 void ScriptMenu_DisplayPCStartupPrompt(void)
