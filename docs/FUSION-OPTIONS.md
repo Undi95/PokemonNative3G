@@ -54,7 +54,7 @@ contenu dans un seul jeu.
 - [ ] Pokémon exclusifs à Rubis, Saphir et Vert Feuille : les rendre obtenables
 - [ ] Légendaires manquants (vers la fin)
 - [ ] Événements en jeu à Hoenn (ceux de RF + Mew) et objets requis (Ticket Aurora, Ticket Mystique, etc.)
-- [ ] Aperçus de donjons/lieux de RF à Kanto (map_preview_screen.c ; données déjà dans kanto_region_map.c)
+- [x] Aperçus de donjons/lieux de RF à Kanto (2026-10-24, `src/kanto_map_preview_screen.c`)
 - [ ] « Précédemment dans votre quête » (journal de RF) : partout si possible, avec une option (désactivé par défaut)
 - [x] Courir partout (intérieurs compris ; bike.c, IsRunningDisallowed)
 - [x] Cherch'Objet selon la région (kanto_itemfinder.c = RF à Kanto, Émeraude à Hoenn) ; objets « sous les pieds » de RF perdus à l'import des cartes (traités comme des objets cachés normaux)
