@@ -3352,7 +3352,7 @@ static bool8 MapLdr_Credits(void)
     switch (*state)
     {
     case 0:
-        InitOverworldBgs();
+        // InitOverworldBgs : déjà fait par InitOverworldGraphicsRegisters (case 2) dans Émeraude
         LoadMapFromWarp(FALSE);
         (*state)++;
         break;
