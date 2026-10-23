@@ -210,11 +210,10 @@ static const union AnimCmd *const sSpriteAnimTable_KantoEmoticons[] =
     sAnimCmd_X,
 };
 
-// Rouge Feu : les émoticônes utilisent la palette 0 de l'OAM, celle de Red ; ici sa palette à elle,
-// quel que soit le personnage joué
+// Rouge Feu : bulles bleues et blanches, avec la palette de leur image, quel que soit le personnage joué
 #define FLDEFF_PAL_TAG_KANTO_EMOTICONS 0x1012
-extern const u16 gKantoObjectEventPal_Player[];
-static const struct SpritePalette sSpritePalette_KantoEmoticons = {gKantoObjectEventPal_Player, FLDEFF_PAL_TAG_KANTO_EMOTICONS};
+static const u16 sEmotion_KantoPal[] = INCGFX_U16("graphics/kanto/field_effects/pics/emotion_x.png", ".gbapal");
+static const struct SpritePalette sSpritePalette_KantoEmoticons = {sEmotion_KantoPal, FLDEFF_PAL_TAG_KANTO_EMOTICONS};
 
 static const struct SpriteTemplate sSpriteTemplate_KantoEmoticons =
 {
