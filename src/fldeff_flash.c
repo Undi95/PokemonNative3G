@@ -13,6 +13,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
+#include "kanto_map_preview_screen.h"
 #include "constants/songs.h"
 #include "constants/map_types.h"
 
@@ -39,6 +40,8 @@ static void Task_EnterCaveTransition1(u8 taskId);
 static void Task_EnterCaveTransition2(u8 taskId);
 static void Task_EnterCaveTransition3(u8 taskId);
 static void Task_EnterCaveTransition4(u8 taskId);
+static void RunMapPreviewScreen(u8 mapsecId);
+static void Task_MapPreviewScreen_0(u8 taskId);
 
 static const struct FlashStruct sTransitionTypes[] =
 {
@@ -151,6 +154,13 @@ static bool8 TryDoMapTransition(void)
     u8 i;
     u8 fromType = GetLastUsedWarpMapType();
     u8 toType = GetCurrentMapType();
+
+    // Rouge Feu : aperçu du lieu (grottes de Kanto) en arrivant d'une autre section
+    if (GetLastUsedWarpMapSectionId() != gMapHeader.regionMapSectionId && MapHasPreviewScreen_HandleQLState2(gMapHeader.regionMapSectionId, MPS_TYPE_CAVE) == TRUE)
+    {
+        RunMapPreviewScreen(gMapHeader.regionMapSectionId);
+        return TRUE;
+    }
 
     for (i = 0; sTransitionTypes[i].fromType; i++)
     {
@@ -358,5 +368,72 @@ static void Task_EnterCaveTransition4(u8 taskId)
     {
         LoadPalette(sCaveTransitionPalette_Black, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
         SetMainCallback2(gMain.savedCallback);
+    }
+}
+
+// ---- Rouge Feu (fldeff_flash.c) : RunMapPreviewScreen ; ensuite la transition d'entrée de grotte
+// (RF : Task_FlashTransition_Enter_1 = Task_EnterCaveTransition2 d'Émeraude) ----
+static void RunMapPreviewScreen(u8 mapSecId)
+{
+    u8 taskId = CreateTask(Task_MapPreviewScreen_0, 0);
+    gTasks[taskId].data[3] = mapSecId;
+}
+
+static void Task_MapPreviewScreen_0(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    switch (data[0])
+    {
+    case 0:
+        SetWordTaskArg(taskId, 5, (uintptr_t)gMain.vblankCallback);
+        SetVBlankCallback(NULL);
+        MapPreview_InitBgs();
+        MapPreview_LoadGfx(data[3]);
+        BlendPalettes(PALETTES_ALL, 0x10, RGB_BLACK);
+        data[0]++;
+        break;
+    case 1:
+        if (!MapPreview_IsGfxLoadFinished())
+        {
+            data[4] = MapPreview_CreateMapNameWindow(data[3]);
+            CopyWindowToVram(data[4], COPYWIN_FULL);
+            data[0]++;
+        }
+        break;
+    case 2:
+        if (!IsDma3ManagerBusyWithBgCopy())
+        {
+            BeginNormalPaletteFade(PALETTES_ALL, -1, 16, 0, RGB_BLACK);
+            SetVBlankCallback((IntrCallback)GetWordTaskArg(taskId, 5));
+            data[0]++;
+        }
+        break;
+    case 3:
+        if (!UpdatePaletteFade())
+        {
+            data[2] = MapPreview_GetDuration(data[3]);
+            data[0]++;
+        }
+        break;
+    case 4:
+        data[1]++;
+        if (data[1] > data[2] || JOY_HELD(B_BUTTON))
+        {
+            BeginNormalPaletteFade(PALETTES_ALL, -2, 0, 16, RGB_WHITE);
+            data[0]++;
+        }
+        break;
+    case 5:
+        if (!UpdatePaletteFade())
+        {
+            int i;
+            for (i = 0; i < 16; i++)
+            {
+                data[i] = 0;
+            }
+            MapPreview_Unload(data[4]);
+            gTasks[taskId].func = Task_EnterCaveTransition2; // RF : Task_FlashTransition_Enter_1
+        }
+        break;
     }
 }

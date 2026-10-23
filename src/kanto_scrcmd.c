@@ -2,6 +2,7 @@
 // les scripts de Kanto. Leurs opcodes (0xc7-0xcc, 0xd0) sont libres (nop1) dans Émeraude ;
 // getbraillestringwidth reçoit un nouvel opcode à la fin de la table.
 #include "global.h"
+#include "kanto_map_preview_screen.h"
 #include "event_data.h"
 #include "overworld.h"
 #include "script.h"
@@ -57,7 +58,7 @@ bool8 ScrCmd_comparestat(struct ScriptContext *ctx)
 bool8 ScrCmd_setworldmapflag(struct ScriptContext *ctx)
 {
     u16 value = ScriptReadHalfword(ctx);
-    FlagSet(value);
+    MapPreview_SetFlag(value); // pose le drapeau ; l'aperçu dure plus longtemps à la première visite
     return FALSE;
 }
 

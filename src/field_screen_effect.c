@@ -9,6 +9,7 @@
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
+#include "kanto_map_preview_screen.h"
 #include "field_special_scene.h"
 #include "field_weather.h"
 #include "gpu_regs.h"
@@ -109,6 +110,14 @@ void FadeInFromBlack(void)
 void WarpFadeOutScreen(void)
 {
     u8 currentMapType = GetCurrentMapType();
+    const struct MapHeader *header = GetDestinationWarpMapHeader();
+
+    // Rouge Feu : vers une grotte avec aperçu, fondu au noir (l'aperçu suit)
+    if (header->regionMapSectionId != gMapHeader.regionMapSectionId && MapHasPreviewScreen(header->regionMapSectionId, MPS_TYPE_CAVE))
+    {
+        FadeScreen(FADE_TO_BLACK, 0);
+        return;
+    }
     switch (GetMapPairFadeToType(currentMapType, GetDestinationWarpMapHeader()->mapType))
     {
     case 0:
@@ -119,6 +128,15 @@ void WarpFadeOutScreen(void)
     }
 }
 
+// Rouge Feu (field_fadetransition.c) : fin du fondu, et de l'aperçu de la forêt s'il y en a un
+bool32 FieldFadeTransitionBackgroundEffectIsFinished(void)
+{
+    if (WaitForWeatherFadeIn() == TRUE && ForestMapPreviewScreenIsRunning())
+        return TRUE;
+    else
+        return FALSE;
+}
+
 static void SetPlayerVisibility(bool8 visible)
 {
     SetPlayerInvisibility(!visible);
@@ -126,7 +144,7 @@ static void SetPlayerVisibility(bool8 visible)
 
 static void Task_WaitForUnionRoomFade(u8 taskId)
 {
-    if (WaitForWeatherFadeIn() == TRUE)
+    if (FieldFadeTransitionBackgroundEffectIsFinished() == TRUE)
         DestroyTask(taskId);
 }
 
@@ -140,7 +158,7 @@ void FieldCB_ContinueScriptUnionRoom(void)
 
 static void Task_WaitForFadeAndEnableScriptCtx(u8 taskID)
 {
-    if (WaitForWeatherFadeIn() == TRUE)
+    if (FieldFadeTransitionBackgroundEffectIsFinished() == TRUE)
     {
         DestroyTask(taskID);
         ScriptContext_Enable();
@@ -180,7 +198,7 @@ static void Task_ReturnToFieldCableLink(u8 taskId)
         }
         break;
     case 2:
-        if (WaitForWeatherFadeIn() == TRUE)
+        if (FieldFadeTransitionBackgroundEffectIsFinished() == TRUE)
         {
             UnlockPlayerFieldControls();
             DestroyTask(taskId);
@@ -220,7 +238,7 @@ static void Task_ReturnToFieldWirelessLink(u8 taskId)
         }
         break;
     case 2:
-        if (WaitForWeatherFadeIn() == TRUE)
+        if (FieldFadeTransitionBackgroundEffectIsFinished() == TRUE)
         {
             StartSendingKeysToLink();
             UnlockPlayerFieldControls();
@@ -347,7 +365,7 @@ static void Task_ExitDoor(u8 taskId)
         task->tState = 1;
         break;
     case 1:
-        if (WaitForWeatherFadeIn())
+        if (FieldFadeTransitionBackgroundEffectIsFinished())
         {
             u8 objEventId;
             SetPlayerVisibility(TRUE);
@@ -395,7 +413,7 @@ static void Task_ExitNonAnimDoor(u8 taskId)
         task->tState = 1;
         break;
     case 1:
-        if (WaitForWeatherFadeIn())
+        if (FieldFadeTransitionBackgroundEffectIsFinished())
         {
             u8 objEventId;
             SetPlayerVisibility(TRUE);
@@ -428,7 +446,7 @@ static void Task_ExitNonDoor(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 1:
-        if (WaitForWeatherFadeIn())
+        if (FieldFadeTransitionBackgroundEffectIsFinished())
         {
             UnfreezeObjectEvents();
             UnlockPlayerFieldControls();
@@ -440,7 +458,7 @@ static void Task_ExitNonDoor(u8 taskId)
 
 static void Task_WaitForFadeShowStartMenu(u8 taskId)
 {
-    if (WaitForWeatherFadeIn() == TRUE)
+    if (FieldFadeTransitionBackgroundEffectIsFinished() == TRUE)
     {
         DestroyTask(taskId);
         CreateTask(Task_ShowStartMenu, 80);
@@ -462,7 +480,7 @@ bool8 FieldCB_ReturnToFieldOpenStartMenu(void)
 
 static void Task_ReturnToFieldNoScript(u8 taskId)
 {
-    if (WaitForWeatherFadeIn() == 1)
+    if (FieldFadeTransitionBackgroundEffectIsFinished() == 1)
     {
         UnlockPlayerFieldControls();
         DestroyTask(taskId);
@@ -550,7 +568,7 @@ static void Task_TeleportWarpIn(u8 taskId)
         gTasks[taskId].data[0]++;
         break;
     case 1:
-        if (WaitForWeatherFadeIn() && IsPlayerSpinEntranceActive() != TRUE)
+        if (FieldFadeTransitionBackgroundEffectIsFinished() && IsPlayerSpinEntranceActive() != TRUE)
         {
             UnfreezeObjectEvents();
             UnlockPlayerFieldControls();
@@ -1097,7 +1115,7 @@ static void Task_SpinEnterWarp(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 1:
-        if (WaitForWeatherFadeIn() && IsPlayerSpinEntranceActive() != TRUE)
+        if (FieldFadeTransitionBackgroundEffectIsFinished() && IsPlayerSpinEntranceActive() != TRUE)
         {
             UnfreezeObjectEvents();
             UnlockPlayerFieldControls();
@@ -1473,7 +1491,7 @@ static void Task_ExitStairs(u8 taskId)
     switch (data[0])
     {
     default:
-        if (WaitForWeatherFadeIn() == TRUE)
+        if (FieldFadeTransitionBackgroundEffectIsFinished() == TRUE)
         {
             CameraObjectReset();
             UnlockPlayerFieldControls();

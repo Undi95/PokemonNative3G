@@ -2,6 +2,7 @@
 #include "kanto_renewable_hidden_items.h"
 #include "kanto_vs_seeker.h"
 #include "overworld.h"
+#include "kanto_map_preview_screen.h"
 #include "kanto_credits.h"
 #include "constants/rgb.h"
 #include "battle_pyramid.h"
@@ -1390,6 +1391,12 @@ u8 GetLastUsedWarpMapType(void)
     return GetMapTypeByWarpData(&gLastUsedWarp);
 }
 
+// Rouge Feu (overworld.c)
+u8 GetLastUsedWarpMapSectionId(void)
+{
+    return Overworld_GetMapHeaderByGroupAndId(gLastUsedWarp.mapGroup, gLastUsedWarp.mapNum)->regionMapSectionId;
+}
+
 bool8 IsMapTypeOutdoors(u8 mapType)
 {
     if (mapType == MAP_TYPE_ROUTE
@@ -1995,7 +2002,13 @@ static bool32 LoadMapInStepsLocal(u8 *state, bool32 a2)
         (*state)++;
         break;
     case 11:
-        if (gMapHeader.showMapName == TRUE && SecretBaseMapPopupEnabled() == TRUE)
+        // Rouge Feu : aperçu de la forêt (Forêt de Jade…) en arrivant d'une autre section, sinon le nom de la carte
+        if (GetLastUsedWarpMapSectionId() != gMapHeader.regionMapSectionId && MapHasPreviewScreen_HandleQLState2(gMapHeader.regionMapSectionId, MPS_TYPE_FOREST) == TRUE)
+        {
+            MapPreview_LoadGfx(gMapHeader.regionMapSectionId);
+            MapPreview_StartForestTransition(gMapHeader.regionMapSectionId);
+        }
+        else if (gMapHeader.showMapName == TRUE && SecretBaseMapPopupEnabled() == TRUE)
             ShowMapNamePopup();
         (*state)++;
         break;
