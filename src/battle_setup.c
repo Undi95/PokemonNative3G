@@ -602,6 +602,7 @@ void BattleSetup_StartScriptedWildBattle(void)
     LockPlayerFieldControls();
     gMain.savedCallback = CB2_EndScriptedWildBattle;
     gBattleTypeFlags = 0;
+    gBattleWildScriptedFrlg = IsKantoTilesetMap(); // Rouge Feu (StartScriptedWildBattle) : BATTLE_TYPE_WILD_SCRIPTED à Kanto
     CreateBattleStartTask(GetWildBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
@@ -730,6 +731,7 @@ static void CB2_EndWildBattle(void)
 static void CB2_EndScriptedWildBattle(void)
 {
     gBattleLegendaryFrlg = FALSE; // PokemonNative3G
+    gBattleWildScriptedFrlg = FALSE;
     CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
 

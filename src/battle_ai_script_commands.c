@@ -370,6 +370,8 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves)
         AI_THINKING_STRUCT->aiFlags = GetAiScriptsInBattleFactory();
     else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE))
         AI_THINKING_STRUCT->aiFlags = AI_SCRIPT_CHECK_BAD_MOVE | AI_SCRIPT_CHECK_VIABILITY | AI_SCRIPT_TRY_TO_FAINT;
+    else if (gBattleWildScriptedFrlg) // Rouge Feu (BATTLE_TYPE_WILD_SCRIPTED) : Ronflex, Électrode, Hypnomade… de Kanto
+        AI_THINKING_STRUCT->aiFlags = AI_SCRIPT_CHECK_BAD_MOVE;
     else if (gBattleLegendaryFrlg) // Rouge Feu (BATTLE_TYPE_LEGENDARY_FRLG) : légendaires de Kanto
         AI_THINKING_STRUCT->aiFlags = AI_SCRIPT_CHECK_BAD_MOVE | AI_SCRIPT_TRY_TO_FAINT | AI_SCRIPT_CHECK_VIABILITY;
     else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
