@@ -82,7 +82,7 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 3. ~~Cinématiques et scènes en stub~~ : faites le 2026-10-23 (S.S. Anne, diplôme, éclairage de la Ligue, téléporteurs de Léo, fossiles du musée). Sans objet : triangle de Deoxys (l'Île Aurore est celle d'Émeraude, avec son puzzle), `DoPicboxCancel` et `BrailleCursorToggle` (aucun script ne les appelle).
 4. ~~Poké Flûte~~ : faite le 2026-10-23 (terrain + combat).
 5. ~~Tour des Dresseurs~~ : faite le 2026-10-24 (`src/kanto_trainer_tower.c` + `kanto_trainer_tower_sets.c` ; combats au type de la Colline des Dresseurs d'Émeraude, aiguillés par `gBattleTrainerTowerFrlg` ; 16 dispositions d'étage ajoutées, cf. `tools/kanto/import_kanto.py`).
-6. Combats sauvages scriptés de RF (`BATTLE_TYPE_WILD_SCRIPTED` : IA « mauvaises attaques ») : même approche que le FANTÔME.
+6. ~~Combats sauvages scriptés de RF~~ : faits le 2026-10-24 (`gBattleWildScriptedFrlg`, posé par `dowildbattle` à Kanto). NB : dans RF comme dans Émeraude, le contrôleur adverse ne consulte l'IA que pour les dresseurs, le Safari, les errants et le premier combat ; les réglages d'IA des sauvages scriptés et des légendaires de RF n'ont donc aucun effet en jeu (portés pour être complets).
 7. Aperçus des donjons (map_preview_screen.c ; données déjà dans kanto_region_map.c).
 8. PNJ en stub : `ShowEasyChatMessage` (2 scripts), `BufferRandomHobbyOrLifestyleString` (1 script).
 9. Journal « Précédemment dans votre quête » (quest_log*.c, ~230 fonctions), option désactivée par défaut.
