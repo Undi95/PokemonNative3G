@@ -107,3 +107,4 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] CS à Kanto : badges de Kanto (Roche = Flash, Cascade = Coupe, Foudre = Vol, Prisme = Force, Âme = Surf, Marais = Éclate-Roc, Volcan = Cascade) depuis le menu d'équipe et sur l'eau (Surf, Cascade) ; à Hoenn, badges de Hoenn comme avant
 - [ ] Options > POKéMON = KANTO : sprites de Rouge Feu (face, dos, couleurs, shiny) sans animation, en combat (sauvage, dresseur, double), résumé, Pokédex, PC, évolution, éclosion ; Deoxys = forme Attaque. HOENN = animés d'Émeraude comme avant
 - [ ] À FAIRE : objets donnés deux fois (CS, cannes, Passe Bateau…) → voir docs/OBJETS-EN-DOUBLE.md
+- [ ] Deoxys : menu de l'équipe > FORME > NORMALE / ATTAQUE / DÉFENSE / VITESSE : message, sprite (face et dos, combat, résumé) et stats de la forme ; par défaut VITESSE (comme Émeraude). Forme commune à tous les Deoxys du joueur
