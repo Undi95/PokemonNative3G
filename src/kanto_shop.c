@@ -47,7 +47,7 @@ static u8 GetMartFontId(void);
 
 // Rouge Feu (money.c) : case d'argent de RF (« ARGENT » puis le montant en petite police à droite) ;
 // celles d'Émeraude n'ont que le montant, plus à droite
-static void PrintMoneyAmountInMoneyBox(u8 windowId, int amount, u8 speed)
+static void KShop_PrintMoneyAmountInMoneyBox(u8 windowId, int amount, u8 speed)
 {
     u8 *txtPtr;
     s32 strLength;
@@ -64,7 +64,7 @@ static void PrintMoneyAmountInMoneyBox(u8 windowId, int amount, u8 speed)
     AddTextPrinterParameterized(windowId, FONT_SMALL, gStringVar4, 64 - GetStringWidth(FONT_SMALL, gStringVar4, 0), 0xC, speed, NULL);
 }
 
-static void PrintMoneyAmount(u8 windowId, u8 x, u8 y, int amount, u8 speed)
+static void KShop_PrintMoneyAmount(u8 windowId, u8 x, u8 y, int amount, u8 speed)
 {
     u8 *txtPtr;
     s32 strLength;
@@ -81,11 +81,11 @@ static void PrintMoneyAmount(u8 windowId, u8 x, u8 y, int amount, u8 speed)
     AddTextPrinterParameterized(windowId, FONT_SMALL, gStringVar4, x, y, speed, NULL);
 }
 
-static void PrintMoneyAmountInMoneyBoxWithBorder(u8 windowId, u16 tileStart, u8 paletteNum, int amount)
+static void KShop_PrintMoneyAmountInMoneyBoxWithBorder(u8 windowId, u16 tileStart, u8 paletteNum, int amount)
 {
     DrawStdFrameWithCustomTileAndPalette(windowId, FALSE, tileStart, paletteNum);
     AddTextPrinterParameterized(windowId, FONT_KANTO, gText_TrainerCardMoney, 0, 0, 0xFF, 0); // RF : FONT_NORMAL de RF
-    PrintMoneyAmountInMoneyBox(windowId, amount, 0);
+    KShop_PrintMoneyAmountInMoneyBox(windowId, amount, 0);
 }
 
 // Rouge Feu (menu.c)
