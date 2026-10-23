@@ -90,6 +90,7 @@ static const u8 sWarpName_KantoHof[] = _("PANTHÉON KANTO");
 static const u8 sWarpName_PokemonTower3F[] = _("TOUR POKéMON 3");
 static const u8 sWarpName_PokemonTower6F[] = _("TOUR POKéMON 6");
 static const u8 sWarpName_RocketHideout[] = _("REPAIRE ROCKET");
+static const u8 sWarpName_OneIslandHarbor[] = _("PORT ÎLE 1");
 
 // Kanto : points d'arrivée du Vol de Rouge Feu (heal_locations.json)
 static const struct DebugWarp sDebugWarps[] =
@@ -122,6 +123,7 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_PokemonTower3F, MAP_GROUP(MAP_POKEMON_TOWER_3F), MAP_NUM(MAP_POKEMON_TOWER_3F), 17, 12}, // SPECTRES sauvages
     {sWarpName_PokemonTower6F, MAP_GROUP(MAP_POKEMON_TOWER_6F), MAP_NUM(MAP_POKEMON_TOWER_6F), 12, 13}, // 3 pas vers le bas : Ossatueur
     {sWarpName_RocketHideout, MAP_GROUP(MAP_ROCKET_HIDEOUT_B4F), MAP_NUM(MAP_ROCKET_HIDEOUT_B4F), 19, 5}, // sous Giovanni (Scope Sylph)
+    {sWarpName_OneIslandHarbor, MAP_GROUP(MAP_ONE_ISLAND_HARBOR), MAP_NUM(MAP_ONE_ISLAND_HARBOR), 8, 7}, // devant le marin du Seagallop
 };
 
 // Tous les objets du jeu (Hoenn + Kanto) : 99 de chaque (1 pour les objets rares et les CS).
