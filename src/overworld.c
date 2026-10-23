@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_renewable_hidden_items.h"
 #include "kanto_vs_seeker.h"
 #include "overworld.h"
 #include "kanto_credits.h"
@@ -820,6 +821,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     SetDefaultFlashLevel();
     Overworld_ClearSavedMusic();
     RunOnTransitionMapScript();
+    TryRegenerateRenewableHiddenItems(); // Rouge Feu
     InitMap();
     CopySecondaryTilesetToVramUsingHeap(gMapHeader.mapLayout);
     LoadSecondaryTilesetPalette(gMapHeader.mapLayout);
@@ -874,6 +876,7 @@ static void LoadMapFromWarp(bool32 a1)
     SetDefaultFlashLevel();
     Overworld_ClearSavedMusic();
     RunOnTransitionMapScript();
+    TryRegenerateRenewableHiddenItems(); // Rouge Feu
     UpdateLocationHistoryForRoamer();
     RoamerMoveToOtherLocationSet();
     if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)

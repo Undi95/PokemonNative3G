@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_renewable_hidden_items.h"
 #include "kanto_save.h"
 #include "new_game.h"
 #include "random.h"
@@ -222,6 +223,7 @@ void NewGameInitData(void)
     RunScriptImmediately(EventScript_ResetAllMapFlags);
     // Nouvelle partie de Rouge Feu (new_game.c de RF)
     RunScriptImmediately(Kanto_EventScript_ResetAllMapFlags);
+    SetAllRenewableItemFlags(); // Rouge Feu (new_game.c)
     ResetFameChecker();
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();

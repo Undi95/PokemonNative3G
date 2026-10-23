@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_renewable_hidden_items.h"
 #include "kanto_vs_seeker.h"
 extern const u8 EventScript_VsSeekerChargingDone[];
 #include "battle_setup.h"
@@ -159,6 +160,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->tookStep)
     {
         IncrementGameStat(GAME_STAT_STEPS);
+        IncrementRenewableHiddenItemStepCounter(); // Rouge Feu
         RunMassageCooldownStepCounter();      // Rouge Feu
         IncrementResortGorgeousStepCounter(); // Rouge Feu
         IncrementBirthIslandRockStepCount();
