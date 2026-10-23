@@ -134,6 +134,8 @@ static void Mailbox_HandleReturnToProcessInput(u8);
 static void Mailbox_UpdateMailListAfterDeposit(void);
 
 static void ItemStorage_Withdraw(u8);
+static void Task_WithdrawItemBeginFade(u8 taskId);
+static void CB2_ReturnFromWithdrawMenu(void);
 static void ItemStorage_Deposit(u8);
 static void ItemStorage_Toss(u8);
 static void ItemStorage_Exit(u8);
@@ -588,12 +590,48 @@ static void ItemStorage_HandleReturnToProcessInput(u8 taskId)
         gTasks[taskId].func = ItemStorageMenuProcessInput;
 }
 
+// ---- Rouge Feu (player_pc.c) : retrait vers le PC objets de RF (kanto_item_pc.c), retour au sous-menu ----
+void ItemPc_Init(u8 kind, MainCallback callback);
+void ItemPc_SetInitializedFlag(bool8 flag);
+
+static void CB2_ReturnFromWithdrawMenu(void)
+{
+    LoadMessageBoxAndBorderGfx(); // RF : LoadStdWindowFrameGfx
+    DrawDialogueFrame(0, TRUE);
+    InitItemStorageMenu(CreateTask(ItemStorage_HandleReturnToProcessInput, 0), 0); // RF : Task_CreateItemStorageSubmenu(taskId, 0)
+    FadeInFromBlack();
+}
+
+static void Task_WithdrawItem_WaitFadeAndGoToItemStorage(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        CleanupOverworldWindowsAndTilemaps();
+        ItemPc_Init(0, CB2_ReturnToField); // RF : tItemPcParam = 0
+        DestroyTask(taskId);
+    }
+}
+
+static void Task_WithdrawItemBeginFade(u8 taskId)
+{
+    gTasks[taskId].func = Task_WithdrawItem_WaitFadeAndGoToItemStorage;
+    ItemPc_SetInitializedFlag(FALSE);
+    FadeScreen(FADE_TO_BLACK, 0);
+}
+
 static void ItemStorage_Withdraw(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
     tUsedSlots = CountUsedPCItemSlots();
-    if (tUsedSlots != 0)
+    if (tUsedSlots != 0 && gSaveBlock2Ptr->optionsMenuStyle)
+    {
+        // Rouge Feu (player_pc.c, Task_PlayerPcWithdrawItem) : PC objets plein écran de RF (option MENUS = KANTO)
+        ItemStorage_EraseMainMenu(taskId);
+        gTasks[taskId].func = Task_WithdrawItemBeginFade;
+        gFieldCallback = CB2_ReturnFromWithdrawMenu;
+    }
+    else if (tUsedSlots != 0)
     {
         ItemStorage_Enter(taskId, FALSE);
     }
