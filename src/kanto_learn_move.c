@@ -541,7 +541,7 @@ static void MoveRelearnerStateMachine(void)
         MoveRelearnerMenuHandleInput();
         break;
     case MENU_STATE_PRINT_TEACH_MOVE_PROMPT:
-        CreateYesNoMenu(&sMoveRelearnerYesNoMenuTemplate, FONT_NORMAL_COPY_2, 0, 2, 0x001, 14, 0);
+        CreateYesNoMenu(&sMoveRelearnerYesNoMenuTemplate, 0x001, 14, 0);
         sMoveRelearner->state++;
         break;
     case MENU_STATE_TEACH_MOVE_CONFIRM :
@@ -566,7 +566,7 @@ static void MoveRelearnerStateMachine(void)
         }
         break;
     case MENU_STATE_PRINT_GIVE_UP_PROMPT:
-        CreateYesNoMenu(&sMoveRelearnerYesNoMenuTemplate, FONT_NORMAL_COPY_2, 0, 2, 0x001, 14, 0);
+        CreateYesNoMenu(&sMoveRelearnerYesNoMenuTemplate, 0x001, 14, 0);
         sMoveRelearner->state++;
         break;
     case MENU_STATE_GIVE_UP_CONFIRM:
@@ -587,7 +587,7 @@ static void MoveRelearnerStateMachine(void)
         sMoveRelearner->state++;
         break;
     case MENU_STATE_WAIT_FOR_TRYING_TO_LEARN:
-        CreateYesNoMenu(&sMoveRelearnerYesNoMenuTemplate, FONT_NORMAL_COPY_2, 0, 2, 0x001, 14, 0);
+        CreateYesNoMenu(&sMoveRelearnerYesNoMenuTemplate, 0x001, 14, 0);
         sMoveRelearner->state = 18;
         break;
     case MENU_STATE_CONFIRM_DELETE_OLD_MOVE:
@@ -608,7 +608,7 @@ static void MoveRelearnerStateMachine(void)
         sMoveRelearner->state++;
         break;
     case MENU_STATE_WAIT_FOR_STOP_TEACHING:
-        CreateYesNoMenu(&sMoveRelearnerYesNoMenuTemplate, FONT_NORMAL_COPY_2, 0, 2, 0x001, 14, 0);
+        CreateYesNoMenu(&sMoveRelearnerYesNoMenuTemplate, 0x001, 14, 0);
         sMoveRelearner->state = 26;
         break;
     case MENU_STATE_CONFIRM_STOP_TEACHING:
@@ -963,5 +963,5 @@ static void PrintTextOnWindow(u8 windowId, const u8 *str, u8 x, u8 y, s32 speed,
     }
     if (colorIdx != 1)
         FillWindowPixelBuffer(windowId, PIXEL_FILL(sMoveRelearner->textColor[0]));
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL_COPY_2, x, y, letterSpacing, lineSpacing, sMoveRelearner->textColor, speed, str);
+    AddTextPrinterParameterized4(windowId, FONT_KANTO, x, y, letterSpacing, lineSpacing, sMoveRelearner->textColor, speed, str);
 }
