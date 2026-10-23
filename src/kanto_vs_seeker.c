@@ -14,6 +14,7 @@
 #include "item.h"
 #include "item_menu.h"
 #include "item_use.h"
+#include "kanto_field_door.h"
 #include "kanto_save.h"
 #include "kanto_vs_seeker.h"
 #include "menu.h"
@@ -89,7 +90,7 @@ struct VsSeekerTrainerInfo
     u8 objectEventId;
     s16 xCoord;
     s16 yCoord;
-    u8 graphicsId;
+    u16 graphicsId; // PokemonNative3G : 16 bits (sprites de RF à partir de 0x100)
 };
 
 struct VsSeekerStruct
@@ -105,6 +106,21 @@ struct VsSeekerStruct
     u8 responseCode:5;
 };
 
+
+// ---- PokemonNative3G : Cherche VS à Hoenn ----
+// À Hoenn, les revanches restent celles du PokéNav (gRematchTable d'Émeraude, battle_setup.c) : le Cherche VS
+// ne fait que donner l'envie de revanche qu'un appel aurait pu donner. Le reste (portée, réactions, recharge)
+// est celui de RF.
+static bool8 sVsSeekerHoenn;
+
+static u8 GetNextAvailableRematchTrainer(const struct RematchData * vsSeekerData, u16 trainerFlagNo, u8 * idxPtr);
+
+static u8 GetNextAvailableRematchTrainerInRegion(const struct RematchData * vsSeekerData, u16 trainerFlagNo, u8 * idxPtr)
+{
+    if (sVsSeekerHoenn)
+        return HoennVsSeekerCanRematch(trainerFlagNo);
+    return GetNextAvailableRematchTrainer(vsSeekerData, trainerFlagNo, idxPtr);
+}
 
 // ---- Rouge Feu : fonctions utilisées ici et absentes d'Émeraude ----
 // event_object_movement.c
@@ -159,7 +175,7 @@ static u8 ShouldTryRematchBattleInternal(const struct RematchData * vsSeekerData
 static u8 HasRematchTrainerAlreadyBeenFought(const struct RematchData * vsSeekerData, u16 trainerBattleOpponent);
 static int LookupVsSeekerOpponentInArray(const struct RematchData * array, u16 trainerId);
 static bool8 IsTrainerReadyForRematchInternal(const struct RematchData * array, u16 trainerIdx);
-static u8 GetRunningBehaviorFromGraphicsId(u8 graphicsId);
+static u8 GetRunningBehaviorFromGraphicsId(u16 graphicsId);
 static u16 GetTrainerFlagFromScript(const u8 * script);
 static int GetRematchIdx(const struct RematchData * vsSeekerData, u16 trainerFlagIdx);
 static bool32 IsThisTrainerRematchable(u32 localId);
@@ -805,6 +821,7 @@ void Task_VsSeeker_0(u8 taskId)
         gTasks[taskId].data[i] = 0;
 
     sVsSeeker = AllocZeroed(sizeof(struct VsSeekerStruct));
+    sVsSeekerHoenn = !IsKantoTilesetMap(); // PokemonNative3G
     GatherNearbyTrainerInfo();
     respval = CanUseVsSeeker();
     if (respval == VSSEEKER_NOT_CHARGED)
@@ -940,7 +957,7 @@ static u8 GetVsSeekerResponseInArea(const struct RematchData * vsSeekerData)
                 vsSeekerIdx++;
                 continue;
             }
-            rematchTrainerIdx = GetNextAvailableRematchTrainer(vsSeekerData, trainerIdx, &unusedIdx);
+            rematchTrainerIdx = GetNextAvailableRematchTrainerInRegion(vsSeekerData, trainerIdx, &unusedIdx);
             if (rematchTrainerIdx == 0)
             {
                 StartTrainerObjectMovementScript(&sVsSeeker->trainerInfo[vsSeekerIdx], sMovementScript_TrainerNoRematch);
@@ -955,6 +972,8 @@ static u8 GetVsSeekerResponseInArea(const struct RematchData * vsSeekerData)
                 else if (response == VSSEEKER_SINGLE_RESP_NO)
                     rval = 0; // Definitely no
                 // Otherwise it's a 70% chance to want a rematch
+                if (sVsSeekerHoenn && HoennVsSeekerWantsRematch(trainerIdx))
+                    rval = 100; // PokemonNative3G : un appel du PokéNav l'a déjà décidé
                 if (rval < 30)
                 {
                     StartTrainerObjectMovementScript(&sVsSeeker->trainerInfo[vsSeekerIdx], sMovementScript_TrainerNoRematch);
@@ -962,7 +981,10 @@ static u8 GetVsSeekerResponseInArea(const struct RematchData * vsSeekerData)
                 }
                 else
                 {
-                    gSaveBlockKanto.trainerRematches[sVsSeeker->trainerInfo[vsSeekerIdx].localId] = rematchTrainerIdx;
+                    if (sVsSeekerHoenn)
+                        HoennVsSeekerSetRematch(trainerIdx); // PokemonNative3G : revanche du PokéNav
+                    else
+                        gSaveBlockKanto.trainerRematches[sVsSeeker->trainerInfo[vsSeekerIdx].localId] = rematchTrainerIdx;
                     ShiftStillObjectEventCoords(&gObjectEvents[sVsSeeker->trainerInfo[vsSeekerIdx].objectEventId]);
                     StartTrainerObjectMovementScript(&sVsSeeker->trainerInfo[vsSeekerIdx], sMovementScript_TrainerRematch);
                     sVsSeeker->trainerIdxArray[sVsSeeker->numRematchableTrainers] = trainerIdx;
@@ -1019,6 +1041,31 @@ void KantoClearRematchStateByTrainerId(void)
                 else
                     objectEvent->movementType = MOVEMENT_TYPE_FACE_DOWN;
             }
+        }
+    }
+}
+
+// PokemonNative3G : à Hoenn, le dresseur qui a répondu au Cherche VS cesse de sauter après son combat
+void HoennVsSeekerClearRematchStateOfLastTalked(void)
+{
+    u8 objEventId = 0;
+    struct ObjectEventTemplate *objectEventTemplates = gSaveBlock1Ptr->objectEventTemplates;
+    int i;
+
+    for (i = 0; i < gMapHeader.events->objectEventCount; i++)
+    {
+        if (objectEventTemplates[i].localId == gSpecialVar_LastTalked
+         && (objectEventTemplates[i].movementType == MOVEMENT_TYPE_RAISE_HAND_AND_STOP
+          || objectEventTemplates[i].movementType == MOVEMENT_TYPE_RAISE_HAND_AND_JUMP
+          || objectEventTemplates[i].movementType == MOVEMENT_TYPE_RAISE_HAND_AND_SWIM))
+        {
+            struct ObjectEvent *objectEvent;
+
+            if (TryGetObjectEventIdByLocalIdAndMap(objectEventTemplates[i].localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objEventId))
+                return;
+            objectEvent = &gObjectEvents[objEventId];
+            OverrideMovementTypeForObjectEvent(objectEvent, sFaceDirectionMovementTypeByFacingDirection[objectEvent->facingDirection]);
+            objectEvent->movementType = sFaceDirectionMovementTypeByFacingDirection[objectEvent->facingDirection];
         }
     }
 }
@@ -1182,7 +1229,7 @@ static u8 GetRandomFaceDirectionMovementType()
     }
 }
 
-static u8 GetRunningBehaviorFromGraphicsId(u8 graphicsId)
+static u8 GetRunningBehaviorFromGraphicsId(u16 graphicsId)
 {
     switch (graphicsId)
     {
@@ -1213,7 +1260,15 @@ static u8 GetRunningBehaviorFromGraphicsId(u8 graphicsId)
         case OBJ_EVENT_GFX_KANTO_SWIMMER_M_WATER:
         case OBJ_EVENT_GFX_KANTO_SWIMMER_F_WATER:
             return MOVEMENT_TYPE_RAISE_HAND_AND_SWIM;
+        // PokemonNative3G : nageurs de Hoenn
+        case OBJ_EVENT_GFX_SWIMMER_M:
+        case OBJ_EVENT_GFX_SWIMMER_F:
+        case OBJ_EVENT_GFX_TUBER_M_SWIMMING:
+            return MOVEMENT_TYPE_RAISE_HAND_AND_SWIM;
         default:
+            // PokemonNative3G : les sprites d'Émeraude n'ont pas d'image « main levée » ; ils sautent sur place
+            if (sVsSeekerHoenn)
+                return MOVEMENT_TYPE_RAISE_HAND_AND_JUMP;
             return MOVEMENT_TYPE_RAISE_HAND_AND_STOP;
     }
 }
@@ -1321,7 +1376,7 @@ static u8 GetRematchableTrainerLocalId(void)
     {
         if (IsTrainerVisibleOnScreen(&sVsSeeker->trainerInfo[i]) == 1)
         {
-            if (HasTrainerBeenFought(sVsSeeker->trainerInfo[i].trainerIdx) != 1 || GetNextAvailableRematchTrainer(sRematches, sVsSeeker->trainerInfo[i].trainerIdx, &idx))
+            if (HasTrainerBeenFought(sVsSeeker->trainerInfo[i].trainerIdx) != 1 || GetNextAvailableRematchTrainerInRegion(sRematches, sVsSeeker->trainerInfo[i].trainerIdx, &idx))
                 return sVsSeeker->trainerInfo[i].localId;
         }
     }
@@ -1372,6 +1427,7 @@ static void StartAllRespondantIdleMovements(void)
                 if (ObjectEventIdIsSane(sVsSeeker->trainerInfo[j].objectEventId) == 1)
                     SetTrainerMovementType(objectEvent, sVsSeeker->runningBehaviourEtcArray[i]);
                 OverrideMovementTypeForObjectEvent(objectEvent, sVsSeeker->runningBehaviourEtcArray[i]);
+                if (!sVsSeekerHoenn) // PokemonNative3G : à Hoenn, l'état est dans gSaveBlock1Ptr->trainerRematches
                 gSaveBlockKanto.trainerRematches[sVsSeeker->trainerInfo[j].localId] = GetNextAvailableRematchTrainer(sRematches, sVsSeeker->trainerInfo[j].trainerIdx, &dummy);
             }
         }

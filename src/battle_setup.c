@@ -1781,6 +1781,32 @@ void UpdateRematchIfDefeated(s32 rematchTableId)
         SetRematchIdForTrainer(gRematchTable, rematchTableId);
 }
 
+// PokemonNative3G : Cherche VS à Hoenn. Seuls les dresseurs inscrits au PokéNav (comme pour les appels,
+// UpdateRandomTrainerRematches) peuvent vouloir une revanche ; le Cherche VS la déclenche sans attendre.
+bool8 HoennVsSeekerCanRematch(u16 trainerId)
+{
+    s32 tableId = FirstBattleTrainerIdToRematchTableId(gRematchTable, trainerId);
+
+    if (tableId == -1 || tableId > REMATCH_SPECIAL_TRAINER_START || IsRematchForbidden(tableId))
+        return FALSE;
+    return FlagGet(TRAINER_REGISTERED_FLAGS_START + tableId);
+}
+
+bool8 HoennVsSeekerWantsRematch(u16 trainerId)
+{
+    s32 tableId = FirstBattleTrainerIdToRematchTableId(gRematchTable, trainerId);
+
+    return tableId != -1 && gSaveBlock1Ptr->trainerRematches[tableId] != 0;
+}
+
+void HoennVsSeekerSetRematch(u16 trainerId)
+{
+    s32 tableId = FirstBattleTrainerIdToRematchTableId(gRematchTable, trainerId);
+
+    if (tableId != -1)
+        SetRematchIdForTrainer(gRematchTable, tableId);
+}
+
 static bool32 DoesSomeoneWantRematchIn_(const struct RematchTrainer *table, u16 mapGroup, u16 mapNum)
 {
     s32 i;

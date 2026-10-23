@@ -5172,6 +5172,8 @@ static void HandleEndTurn_FinishBattle(void)
         RecordedBattle_SetPlaybackFinished();
         if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && IS_KANTO_TRAINER(gTrainerBattleOpponent_A)) // PokemonNative3G : Rouge Feu
             KantoClearRematchStateByTrainerId();
+        else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER) // PokemonNative3G : Cherche VS à Hoenn
+            HoennVsSeekerClearRematchStateOfLastTalked();
         BeginFastPaletteFade(3);
         FadeOutMapMusic(5);
         gBattleMainFunc = FreeResetData_ReturnToOvOrDoEvolutions;

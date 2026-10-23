@@ -9530,9 +9530,17 @@ static bool8 MovementAction_EmoteDoubleExclamationMark_Step0(struct ObjectEvent 
     return TRUE;
 }
 
+// PokemonNative3G : seules les tables de RF ont l'animation « main levée » ; un sprite d'Émeraude regarde vers le bas
+static u8 GetRaiseHandAnimNum(struct Sprite *sprite)
+{
+    if (sprite->anims == sKantoAnimTable_Standard || sprite->anims == sKantoAnimTable_HoOh)
+        return ANIM_RAISE_HAND;
+    return ANIM_STD_FACE_SOUTH;
+}
+
 static bool8 MovementAction_RaiseHand_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    StartSpriteAnim(sprite, ANIM_RAISE_HAND);
+    StartSpriteAnim(sprite, GetRaiseHandAnimNum(sprite));
     sprite->animPaused = FALSE;
     objectEvent->disableAnim = FALSE;
     sprite->data[2] = 1;
@@ -9569,7 +9577,7 @@ static bool8 MovementAction_RaiseHandAndJump_Step1(struct ObjectEvent *objectEve
         if (++sprite->data[4] > 16)
         {
             sprite->data[4] = 0;
-            StartSpriteAnim(sprite, ANIM_RAISE_HAND);
+            StartSpriteAnim(sprite, GetRaiseHandAnimNum(sprite));
             sprite->animPaused = FALSE;
             objectEvent->disableAnim = FALSE;
             sprite->data[7] = 0;
