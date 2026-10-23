@@ -29,6 +29,8 @@
 #include "constants/songs.h"
 
 #define FONT_NORMAL FONT_KANTO // police de RF (écran de RF)
+#include "constants/rgb.h"
+#define DMA3_32BIT 1 // RF : dma3.h (même valeur pour RequestDma3Fill d'Émeraude)
 
 // Rouge Feu (strings_*_fr.h)
 
