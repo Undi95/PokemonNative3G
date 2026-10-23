@@ -15,11 +15,13 @@ EventScript_PCMainMenu::
 	end
 
 EventScript_AccessPC::
+	special PCMultichoice_GetAction
 	switch VAR_RESULT
 	case 0, EventScript_AccessPokemonStorage
 	case 1, EventScript_AccessPlayersPC
 	case 2, EventScript_AccessHallOfFame
 	case 3, EventScript_TurnOffPC
+	case 4, EventScript_AccessProfOaksPCFromMenu
 	case MULTI_B_PRESSED, EventScript_TurnOffPC
 	end
 
@@ -60,4 +62,18 @@ EventScript_AccessHallOfFame::
 	playse SE_PC_LOGIN
 	special AccessHallOfFamePC
 	goto EventScript_AccessPC
+	end
+
+@ PokemonNative3G : PC du PROF. CHEN à Kanto (Rouge Feu, EventScript_AccessProfOaksPC), depuis le menu PC d'Émeraude
+EventScript_AccessProfOaksPCFromMenu::
+	playse SE_PC_LOGIN
+	msgbox Text_AccessedProfOaksPC
+	msgbox Text_HavePokedexRated, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, EventScript_ExitProfOaksPCFromMenu
+	setflag FLAG_KANTO_OAKS_RATING_IS_VIA_PC
+	call PokedexRating_EventScript_Rate
+	clearflag FLAG_KANTO_OAKS_RATING_IS_VIA_PC
+EventScript_ExitProfOaksPCFromMenu:
+	msgbox Text_ClosedLinkToProfOaksPC
+	goto EventScript_PCMainMenu
 	end

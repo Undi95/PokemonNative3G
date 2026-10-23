@@ -1,4 +1,6 @@
 #include "global.h"
+#include "constants/kanto.h"
+#include "kanto_field_door.h"
 #include "main.h"
 #include "event_data.h"
 #include "field_effect.h"
@@ -326,14 +328,34 @@ bool16 ScriptMenu_CreatePCMultichoice(void)
     }
 }
 
+// PokemonNative3G : à Kanto, une fois le Pokédex de Chen reçu, « PC du PROF. CHEN » (note du Pokédex, Rouge Feu)
+// s'ajoute entre le PC du joueur et le PANTHEON, comme dans RF. Le choix est la ligne du curseur :
+// PCMultichoice_GetAction le traduit en action pour le script (0 à 3 comme Émeraude, 4 = Chen).
+enum
+{
+    PC_ACTION_STORAGE,
+    PC_ACTION_PLAYER,
+    PC_ACTION_HALL_OF_FAME,
+    PC_ACTION_LOG_OFF,
+    PC_ACTION_PROF_OAK,
+};
+static EWRAM_DATA u8 sPCMenuActions[5] = {0};
+
+void PCMultichoice_GetAction(void)
+{
+    if (gSpecialVar_Result < ARRAY_COUNT(sPCMenuActions))
+        gSpecialVar_Result = sPCMenuActions[gSpecialVar_Result];
+}
+
 static void CreatePCMultichoice(void)
 {
     u8 x = 8;
     u32 pixelWidth = 0;
     u8 width;
-    u8 numChoices;
+    u8 numChoices = 0;
     u8 windowId;
     int i;
+    bool8 profOak = IsKantoTilesetMap() && FlagGet(FLAG_KANTO_SYS_POKEDEX_GET);
 
     for (i = 0; i < ARRAY_COUNT(sPCNameStrings); i++)
     {
@@ -344,24 +366,31 @@ static void CreatePCMultichoice(void)
     {
         pixelWidth = DisplayTextAndGetWidth(gText_HallOfFame, pixelWidth);
     }
+    if (profOak)
+        pixelWidth = DisplayTextAndGetWidth(gText_ProfOakSPc, pixelWidth);
 
     width = ConvertPixelWidthToTileWidth(pixelWidth);
 
+    sPCMenuActions[numChoices++] = PC_ACTION_STORAGE;
+    sPCMenuActions[numChoices++] = PC_ACTION_PLAYER;
+    if (profOak)
+        sPCMenuActions[numChoices++] = PC_ACTION_PROF_OAK;
     // Include Hall of Fame option if player is champion (PokemonNative3G : de la région)
     if (HasHallOfFameInThisRegion())
+        sPCMenuActions[numChoices++] = PC_ACTION_HALL_OF_FAME;
+    sPCMenuActions[numChoices++] = PC_ACTION_LOG_OFF;
+
+    windowId = CreateWindowFromRect(0, 0, width, numChoices * 2);
+    SetStandardWindowBorderStyle(windowId, FALSE);
+    for (i = 2; i < numChoices; i++)
     {
-        numChoices = 4;
-        windowId = CreateWindowFromRect(0, 0, width, 8);
-        SetStandardWindowBorderStyle(windowId, FALSE);
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_HallOfFame, x, 33, TEXT_SKIP_DRAW, NULL);
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_LogOff, x, 49, TEXT_SKIP_DRAW, NULL);
-    }
-    else
-    {
-        numChoices = 3;
-        windowId = CreateWindowFromRect(0, 0, width, 6);
-        SetStandardWindowBorderStyle(windowId, FALSE);
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_LogOff, x, 33, TEXT_SKIP_DRAW, NULL);
+        const u8 *text = gText_LogOff;
+
+        if (sPCMenuActions[i] == PC_ACTION_PROF_OAK)
+            text = gText_ProfOakSPc;
+        else if (sPCMenuActions[i] == PC_ACTION_HALL_OF_FAME)
+            text = gText_HallOfFame;
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, text, x, 1 + i * 16, TEXT_SKIP_DRAW, NULL);
     }
 
     // Change PC name if player has met Lanette
