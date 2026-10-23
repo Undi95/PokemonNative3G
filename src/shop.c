@@ -1238,8 +1238,15 @@ static void RecordItemPurchase(u8 taskId)
 #undef tItemId
 #undef tListTaskId
 
+void KantoCreatePokemartMenu(const u16 *itemsForSale); // kanto_shop.c
+
 void CreatePokemartMenu(const u16 *itemsForSale)
 {
+    if (gSaveBlock2Ptr->optionsMenuStyle) // PokemonNative3G : boutique de RF (option MENUS = KANTO)
+    {
+        KantoCreatePokemartMenu(itemsForSale);
+        return;
+    }
     CreateShopMenu(MART_TYPE_NORMAL);
     SetShopItemsForSale(itemsForSale);
     ClearItemPurchases();
