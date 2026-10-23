@@ -60,15 +60,23 @@ contenu dans un seul jeu.
 - [x] Cherch'Objet selon la région (kanto_itemfinder.c = RF à Kanto, Émeraude à Hoenn) ; objets « sous les pieds » de RF perdus à l'import des cartes (traités comme des objets cachés normaux)
 - [ ] Objets donnés deux fois (CS, cannes, Passe Bateau…) : voir docs/OBJETS-EN-DOUBLE.md
 
-## Trouvé par la cartographie (2026-10-23, docs/CARTOGRAPHIE.md)
-- [x] Combat FANTÔME de la Tour Pokémon (2026-10-23) : SPECTRES sauvages sans Scope Sylph, Ossatueur du 6e (révélé avec le Scope Sylph de Giovanni) ; état dans `gBattleGhostType` (battle.h), plus de bit libre dans gBattleTypeFlags
+## Trouvé par la cartographie — décisions de l'utilisateur (2026-10-23)
+Contenu de RF à importer :
+- [x] Combat FANTÔME de la Tour Pokémon (SPECTRES sans Scope Sylph, Ossatueur révélé avec le Scope Sylph de Giovanni ; `gBattleGhostType`, plus de bit libre dans gBattleTypeFlags)
 - [ ] Objets cachés qui réapparaissent (renewable_hidden_items.c)
 - [ ] Fame Checker (fame_checker.c ; sauvegarde déjà réservée dans gSaveBlockKanto)
-- [ ] Animation d'objet sur un Pokémon (pokemon_special_anim*.c : CT, Super Bonbon…), avec le sac KANTO
-- [ ] Note du Pokédex par Chen au PC (prof_pc.c, stub `GetProfOaksRatingMessage`)
-- [ ] Cinématiques Seagallop et départ du S.S. Anne (stubs)
-- [ ] IA des légendaires de RF (`BATTLE_TYPE_LEGENDARY_FRLG`)
-- [ ] Candidats HOENN/KANTO (version d'Émeraude partout aujourd'hui) : PC objets et boîte aux lettres, Maître des capacités, boutique, machine à sous, menu Start
+- [ ] Animation quand on utilise un objet sur un Pokémon (pokemon_special_anim*.c : CT, Super Bonbon…) — à importer (portée à préciser)
+- [ ] Note du Pokédex par Chen : même système que le PC du Prof. Seko (birch_pc.c), à intégrer à Kanto (prof_pc.c de RF : textes et compte du Pokédex de Kanto)
+- [ ] TOUTES les cinématiques de RF : départ du S.S. Anne, ferry Seagallop, et les autres stubs de `kanto_specials_stubs.c` (éclairage de la Ligue, téléporteurs de Léo, triangle de Deoxys, fossiles du musée, diplôme…)
+- [ ] IA des légendaires de RF (`BATTLE_TYPE_LEGENDARY_FRLG` : état à part comme le FANTÔME)
+
+Choix HOENN / KANTO :
+- [ ] PC objets : interface de RF en option ; les objets stockés restent communs aux deux régions (même stockage)
+- [ ] Maîtres des capacités : un maître qui apprend une capacité limitée/exclusive le reste ; les autres sont fusionnés (plus de choix chez chacun)
+- [ ] Boutique : interface de RF en option
+- [ ] Machine à sous : PAS d'option, chacune dans sa région (celle de RF au Casino de Céladopole, celle d'Émeraude à Lavandia)
+- [ ] Menu Start de RF : en option
+- [ ] Menu Options : classer les lignes par ordre d'importance (la liste s'allonge)
 
 ## Notes
 - Piste (utilisateur) : Émeraude a été construit à partir de Rouge Feu ; il garde des fonctions vidées et des entrées inutilisées de RF (ex. BgTileAllocOp « Dummied out », LoadMonPicInWindow UNUSED). Les rétablir avec le code de RF avant de réinventer.
