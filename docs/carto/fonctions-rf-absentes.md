@@ -1,0 +1,1139 @@
+# Fonctions propres à Rouge Feu absentes de la fusion
+
+> Généré par `tools/cartographie.py` — ne pas éditer à la main.
+
+Par fichier RF : (nombre absent / nombre propre à RF). Les stubs de `kanto_specials_stubs.c` comptent comme absents.
+
+### battle_ai_script_commands.c (commun, 14/14)
+Cmd_if_would_go_first, Cmd_if_would_not_go_first, Cmd_nullsub_2A, Cmd_nullsub_2B, Cmd_count_alive_pokemon,
+Cmd_nullsub_32, Cmd_nullsub_33, Cmd_nullsub_52, Cmd_nullsub_53, Cmd_nullsub_54, Cmd_nullsub_55, Cmd_nullsub_56,
+Cmd_nullsub_57, Cmd_if_level_compare
+
+### battle_anim_effects_2.c (commun, 1/3)
+AirCutterProjectile_Step1
+
+### battle_anim_fight.c (commun, 1/2)
+AnimStompFootStep
+
+### battle_anim_flying.c (commun, 2/2)
+AnimUnusedFeather, AnimUnusedFeather_Step
+
+### battle_anim_ghost.c (commun, 4/5)
+AnimTask_GhostGetOut, AnimTask_GhostGetOut_Step1, AnimTask_GhostGetOut_Step2, AnimTask_GhostGetOut_Step3
+
+### battle_anim_mon_movement.c (commun, 2/2)
+AnimTask_ShakeMon2Step, AnimTask_SwayMon_Step
+
+### battle_anim_mons.c (commun, 7/12)
+GetGhostSpriteDefault_Y, GetBattleAnimBgDataByPriorityRank, InitBattleAnimBg, ToggleBg3Mode,
+PlayerThrowBall_StartAnimLinearTranslation, PlayerThrowBall_AnimTranslateLinear_WithFollowup,
+SetGreyscaleOrOriginalPalette
+
+### battle_anim_normal.c (commun, 4/5)
+AnimShakeMonOrBattleTerrain, AnimShakeMonOrBattleTerrain_Step,
+AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled, AnimTask_ShakeBattleTerrain
+
+### battle_anim_special.c (RF seul, 35/42)
+AnimTask_LevelUpHealthBox, AnimTask_IsBallBlockedByTrainerOrDodged, AnimTask_ThrowBall_WaitAnimObjComplete,
+AnimTask_ThrowBallSpecial, AnimTask_ThrowBallSpecial_PlaySfx, SpriteCB_ThrowBall_Init,
+SpriteCB_ThrowBall_ArcFlight, SpriteCB_ThrowBall_TenFrameDelay, SpriteCB_ThrowBall_ShrinkMon,
+SpriteCB_ThrowBall_InitialFall, SpriteCB_ThrowBall_Bounce, SpriteCB_ThrowBall_InitShake,
+SpriteCB_ThrowBall_DoShake, SpriteCB_ThrowBall_DelayThenBreakOut, SpriteCB_ThrowBall_InitClick,
+SpriteCB_ThrowBall_DoClick, SpriteCB_ThrowBall_FinishClick, BattleAnimObj_SignalEnd, CreateStarsWhenBallClicks,
+SpriteCB_ThrowBall_BeginBreakOut, SpriteCB_ThrowBall_RunBreakOut, TrainerBallBlock, TrainerBallBlock2,
+GhostBallDodge, GhostBallDodge2, AnimTask_ShinySparkles, AnimTask_ShinySparkles_WaitSparkles,
+SpriteCB_ShinySparkles_1, SpriteCB_ShinySparkles_2, AnimTask_LoadBaitGfx, AnimTask_FreeBaitGfx,
+SpriteCB_SafariBaitOrRock_Init, SpriteCB_SafariBaitOrRock_WaitPlayerThrow, SpriteCB_SafariBaitOrRock_ArcFlight,
+AnimTask_SafariGetReaction
+
+### battle_anim_utility_funcs.c (commun, 1/1)
+AnimTask_GetBattleTerrain
+
+### battle_bg.c (commun, 3/7)
+CreateUnknownDebugSprite, CB2_unused, GetBattleTerrainGfxPtrs
+
+### battle_controller_link_opponent.c (commun, 2/2)
+LinkOpponentHandleUnknownYesNoBox, LinkOpponentHandlePlayFanfare
+
+### battle_controller_link_partner.c (commun, 3/3)
+LinkPartnerDummy, LinkPartnerHandleUnknownYesNoBox, LinkPartnerHandlePlayFanfare
+
+### battle_controller_oak_old_man.c (RF seul, 77/81)
+OakOldManDummy, SetControllerToOakOrOldMan, OakOldManBufferRunCommand, SimulateInputChooseAction,
+OakOldManHandleInputChooseMove, PrintOakText_ForPetesSake, PrintOakText_InflictingDamageIsKey,
+PrintOakText_LoweringStats, PrintOakText_OakNoRunningFromATrainer, PrintOakText_WinEarnsPrizeMoney,
+PrintOakText_HowDisappointing, PrintOakTextWithMainBgDarkened, PrintOakText_KeepAnEyeOnHP,
+CompleteOnBattlerSpriteCallbackDummy2, OakOldManBufferExecCompleted, OakOldManHandleGetMonData,
+CopyOakOldManMonData, OakOldManHandleGetRawMonData, OakOldManHandleSetMonData, SetOakOldManMonData,
+OakOldManHandleSetRawMonData, OakOldManHandleLoadMonSprite, OakOldManHandleSwitchInAnim,
+OakOldManHandleReturnMonToBall, OakOldManHandleDrawTrainerPic, OakOldManHandleTrainerSlide,
+OakOldManHandleTrainerSlideBack, OakOldManHandleFaintAnimation, OakOldManHandlePaletteFade,
+OakOldManHandlePause, OakOldManHandleMoveAnimation, OakOldManDoMoveAnimation, OakOldManHandlePrintString,
+OakOldManHandlePrintSelectionString, OakOldManHandleChooseAction, OakOldManHandleUnknownYesNoBox,
+OakHandleChooseMove_WaitDma3, OakOldManHandleChooseMove, OakOldManHandleChooseItem,
+OakOldManHandleChoosePokemon, OakOldManHandleCmd23, OakOldManHandleExpUpdate, OakOldManHandleStatusIconUpdate,
+OakOldManHandleStatusAnimation, OakOldManHandleStatusXor, OakOldManHandleDataTransfer,
+OakOldManHandleDMA3Transfer, OakOldManHandlePlayBGM, OakOldManHandleCmd32, OakOldManHandleTwoReturnValues,
+OakOldManHandleChosenMonReturnValue, OakOldManHandleOneReturnValue, OakOldManHandleOneReturnValue_Duplicate,
+OakOldManHandleCmd37, OakOldManHandleCmd38, OakOldManHandleCmd39, OakOldManHandleCmd40,
+OakOldManHandleHitAnimation, OakOldManHandleCmd42, OakOldManHandlePlaySE, OakOldManHandlePlayFanfare,
+OakOldManHandleFaintingCry, OakOldManHandleIntroSlide, OakOldManHandleIntroTrainerBallThrow,
+OakOldManHandleDrawPartyStatusSummary, OakOldManHandleHidePartyStatusSummary, OakOldManHandleEndBounceEffect,
+OakOldManHandleSpriteInvisibility, OakOldManHandleBattleAnimation, OakOldManHandleLinkStandbyMsg,
+OakOldManHandleResetActionMoveSelection, OakOldManHandleCmd55, OakOldManCmdEnd,
+BtlCtrl_OakOldMan_TestState2Flag, BtlCtrl_OakOldMan_SetState2Flag, BtlCtrl_DrawVoiceoverMessageFrame,
+BtlCtrl_RemoveVoiceoverMessageFrame
+
+### battle_controller_opponent.c (commun, 5/10)
+OpponentHandleBallThrowAnim, OpponentHandleUnknownYesNoBox, OpponentHandleCmd42, OpponentHandlePlayFanfare,
+OpponentHandleCmd55
+
+### battle_controller_player.c (commun, 6/15)
+Task_CreateLevelUpVerticalStripes, PlayerHandleUnknownYesNoBox, PlayerHandleCmd42, PlayerHandlePlayFanfare,
+PlayerHandleCmd55, PreviewDeterminativeMoveTargets
+
+### battle_controller_pokedude.c (RF seul, 74/78)
+PokedudeDummy, SetControllerToPokedude, PokedudeBufferRunCommand, CompleteOnBattlerSpritePosX_0,
+PokedudeHandleInputChooseMove, CompleteOnBattlerSpriteCallbackDummy2, PokedudeBufferExecCompleted,
+CompleteOnFinishedStatusAnimation2, PokedudeHandleGetMonData, CopyPokedudeMonData, PokedudeHandleGetRawMonData,
+PokedudeHandleSetMonData, SetPokedudeMonData, PokedudeHandleSetRawMonData, PokedudeHandleLoadMonSprite,
+PokedudeHandleSwitchInAnim, PokedudeHandleReturnMonToBall, PokedudeHandleDrawTrainerPic,
+PokedudeHandleTrainerSlide, PokedudeHandleTrainerSlideBack, PokedudeHandleFaintAnimation,
+PokedudeHandlePaletteFade, PokedudeHandlePause, PokedudeHandleMoveAnimation, PokedudeDoMoveAnimation,
+PokedudeHandlePrintString, PokedudeHandlePrintSelectionString, PokedudeHandleChooseAction,
+PokedudeHandleUnknownYesNoBox, PokedudeHandleChooseMoveAfterDma3, PokedudeHandleChooseMove,
+PokedudeHandleChooseItem, PokedudeHandleChoosePokemon, PokedudeHandleCmd23, PokedudeHandleHealthBarUpdate,
+PokedudeHandleExpUpdate, PokedudeHandleStatusIconUpdate, PokedudeHandleStatusXor, PokedudeHandleDataTransfer,
+PokedudeHandleDMA3Transfer, PokedudeHandlePlayBGM, PokedudeHandleCmd32, PokedudeHandleTwoReturnValues,
+PokedudeHandleChosenMonReturnValue, PokedudeHandleOneReturnValue, PokedudeHandleOneReturnValue_Duplicate,
+PokedudeHandleCmd37, PokedudeHandleCmd38, PokedudeHandleCmd39, PokedudeHandleCmd40, PokedudeHandleHitAnimation,
+PokedudeHandleCmd42, PokedudeHandlePlaySE, PokedudeHandlePlayFanfare, PokedudeHandleFaintingCry,
+PokedudeHandleIntroSlide, PokedudeHandleIntroTrainerBallThrow, PokedudeHandleDrawPartyStatusSummary,
+PokedudeHandleHidePartyStatusSummary, PokedudeHandleEndBounceEffect, PokedudeHandleSpriteInvisibility,
+PokedudeHandleBattleAnimation, PokedudeHandleLinkStandbyMsg, PokedudeHandleResetActionMoveSelection,
+PokedudeHandleCmd55, PokedudeCmdEnd, PokedudeSimulateInputChooseAction, PokedudeSimulateInputChooseMove,
+HandlePokedudeVoiceoverEtc, ReturnFromPokedudeAction, PokedudeAction_PrintVoiceoverMessage,
+PokedudeAction_PrintMessageWithHealthboxPals, GetPokedudeText, InitPokedudePartyAndOpponent
+
+### battle_controller_safari.c (commun, 8/9)
+SafariDummy, SafariHandleUnknownYesNoBox, SafariHandleCmd37, SafariHandleCmd38, SafariHandleCmd39,
+SafariHandleCmd40, SafariHandleCmd42, SafariHandleCmd55
+
+### battle_controllers.c (commun, 3/3)
+SetUpBattleVars, BtlController_EmitUnknownYesNoBox, BtlController_EmitPlayFanfare
+
+### battle_gfx_sfx_util.c (commun, 5/6)
+DoBattleSpriteAffineAnim, DecompressGhostFrontPic, DecompressTrainerBackPalette,
+FreeTrainerFrontPicPaletteAndTile, BattleInterfaceSetWindowPals
+
+### battle_interface.c (commun, 11/11)
+GetBattleInterfaceGfxPtr, SpriteCB_PartySummaryBar, SpriteCB_PartySummaryBar_Exit,
+SpriteCB_PartySummaryBall_OnBattleStart, SpriteCB_PartySummaryBall_Exit, SpriteCB_PartySummaryBall_OnSwitchout,
+UpdateAndDrawHealthbarOntoScreen, CalcNewHealthbarValue, DoDrawHealthbarOntoScreen, DrawHealthbarOntoScreen,
+GetReceivedValueInPixels
+
+### battle_intro.c (commun, 1/1)
+CopyBattlerSpriteToBg
+
+### battle_main.c (commun, 14/18)
+LinkBattleComputeBattleTypeFlags, PrepareOwnMultiPartnerBuffer, CB2_QuitPokedudeBattle,
+SpriteCB_UnusedDebugSprite, SpriteCB_UnusedDebugSprite_Step, SpriteCB_AllyMon, SpriteCB_PlayerThrowInit,
+UpdatePlayerPosInThrowAnim, SpriteCB_PlayerThrowUpdate, BattleIntroOpponentSendsOutMonAnimation,
+BattleIntroPlayerSendsOutMonAnimation, UpdatePartyOwnerOnSwitch_NonMulti, HandleAction_ThrowBait,
+HandleAction_ThrowRock
+
+### battle_message.c (commun, 5/5)
+Localize_TrainerClass_SchoolKid, Localize_TrainerClass_PkmnTrainer, Localize_TrainerClass_Leader,
+Localize_TrainerClass_Names, BattleStringShouldBeColored
+
+### battle_records.c (commun, 19/21)
+ShowBattleRecords, MainCB2_SetUp, Task_WaitFadeIn, Task_WaitButton, Task_FadeOut, Task_DestroyAndReturnToField,
+ResetGpu, StopAllRunningTasks, EnableDisplay, ResetBGPos, IndexOfOpponentLinkBattleRecord,
+AddOpponentLinkBattleRecord, IncTrainerCardWinCount, IncTrainerCardLossCount,
+UpdateBattleOutcomeOnTrainerCards, PrintTotalRecord, PrintOpponentBattleRecord, PrintBattleRecords,
+LoadFrameGfxOnBg
+
+### battle_script_commands.c (commun, 3/3)
+Cmd_callterrainattack, Cmd_cureifburnedparalysedorpoisoned, Cmd_settypetoterrain
+
+### battle_setup.c (commun, 12/20)
+CheckSilphScopeInPokemonTower, StartWildBattle, StartRoamerBattle, DoGhostBattle, StartScriptedWildBattle,
+StartMarowakBattle, EndPokedudeBattle, StartPokedudeBattle, CB2_EndMarowakBattle,
+BattleSetup_GetBattleTowerBattleTransition, SetBattledTrainerFlag2, StartTrainerBattle
+
+### battle_tower.c (commun, 33/33)
+BattleTowerMapScript2, ResetBattleTowerStreak, ShouldBattleEReaderTrainer, ChooseNextBattleTowerTrainer,
+SetBattleTowerTrainerGfxId, UpdateOrInsertReceivedBattleTowerRecord, GetBattleTowerTrainerFrontSpriteId,
+GetBattleTowerTrainerClassNameId, GetBattleTowerTrainerName, FillBattleTowerTrainerParty,
+AppendBattleTowerBannedSpeciesName, CheckMonBattleTowerBanlist, CheckPartyBattleTowerBanlist,
+BufferBattleTowerTrainerMessage, PrintBattleTowerTrainerGreeting, CB2_FinishEReaderBattle, Task_WaitBT,
+StartSpecialBattle, SetBattleTowerProperty, BattleTowerUtil, SetBattleTowerParty, SetPlayerBattleTowerRecord,
+SaveBattleTowerProgress, BattleTower_SoftReset, SetBattleTowerRecordChecksum,
+PopulateBravoTrainerBattleTowerLostData, DetermineBattleTowerPrize, GiveBattleTowerPrize,
+Debug_FillEReaderTrainerWithPlayerData, CopyEReaderTrainerName5, BufferEReaderTrainerGreeting,
+PrintEReaderTrainerFarewellMessage, Dummy_TryEnableBravoTrainerBattleTower
+
+### battle_transition.c (commun, 10/10)
+Task_Spiral, Spiral_UpdateFrame, Spiral_Init, Spiral_End, VBlankCB_Spiral, Task_Lorelei, Task_Bruno,
+Task_Agatha, Task_Lance, Task_Blue
+
+### battle_util.c (commun, 1/1)
+AtkCanceller_UnableToUseMove
+
+### berry.c (commun, 1/1)
+InitEnigmaBerry
+
+### berry_crush.c (commun, 4/4)
+BerryCrush_SetVBlankCallback, BerryCrush_BuildLocalState, printCrushingResults, Task_ShowBerryCrushRankings
+
+### berry_fix_program.c (commun, 1/1)
+SetScene
+
+### bg.c (commun, 1/1)
+AdjustBgMosaic
+
+### bike.c (commun, 11/11)
+GetBikeTransitionId, BikeInputHandler_Normal, BikeInputHandler_Turning, BikeInputHandler_Slope,
+BikeTransition_FaceDirection, BikeTransition_TurnDirection, BikeTransition_MoveDirection,
+BikeTransition_Downhill, BikeTransition_Uphill, MetatileBehaviorForbidsBiking, CanBikeFaceDirectionOnRail
+
+### blend_palette.c (RF seul, 1/1)
+BlendPalettesAt
+
+### buy_menu_helpers.c (RF seul, 3/3)
+BuyMenuDrawMoneyBox, BuyMenuQuantityBoxNormalBorder, BuyMenuQuantityBoxThinBorder
+
+### cable_car_util.c (RF seul, 2/2)
+CableCarUtil_FillWrapped, CableCarUtil_CopyWrapped
+
+### cable_club.c (commun, 5/7)
+AnyConnectedPartnersPlayingRS, CableClub_AskSaveTheGame, EnterTradeSeat, StartWiredCableClubTrade,
+GetSeeingLinkPlayerCardMsg
+
+### cereader_tool.c (RF seul, 7/7)
+ValidateTrainerTowerTrainer, ValidateTrainerTowerData, CEReaderTool_SaveTrainerTower_r,
+CEReaderTool_SaveTrainerTower, CEReaderTool_LoadTrainerTower_r, CEReaderTool_LoadTrainerTower,
+ReadTrainerTowerAndValidate
+
+### clear_save_data_screen.c (commun, 6/8)
+CB2_SaveClearScreen_Init, Task_DrawClearSaveDataScreen, Task_HandleYesNoMenu, Task_CleanUpAndSoftReset,
+CB2_Sub_SaveClearScreen_Init, SaveClearScreen_GpuInit
+
+### coins.c (commun, 2/2)
+PrintCoinsString_Parameterized, ShowCoinsWindow_Parameterized
+
+### daycare.c (commun, 11/18)
+DayCare_GetMonNickname, DayCare_GetBoxMonNickname, CreatedHatchedMon, CB2_EggHatch_0, CB2_EggHatch_1,
+SpriteCB_Egg_0, SpriteCB_Egg_1, SpriteCB_Egg_2, SpriteCB_Egg_3, SpriteCB_Egg_4, SpriteCB_Egg_5
+
+### diploma.c (commun, 7/9)
+Task_DiplomaInit, Task_HandleDiplomaInput, Task_DiplomaExit, DiplomaReset, DiplomaInitScreen, DiplomaLoadGfx,
+DiplomaPrintText
+
+### dma3_manager.c (commun, 1/1)
+WaitDma3Request
+
+### dodrio_berry_picking.c (commun, 1/1)
+DBP_LoadStdWindowGfx
+
+### dynamic_placeholder_text_util.c (commun, 1/1)
+GetColorFromTextColorTable
+
+### easy_chat.c (commun, 27/27)
+IsECGroupUnlocked, IsECWordInvalid, Localize_ConvertEasyChatMessageToString, EC_DoesEasyChatStringFitOnLine,
+GetRandomWordFromGroup, GetRandomWordFromAnyGroup, ShowEasyChatMessage, BufferRandomHobbyOrLifestyleString,
+EnableRareWord, GetNumUnlockedTrendySayings, EC_IsNationalPokedexEnabled, GetRandomECPokemon,
+InitEasyChatSelection, DestroyEasyChatSelectionData, PopulateECGroups, GetNumDisplayableGroups,
+GetSelectedGroupByIndex, PopulateAlphabeticalGroups, GetUnlockedECWords, GetDisplayedWordByIndex,
+GetNumDisplayedWords, GetUnlockedWordsInECGroup, GetUnlockedWordsInAlphabeticalGroup, IsGroupSelectable,
+UnlockedECMonOrMove, EC_IsDeoxys, IsWordUnlocked
+
+### easy_chat_2.c (RF seul, 55/57)
+SetEasyChatTaskFunc, Task_InitEasyChat, Task_RunEasyChat, Task_InitEasyChatInternal, DismantleEasyChat,
+CompareProfileResponseWithPassphrase, CompareQuestionnaireResponseWithPassphrase, EasyChat_AllocateResources,
+EasyChat_FreeResources, EasyChatScreen_HandleJoypad, HandleJoypad_SelectField, HandleJoypad_SelectFooter,
+HandleJoypad_SelectGroup, HandleJoypad_SelectWord, Cancel_HandleYesNoMenu, Confirm_HandleYesNoMenu,
+DelAll_HandleYesNoMenu, Cancel_CreateYesNoMenu, DelAll_CreateYesNoMenu, Confirm_CreateYesNoMenu,
+GetStateBackup, OpenSelectedGroup, BackOutFromGroupToFieldSelect, ToggleGroupAlphaMode, PlaceSelectedWord,
+CommitECWords, DeleteAllECFields, SetEasyChatWordToField, HasECMessageChanged, SelectGroupCursorAction,
+UpdateSelectGroupCursorPos_OutsideBlueBox_GroupMode, UpdateSelectGroupCursorPos_OutsideBlueBox_AlphaMode,
+UpdateSelectGroupCursorPos_InsideBlueBox, GroupCursorMoveToBlueBox, GroupCursorWrapAroundLeft,
+SelectWordCursorAction, GetSelectedLetter, GetSelectWordCursorPos, GetMaxGroupCursorXinAlphaMode,
+MoveGroupCursorXToMaxCol, MoveWordCursorXToMaxCol, GroupSelectCursorXPosTooFarRight,
+WordSelectCursorXPosTooFarRight, GetEasyChatWordBuffer, GetEasyChatConfirmCancelText,
+GetECSelectGroupCursorCoords, IsEasyChatAlphaMode, GetECSelectGroupRowsAbove, GetECSelectWordCursorCoords,
+GetECSelectWordRowsAbove, GetECSelectWordNumRows, ShouldDrawECUpArrow, ShouldDrawECDownArrow,
+GetEasyChatScreenTemplateId, IsEcWordBufferUninitialized
+
+### easy_chat_3.c (RF seul, 91/92)
+InitEasyChatGraphicsWork, LoadEasyChatGraphics, DestroyEasyChatGraphicsResources,
+EasyChatInterfaceCommand_Setup, EasyChatInterfaceCommand_Run, ECInterfaceCmd_01, ECInterfaceCmd_02,
+ECInterfaceCmd_03, ECInterfaceCmd_05, ECInterfaceCmd_06, ECInterfaceCmd_04, ECInterfaceCmd_07,
+ECInterfaceCmd_08, ECInterfaceCmd_09, ECInterfaceCmd_10, ECInterfaceCmd_22, ECInterfaceCmd_14,
+ECInterfaceCmd_15, ECInterfaceCmd_16, ECInterfaceCmd_11, ECInterfaceCmd_12, ECInterfaceCmd_13,
+ECInterfaceCmd_17, ECInterfaceCmd_19, ECInterfaceCmd_18, ECInterfaceCmd_21, ECInterfaceCmd_20,
+InitEasyChatGraphicsWork_Internal, SetGpuRegsForEasyChatInit, LoadEasyChatPals, PrintTitleText,
+EC_AddTextPrinterParameterized, EC_AddTextPrinterParameterized2, PrintECInstructionsText,
+PrintECInterfaceTextById, EC_CreateYesNoMenuWithInitialCursorPos, CreatePhraseFrameWindow, PrintECFields,
+DrawECFrameInTilemapBuffer, PutWin2TilemapAndCopyToVram, PrintECMenuById, PrintECGroupOrAlphaMenu,
+PrintECGroupsMenu, PrintEasyChatKeyboardText, PrintECWordsMenu, UpdateWin2PrintWordsScrollDown,
+UpdateWin2PrintWordsScrollUp, UpdateWin2PrintWordsScrollPageDown, UpdateWin2PrintWordsScrollPageUp,
+PrintECRowsWin2, ClearECRowsWin2, ClearWin2AndCopyToVram, StartWin2FrameAnim, AnimateFrameResize,
+RedrawFrameByIndex, RedrawFrameByRect, InitBg2Scroll, ScheduleBg2VerticalScroll, AnimateBg2VerticalScroll,
+GetBg2ScrollRow, LoadSpriteGfx, CreateSelectDestFieldCursorSprite, SpriteCB_BounceCursor,
+SetSelectDestFieldCursorSpritePosAndResetAnim, FreezeSelectDestFieldCursorSprite,
+UnfreezeSelectDestFieldCursorSprite, CreateRedRectangularCursorSpritePair, DestroyRedRectangularCursor,
+EC_MoveCursor, MoveCursor_Group, MoveCursor_Alpha, CreateSelectWordCursorSprite,
+SpriteCB_SelectWordCursorSprite, SetSelectWordCursorSpritePos, SetSelectWordCursorSpritePosExplicit,
+DestroySelectWordCursorSprite, CreateSelectGroupHelpSprite, AnimateSeletGroupModeAndHelpSpriteEnter,
+StartModeIconHidingAnimation, RunModeIconHidingAnimation, ShrinkModeIconsSprite, ShowModeIconsSprite,
+ModeIconsSpriteAnimIsEnded, CreateVerticalScrollArrowSprites, UpdateVerticalScrollArrowVisibility,
+HideVerticalScrollArrowSprites, UpdateVerticalScrollArrowSpriteXPos, CreateStartSelectButtonsSprites,
+UpdateStartSelectButtonSpriteVisibility, HideStartSelectButtonSprites, CreateFooterWindow
+
+### event_data.c (commun, 6/6)
+DisableNationalPokedex_RSE, EnableNationalPokedex_RSE, IsNationalPokedexEnabled_RSE,
+IsFlagOrVarStoredInQuestLog, GetFlagAddr, ResetSpecialVars
+
+### event_object_lock.c (commun, 3/4)
+walkrun_is_standing_still, Task_WaitPlayerStopMoving, Task_WaitPlayerAndTargetNPCStopMoving
+
+### event_object_movement.c (commun, 101/129)
+ShouldInitObjectEventStateFromTemplate, TemplateIsObstacleAndWithinView,
+TemplateIsObstacleAndVisibleFromConnectingMap, SetHideObstacleFlag, MakeObjectTemplateFromObjectEventTemplate,
+CreateFameCheckerObject, TryLoadObjectPalette, GetReflectionEffectPaletteSlot, ObjectCB_CameraObject,
+CameraObject_0, CameraObject_1, CameraObject_2, FindCameraObject, CameraObjectReset1,
+CameraObjectSetFollowedObjectId, CameraObjectGetFollowedObjectId, CameraObjectReset2,
+MovementType_WanderAround_Step5Slower, CopyablePlayerMovement_GoSpeed0, CopyablePlayerMovement_GoSpeed1,
+CopyablePlayerMovement_GoSpeed2, cph_IM_DIFFERENT, CopyablePlayerMovement_GoSpeed4,
+MovementType_WalkInPlaceFast_Step0, GetAcroBunnyHopFrontWheelDirectionAnimNum, GetSpinDirectionAnimNum,
+QL_UpdateObjectEventCurrentMovement, GetWalkSlowestMovementAction, QuestLogObjectEventExecHeldMovementAction,
+InitNpcForWalkSlower, InitWalkSlower, UpdateWalkSlower, InitNpcForWalkSlowest, InitWalkSlowest,
+UpdateWalkSlowest, MovementAction_WalkSlowestDown_Step0, MovementAction_WalkSlowestDown_Step1,
+MovementAction_WalkSlowestUp_Step0, MovementAction_WalkSlowestUp_Step1, MovementAction_WalkSlowestLeft_Step0,
+MovementAction_WalkSlowestLeft_Step1, MovementAction_WalkSlowestRight_Step0,
+MovementAction_WalkSlowestRight_Step1, MovementAction_WalkSlowerDown_Step0,
+MovementAction_WalkSlowerDown_Step1, MovementAction_WalkSlowerUp_Step0, MovementAction_WalkSlowerUp_Step1,
+MovementAction_WalkSlowerLeft_Step0, MovementAction_WalkSlowerLeft_Step1, MovementAction_WalkSlowerRight_Step0,
+MovementAction_WalkSlowerRight_Step1, UpdateMovementGlide, MovementAction_GlideDown_Step0,
+MovementAction_GlideDown_Step1, MovementAction_GlideUp_Step0, MovementAction_GlideUp_Step1,
+MovementAction_GlideLeft_Step0, MovementAction_GlideLeft_Step1, MovementAction_GlideRight_Step0,
+MovementAction_GlideRight_Step1, FaceDirectionFast, MovementAction_FaceDownFast_Step0,
+MovementAction_FaceUpFast_Step0, MovementAction_FaceLeftFast_Step0, MovementAction_FaceRightFast_Step0,
+MovementAction_RunDownSlow_Step0, MovementAction_RunDownSlow_Step1, MovementAction_RunUpSlow_Step0,
+MovementAction_RunUpSlow_Step1, MovementAction_RunLeftSlow_Step0, MovementAction_RunLeftSlow_Step1,
+MovementAction_RunRightSlow_Step0, MovementAction_RunRightSlow_Step1,
+MovementAction_JumpSpecialWithEffectDown_Step0, MovementAction_JumpSpecialWithEffectDown_Step1,
+MovementAction_JumpSpecialWithEffectUp_Step0, MovementAction_JumpSpecialWithEffectUp_Step1,
+MovementAction_JumpSpecialWithEffectLeft_Step0, MovementAction_JumpSpecialWithEffectLeft_Step1,
+MovementAction_JumpSpecialWithEffectRight_Step0, MovementAction_JumpSpecialWithEffectRight_Step1,
+MovementAction_EmoteSmile_Step0, InitSpin, MovementAction_SpinDown_Step0, MovementAction_SpinDown_Step1,
+MovementAction_SpinUp_Step0, MovementAction_SpinUp_Step1, MovementAction_SpinLeft_Step0,
+MovementAction_SpinLeft_Step1, MovementAction_SpinRight_Step0, MovementAction_SpinRight_Step1,
+MovementAction_ShakeHeadOrWalkInPlace_Step0, MovementAction_ShakeHeadOrWalkInPlace_Step1,
+MovementAction_FlyUp_Step2, CalcWhetherObjectIsOffscreen, UpdateObjEventSpriteVisibility,
+ObjectEventCheckForReflectiveSurface, SetWalkSlowerSpriteData, UpdateWalkSlowerAnim, SetWalkSlowestSpriteData,
+UpdateWalkSlowestAnim
+
+### evolution_graphics.c (commun, 26/29)
+SpriteCallbackDummy_EvoSparkles, SpriteCB_PreEvoSparkleSet1, CreatePreEvoSparkleSet1,
+SpriteCB_PreEvoSparkleSet2, CreatePreEvoSparkleSet2, SpriteCB_PostEvoSparkleSet1, CreatePostEvoSparkleSet1,
+SpriteCB_PostEvoSparkleSet2, CreatePostEvoSparkleSet2, EvoTask_PreEvoSparkleSet1Init,
+EvoTask_CreatePreEvoSparkleSet1, EvoTask_WaitForPre1SparklesToGoUp, EvoTask_PreEvoSparkleSet2Init,
+EvoTask_CreatePreEvoSparklesSet2, EvoTask_PreEvoSparkleSet2Teardown, EvoTask_PostEvoSparklesSet1Init,
+EvoTask_CreatePostEvoSparklesSet1, EvoTask_PostEvoSparklesSet1Teardown, EvoTask_PostEvoSparklesSet2Init,
+EvoTask_CreatePostEvoSparklesSet2, EvoTask_PostEvoSparklesSet2TradeInit,
+EvoTask_CreatePostEvoSparklesSet2Trade, SpriteCallbackDummy_MonSprites, EvoTask_PrePostEvoMonSpritesInit,
+EvoTask_ChooseNextEvoSpriteAnim, EvoTask_ShrinkOrExpandEvoSprites
+
+### fame_checker.c (RF seul, 57/64)
+UseFameChecker, MainCB2_LoadFameChecker, LoadUISpriteSheetsAndPalettes, Task_WaitFadeOnInit,
+Task_TopMenuHandleInput, TryExitPickMode, MessageBoxPrintEmptyText, Task_EnterPickMode, Task_ExitPickMode,
+Task_FlavorTextDisplayHandleInput, FC_MoveSelectorCursor, GetPickModeText, PrintSelectedNameInBrightGreen,
+WipeMsgBoxAndTransfer, Setup_DrawMsgAndListBoxes, SetMessageSelectorIconObjMode, Task_StartToCloseFameChecker,
+Task_DestroyAssetsAndCloseFameChecker, FC_DestroyWindow, AdjustGiovanniIndexIfBeatenInGym, PrintUIHelp,
+DestroyAllFlavorTextIcons, CreateAllFlavorTextIcons, FullyUnlockFameChecker, FCSetup_ClearVideoRegisters,
+FCSetup_ResetTasksAndSpriteResources, FCSetup_TurnOnDisplay, FCSetup_ResetBGCoords,
+HasUnlockedAllFlavorTextsForCurrentPerson, FreeSelectionCursorSpriteResources,
+CreateFlavorTextIconSelectorCursorSprite, SpriteCB_DestroyFlavorTextIconSelectorCursor,
+FreeQuestionMarkSpriteResources, PlaceQuestionMarkTile, FreeSpinningPokeballSpriteResources,
+CreateSpinningPokeballSprite, SpriteCB_DestroySpinningPokeball, FreeNonTrainerPicTiles,
+SpriteCB_FCSpinningPokeball, CreatePersonPicSprite, DestroyPersonPicSprite, UpdateIconDescriptionBox,
+UpdateIconDescriptionBoxOff, FC_CreateListMenu, InitListMenuTemplate, FC_MoveCursorFunc, Task_SwitchToPickMode,
+PrintCancelDescription, FC_DoMoveCursor, FC_PopulateListMenu, FC_CreateScrollIndicatorArrowPair,
+FreeListMenuSelectorArrowPairResources, FameCheckerGetCursorY, HandleFlavorTextModeSwitch,
+Task_FCOpenOrCloseInfoBox, UpdateInfoBoxTilemap, PlaceListMenuCursor
+
+### field_camera.c (commun, 4/6)
+tilemap_move_something, coords8_add, move_tilemap_camera_to_upper_left_corner,
+FieldCameraGetPixelOffsetAtGround
+
+### field_control_avatar.c (commun, 9/13)
+QuestLogOverrideJoyVars, FieldInput_HandleCancelSignpost, Task_QuestLogPlayback_OpenStartMenu,
+Unref_ClearHappinessStepCounter, UpdateHappinessStepCounter, TrySetUpWalkIntoSignpostScript,
+GetFacingSignpostType, SetUpWalkIntoSignScript, GetSignpostScriptAtMapPosition
+
+### field_effect.c (commun, 90/109)
+ApplyGlobalFieldPaletteTint, FieldEffectScript_LoadFadedPal, FieldEffectScript_LoadPal,
+PokeballGlowEffect_FlashFirstThree, PokeballGlowEffect_FlashLast, FallWarpEffect_1, FallWarpEffect_2,
+FallWarpEffect_3, FallWarpEffect_4, FallWarpEffect_5, FallWarpEffect_6, FallWarpEffect_7,
+Task_EscalatorWarpFieldEffect, EscalatorWarpEffect_1, EscalatorWarpEffect_2, EscalatorWarpEffect_3,
+EscalatorWarpEffect_4, EscalatorWarpEffect_5, EscalatorWarpEffect_6, Escalator_TransitionToWarpInEffect,
+FieldCB_EscalatorWarpIn, Task_EscalatorWarpInFieldEffect, EscalatorWarpInEffect_1, EscalatorWarpInEffect_2,
+EscalatorWarpInEffect_3, EscalatorWarpInEffect_4, EscalatorWarpInEffect_5, EscalatorWarpInEffect_6,
+EscalatorWarpInEffect_7, waterfall_0_setup, waterfall_1_do_anim_probably,
+waterfall_2_wait_anim_finish_probably, waterfall_3_move_player_probably, waterfall_4_wait_player_move_probably,
+LavaridgeGymB1FWarpEffect_1, LavaridgeGymB1FWarpEffect_3, LavaridgeGymB1FWarpEffect_4,
+LavaridgeGymB1FWarpExitEffect_1, LavaridgeGymB1FWarpExitEffect_2, LavaridgeGymB1FWarpExitEffect_3,
+LavaridgeGym1FWarpEffect_1, LavaridgeGym1FWarpEffect_2, LavaridgeGym1FWarpEffect_4, SpriteCB_PopOutOfAsh,
+SpinObjectEvent, WarpOutObjectEventUpwards, WarpInObjectEventDownwards, FieldCallback_EscapeRopeExit,
+CreateTeleportFieldEffectTask, Task_DoTeleportFieldEffect, TeleportFieldEffectTask1, TeleportFieldEffectTask2,
+TeleportFieldEffectTask3, TeleportFieldEffectTask4, FieldCallback_TeleportIn, Task_DoTeleportInFieldEffect,
+TeleportInFieldEffectTask2, TeleportInFieldEffectTask3, Task_ShowMon_Outdoors, ShowMonEffect_Outdoors_1,
+ShowMonEffect_Outdoors_2, ShowMonEffect_Outdoors_3, ShowMonEffect_Outdoors_4, ShowMonEffect_Outdoors_5,
+ShowMonEffect_Outdoors_6, ShowMonEffect_Outdoors_7, VBlankCB_ShowMonEffect_Outdoors,
+LoadFieldMoveStreaksTilemapToVram, Task_ShowMon_Indoors, ShowMonEffect_Indoors_1, ShowMonEffect_Indoors_2,
+ShowMonEffect_Indoors_3, ShowMonEffect_Indoors_4, ShowMonEffect_Indoors_5, ShowMonEffect_Indoors_6,
+ShowMonEffect_Indoors_7, VBlankCB_ShowMonEffect_Indoors, Task_FldEffUseSurf, UseSurfEffect_1, UseSurfEffect_2,
+UseSurfEffect_3, UseSurfEffect_4, UseSurfEffect_5, FldEff_FlyOut, DoBirdSpriteWithPlayerAffineAnim,
+SpriteCB_FlyBirdWithPlayer, TryChangeBirdSprite, Task_MoveDeoxysRock_Step, Task_PhotoFlash, FldEff_PhotoFlash
+
+### field_effect_helpers.c (commun, 6/7)
+FldEff_UnusedWaterSurfacing, UpdateAshFieldEffect_Step0, UpdateAshFieldEffect_Step1, SynchroniseSurfAnim,
+SynchroniseSurfPosition, CreateBobbingEffect
+
+### field_fadetransition.c (RF seul, 17/30)
+WarpFadeInScreenWithDelay, WarpFadeOutScreenWithDelay, Task_ContinueScriptUnionRoom, Task_ContinueScript,
+ExitWarpFadeInScreen, Task_WaitFadeAndCreateStartMenuTask, FadeTransition_FadeInOnReturnToStartMenu,
+Task_SafariZoneRanOutOfBalls, FieldCB_SafariZoneRanOutOfBalls, WaitWarpFadeOutScreen,
+FieldFadeTransitionBackgroundEffectIsFinished, DoTeleport2Warp, DoUnionRoomWarp, Task_CableClubWarp,
+Task_ReturnFromLinkRoomWarp, Task_Teleport2Warp, Task_DoorWarp
+
+### field_message_box.c (commun, 6/6)
+Task_DrawFieldMessageBox, CreateTask_DrawFieldMessageBox, DestroyTask_DrawFieldMessageBox,
+ExpandStringAndStartDrawFieldMessageBox, StartDrawFieldMessageBox, GetFieldMessageBoxType
+
+### field_player_avatar.c (commun, 52/61)
+player_step, TryUpdatePlayerSpinDirection, ForcedMovement_SpinRight, ForcedMovement_SpinLeft,
+ForcedMovement_SpinUp, ForcedMovement_SpinDown, PlaySpinSound, PlayerAvatarTransition_Bike,
+QL_TryRecordPlayerStepWithDuration0, QL_TryRecordNPCStepWithDuration32, PlayerWalkSlower, PlayerGlide,
+PlayerFaceDirectionFast, PlayerShakeHeadOrWalkInPlace, PlayerGoSpin, PlayerApplyTileForcedMovement,
+PlayerAcroWheelieCollide, PlayerAcroPopWheelie, PlayerAcroWheelieMove, GetPlayerAvatarObjectId,
+MetatileAtCoordsIsWaterTile, StartPlayerAvatarSummonMonForFieldMoveAnim, GetPlayerAvatarVsSeekerGfxId,
+StartPlayerAvatarFishAnim, Task_BumpBoulder, DoBoulderInit, DoBoulderDust, DoBoulderFinish,
+CreateStopSurfingTask_NoMusicChange, Fishing2, Fishing3, Fishing5, Fishing6, Fishing7, Fishing8, Fishing9,
+Fishing10, Fishing11, Fishing12, Fishing13, Fishing14, Fishing15, Fishing16, StartTeleportWarpOutPlayerAnim,
+WaitTeleportWarpOutPlayerAnim, SavePlayerFacingDirectionForTeleport, GetTeleportSavedFacingDirection,
+Task_TeleportWarpOutPlayerAnim, StartTeleportInPlayerAnim, WaitTeleportInPlayerAnim,
+Task_TeleportWarpInPlayerAnim, TeleportAnim_RotatePlayer
+
+### field_screen_effect.c (commun, 9/9)
+DoInwardBarnDoorFade, DoOutwardBarnDoorWipe, BarnDoorWipeSaveGpuRegs, BarnDoorWipeLoadGpuRegs,
+Task_BarnDoorWipe, Task_BarnDoorWipeChild, PrintWhiteOutRecoveryMessage, Task_RushInjuredPokemonToCenter,
+FieldCB_RushInjuredPokemonToCenter
+
+### field_special_scene.c (commun, 4/4)
+FieldSpecialScene_Dummy0, FieldSpecialScene_Dummy1, FieldSpecialScene_Dummy2, FieldSpecialScene_Dummy3
+
+### field_specials.c (commun, 18/89)
+ShowDiploma, DoPicboxCancel, ResetContextNpcTextColor, ContextNpcGetTextColor,
+QuestLog_CheckDepartingIndoorsMap, QuestLog_TryRecordDepartedLocation, DoPokemonLeagueLightingEffect,
+Task_RunPokemonLeagueLightingEffect, Task_CancelPokemonLeagueLightingEffect,
+StopPokemonLeagueLightingEffectTask, CutMoveRuinValleyCheck, CutMoveOpenDottedHoleDoor,
+DoDeoxysTriangleInteraction, Task_DoDeoxysTriangleInteraction, MoveDeoxysObject, Task_WaitDeoxysFieldEffect,
+SetDeoxysTrianglePalette, BrailleCursorToggle
+
+### field_weather.c (commun, 12/13)
+BuildGammaShiftTables, UpdateWeatherGammaShift, ApplyGammaShift, ApplyGammaShiftWithBlend,
+ApplyDroughtGammaShiftWithBlend, WeatherShiftGammaIfPalStateIdle, WeatherBeginGammaFade, FadeSelectedPals,
+ApplyWeatherGammaShiftToPal, IsWeatherFadingIn, SetDroughtGamma, SlightlyDarkenPalsInWeather
+
+### field_weather_effects.c (RF seul, 1/1)
+SetThunderCounter
+
+### field_weather_util.c (RF seul, 1/1)
+GetSav1Weather
+
+### fieldmap.c (commun, 3/3)
+ExtractMetatileAttribute, MapGridGetMetatileAttributeAt, GetAttributeByMetatileIdAndMapLayout
+
+### fldeff_cut.c (commun, 6/7)
+MetatileAtCoordsIsGrassTile, FieldMoveCallback_CutGrass, SetCutGrassMetatileAt, SpriteCallback_CutGrass_Init,
+SpriteCallback_CutGrass_Run, SpriteCallback_CutGrass_Cleanup
+
+### fldeff_flash.c (commun, 15/15)
+MapTransitionIsEnter, MapTransitionIsExit, FlashTransition_Exit, Task_FlashTransition_Exit_0,
+Task_FlashTransition_Exit_1, Task_FlashTransition_Exit_2, Task_FlashTransition_Exit_3,
+Task_FlashTransition_Exit_4, FlashTransition_Enter, Task_FlashTransition_Enter_0, Task_FlashTransition_Enter_1,
+Task_FlashTransition_Enter_2, Task_FlashTransition_Enter_3, RunMapPreviewScreen, Task_MapPreviewScreen_0
+
+### fldeff_rocksmash.c (commun, 6/7)
+CreateFieldEffectShowMon, Task_FieldEffectShowMon_Init, Task_FieldEffectShowMon_WaitPlayerAnim,
+Task_FieldEffectShowMon_WaitFldeff, Task_FieldEffectShowMon_Cleanup, FieldCallback_UseRockSmash
+
+### fldeff_strength.c (commun, 1/2)
+FieldCB_UseStrength
+
+### fldeff_sweetscent.c (commun, 1/1)
+Unused_StartSweetscentFldeff
+
+### heal_location.c (commun, 4/4)
+GetHealLocationIndexFromMapGroupAndNum, GetHealLocationPointerFromMapGroupAndNum,
+SetWhiteoutRespawnWarpAndHealerNpc, SetWhiteoutRespawnHealerNpcAsLastTalked
+
+### help_message.c (RF seul, 1/7)
+MapNamePopupWindowIdSetDummy
+
+### help_system.c (RF seul, 35/41)
+SetHelpContextDontCheckBattle, SetHelpContext, IsInMartMap, IsInGymMap, IsCurrentMapInArray, IsInDungeonMap,
+HelpSystem_UpdateHasntSeenIntro, HelpSystem_IsSinglePlayer, HelpSystem_DisableToggleWithRButton,
+HelpSystem_EnableToggleWithRButton, ResetHelpSystemListMenu, BuildAndPrintMainTopicsListMenu,
+BuildMainTopicsListAndMoveToH00, BuildAndPrintSubmenuList, SetHelpSystemSubmenuItems,
+HelpSystem_ShouldShowBasicTerms, IsHelpSystemSubmenuEnabled, HasGottenAtLeastOneHM, RunHelpMenuSubroutine,
+HelpSystemSubroutine_PrintWelcomeMessage, HelpSystemSubroutine_WelcomeWaitButton,
+HelpSystemSubroutine_WelcomeEndGotoMenu, HelpSystemSubroutine_MenuInputHandlerMain,
+HelpMenuSubroutine_InitSubmenu, HelpMenuSubroutine_ReturnFromSubmenu, HelpMenuSubroutine_SubmenuInputHandler,
+HelpSystem_PrintTopicLabel, HelpMenuSubroutine_HelpItemPrint, HelpMenuSubroutine_ReturnFromHelpItem,
+HelpMenuSubroutine_HelpItemWaitButton, PrintWelcomeMessageOnPanel1, PrintTextOnPanel2Row52RightAlign,
+GetHelpSystemMenuLevel, ResetHelpSystemCursor, PrintHelpSystemTopicMouseoverDescription
+
+### help_system_util.c (RF seul, 41/41)
+RunHelpSystemCallback, SaveCallbacks, SaveMapGPURegs, SaveMapTiles, SaveMapTextColors, RestoreCallbacks,
+RestoreGPURegs, RestoreMapTiles, RestoreMapTextColors, CommitTilemap, HS_DrawBgTilemapRect,
+HS_BufferFillMapWithTile1FF, HS_ShowOrHideWordHELPinTopLeft, HS_ShowOrHideControlsGuideInTopRight,
+HS_ShowOrHideMainWindowText, HS_SetMainWindowBgBrightness, HS_ShowOrHideToplevelTooltipWindow,
+HS_ShowOrHideHeaderAndFooterLines_Lighter, HS_ShowOrHideHeaderAndFooterLines_Darker,
+HS_ShowOrHideVerticalBlackBarsAlongSides, HS_ShowOrHideHeaderLine_Darker_FooterStyle,
+HS_ShowOrHideScrollArrows, HelpSystemRenderText, DecompressAndRenderGlyph, HelpSystem_PrintTextInTopLeftCorner,
+HelpSystem_PrintTextRightAlign_Row52, HelpSystem_PrintTextAt, HelpSystem_PrintQuestionAndAnswerPair,
+HelpSystem_PrintTopicMouseoverDescription, HelpSystem_FillPanel3, HelpSystem_FillPanel2, HelpSystem_FillPanel1,
+HelpSystem_InitListMenuController, HelpSystem_SetInputDelay, HelpSystem_GetMenuInput,
+HS_UpdateMenuScrollArrows, PrintListMenuItems, PlaceListMenuCursor, HS_RemoveSelectionCursorAt, TryMoveCursor1,
+MoveCursor
+
+### intro.c (commun, 1/71)
+CB2_WaitFadeBeforeSetUpIntro
+
+### item.c (commun, 12/29)
+GetPcItemQuantity, SetPcItemQuantity, SetBagPocketsPointers, BagPocketGetFirstEmptySlot, IsPocketNotEmpty,
+ClearPCItemSlots, CountItemsInPC, ItemPcCompaction, BagPocketCompaction, SortAndCompactBagPocket,
+BagGetQuantityByItemId, TrySetObtainedItemQuestLogEvent
+
+### item_menu.c (commun, 12/100)
+BackUpPlayerBag, RestorePlayerBag, InitOldManBag, Task_Bag_OldManTutorial, Task_Pokedude_FadeFromBag,
+Task_Pokedude_WaitFadeAndExitBag, InitPokedudeBag, Task_BButtonInterruptTeachyTv, Task_Bag_TeachyTvRegister,
+Task_Bag_TeachyTvCatching, Task_Bag_TeachyTvStatus, Task_Bag_TeachyTvTMs
+
+### item_pc.c (RF seul, 57/59)
+ItemPc_Init, ItemPc_RunSetup, ItemPc_DoGfxSetup, ItemPc_FadeAndBail, Task_ItemPcWaitFadeAndBail,
+ItemPc_InitBgs, ItemPc_LoadGraphics, ItemPc_AllocateResourcesForListMenu, ItemPc_BuildListMenuTemplate,
+ItemPc_MoveCursorFunc, ItemPc_ItemPrintFunc, ItemPc_PrintOrRemoveCursor, ItemPc_PrintOrRemoveCursorAt,
+ItemPc_PrintWithdrawItem, ItemPc_PlaceTopMenuScrollIndicatorArrows,
+ItemPc_PlaceWithdrawQuantityScrollIndicatorArrows, ItemPc_RemoveScrollIndicatorArrowPair,
+ItemPc_SetCursorPosition, ItemPc_FreeResources, Task_ItemPcTurnOff1, Task_ItemPcTurnOff2,
+ItemPc_GetCursorPosition, ItemPc_GetItemIdBySlotId, ItemPc_GetItemQuantityBySlotId, ItemPc_CountPcItems,
+ItemPc_SetScrollPosition, ItemPc_SetMessageWindowPalette, ItemPc_SetInitializedFlag, Task_ItemPcMain,
+ItemPc_ReturnFromSubmenu, ItemPc_MoveItemModeInit, Task_ItemPcMoveItemModeRun, ItemPc_InsertItemIntoNewSlot,
+ItemPc_MoveItemModeCancel, Task_ItemPcSubmenuInit, Task_ItemPcSubmenuRun, Task_ItemPcWithdraw,
+ItemPc_DoWithdraw, Task_ItemPcWaitButtonAndFinishWithdrawMultiple, Task_ItemPcWaitButtonWithdrawMultipleFailed,
+Task_ItemPcCleanUpWithdraw, ItemPc_WithdrawMultipleInitWindow, UpdateWithdrawQuantityDisplay,
+Task_ItemPcHandleWithdrawMultiple, Task_ItemPcGive, ItemPc_CB2_SwitchToPartyMenu,
+ItemPc_CB2_ReturnFromPartyMenu, gTask_ItemPcWaitButtonAndExitSubmenu, Task_ItemPcCancel, ItemPc_InitWindows,
+unused_ItemPc_AddTextPrinterParameterized, ItemPc_AddTextPrinterParameterized, ItemPc_SetBorderStyleOnWindow,
+ItemPc_GetOrCreateSubwindow, ItemPc_DestroySubwindow, ItemPc_GetSubwindow,
+ItemPc_PrintOnWindow5WithContinueTask
+
+### item_use.c (commun, 48/58)
+FieldCB_FadeInFromBlack, Task_WaitFadeIn_CallItemUseOnFieldCB, DisplayItemMessageInCurrentContext,
+PrintNotTheTimeToUseThat, Task_ItemUse_CloseMessageBoxAndReturnToField, SetFieldCallback2ForItemUse,
+FieldCB2_UseItemFromField, Task_ItemUseWaitForFade, FieldUseFunc_Mail, FieldUseFunc_Bike,
+ItemUseOnFieldCB_Bicycle, FieldUseFunc_Rod, FieldUseFunc_CoinCase, FieldUseFunc_PowderJar,
+FieldUseFunc_PokeFlute, Task_PlayPokeFlute, Task_DisplayPokeFluteMessage, DoSetUpItemUseCallback,
+FieldUseFunc_Medicine, FieldUseFunc_Ether, FieldUseFunc_PpUp, FieldUseFunc_RareCandy, FieldUseFunc_EvoItem,
+FieldUseFunc_TmCase, FieldUseFunc_BerryPouch, BattleUseFunc_BerryPouch, FieldUseFunc_TeachyTv,
+InitTeachyTvFromBag, Task_InitTeachyTvFromField, FieldUseFunc_Repel, FieldUseFunc_BlackWhiteFlute,
+FieldUseFunc_TownMap, FieldUseFunc_FameChecker, UseFameCheckerFromBag, Task_UseFameCheckerFromField,
+FieldUseFunc_VsSeeker, BattleUseFunc_PokeBallEtc, BattleUseFunc_PokeFlute, BattleUseFunc_StatBooster,
+Task_BattleUse_StatBooster_DelayAndPrint, Task_BattleUse_StatBooster_WaitButton_ReturnToBattle,
+ItemUse_SwitchToPartyMenuInBattle, BattleUseFunc_Medicine, BattleUseFunc_SacredAsh, BattleUseFunc_Ether,
+BattleUseFunc_PokeDoll, FieldUseFunc_OakStopsYou, ItemUse_SetQuestLogEvent
+
+### learn_move.c (RF seul, 19/20)
+Task_InitMoveRelearnerMenu, MoveRelearnerLoadBgGfx, CB2_MoveRelearner_Init, CB2_MoveRelearner_Resume,
+CB2_MoveRelearner, StringExpandPlaceholdersAndPrintTextOnWindow7Color2, MoveRelearnerStateMachine,
+DrawTextBorderOnWindows6and7, PrintTeachWhichMoveToStrVar1, InitMoveRelearnerStateVariables,
+SpriteCB_ListMenuScrollIndicators, SpawnListMenuScrollIndicatorSprites, MoveRelearnerInitListMenuBuffersEtc,
+MoveRelearnerMenuHandleInput, MoveLearnerInitListMenu, LoadMoveInfoUI, PrintMoveInfoHandleCancel_CopyToVram,
+MoveRelearnerMenu_MoveCursorFunc, YesNoMenuProcessInput
+
+### link.c (commun, 1/2)
+SetLinkErrorFromRfu
+
+### link_rfu_2.c (commun, 3/4)
+LinkRfu_ForceChangeSpParent, RfuGetErrorInfo, DestroyTask_RfuReconnectWithParent
+
+### link_rfu_3.c (commun, 2/3)
+ZeroName, NameIsEmpty
+
+### load_save.c (commun, 2/2)
+SaveSerializedGame, LoadSerializedGame
+
+### mail.c (commun, 8/9)
+DoInitMailView, CB2_InitMailView, BufferMailMessage, AddMailMessagePrinters, CB2_RunShowMailCB,
+ShowMailCB_WaitFadeIn, ShowMailCB_WaitButton, ShowMailCB_Teardown
+
+### mail_data.c (commun, 4/4)
+ClearMailData, ClearMailStruct, GiveMailToMon2, TakeMailFromMon2
+
+### mailbox_pc.c (RF seul, 9/9)
+MailboxPC_InitBuffers, MailboxPC_GetAddWindow, MailboxPC_RemoveWindow, MailboxPC_GetWindowId, ItemPrintFunc,
+MailboxPC_InitListMenu, MoveCursorFunc, MailboxPC_AddScrollIndicatorArrows, MailboxPC_DestroyListMenuBuffer
+
+### main.c (commun, 2/2)
+SetVBlankCounter1Ptr, DisableVBlankCounter1
+
+### main_menu.c (commun, 25/25)
+CB2_InitMainMenu_2, MainMenuGpuInit, Task_SetWin0BldRegsAndCheckSaveFile, PrintSaveErrorStatus,
+Task_SaveErrorStatus_RunPrinterThenWaitButton, Task_SetWin0BldRegsNoSaveFileCheck,
+Task_WaitFadeAndPrintMainMenuText, Task_PrintMainMenuText, Task_WaitDma3AndFadeIn, Task_UpdateVisualSelection,
+Task_HandleMenuInput, Task_ExecuteMainMenuSelection, Task_MysteryGiftError, Task_ReturnToTileScreen,
+MoveWindowByMenuTypeAndCursorPos, PrintMessageOnWindow4, PrintContinueStats, PrintPlayerName, PrintPlayTime,
+PrintDexCount, PrintBadgeCount, LoadUserFrameToBg, SetStdFrame0OnBg, MainMenu_DrawWindow, MainMenu_EraseWindow
+
+### map_name_popup.c (commun, 6/6)
+Task_MapNamePopup, DismissMapNamePopup, IsMapNamePopupTaskActive, MapNamePopupCreateWindow,
+MapNamePopupPrintMapNameOnWindow, MapNamePopupAppendFloorNum
+
+### map_preview_screen.c (RF seul, 11/14)
+MapHasPreviewScreen, MapHasPreviewScreen_HandleQLState2, MapPreview_InitBgs, MapPreview_LoadGfx,
+MapPreview_Unload, MapPreview_StartForestTransition, MapPreview_CreateMapNameWindow,
+ForestMapPreviewScreenIsRunning, Task_RunMapPreviewScreenForest, MapPreview_GetDuration, MapPreview_SetFlag
+
+### math_util.c (commun, 5/9)
+Q_8_8_div, Q_N_S_div, Q_8_8_inv, Q_N_S_inv, Q_24_8_inv
+
+### menu.c (commun, 19/25)
+Unused_ClearTopBarWindow, Menu_InitCursorInternal, Menu_InitCursor, Menu_RedrawCursor,
+Menu_ProcessInputNoWrapAround, Menu_ProcessInput_other, PrintTextArray, MultichoiceList_PrintItems,
+AddItemMenuActionTextPrinters, CreateYesNoMenu2, DestroyYesNoMenu, MultichoiceGrid_PrintItems,
+MultichoiceGrid_PrintItemsCustomOrder, MultichoiceGrid_InitCursorInternal, MultichoiceGrid_InitCursor,
+MultichoiceGrid_RedrawCursor, MultichoiceGrid_MoveCursor, MultichoiceGrid_MoveCursorIfValid,
+Menu_ProcessInputGridLayout
+
+### menu2.c (RF seul, 3/6)
+Menu_PrintFormatIntlPlayerName, Menu2_GetMonPosAttribute, Menu2_GetStarSpritePosAttribute
+
+### menu_helpers.c (commun, 1/3)
+GetDialogBoxFontId
+
+### metatile_behavior.c (commun, 48/58)
+MetatileBehavior_IsSand, MetatileBehavior_IsSandOrShallowFlowingWater, MetatileBehavior_IsWarpDoor_2,
+MetatileBehavior_IsSurfable, MetatileBehavior_IsFastWater, MetatileBehavior_IsArrowWarp,
+MetatileBehavior_IsUnused01, MetatileBehavior_IsDeepWaterTerrain, MetatileBehavior_IsUnusedWater,
+MetatileBehavior_IsWater, MetatileBehavior_IsCyclingRoadPullDownTile,
+MetatileBehavior_IsCyclingRoadPullDownTileGrass, MetatileBehavior_IsPokeMartShelf,
+MetatileBehavior_IsPlayerFacingPokemonCenterSign, MetatileBehavior_IsPlayerFacingPokeMartSign,
+TestMetatileAttributeBit, MetatileBehavior_IsSpinRight, MetatileBehavior_IsSpinLeft, MetatileBehavior_IsSpinUp,
+MetatileBehavior_IsSpinDown, MetatileBehavior_IsStopSpinning, MetatileBehavior_IsSpinTile,
+MetatileBehavior_IsSignpost, MetatileBehavior_IsCabinet, MetatileBehavior_IsKitchen,
+MetatileBehavior_IsDresser, MetatileBehavior_IsSnacks, MetatileBehavior_IsStrengthButton,
+MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor, MetatileBehavior_IsPlayerFacingBattleRecords,
+MetatileBehavior_IsIndigoPlateauSign1, MetatileBehavior_IsIndigoPlateauSign2, MetatileBehavior_IsFood,
+MetatileBehavior_IsBlueprints, MetatileBehavior_IsPainting, MetatileBehavior_IsPowerPlantMachine,
+MetatileBehavior_IsTelephone, MetatileBehavior_IsComputer, MetatileBehavior_IsAdvertisingPoster,
+MetatileBehavior_IsTastyFood, MetatileBehavior_IsTrashBin, MetatileBehavior_IsCup,
+MetatileBehavior_IsBlinkingLights, MetatileBehavior_IsNeatlyLinedUpTools, MetatileBehavior_IsImpressiveMachine,
+MetatileBehavior_IsVideoGame, MetatileBehavior_IsBurglary, MetatileBehavior_IsTrainerTowerMonitor
+
+### mystery_event_script.c (commun, 1/2)
+MEventScript_Run
+
+### mystery_gift_menu.c (commun, 4/4)
+PrintMysteryGiftOrEReaderTopMenu, AddTextPrinterToWindow1, ClearTextWindow, HandleMysteryGiftListMenu
+
+### naming_screen.c (commun, 3/3)
+NamingScreen_CreateRivalIcon, DecompressToBgTilemapBuffer, Debug_NamingScreenRival
+
+### new_game.c (commun, 2/3)
+ClearBattleTower, WarpToPlayersRoom
+
+### new_menu_helpers.c (RF seul, 16/19)
+DecompressAndCopyTileDataToVram2, DecompressAndLoadBgGfxUsingHeap2, TaskFreeBufAfterCopyingTileDataToVram,
+MallocAndDecompress, CopyDecompressedTileDataToVram, AddTextPrinterDiffStyle, LoadStdWindowFrameGfx,
+GetStdMenuPalette, DisplayYesNoMenuDefaultNo, GetTextSpeedSetting, CreateStartMenuWindow,
+GetDlgWindowBaseTileNum, GetStdWindowBaseTileNum, DrawHelpMessageWindowWithText, DestroyHelpMessageWindow_,
+LoadSignpostWindowFrameGfx
+
+### oak_speech.c (RF seul, 62/64)
+StartNewGameScene, Task_NewGameScene, ControlsGuide_LoadPage1, Task_ControlsGuide_LoadPage,
+Task_ControlsGuide_HandleInput, Task_ControlsGuide_ChangePage, Task_ControlsGuide_Clear,
+Task_PikachuIntro_LoadPage1, Task_PikachuIntro_HandleInput, Task_PikachuIntro_Clear, Task_OakSpeech_Init,
+Task_OakSpeech_WelcomeToTheWorld, Task_OakSpeech_ThisWorld, Task_OakSpeech_ReleaseNidoranFFromPokeBall,
+Task_OakSpeech_IsInhabitedFarAndWide, Task_OakSpeech_IStudyPokemon, Task_OakSpeech_ReturnNidoranFToPokeBall,
+Task_OakSpeech_TellMeALittleAboutYourself, Task_OakSpeech_FadeOutOak, Task_OakSpeech_AskPlayerGender,
+Task_OakSpeech_ShowGenderOptions, Task_OakSpeech_HandleGenderInput, Task_OakSpeech_ClearGenderWindows,
+Task_OakSpeech_LoadPlayerPic, Task_OakSpeech_YourNameWhatIsIt, Task_OakSpeech_FadeOutForPlayerNamingScreen,
+Task_OakSpeech_MoveRivalDisplayNameOptions, Task_OakSpeech_RepeatNameQuestion,
+Task_OakSpeech_HandleRivalNameInput, Task_OakSpeech_DoNamingScreen, Task_OakSpeech_ConfirmName,
+Task_OakSpeech_HandleConfirmNameInput, Task_OakSpeech_FadeOutPlayerPic, Task_OakSpeech_FadeOutRivalPic,
+Task_OakSpeech_FadeInRivalPic, Task_OakSpeech_AskRivalsName, Task_OakSpeech_ReshowPlayersPic,
+Task_OakSpeech_LetsGo, Task_OakSpeech_FadeOutBGM, Task_OakSpeech_SetUpExitAnimation,
+Task_OakSpeech_SetUpShrinkPlayerPic, Task_OakSpeech_ShrinkPlayerPic,
+Task_OakSpeech_SetUpDestroyPlatformSprites, Task_OakSpeech_DestroyPlatformSprites,
+Task_OakSpeech_SetUpFadePlayerPicWhite, Task_OakSpeech_FadePlayerPicWhite, Task_OakSpeech_FadePlayerPicToBlack,
+Task_OakSpeech_WaitForFade, Task_OakSpeech_FreeResources, CB2_ReturnFromNamingScreen, CreateNidoranFSprite,
+SpriteCB_Pikachu, CreatePikachuOrPlatformSprites, DestroyPikachuOrPlatformSprites, LoadTrainerPic,
+ClearTrainerPic, Task_SlowFadeIn, CreateFadeInTask, Task_SlowFadeOut, CreateFadeOutTask,
+PrintNameChoiceOptions, GetDefaultName
+
+### option_menu.c (commun, 17/19)
+CB2_OptionsMenuFromStartMenu, OptionMenu_SetVBlankCallback, CB2_OptionMenu, SetOptionMenuTask,
+InitOptionMenuBg, OptionMenu_PickSwitchCancel, OptionMenu_ResetSpriteData, LoadOptionMenuPalette,
+Task_OptionMenu, OptionMenu_ProcessInput, BufferOptionMenuString, Localize_BufferOptionMenuString,
+CloseAndSaveOptionMenu, PrintOptionMenuHeader, DrawOptionMenuBg, LoadOptionMenuItemNames,
+UpdateSettingSelectionDisplay
+
+### overworld.c (commun, 30/44)
+Overworld_ResetStateAfterWhitingOut, Overworld_ResetStateOnContinue, Overworld_SetWhiteoutRespawnPoint,
+QL_LoadMapNormal, SetInitialPlayerAvatarStateWithDirection, MetatileBehavior_IsSurfableInSeafoamIslands,
+Overworld_GetFlashLevel, Overworld_SetWarpDestinationFromWarp, Overworld_TryMapConnectionMusicTransition,
+Overworld_MusicCanOverrideMapMusic, GetLastUsedWarpMapSectionId, InitOverworldBgs_NoResetHeap,
+IsUpdateLinkStateCBActive, DoCB1_Overworld_QuestLogPlayback, ClearFieldCallback, FieldCB_ShowMapNameOnContinue,
+MoveSaveBlocks_ResetHeap_, ReloadObjectsAndRunReturnToFieldMapScript,
+CB2_SetUpOverworldForQLPlaybackWithWarpExit, CB2_SetUpOverworldForQLPlayback, CB2_LoadMapForQLPlayback,
+DoLoadMap_QLPlayback, LoadMap_QLPlayback, CB2_EnterFieldFromQuestLog, SetUpScrollSceneForCredits,
+ResetAllLinkStates, KeyInterCB_SendNothing_2, CreateConfirmLeaveTradeRoomPrompt,
+Overworld_LinkRecvQueueLengthMoreThan2, LinkPlayerDetectCollision
+
+### palette.c (commun, 1/1)
+CopyPaletteInvertedTint
+
+### party_menu.c (commun, 60/70)
+DisplayPartyPokemonDataForChooseMultiple, Task_FirstBattleEnterParty_WaitFadeIn,
+Task_FirstBattleEnterParty_DarkenScreen, Task_FirstBattleEnterParty_WaitDarken,
+Task_FirstBattleEnterParty_CreatePrinter, Task_FirstBattleEnterParty_RunPrinterMsg1,
+Task_FirstBattleEnterParty_LightenFirstMonIcon, Task_FirstBattleEnterParty_WaitLightenFirstMonIcon,
+Task_FirstBattleEnterParty_StartPrintMsg2, Task_FirstBattleEnterParty_RunPrinterMsg2,
+Task_FirstBattleEnterParty_FadeNormal, Task_FirstBattleEnterParty_WaitFadeNormal, Task_PartyMenu_Pokedude,
+Task_PartyMenu_PokedudeStep, PartyMenuPokedudeIsCancelled, PartyMenuHandlePokedudeCancel,
+Task_PartyMenuFromBag_Pokedude, Task_PartyMenuFromBag_PokedudeStep, PartyMenuPrintText,
+PartyMenu_Oak_PrintText, FirstBattleEnterParty_CreateWindowAndMsg1Printer,
+FirstBattleEnterParty_DestroyVoiceoverWindow, ToggleFieldMoveDescriptionWindow,
+SetSwitchedPartyOrderQuestLogEvent, CursorCB_Item, CursorCB_Mail, CursorCB_Cancel2, CursorCB_Enter,
+CursorCB_NoEntry, CursorCB_Store, CursorCB_Trade2, CursorCB_FieldMove, SetSwappedHeldItemQuestLogEvent,
+SetUsedFieldMoveQuestLogEvent, SetUsedFlyQuestLogEvent, CB2_ReturnToTMCaseMenu, CB2_ReturnToBerryPouchMenu,
+Task_DoUseItemAnim, CB2_DoUseItemAnim, CB2_UseItem, CB2_UseTMHMAfterForgettingMove, ItemUseCB_MedicineStep,
+Task_HandleRestoreWhichMoveInput, ItemUseCB_TryRestorePP, TryUsePPItemOutsideBattle, ItemUseCB_RestorePP,
+TryUsePPItemInBattle, ItemUseCB_LearnedMove, ItemUseCB_ReplaceMoveWithTMHM, Task_ReplaceMoveWithTMHM,
+ItemUseCB_RareCandyStep, CB2_UseEvolutionStone, MonCanEvolve, InitChooseMonsForBattle,
+Task_ValidateChosenMonsForBattle, Task_ContinueChoosingMonsForBattle, OpenPartyMenuInTutorialBattle,
+Pokedude_OpenPartyMenuInBattle, Pokedude_ChooseMonForInBattleItem, EnterPartyFromItemMenuInBattle
+
+### player_pc.c (commun, 43/43)
+Task_DrawPlayerPcTopMenu, Task_TopMenuHandleInput, Task_ReturnToTopMenu, Task_PlayerPcItemStorage,
+Task_PlayerPcMailbox, Task_PlayerPcTurnOff, Task_CreateItemStorageSubmenu,
+PrintStringOnWindow0WithDialogueFrame, Task_TopMenu_ItemStorageSubmenu_HandleInput,
+Task_DepositItem_WaitFadeAndGoToBag, Task_PlayerPcDepositItem, Task_ReturnToItemStorageSubmenu,
+CB2_ReturnFromDepositMenu, Task_PlayerPcWithdrawItem, CB2_ReturnFromWithdrawMenu,
+Task_WithdrawItem_WaitFadeAndGoToItemStorage, Task_WithdrawItemBeginFade, Task_PlayerPcCancel,
+Task_SetPageItemVars, CountPCMail, PCMailCompaction, Task_DrawMailboxPcMenu, Task_MailboxPcHandleInput,
+Task_PrintWhatToDoWithSelectedMail, Task_DestroyMailboxPcViewAndCancel, Task_DrawMailSubmenu,
+Task_MailSubmenuHandleInput, Task_PlayerPcReadMail, Task_WaitFadeAndReadSelectedMail,
+Task_WaitFadeAndReturnToMailboxPcInputHandler, CB2_ReturnToMailbox, CB2_SetCbToReturnToMailbox,
+Task_PlayerPcMoveMailToBag, Task_DrawYesNoMenuToConfirmMoveToBag, Task_MoveToBagYesNoMenuHandleInput,
+Task_TryPutMailInBag_DestroyMsgIfSuccessful, Task_DeclinedMoveMailToBag, Task_PlayerPcGiveMailToMon,
+Task_WaitFadeAndGoToPartyMenu, CB2_ReturnToMailboxPc_UpdateScrollVariables, Task_Error_NoPokemon,
+Task_RedrawPlayerPcMailboxAndSetUpInputHandler, Task_PlayerPcExitMailSubmenu
+
+### pokemon.c (commun, 11/13)
+GetSecretBaseTrainerNameIndex, PokemonItemUseNoEffect, PartyMonHasStatus, Battle_PrintStatBoosterEffectMessage,
+SetMonExpWithMaxLevelCheck, CheckBattleTypeGhost, InitMonSpritesGfx_Mode1, InitMonSpritesGfx_Mode0,
+es_sub_8044D1C, es_sub_8044D64, Localize_BattleStrings
+
+### pokemon_icon.c (commun, 4/5)
+CreateMonIcon_HandleDeoxys, MailSpeciesToIconSpecies, DestroyMonIcon, LoadMonIconPalettesAt
+
+### pokemon_special_anim.c (RF seul, 29/30)
+StartUseItemAnim_Normal, StartUseItemAnim_ForgetMoveAndLearnTMorHM, StartUseItemAnim_CantEvolve, AllocPSA,
+CB2_PSA, SetUseItemAnimCallback, SetUpUseItemAnim_Normal, SetUpUseItemAnim_ForgetMoveAndLearnTMorHM,
+SetUpUseItemAnim_CantEvolve, Task_UseItem_Normal, Task_ForgetMove, Task_EvoStone_CantEvolve,
+Task_UseTM_NoForget, Task_MachineSet, Task_CleanUp, GetAnimTypeByItemId, GetClosenessFromFriendship,
+GetPSAStruct, PSA_GetPokemon, PSA_GetSceneWork, PSA_GetItemId, PSA_GetNameOfMoveForgotten,
+PSA_GetNameOfMoveToTeach, PSA_CopyMonNickname, PSA_GetMonNickname, PSA_GetAnimType, PSA_GetMonSpecies,
+PSA_GetMonPersonality, PSA_IsCancelDisabled
+
+### pokemon_special_anim_scene.c (RF seul, 64/64)
+InitPokemonSpecialAnimScene, PokemonSpecialAnimSceneInitIsNotFinished, PSA_FreeWindowBuffers,
+PSA_ShowMessageWindow, PSA_HideMessageWindow, PSA_PrintMessage, PSA_AfterPoof_ClearMessageWindow,
+PSA_IsMessagePrintTaskActive, PSA_DarkenMonSprite, PSA_RunPoofAnim, PSA_UseTM_SetUpZoomOutAnim,
+PSA_UseTM_CleanUpForCancel, PSA_UseTM_RunZoomOutAnim, PSA_UseTM_SetUpMachineSetWobble,
+PSA_UseTM_RunMachineSetWobble, PSA_CreateLevelUpVerticalSpritesTask, PSA_LevelUpVerticalSpritesTaskIsRunning,
+PSA_DrawLevelUpWindowPg1, PSA_DrawLevelUpWindowPg2, PSA_IsCopyingLevelUpWindowToVram, LoadBgGfxByAnimType,
+PSA_CreateMonSpriteAtCloseness, PSA_SetUpZoomAnim, PSA_IsZoomTaskActive, Task_ZoomAnim, SetSpriteWithCloseness,
+IsZoomSpriteCBActive, GetSpriteOffsetByScale, GetYPosByScale, MonSpriteZoom_UpdateYPos,
+ItemSpriteZoom_UpdateYPos, StartMonWiggleAnim, StopMonWiggleAnim, SpriteCallback_MonSpriteWiggle,
+LoadMonSpriteGraphics, PSA_SetUpItemUseOnMonAnim, GetBlendColorByItemId, CreateItemIconSpriteAtMaxCloseness,
+PSA_CreateItemIconObject, PSA_IsItemUseOnMonAnimActive, Task_ItemUseOnMonAnim,
+CreateSprites_UseItem_OutwardSpiralDots, SpriteCB_OutwardSpiralDots, PSA_UseItem_CleanUpForCancel,
+InitItemIconSpriteState, MachineSetWobbleInit, MachineSetWobble_SetCB, MachineSetWobbleCBIsRunning,
+SpriteCB_MachineSetWobble, StartZoomOutAnimForUseTM, CreateStarSprites, AnyStarSpritesActive,
+PSAScene_SeedRandomInTask, StopMakingOutwardSpiralDots, Task_UseItem_OutwardSpiralDots,
+PSAScene_RandomFromTask, SpriteCallback_UseItem_OutwardSpiralDots, LoadOutwardSpiralDotsGfx,
+IsOutwardSpiralDotsTaskRunning, CreateLevelUpVerticalSpritesTask, LevelUpVerticalSpritesTaskIsRunning,
+Task_LevelUpVerticalSprites, CreateLevelUpVerticalSprite, SpriteCB_LevelUpVertical
+
+### pokemon_storage_system.c (commun, 2/2)
+RestorePokemonStorage, SeekToNextMonInBox
+
+### pokemon_storage_system_data.c (RF seul, 16/17)
+MonPlaceChange_DoMoveCursorDown, MonPlaceChange_DoMoveCursorUp, MonPlaceChange_MoveCursorDown,
+MonPlaceChange_MoveCursorUp, DoTrySetDisplayMonData, SetMovedMonData, TrySetDisplayMonData,
+HandleInput_InBox_Normal, HandleInput_InBox_GrabbingMultiple, HandleInput_InBox_MovingMultiple,
+HandleInput_BoxTitle, AddBoxMenu, SetMenuTextsForMon, SetMenuTextsForItem, ToggleCursorMultiMoveMode,
+GetBoxCursorPosition
+
+### pokemon_storage_system_graphics.c (RF seul, 9/9)
+GetMonIconPriorityByCursorArea, DestroyAllIconsInColumn, SetBoxSpeciesAndPersonalities,
+SpriteCB_MovePartySpriteToNextSlot, SetShiftMonSpritePtr, ShiftMons, DoReleaseMonAnim,
+DoReleaseMonComeBackAnim, SpriteCB_BoxScrollArrow
+
+### pokemon_storage_system_menu.c (RF seul, 4/6)
+PrintStringToBufferCopyNow, CreatePCMainMenu, ChooseBoxMenu_PrintBoxNameAndCount,
+ChooseBoxMenu_PrintTextToSprite
+
+### pokemon_storage_system_misc.c (RF seul, 12/15)
+MultiMove_Function_Start, MultiMove_Function_ChangeSelection, MultiMove_Function_GrabSelection,
+MultiMove_Function_MoveMons, MultiMove_Function_PlaceMons, MultiMove_InitBg, Item_FromMonToMoving,
+Item_SwitchMonsWithMoving, Item_GiveMovingToMon, Item_TakeMons, IsActiveItemMoving, GetMovingItem
+
+### pokemon_storage_system_tasks.c (RF seul, 5/5)
+LoadsMiscSpritePalette, StartDisplayMonMosaic, IsDisplayMonMosaicActive, PrintStorageMessage,
+SetPokeStorageQuestLogEvent
+
+### prof_pc.c (RF seul, 2/3)
+GetProfOaksRatingMessageByCount, GetProfOaksRatingMessage
+
+### quest_log.c (RF seul, 86/88)
+QL_AddASLROffset, ResetQuestLog, ClearSavedScene, QL_ResetDefeatedWildMonRecord, RunQuestLogCB,
+QL_IsRoomToSaveEvent, QL_IsRoomToSaveAction, SetQuestLogState, QLogCB_Recording, QLogCB_Playback,
+GetQuestLogStartType, QL_StartRecordingAction, SetPlayerInitialCoordsAtScene, SetNPCInitialCoordsAtScene,
+SetGameStateAtScene, BackUpTrainerRematches, BackUpMapLayout, RecordSceneEnd, TryRecordActionSequence,
+TryStartQuestLogPlayback, Task_BeginQuestLogPlayback, QL_InitSceneObjectsAndActions,
+FieldCB2_QuestLogStartPlaybackWithWarpExit, FieldCB2_QuestLogStartPlaybackStandingInPlace,
+DrawPreviouslyOnQuestHeader, CommitQuestLogWindow1, QL_LoadObjectsAndTemplates,
+QLPlayback_SetInitialPlayerPosition, QLPlayback_InitOverworldState, QL_CopySaveState, QL_ResetPartyAndPC,
+SetPokemonCounts, QuestLog_GetPartyCount, QuestLog_GetBoxMonCount, RestoreTrainerRematches,
+QL_RestoreMapLayoutId, ReadQuestLogScriptFromSav1, DoSceneEndTransition, QuestLog_AdvancePlayhead,
+QuestLog_StartFinalScene, QuestLog_AdvancePlayhead_, QL_AvoidDisplay, Task_AvoidDisplay,
+QuestLog_PlayCurrentEvent, HandleShowQuestLogMessage, GetQuestLogTextDisplayDuration,
+QL_IsTrainerSightDisabled, QL_HandleInput, QuestLogScenePlaybackIsEnding,
+QuestLog_DrawPreviouslyOnQuestHeaderIfInPlaybackMode, DrawSceneDescription, CopyDescriptionWindowTiles,
+QuestLog_CloseTextWindow, DoSkipToEndTransition, QuestLog_WaitFadeAndCancelPlayback,
+QuestLog_InitPalettesBackup, QuestLog_BackUpPalette, FieldCB2_FinalScene, Task_FinalScene_WaitFade,
+Task_QuestLogScene_SavedGame, Task_WaitAtEndOfQuestLog, Task_EndQuestLog, RestoreScreenAfterPlayback,
+QL_SlightlyDarkenSomePals, QL_FinishRecordingScene, SortQuestLogInSav1, SaveQuestLogData, QL_UpdateObject,
+QuestLogRecordNPCStep, QuestLogRecordNPCStepWithDuration, QuestLogRecordPlayerStep,
+QuestLogRecordPlayerStepWithDuration, QuestLogRecordPlayerAvatarGfxTransition,
+QuestLogRecordPlayerAvatarGfxTransitionWithDuration, QL_RecordFieldInput, TogglePlaybackStateForOverworldLock,
+QuestLog_OnEscalatorWarp, ResetActions, QL_TryRunActions, QL_AfterRecordFishActionSuccessful,
+QL_GetPlaybackState, RecordHeadAtEndOfEntryOrScriptContext2Enabled, RecordHeadAtEndOfEntry,
+QuestLogGetFlagOrVarPtr, QuestLogSetFlagOrVar, QuestLogResetFlagsOrVars
+
+### quest_log_battle.c (RF seul, 3/3)
+TrySetQuestLogBattleEvent, TrySetQuestLogLinkBattleEvent, GetLinkMultiBattlePlayerIndexes
+
+### quest_log_events.c (RF seul, 117/118)
+SetQuestLogEvent, InQuestLogDisabledLocation, QuestLog_ShouldEndSceneOnMapChange,
+ShouldRegisterEvent_HandlePartyActions, ShouldRegisterEvent_HandleBeatStoryTrainer, QL_EnableRecordingSteps,
+ShouldRegisterEvent, TryDeferLinkEvent, ResetDeferredLinkEvent, TryDeferTrainerBattleEvent,
+QuestLogEvents_HandleEndTrainerBattle, QL_RecordWait, IsEventWithSpecialEncounterSpecies, QL_SkipCommand,
+QL_UpdateLastDepartedLocation, QL_LoadEvent, QL_TryRepeatEvent, QL_ResetRepeatEventTracker,
+UpdateRepeatEventCounter, QL_ResetEventStates, QL_RecordAction_SceneEnd, QL_LoadAction_SceneEnd,
+QL_RecordAction_Wait, QL_LoadAction_Wait, QL_RecordAction_Input, QL_LoadAction_Input,
+QL_RecordAction_MovementOrGfxChange, QL_LoadAction_MovementOrGfxChange, RecordEventHeader, LoadEvent,
+QuestLog_GetSpeciesName, RecordEvent_SwitchedPartyOrder, LoadEvent_SwitchedPartyOrder, RecordEvent_UsedItem,
+LoadEvent_UsedItem, RecordEvent_GiveTakeHeldItem, RecordEvent_GaveHeldItemFromPartyMenu,
+LoadEvent_GaveHeldItemFromPartyMenu, RecordEvent_GaveHeldItemFromBagMenu, LoadEvent_GaveHeldItemFromBagMenu,
+RecordEvent_GaveHeldItemFromPC, LoadEvent_GaveHeldItemFromPC, RecordEvent_TookHeldItem, LoadEvent_TookHeldItem,
+RecordEvent_SwappedHeldItem, RecordEvent_SwappedHeldItemFromBag, LoadEvent_SwappedHeldItem,
+RecordEvent_SwappedHeldItemFromPC, LoadEvent_SwappedHeldItemFromPC, RecordEvent_UsedPkmnCenter,
+LoadEvent_UsedPkmnCenter, RecordEvent_LinkTraded, LoadEvent_LinkTraded, RecordEvent_LinkBattledSingle,
+LoadEvent_LinkBattledSingle, RecordEvent_LinkBattledDouble, LoadEvent_LinkBattledDouble,
+RecordEvent_LinkBattledMulti, LoadEvent_LinkBattledMulti, RecordEvent_UsedUnionRoom, LoadEvent_UsedUnionRoom,
+RecordEvent_UsedUnionRoomChat, LoadEvent_UsedUnionRoomChat, RecordEvent_LinkTradedUnionRoom,
+LoadEvent_LinkTradedUnionRoom, RecordEvent_LinkBattledUnionRoom, LoadEvent_LinkBattledUnionRoom,
+RecordEvent_SwitchedMonsBetweenBoxes, LoadEvent_SwitchedMonsBetweenBoxes, RecordEvent_SwitchedMonsWithinBox,
+LoadEvent_SwitchedMonsWithinBox, RecordEvent_SwitchedPartyMonForPCMon, LoadEvent_SwitchedPartyMonForPCMon,
+RecordEvent_MovedMonBetweenBoxes, LoadEvent_MovedMonBetweenBoxes, RecordEvent_MovedMonWithinBox,
+LoadEvent_MovedMonWithinBox, RecordEvent_WithdrewMonFromPC, LoadEvent_WithdrewMonFromPC,
+RecordEvent_DepositedMonInPC, LoadEvent_DepositedMonInPC, RecordEvent_SwitchedMultipleMons,
+LoadEvent_SwitchedMultipleMons, RecordEvent_DepositedItemInPC, LoadEvent_DepositedItemInPC,
+RecordEvent_WithdrewItemFromPC, LoadEvent_WithdrewItemFromPC, RecordEvent_DefeatedTrainer,
+RecordEvent_DefeatedGymLeader, LoadEvent_DefeatedGymLeader, RecordEvent_DefeatedWildMon,
+LoadEvent_DefeatedWildMon, IsSpeciesFromSpecialEncounter, RecordEvent_DefeatedEliteFourMember,
+LoadEvent_DefeatedEliteFourMember, RecordEvent_DefeatedChampion, LoadEvent_DefeatedChampion,
+RecordEvent_DefeatedNormalTrainer, LoadEvent_DefeatedTrainer, RecordEvent_DepartedLocation,
+LoadEvent_DepartedLocation, SetQLPlayedTheSlots, ShouldRegisterEvent_HandleDeparted,
+ShouldRegisterEvent_DepartedGameCorner, RecordEvent_UsedFieldMove, LoadEvent_UsedFieldMove,
+RecordEvent_BoughtItem, LoadEvent_BoughtItem, RecordEvent_SoldItem, LoadEvent_SoldItem,
+RecordEvent_ObtainedStoryItem, LoadEvent_ObtainedStoryItem, QuestLog_RecordEnteredMap,
+SetQuestLogEvent_Arrived, RecordEvent_ArrivedInLocation, LoadEvent_ArrivedInLocation,
+TranslateLinkPartnersName
+
+### quest_log_objects.c (RF seul, 3/3)
+QL_RecordObjects, QL_LoadObjects, QL_TryStopSurfing
+
+### quest_log_player.c (RF seul, 15/15)
+QuestLogUpdatePlayerSprite, QuestLogTryRecordPlayerAvatarGfxTransition, QuestLogCallUpdatePlayerSprite,
+QL_GfxTransition_Normal, QL_GfxTransition_Bike, QL_GfxTransition_Fish, Task_QLFishMovement,
+QL_GfxTransition_StartSurf, QL_GfxTransition_VSSeeker, Task_QLVSSeekerMovement, QL_SetObjectGraphicsId,
+QL_GfxTransition_StopSurfSouth, QL_GfxTransition_StopSurfNorth, QL_GfxTransition_StopSurfWest,
+QL_GfxTransition_StopSurfEast
+
+### renewable_hidden_items.c (RF seul, 4/4)
+SetAllRenewableItemFlags, IncrementRenewableHiddenItemStepCounter, TryRegenerateRenewableHiddenItems,
+SampleRenewableItemFlags
+
+### reshow_battle_screen.c (commun, 1/1)
+ReshowBattleScreen_TurnOnDisplay
+
+### save_failed_screen.c (commun, 11/11)
+SetNotInSaveFailedScreen, RunSaveFailedScreen, BlankPalettes, RequestDmaCopyFromScreenBuffer,
+RequestDmaCopyFromCharBuffer, FillBgMapBufferRect, UpdateMapBufferWithText, ClearMapBuffer,
+PrintTextOnSaveFailedScreen, TryWipeDamagedSectors, WipeDamagedSectors
+
+### save_menu_util.c (RF seul, 1/1)
+SaveStatToString
+
+### scrcmd.c (commun, 2/12)
+ScriptContext_NextCommandEndsScript, ScriptContext_GetQuestLogInput
+
+### script.c (commun, 15/17)
+SetQuestLogInputIsDpadFlag, ClearQuestLogInputIsDpadFlag, IsQuestLogInputDpad, RegisterQuestLogInput,
+ClearQuestLogInput, GetRegisteredQuestLogInput, EnableMsgBoxWalkaway, IsMsgBoxWalkawayDisabled,
+ClearMsgBoxCancelableState, CanWalkAwayToCancelMsgBox, MsgSetSignpost, MsgSetNotSignpost, IsMsgSignpost,
+ResetFacingNpcOrSignpostVars, ValidateRamScript
+
+### script_menu.c (commun, 20/21)
+GetStringTilesWide, GetMenuWidthFromList, DrawVerticalMultichoiceMenu, GetMCWindowHeight,
+CreateMCMenuInputHandlerTask, Task_MultichoiceMenu_HandleInput, MultiChoicePrintHelpDescription,
+Task_YesNoMenu_HandleInput, Hask_MultichoiceGridMenu_HandleInput, CreatePCMenuWindow, Task_ScriptShowMonPic,
+PicboxWait, PicboxCancel, Task_WaitMuseumFossilPic, OpenMuseumFossilPic, CloseMuseumFossilPic,
+DestroyScriptMenuWindow, QL_DestroyAbortedDisplay, DrawSeagallopDestinationMenu,
+GetSelectedSeagallopDestination
+
+### script_pokemon_util.c (commun, 3/3)
+ChooseBattleTowerPlayerParty, CB2_ReturnFromChooseBattleTowerParty, ReducePlayerPartyToThree
+
+### seagallop.c (RF seul, 18/22)
+DoSeagallopFerryScene, CB2_SetUpSeagallopScene, Task_Seagallop_0, ScrollBG, Task_Seagallop_1, Task_Seagallop_2,
+Task_Seagallop_3, ResetGPU, ResetAllAssets, SetDispcnt, ResetBGPos, LoadFerrySpriteResources,
+FreeFerrySpriteResources, CreateFerrySprite, SpriteCB_Ferry, CreateWakeSprite, SpriteCB_Wake,
+GetDirectionOfTravel
+
+### shop.c (commun, 15/17)
+GetMartTypeFromItemList, ClearShopMenuWindow, InitShopData, RecolorItemDescriptionBox,
+PokeMartWriteNameAndIdAt, LoadTmHmNameInMart, GetMartFontId, BuyMenuPrintCursorAtYPosition,
+BuyQuantityAddScrollIndicatorArrows, BuyMenuCopyTilemapData, CreateBuyMenuConfirmPurchaseWindow,
+DebugFunc_PrintPurchaseDetails, DebugFunc_PrintShopMenuHistoryBeforeClearMaybe, RecordItemTransaction,
+RecordTransactionForQuestLog
+
+### slot_machine.c (commun, 73/75)
+InitSlotMachineState, CB2_InitSlotMachine, CleanSupSlotMachineState, MainTask_SlotsGameLoop,
+MainTask_NoCoinsGameOver, MainTask_ShowHelp, MainTask_ConfirmExitGame, MainTask_DarnNoPayout,
+MainTask_WinHandlePayout, MainTask_ExitSlots, SetMainTask, Task_SpinReels, StartReels, StopCurrentReel,
+IsReelSpinning, GetNextReelPosition, StopReel1, StopReel2, StopReel3, TwoReelBiasCheck, OneReelBiasCheck,
+TestReelIconAttribute, ReelIconToPayoutRank, CalcSlotBias, ResetMachineBias, CalcPayout, GetPayout,
+GetPlayerBet, GetWinFlagByLine, LoadSpriteGraphicsAndAllocateManager, DestroyGfxManager, InitGfxManager,
+CreateReelIconSprites, UpdateReelIconSprites, HBlankCB_SlotMachine, CreateScoreDigitSprites,
+UpdateCoinsDisplay, CreateClefairySprites, SetClefairySpriteAnim, CreateSlotMachine, DestroySlotMachine,
+GetSlotMachineSetupTaskDataPtr, SetSlotMachineSetupTask, IsSlotMachineSetupTaskActive, SetBackdropColor,
+SlotsTask_GraphicsInit, SlotsTask_FadeOut, SlotsTask_UpdateLineStates, SlotsTask_ClefairyUpdateOnReelsStart,
+SlotsTask_StartClefairyDanceAndWinningLineFlash, SlotsTask_StopWinningLineFlashTask, SlotsTask_ClefairyFainted,
+SlotsTask_ClefairyNeutral, SlotsTask_UpdateCoinsDisplay, SlotsTask_MessageOutOfCoins, SlotsTask_AskQuitPlaying,
+SlotsTask_DestroyYesNoMenu, SlotsTask_PressReelButton, SlotsTask_ReleaseReelButtons, SlotsTask_ShowHelp,
+SlotsTask_HideHelp, Slot_PrintOnWindow0, Slot_ClearWindow0, SetLineStatesByBet, SetLineState,
+Task_FlashWinningLine, SignalStopWinningLineFlashTask, Slot_CreateYesNoMenu, Slot_DestroyYesNoMenu,
+InitReelButtonTileMem, SetReelButtonPressed, ReleaseReelButtons, PressReelButton
+
+### sound.c (commun, 2/2)
+SetBGMVolume_SuppressHelpSystemReduction, BGMVolumeMax_EnableHelpSystemReduction
+
+### special_field_anim.c (RF seul, 4/4)
+AnimateTeleporterHousing, Task_DrawTeleporterHousing, AnimateTeleporterCable, Task_DrawTeleporterCable
+
+### sprite.c (commun, 1/1)
+FreeSpriteTilesIfNotUsingSheet
+
+### ss_anne.c (RF seul, 8/8)
+DoSSAnneDepartureCutscene, Task_SSAnneInit, Task_SSAnneRun, Task_SSAnneFinish, CreateWakeBehindBoat,
+WakeSpriteCallback, CreateSmokeSprite, SmokeSpriteCallback
+
+### start_menu.c (commun, 53/55)
+SetHasPokedexAndPokemon, SetUpStartMenu, AppendToStartMenuItems, SetUpStartMenu_NormalField,
+SetUpStartMenu_SafariZone, SetUpStartMenu_Link, SetUpStartMenu_UnionRoom, DrawSafariZoneStatsWindow,
+DestroySafariZoneStatsWindow, PrintStartMenuItems, DoDrawStartMenu, DrawStartMenuInOneGo, task50_startmenu,
+OpenStartMenuWithFollowupFunc, FieldCB2_DrawStartMenu, SetUpReturnToStartMenu, Task_StartMenuHandleInput,
+StartCB_HandleInput, StartMenu_FadeScreenIfLeavingOverworld, StartMenuPokedexSanityCheck,
+StartMenuPlayerCallback, StartCB_Save1, StartCB_Save2, StartMenu_PrepareForSave, RunSaveDialogCB,
+PrintSaveTextWithFollowupFunc, task50_save_game, CloseSaveMessageWindow, CloseSaveStatsWindow_,
+SetSaveDialogDelayTo60Frames, SaveDialog_Wait60FramesOrAButtonHeld,
+SaveDialog_Wait60FramesThenCheckAButtonHeld, SaveDialogCB_PrintAskSaveText, SaveDialogCB_AskSavePrintYesNoMenu,
+SaveDialogCB_AskSaveHandleInput, SaveDialogCB_PrintAskOverwriteText, SaveDialogCB_AskOverwritePrintYesNoMenu,
+SaveDialogCB_AskReplacePreviousFilePrintYesNoMenu, SaveDialogCB_AskOverwriteOrReplacePreviousFileHandleInput,
+SaveDialogCB_PrintSavingDontTurnOffPower, SaveDialogCB_DoSave, SaveDialogCB_PrintSaveResult,
+SaveDialogCB_WaitPrintSuccessAndPlaySE, SaveDialogCB_ReturnSuccess, SaveDialogCB_WaitPrintErrorAndPlaySE,
+SaveDialogCB_ReturnError, VBlankCB_WhileSavingAfterLinkBattle, DoSetUpSaveAfterLinkBattle,
+CB2_WhileSavingAfterLinkBattle, task50_after_link_battle_save, PrintSaveStats, CloseSaveStatsWindow,
+CloseStartMenu
+
+### teachy_tv.c (RF seul, 56/58)
+InitTeachyTvController, CB2_ReturnToTeachyTV, SetTeachyTvControllerModeToResume, TeachyTvMainCallback,
+TeachyTvSetupBg, TeachyTvLoadGraphic, TeachyTvCreateAndRenderRbox, TeachyTvSetupWindow,
+TeachyTvSetupScrollIndicatorArrowPair, TeachyTvRemoveScrollIndicatorArrowPair, TeachyTvAudioByInput,
+TeachyTvInitIo, TeachyTvSetupObjEventAndOam, TeachyTvSetSpriteCoordsAndSwitchFrame, TeachyTvSetWindowRegs,
+TeachyTvClearWindowRegs, TeachyTvBg2AnimController, TeachyTvSetupPostBattleWindowAndObj,
+TeachyTvInitTextPrinter, TeachyTvFree, TeachyTvQuitBeginFade, TeachyTvQuitFadeControlAndTaskDel,
+TeachyTvOptionListController, TTVcmd_TransitionRenderBg2TeachyTvGraphicInitNpcPos,
+TTVcmd_ClearBg2TeachyTvGraphic, TTVcmd_NpcMoveAndSetupTextPrinter, TTVcmd_IdleIfTextPrinterIsActive,
+TeachyTvRenderMsgAndSwitchClusterFuncs, TTVcmd_TextPrinterSwitchStringByOptionChosen,
+TTVcmd_TextPrinterSwitchStringByOptionChosen2, TTVcmd_IdleIfTextPrinterIsActive2,
+TTVcmd_EraseTextWindowIfKeyPressed, TTVcmd_StartAnimNpcWalkIntoGrass, TTVcmd_DudeMoveUp, TTVcmd_DudeMoveRight,
+TTVcmd_DudeTurnLeft, TTVcmd_DudeMoveLeft, TTVcmd_RenderAndRemoveBg1EndGraphic, TeachyTvClearBg1EndGraphicText,
+TTVcmd_End, TTVcmd_TaskBattleOrFadeByOptionChosen, TeachyTvSetupBagItemsByOptionChosen,
+TeachyTvPostBattleFadeControl, TeachyTvGrassAnimationMain, TeachyTvGrassAnimationObjCallback,
+TeachyTvGrassAnimationCheckIfNeedsToGenerateGrassObj, TeachyTvPrepBattle,
+TeachyTvPreBattleAnimAndSetBattleCallback, TeachyTvRestorePlayerPartyCallback, TeachyTvLoadBg3Map,
+TeachyTvLoadMapTilesetToBuffer, TeachyTvPushBackNewMapPalIndexArrayEntry,
+TeachyTvComputeMapTilesFromTilesetAndMetaTiles, TeachyTvComputeSingleMapTileBlockFromTilesetAndMetaTiles,
+TeachyTvComputePalIndexArrayEntryByMetaTile, TeachyTvLoadMapPalette
+
+### text.c (commun, 15/15)
+FontFunc_NormalCopy1, FontFunc_NormalCopy2, FontFunc_Male, FontFunc_Female, SpriteCB_TextCursor,
+CreateTextCursorSprite, DestroyTextCursorSprite, DecompressGlyph_NormalCopy1, GetGlyphWidth_NormalCopy1,
+DecompressGlyph_NormalCopy2, GetGlyphWidth_NormalCopy2, DecompressGlyph_Male, GetGlyphWidth_Male,
+DecompressGlyph_Female, GetGlyphWidth_Female
+
+### text_printer.c (RF seul, 1/1)
+CopyGlyphToWindow_Parameterized
+
+### text_window.c (commun, 14/15)
+LoadHelpMessageWindowGfxOnBg, LoadMenuMessageWindowGfxOnBg, LoadSignpostWindowGfxOnBg, LoadStdWindowGfxOnBg,
+LoadQuestLogWindowTilesOnBg, LoadUserWindowGfxByFrameOnBg, LoadUserWindowGfx2, LoadHelpMessageWindowGfx,
+LoadMenuMessageWindowGfx, LoadSignpostWindowGfx, LoadStdWindowTiles, LoadQuestLogWindowTiles,
+LoadUserWindowGfxByFrame, LoadUserWindowGfx
+
+### text_window_graphics.c (RF seul, 1/1)
+GetUserWindowGraphics
+
+### tilemap_util.c (RF seul, 1/1)
+TilemapUtil_SetTilemap
+
+### tileset_anims.c (commun, 17/17)
+QueueAnimTiles_General_Water_Current_LandWatersEdge, QueueAnimTiles_General_SandWatersEdge,
+QueueAnimTiles_CeladonCity_Fountain, TilesetAnim_CeladonCity, InitTilesetAnim_CeladonCity,
+QueueAnimTiles_SilphCo_Fountain, TilesetAnim_SilphCo, InitTilesetAnim_SilphCo, QueueAnimTiles_MtEmber_Steam,
+TilesetAnim_MtEmber, InitTilesetAnim_MtEmber, QueueAnimTiles_VermilionGym_MotorizedDoor,
+TilesetAnim_VermilionGym, InitTilesetAnim_VermilionGym, QueueAnimTiles_CeladonGym_Flowers,
+TilesetAnim_CeladonGym, InitTilesetAnim_CeladonGym
+
+### title_screen.c (commun, 5/36)
+SpriteCallback_TitleScreenLeaf, CreateLeafSprite, SpriteCallback_Streak, CreateStreakSprites, Task_LeafSpawner
+
+### tm_case.c (RF seul, 3/71)
+Pokedude_InitTMCase, Task_Pokedude_Start, Task_Pokedude_Run
+
+### trade.c (commun, 2/2)
+CB2_ReturnToTradeMenuFromSummary, CommunicateWhetherMonCanBeTraded
+
+### trade_scene.c (RF seul, 3/3)
+CheckLinkTimeout, LoadTradeGbaSpriteGfx, TradeBufferOTnameAndNicknames
+
+### trainer_card.c (commun, 14/15)
+VBlankCB_TrainerCard, GetTrainerStarCount, HandleGpuRegs, TrainerCardNull, DmaClearOam, DmaClearPltt,
+ResetBgRegs, SetTrainerCardCB2, BufferTextForCardBack, SetTrainerCardBgsAndPals, GetCardType,
+Unref_InitTrainerCard, Unref_InitTrainerCardLink, Unref_InitTrainerCardLink2
+
+### trainer_see.c (commun, 17/25)
+TrainerApproachPlayer, StartTrainerApproachWithFollowupTask, TrainerSeeFunc_Dummy,
+TrainerSeeFunc_StartExclMark, TrainerSeeFunc_WaitExclMark, TrainerSeeFunc_PrepareToEngage,
+TrainerSeeFunc_WaitRemoveDisguise, TrainerSeeFunc_BeginJumpOutOfAsh, TrainerSeeFunc_WaitJumpOutOfAsh,
+TrainerSeeFunc_EndJumpOutOfAsh, TrainerSeeFunc_OffscreenAboveTrainerCreateCameraObj,
+TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveUp, TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveDown,
+Task_RevealTrainer_RunTrainerSeeFuncList, MovementAction_RevealTrainer_RunTrainerSeeFuncList,
+FldEff_ExclamationMarkIcon1, FldEff_SmileyFaceIcon
+
+### trainer_tower.c (RF seul, 39/40)
+CallTrainerTowerFunc, GetTrainerTowerOpponentClass, GetTrainerTowerOpponentName,
+GetTrainerTowerTrainerFrontSpriteId, InitTrainerTowerBattleStruct, FreeTrainerTowerBattleStruct,
+GetTrainerTowerOpponentWinText, GetTrainerTowerOpponentLoseText, SetUpTrainerTowerDataStruct,
+FreeTrainerTowerDataStruct, InitTrainerTowerFloor, SetTrainerTowerNPCGraphics,
+TT_ConvertEasyChatMessageToString, BufferTowerOpponentSpeech, TrainerTowerGetOpponentTextColor,
+Task_DoTrainerTowerBattle, DoTrainerTowerBattle, TrainerTowerGetChallengeType, TrainerTowerAddFloorCleared,
+GetFloorAlreadyCleared, StartTrainerTowerChallenge, TrainerTowerResumeTimer, TrainerTowerSetPlayerLost,
+GetTrainerTowerChallengeStatus, GetCurrentTime, ShowResultsBoard, CloseResultsBoard,
+TrainerTowerGetDoublesEligiblity, TrainerTowerGetNumFloors, ShouldWarpToCounter,
+PlayTrainerTowerEncounterMusic, HasSpokenToOwner, BuildEnemyParty, GetPartyMaxLevel,
+ValidateOrResetCurTrainerTowerRecord, PrintTrainerTowerRecords, GetTrainerTowerRecordTime,
+SetTrainerTowerRecordTime, ResetTrainerTowerResults
+
+### union_room.c (commun, 2/2)
+Leader_DisconnectOnState, ItemPrintFunc_Unused
+
+### union_room_battle.c (commun, 3/3)
+SetUpPartiesAndStartBattle, UnionRoomBattle_CreateTextPrinter, UnionRoomBattle_PrintTextOnWindow0
+
+### union_room_chat.c (commun, 34/35)
+InitChatWork, FreeChatWork, ChatEntryRoutine_Join, ChatEntryRoutine_HandleInput, ChatEntryRoutine_Switch,
+ChatEntryRoutine_AskQuitChatting, ChatEntryRoutine_ExitChat, ChatEntryRoutine_Drop, ChatEntryRoutine_Disbanded,
+ChatEntryRoutine_SendMessage, ChatEntryRoutine_Register, ChatEntryRoutine_SaveAndExit, GoToRoutine,
+TypeChatMessage_HandleDPad, AppendCharacterToChatMessageBuffer, DeleteLastCharacterOfChatMessageBuffer,
+ToggleCaseOfLastCharacterInChatMessageBuffer, ChatMsgHasAtLeastOneCharcter, SaveRegisteredTextsToSB1,
+UnionRoomChat_GetWorkRegisteredText, GetEndOfUnk1A, GetPtrToLastCharOfUnk1A, GetNumCharsInMessageEntryBuffer,
+UnionRoomChat_GetCursorColAndRow, UnionRoomChat_GetMessageEntryBuffer, UnionRoomChat_LenMessageEntryBuffer,
+UnionRoomChat_GetBufferSelectionRegion, UnionRoomChat_GetEndOfMessageEntryBuffer,
+UnionRoomChat_GetNumCharsInMessageEntryBuffer, UnionRoomChat_GetLastReceivedMessage,
+UnionRoomChat_GetReceivedPlayerIndex, UnionRoomChat_GetMessageEntryCursorPosition,
+UnionRoomChat_GetWhetherShouldShowCaseToggleIcon, UnionRoomChat_GetNameOfPlayerWhoDisbandedChat
+
+### union_room_chat_display.c (RF seul, 49/50)
+UnionRoomChat_TryAllocGraphicsWork, UnionRoomChat_RunDisplaySubtask0, UnionRoomChat_FreeGraphicsWork, InitWork,
+UnionRoomChat_ResetDisplaySubtasks, UnionRoomChat_RunDisplaySubtasks, UnionRoomChat_StartDisplaySubtask,
+RunDisplaySubtask, DisplaySubtask_LoadGfx, DisplaySubtask_PrintWin3, DisplaySubtask_HideWin3,
+DisplaySubtask_SwitchPages, DisplaySubtask_MoveSelectorCursorObj, DisplaySubtask_ShowQuitChattingDialog,
+DisplaySubtask_UpdateMessageBuffer, DisplaySubtask_PrintRegisterWhere, DisplaySubtask_CancelRegister,
+DisplaySubtask_ReturnToKeyboard, DisplaySubtask_ScrollChat, DisplaySubtask_AnimateSelectorCursorBlink,
+DisplaySubtask_PrintInputText, DisplaySubtask_PrintExitingChat, DisplaySubtask_PrintLeaderLeft,
+DisplaySubtask_AskSave, DisplaySubtask_AskOverwriteSave, DisplaySubtask_PrintSavingDontTurnOffPower,
+DisplaySubtask_PrintSavedTheGame, DisplaySubtask_ShowConfirmLeaderLeaveDialog, DisplaySubtaskDummy,
+PlaceYesNoMenuAt, UnionRoomChat_ProcessInput, PlaceStdMessageWindow, FillWin1Rect, PrintOnWin1Parameterized,
+AnimateMoveBg1Right, AnimateMoveBg1Left, PrintKeyboardSwapTextsOnWin3, ClearWin3, PrintTextOnWin0Colorized,
+SetBgTilemapWorkBuffers, LoadUnionRoomChatPanelGfx, LoadLinkMiscMenuGfx, LoadBg1Pal8, LoadWin0, LoadWin2,
+LoadWin1, LoadWin3, FillScanlineEffectWithValue1col, FillScanlineEffectWithValue2col
+
+### union_room_chat_objects.c (RF seul, 11/12)
+UnionRoomChat_TryAllocSpriteWork, UnionRoomChat_FreeSpriteWork, UnionRoomChat_CreateSelectorCursorObj,
+UnionRoomChat_ToggleSelectorCursorObjVisibility, UnionRoomChat_MoveSelectorCursorObj,
+UnionRoomChat_UpdateObjPalCycle, UnionRoomChat_SetSelectorCursorClosedImage,
+UnionRoomChat_AnimateSelectorCursorReopen, UnionRoomChat_SpawnTextEntryPointerSprites,
+CreatePageSwitchUISprites, UpdateVisibleUnionRoomChatIcon
+
+### union_room_player_avatar.c (commun, 1/1)
+MakeGroupAssemblyAreasPassable
+
+### wild_encounter.c (commun, 18/18)
+UnlockedTanobyOrAreNotInTanoby, GenerateWildMon, GenerateUnownPersonalityByLetter,
+GetUnownLetterByPersonalityLoByte, GenerateFishingEncounter, DoWildEncounterRateDiceRoll,
+DoWildEncounterRateTest, GetAbilityEncounterRateModType, DoGlobalWildEncounterDiceRoll,
+GetFluteEncounterRateModType, IsLeadMonHoldingCleanseTag, SeedWildEncounterRng, WildEncounterRandom,
+GetMapBaseEncounterCooldown, ResetEncounterRateModifiers, HandleWildEncounterCooldown,
+TryStandardWildEncounter, AddToWildEncounterRateBuff
+
+### window.c (commun, 1/1)
+nullsub_8
+
+### window_8bpp.c (RF seul, 1/1)
+nullsub_9
+
+### wireless_communication_status_screen.c (commun, 1/1)
+ExitWirelessCommunicationStatusScreen

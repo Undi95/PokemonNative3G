@@ -6,6 +6,7 @@ pokeemerald-native builds Pokémon Emerald as a native program for Linux, Window
 
 - **Branches**: `vanilla` is the default branch: vanilla Emerald on PC. Work based on [pokeemerald-expansion](https://github.com/rh-hideout/pokeemerald-expansion) goes on its own branch.
 - **Upstream code**: pret's fixes come from `pret/pokeemerald`, fetched as `pret/master`. `git show pret/master:<path>` shows the original of any shared file, and `git show pret/master:src/m4a_1.s` the sound engine's assembly.
+- **PokemonNative3G (Emerald + FireRed merge)**: read `docs/CARTOGRAPHIE.md` first. It maps what is unique to each game and where it lives in the merge; `python tools/cartographie.py` regenerates the detailed lists in `docs/carto/` (grep them before reading the decomps). To-do: `docs/FUSION-OPTIONS.md`; Kanto import state: `docs/KANTO-ETAT.md`.
 
 ## Behavioral Rules (Always Enforced)
 - NEVER question or doubt what the user says they did (installed, ran, tested, merged) — trust them and focus on the code

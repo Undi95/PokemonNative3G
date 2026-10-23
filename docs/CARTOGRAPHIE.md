@@ -1,0 +1,106 @@
+# Cartographie Émeraude / Rouge Feu / fusion
+
+À lire avant toute tâche de fusion : on y trouve ce qui est propre à chaque jeu, où c'est dans les décomps
+et où c'en est la fusion. Les listes détaillées sont générées ; cette page est la synthèse (mise à jour à la main).
+
+```bash
+python tools/cartographie.py
+```
+
+Le script relit `../decomps/pokeemeraude`, `../decomps/pokerougefeu` et ce dépôt (4 s), et réécrit `docs/carto/` :
+
+| Fichier | Contenu | Usage |
+|---|---|---|
+| [carto/sources.md](carto/sources.md) | chaque `.c` de RF : fonctions propres, déjà portées, copie Kanto, fichiers de la fusion | « où en est le fichier X de RF ? » |
+| [carto/fonctions-rf-absentes.md](carto/fonctions-rf-absentes.md) | fonctions propres à RF absentes de la fusion, par fichier | `grep NomDeFonction` avant de porter |
+| [carto/fonctions-divergentes.md](carto/fonctions-divergentes.md) | même nom dans les deux jeux, code différent (✓ = variante Kanto dans la fusion) | trouver un comportement propre à RF |
+| [carto/constantes.md](carto/constantes.md) | objets, espèces, types de combat, effets de terrain, déplacements, métatiles, musiques, dresseurs, sprites | « cette constante RF existe-t-elle ? » |
+| [carto/scripts.md](carto/scripts.md) | specials (portés / stubs), opcodes de script, macros, `data/scripts/` | porter un script RF |
+| [carto/donnees.md](carto/donnees.md) | dossiers `graphics/`, champs de sauvegarde, cartes | graphismes et sauvegarde |
+
+Limites : le repérage se fait par nom. Une fonction de RF portée sous un autre nom n'est pas vue. Une fonction
+« propre à RF » est souvent la même logique qu'Émeraude sous un autre nom (`SetUpStartMenu` de RF ↔
+`BuildStartMenuActions` d'Émeraude) : « absente » ne veut pas dire « fonctionnalité manquante ». Le script
+reconnaît les corps identiques (187 fonctions) mais pas les corps voisins.
+
+## Chiffres (2026-10-23)
+
+- Sources : 310 `.c` dans Émeraude, 283 dans RF, 350 dans la fusion. 207 fichiers communs, 76 propres à RF, 103 propres à Émeraude.
+- Fonctions de RF : 12 033. 3 949 identiques à Émeraude ; 4 254 de même nom mais code différent ; 3 830 de nom
+  propre à RF, dont 1 045 dans la fusion et 187 au code identique à une fonction d'Émeraude.
+- Données de jeu : espèces (440), capacités (356), talents, effets de capacités et d'objets tenus **identiques**.
+  Objets : mêmes numéros. Les 58 noms propres à RF ne sont que des alias de CT/CS (`ITEM_TM01_FOCUS_PUNCH = ITEM_TM01`).
+- Cartes : Émeraude 518, RF 425, fusion 914 (518 + 396 de RF). Non importées : Nombril du Monde de RF
+  (celui d'Émeraude est gardé), salles link et Île Aurore (mêmes cartes). Route Victoire et Parc Safari
+  Nord de RF : `KantoVictoryRoad_*`, `KantoSafariZone_North*`.
+- Specials : RF en a 272. 147 lui sont propres : 104 portés, 43 stubs (`src/kanto_specials_stubs.c`).
+- Musiques de RF : déjà dans Émeraude sous `MUS_RG_*`, sauf `MUS_RS_VS_GYM_LEADER` et `MUS_RS_VS_TRAINER`.
+
+## Propre à Rouge Feu
+
+✓ porté · ◐ partiel · ✗ absent · ⊘ hors solo (link) · — écarté par décision.
+
+| Contenu | Fichiers RF | Fusion |
+|---|---|---|
+| Sac, Boîte à CT, Sac à Baies | bag, item_menu, item_menu_icons, tm_case, berry_pouch | ✓ option SAC (`kanto_bag.c`, `kanto_item_menu*.c`, `kanto_tm_case.c`, `kanto_berry_pouch.c`) |
+| Pokédex de Kanto | pokedex_screen, pokedex_area_markers, wild_pokemon_area | ✓ option POKéDEX (`kanto_pokedex_screen.c`, `kanto_pokedex_area.c`) |
+| Résumé du Pokémon | pokemon_summary_screen | ✓ option MENUS (`kanto_summary_screen.c`) |
+| Écran titre, intro, crédits, Panthéon | title_screen, intro, credits, hall_of_fame | ✓ (`kanto_title_screen.c`, `kanto_intro.c`, `kanto_credits.c`, `kanto_hall_of_fame.c`) |
+| Carte de Kanto, Vol, objet Carte | region_map | ✓ (`kanto_region_map.c`) |
+| Cherche VS | vs_seeker | ✓ à Kanto (`kanto_vs_seeker.c`) ; Hoenn à faire |
+| Cherch'Objet | itemfinder | ✓ à Kanto (`kanto_itemfinder.c`) |
+| Fan Club de Safrania, portes | trainer_fan_club, field_door | ✓ (`kanto_trainer_fan_club.c`, `kanto_field_door.c`) |
+| Specials de terrain | field_specials (118 fonctions) | ◐ 47 dans `kanto_field_specials.c` / `kanto_specials.c` / `kanto_list_menu.c` ; 43 stubs |
+| Commandes de script RF | scrcmd | ✓ opcodes RF dans `kanto_scrcmd.c` (les autres = ceux d'Émeraude) |
+| Décors de combat | battle_bg | ✓ (`kanto_battle_bg.c`, généré) |
+| Warps et transitions | field_fadetransition | ◐ 43 % (escaliers, téléporteurs, trous portés) |
+| Vieil homme de Jadielle | battle_controller_oak_old_man | ◐ vieil homme (`battle_controller_old_man.c`) ; conseils de Chen — écartés |
+| Aperçus de donjons | map_preview_screen | ◐ données dans `kanto_region_map.c`, écran à faire |
+| Aide (touche L/R) | help_system, help_system_util, help_message | ◐ messages (`kanto_help_message.c`) ; système sans effet |
+| Journal « Précédemment dans votre quête » | quest_log, quest_log_* (5 fichiers) | ✗ à faire (option, désactivé par défaut) |
+| Tour des Dresseurs (Île 7) | trainer_tower | ✗ dette (cf. KANTO-ETAT.md) |
+| Objets cachés qui réapparaissent | renewable_hidden_items | ✗ |
+| Fame Checker (objet rare) | fame_checker | ✗ (sauvegarde déjà réservée dans `gSaveBlockKanto`) |
+| Discours de Chen (nouvelle partie) | oak_speech | ✗ (la partie commence à Hoenn) |
+| Note du Pokédex par Chen (PC) | prof_pc | ✗ stub `GetProfOaksRatingMessage` |
+| Animation d'objet sur un Pokémon (CT, Super Bonbon…) | pokemon_special_anim, pokemon_special_anim_scene | ✗ |
+| Ferry Seagallop, départ du S.S. Anne | seagallop, ss_anne | ◐ menus / ✗ cinématiques (stubs) |
+| Combat FANTÔME (Tour Pokémon), IA des légendaires RF | battle_main, battle_ai… (`BATTLE_TYPE_GHOST`, `_LEGENDARY_FRLG`) | ✗ stub `StartMarowakBattle` |
+| Teachy TV, combats du Pokédude | teachy_tv, battle_controller_pokedude | — retirés du sac |
+| PC (stockage), Easy Chat | pokemon_storage_system_*, easy_chat_2/3 | — Émeraude gardé (décisions 2026-10-23) |
+| PC objets / boîte aux lettres, Maître des capacités, boutique, machine à sous, menu Start de RF | item_pc, mailbox_pc, learn_move, buy_menu_helpers, slot_machine, start_menu | ✗ version d'Émeraude partout (candidats à HOENN/KANTO) |
+| Link : E-Reader, Union Room, Tour de Combat RF, Colisée | cereader_tool, union_room_chat_*, battle_tower | ⊘ stubs |
+
+## Propre à Émeraude (contenu de Hoenn, intact dans la fusion)
+
+- Concours : contest*, contest_painting, berry_blender, pokeblock*, use_pokeblock.
+- Zone de Combat : battle_dome/pike/pyramid/palace/arena/factory(_screen)/tent, frontier_*, apprentice, battle_pyramid_bag.
+- PokéNav et appels : pokenav_* (14 fichiers), match_call (revanches de Hoenn).
+- Monde : secret_base, tv, record_mixing, dewford_trend, lilycove_lady, mauville_old_man, trader, mirage_tower,
+  rayquaza_scene, faraway_island, trainer_hill, rotating_gate, rotating_tile_puzzle, braille_puzzles, cable_car, roulette, lottery_corner.
+- Horloge : rtc, clock, time_events, wallclock, reset_rtc_screen.
+- Début de partie : starter_choose, birch_pc. Combat : battle_controller_wally (base du vieil homme),
+  battle_controller_player_partner, recorded_battle, battle_tv, pokemon_animation (sprites animés = option POKéMON).
+
+## Communs mais différents (présentation propre à chaque jeu)
+
+Détail : `carto/fonctions-divergentes.md`. Fichiers communs où RF a le plus de fonctions propres non couvertes :
+event_object_movement 101, field_effect 90, slot_machine 73, party_menu 60, start_menu 53, field_player_avatar 52,
+item_use 48, metatile_behavior 48, player_pc 43, overworld 30, easy_chat 27, evolution_graphics 26, main_menu 25,
+script_menu 20, menu 19, field_specials 18, wild_encounter 18, option_menu 17, tileset_anims 17, trainer_see 17.
+Une bonne part est du renommage ; à vérifier fichier par fichier avant de porter.
+
+Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.md).
+
+## Sauvegarde
+
+- Champs propres à RF (SaveBlock1/2) : questLog, fameChecker, rivalName, route5DayCareMon, trainerTower, battleTower RF.
+  Ils vont dans `gSaveBlockKanto` (`include/kanto_save.h`), qui a déjà rivalName, fameChecker, route5DayCareMon,
+  roamers et les revanches du Cherche VS.
+- Champs propres à Émeraude : décorations, bases secrètes, TV, concours, Zone de Combat, apprentis, dame de Nénucrique : inchangés.
+
+## Fichiers propres à la fusion
+
+`src/kanto_*.c` (25 fichiers : copies de RF, cf. colonne « copie » de `carto/sources.md`), `battle_controller_old_man.c`,
+`debug_menu.c`, `kanto_save.c`, `kanto_specials_stubs.c`. Outils d'import : `tools/kanto/*.py`, `tools/import_rf_mon_pics.py`,
+`tools/redleaf_sprites.py`, `tools/item_doubles.py`, `tools/cartographie.py`.

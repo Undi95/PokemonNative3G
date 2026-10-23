@@ -60,6 +60,16 @@ contenu dans un seul jeu.
 - [x] Cherch'Objet selon la région (kanto_itemfinder.c = RF à Kanto, Émeraude à Hoenn) ; objets « sous les pieds » de RF perdus à l'import des cartes (traités comme des objets cachés normaux)
 - [ ] Objets donnés deux fois (CS, cannes, Passe Bateau…) : voir docs/OBJETS-EN-DOUBLE.md
 
+## Trouvé par la cartographie (2026-10-23, docs/CARTOGRAPHIE.md)
+- [ ] Combat FANTÔME de la Tour Pokémon (stub `StartMarowakBattle`, `BATTLE_TYPE_GHOST` absent) : sur le chemin de l'histoire de Kanto
+- [ ] Objets cachés qui réapparaissent (renewable_hidden_items.c)
+- [ ] Fame Checker (fame_checker.c ; sauvegarde déjà réservée dans gSaveBlockKanto)
+- [ ] Animation d'objet sur un Pokémon (pokemon_special_anim*.c : CT, Super Bonbon…), avec le sac KANTO
+- [ ] Note du Pokédex par Chen au PC (prof_pc.c, stub `GetProfOaksRatingMessage`)
+- [ ] Cinématiques Seagallop et départ du S.S. Anne (stubs)
+- [ ] IA des légendaires de RF (`BATTLE_TYPE_LEGENDARY_FRLG`)
+- [ ] Candidats HOENN/KANTO (version d'Émeraude partout aujourd'hui) : PC objets et boîte aux lettres, Maître des capacités, boutique, machine à sous, menu Start
+
 ## Notes
 - Piste (utilisateur) : Émeraude a été construit à partir de Rouge Feu ; il garde des fonctions vidées et des entrées inutilisées de RF (ex. BgTileAllocOp « Dummied out », LoadMonPicInWindow UNUSED). Les rétablir avec le code de RF avant de réinventer.
 - Comparaison des cadres : script PIL (pixels RGB identiques) ; refaire de même pour chaque liste.
