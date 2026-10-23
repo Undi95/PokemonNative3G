@@ -45,6 +45,49 @@ static u8 GetMartFontId(void);
 
 #define INDEX_CANCEL LIST_CANCEL // RF : shop.h
 
+// Rouge Feu (money.c) : case d'argent de RF (« ARGENT » puis le montant en petite police à droite) ;
+// celles d'Émeraude n'ont que le montant, plus à droite
+static void PrintMoneyAmountInMoneyBox(u8 windowId, int amount, u8 speed)
+{
+    u8 *txtPtr;
+    s32 strLength;
+
+    ConvertIntToDecimalStringN(gStringVar1, amount, STR_CONV_MODE_LEFT_ALIGN, 6);
+
+    strLength = 6 - StringLength(gStringVar1);
+    txtPtr = gStringVar4;
+
+    while (strLength-- != 0)
+        *(txtPtr++) = 0;
+
+    StringExpandPlaceholders(txtPtr, gText_PokedollarVar1);
+    AddTextPrinterParameterized(windowId, FONT_SMALL, gStringVar4, 64 - GetStringWidth(FONT_SMALL, gStringVar4, 0), 0xC, speed, NULL);
+}
+
+static void PrintMoneyAmount(u8 windowId, u8 x, u8 y, int amount, u8 speed)
+{
+    u8 *txtPtr;
+    s32 strLength;
+
+    ConvertIntToDecimalStringN(gStringVar1, amount, STR_CONV_MODE_LEFT_ALIGN, 6);
+
+    strLength = 6 - StringLength(gStringVar1);
+    txtPtr = gStringVar4;
+
+    while (strLength-- != 0)
+        *(txtPtr++) = 0;
+
+    StringExpandPlaceholders(txtPtr, gText_PokedollarVar1);
+    AddTextPrinterParameterized(windowId, FONT_SMALL, gStringVar4, x, y, speed, NULL);
+}
+
+static void PrintMoneyAmountInMoneyBoxWithBorder(u8 windowId, u16 tileStart, u8 paletteNum, int amount)
+{
+    DrawStdFrameWithCustomTileAndPalette(windowId, FALSE, tileStart, paletteNum);
+    AddTextPrinterParameterized(windowId, FONT_KANTO, gText_TrainerCardMoney, 0, 0, 0xFF, 0); // RF : FONT_NORMAL de RF
+    PrintMoneyAmountInMoneyBox(windowId, amount, 0);
+}
+
 // Rouge Feu (menu.c)
 static void PrintTextArray(u8 windowId, u8 fontId, u8 left, u8 top, u8 lineHeight, u8 itemCount, const struct MenuAction *strs)
 {
