@@ -72,11 +72,11 @@ Contenu de RF à importer :
 
 Choix HOENN / KANTO :
 - [x] PC objets (2026-10-24) : interface de RF avec l'option MENUS = KANTO (RETIRER = PC objets plein écran de RF, `kanto_item_pc.c` ; boîte aux lettres aux fenêtres de RF) ; les objets stockés restent communs aux deux régions (même stockage). Les interfaces de RF suivantes (boutique, Maître des capacités) passent aussi par MENUS
-- [ ] Maître des capacités (réapprentissage) : interface de RF en option (learn_move.c), rendu seulement. Les deux proposent déjà les mêmes attaques (capacités par niveau, mêmes données) : rien à fusionner
+- [x] Maître des capacités (2026-10-24) : interface de RF avec MENUS = KANTO (`kanto_learn_move.c`), rendu seulement. Les deux proposent déjà les mêmes attaques (capacités par niveau, mêmes données) : rien à fusionner
 - Donneurs de capacités : chacun reste exclusif à sa région (pas de changement)
 - [x] Boutique (2026-10-24) : interface de RF avec MENUS = KANTO (`kanto_shop.c` ; boutiques de décorations d'Émeraude inchangées)
 - [ ] Machine à sous : PAS d'option, chacune dans sa région (celle de RF au Casino de Céladopole, celle d'Émeraude à Lavandia)
-- [ ] Menu Start de RF : en option
+- [x] Menu Start de RF : déjà par MENUS = KANTO (police, espacement, curseur, descriptions de RF)
 - [x] Menu Options en pages (2026-10-23, L/R ; titre « {L}{R} PAGE 1/2 : JEU » / « PAGE 2/2 : HOENN/KANTO » ; page 2 : PERSO, POKéMON, DIALOGUE, BOITES COMBAT, MENUS, SAC, POKéDEX, TITRE, INTRO) : page 1 = réglages d'Émeraude, page 2 (et suivantes) = choix HOENN/KANTO ; indiquer clairement qu'il y a d'autres pages (ex. « PAGE 1/2 » et flèches L/R dans le titre)
 
 ## Notes
