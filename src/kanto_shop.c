@@ -45,12 +45,20 @@ static u8 GetMartFontId(void);
 
 #define INDEX_CANCEL LIST_CANCEL // RF : shop.h
 
-// Rouge Feu (item_menu.c) : DisplayItemMessageOnField avec la police (Émeraude : police normale)
+// Rouge Feu (menu.c)
+static void PrintTextArray(u8 windowId, u8 fontId, u8 left, u8 top, u8 lineHeight, u8 itemCount, const struct MenuAction *strs)
+{
+    u8 i;
+
+    for (i = 0; i < itemCount; i++)
+        AddTextPrinterParameterized(windowId, fontId, strs[i].text, left, (lineHeight * i) + top, 0xFF, NULL);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
+// Rouge Feu (item_menu.c) : DisplayItemMessageOnField(taskId, fontId, ...) ; RF y passe la police homme/femme du vendeur
 static void KShop_DisplayItemMessageOnField(u8 taskId, u8 fontId, const u8 *str, TaskFunc callback)
 {
-    LoadMessageBoxAndBorderGfx(); // RF : LoadStdWindowFrameGfx
-    DisplayMessageAndContinueTask(taskId, 0, DLG_WINDOW_BASE_TILE_NUM, DLG_WINDOW_PALETTE_NUM, fontId, GetPlayerTextSpeedDelay(), str, callback);
-    ScheduleBgCopyTilemapToVram(0);
+    DisplayItemMessageOnField(taskId, str, callback); // police : celle de la boîte de dialogue (option DIALOGUE)
 }
 
 static const u32 sKBuyMenuFrame_Gfx[] = INCGFX_U32("graphics/kanto/shop_menu/shop_menu.png", ".4bpp.lz");
@@ -450,7 +458,7 @@ static u8 CreateShopMenu(u8 martType)
     sShopData.fontId = FONT_KANTO; // RF : FONT_MALE / FONT_FEMALE selon le vendeur (polices de RF pas encore importées)
 
     sShopMenuWindowId = AddWindow(&sShopMenuWindowTemplate);
-    SetStdWindowBorderStyle(sShopMenuWindowId, 0);
+    SetStandardWindowBorderStyle(sShopMenuWindowId, 0);
     PrintTextArray(sShopMenuWindowId, FONT_NORMAL, GetMenuCursorDimensionByFont(FONT_NORMAL, 0), 2, 16, 3, sShopMenuActions_BuySellQuit);
     Menu_InitCursor(sShopMenuWindowId, FONT_NORMAL, 0, 2, 16, 3, 0);
     PutWindowTilemap(sShopMenuWindowId);
@@ -467,7 +475,7 @@ static u8 GetMartTypeFromItemList(u32 martType)
 
     for (i = 0; i < sShopData.itemCount && sShopData.itemList[i] != 0; i++)
     {
-        if (ItemId_GetPocket(sShopData.itemList[i]) == POCKET_TM_HM)
+        if (GetItemPocket(sShopData.itemList[i]) == POCKET_TM_HM)
             return MART_TYPE_TMHM;
     }
     return MART_TYPE_REGULAR;
@@ -1147,7 +1155,7 @@ static void Task_BuyMenu(u8 taskId)
 static void Task_BuyHowManyDialogueInit(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    u16 quantityInBag = BagGetQuantityByItemId(tItemId);
+    u16 quantityInBag = CountTotalItemQuantityInBag(tItemId);
     u16 maxQuantity;
 
     BuyMenuQuantityBoxThinBorder(1, 0);
