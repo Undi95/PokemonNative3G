@@ -71,6 +71,40 @@ reconnaît les corps identiques (187 fonctions) mais pas les corps voisins.
 | PC objets / boîte aux lettres, Maître des capacités, boutique, machine à sous, menu Start de RF | item_pc, mailbox_pc, learn_move, buy_menu_helpers, slot_machine, start_menu | ✗ version d'Émeraude partout (candidats à HOENN/KANTO) |
 | Link : E-Reader, Union Room, Tour de Combat RF, Colisée | cereader_tool, union_room_chat_*, battle_tower | ⊘ stubs |
 
+
+## Reste à importer de Rouge Feu (bilan du 2026-10-23, d'après `carto/`)
+
+Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis la présentation (options), le reste à décider.
+
+**A. Aventure (solo)**
+1. Ferry Seagallop : cinématique + menu des destinations (`DoSeagallopFerryScene`, `DrawSeagallopDestinationMenu`, `GetSelectedSeagallopDestination` = stubs ; seagallop.c 18 %). Transport vers les îles Sevii.
+2. Fame Checker : objet rare et écran (fame_checker.c, 64 fonctions ; la macro `famechecker` des scripts existe déjà).
+3. Cinématiques et scènes encore en stub (appelées par des scripts de Kanto) : départ du S.S. Anne (ss_anne.c), éclairage de la Ligue, téléporteurs de Léo, fossiles du musée et `DoPicboxCancel`, diplôme, triangle de Deoxys (Île Aurore), curseur du braille.
+4. Poké Flûte : utilisable ni sur le terrain ni en combat (`checkpokeflute`, BattleScript_UsePokeFlute de RF).
+5. Tour des Dresseurs (Île 7) : trainer_tower.c, données, type de combat à part, chrono, records.
+6. Combats sauvages scriptés de RF (`BATTLE_TYPE_WILD_SCRIPTED` : IA « mauvaises attaques ») : même approche que le FANTÔME.
+7. Aperçus des donjons (map_preview_screen.c ; données déjà dans kanto_region_map.c).
+8. PNJ en stub : `ShowEasyChatMessage` (2 scripts), `BufferRandomHobbyOrLifestyleString` (1 script).
+9. Journal « Précédemment dans votre quête » (quest_log*.c, ~230 fonctions), option désactivée par défaut.
+
+**B. Présentation (choix HOENN/KANTO ou règle par région)**
+- Animation d'objet sur un Pokémon avec le sac KANTO (pokemon_special_anim*.c, ~94 fonctions).
+- Interfaces de RF en option : PC objets + boîte aux lettres (item_pc.c, mailbox_pc.c), boutique (buy_menu_helpers.c + shop.c), menu Start (start_menu.c), Maître des capacités (learn_move.c).
+- Machine à sous de RF au Casino de Céladopole (slot_machine.c de RF : 73 fonctions propres).
+- Panneaux de RF (signpost), polices homme/femme et couleurs de texte de RF.
+
+**C. À décider (écartés jusqu'ici)**
+- Aide L/R de RF (help_system*.c) : aujourd'hui sans effet.
+- Teachy TV et combats du Pokédude (teachy_tv.c, battle_controller_pokedude.c) : retirés du sac.
+- Conseils de Chen pendant le combat du labo (battle_controller_oak_old_man.c).
+- Discours de Chen de nouvelle partie (oak_speech.c) : la partie commence à Hoenn.
+
+**D. Hors solo (link)** : Colisée, échanges câble, Union Room, Tour de Combat de RF, E-Reader, records de combat.
+
+**E. Données perdues à l'import** : objets « sous les pieds » (traités comme des objets cachés normaux).
+
+**Déjà conformes, contrairement à ce que suggère la carte** : animations de tilesets de Kanto (tileset_anims.c), musiques RF (`MUS_RG_*`, sauf `MUS_RS_VS_*` = musiques d'Émeraude), déplacements `walk_slower` (convertis en `walk_slow`) ; les autres actions de déplacement propres à RF (rotation, glissade…) ne servent qu'aux cinématiques du point A3.
+
 ## Propre à Émeraude (contenu de Hoenn, intact dans la fusion)
 
 - Concours : contest*, contest_painting, berry_blender, pokeblock*, use_pokeblock.
