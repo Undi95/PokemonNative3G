@@ -3,7 +3,7 @@
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
-from kanto_tour import log, debug_warp, give_mewtwo
+from kanto_tour import log, give_mewtwo
 
 
 def play(game):
@@ -11,7 +11,8 @@ def play(game):
     game.wait(120)
     game.tap("A", 210, hold=4, gap=26)
     give_mewtwo(game)
-    debug_warp(game, 24); log(game, "Panthéon")
+    game.wait(30); game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("A"); game.wait(30)
+    game.tap("DOWN", 24); game.tap("A"); game.wait(200); log(game, "Panthéon")
     for _ in range(300):
         game.tap("A", gap=60)
     log(game, "fin")
