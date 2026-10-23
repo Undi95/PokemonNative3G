@@ -39,6 +39,8 @@ static void SetNextConditionSparkle(struct Sprite *);
 static void SpriteCB_ConditionSparkle(struct Sprite *);
 static void ShowAllConditionSparkles(struct Sprite *);
 
+static const u8 sKText_FameCheckerText_Cancel[] = _("SORTIR"); // Rouge Feu (strings_1_fr.h)
+
 static const struct WindowTemplate sWindowTemplates_MailboxMenu[MAILBOXWIN_COUNT] =
 {
     [MAILBOXWIN_TITLE] = {
@@ -211,8 +213,21 @@ bool8 MailboxMenu_Alloc(u8 count)
 /**
  * French Difference
 */
+// Rouge Feu (mailbox_pc.c) : fenêtres de la boîte aux lettres de RF (option MENUS = KANTO)
+static const struct WindowTemplate sKantoWindowTemplates_MailboxMenu[MAILBOXWIN_COUNT] =
+{
+    [MAILBOXWIN_TITLE]   = {.bg = 0, .tilemapLeft = 1,  .tilemapTop = 1, .width = 10, .height = 2,  .paletteNum = 15, .baseBlock = 0x008},
+    [MAILBOXWIN_LIST]    = {.bg = 0, .tilemapLeft = 19, .tilemapTop = 1, .width = 10, .height = 18, .paletteNum = 15, .baseBlock = 0x01c},
+    [MAILBOXWIN_OPTIONS] = {.bg = 0, .tilemapLeft = 1,  .tilemapTop = 1, .width = 15, .height = 8,  .paletteNum = 15, .baseBlock = 0x01c},
+};
+
 u8 MailboxMenu_AddWindow(u8 windowIdx)
 {
+    if (sMailboxWindowIds[windowIdx] == WINDOW_NONE && gSaveBlock2Ptr->optionsMenuStyle)
+    {
+        sMailboxWindowIds[windowIdx] = AddWindow(&sKantoWindowTemplates_MailboxMenu[windowIdx]);
+        SetStandardWindowBorderStyle(sMailboxWindowIds[windowIdx], FALSE);
+    }
     if (sMailboxWindowIds[windowIdx] == WINDOW_NONE)
     {
         if (windowIdx == MAILBOXWIN_OPTIONS)
@@ -263,7 +278,7 @@ static void MailboxMenu_ItemPrintFunc(u8 windowId, u32 itemId, u8 y)
     length = StringLength(buffer);
     if (length < PLAYER_NAME_LENGTH - 1)
         ConvertInternationalString(buffer, LANGUAGE_JAPANESE);
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 8, y, 0, 0, sPlayerNameTextColors, TEXT_SKIP_DRAW, buffer);
+    AddTextPrinterParameterized4(windowId, gSaveBlock2Ptr->optionsMenuStyle ? FONT_KANTO : FONT_NORMAL, 8, y, 0, 0, sPlayerNameTextColors, TEXT_SKIP_DRAW, buffer);
 }
 
 u8 MailboxMenu_CreateList(struct PlayerPCItemPageStruct *page)
@@ -296,6 +311,15 @@ u8 MailboxMenu_CreateList(struct PlayerPCItemPageStruct *page)
     gMultiuseListMenuTemplate.lettersSpacing = 0;
     gMultiuseListMenuTemplate.itemVerticalPadding = 0;
     gMultiuseListMenuTemplate.scrollMultiple = LIST_NO_MULTIPLE_SCROLL;
+    if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu (MailboxPC_InitListMenu)
+    {
+        sMailboxList[page->count].name = sKText_FameCheckerText_Cancel;
+        gMultiuseListMenuTemplate.item_X = GetMenuCursorDimensionByFont(FONT_KANTO, 0);
+        gMultiuseListMenuTemplate.itemVerticalPadding = 2;
+        gMultiuseListMenuTemplate.fontId = FONT_KANTO;
+        gMultiuseListMenuTemplate.upText_Y = 10;
+        gMultiuseListMenuTemplate.cursorKind = 0;
+    }
     return ListMenuInit(&gMultiuseListMenuTemplate, page->itemsAbove, page->cursorPos);
 }
 

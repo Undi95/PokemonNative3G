@@ -230,6 +230,14 @@ static const u16 sNewGamePCItems[][2] =
     { ITEM_NONE, 0 }
 };
 
+// Rouge Feu (strings_1_fr.h) : boîte aux lettres de RF (option MENUS = KANTO)
+static const u8 sKText_Mailbox[] = _("BOITE LETTR.");
+static const u8 sKText_OtherText_Read[] = _("LIRE");
+static const u8 sKText_OtherText_MoveToBag[] = _("METTRE DANS SAC");
+static const u8 sKText_OtherText_Give2[] = _("DONNER");
+static const u8 sKText_OtherText_Exit[] = _("RETOUR");
+static const u8 *const sKText_MailOptions[] = {sKText_OtherText_Read, sKText_OtherText_MoveToBag, sKText_OtherText_Give2, sKText_OtherText_Exit};
+
 const struct MenuAction gMailboxMailOptions[] =
 {
     { gText_Read,      {Mailbox_DoMailRead} },
@@ -735,6 +743,9 @@ static void Mailbox_DrawMailboxMenu(u8 taskId)
     u8 windowId = MailboxMenu_AddWindow(MAILBOXWIN_TITLE);
     MailboxMenu_AddWindow(MAILBOXWIN_LIST);
     //!< French Difference ?
+    if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu (Task_DrawMailboxPcMenu)
+        AddTextPrinterParameterized(windowId, FONT_KANTO, sKText_Mailbox, (80 - GetStringWidth(FONT_KANTO, sKText_Mailbox, 0)) / 2, 2, 0, NULL);
+    else
     AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_Mailbox, GetStringCenterAlignXOffset(FONT_NORMAL, gText_Mailbox, gWindows[windowId].window.width * 8), 1, 0, NULL); // FR difference
     ScheduleBgCopyTilemapToVram(0);
     gTasks[taskId].tListTaskId = MailboxMenu_CreateList(&gPlayerPCItemPageInfo);
@@ -796,6 +807,17 @@ static void Mailbox_ReturnToPlayerPC(u8 taskId)
 static void Mailbox_PrintMailOptions(u8 taskId)
 {
     u8 windowId = MailboxMenu_AddWindow(MAILBOXWIN_OPTIONS);
+    if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu (Task_DrawMailSubmenu)
+    {
+        u8 i;
+        for (i = 0; i < ARRAY_COUNT(sKText_MailOptions); i++)
+            AddTextPrinterParameterized(windowId, FONT_KANTO, sKText_MailOptions[i], GetMenuCursorDimensionByFont(FONT_KANTO, 0), 16 * i + 2, TEXT_SKIP_DRAW, NULL);
+        CopyWindowToVram(windowId, COPYWIN_GFX);
+        InitMenuNormal(windowId, FONT_KANTO, 0, 2, 16, ARRAY_COUNT(gMailboxMailOptions), 0);
+        ScheduleBgCopyTilemapToVram(0);
+        gTasks[taskId].func = Mailbox_MailOptionsProcessInput;
+        return;
+    }
     PrintMenuTable(windowId, ARRAY_COUNT(gMailboxMailOptions), gMailboxMailOptions);
     InitMenuInUpperLeftCornerNormal(windowId, ARRAY_COUNT(gMailboxMailOptions), 0);
     ScheduleBgCopyTilemapToVram(0);
