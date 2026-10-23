@@ -370,8 +370,15 @@ static void VBlankCB_MoveRelearner(void)
 }
 
 // Script arguments: The Pokémon to teach is in VAR_0x8004
+void KantoTeachMoveRelearnerMove(void); // kanto_learn_move.c
+
 void TeachMoveRelearnerMove(void)
 {
+    if (gSaveBlock2Ptr->optionsMenuStyle) // PokemonNative3G : écran de RF (option MENUS = KANTO)
+    {
+        KantoTeachMoveRelearnerMove();
+        return;
+    }
     LockPlayerFieldControls();
     CreateTask(Task_WaitForFadeOut, 10);
     // Fade to black
