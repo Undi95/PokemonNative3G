@@ -1,6 +1,7 @@
 // Menu de debug (builds KANTO_DEBUG=1 uniquement), ouvert depuis le menu Start.
 // Téléportation, traverser les murs, rencontres sauvages, soin de l'équipe.
 #include "global.h"
+#include "constants/kanto_flags_vars.h"
 #include "debug_menu.h"
 #include "event_object_lock.h"
 #include "event_object_movement.h"
@@ -51,6 +52,7 @@ enum {
     DEBUG_UNLOCK_DEXES,
     DEBUG_FLY_MAP,
     DEBUG_HOENN_REMATCHES,
+    DEBUG_SEVII_PASSES,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -159,6 +161,7 @@ static const u8 sText_GiveItems[] = _("Ajout objets");
 static const u8 sText_UnlockDexes[] = _("Débloquer les 2 POKéDEX");
 static const u8 sText_FlyMap[] = _("Carte VOL (2 régions)");
 static const u8 sText_HoennRematches[] = _("Revanches PokéNav");
+static const u8 sText_SeviiPasses[] = _("Pass îles Sevii");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -200,6 +203,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_UNLOCK_DEXES].name = sText_UnlockDexes;
         sItems[DEBUG_FLY_MAP].name = sText_FlyMap;
         sItems[DEBUG_HOENN_REMATCHES].name = sText_HoennRematches;
+        sItems[DEBUG_SEVII_PASSES].name = sText_SeviiPasses;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -361,6 +365,16 @@ static void Task_DebugMenu(u8 taskId)
         if (!CheckBagHasItem(ITEM_VS_SEEKER, 1))
             AddBagItem(ITEM_VS_SEEKER, 1);
         gSaveBlockKanto.trainerRematchStepCounter = (gSaveBlockKanto.trainerRematchStepCounter & 0xFF00) | 100;
+        PlaySE(SE_USE_ITEM);
+        break;
+    case DEBUG_SEVII_PASSES:
+        // Seagallop : Carmin sur Mer accessible (Tri-Pass) et toutes les îles (Rainbow Pass, menu des destinations)
+        VarSet(VAR_KANTO_MAP_SCENE_CINNABAR_ISLAND, 4);
+        VarSet(VAR_KANTO_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5);
+        if (!CheckBagHasItem(ITEM_TRI_PASS, 1))
+            AddBagItem(ITEM_TRI_PASS, 1);
+        if (!CheckBagHasItem(ITEM_RAINBOW_PASS, 1))
+            AddBagItem(ITEM_RAINBOW_PASS, 1);
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_CLOSE:
