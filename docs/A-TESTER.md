@@ -128,4 +128,5 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Ferry Seagallop (2026-10-23 ; avant, la traversée ne faisait rien, le voyage ne pouvait pas se faire). Vérifié en headless : `kanto_seagallop.py` (DEBUG > PORT ÎLE 1 : Île 1 -> Île 2 et retour, traversée de RF : mer, ferry, sillage), `kanto_seagallop_menu.py` (DEBUG > Pass îles Sevii : menu des destinations de RF en 2 pages, Île 1 -> Île 7). Nombril du Monde et Île Aurore : arrivée en (8,4) sur les ports d'Émeraude (le marin est en 8,5)
 - [ ] Départ du S.S. Anne (ss_anne.c de RF ; AVANT : le jeu se bloquait en sortant du bateau avec la CS Coupe). Vérifié en headless `kanto_ss_anne.py` (DEBUG > Départ S.S. Anne) : corne, fumée, sillage, le bateau quitte l'écran, retour à quai. Sillage et fumée prennent la palette du bateau (RF : palette 10)
 - [ ] DEBUG > PORT ÎLE 1 : maintenant au-dessus du marin (en dessous, on était coincé ; signalé par l'utilisateur)
+- [ ] Diplôme de Game Freak à Céladopole (diploma.c de RF ; AVANT : le jeu se bloquait). Vérifié en headless `kanto_diploma.py` (DEBUG > POKéDEX Kanto complet, téléport GAME FREAK). « POKéDEX NATIONAL » si tous les Pokémon sont attrapés (non testé)
 
