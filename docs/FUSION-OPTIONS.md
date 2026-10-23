@@ -64,10 +64,10 @@ contenu dans un seul jeu.
 Contenu de RF à importer :
 - [x] Combat FANTÔME de la Tour Pokémon (SPECTRES sans Scope Sylph, Ossatueur révélé avec le Scope Sylph de Giovanni ; `gBattleGhostType`, plus de bit libre dans gBattleTypeFlags)
 - [x] Objets cachés qui réapparaissent (`src/kanto_renewable_hidden_items.c`, 2026-10-23)
-- [ ] Fame Checker (fame_checker.c ; sauvegarde déjà réservée dans gSaveBlockKanto)
+- [x] Fame Checker = MEMORYDEX (2026-10-23, `src/kanto_fame_checker.c` ; même écran avec les deux sacs, police de RF)
 - [ ] Animation quand on utilise un objet sur un Pokémon (pokemon_special_anim*.c : CT, Super Bonbon…) : jouée avec le sac KANTO (option SAC), sac HOENN comme Émeraude
 - [x] Note du Pokédex par Chen (2026-10-23) : GetProfOaksRatingMessage de RF (PC, Chen en personne, ses aides) ; « PC du PROF. CHEN » ajouté au menu PC à Kanto une fois son Pokédex reçu
-- [ ] TOUTES les cinématiques de RF : départ du S.S. Anne, ferry Seagallop, et les autres stubs de `kanto_specials_stubs.c` (éclairage de la Ligue, téléporteurs de Léo, triangle de Deoxys, fossiles du musée, diplôme…)
+- [x] TOUTES les cinématiques de RF (2026-10-23) : départ du S.S. Anne, ferry Seagallop, et les autres stubs de `kanto_specials_stubs.c` (éclairage de la Ligue, téléporteurs de Léo, triangle de Deoxys, fossiles du musée, diplôme…)
 - [x] IA des légendaires de RF (2026-10-23, `gBattleLegendaryFrlg` : StartLegendaryBattle de Kanto, IA « mauvaises attaques + K.O. + viabilité »)
 
 Choix HOENN / KANTO :
