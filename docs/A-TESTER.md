@@ -101,3 +101,6 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Animations des tuiles de Kanto (RF) : fleurs, eau et sable des rivages, fontaines de Céladopole et de Sylphe SARL, vapeur du Mont Braise, fleurs de l'arène de Céladopole, porte motorisée de l'arène de Carmin
 - [ ] Centre Pokémon de Kanto : moniteur de soin qui clignote (RF), écran du PC qui s'allume/s'éteint (RF), aussi le PC de la chambre
 - [ ] À FAIRE : sac de Kanto (RF) + Boîte CT et Sac à Baies de RF pour les poches CT/Baies d'Émeraude
+
+- [ ] Kanto : musique des crédits continue sur tout le défilé ; moniteur RF (pas les écrans d'Émeraude) à l'enregistrement du Panthéon ; fonds de boîtes de Kanto aux bonnes couleurs.
+- [ ] Sprites Red/Leaf vélo cross : pixels noirs, tête qui tourne une frame, sprite coupé au pédalage (à refaire en Élevé).
