@@ -49,9 +49,9 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | fame_checker.c | RF seul | 64 | 64 | 4 | 3 | 10 | 0 | 0 | kanto_field_specials.c (3) |
 | help_system.c | RF seul | 41 | 41 | 0 | 6 | 14 | 0 | 0 | kanto_specials.c (6) |
 | new_menu_helpers.c | RF seul | 54 | 19 | 3 | 0 | 15 | 11 | 24 |  |
-| battle_anim_special.c | RF seul | 81 | 42 | 7 | 0 | 16 | 15 | 24 |  |
 | seagallop.c | RF seul | 22 | 22 | 2 | 2 | 18 | 0 | 0 | kanto_specials.c (2) |
 | pokemon_storage_system_misc.c | RF seul | 70 | 15 | 3 | 0 | 20 | 16 | 39 |  |
+| battle_anim_special.c | RF seul | 81 | 42 | 6 | 3 | 21 | 15 | 24 | battle_anim_throw.c (3) |
 | map_preview_screen.c | RF seul | 14 | 14 | 1 | 2 | 21 | 0 | 0 | kanto_region_map.c (2) |
 | pokemon_storage_system_menu.c | RF seul | 29 | 6 | 2 | 0 | 33 | 10 | 13 |  |
 | prof_pc.c | RF seul | 3 | 3 | 0 | 1 | 33 | 0 | 0 | kanto_field_specials.c (1) |
@@ -98,10 +98,10 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_ai_script_commands.c | commun | 105 | 14 | 0 | 0 | 0 | 3 | 88 |  |
 | battle_transition.c | commun | 134 | 10 | 0 | 0 | 0 | 47 | 77 |  |
 | battle_anim_effects_1.c | commun | 154 | 1 | 1 | 0 | 100 | 76 | 77 |  |
-| battle_anim_mons.c | commun | 128 | 12 | 5 | 0 | 41 | 47 | 69 |  |
+| battle_anim_mons.c | commun | 128 | 12 | 5 | 1 | 50 | 47 | 69 | battle_anim_mons.c (1) |
 | battle_controller_player.c | commun | 123 | 15 | 9 | 0 | 60 | 39 | 69 |  |
 | slot_machine.c | commun | 77 | 75 | 2 | 0 | 2 | 0 | 2 |  |
-| pokemon.c | commun | 143 | 13 | 1 | 1 | 15 | 68 | 62 | kanto_specials.c (1) |
+| pokemon.c | commun | 143 | 13 | 1 | 2 | 23 | 68 | 62 | kanto_specials.c (1), pokemon.c (1) |
 | metatile_behavior.c | commun | 115 | 58 | 2 | 8 | 17 | 34 | 23 | metatile_behavior.c (8) |
 | battle_main.c | commun | 106 | 18 | 4 | 0 | 22 | 32 | 56 |  |
 | scrcmd.c | commun | 224 | 12 | 2 | 8 | 83 | 144 | 68 | copie kanto_scrcmd.c : 8/224 fonctions |
@@ -125,15 +125,15 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | naming_screen.c | commun | 109 | 3 | 0 | 0 | 0 | 69 | 37 |  |
 | battle_controller_opponent.c | commun | 87 | 10 | 5 | 0 | 50 | 43 | 34 |  |
 | field_specials.c | commun | 118 | 89 | 0 | 71 | 79 | 9 | 20 | copie kanto_field_specials.c+kanto_list_menu.c+kanto_specials.c : 66/118 fonctions; kanto_itemfinder.c (2), kanto_region_map.c (1), kanto_summary_screen.c (1) |
-| battle_setup.c | commun | 66 | 20 | 0 | 8 | 40 | 21 | 25 | battle_setup.c (7), kanto_battle_bg.c (1) |
 | easy_chat.c | commun | 40 | 27 | 0 | 0 | 0 | 3 | 10 |  |
 | fieldmap.c | commun | 54 | 3 | 0 | 0 | 0 | 17 | 34 |  |
 | battle_anim_effects_2.c | commun | 121 | 3 | 2 | 0 | 66 | 83 | 35 |  |
 | menu.c | commun | 50 | 25 | 0 | 6 | 24 | 8 | 17 | kanto_hall_of_fame.c (6) |
 | battle_anim_effects_3.c | commun | 140 | 1 | 1 | 0 | 100 | 104 | 35 |  |
-| battle_gfx_sfx_util.c | commun | 48 | 6 | 1 | 0 | 16 | 13 | 29 |  |
 | evolution_graphics.c | commun | 37 | 29 | 3 | 0 | 10 | 0 | 8 |  |
 | field_control_avatar.c | commun | 49 | 13 | 1 | 3 | 30 | 11 | 25 | field_control_avatar.c (3) |
+| battle_gfx_sfx_util.c | commun | 48 | 6 | 1 | 1 | 33 | 13 | 29 | battle_gfx_sfx_util.c (1) |
+| battle_setup.c | commun | 66 | 20 | 0 | 12 | 60 | 21 | 25 | battle_setup.c (11), kanto_battle_bg.c (1) |
 | cable_club.c | commun | 54 | 7 | 2 | 0 | 28 | 19 | 28 |  |
 | item.c | commun | 49 | 29 | 15 | 2 | 58 | 0 | 20 | kanto_specials.c (1), kanto_tm_case.c (1) |
 | text.c | commun | 37 | 15 | 0 | 0 | 0 | 5 | 17 |  |
@@ -153,7 +153,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | list_menu.c | commun | 31 | 2 | 0 | 2 | 100 | 4 | 25 | kanto_pokedex_screen.c (2) |
 | battle_anim_mon_movement.c | commun | 34 | 2 | 0 | 0 | 0 | 10 | 22 |  |
 | palette.c | commun | 41 | 1 | 0 | 0 | 0 | 17 | 23 |  |
-| battle_anim_ghost.c | commun | 41 | 5 | 1 | 0 | 20 | 17 | 19 |  |
 | battle_controller_link_partner.c | commun | 85 | 3 | 0 | 0 | 0 | 62 | 20 |  |
 | bike.c | commun | 24 | 11 | 0 | 0 | 0 | 1 | 12 |  |
 | hall_of_fame.c | commun | 42 | 16 | 0 | 16 | 100 | 3 | 23 | copie kanto_hall_of_fame.c : 42/42 fonctions |
@@ -168,6 +167,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | fldeff_flash.c | commun | 22 | 15 | 0 | 0 | 0 | 2 | 5 |  |
 | tileset_anims.c | commun | 28 | 17 | 0 | 0 | 0 | 8 | 3 |  |
 | battle_anim_electric.c | commun | 37 | 0 | 0 | 0 | 100 | 18 | 19 |  |
+| battle_anim_ghost.c | commun | 41 | 5 | 1 | 4 | 100 | 17 | 19 | battle_anim_ghost.c (4) |
 | battle_controllers.c | commun | 68 | 3 | 0 | 0 | 0 | 49 | 16 |  |
 | mystery_gift_menu.c | commun | 34 | 4 | 0 | 0 | 0 | 15 | 15 |  |
 | union_room_player_avatar.c | commun | 38 | 1 | 0 | 0 | 0 | 19 | 18 |  |

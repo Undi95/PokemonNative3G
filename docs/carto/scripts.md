@@ -6,7 +6,7 @@
 
 Émeraude 524, Rouge Feu 272, communs 125.
 
-**RF seul — portés (104)** :
+**RF seul — portés (105)** :
 NullFieldSpecial, Script_HasTrainerBeenFought, EndTrainerApproach, StartRematchBattle, HasLeadMonBeenRenamed,
 Field_AskSaveTheGame, GetHeracrossSizeRecordInfo, CompareHeracrossSize, GetMagikarpSizeRecordInfo,
 CompareMagikarpSize, NameRaterWasNicknameChanged, RegisteredItemHandleBikeSwap, GetPlayerXY,
@@ -19,7 +19,7 @@ HallOfFamePCBeginFade, EnterHallOfFame, AnimateElevator, GetRandomSlotMachineId,
 PlayerHasGrassPokemonInParty, IsStarterFirstStageInParty, IsThereRoomInAnyBoxForMorePokemon,
 DrawElevatorCurrentFloorWindow, SetIcefallCaveCrackedIceMetatiles, ShakeScreen, StartLegendaryBattle,
 SetUpTrainerMovement, StartSouthernIslandBattle, GetPartyMonSpecies, HasAllKantoMons, IsMonOTNameNotPlayers,
-SetPostgameFlags, ForcePlayerOntoBike, ListMenu, ReturnToListMenu, SetVermilionTrashCans,
+SetPostgameFlags, StartMarowakBattle, ForcePlayerOntoBike, ListMenu, ReturnToListMenu, SetVermilionTrashCans,
 SeafoamIslandsB4F_CurrentDumpsPlayerOnLand, SampleResortGorgeousMonAndReward, CheckAddCoins,
 GetDaycarePokemonCount, CloseElevatorCurrentFloorWindow, ForcePlayerToStartSurfing, GetStarterSpecies,
 SetSeenMon, VsSeekerResetObjectMovementAfterChargeComplete, UpdateTrainerCardPhotoIcons,
@@ -36,15 +36,15 @@ IsPlayerLeftOfVermilionSailor, HasAllMons, IsPlayerNotInTrainerTowerLobby,
 PlayerPartyContainsSpeciesWithPlayerID, InitElevatorFloorSelectMenuPos, UpdateLoreleiDollCollection,
 LoopWingFlapSound
 
-**RF seul — stubs (43)** (`src/kanto_specials_stubs.c`) :
+**RF seul — stubs (42)** (`src/kanto_specials_stubs.c`) :
 EnterColosseumPlayerSpot, EnterTradeSeat, StartWiredCableClubTrade, CableClub_AskSaveTheGame, TryContestLinkup,
 ShowEasyChatMessage, BufferRandomHobbyOrLifestyleString, ShowBattleRecords, GetProfOaksRatingMessage,
 BattleTowerMapScript2, ChooseNextBattleTowerTrainer, CheckPartyBattleTowerBanlist,
 PrintBattleTowerTrainerGreeting, BufferEReaderTrainerGreeting, StartSpecialBattle, SetBattleTowerProperty,
 BattleTowerUtil, SetBattleTowerParty, SaveBattleTowerProgress, BattleTower_SoftReset,
 DetermineBattleTowerPrize, GiveBattleTowerPrize, AwardBattleTowerRibbons, ChooseBattleTowerPlayerParty,
-ReducePlayerPartyToThree, ShowDiploma, Dummy_TryEnableBravoTrainerBattleTower, StartMarowakBattle,
-DoPicboxCancel, DoSeagallopFerryScene, OpenMuseumFossilPic, CloseMuseumFossilPic, DoSSAnneDepartureCutscene,
+ReducePlayerPartyToThree, ShowDiploma, Dummy_TryEnableBravoTrainerBattleTower, DoPicboxCancel,
+DoSeagallopFerryScene, OpenMuseumFossilPic, CloseMuseumFossilPic, DoSSAnneDepartureCutscene,
 CallTrainerTowerFunc, DoPokemonLeagueLightingEffect, DrawSeagallopDestinationMenu,
 GetSelectedSeagallopDestination, DoDeoxysTriangleInteraction, SetDeoxysTrianglePalette,
 ReadTrainerTowerAndValidate, BrailleCursorToggle, AnimateTeleporterHousing, AnimateTeleporterCable

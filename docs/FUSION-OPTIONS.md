@@ -61,7 +61,7 @@ contenu dans un seul jeu.
 - [ ] Objets donnés deux fois (CS, cannes, Passe Bateau…) : voir docs/OBJETS-EN-DOUBLE.md
 
 ## Trouvé par la cartographie (2026-10-23, docs/CARTOGRAPHIE.md)
-- [ ] Combat FANTÔME de la Tour Pokémon (stub `StartMarowakBattle`, `BATTLE_TYPE_GHOST` absent) : sur le chemin de l'histoire de Kanto
+- [x] Combat FANTÔME de la Tour Pokémon (2026-10-23) : SPECTRES sauvages sans Scope Sylph, Ossatueur du 6e (révélé avec le Scope Sylph de Giovanni) ; état dans `gBattleGhostType` (battle.h), plus de bit libre dans gBattleTypeFlags
 - [ ] Objets cachés qui réapparaissent (renewable_hidden_items.c)
 - [ ] Fame Checker (fame_checker.c ; sauvegarde déjà réservée dans gSaveBlockKanto)
 - [ ] Animation d'objet sur un Pokémon (pokemon_special_anim*.c : CT, Super Bonbon…), avec le sac KANTO

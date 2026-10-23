@@ -26,7 +26,8 @@ trainers (kanto ✓), union_room_chat, unused, weather, wireless_status_screen, 
 **Dans `graphics/kanto/` de la fusion** :
 battle_interface, battle_terrain, berry_pouch, credits, field_effects, fonts, hall_of_fame, help_system,
 interface, intro, item_menu, itemfinder, map_preview, misc, naming_screen, object_events, party_menu, pokedex,
-pokemon, pokemon_storage, region_map, summary_screen, text_window, title_screen, tm_case, trainers
+pokemon, pokemon_ghost, pokemon_storage, region_map, summary_screen, text_window, title_screen, tm_case,
+trainers
 
 ## Sauvegarde (`include/global.h`)
 

@@ -18,22 +18,18 @@ AnimStompFootStep
 ### battle_anim_flying.c (commun, 2/2)
 AnimUnusedFeather, AnimUnusedFeather_Step
 
-### battle_anim_ghost.c (commun, 4/5)
-AnimTask_GhostGetOut, AnimTask_GhostGetOut_Step1, AnimTask_GhostGetOut_Step2, AnimTask_GhostGetOut_Step3
-
 ### battle_anim_mon_movement.c (commun, 2/2)
 AnimTask_ShakeMon2Step, AnimTask_SwayMon_Step
 
-### battle_anim_mons.c (commun, 7/12)
-GetGhostSpriteDefault_Y, GetBattleAnimBgDataByPriorityRank, InitBattleAnimBg, ToggleBg3Mode,
-PlayerThrowBall_StartAnimLinearTranslation, PlayerThrowBall_AnimTranslateLinear_WithFollowup,
-SetGreyscaleOrOriginalPalette
+### battle_anim_mons.c (commun, 6/12)
+GetBattleAnimBgDataByPriorityRank, InitBattleAnimBg, ToggleBg3Mode, PlayerThrowBall_StartAnimLinearTranslation,
+PlayerThrowBall_AnimTranslateLinear_WithFollowup, SetGreyscaleOrOriginalPalette
 
 ### battle_anim_normal.c (commun, 4/5)
 AnimShakeMonOrBattleTerrain, AnimShakeMonOrBattleTerrain_Step,
 AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled, AnimTask_ShakeBattleTerrain
 
-### battle_anim_special.c (RF seul, 35/42)
+### battle_anim_special.c (RF seul, 33/42)
 AnimTask_LevelUpHealthBox, AnimTask_IsBallBlockedByTrainerOrDodged, AnimTask_ThrowBall_WaitAnimObjComplete,
 AnimTask_ThrowBallSpecial, AnimTask_ThrowBallSpecial_PlaySfx, SpriteCB_ThrowBall_Init,
 SpriteCB_ThrowBall_ArcFlight, SpriteCB_ThrowBall_TenFrameDelay, SpriteCB_ThrowBall_ShrinkMon,
@@ -41,10 +37,9 @@ SpriteCB_ThrowBall_InitialFall, SpriteCB_ThrowBall_Bounce, SpriteCB_ThrowBall_In
 SpriteCB_ThrowBall_DoShake, SpriteCB_ThrowBall_DelayThenBreakOut, SpriteCB_ThrowBall_InitClick,
 SpriteCB_ThrowBall_DoClick, SpriteCB_ThrowBall_FinishClick, BattleAnimObj_SignalEnd, CreateStarsWhenBallClicks,
 SpriteCB_ThrowBall_BeginBreakOut, SpriteCB_ThrowBall_RunBreakOut, TrainerBallBlock, TrainerBallBlock2,
-GhostBallDodge, GhostBallDodge2, AnimTask_ShinySparkles, AnimTask_ShinySparkles_WaitSparkles,
-SpriteCB_ShinySparkles_1, SpriteCB_ShinySparkles_2, AnimTask_LoadBaitGfx, AnimTask_FreeBaitGfx,
-SpriteCB_SafariBaitOrRock_Init, SpriteCB_SafariBaitOrRock_WaitPlayerThrow, SpriteCB_SafariBaitOrRock_ArcFlight,
-AnimTask_SafariGetReaction
+AnimTask_ShinySparkles, AnimTask_ShinySparkles_WaitSparkles, SpriteCB_ShinySparkles_1,
+SpriteCB_ShinySparkles_2, AnimTask_LoadBaitGfx, AnimTask_FreeBaitGfx, SpriteCB_SafariBaitOrRock_Init,
+SpriteCB_SafariBaitOrRock_WaitPlayerThrow, SpriteCB_SafariBaitOrRock_ArcFlight, AnimTask_SafariGetReaction
 
 ### battle_anim_utility_funcs.c (commun, 1/1)
 AnimTask_GetBattleTerrain
@@ -122,9 +117,9 @@ SafariHandleCmd40, SafariHandleCmd42, SafariHandleCmd55
 ### battle_controllers.c (commun, 3/3)
 SetUpBattleVars, BtlController_EmitUnknownYesNoBox, BtlController_EmitPlayFanfare
 
-### battle_gfx_sfx_util.c (commun, 5/6)
-DoBattleSpriteAffineAnim, DecompressGhostFrontPic, DecompressTrainerBackPalette,
-FreeTrainerFrontPicPaletteAndTile, BattleInterfaceSetWindowPals
+### battle_gfx_sfx_util.c (commun, 4/6)
+DoBattleSpriteAffineAnim, DecompressTrainerBackPalette, FreeTrainerFrontPicPaletteAndTile,
+BattleInterfaceSetWindowPals
 
 ### battle_interface.c (commun, 11/11)
 GetBattleInterfaceGfxPtr, SpriteCB_PartySummaryBar, SpriteCB_PartySummaryBar_Exit,
@@ -156,9 +151,8 @@ LoadFrameGfxOnBg
 ### battle_script_commands.c (commun, 3/3)
 Cmd_callterrainattack, Cmd_cureifburnedparalysedorpoisoned, Cmd_settypetoterrain
 
-### battle_setup.c (commun, 12/20)
-CheckSilphScopeInPokemonTower, StartWildBattle, StartRoamerBattle, DoGhostBattle, StartScriptedWildBattle,
-StartMarowakBattle, EndPokedudeBattle, StartPokedudeBattle, CB2_EndMarowakBattle,
+### battle_setup.c (commun, 8/20)
+StartWildBattle, StartRoamerBattle, StartScriptedWildBattle, EndPokedudeBattle, StartPokedudeBattle,
 BattleSetup_GetBattleTowerBattleTransition, SetBattledTrainerFlag2, StartTrainerBattle
 
 ### battle_tower.c (commun, 33/33)
@@ -745,10 +739,10 @@ Task_TryPutMailInBag_DestroyMsgIfSuccessful, Task_DeclinedMoveMailToBag, Task_Pl
 Task_WaitFadeAndGoToPartyMenu, CB2_ReturnToMailboxPc_UpdateScrollVariables, Task_Error_NoPokemon,
 Task_RedrawPlayerPcMailboxAndSetUpInputHandler, Task_PlayerPcExitMailSubmenu
 
-### pokemon.c (commun, 11/13)
+### pokemon.c (commun, 10/13)
 GetSecretBaseTrainerNameIndex, PokemonItemUseNoEffect, PartyMonHasStatus, Battle_PrintStatBoosterEffectMessage,
-SetMonExpWithMaxLevelCheck, CheckBattleTypeGhost, InitMonSpritesGfx_Mode1, InitMonSpritesGfx_Mode0,
-es_sub_8044D1C, es_sub_8044D64, Localize_BattleStrings
+SetMonExpWithMaxLevelCheck, InitMonSpritesGfx_Mode1, InitMonSpritesGfx_Mode0, es_sub_8044D1C, es_sub_8044D64,
+Localize_BattleStrings
 
 ### pokemon_icon.c (commun, 4/5)
 CreateMonIcon_HandleDeoxys, MailSpeciesToIconSpecies, DestroyMonIcon, LoadMonIconPalettesAt

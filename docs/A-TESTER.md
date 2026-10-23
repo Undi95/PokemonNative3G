@@ -114,3 +114,10 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Icônes « !! » et « X » du Cherche VS : maintenant dans le bon ordre (fichiers inversés à l'import) et aux couleurs de RF (bulle bleue et blanche, palette de leur image) avec tous les persos
 - [ ] Course (B) dans les intérieurs : maisons, Centres Pokémon, grottes, à Hoenn et à Kanto
 - [ ] Cherch'Objet : à Kanto, flèches de RF vers l'objet + messages de RF (vérifié en headless, `kanto_itemfinder.py`) ; à Hoenn, celui d'Émeraude (le joueur se tourne). Couleur des flèches (palette du joueur)
+- [ ] Combat FANTÔME (Tour Pokémon, 2026-10-23). Vérifié en headless :
+  - `kanto_ghost.py` (DEBUG > TOUR POKéMON 3, sans Scope Sylph) : « Le SPECTRE apparaît ! Mince ! Le SPECTRE ne peut être identifié ! », image du SPECTRE, « MEWTWO a peur de bouger ! », « SPECTRE : Va t'en… Dehors… » (écran assombri), FUITE réussie ;
+  - `kanto_giovanni.py` (DEBUG > REPAIRE ROCKET) : combat contre Giovanni, Scope Sylph ramassé, puis TOUR POKéMON 6 : « Le SCOPE SYLPHE révèle l'identité du SPECTRE ! » (mosaïque), « Le SPECTRE était OSSATUEUR ! », victoire, suite du script (l'âme de la mère d'Osselait) ;
+  - `kanto_marowak.py` (DEBUG > Ajout objets, donc Scope Sylph) : même combat révélé.
+  Non vérifié : Ossatueur SANS Scope Sylph (fuite, le joueur est repoussé dans l'escalier) ; Ball lancée sur un SPECTRE (« Il a évité la BALL ! », la Ball rebondit) ; Pokédex : un SPECTRE non révélé ne doit pas être marqué « vu »
+- [ ] Cherche VS avec Red/Leaf : le sprite levant le Cherche VS était faux (numéro de sprite tronqué à 8 bits, corrigé)
+
