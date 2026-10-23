@@ -21,7 +21,7 @@ def play(game):
     game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 8, gap=10); game.tap("A"); game.wait(60)
     close_menus(game)
     debug_warp(game, 22); log(game, "Route 102")
-    use_vs_seeker(game, "VS", 1)
+    use_vs_seeker(game, "VS", 2)  # menu Start : DEBUG, POKéMON, SAC
     game.wait(120); log(game, "réponses")
     game.tap("RIGHT", hold=16); game.wait(30); game.tap("RIGHT"); game.wait(20)
     game.tap("A"); game.wait(400); log(game, "Calvin")

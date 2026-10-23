@@ -4069,8 +4069,17 @@ static void UseVsSeekerEffect_2(struct Task *task)
     struct ObjectEvent * playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
     if (!ObjectEventIsMovementOverridden(playerObj) || ObjectEventClearHeldMovementIfFinished(playerObj))
     {
-        StartPlayerAvatarVsSeekerAnim();
-        ObjectEventSetHeldMovement(playerObj, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
+        if (StartPlayerAvatarVsSeekerAnim())
+        {
+            ObjectEventSetHeldMovement(playerObj, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
+        }
+        else
+        {
+            // PokemonNative3G : Brice/Flora n'ont pas d'images du Cherche VS (et leurs animations de face
+            // bouclent) : ils se tournent vers le bas, comme Red, le temps de l'animation de RF (76 images)
+            ObjectEventSetHeldMovement(playerObj, MOVEMENT_ACTION_FACE_DOWN);
+            task->data[1] = 76;
+        }
         task->data[0]++;
     }
 }
@@ -4078,6 +4087,8 @@ static void UseVsSeekerEffect_2(struct Task *task)
 static void UseVsSeekerEffect_3(struct Task *task)
 {
     struct ObjectEvent * playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+    if (task->data[1] != 0 && --task->data[1] != 0) // PokemonNative3G : Brice/Flora (UseVsSeekerEffect_2)
+        return;
     if (ObjectEventClearHeldMovementIfFinished(playerObj))
     {
         if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_ACRO_BIKE | PLAYER_AVATAR_FLAG_MACH_BIKE))
