@@ -104,3 +104,6 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 
 - [ ] Kanto : musique des crédits continue sur tout le défilé ; moniteur RF (pas les écrans d'Émeraude) à l'enregistrement du Panthéon ; fonds de boîtes de Kanto aux bonnes couleurs.
 - [ ] Sprites Red/Leaf vélo cross refaits : pédalage = images de vélo de Rouge Feu telles quelles, plus de noir, tête dans la bonne direction sur les figures. Revérifier roue arrière + sauts.
+- [ ] CS à Kanto : badges de Kanto (Roche = Flash, Cascade = Coupe, Foudre = Vol, Prisme = Force, Âme = Surf, Marais = Éclate-Roc, Volcan = Cascade) depuis le menu d'équipe et sur l'eau (Surf, Cascade) ; à Hoenn, badges de Hoenn comme avant
+- [ ] Options > POKéMON = KANTO : sprites de Rouge Feu (face, dos, couleurs, shiny) sans animation, en combat (sauvage, dresseur, double), résumé, Pokédex, PC, évolution, éclosion ; Deoxys = forme Attaque. HOENN = animés d'Émeraude comme avant
+- [ ] À FAIRE : objets donnés deux fois (CS, cannes, Passe Bateau…) → voir docs/OBJETS-EN-DOUBLE.md
