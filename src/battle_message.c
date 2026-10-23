@@ -516,6 +516,12 @@ static const u8 sText_Trainer2WinText[];
 static const u8 sText_Trainer1RecallPkmn1[];
 static const u8 sText_GotchaPkmnCaught2[];
 static const u8 sText_OldManUsedItem[];
+static const u8 sText_TooScaredToMove[];
+static const u8 sText_GetOutGetOut[];
+static const u8 sText_SilphScopeUnveil[];
+static const u8 sText_TheGhostWas[];
+static const u8 sText_GhostAppearedCantId[];
+static const u8 sText_TheGhostAppeared[];
 static const u8 sText_TwoInGameTrainersDefeated[];
 static const u8 sText_Trainer2LoseText[];
 
@@ -893,7 +899,6 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT - BATTLESTRINGS_TABLE_ST
     [STRINGID_TRAINER1MON1COMEBACK - BATTLESTRINGS_TABLE_START] = sText_Trainer1RecallPkmn1,
     [STRINGID_GOTCHAPKMNCAUGHT2 - BATTLESTRINGS_TABLE_START] = sText_GotchaPkmnCaught2,
     [STRINGID_OLDMANUSEDITEM - BATTLESTRINGS_TABLE_START] = sText_OldManUsedItem,
-    [STRINGID_ITDODGEDBALL - BATTLESTRINGS_TABLE_START] = sText_ItDodgedBall,
     [STRINGID_MONTOOSCAREDTOMOVE - BATTLESTRINGS_TABLE_START] = sText_TooScaredToMove,
     [STRINGID_GHOSTGETOUTGETOUT - BATTLESTRINGS_TABLE_START] = sText_GetOutGetOut,
     [STRINGID_SILPHSCOPEUNVEILED - BATTLESTRINGS_TABLE_START] = sText_SilphScopeUnveil,
@@ -1445,7 +1450,6 @@ static const u8 sText_GhostAppearedCantId[] = _("Le SPECTRE apparaît!\pMince!\n
 static const u8 sText_TheGhostAppeared[] = _("Le SPECTRE apparaît!\p");
 static const u8 sText_SilphScopeUnveil[] = _("Le SCOPE SYLPHE révèle l'identité\ndu SPECTRE!");
 static const u8 sText_TheGhostWas[] = _("Le SPECTRE était OSSATUEUR!");
-static const u8 sText_ItDodgedBall[] = _("Il a évité la BALL!\nCe POKéMON ne se laisse pas faire!");
 static const u8 sText_TooScaredToMove[] = _("{B_ATK_NAME_WITH_PREFIX} a peur\nde bouger!");
 static const u8 sText_GetOutGetOut[] = _("SPECTRE: Va t'en…\nDehors…");
 static const u8 sText_GotchaPkmnCaught2[] = _("Et hop!\n{B_OPPONENT_MON1_NAME} est attrapé!{WAIT_SE}{PLAY_BGM MUS_RG_CAUGHT}{PAUSE 127}");

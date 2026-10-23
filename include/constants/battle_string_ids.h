@@ -381,13 +381,12 @@
 #define STRINGID_TRAINER1MON1COMEBACK       381 // Rouge Feu
 #define STRINGID_GOTCHAPKMNCAUGHT2          382 // Rouge Feu (vieil homme)
 #define STRINGID_OLDMANUSEDITEM             383 // Rouge Feu
-#define STRINGID_ITDODGEDBALL               384 // Rouge Feu (FANTÔME)
-#define STRINGID_MONTOOSCAREDTOMOVE         385 // Rouge Feu
-#define STRINGID_GHOSTGETOUTGETOUT          386 // Rouge Feu
-#define STRINGID_SILPHSCOPEUNVEILED         387 // Rouge Feu
-#define STRINGID_GHOSTWASMAROWAK            388 // Rouge Feu
+#define STRINGID_MONTOOSCAREDTOMOVE         384 // Rouge Feu (FANTÔME)
+#define STRINGID_GHOSTGETOUTGETOUT          385 // Rouge Feu
+#define STRINGID_SILPHSCOPEUNVEILED         386 // Rouge Feu
+#define STRINGID_GHOSTWASMAROWAK            387 // Rouge Feu
 
-#define BATTLESTRINGS_COUNT                 389
+#define BATTLESTRINGS_COUNT                 388
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,
