@@ -23,7 +23,7 @@ def play(game):
     give_mewtwo(game)
     debug_warp(game, 1); log(game, "Jadielle")
     game.wait(30); game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
-    game.tap("DOWN", 10, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120); game.tap("B")
+    game.tap("R"); game.wait(30); game.tap("DOWN", 3, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120); game.tap("B")
     wait_until(game, lambda s: s.free)
     walk_to(game, 23, 39); leave_map(game, "DOWN"); log(game, "Route 1")
     try:

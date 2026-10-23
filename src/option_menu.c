@@ -43,15 +43,16 @@ enum
     MENUITEM_SOUND,
     MENUITEM_BUTTONMODE,
     MENUITEM_FRAMETYPE,
+    // page 2 : choix HOENN / KANTO, par ordre d'importance
     MENUITEM_CHARACTER,
-    MENUITEM_TITLESCREEN,
-    MENUITEM_INTRO,
+    MENUITEM_MONSPRITES,
     MENUITEM_DIALOGSTYLE,
     MENUITEM_BATTLEUI,
-    MENUITEM_MONSPRITES,
     MENUITEM_MENUSTYLE,
     MENUITEM_BAGSTYLE,
     MENUITEM_POKEDEXSTYLE,
+    MENUITEM_TITLESCREEN,
+    MENUITEM_INTRO,
     MENUITEM_CANCEL,
     MENUITEM_COUNT,
 };
@@ -66,10 +67,23 @@ enum
 #define MAX_VISIBLE_ITEMS 7
 #define OPTION_YPOS(item) ((OptionRow(item) - sScrollOffset) * 16)
 
+// PokemonNative3G : le menu a deux pages (L/R) : page 1 = réglages d'Émeraude, page 2 = choix HOENN / KANTO.
+// RETOUR est sur chaque page.
+#define OPTION_PAGE_COUNT 2
+#define OPTION_PAGE_FIRST_REGION_ITEM MENUITEM_CHARACTER
+EWRAM_DATA static u8 sOptionPage = 0;
+
+static u8 GetOptionPage(u8 item)
+{
+    return item >= OPTION_PAGE_FIRST_REGION_ITEM ? 1 : 0;
+}
+
 // PokemonNative3G : options masquées tant qu'elles ne sont pas débloquées en jeu
-// (POKéDEX : vue KANTO débloquée quand le Prof. Chen donne le Pokédex)
+// (POKéDEX : vue KANTO débloquée quand le Prof. Chen donne le Pokédex), ou sur l'autre page
 static bool8 IsOptionHidden(u8 item)
 {
+    if (item != MENUITEM_CANCEL && GetOptionPage(item) != sOptionPage)
+        return TRUE;
     if (item == MENUITEM_POKEDEXSTYLE)
         return !FlagGet(FLAG_KANTO_SYS_POKEDEX_GET);
     return FALSE;
@@ -128,6 +142,7 @@ static void TitleScreen_DrawChoices(u8 selection);
 static void Region_DrawChoices(u8 selection, u8 y);
 static void DrawOptionMenuChoices(u8 taskId);
 static void ScrollOptionMenu(u8 taskId);
+static void ChangeOptionMenuPage(u8 taskId);
 static void DrawHeaderText(void);
 static void DrawOptionMenuTexts(void);
 static void DrawBgWindowFrames(void);
@@ -372,6 +387,10 @@ static void Task_OptionMenuProcessInput(u8 taskId)
         ScrollOptionMenu(taskId);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
     }
+    else if (JOY_NEW(L_BUTTON) || JOY_NEW(R_BUTTON)) // PokemonNative3G : page suivante
+    {
+        ChangeOptionMenuPage(taskId);
+    }
     else
     {
         u8 previousOption;
@@ -513,6 +532,7 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsBagStyle = gTasks[taskId].tBagStyle;
     gSaveBlock2Ptr->optionsIntroHoenn = !gTasks[taskId].tIntro;
     sScrollOffset = 0;
+    sOptionPage = 0;
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_OptionMenuFadeOut;
@@ -776,10 +796,17 @@ static void ButtonMode_DrawChoices(u8 selection)
     DrawOptionMenuChoice(gText_ButtonTypeLEqualsA, GetStringRightAlignXOffset(FONT_NORMAL, gText_ButtonTypeLEqualsA, 198), YPOS_BUTTONMODE, styles[2]);
 }
 
+static const u8 sText_OptionPage1[] = _("{L_BUTTON}{R_BUTTON} PAGE 1/2 : JEU");
+static const u8 sText_OptionPage2[] = _("{L_BUTTON}{R_BUTTON} PAGE 2/2 : HOENN/KANTO");
+
 static void DrawHeaderText(void)
 {
+    const u8 *page = sOptionPage == 0 ? sText_OptionPage1 : sText_OptionPage2;
+
     FillWindowPixelBuffer(WIN_HEADER, PIXEL_FILL(1));
     AddTextPrinterParameterized(WIN_HEADER, FONT_NORMAL, gText_Option, 8, 1, TEXT_SKIP_DRAW, NULL);
+    // PokemonNative3G : la page affichée, et les touches pour changer de page
+    AddTextPrinterParameterized(WIN_HEADER, FONT_NORMAL, page, GetStringRightAlignXOffset(FONT_NORMAL, page, 26 * 8) - 4, 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(WIN_HEADER, COPYWIN_FULL);
 }
 
@@ -955,5 +982,21 @@ static void ScrollOptionMenu(u8 taskId)
     sScrollOffset = offset;
     DrawOptionMenuTexts();
     DrawOptionMenuChoices(taskId);
+    CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
+}
+
+// PokemonNative3G : L/R change de page ; le curseur va sur la première ligne de la nouvelle page
+static void ChangeOptionMenuPage(u8 taskId)
+{
+    sOptionPage = (sOptionPage + 1) % OPTION_PAGE_COUNT;
+    gTasks[taskId].tMenuSelection = 0;
+    while (IsOptionHidden(gTasks[taskId].tMenuSelection))
+        gTasks[taskId].tMenuSelection++;
+    sScrollOffset = 0;
+    PlaySE(SE_SELECT);
+    DrawHeaderText();
+    DrawOptionMenuTexts();
+    DrawOptionMenuChoices(taskId);
+    HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
 }

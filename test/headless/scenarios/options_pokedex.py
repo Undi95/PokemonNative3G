@@ -17,7 +17,7 @@ def play(game):
     game.tap("DOWN", 6); game.tap("A"); game.wait(30); game.tap("B"); game.wait(30)
     wait_until(game, lambda s: s.free)
     game.wait(30); game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
-    game.tap("DOWN", 13, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120); game.tap("B")
+    game.tap("R"); game.wait(30); game.tap("DOWN", 6, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120); game.tap("B")
     wait_until(game, lambda s: s.free); game.wait(30)
     game.tap("START"); game.wait(30); game.tap("UP", 5, gap=10); game.wait(10); game.tap("A"); game.wait(240)
     game.tap("A"); game.wait(200)        # 1re entrée du sommaire : liste numérique

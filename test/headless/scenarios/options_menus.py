@@ -17,7 +17,7 @@ def play(game):
     game.tap("DOWN", 6); game.tap("A"); game.wait(30); game.tap("B"); game.wait(30)
     wait_until(game, lambda s: s.free)
     game.wait(30); game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
-    game.tap("DOWN", 11, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
+    game.tap("R"); game.wait(30); game.tap("DOWN", 4, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
     game.wait(120); game.tap("UP", 4, gap=40); game.wait(60)   # menu Start : POKéMON
     game.tap("A"); game.wait(240)                                # équipe
     game.tap("A"); game.wait(60); game.tap("A"); game.wait(240)  # RÉSUMÉ
