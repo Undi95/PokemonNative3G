@@ -1,4 +1,6 @@
 #include "global.h"
+#include "kanto_vs_seeker.h"
+#include "constants/kanto_trainers.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_ai_script_commands.h"
@@ -5168,6 +5170,8 @@ static void HandleEndTurn_FinishBattle(void)
         }
 
         RecordedBattle_SetPlaybackFinished();
+        if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && IS_KANTO_TRAINER(gTrainerBattleOpponent_A)) // PokemonNative3G : Rouge Feu
+            KantoClearRematchStateByTrainerId();
         BeginFastPaletteFade(3);
         FadeOutMapMusic(5);
         gBattleMainFunc = FreeResetData_ReturnToOvOrDoEvolutions;

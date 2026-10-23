@@ -1,4 +1,6 @@
 #include "global.h"
+#include "kanto_vs_seeker.h"
+#include "constants/kanto_trainers.h"
 #include "battle.h"
 #include "battle_setup.h"
 #include "battle_transition.h"
@@ -1470,6 +1472,12 @@ static void CB2_EndRematchBattle(void)
     else
     {
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        if (IS_KANTO_TRAINER(gTrainerBattleOpponent_A)) // PokemonNative3G : Rouge Feu (CB2_EndRematchBattle)
+        {
+            SetBattledTrainersFlags();
+            KantoClearRematchStateOfLastTalked();
+            return;
+        }
         RegisterTrainerInMatchCall();
         SetBattledTrainersFlags();
         HandleRematchVarsOnBattleEnd();
@@ -1967,6 +1975,8 @@ bool32 IsRematchTrainerIn(u16 mapGroup, u16 mapNum)
 
 static u16 GetRematchTrainerId(u16 trainerId)
 {
+    if (IS_KANTO_TRAINER(trainerId)) // PokemonNative3G : Cherche VS (Rouge Feu)
+        return KantoGetRematchTrainerId(trainerId);
     return GetRematchTrainerIdFromTable(gRematchTable, trainerId);
 }
 
@@ -1977,6 +1987,8 @@ u16 GetLastBeatenRematchTrainerId(u16 trainerId)
 
 bool8 ShouldTryRematchBattle(void)
 {
+    if (IS_KANTO_TRAINER(gTrainerBattleOpponent_A)) // PokemonNative3G : Cherche VS (Rouge Feu)
+        return KantoShouldTryRematchBattle();
     if (IsFirstTrainerIdReadyForRematch(gRematchTable, gTrainerBattleOpponent_A))
         return TRUE;
 
@@ -1985,6 +1997,8 @@ bool8 ShouldTryRematchBattle(void)
 
 bool8 IsTrainerReadyForRematch(void)
 {
+    if (IS_KANTO_TRAINER(gTrainerBattleOpponent_A)) // PokemonNative3G : Cherche VS (Rouge Feu)
+        return KantoIsTrainerReadyForRematch();
     return IsTrainerReadyForRematch_(gRematchTable, gTrainerBattleOpponent_A);
 }
 

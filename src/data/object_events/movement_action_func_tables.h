@@ -264,6 +264,11 @@ u8 MovementAction_FlyDown_Step1(struct ObjectEvent *, struct Sprite *);
 
 // Rouge Feu (définies dans event_object_movement.c)
 u8 (*const gMovementActionFuncs_KantoWalkSlowDown[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_EmoteX[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_EmoteDoubleExclMark[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_RaiseHandAndStop[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_RaiseHandAndJump[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_RaiseHandAndSwim[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_KantoWalkSlowUp[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_KantoWalkSlowLeft[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_KantoWalkSlowRight[])(struct ObjectEvent *, struct Sprite *);
@@ -597,6 +602,11 @@ u8 (*const *const gMovementActionFuncs[])(struct ObjectEvent *, struct Sprite *)
     [MOVEMENT_ACTION_PLAYER_RUN_UP_SLOW] = gMovementActionFuncs_PlayerRunUpSlow,
     [MOVEMENT_ACTION_PLAYER_RUN_LEFT_SLOW] = gMovementActionFuncs_PlayerRunLeftSlow,
     [MOVEMENT_ACTION_PLAYER_RUN_RIGHT_SLOW] = gMovementActionFuncs_PlayerRunRightSlow,
+    [MOVEMENT_ACTION_EMOTE_X] = gMovementActionFuncs_EmoteX,
+    [MOVEMENT_ACTION_EMOTE_DOUBLE_EXCL_MARK] = gMovementActionFuncs_EmoteDoubleExclMark,
+    [MOVEMENT_ACTION_RAISE_HAND_AND_STOP] = gMovementActionFuncs_RaiseHandAndStop,
+    [MOVEMENT_ACTION_RAISE_HAND_AND_JUMP] = gMovementActionFuncs_RaiseHandAndJump,
+    [MOVEMENT_ACTION_RAISE_HAND_AND_SWIM] = gMovementActionFuncs_RaiseHandAndSwim,
 };
 
 u8 (*const gMovementActionFuncs_FaceDown[])(struct ObjectEvent *, struct Sprite *) = {

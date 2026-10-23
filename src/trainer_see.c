@@ -62,6 +62,9 @@ EWRAM_DATA u8 gApproachingTrainerId = 0;
 static const u8 sEmotion_ExclamationMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_exclamation.png", ".4bpp");
 static const u8 sEmotion_QuestionMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_question.png", ".4bpp");
 static const u8 sEmotion_HeartGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_heart.png", ".4bpp");
+// Rouge Feu (graphics/misc/emoticons.png) : X et !! (Cherche VS)
+static const u8 sEmotion_XGfx[] = INCGFX_U8("graphics/kanto/field_effects/pics/emotion_x.png", ".4bpp");
+static const u8 sEmotion_DoubleExclMarkGfx[] = INCGFX_U8("graphics/kanto/field_effects/pics/emotion_double_exclamation.png", ".4bpp");
 
 static u8 (*const sDirectionalApproachDistanceFuncs[])(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y) =
 {
@@ -172,6 +175,48 @@ static const struct SpriteTemplate sSpriteTemplate_ExclamationQuestionMark =
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_Icons,
     .images = sSpriteImageTable_ExclamationQuestionMark,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_TrainerIcons
+};
+
+// Rouge Feu (trainer_see.c) : X et !!, apparition en 3 images
+static const struct SpriteFrameImage sSpriteImageTable_KantoEmoticons[] =
+{
+    overworld_frame(sEmotion_DoubleExclMarkGfx, 2, 2, 0),
+    overworld_frame(sEmotion_DoubleExclMarkGfx, 2, 2, 1),
+    overworld_frame(sEmotion_DoubleExclMarkGfx, 2, 2, 2),
+    overworld_frame(sEmotion_XGfx, 2, 2, 0),
+    overworld_frame(sEmotion_XGfx, 2, 2, 1),
+    overworld_frame(sEmotion_XGfx, 2, 2, 2),
+};
+
+static const union AnimCmd sAnimCmd_DoubleExclMark[] = {
+    ANIMCMD_FRAME(0,  4),
+    ANIMCMD_FRAME(1,  4),
+    ANIMCMD_FRAME(2, 52),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnimCmd_X[] = {
+    ANIMCMD_FRAME(3,  4),
+    ANIMCMD_FRAME(4,  4),
+    ANIMCMD_FRAME(5, 52),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sSpriteAnimTable_KantoEmoticons[] =
+{
+    sAnimCmd_DoubleExclMark,
+    sAnimCmd_X,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_KantoEmoticons =
+{
+    .tileTag = TAG_NONE,
+    .paletteTag = TAG_NONE,
+    .oam = &sOamData_Icons,
+    .anims = sSpriteAnimTable_KantoEmoticons,
+    .images = sSpriteImageTable_KantoEmoticons,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TrainerIcons
 };
@@ -713,6 +758,33 @@ u8 FldEff_QuestionMarkIcon(void)
     if (spriteId != MAX_SPRITES)
     {
         SetIconSpriteData(&gSprites[spriteId], FLDEFF_QUESTION_MARK_ICON, 1);
+        gSprites[spriteId].oam.paletteNum = GetPlayerIconPaletteNum();
+    }
+
+    return 0;
+}
+
+// Rouge Feu : émoticônes du Cherche VS (palette du joueur, comme ! et ?)
+u8 FldEff_DoubleExclMarkIcon(void)
+{
+    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoEmoticons, 0, 0, 0x52);
+
+    if (spriteId != MAX_SPRITES)
+    {
+        SetIconSpriteData(&gSprites[spriteId], FLDEFF_DOUBLE_EXCL_MARK_ICON, 0);
+        gSprites[spriteId].oam.paletteNum = GetPlayerIconPaletteNum();
+    }
+
+    return 0;
+}
+
+u8 FldEff_XIcon(void)
+{
+    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoEmoticons, 0, 0, 0x52);
+
+    if (spriteId != MAX_SPRITES)
+    {
+        SetIconSpriteData(&gSprites[spriteId], FLDEFF_X_ICON, 1);
         gSprites[spriteId].oam.paletteNum = GetPlayerIconPaletteNum();
     }
 

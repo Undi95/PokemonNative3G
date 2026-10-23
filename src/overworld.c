@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_vs_seeker.h"
 #include "overworld.h"
 #include "kanto_credits.h"
 #include "constants/rgb.h"
@@ -812,6 +813,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     ResetCyclingRoadChallengeData();
     RestartWildEncounterImmunitySteps();
     TryUpdateRandomTrainerRematches(mapGroup, mapNum);
+    KantoMapResetTrainerRematches(mapGroup, mapNum); // PokemonNative3G : Cherche VS (Rouge Feu)
     DoTimeBasedEvents();
     SetSavedWeatherFromCurrMapHeader();
     ChooseAmbientCrySpecies();
@@ -862,6 +864,7 @@ static void LoadMapFromWarp(bool32 a1)
     ResetCyclingRoadChallengeData();
     RestartWildEncounterImmunitySteps();
     TryUpdateRandomTrainerRematches(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
+    KantoMapResetTrainerRematches(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum); // PokemonNative3G : Cherche VS
     if (a1 != TRUE)
         DoTimeBasedEvents();
     SetSavedWeatherFromCurrMapHeader();

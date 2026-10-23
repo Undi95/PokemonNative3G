@@ -1,4 +1,6 @@
 #include "global.h"
+#include "kanto_vs_seeker.h"
+extern const u8 EventScript_VsSeekerChargingDone[];
 #include "battle_setup.h"
 #include "bike.h"
 #include "coord_event_weather.h"
@@ -550,6 +552,11 @@ static bool8 TryStartStepCountScript(u16 metatileBehavior)
 
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_FORCED_MOVE) && !MetatileBehavior_IsForcedMovementTile(metatileBehavior))
     {
+        if (UpdateVsSeekerStepCounter() == TRUE) // PokemonNative3G : Cherche VS rechargé (Rouge Feu)
+        {
+            ScriptContext_SetupScript(EventScript_VsSeekerChargingDone);
+            return TRUE;
+        }
         if (UpdatePoisonStepCounter() == TRUE)
         {
             ScriptContext_SetupScript(EventScript_FieldPoison);

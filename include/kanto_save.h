@@ -26,7 +26,9 @@ struct SaveBlockKanto
     struct FameCheckerSaveData fameChecker[NUM_FAMECHECKER_PERSONS];
     struct DaycareMon route5DayCareMon; // SaveBlock1 de RF (pension de la Route 5)
     struct Roamer roamers[NUM_KANTO_ROAMERS]; // chiens légendaires (RF : un seul, SaveBlock1)
-    u8 reserved[1024 - (PLAYER_NAME_LENGTH + 1) - NUM_FAMECHECKER_PERSONS * 2 - sizeof(struct DaycareMon) - sizeof(struct Roamer) * NUM_KANTO_ROAMERS]; // place pour Johto, les îles Sevii, etc.
+    u16 trainerRematchStepCounter; // Cherche VS (RF : SaveBlock1)
+    u8 trainerRematches[MAX_REMATCH_ENTRIES]; // revanches des dresseurs de la carte, par numéro local
+    u8 reserved[1024 - (PLAYER_NAME_LENGTH + 1) - NUM_FAMECHECKER_PERSONS * 2 - sizeof(struct DaycareMon) - sizeof(struct Roamer) * NUM_KANTO_ROAMERS - 2 - MAX_REMATCH_ENTRIES]; // place pour Johto, les îles Sevii, etc.
     u32 checksum;
 };
 

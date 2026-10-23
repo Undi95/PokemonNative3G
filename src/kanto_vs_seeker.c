@@ -1,0 +1,1379 @@
+// Rouge Feu : vs_seeker.c (Cherche VS). Revanches des dresseurs de Kanto, état dans le bloc de
+// sauvegarde de Kanto (gSaveBlockKanto) ; les revanches de Hoenn restent celles du PokéNav.
+#include "global.h"
+#include "battle.h"
+#include "battle_setup.h"
+#include "event_data.h"
+#include "event_object_lock.h"
+#include "event_object_movement.h"
+#include "event_scripts.h"
+#include "field_effect.h"
+#include "field_player_avatar.h"
+#include "field_screen_effect.h"
+#include "malloc.h"
+#include "item.h"
+#include "item_menu.h"
+#include "item_use.h"
+#include "kanto_save.h"
+#include "kanto_vs_seeker.h"
+#include "menu.h"
+#include "random.h"
+#include "script.h"
+#include "script_movement.h"
+#include "sound.h"
+#include "string_util.h"
+#include "task.h"
+#include "tv.h"
+#include "constants/event_object_movement.h"
+#include "constants/event_objects.h"
+#include "constants/field_effects.h"
+#include "constants/items.h"
+#include "constants/maps.h"
+#include "constants/songs.h"
+#include "constants/trainer_types.h"
+#include "constants/kanto_event_objects.h"
+#include "constants/kanto_flags_vars.h"
+#include "constants/kanto_trainers.h"
+#define MAP(map) MAP_GROUP(map), MAP_NUM(map) // Rouge Feu (constants/maps.h)
+
+extern const u8 VSSeeker_Text_BatteryNotChargedNeedXSteps[];
+extern const u8 VSSeeker_Text_NoTrainersWithinRange[];
+extern const u8 VSSeeker_Text_TrainersNotReady[];
+extern const u8 EventScript_VsSeekerChargingDone[];
+struct ObjectEventTemplate *GetBaseTemplateForObjectEvent(const struct ObjectEvent *objectEvent); // event_object_movement.c
+void SetBattledTrainerFlag(void); // battle_setup.c (special de Rouge Feu)
+void PlayerFreeze(void); // field_player_avatar.c
+
+// Each trainer can have up to 6 parties, including their original party.
+// Each rematch is unavailable until the player has progressed to a certain point in the story (see TryGetRematchTrainerIdGivenGameState).
+// A list of the trainer ids for each party is in sRematches. If a party doesn't update for a progression point it will have SKIP instead,
+// and that trainer id will be ignored.
+#define MAX_REMATCH_PARTIES 6
+#define SKIP 0xFFFF
+
+#define NO_REMATCH_LOCALID LOCALID_PLAYER
+
+enum
+{
+   VSSEEKER_NOT_CHARGED,
+   VSSEEKER_NO_ONE_IN_RANGE,
+   VSSEEKER_CAN_USE,
+};
+
+typedef enum
+{
+    VSSEEKER_SINGLE_RESP_RAND,
+    VSSEEKER_SINGLE_RESP_NO,
+    VSSEEKER_SINGLE_RESP_YES
+} VsSeekerSingleRespCode;
+
+typedef enum
+{
+    VSSEEKER_RESPONSE_NO_RESPONSE,
+    VSSEEKER_RESPONSE_UNFOUGHT_TRAINERS,
+    VSSEEKER_RESPONSE_FOUND_REMATCHES
+} VsSeekerResponseCode;
+
+struct RematchData
+{
+    u16 trainerIdxs[MAX_REMATCH_PARTIES];
+    u16 mapGroup; // unused
+    u16 mapNum; // unused
+};
+
+struct VsSeekerTrainerInfo
+{
+    const u8 *script;
+    u16 trainerIdx;
+    u8 localId;
+    u8 objectEventId;
+    s16 xCoord;
+    s16 yCoord;
+    u8 graphicsId;
+};
+
+struct VsSeekerStruct
+{
+    /*0x000*/ struct VsSeekerTrainerInfo trainerInfo[OBJECT_EVENTS_COUNT];
+    /*0x100*/ u8 filler_100[0x300];
+    /*0x400*/ u16 trainerIdxArray[OBJECT_EVENTS_COUNT];
+    /*0x420*/ u8 runningBehaviourEtcArray[OBJECT_EVENTS_COUNT];
+    /*0x430*/ u8 numRematchableTrainers;
+    /*0x431*/ u8 trainerHasNotYetBeenFought:1;
+    /*0x431*/ u8 trainerDoesNotWantRematch:1;
+    /*0x431*/ u8 trainerWantsRematch:1;
+    u8 responseCode:5;
+};
+
+
+// ---- Rouge Feu : fonctions utilisées ici et absentes d'Émeraude ----
+// event_object_movement.c
+static void OverrideMovementTypeForObjectEvent(const struct ObjectEvent *objectEvent, u8 movementType)
+{
+    struct ObjectEventTemplate *objectEventTemplate;
+
+    objectEventTemplate = GetBaseTemplateForObjectEvent(objectEvent);
+    if (objectEventTemplate != NULL)
+    {
+        objectEventTemplate->movementType = movementType;
+    }
+}
+
+// field_player_avatar.c : HandleEnforcedLookDirectionOnPlayerStopMoving = PlayerFreeze d'Émeraude
+#define HandleEnforcedLookDirectionOnPlayerStopMoving PlayerFreeze
+// field_player_avatar.c : walkrun_is_standing_still = IsPlayerStandingStill d'Émeraude
+#define walkrun_is_standing_still IsPlayerStandingStill
+
+// event_object_lock.c
+static void ClearPlayerHeldMovementAndUnfreezeObjectEvents(void)
+{
+    u8 objectEventId = GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0);
+    ObjectEventClearHeldMovementIfFinished(&gObjectEvents[objectEventId]);
+    ScriptMovement_UnfreezeObjectEvents();
+    UnfreezeObjectEvents();
+}
+
+// field_specials.c
+static void TV_PrintIntToStringVar(u8 varidx, s32 number)
+{
+    u8 *const stringVars[] = {gStringVar1, gStringVar2, gStringVar3};
+    s32 n = CountDigits(number);
+    ConvertIntToDecimalStringN(stringVars[varidx], number, STR_CONV_MODE_LEFT_ALIGN, n);
+}
+
+// static declarations
+static EWRAM_DATA struct VsSeekerStruct *sVsSeeker = NULL;
+
+static void VsSeekerResetInBagStepCounter(void);
+static void VsSeekerResetChargingStepCounter(void);
+static void Task_ResetObjectsRematchWantedState(u8 taskId);
+static void ResetMovementOfRematchableTrainers(void);
+static void Task_VsSeeker_1(u8 taskId);
+static void Task_VsSeeker_2(u8 taskId);
+static void GatherNearbyTrainerInfo(void);
+static void Task_VsSeeker_3(u8 taskId);
+static bool8 CanUseVsSeeker(void);
+static u8 GetVsSeekerResponseInArea(const struct RematchData * vsSeekerData);
+static u8 GetRematchTrainerIdGivenGameState(const u16 *trainerIdxs, u8 rematchIdx);
+static u8 ShouldTryRematchBattleInternal(const struct RematchData * vsSeekerData, u16 trainerBattleOpponent);
+static u8 HasRematchTrainerAlreadyBeenFought(const struct RematchData * vsSeekerData, u16 trainerBattleOpponent);
+static int LookupVsSeekerOpponentInArray(const struct RematchData * array, u16 trainerId);
+static bool8 IsTrainerReadyForRematchInternal(const struct RematchData * array, u16 trainerIdx);
+static u8 GetRunningBehaviorFromGraphicsId(u8 graphicsId);
+static u16 GetTrainerFlagFromScript(const u8 * script);
+static int GetRematchIdx(const struct RematchData * vsSeekerData, u16 trainerFlagIdx);
+static bool32 IsThisTrainerRematchable(u32 localId);
+static void ClearAllTrainerRematchStates(void);
+static bool8 IsTrainerVisibleOnScreen(struct VsSeekerTrainerInfo * trainerInfo);
+static u8 GetNextAvailableRematchTrainer(const struct RematchData * vsSeekerData, u16 trainerFlagNo, u8 * idxPtr);
+static u8 GetRematchableTrainerLocalId(void);
+static void StartTrainerObjectMovementScript(struct VsSeekerTrainerInfo * trainerInfo, const u8 * script);
+static u8 GetCurVsSeekerResponse(s32 vsSeekerIdx, u16 trainerIdx);
+static void StartAllRespondantIdleMovements(void);
+static bool8 ObjectEventIdIsSane(u8 objectEventId);
+static u8 GetRandomFaceDirectionMovementType();
+
+static const struct RematchData sRematches[] = {
+   { {TRAINER_KANTO_YOUNGSTER_BEN, TRAINER_KANTO_YOUNGSTER_BEN_2, SKIP, TRAINER_KANTO_YOUNGSTER_BEN_3, TRAINER_KANTO_YOUNGSTER_BEN_4}, MAP(MAP_ROUTE3) },
+   { {TRAINER_KANTO_YOUNGSTER_CALVIN, TRAINER_KANTO_YOUNGSTER_CALVIN}, MAP(MAP_ROUTE3) },
+   { {TRAINER_KANTO_BUG_CATCHER_COLTON, TRAINER_KANTO_BUG_CATCHER_COLTON_2, SKIP, TRAINER_KANTO_BUG_CATCHER_COLTON_3, SKIP, TRAINER_KANTO_BUG_CATCHER_COLTON_4},
+      MAP(MAP_ROUTE3) },
+   { {TRAINER_KANTO_BUG_CATCHER_GREG, TRAINER_KANTO_BUG_CATCHER_GREG},
+      MAP(MAP_ROUTE3) },
+   { {TRAINER_KANTO_BUG_CATCHER_JAMES, TRAINER_KANTO_BUG_CATCHER_JAMES},
+      MAP(MAP_ROUTE3) },
+   { {TRAINER_KANTO_LASS_JANICE, TRAINER_KANTO_LASS_JANICE_2, SKIP, TRAINER_KANTO_LASS_JANICE_3},
+      MAP(MAP_ROUTE3) },
+   { {TRAINER_KANTO_LASS_SALLY, TRAINER_KANTO_LASS_SALLY},
+      MAP(MAP_ROUTE3) },
+   { {TRAINER_KANTO_LASS_ROBIN, TRAINER_KANTO_LASS_ROBIN},
+      MAP(MAP_ROUTE3) },
+   { {TRAINER_KANTO_LASS_CRISSY, TRAINER_KANTO_LASS_CRISSY},
+      MAP(MAP_ROUTE4) },
+   { {TRAINER_KANTO_YOUNGSTER_TIMMY, TRAINER_KANTO_YOUNGSTER_TIMMY_2, SKIP, TRAINER_KANTO_YOUNGSTER_TIMMY_3, SKIP, TRAINER_KANTO_YOUNGSTER_TIMMY_4},
+      MAP(MAP_ROUTE24) },
+   { {TRAINER_KANTO_BUG_CATCHER_CALE, TRAINER_KANTO_BUG_CATCHER_CALE},
+      MAP(MAP_ROUTE24) },
+   { {TRAINER_KANTO_LASS_RELI, TRAINER_KANTO_LASS_RELI_2, SKIP, TRAINER_KANTO_LASS_RELI_3},
+      MAP(MAP_ROUTE24) },
+   { {TRAINER_KANTO_LASS_ALI, TRAINER_KANTO_LASS_ALI},
+      MAP(MAP_ROUTE24) },
+   { {TRAINER_KANTO_CAMPER_SHANE, TRAINER_KANTO_CAMPER_SHANE},
+      MAP(MAP_ROUTE24) },
+   { {TRAINER_KANTO_CAMPER_ETHAN, TRAINER_KANTO_CAMPER_ETHAN},
+      MAP(MAP_ROUTE24) },
+   { {TRAINER_KANTO_YOUNGSTER_JOEY, TRAINER_KANTO_YOUNGSTER_JOEY},
+      MAP(MAP_ROUTE25) },
+   { {TRAINER_KANTO_YOUNGSTER_DAN, TRAINER_KANTO_YOUNGSTER_DAN},
+      MAP(MAP_ROUTE25) },
+   { {TRAINER_KANTO_YOUNGSTER_CHAD, TRAINER_KANTO_YOUNGSTER_CHAD_2, SKIP, TRAINER_KANTO_YOUNGSTER_CHAD_3, TRAINER_KANTO_YOUNGSTER_CHAD_4},
+      MAP(MAP_ROUTE25) },
+   { {TRAINER_KANTO_PICNICKER_KELSEY, TRAINER_KANTO_PICNICKER_KELSEY_2, SKIP, TRAINER_KANTO_PICNICKER_KELSEY_3, TRAINER_KANTO_PICNICKER_KELSEY_4},
+      MAP(MAP_ROUTE25) },
+   { {TRAINER_KANTO_LASS_HALEY, TRAINER_KANTO_LASS_HALEY},
+      MAP(MAP_ROUTE25) },
+   { {TRAINER_KANTO_HIKER_FRANKLIN, SKIP, TRAINER_KANTO_HIKER_FRANKLIN_2},
+      MAP(MAP_ROUTE25) },
+   { {TRAINER_KANTO_HIKER_NOB, TRAINER_KANTO_HIKER_NOB},
+      MAP(MAP_ROUTE25) },
+   { {TRAINER_KANTO_HIKER_WAYNE, TRAINER_KANTO_HIKER_WAYNE},
+      MAP(MAP_ROUTE25) },
+   { {TRAINER_KANTO_CAMPER_FLINT, TRAINER_KANTO_CAMPER_FLINT},
+      MAP(MAP_ROUTE25) },
+   { {TRAINER_KANTO_BUG_CATCHER_KEIGO, TRAINER_KANTO_BUG_CATCHER_KEIGO},
+      MAP(MAP_ROUTE6) },
+   { {TRAINER_KANTO_BUG_CATCHER_ELIJAH, TRAINER_KANTO_BUG_CATCHER_ELIJAH},
+      MAP(MAP_ROUTE6) },
+   { {TRAINER_KANTO_CAMPER_RICKY, TRAINER_KANTO_CAMPER_RICKY_2, SKIP, TRAINER_KANTO_CAMPER_RICKY_3, SKIP, TRAINER_KANTO_CAMPER_RICKY_4},
+      MAP(MAP_ROUTE6) },
+   { {TRAINER_KANTO_CAMPER_JEFF, TRAINER_KANTO_CAMPER_JEFF_2, SKIP, TRAINER_KANTO_CAMPER_JEFF_3, SKIP, TRAINER_KANTO_CAMPER_JEFF_4},
+      MAP(MAP_ROUTE6) },
+   { {TRAINER_KANTO_PICNICKER_NANCY, TRAINER_KANTO_PICNICKER_NANCY},
+      MAP(MAP_ROUTE6) },
+   { {TRAINER_KANTO_PICNICKER_ISABELLE, TRAINER_KANTO_PICNICKER_ISABELLE_2, SKIP, TRAINER_KANTO_PICNICKER_ISABELLE_3, TRAINER_KANTO_PICNICKER_ISABELLE_4},
+      MAP(MAP_ROUTE6) },
+   { {TRAINER_KANTO_YOUNGSTER_EDDIE, TRAINER_KANTO_YOUNGSTER_EDDIE},
+      MAP(MAP_ROUTE11) },
+   { {TRAINER_KANTO_YOUNGSTER_DILLON, TRAINER_KANTO_YOUNGSTER_DILLON},
+      MAP(MAP_ROUTE11) },
+   { {TRAINER_KANTO_YOUNGSTER_YASU, SKIP, TRAINER_KANTO_YOUNGSTER_YASU_2, SKIP, TRAINER_KANTO_YOUNGSTER_YASU_3},
+      MAP(MAP_ROUTE11) },
+   { {TRAINER_KANTO_YOUNGSTER_DAVE, TRAINER_KANTO_YOUNGSTER_DAVE},
+      MAP(MAP_ROUTE11) },
+   { {TRAINER_KANTO_ENGINEER_BRAXTON, TRAINER_KANTO_ENGINEER_BRAXTON},
+      MAP(MAP_ROUTE11) },
+   { {TRAINER_KANTO_ENGINEER_BERNIE, SKIP, SKIP, TRAINER_KANTO_ENGINEER_BERNIE_2},
+      MAP(MAP_ROUTE11) },
+   { {TRAINER_KANTO_GAMER_HUGO, TRAINER_KANTO_GAMER_HUGO},
+      MAP(MAP_ROUTE11) },
+   { {TRAINER_KANTO_GAMER_JASPER, TRAINER_KANTO_GAMER_JASPER},
+      MAP(MAP_ROUTE11) },
+   { {TRAINER_KANTO_GAMER_DIRK, TRAINER_KANTO_GAMER_DIRK},
+      MAP(MAP_ROUTE11) },
+   { {TRAINER_KANTO_GAMER_DARIAN, SKIP, SKIP, TRAINER_KANTO_GAMER_DARIAN_2},
+      MAP(MAP_ROUTE11) },
+   { {TRAINER_KANTO_BUG_CATCHER_BRENT, TRAINER_KANTO_BUG_CATCHER_BRENT},
+      MAP(MAP_ROUTE9) },
+   { {TRAINER_KANTO_BUG_CATCHER_CONNER, TRAINER_KANTO_BUG_CATCHER_CONNER},
+      MAP(MAP_ROUTE9) },
+   { {TRAINER_KANTO_CAMPER_CHRIS, SKIP, TRAINER_KANTO_CAMPER_CHRIS_2, TRAINER_KANTO_CAMPER_CHRIS_3, SKIP, TRAINER_KANTO_CAMPER_CHRIS_4},
+      MAP(MAP_ROUTE9) },
+   { {TRAINER_KANTO_CAMPER_DREW, TRAINER_KANTO_CAMPER_DREW},
+      MAP(MAP_ROUTE9) },
+   { {TRAINER_KANTO_PICNICKER_ALICIA, SKIP, TRAINER_KANTO_PICNICKER_ALICIA_2, TRAINER_KANTO_PICNICKER_ALICIA_3, SKIP, TRAINER_KANTO_PICNICKER_ALICIA_4},
+      MAP(MAP_ROUTE9) },
+   { {TRAINER_KANTO_PICNICKER_CAITLIN, TRAINER_KANTO_PICNICKER_CAITLIN},
+      MAP(MAP_ROUTE9) },
+   { {TRAINER_KANTO_HIKER_ALAN, TRAINER_KANTO_HIKER_ALAN},
+      MAP(MAP_ROUTE9) },
+   { {TRAINER_KANTO_HIKER_BRICE, TRAINER_KANTO_HIKER_BRICE},
+      MAP(MAP_ROUTE9) },
+   { {TRAINER_KANTO_HIKER_JEREMY, SKIP, SKIP, TRAINER_KANTO_HIKER_JEREMY_2},
+      MAP(MAP_ROUTE9) },
+   { {TRAINER_KANTO_PICNICKER_HEIDI, TRAINER_KANTO_PICNICKER_HEIDI},
+      MAP(MAP_ROUTE10) },
+   { {TRAINER_KANTO_PICNICKER_CAROL, TRAINER_KANTO_PICNICKER_CAROL},
+      MAP(MAP_ROUTE10) },
+   { {TRAINER_KANTO_POKEMANIAC_MARK, SKIP, SKIP, TRAINER_KANTO_POKEMANIAC_MARK_2, SKIP, TRAINER_KANTO_POKEMANIAC_MARK_3},
+      MAP(MAP_ROUTE10) },
+   { {TRAINER_KANTO_POKEMANIAC_HERMAN, SKIP, SKIP, TRAINER_KANTO_POKEMANIAC_HERMAN_2, SKIP, TRAINER_KANTO_POKEMANIAC_HERMAN_3},
+      MAP(MAP_ROUTE10) },
+   { {TRAINER_KANTO_HIKER_CLARK, TRAINER_KANTO_HIKER_CLARK},
+      MAP(MAP_ROUTE10) },
+   { {TRAINER_KANTO_HIKER_TRENT, SKIP, SKIP, TRAINER_KANTO_HIKER_TRENT_2},
+      MAP(MAP_ROUTE10) },
+   { {TRAINER_KANTO_LASS_PAIGE, TRAINER_KANTO_LASS_PAIGE},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_LASS_ANDREA, TRAINER_KANTO_LASS_ANDREA},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_LASS_MEGAN, SKIP, TRAINER_KANTO_LASS_MEGAN_2, SKIP, TRAINER_KANTO_LASS_MEGAN_3},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_LASS_JULIA, TRAINER_KANTO_LASS_JULIA},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_SUPER_NERD_AIDAN, TRAINER_KANTO_SUPER_NERD_AIDAN},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_SUPER_NERD_GLENN, SKIP, SKIP, TRAINER_KANTO_SUPER_NERD_GLENN_2},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_SUPER_NERD_LESLIE, TRAINER_KANTO_SUPER_NERD_LESLIE},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_GAMER_STAN, TRAINER_KANTO_GAMER_STAN},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_GAMER_RICH, SKIP, SKIP, TRAINER_KANTO_GAMER_RICH_2},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_TWINS_ELI_ANNE, SKIP, SKIP, TRAINER_KANTO_TWINS_ELI_ANNE_2},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_BIKER_RICARDO, TRAINER_KANTO_BIKER_RICARDO},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_BIKER_JAREN, SKIP, SKIP, TRAINER_KANTO_BIKER_JAREN_2},
+      MAP(MAP_ROUTE8) },
+   { {TRAINER_KANTO_FISHERMAN_NED, TRAINER_KANTO_FISHERMAN_NED},
+      MAP(MAP_ROUTE12) },
+   { {TRAINER_KANTO_FISHERMAN_CHIP, TRAINER_KANTO_FISHERMAN_CHIP},
+      MAP(MAP_ROUTE12) },
+   { {TRAINER_KANTO_FISHERMAN_HANK, TRAINER_KANTO_FISHERMAN_HANK},
+      MAP(MAP_ROUTE12) },
+   { {TRAINER_KANTO_FISHERMAN_ELLIOT, SKIP, SKIP, TRAINER_KANTO_FISHERMAN_ELLIOT_2},
+      MAP(MAP_ROUTE12) },
+   { {TRAINER_KANTO_FISHERMAN_ANDREW, TRAINER_KANTO_FISHERMAN_ANDREW},
+      MAP(MAP_ROUTE12) },
+   { {TRAINER_KANTO_ROCKER_LUCA, SKIP, SKIP, TRAINER_KANTO_ROCKER_LUCA_2},
+      MAP(MAP_ROUTE12) },
+   { {TRAINER_KANTO_CAMPER_JUSTIN, TRAINER_KANTO_CAMPER_JUSTIN},
+      MAP(MAP_ROUTE12) },
+   { {TRAINER_KANTO_YOUNG_COUPLE_GIA_JES, SKIP, SKIP, TRAINER_KANTO_YOUNG_COUPLE_GIA_JES_2, SKIP, TRAINER_KANTO_YOUNG_COUPLE_GIA_JES_3},
+      MAP(MAP_ROUTE12) },
+   { {TRAINER_KANTO_BIKER_JARED, TRAINER_KANTO_BIKER_JARED},
+      MAP(MAP_ROUTE13) },
+   { {TRAINER_KANTO_BEAUTY_LOLA, TRAINER_KANTO_BEAUTY_LOLA},
+      MAP(MAP_ROUTE13) },
+   { {TRAINER_KANTO_BEAUTY_SHEILA, SKIP, SKIP, SKIP, TRAINER_KANTO_BEAUTY_SHEILA_2},
+      MAP(MAP_ROUTE13) },
+   { {TRAINER_KANTO_BIRD_KEEPER_SEBASTIAN, TRAINER_KANTO_BIRD_KEEPER_SEBASTIAN},
+      MAP(MAP_ROUTE13) },
+   { {TRAINER_KANTO_BIRD_KEEPER_PERRY, TRAINER_KANTO_BIRD_KEEPER_PERRY},
+      MAP(MAP_ROUTE13) },
+   { {TRAINER_KANTO_BIRD_KEEPER_ROBERT, SKIP, SKIP, TRAINER_KANTO_BIRD_KEEPER_ROBERT_2, TRAINER_KANTO_BIRD_KEEPER_ROBERT_3},
+      MAP(MAP_ROUTE13) },
+   { {TRAINER_KANTO_PICNICKER_ALMA, TRAINER_KANTO_PICNICKER_ALMA},
+      MAP(MAP_ROUTE13) },
+   { {TRAINER_KANTO_PICNICKER_SUSIE, SKIP, SKIP, TRAINER_KANTO_PICNICKER_SUSIE_2, TRAINER_KANTO_PICNICKER_SUSIE_3, TRAINER_KANTO_PICNICKER_SUSIE_4},
+      MAP(MAP_ROUTE13) },
+   { {TRAINER_KANTO_PICNICKER_VALERIE, TRAINER_KANTO_PICNICKER_VALERIE},
+      MAP(MAP_ROUTE13) },
+   { {TRAINER_KANTO_PICNICKER_GWEN, TRAINER_KANTO_PICNICKER_GWEN},
+      MAP(MAP_ROUTE13) },
+   { {TRAINER_KANTO_BIKER_MALIK, TRAINER_KANTO_BIKER_MALIK},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_BIKER_LUKAS, SKIP, SKIP, SKIP, TRAINER_KANTO_BIKER_LUKAS_2},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_BIKER_ISAAC, TRAINER_KANTO_BIKER_ISAAC},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_BIKER_GERALD, TRAINER_KANTO_BIKER_GERALD},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_BIRD_KEEPER_DONALD, TRAINER_KANTO_BIRD_KEEPER_DONALD},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_BIRD_KEEPER_BENNY, SKIP, SKIP, TRAINER_KANTO_BIRD_KEEPER_BENNY_2, TRAINER_KANTO_BIRD_KEEPER_BENNY_3},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_BIRD_KEEPER_CARTER, TRAINER_KANTO_BIRD_KEEPER_CARTER},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_BIRD_KEEPER_MITCH, TRAINER_KANTO_BIRD_KEEPER_MITCH},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_BIRD_KEEPER_BECK, TRAINER_KANTO_BIRD_KEEPER_BECK},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_BIRD_KEEPER_MARLON, SKIP, SKIP, TRAINER_KANTO_BIRD_KEEPER_MARLON_2, TRAINER_KANTO_BIRD_KEEPER_MARLON_3},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_TWINS_KIRI_JAN, TRAINER_KANTO_TWINS_KIRI_JAN},
+      MAP(MAP_ROUTE14) },
+   { {TRAINER_KANTO_BIKER_ERNEST, TRAINER_KANTO_BIKER_ERNEST},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_BIKER_ALEX, TRAINER_KANTO_BIKER_ALEX},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_BEAUTY_GRACE, SKIP, SKIP, SKIP, TRAINER_KANTO_BEAUTY_GRACE_2},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_BEAUTY_OLIVIA, TRAINER_KANTO_BEAUTY_OLIVIA},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_BIRD_KEEPER_EDWIN, TRAINER_KANTO_BIRD_KEEPER_EDWIN},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_BIRD_KEEPER_CHESTER, SKIP, SKIP, TRAINER_KANTO_BIRD_KEEPER_CHESTER_2, TRAINER_KANTO_BIRD_KEEPER_CHESTER_3},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_PICNICKER_YAZMIN, TRAINER_KANTO_PICNICKER_YAZMIN},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_PICNICKER_KINDRA, TRAINER_KANTO_PICNICKER_KINDRA},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_PICNICKER_BECKY, SKIP, SKIP, TRAINER_KANTO_PICNICKER_BECKY_2, TRAINER_KANTO_PICNICKER_BECKY_3, TRAINER_KANTO_PICNICKER_BECKY_4},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_PICNICKER_CELIA, TRAINER_KANTO_PICNICKER_CELIA},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_CRUSH_KIN_RON_MYA, SKIP, SKIP, TRAINER_KANTO_CRUSH_KIN_RON_MYA_2, TRAINER_KANTO_CRUSH_KIN_RON_MYA_3, TRAINER_KANTO_CRUSH_KIN_RON_MYA_4},
+      MAP(MAP_ROUTE15) },
+   { {TRAINER_KANTO_BIKER_LAO, TRAINER_KANTO_BIKER_LAO},
+      MAP(MAP_ROUTE16) },
+   { {TRAINER_KANTO_BIKER_HIDEO, TRAINER_KANTO_BIKER_HIDEO},
+      MAP(MAP_ROUTE16) },
+   { {TRAINER_KANTO_BIKER_RUBEN, SKIP, SKIP, SKIP, TRAINER_KANTO_BIKER_RUBEN_2},
+      MAP(MAP_ROUTE16) },
+   { {TRAINER_KANTO_CUE_BALL_KOJI, TRAINER_KANTO_CUE_BALL_KOJI},
+      MAP(MAP_ROUTE16) },
+   { {TRAINER_KANTO_CUE_BALL_LUKE, TRAINER_KANTO_CUE_BALL_LUKE},
+      MAP(MAP_ROUTE16) },
+   { {TRAINER_KANTO_CUE_BALL_CAMRON, SKIP, SKIP, SKIP, TRAINER_KANTO_CUE_BALL_CAMRON_2},
+      MAP(MAP_ROUTE16) },
+   { {TRAINER_KANTO_YOUNG_COUPLE_LEA_JED, TRAINER_KANTO_YOUNG_COUPLE_LEA_JED},
+      MAP(MAP_ROUTE16) },
+   { {TRAINER_KANTO_BIKER_BILLY, TRAINER_KANTO_BIKER_BILLY},
+      MAP(MAP_ROUTE17) },
+   { {TRAINER_KANTO_BIKER_NIKOLAS, TRAINER_KANTO_BIKER_NIKOLAS},
+      MAP(MAP_ROUTE17) },
+   { {TRAINER_KANTO_BIKER_JAXON, SKIP, SKIP, SKIP, TRAINER_KANTO_BIKER_JAXON_2},
+      MAP(MAP_ROUTE17) },
+   { {TRAINER_KANTO_BIKER_WILLIAM, TRAINER_KANTO_BIKER_WILLIAM},
+      MAP(MAP_ROUTE17) },
+   { {TRAINER_KANTO_CUE_BALL_RAUL, TRAINER_KANTO_CUE_BALL_RAUL},
+      MAP(MAP_ROUTE17) },
+   { {TRAINER_KANTO_CUE_BALL_ISAIAH, SKIP, SKIP, SKIP, TRAINER_KANTO_CUE_BALL_ISAIAH_2},
+      MAP(MAP_ROUTE17) },
+   { {TRAINER_KANTO_CUE_BALL_ZEEK, TRAINER_KANTO_CUE_BALL_ZEEK},
+      MAP(MAP_ROUTE17) },
+   { {TRAINER_KANTO_CUE_BALL_JAMAL, TRAINER_KANTO_CUE_BALL_JAMAL},
+      MAP(MAP_ROUTE17) },
+   { {TRAINER_KANTO_CUE_BALL_COREY, SKIP, SKIP, SKIP, TRAINER_KANTO_CUE_BALL_COREY_2},
+      MAP(MAP_ROUTE17) },
+   { {TRAINER_KANTO_BIKER_VIRGIL, TRAINER_KANTO_BIKER_VIRGIL},
+      MAP(MAP_ROUTE17) },
+   { {TRAINER_KANTO_BIRD_KEEPER_WILTON, TRAINER_KANTO_BIRD_KEEPER_WILTON},
+      MAP(MAP_ROUTE18) },
+   { {TRAINER_KANTO_BIRD_KEEPER_RAMIRO, TRAINER_KANTO_BIRD_KEEPER_RAMIRO},
+      MAP(MAP_ROUTE18) },
+   { {TRAINER_KANTO_BIRD_KEEPER_JACOB, SKIP, SKIP, TRAINER_KANTO_BIRD_KEEPER_JACOB_2, TRAINER_KANTO_BIRD_KEEPER_JACOB_3},
+      MAP(MAP_ROUTE18) },
+   { {TRAINER_KANTO_SWIMMER_MALE_RICHARD, TRAINER_KANTO_SWIMMER_MALE_RICHARD},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SWIMMER_MALE_REECE, TRAINER_KANTO_SWIMMER_MALE_REECE},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SWIMMER_MALE_MATTHEW, SKIP, SKIP, SKIP, TRAINER_KANTO_SWIMMER_MALE_MATTHEW_2},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SWIMMER_MALE_DOUGLAS, TRAINER_KANTO_SWIMMER_MALE_DOUGLAS},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SWIMMER_MALE_DAVID, TRAINER_KANTO_SWIMMER_MALE_DAVID},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SWIMMER_MALE_TONY, SKIP, SKIP, SKIP, TRAINER_KANTO_SWIMMER_MALE_TONY_2},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SWIMMER_MALE_AXLE, TRAINER_KANTO_SWIMMER_MALE_AXLE},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_ANYA, TRAINER_KANTO_SWIMMER_FEMALE_ANYA},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_ALICE, SKIP, SKIP, SKIP, TRAINER_KANTO_SWIMMER_FEMALE_ALICE_2},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_CONNIE, TRAINER_KANTO_SWIMMER_FEMALE_CONNIE},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SIS_AND_BRO_LIA_LUC, TRAINER_KANTO_SIS_AND_BRO_LIA_LUC},
+      MAP(MAP_ROUTE19) },
+   { {TRAINER_KANTO_SWIMMER_MALE_BARRY, TRAINER_KANTO_SWIMMER_MALE_BARRY},
+      MAP(MAP_ROUTE20) },
+   { {TRAINER_KANTO_SWIMMER_MALE_DEAN, TRAINER_KANTO_SWIMMER_MALE_DEAN},
+      MAP(MAP_ROUTE20) },
+   { {TRAINER_KANTO_SWIMMER_MALE_DARRIN, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_SWIMMER_MALE_DARRIN_2},
+      MAP(MAP_ROUTE20) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_TIFFANY, TRAINER_KANTO_SWIMMER_FEMALE_TIFFANY},
+      MAP(MAP_ROUTE20) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_NORA, TRAINER_KANTO_SWIMMER_FEMALE_NORA},
+      MAP(MAP_ROUTE20) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_MELISSA, SKIP, SKIP, SKIP, TRAINER_KANTO_SWIMMER_FEMALE_MELISSA_2},
+      MAP(MAP_ROUTE20) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_SHIRLEY, TRAINER_KANTO_SWIMMER_FEMALE_SHIRLEY},
+      MAP(MAP_ROUTE20) },
+   { {TRAINER_KANTO_BIRD_KEEPER_ROGER, TRAINER_KANTO_BIRD_KEEPER_ROGER},
+      MAP(MAP_ROUTE20) },
+   { {TRAINER_KANTO_PICNICKER_MISSY, SKIP, SKIP, SKIP, TRAINER_KANTO_PICNICKER_MISSY_2, TRAINER_KANTO_PICNICKER_MISSY_3},
+      MAP(MAP_ROUTE20) },
+   { {TRAINER_KANTO_PICNICKER_IRENE, TRAINER_KANTO_PICNICKER_IRENE},
+      MAP(MAP_ROUTE20) },
+   { {TRAINER_KANTO_FISHERMAN_RONALD, TRAINER_KANTO_FISHERMAN_RONALD},
+      MAP(MAP_ROUTE21_NORTH) },
+   { {TRAINER_KANTO_FISHERMAN_CLAUDE, TRAINER_KANTO_FISHERMAN_CLAUDE},
+      MAP(MAP_ROUTE21_NORTH) },
+   { {TRAINER_KANTO_FISHERMAN_WADE, SKIP, SKIP, SKIP, TRAINER_KANTO_FISHERMAN_WADE_2},
+      MAP(MAP_ROUTE21_NORTH) },
+   { {TRAINER_KANTO_FISHERMAN_NOLAN, TRAINER_KANTO_FISHERMAN_NOLAN},
+      MAP(MAP_ROUTE21_NORTH) },
+   { {TRAINER_KANTO_SWIMMER_MALE_SPENCER, TRAINER_KANTO_SWIMMER_MALE_SPENCER},
+      MAP(MAP_ROUTE21_NORTH) },
+   { {TRAINER_KANTO_SWIMMER_MALE_JACK, SKIP, SKIP, SKIP, TRAINER_KANTO_SWIMMER_MALE_JACK_2},
+      MAP(MAP_ROUTE21_NORTH) },
+   { {TRAINER_KANTO_SWIMMER_MALE_JEROME, TRAINER_KANTO_SWIMMER_MALE_JEROME},
+      MAP(MAP_ROUTE21_NORTH) },
+   { {TRAINER_KANTO_SWIMMER_MALE_ROLAND, TRAINER_KANTO_SWIMMER_MALE_ROLAND},
+      MAP(MAP_ROUTE21_NORTH) },
+   { {TRAINER_KANTO_SIS_AND_BRO_LIL_IAN, SKIP, SKIP, SKIP, TRAINER_KANTO_SIS_AND_BRO_LIL_IAN_2, TRAINER_KANTO_SIS_AND_BRO_LIL_IAN_3},
+      MAP(MAP_ROUTE21_NORTH) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_MARIA, TRAINER_KANTO_SWIMMER_FEMALE_MARIA},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_ABIGAIL, TRAINER_KANTO_SWIMMER_FEMALE_ABIGAIL},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_SWIMMER_MALE_FINN, SKIP, SKIP, SKIP, TRAINER_KANTO_SWIMMER_MALE_FINN_2},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_SWIMMER_MALE_GARRETT, TRAINER_KANTO_SWIMMER_MALE_GARRETT},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_FISHERMAN_TOMMY, TRAINER_KANTO_FISHERMAN_TOMMY},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_CRUSH_GIRL_SHARON, SKIP, SKIP, SKIP, TRAINER_KANTO_CRUSH_GIRL_SHARON_2, TRAINER_KANTO_CRUSH_GIRL_SHARON_3},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_CRUSH_GIRL_TANYA, SKIP, SKIP, SKIP, TRAINER_KANTO_CRUSH_GIRL_TANYA_2, TRAINER_KANTO_CRUSH_GIRL_TANYA_3},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_BLACK_BELT_SHEA, SKIP, SKIP, SKIP, TRAINER_KANTO_BLACK_BELT_SHEA_2, TRAINER_KANTO_BLACK_BELT_SHEA_3},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_BLACK_BELT_HUGH, SKIP, SKIP, SKIP, TRAINER_KANTO_BLACK_BELT_HUGH_2, TRAINER_KANTO_BLACK_BELT_HUGH_3},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_CAMPER_BRYCE, TRAINER_KANTO_CAMPER_BRYCE},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_PICNICKER_CLAIRE, TRAINER_KANTO_PICNICKER_CLAIRE},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_CRUSH_KIN_MIK_KIA, SKIP, SKIP, SKIP, TRAINER_KANTO_CRUSH_KIN_MIK_KIA_2, TRAINER_KANTO_CRUSH_KIN_MIK_KIA_3},
+      MAP(MAP_ONE_ISLAND_KINDLE_ROAD) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_AMARA, TRAINER_KANTO_SWIMMER_FEMALE_AMARA},
+      MAP(MAP_ONE_ISLAND_TREASURE_BEACH) },
+   { {TRAINER_KANTO_AROMA_LADY_NIKKI, TRAINER_KANTO_AROMA_LADY_NIKKI},
+      MAP(MAP_THREE_ISLAND_BOND_BRIDGE) },
+   { {TRAINER_KANTO_AROMA_LADY_VIOLET, TRAINER_KANTO_AROMA_LADY_VIOLET},
+      MAP(MAP_THREE_ISLAND_BOND_BRIDGE) },
+   { {TRAINER_KANTO_TUBER_AMIRA, SKIP, SKIP, SKIP, TRAINER_KANTO_TUBER_AMIRA_2},
+      MAP(MAP_THREE_ISLAND_BOND_BRIDGE) },
+   { {TRAINER_KANTO_TUBER_ALEXIS, TRAINER_KANTO_TUBER_ALEXIS},
+      MAP(MAP_THREE_ISLAND_BOND_BRIDGE) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_TISHA, TRAINER_KANTO_SWIMMER_FEMALE_TISHA},
+      MAP(MAP_THREE_ISLAND_BOND_BRIDGE) },
+   { {TRAINER_KANTO_TWINS_JOY_MEG, SKIP, SKIP, SKIP, TRAINER_KANTO_TWINS_JOY_MEG_2},
+      MAP(MAP_THREE_ISLAND_BOND_BRIDGE) },
+   { {TRAINER_KANTO_PAINTER_DAISY, TRAINER_KANTO_PAINTER_DAISY},
+      MAP(MAP_FIVE_ISLAND_RESORT_GORGEOUS) },
+   { {TRAINER_KANTO_PAINTER_CELINA, TRAINER_KANTO_PAINTER_CELINA},
+      MAP(MAP_FIVE_ISLAND_RESORT_GORGEOUS) },
+   { {TRAINER_KANTO_PAINTER_RAYNA, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_PAINTER_RAYNA_2},
+      MAP(MAP_FIVE_ISLAND_RESORT_GORGEOUS) },
+   { {TRAINER_KANTO_LADY_JACKI, TRAINER_KANTO_LADY_JACKI},
+      MAP(MAP_FIVE_ISLAND_RESORT_GORGEOUS) },
+   { {TRAINER_KANTO_LADY_GILLIAN, TRAINER_KANTO_LADY_GILLIAN},
+      MAP(MAP_FIVE_ISLAND_RESORT_GORGEOUS) },
+   { {TRAINER_KANTO_YOUNGSTER_DESTIN, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_YOUNGSTER_DESTIN_2},
+      MAP(MAP_FIVE_ISLAND_RESORT_GORGEOUS) },
+   { {TRAINER_KANTO_SWIMMER_MALE_TOBY, TRAINER_KANTO_SWIMMER_MALE_TOBY},
+      MAP(MAP_FIVE_ISLAND_RESORT_GORGEOUS) },
+   { {TRAINER_KANTO_PKMN_BREEDER_ALIZE, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_PKMN_BREEDER_ALIZE_2},
+      MAP(MAP_FIVE_ISLAND_WATER_LABYRINTH) },
+   { {TRAINER_KANTO_BIRD_KEEPER_MILO, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_BIRD_KEEPER_MILO_2},
+      MAP(MAP_FIVE_ISLAND_MEMORIAL_PILLAR) },
+   { {TRAINER_KANTO_BIRD_KEEPER_CHAZ, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_BIRD_KEEPER_CHAZ_2},
+      MAP(MAP_FIVE_ISLAND_MEMORIAL_PILLAR) },
+   { {TRAINER_KANTO_BIRD_KEEPER_HAROLD, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_BIRD_KEEPER_HAROLD_2},
+      MAP(MAP_FIVE_ISLAND_MEMORIAL_PILLAR) },
+   { {TRAINER_KANTO_FISHERMAN_TYLOR, TRAINER_KANTO_FISHERMAN_TYLOR},
+      MAP(MAP_SIX_ISLAND_OUTCAST_ISLAND) },
+   { {TRAINER_KANTO_SWIMMER_MALE_MYMO, TRAINER_KANTO_SWIMMER_MALE_MYMO},
+      MAP(MAP_SIX_ISLAND_OUTCAST_ISLAND) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_NICOLE, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_SWIMMER_FEMALE_NICOLE_2},
+      MAP(MAP_SIX_ISLAND_OUTCAST_ISLAND) },
+   { {TRAINER_KANTO_SIS_AND_BRO_AVA_GEB, TRAINER_KANTO_SIS_AND_BRO_AVA_GEB},
+      MAP(MAP_SIX_ISLAND_OUTCAST_ISLAND) },
+   { {TRAINER_KANTO_PSYCHIC_JACLYN, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_PSYCHIC_JACLYN_2},
+      MAP(MAP_SIX_ISLAND_GREEN_PATH) },
+   { {TRAINER_KANTO_AROMA_LADY_ROSE, TRAINER_KANTO_AROMA_LADY_ROSE},
+      MAP(MAP_SIX_ISLAND_WATER_PATH) },
+   { {TRAINER_KANTO_JUGGLER_EDWARD, TRAINER_KANTO_JUGGLER_EDWARD},
+      MAP(MAP_SIX_ISLAND_WATER_PATH) },
+   { {TRAINER_KANTO_SWIMMER_MALE_SAMIR, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_SWIMMER_MALE_SAMIR_2},
+      MAP(MAP_SIX_ISLAND_WATER_PATH) },
+   { {TRAINER_KANTO_SWIMMER_FEMALE_DENISE, TRAINER_KANTO_SWIMMER_FEMALE_DENISE},
+      MAP(MAP_SIX_ISLAND_WATER_PATH) },
+   { {TRAINER_KANTO_TWINS_MIU_MIA, TRAINER_KANTO_TWINS_MIU_MIA},
+      MAP(MAP_SIX_ISLAND_WATER_PATH) },
+   { {TRAINER_KANTO_HIKER_EARL, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_HIKER_EARL_2},
+      MAP(MAP_SIX_ISLAND_WATER_PATH) },
+   { {TRAINER_KANTO_RUIN_MANIAC_STANLY, TRAINER_KANTO_RUIN_MANIAC_STANLY},
+      MAP(MAP_SIX_ISLAND_RUIN_VALLEY) },
+   { {TRAINER_KANTO_RUIN_MANIAC_FOSTER, TRAINER_KANTO_RUIN_MANIAC_FOSTER},
+      MAP(MAP_SIX_ISLAND_RUIN_VALLEY) },
+   { {TRAINER_KANTO_RUIN_MANIAC_LARRY, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_RUIN_MANIAC_LARRY_2},
+      MAP(MAP_SIX_ISLAND_RUIN_VALLEY) },
+   { {TRAINER_KANTO_HIKER_DARYL, TRAINER_KANTO_HIKER_DARYL},
+      MAP(MAP_SIX_ISLAND_RUIN_VALLEY) },
+   { {TRAINER_KANTO_POKEMANIAC_HECTOR, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_POKEMANIAC_HECTOR_2},
+      MAP(MAP_SIX_ISLAND_RUIN_VALLEY) },
+   { {TRAINER_KANTO_PSYCHIC_DARIO, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_PSYCHIC_DARIO_2},
+      MAP(MAP_SEVEN_ISLAND_TRAINER_TOWER) },
+   { {TRAINER_KANTO_PSYCHIC_RODETTE, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_PSYCHIC_RODETTE_2},
+      MAP(MAP_SEVEN_ISLAND_TRAINER_TOWER) },
+   { {TRAINER_KANTO_AROMA_LADY_MIAH, TRAINER_KANTO_AROMA_LADY_MIAH},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE) },
+   { {TRAINER_KANTO_YOUNG_COUPLE_EVE_JON, TRAINER_KANTO_YOUNG_COUPLE_EVE_JON},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE) },
+   { {TRAINER_KANTO_JUGGLER_MASON, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_JUGGLER_MASON_2},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE) },
+   { {TRAINER_KANTO_PKMN_RANGER_NICOLAS, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_PKMN_RANGER_NICOLAS_2},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE) },
+   { {TRAINER_KANTO_PKMN_RANGER_MADELINE, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_PKMN_RANGER_MADELINE_2},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE) },
+   { {TRAINER_KANTO_CRUSH_GIRL_CYNDY, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_CRUSH_GIRL_CYNDY_2},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON) },
+   { {TRAINER_KANTO_TAMER_EVAN, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_TAMER_EVAN_2},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON) },
+   { {TRAINER_KANTO_PKMN_RANGER_JACKSON, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_PKMN_RANGER_JACKSON_2},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON) },
+   { {TRAINER_KANTO_PKMN_RANGER_KATELYN, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_PKMN_RANGER_KATELYN_2},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON) },
+   { {TRAINER_KANTO_COOLTRAINER_LEROY, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_COOLTRAINER_LEROY_2},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON) },
+   { {TRAINER_KANTO_COOLTRAINER_MICHELLE, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_COOLTRAINER_MICHELLE_2},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON) },
+   { {TRAINER_KANTO_COOL_COUPLE_LEX_NYA, SKIP, SKIP, SKIP, SKIP, TRAINER_KANTO_COOL_COUPLE_LEX_NYA_2},
+      MAP(MAP_SEVEN_ISLAND_SEVAULT_CANYON) },
+   { {TRAINER_KANTO_RUIN_MANIAC_BRANDON, TRAINER_KANTO_RUIN_MANIAC_BRANDON},
+      MAP(MAP_SEVEN_ISLAND_TANOBY_RUINS) },
+   { {TRAINER_KANTO_RUIN_MANIAC_BENJAMIN, TRAINER_KANTO_RUIN_MANIAC_BENJAMIN},
+      MAP(MAP_SEVEN_ISLAND_TANOBY_RUINS) },
+   { {TRAINER_KANTO_PAINTER_EDNA, TRAINER_KANTO_PAINTER_EDNA},
+      MAP(MAP_SEVEN_ISLAND_TANOBY_RUINS) },
+   { {TRAINER_KANTO_GENTLEMAN_CLIFFORD, TRAINER_KANTO_GENTLEMAN_CLIFFORD},
+      MAP(MAP_SEVEN_ISLAND_TANOBY_RUINS) },
+};
+
+static const u8 sMovementScript_Wait48[] = {
+    MOVEMENT_ACTION_DELAY_16,
+    MOVEMENT_ACTION_DELAY_16,
+    MOVEMENT_ACTION_DELAY_16,
+    MOVEMENT_ACTION_STEP_END
+};
+
+static const u8 sMovementScript_TrainerUnfought[] = {
+    MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK,
+    MOVEMENT_ACTION_STEP_END
+};
+
+static const u8 sMovementScript_TrainerNoRematch[] = {
+    MOVEMENT_ACTION_EMOTE_X,
+    MOVEMENT_ACTION_STEP_END
+};
+
+static const u8 sMovementScript_TrainerRematch[] = {
+    MOVEMENT_ACTION_WALK_IN_PLACE_FASTER_DOWN,
+    MOVEMENT_ACTION_EMOTE_DOUBLE_EXCL_MARK,
+    MOVEMENT_ACTION_STEP_END
+};
+
+static const u8 sFaceDirectionMovementTypeByFacingDirection[] = {
+    MOVEMENT_TYPE_FACE_DOWN,
+    MOVEMENT_TYPE_FACE_DOWN,
+    MOVEMENT_TYPE_FACE_UP,
+    MOVEMENT_TYPE_FACE_LEFT,
+    MOVEMENT_TYPE_FACE_RIGHT
+};
+
+// text
+
+void VsSeekerFreezeObjectsAfterChargeComplete(void)
+{
+    CreateTask(Task_ResetObjectsRematchWantedState, 80);
+}
+
+static void Task_ResetObjectsRematchWantedState(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    u8 i;
+
+    if (task->data[0] == 0 && walkrun_is_standing_still() == TRUE)
+    {
+        HandleEnforcedLookDirectionOnPlayerStopMoving();
+        task->data[0] = 1;
+    }
+
+    if (task->data[1] == 0)
+    {
+        for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+        {
+            if (ObjectEventIdIsSane(i) == TRUE)
+            {
+                if (gObjectEvents[i].singleMovementActive)
+                    return;
+                FreezeObjectEvent(&gObjectEvents[i]);
+            }
+        }
+    }
+
+    task->data[1] = 1;
+    if (task->data[0] != 0)
+    {
+        DestroyTask(taskId);
+        StopPlayerAvatar();
+        ScriptContext_Enable();
+    }
+}
+
+void VsSeekerResetObjectMovementAfterChargeComplete(void)
+{
+    struct ObjectEventTemplate * templates = gSaveBlock1Ptr->objectEventTemplates;
+    u8 i;
+    u8 movementType;
+    u8 objEventId;
+    struct ObjectEvent * objectEvent;
+
+    for (i = 0; i < gMapHeader.events->objectEventCount; i++)
+    {
+        if ((templates[i].trainerType == TRAINER_TYPE_NORMAL
+          || templates[i].trainerType == TRAINER_TYPE_BURIED)
+         && (templates[i].movementType == MOVEMENT_TYPE_RAISE_HAND_AND_STOP
+          || templates[i].movementType == MOVEMENT_TYPE_RAISE_HAND_AND_JUMP
+          || templates[i].movementType == MOVEMENT_TYPE_RAISE_HAND_AND_SWIM))
+        {
+            movementType = GetRandomFaceDirectionMovementType();
+            TryGetObjectEventIdByLocalIdAndMap(templates[i].localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objEventId);
+            objectEvent = &gObjectEvents[objEventId];
+            if (ObjectEventIdIsSane(objEventId) == TRUE)
+            {
+                SetTrainerMovementType(objectEvent, movementType);
+            }
+            templates[i].movementType = movementType;
+        }
+    }
+}
+
+bool8 UpdateVsSeekerStepCounter(void)
+{
+    u8 x = 0;
+
+    if (CheckBagHasItem(ITEM_VS_SEEKER, 1) == TRUE)
+    {
+        if ((gSaveBlockKanto.trainerRematchStepCounter & 0xFF) < 100)
+            gSaveBlockKanto.trainerRematchStepCounter++;
+    }
+
+    if (FlagGet(FLAG_KANTO_SYS_VS_SEEKER_CHARGING) == TRUE)
+    {
+        if (((gSaveBlockKanto.trainerRematchStepCounter >> 8) & 0xFF) < 100)
+        {
+            x = (((gSaveBlockKanto.trainerRematchStepCounter >> 8) & 0xFF) + 1);
+            gSaveBlockKanto.trainerRematchStepCounter = (gSaveBlockKanto.trainerRematchStepCounter & 0xFF) | (x << 8);
+        }
+        if (((gSaveBlockKanto.trainerRematchStepCounter >> 8) & 0xFF) == 100)
+        {
+            FlagClear(FLAG_KANTO_SYS_VS_SEEKER_CHARGING);
+            VsSeekerResetChargingStepCounter();
+            ClearAllTrainerRematchStates();
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+void KantoMapResetTrainerRematches(u16 mapGroup, u16 mapNum)
+{
+    FlagClear(FLAG_KANTO_SYS_VS_SEEKER_CHARGING);
+    VsSeekerResetChargingStepCounter();
+    ClearAllTrainerRematchStates();
+    ResetMovementOfRematchableTrainers();
+}
+
+static void ResetMovementOfRematchableTrainers(void)
+{
+    u8 i;
+
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        struct ObjectEvent * objectEvent = &gObjectEvents[i];
+        if (objectEvent->movementType == MOVEMENT_TYPE_RAISE_HAND_AND_STOP
+                || objectEvent->movementType == MOVEMENT_TYPE_RAISE_HAND_AND_JUMP
+                || objectEvent->movementType == MOVEMENT_TYPE_RAISE_HAND_AND_SWIM)
+        {
+            u8 movementType = GetRandomFaceDirectionMovementType();
+            if (objectEvent->active && gSprites[objectEvent->spriteId].data[0] == i)
+            {
+                gSprites[objectEvent->spriteId].x2 = 0;
+                gSprites[objectEvent->spriteId].y2 = 0;
+                SetTrainerMovementType(objectEvent, movementType);
+            }
+        }
+    }
+}
+
+static void VsSeekerResetInBagStepCounter(void)
+{
+    gSaveBlockKanto.trainerRematchStepCounter &= 0xFF00;
+}
+
+static void VsSeekerSetStepCounterInBagFull(void)
+{
+    gSaveBlockKanto.trainerRematchStepCounter &= 0xFF00;
+    gSaveBlockKanto.trainerRematchStepCounter |= 100;
+}
+
+static void VsSeekerResetChargingStepCounter(void)
+{
+    gSaveBlockKanto.trainerRematchStepCounter &= 0x00FF;
+}
+
+static void VsSeekerSetStepCounterFullyCharged(void)
+{
+    gSaveBlockKanto.trainerRematchStepCounter &= 0x00FF;
+    gSaveBlockKanto.trainerRematchStepCounter |= (100 << 8);
+}
+
+void Task_VsSeeker_0(u8 taskId)
+{
+    u8 i;
+    u8 respval;
+
+    for (i = 0; i < 16; i++)
+        gTasks[taskId].data[i] = 0;
+
+    sVsSeeker = AllocZeroed(sizeof(struct VsSeekerStruct));
+    GatherNearbyTrainerInfo();
+    respval = CanUseVsSeeker();
+    if (respval == VSSEEKER_NOT_CHARGED)
+    {
+        Free(sVsSeeker);
+        DisplayItemMessageOnField(taskId, VSSeeker_Text_BatteryNotChargedNeedXSteps, Task_ItemUse_CloseMessageBoxAndReturnToField_VsSeeker);
+    }
+    else if (respval == VSSEEKER_NO_ONE_IN_RANGE)
+    {
+        Free(sVsSeeker);
+        DisplayItemMessageOnField(taskId, VSSeeker_Text_NoTrainersWithinRange, Task_ItemUse_CloseMessageBoxAndReturnToField_VsSeeker);
+    }
+    else if (respval == VSSEEKER_CAN_USE)
+    {
+        FieldEffectStart(FLDEFF_USE_VS_SEEKER);
+        gTasks[taskId].func = Task_VsSeeker_1;
+        gTasks[taskId].data[0] = 15;
+    }
+}
+
+static void Task_VsSeeker_1(u8 taskId)
+{
+    if (--gTasks[taskId].data[0] == 0)
+    {
+        gTasks[taskId].func = Task_VsSeeker_2;
+        gTasks[taskId].data[1] = 16;
+    }
+}
+
+static void Task_VsSeeker_2(u8 taskId)
+{
+    s16 * data = gTasks[taskId].data;
+
+    if (data[2] != 2 && --data[1] == 0)
+    {
+        PlaySE(SE_CONTEST_MONS_TURN);
+        data[1] = 11;
+        data[2]++;
+    }
+
+    if (!FieldEffectActiveListContains(FLDEFF_USE_VS_SEEKER))
+    {
+        data[1] = 0;
+        data[2] = 0;
+        VsSeekerResetInBagStepCounter();
+        sVsSeeker->responseCode = GetVsSeekerResponseInArea(sRematches);
+        ScriptMovement_StartObjectMovementScript(0xFF, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, sMovementScript_Wait48);
+        gTasks[taskId].func = Task_VsSeeker_3;
+    }
+}
+
+static void GatherNearbyTrainerInfo(void)
+{
+    struct ObjectEventTemplate *templates = gSaveBlock1Ptr->objectEventTemplates;
+    u8 objectEventId = 0;
+    u8 vsSeekerObjectIdx = 0;
+    s32 objectEventIdx;
+
+    for (objectEventIdx = 0; objectEventIdx < gMapHeader.events->objectEventCount; objectEventIdx++)
+    {
+        if (templates[objectEventIdx].trainerType == TRAINER_TYPE_NORMAL || templates[objectEventIdx].trainerType == TRAINER_TYPE_BURIED)
+        {
+            sVsSeeker->trainerInfo[vsSeekerObjectIdx].script = templates[objectEventIdx].script;
+            sVsSeeker->trainerInfo[vsSeekerObjectIdx].trainerIdx = GetTrainerFlagFromScript(templates[objectEventIdx].script);
+            sVsSeeker->trainerInfo[vsSeekerObjectIdx].localId = templates[objectEventIdx].localId;
+            TryGetObjectEventIdByLocalIdAndMap(templates[objectEventIdx].localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objectEventId);
+            sVsSeeker->trainerInfo[vsSeekerObjectIdx].objectEventId = objectEventId;
+            sVsSeeker->trainerInfo[vsSeekerObjectIdx].xCoord = gObjectEvents[objectEventId].currentCoords.x - 7;
+            sVsSeeker->trainerInfo[vsSeekerObjectIdx].yCoord = gObjectEvents[objectEventId].currentCoords.y - 7;
+            sVsSeeker->trainerInfo[vsSeekerObjectIdx].graphicsId = templates[objectEventIdx].graphicsId;
+            vsSeekerObjectIdx++;
+        }
+    }
+    sVsSeeker->trainerInfo[vsSeekerObjectIdx].localId = NO_REMATCH_LOCALID;
+}
+
+static void Task_VsSeeker_3(u8 taskId)
+{
+    if (ScriptMovement_IsObjectMovementFinished(NO_REMATCH_LOCALID, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup))
+    {
+        if (sVsSeeker->responseCode == VSSEEKER_RESPONSE_NO_RESPONSE)
+        {
+            DisplayItemMessageOnField(taskId, VSSeeker_Text_TrainersNotReady, Task_ItemUse_CloseMessageBoxAndReturnToField_VsSeeker);
+        }
+        else
+        {
+            if (sVsSeeker->responseCode == VSSEEKER_RESPONSE_FOUND_REMATCHES)
+                StartAllRespondantIdleMovements();
+            ClearDialogWindowAndFrame(0, TRUE);
+            ClearPlayerHeldMovementAndUnfreezeObjectEvents();
+            UnlockPlayerFieldControls();
+            DestroyTask(taskId);
+        }
+        Free(sVsSeeker);
+    }
+}
+
+static u8 CanUseVsSeeker(void)
+{
+    u8 vsSeekerChargeSteps = gSaveBlockKanto.trainerRematchStepCounter;
+    if (vsSeekerChargeSteps == 100)
+    {
+        if (GetRematchableTrainerLocalId() == NO_REMATCH_LOCALID)
+            return VSSEEKER_NO_ONE_IN_RANGE;
+        else
+            return VSSEEKER_CAN_USE;
+    }
+    else
+    {
+        TV_PrintIntToStringVar(0, 100 - vsSeekerChargeSteps);
+        return VSSEEKER_NOT_CHARGED;
+    }
+}
+
+static u8 GetVsSeekerResponseInArea(const struct RematchData * vsSeekerData)
+{
+    u16 trainerIdx = 0;
+    u16 rval = 0;
+    u8 rematchTrainerIdx;
+    u8 unusedIdx = 0;
+    u8 response = 0;
+    s32 vsSeekerIdx = 0;
+
+    while (sVsSeeker->trainerInfo[vsSeekerIdx].localId != NO_REMATCH_LOCALID)
+    {
+        if (IsTrainerVisibleOnScreen(&sVsSeeker->trainerInfo[vsSeekerIdx]) == TRUE)
+        {
+            trainerIdx = sVsSeeker->trainerInfo[vsSeekerIdx].trainerIdx;
+            if (!HasTrainerBeenFought(trainerIdx))
+            {
+                StartTrainerObjectMovementScript(&sVsSeeker->trainerInfo[vsSeekerIdx], sMovementScript_TrainerUnfought);
+                sVsSeeker->trainerHasNotYetBeenFought = 1;
+                vsSeekerIdx++;
+                continue;
+            }
+            rematchTrainerIdx = GetNextAvailableRematchTrainer(vsSeekerData, trainerIdx, &unusedIdx);
+            if (rematchTrainerIdx == 0)
+            {
+                StartTrainerObjectMovementScript(&sVsSeeker->trainerInfo[vsSeekerIdx], sMovementScript_TrainerNoRematch);
+                sVsSeeker->trainerDoesNotWantRematch = 1;
+            }
+            else
+            {
+                rval = Random() % 100; // Even if it's overwritten below, it progresses the RNG.
+                response = GetCurVsSeekerResponse(vsSeekerIdx, trainerIdx);
+                if (response == VSSEEKER_SINGLE_RESP_YES)
+                    rval = 100; // Definitely yes
+                else if (response == VSSEEKER_SINGLE_RESP_NO)
+                    rval = 0; // Definitely no
+                // Otherwise it's a 70% chance to want a rematch
+                if (rval < 30)
+                {
+                    StartTrainerObjectMovementScript(&sVsSeeker->trainerInfo[vsSeekerIdx], sMovementScript_TrainerNoRematch);
+                    sVsSeeker->trainerDoesNotWantRematch = 1;
+                }
+                else
+                {
+                    gSaveBlockKanto.trainerRematches[sVsSeeker->trainerInfo[vsSeekerIdx].localId] = rematchTrainerIdx;
+                    ShiftStillObjectEventCoords(&gObjectEvents[sVsSeeker->trainerInfo[vsSeekerIdx].objectEventId]);
+                    StartTrainerObjectMovementScript(&sVsSeeker->trainerInfo[vsSeekerIdx], sMovementScript_TrainerRematch);
+                    sVsSeeker->trainerIdxArray[sVsSeeker->numRematchableTrainers] = trainerIdx;
+                    sVsSeeker->runningBehaviourEtcArray[sVsSeeker->numRematchableTrainers] = GetRunningBehaviorFromGraphicsId(sVsSeeker->trainerInfo[vsSeekerIdx].graphicsId);
+                    sVsSeeker->numRematchableTrainers++;
+                    sVsSeeker->trainerWantsRematch = 1;
+                }
+            }
+        }
+        vsSeekerIdx++;
+    }
+
+    if (sVsSeeker->trainerWantsRematch)
+    {
+        PlaySE(SE_PIN);
+        FlagSet(FLAG_KANTO_SYS_VS_SEEKER_CHARGING);
+        VsSeekerResetChargingStepCounter();
+        return VSSEEKER_RESPONSE_FOUND_REMATCHES;
+    }
+    if (sVsSeeker->trainerHasNotYetBeenFought)
+        return VSSEEKER_RESPONSE_UNFOUGHT_TRAINERS;
+    return VSSEEKER_RESPONSE_NO_RESPONSE;
+}
+
+void KantoClearRematchStateByTrainerId(void)
+{
+    u8 objEventId = 0;
+    struct ObjectEventTemplate *objectEventTemplates = gSaveBlock1Ptr->objectEventTemplates;
+    int vsSeekerDataIdx = LookupVsSeekerOpponentInArray(sRematches, gTrainerBattleOpponent_A);
+
+    if (vsSeekerDataIdx != -1)
+    {
+        int i;
+
+        for (i = 0; i < gMapHeader.events->objectEventCount; i++)
+        {
+            if ((objectEventTemplates[i].trainerType == TRAINER_TYPE_NORMAL
+              || objectEventTemplates[i].trainerType == TRAINER_TYPE_BURIED)
+              && vsSeekerDataIdx == LookupVsSeekerOpponentInArray(sRematches, GetTrainerFlagFromScript(objectEventTemplates[i].script)))
+            {
+                struct ObjectEvent *objectEvent;
+
+                TryGetObjectEventIdByLocalIdAndMap(objectEventTemplates[i].localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objEventId);
+                objectEvent = &gObjectEvents[objEventId];
+                #if __STDC_VERSION__ < 202311L
+                GetRandomFaceDirectionMovementType(&objectEventTemplates[i]); // You are using this function incorrectly.  Please consult the manual.
+                #else
+                GetRandomFaceDirectionMovementType();
+                #endif
+                OverrideMovementTypeForObjectEvent(objectEvent, sFaceDirectionMovementTypeByFacingDirection[objectEvent->facingDirection]);
+                gSaveBlockKanto.trainerRematches[objectEventTemplates[i].localId] = 0;
+                if (gSelectedObjectEvent == objEventId)
+                    objectEvent->movementType = sFaceDirectionMovementTypeByFacingDirection[objectEvent->facingDirection];
+                else
+                    objectEvent->movementType = MOVEMENT_TYPE_FACE_DOWN;
+            }
+        }
+    }
+}
+
+static void TryGetRematchTrainerIdGivenGameState(const u16 * trainerIdxs, u8 * rematchIdx_p)
+{
+    switch (*rematchIdx_p)
+    {
+     case 0:
+         break;
+     case 1:
+         if (!FlagGet(FLAG_KANTO_GOT_VS_SEEKER))
+             *rematchIdx_p = GetRematchTrainerIdGivenGameState(trainerIdxs, *rematchIdx_p);
+         break;
+     case 2:
+         if (!FlagGet(FLAG_KANTO_WORLD_MAP_CELADON_CITY))
+             *rematchIdx_p = GetRematchTrainerIdGivenGameState(trainerIdxs, *rematchIdx_p);
+         break;
+     case 3:
+         if (!FlagGet(FLAG_KANTO_WORLD_MAP_FUCHSIA_CITY))
+             *rematchIdx_p = GetRematchTrainerIdGivenGameState(trainerIdxs, *rematchIdx_p);
+         break;
+     case 4:
+         if (!FlagGet(FLAG_KANTO_SYS_GAME_CLEAR))
+             *rematchIdx_p = GetRematchTrainerIdGivenGameState(trainerIdxs, *rematchIdx_p);
+         break;
+     case 5:
+         if (!FlagGet(FLAG_KANTO_SYS_CAN_LINK_WITH_RS))
+             *rematchIdx_p = GetRematchTrainerIdGivenGameState(trainerIdxs, *rematchIdx_p);
+         break;
+    }
+}
+
+static u8 GetRematchTrainerIdGivenGameState(const u16 *trainerIdxs, u8 rematchIdx)
+{
+    while (--rematchIdx != 0)
+    {
+        const u16 *rematch_p = trainerIdxs + rematchIdx;
+        if (*rematch_p != SKIP)
+            return rematchIdx;
+    }
+    return 0;
+}
+
+bool8 KantoShouldTryRematchBattle(void)
+{
+    if (ShouldTryRematchBattleInternal(sRematches, gTrainerBattleOpponent_A))
+    {
+        return TRUE;
+    }
+    return HasRematchTrainerAlreadyBeenFought(sRematches, gTrainerBattleOpponent_A);
+}
+
+static bool8 ShouldTryRematchBattleInternal(const struct RematchData *vsSeekerData, u16 trainerBattleOpponent)
+{
+    s32 rematchIdx = GetRematchIdx(vsSeekerData, trainerBattleOpponent);
+
+    if (rematchIdx == -1)
+        return FALSE;
+    if (rematchIdx >= 0 && rematchIdx < NELEMS(sRematches))
+    {
+        if (IsThisTrainerRematchable(gSpecialVar_LastTalked))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 HasRematchTrainerAlreadyBeenFought(const struct RematchData *vsSeekerData, u16 trainerBattleOpponent)
+{
+    s32 rematchIdx = GetRematchIdx(vsSeekerData, trainerBattleOpponent);
+
+    if (rematchIdx == -1)
+        return FALSE;
+    if (!HasTrainerBeenFought(vsSeekerData[rematchIdx].trainerIdxs[0]))
+        return FALSE;
+    return TRUE;
+}
+
+void KantoClearRematchStateOfLastTalked(void)
+{
+    gSaveBlockKanto.trainerRematches[gSpecialVar_LastTalked] = 0;
+    SetBattledTrainerFlag();
+}
+
+static int LookupVsSeekerOpponentInArray(const struct RematchData * array, u16 trainerId)
+{
+    int i, j;
+
+    for (i = 0; i < NELEMS(sRematches); i++)
+    {
+        for (j = 0; j < MAX_REMATCH_PARTIES; j++)
+        {
+            u16 testTrainerId;
+            if (array[i].trainerIdxs[j] == 0)
+                break;
+            testTrainerId = array[i].trainerIdxs[j];
+            if (testTrainerId == SKIP)
+                continue;
+            if (testTrainerId == trainerId)
+                return i;
+        }
+    }
+
+    return -1;
+}
+
+int KantoGetRematchTrainerId(u16 trainerId)
+{
+    u8 i;
+    u8 j;
+    j = GetNextAvailableRematchTrainer(sRematches, trainerId, &i);
+    if (!j)
+        return 0;
+    TryGetRematchTrainerIdGivenGameState(sRematches[i].trainerIdxs, &j);
+    return sRematches[i].trainerIdxs[j];
+}
+
+u8 KantoIsTrainerReadyForRematch(void)
+{
+    return IsTrainerReadyForRematchInternal(sRematches, gTrainerBattleOpponent_A);
+}
+
+static bool8 IsTrainerReadyForRematchInternal(const struct RematchData * array, u16 trainerId)
+{
+    int rematchTrainerIdx = LookupVsSeekerOpponentInArray(array, trainerId);
+
+    if (rematchTrainerIdx == -1)
+        return FALSE;
+    if (rematchTrainerIdx >= NELEMS(sRematches))
+        return FALSE;
+    if (!IsThisTrainerRematchable(gSpecialVar_LastTalked))
+        return FALSE;
+    return TRUE;
+}
+
+static bool8 ObjectEventIdIsSane(u8 objectEventId)
+{
+    struct ObjectEvent *objectEvent = &gObjectEvents[objectEventId];
+
+    if (objectEvent->active && gMapHeader.events->objectEventCount >= objectEvent->localId && gSprites[objectEvent->spriteId].data[0] == objectEventId)
+        return TRUE;
+    return FALSE;
+}
+
+static u8 GetRandomFaceDirectionMovementType()
+{
+    u16 r1 = Random() % 4;
+
+    switch (r1)
+    {
+        case 0:
+            return MOVEMENT_TYPE_FACE_UP;
+        case 1:
+            return MOVEMENT_TYPE_FACE_DOWN;
+        case 2:
+            return MOVEMENT_TYPE_FACE_LEFT;
+        case 3:
+            return MOVEMENT_TYPE_FACE_RIGHT;
+        default:
+            return MOVEMENT_TYPE_FACE_DOWN;
+    }
+}
+
+static u8 GetRunningBehaviorFromGraphicsId(u8 graphicsId)
+{
+    switch (graphicsId)
+    {
+        case OBJ_EVENT_GFX_KANTO_LITTLE_GIRL:
+        case OBJ_EVENT_GFX_KANTO_YOUNGSTER:
+        case OBJ_EVENT_GFX_KANTO_BOY:
+        case OBJ_EVENT_GFX_KANTO_BUG_CATCHER:
+        case OBJ_EVENT_GFX_KANTO_LASS:
+        case OBJ_EVENT_GFX_KANTO_WOMAN_1:
+        case OBJ_EVENT_GFX_KANTO_CRUSH_GIRL:
+        case OBJ_EVENT_GFX_KANTO_MAN:
+        case OBJ_EVENT_GFX_KANTO_ROCKER:
+        case OBJ_EVENT_GFX_KANTO_WOMAN_2:
+        case OBJ_EVENT_GFX_KANTO_BEAUTY:
+        case OBJ_EVENT_GFX_KANTO_BALDING_MAN:
+        case OBJ_EVENT_GFX_KANTO_TUBER_F:
+        case OBJ_EVENT_GFX_KANTO_CAMPER:
+        case OBJ_EVENT_GFX_KANTO_PICNICKER:
+        case OBJ_EVENT_GFX_KANTO_COOLTRAINER_M:
+        case OBJ_EVENT_GFX_KANTO_COOLTRAINER_F:
+        case OBJ_EVENT_GFX_KANTO_SWIMMER_M_LAND:
+        case OBJ_EVENT_GFX_KANTO_SWIMMER_F_LAND:
+        case OBJ_EVENT_GFX_KANTO_BLACK_BELT:
+        case OBJ_EVENT_GFX_KANTO_HIKER:
+        case OBJ_EVENT_GFX_KANTO_SAILOR:
+            return MOVEMENT_TYPE_RAISE_HAND_AND_JUMP;
+        case OBJ_EVENT_GFX_KANTO_TUBER_M_WATER:
+        case OBJ_EVENT_GFX_KANTO_SWIMMER_M_WATER:
+        case OBJ_EVENT_GFX_KANTO_SWIMMER_F_WATER:
+            return MOVEMENT_TYPE_RAISE_HAND_AND_SWIM;
+        default:
+            return MOVEMENT_TYPE_RAISE_HAND_AND_STOP;
+    }
+}
+
+static u16 GetTrainerFlagFromScript(const u8 *script)
+/*
+ * The trainer flag is a little-endian short located +2 from
+ * the script pointer, assuming the trainerbattle command is
+ * first in the script.  Because scripts are unaligned, and
+ * because the ARM processor requires shorts to be 16-bit
+ * aligned, this function needs to perform explicit bitwise
+ * operations to get the correct flag.
+ *
+ * 5c XX YY ZZ ...
+ *       -- --
+ */
+{
+    u16 trainerFlag;
+
+    script += 2;
+    trainerFlag = script[0];
+    trainerFlag |= script[1] << 8;
+    return trainerFlag;
+}
+
+static int GetRematchIdx(const struct RematchData * vsSeekerData, u16 trainerFlagIdx)
+{
+    int i;
+
+    for (i = 0; i < NELEMS(sRematches); i++)
+    {
+        if (vsSeekerData[i].trainerIdxs[0] == trainerFlagIdx)
+            return i;
+    }
+
+    return -1;
+}
+
+static bool32 IsThisTrainerRematchable(u32 localId)
+{
+    if (!gSaveBlockKanto.trainerRematches[localId])
+        return FALSE;
+    return TRUE;
+}
+
+static void ClearAllTrainerRematchStates(void)
+{
+    u8 i;
+
+    for (i = 0; i < NELEMS(gSaveBlockKanto.trainerRematches); i++)
+        gSaveBlockKanto.trainerRematches[i] = 0;
+}
+
+static bool8 IsTrainerVisibleOnScreen(struct VsSeekerTrainerInfo * trainerInfo)
+{
+    s16 x;
+    s16 y;
+
+    PlayerGetDestCoords(&x, &y);
+    x -= 7;
+    y -= 7;
+
+    if (   x - 7 <= trainerInfo->xCoord
+        && x + 7 >= trainerInfo->xCoord
+        && y - 5 <= trainerInfo->yCoord
+        && y + 5 >= trainerInfo->yCoord
+        && ObjectEventIdIsSane(trainerInfo->objectEventId) == 1)
+        return TRUE;
+    return FALSE;
+}
+
+static u8 GetNextAvailableRematchTrainer(const struct RematchData * vsSeekerData, u16 trainerFlagNo, u8 * idxPtr)
+{
+    int i, j;
+
+    for (i = 0; i < NELEMS(sRematches); i++)
+    {
+        if (vsSeekerData[i].trainerIdxs[0] == trainerFlagNo)
+        {
+            *idxPtr = i;
+            for (j = 1; j < MAX_REMATCH_PARTIES; j++)
+            {
+                if (vsSeekerData[i].trainerIdxs[j] == TRAINER_KANTO_NONE)
+                    return j - 1;
+                if (vsSeekerData[i].trainerIdxs[j] == SKIP)
+                    continue;
+                if (HasTrainerBeenFought(vsSeekerData[i].trainerIdxs[j]))
+                    continue;
+                return j;
+            }
+            return j - 1;
+        }
+    }
+
+    *idxPtr = 0;
+    return 0;
+}
+
+static u8 GetRematchableTrainerLocalId(void)
+{
+    u8 idx;
+    u8 i;
+
+    for (i = 0; sVsSeeker->trainerInfo[i].localId != NO_REMATCH_LOCALID; i++)
+    {
+        if (IsTrainerVisibleOnScreen(&sVsSeeker->trainerInfo[i]) == 1)
+        {
+            if (HasTrainerBeenFought(sVsSeeker->trainerInfo[i].trainerIdx) != 1 || GetNextAvailableRematchTrainer(sRematches, sVsSeeker->trainerInfo[i].trainerIdx, &idx))
+                return sVsSeeker->trainerInfo[i].localId;
+        }
+    }
+
+    return NO_REMATCH_LOCALID;
+}
+
+static void StartTrainerObjectMovementScript(struct VsSeekerTrainerInfo * trainerInfo, const u8 * script)
+{
+    UnfreezeObjectEvent(&gObjectEvents[trainerInfo->objectEventId]);
+    ScriptMovement_StartObjectMovementScript(trainerInfo->localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, script);
+}
+
+static u8 GetCurVsSeekerResponse(s32 vsSeekerIdx, u16 trainerIdx)
+{
+    s32 i;
+    s32 j;
+
+    for (i = 0; i < vsSeekerIdx; i++)
+    {
+        if (IsTrainerVisibleOnScreen(&sVsSeeker->trainerInfo[i]) == 1 && sVsSeeker->trainerInfo[i].trainerIdx == trainerIdx)
+        {
+            for (j = 0; j < sVsSeeker->numRematchableTrainers; j++)
+            {
+                if (sVsSeeker->trainerIdxArray[j] == sVsSeeker->trainerInfo[i].trainerIdx)
+                    return VSSEEKER_SINGLE_RESP_YES;
+            }
+            return VSSEEKER_SINGLE_RESP_NO;
+        }
+    }
+    return VSSEEKER_SINGLE_RESP_RAND;
+}
+
+static void StartAllRespondantIdleMovements(void)
+{
+    u8 dummy = 0;
+    s32 i;
+    s32 j;
+
+    for (i = 0; i < sVsSeeker->numRematchableTrainers; i++)
+    {
+        for (j = 0; sVsSeeker->trainerInfo[j].localId != NO_REMATCH_LOCALID; j++)
+        {
+            if (sVsSeeker->trainerInfo[j].trainerIdx == sVsSeeker->trainerIdxArray[i])
+            {
+                struct ObjectEvent *objectEvent = &gObjectEvents[sVsSeeker->trainerInfo[j].objectEventId];
+
+                if (ObjectEventIdIsSane(sVsSeeker->trainerInfo[j].objectEventId) == 1)
+                    SetTrainerMovementType(objectEvent, sVsSeeker->runningBehaviourEtcArray[i]);
+                OverrideMovementTypeForObjectEvent(objectEvent, sVsSeeker->runningBehaviourEtcArray[i]);
+                gSaveBlockKanto.trainerRematches[sVsSeeker->trainerInfo[j].localId] = GetNextAvailableRematchTrainer(sRematches, sVsSeeker->trainerInfo[j].trainerIdx, &dummy);
+            }
+        }
+    }
+}

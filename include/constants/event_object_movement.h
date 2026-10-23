@@ -82,7 +82,11 @@
 #define MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_UP          0x4E
 #define MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT        0x4F
 #define MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT       0x50
-#define NUM_MOVEMENT_TYPES                             0x51
+// Rouge Feu : dresseurs qui lèvent la main (Cherche VS)
+#define MOVEMENT_TYPE_RAISE_HAND_AND_STOP              0x51
+#define MOVEMENT_TYPE_RAISE_HAND_AND_JUMP              0x52
+#define MOVEMENT_TYPE_RAISE_HAND_AND_SWIM              0x53
+#define NUM_MOVEMENT_TYPES                             0x54
 
 #define MOVEMENT_ACTION_FACE_DOWN                       0x0
 #define MOVEMENT_ACTION_FACE_UP                         0x1
@@ -252,6 +256,12 @@
 #define MOVEMENT_ACTION_PLAYER_RUN_UP_SLOW              0xA3
 #define MOVEMENT_ACTION_PLAYER_RUN_LEFT_SLOW            0xA4
 #define MOVEMENT_ACTION_PLAYER_RUN_RIGHT_SLOW           0xA5
+// Rouge Feu : émoticônes X et !!, dresseurs qui lèvent la main (Cherche VS)
+#define MOVEMENT_ACTION_EMOTE_X                         0xA6
+#define MOVEMENT_ACTION_EMOTE_DOUBLE_EXCL_MARK          0xA7
+#define MOVEMENT_ACTION_RAISE_HAND_AND_STOP             0xA8
+#define MOVEMENT_ACTION_RAISE_HAND_AND_JUMP             0xA9
+#define MOVEMENT_ACTION_RAISE_HAND_AND_SWIM             0xAA
 
 #define MOVEMENT_ACTION_STEP_END 0xFE
 #define MOVEMENT_ACTION_NONE     0xFF

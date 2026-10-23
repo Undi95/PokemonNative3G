@@ -2286,3 +2286,22 @@ void SeafoamIslandsB4F_CurrentDumpsPlayerOnLand(void)
 {
     CreateStopSurfingTask(DIR_NORTH);
 }
+
+// ---- Rouge Feu (field_player_avatar.c) : pose du Cherche VS ----
+// Seulement avec Red/Leaf (option PERSO) : Brice et Flora n'ont pas de sprite avec le Cherche VS.
+#define ANIM_VS_SEEKER 0 // tables d'animations des sprites du Cherche VS (kanto_object_events.h)
+
+static const u8 sPlayerAvatarVsSeekerGfxIds[][GENDER_COUNT] = {
+    {OBJ_EVENT_GFX_KANTO_RED_VS_SEEKER,      OBJ_EVENT_GFX_KANTO_GREEN_VS_SEEKER},
+    {OBJ_EVENT_GFX_KANTO_RED_VS_SEEKER_BIKE, OBJ_EVENT_GFX_KANTO_GREEN_VS_SEEKER_BIKE},
+};
+
+void StartPlayerAvatarVsSeekerAnim(void)
+{
+    bool8 bike = (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE)) != 0;
+
+    if (!gSaveBlock2Ptr->optionsPlayerCharacter)
+        return;
+    ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], sPlayerAvatarVsSeekerGfxIds[bike][gPlayerAvatar.gender]);
+    StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], ANIM_VS_SEEKER);
+}
