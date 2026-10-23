@@ -20,6 +20,8 @@ def play(game):
     game.tap("UP", 30, gap=4); game.wait(30); log(game, "sac")
     game.tap("A"); game.wait(60); game.tap("A"); game.wait(240); log(game, "memorydex")
     game.tap("DOWN", 2, gap=30); game.wait(60); log(game, "pierre")
+    game.tap("START"); game.wait(120); log(game, "portrait")
+    game.tap("START"); game.wait(90)
     game.tap("A"); game.wait(90); log(game, "fiches")
     game.tap("A"); game.wait(120); log(game, "lecture")
     game.tap("A", 4, gap=60); game.wait(60)
