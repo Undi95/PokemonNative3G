@@ -34,9 +34,9 @@
 
 void KantoTeachMoveRelearnerMove(void);
 
-static const u32 sKMoveRelearner_Gfx[] = INCBIN_U32("graphics/interface/learn_move.4bpp.lz");
-static const u16 sKMoveRelearner_Pal[] = INCBIN_U16("graphics/interface/learn_move.gbapal");
-static const u32 sKMoveRelearner_Tilemap[] = INCBIN_U32("graphics/interface/learn_move.bin.lz");
+static const u32 sKMoveRelearner_Gfx[] = INCGFX_U32("graphics/kanto/interface/learn_move.png", ".4bpp.lz");
+static const u16 sKMoveRelearner_Pal[] = INCGFX_U16("graphics/kanto/interface/learn_move.png", ".gbapal");
+static const u32 sKMoveRelearner_Tilemap[] = INCGFX_U32("graphics/kanto/interface/learn_move.bin", ".lz");
 
 // Rouge Feu (strings_*_fr.h)
 static const u8 sKText_FameCheckerText_Cancel[] = _("SORTIR");
