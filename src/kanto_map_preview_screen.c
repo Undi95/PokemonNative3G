@@ -356,7 +356,7 @@ static const struct WindowTemplate sMapNameWindow = {
     .width = 13,
     .height = 2,
     .paletteNum = 14,
-    .baseBlock = 0x2C0 // RF : 0x1C2, recouvert ici par la boîte de dialogue du terrain (0x194-0x1FF)
+    .baseBlock = 0x1C2
 };
 
 static const struct BgTemplate sMapPreviewBgTemplate[1] = {
@@ -470,12 +470,7 @@ u16 MapPreview_CreateMapNameWindow(u8 mapsec)
 {
     u16 windowId;
     u32 xctr;
-    #ifdef BUGFIX
-    // Fixes access violations indicated below.
-    u8 color[3];
-    #else
-    u8 color[0];
-    #endif
+    u8 color[3]; // RF : u8 color[0] sans BUGFIX (écrit hors du tableau, écrase la pile sur PC)
 
     windowId = AddWindow(&sMapNameWindow);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
