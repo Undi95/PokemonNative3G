@@ -1,6 +1,10 @@
 // Généré par tools/import_rf_mon_pics.py : sprites des Pokémon de Rouge Feu (option POKéMON = KANTO)
 // Inclus par src/data.c après les macros SPECIES_SPRITE / SPECIES_PAL.
 
+static const u32 gKantoMonFrontPic_CircledQuestionMark[] = INCGFX_U32("graphics/kanto/pokemon/question_mark/circled/anim_front.png", ".4bpp.lz");
+static const u32 gKantoMonBackPic_CircledQuestionMark[] = INCGFX_U32("graphics/kanto/pokemon/question_mark/circled/back.png", ".4bpp.lz");
+static const u32 gKantoMonPalette_CircledQuestionMark[] = INCGFX_U32("graphics/kanto/pokemon/question_mark/circled/normal.pal", ".gbapal.lz");
+static const u32 gKantoMonShinyPalette_CircledQuestionMark[] = INCGFX_U32("graphics/kanto/pokemon/question_mark/circled/shiny.pal", ".gbapal.lz");
 static const u32 gKantoMonFrontPic_Bulbasaur[] = INCGFX_U32("graphics/kanto/pokemon/bulbasaur/anim_front.png", ".4bpp.lz");
 static const u32 gKantoMonPalette_Bulbasaur[] = INCGFX_U32("graphics/kanto/pokemon/bulbasaur/normal.pal", ".gbapal.lz");
 static const u32 gKantoMonBackPic_Bulbasaur[] = INCGFX_U32("graphics/kanto/pokemon/bulbasaur/back.png", ".4bpp.lz");
@@ -1540,10 +1544,6 @@ static const u32 gKantoMonShinyPalette_Jirachi[] = INCGFX_U32("graphics/kanto/po
 static const u32 gKantoMonFrontPic_Deoxys[] = INCGFX_U32("graphics/kanto/pokemon/deoxys/anim_front.png", ".4bpp.lz");
 static const u32 gKantoMonPalette_Deoxys[] = INCGFX_U32("graphics/kanto/pokemon/deoxys/normal.pal", ".gbapal.lz");
 static const u32 gKantoMonBackPic_Deoxys[] = INCGFX_U32("graphics/kanto/pokemon/deoxys/back.png", ".4bpp.lz");
-static const u32 gKantoMonShinyPalette_Deoxys[] = INCGFX_U32("graphics/kanto/pokemon/deoxys/shiny.pal", ".gbapal.lz");
-static const u32 gKantoMonFrontPic_Deoxys[] = INCGFX_U32("graphics/kanto/pokemon/deoxys/anim_front_def.png", ".4bpp.lz");
-static const u32 gKantoMonPalette_Deoxys[] = INCGFX_U32("graphics/kanto/pokemon/deoxys/normal.pal", ".gbapal.lz");
-static const u32 gKantoMonBackPic_Deoxys[] = INCGFX_U32("graphics/kanto/pokemon/deoxys/back_def.png", ".4bpp.lz");
 static const u32 gKantoMonShinyPalette_Deoxys[] = INCGFX_U32("graphics/kanto/pokemon/deoxys/shiny.pal", ".gbapal.lz");
 static const u32 gKantoMonFrontPic_Chimecho[] = INCGFX_U32("graphics/kanto/pokemon/chimecho/anim_front.png", ".4bpp.lz");
 static const u32 gKantoMonPalette_Chimecho[] = INCGFX_U32("graphics/kanto/pokemon/chimecho/normal.pal", ".gbapal.lz");

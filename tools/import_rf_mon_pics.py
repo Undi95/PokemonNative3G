@@ -34,7 +34,16 @@ def copy_front(src, dst):
 
 def main():
     decls = []
+    lines = [l for l in open(RF + 'src/graphics.c', encoding='utf-8') if 'CircledQuestionMark' in l]
+    leafgreen = False
     for line in open(RF + 'src/data/graphics/pokemon.h', encoding='utf-8'):
+        if line.startswith('#ifdef LEAFGREEN'):
+            leafgreen = True  # Deoxys de Vert Feuille : on garde celui de Rouge Feu
+        elif line.startswith('#endif'):
+            leafgreen = False
+        elif not leafgreen:
+            lines.append(line)
+    for line in lines:
         m = GFX.match(line)
         if not m:
             continue
