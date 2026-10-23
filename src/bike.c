@@ -1065,7 +1065,9 @@ void Bike_HandleBumpySlopeJump(void)
 
 bool32 IsRunningDisallowed(u8 metatile)
 {
-    if (!gMapHeader.allowRunning || IsRunningDisallowedByMetatile(metatile) == TRUE)
+    // PokemonNative3G : on court partout, intérieurs compris (gMapHeader.allowRunning ignoré) ;
+    // seules les tuiles qui l'interdisent (herbes hautes, pont de Cimetronelle...) restent bloquantes
+    if (IsRunningDisallowedByMetatile(metatile) == TRUE)
         return TRUE;
     else
         return FALSE;

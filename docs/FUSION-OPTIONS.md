@@ -56,7 +56,7 @@ contenu dans un seul jeu.
 - [ ] Événements en jeu à Hoenn (ceux de RF + Mew) et objets requis (Ticket Aurora, Ticket Mystique, etc.)
 - [ ] Aperçus de donjons/lieux de RF à Kanto (map_preview_screen.c ; données déjà dans kanto_region_map.c)
 - [ ] « Précédemment dans votre quête » (journal de RF) : partout si possible, avec une option (désactivé par défaut)
-- [ ] Courir partout (intérieurs compris)
+- [x] Courir partout (intérieurs compris ; bike.c, IsRunningDisallowed)
 - [ ] Cherch'Objet : Hoenn et Kanto l'utilisent différemment, avoir le bon selon la région
 - [ ] Objets donnés deux fois (CS, cannes, Passe Bateau…) : voir docs/OBJETS-EN-DOUBLE.md
 
