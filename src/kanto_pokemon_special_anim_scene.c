@@ -1133,7 +1133,7 @@ bool8 PSA_LevelUpVerticalSpritesTaskIsRunning(void)
 void PSA_DrawLevelUpWindowPg1(u16 *statsBefore, u16 *statsAfter)
 {
     DrawTextBorderOuter(1, 0x001, 14);
-    DrawLevelUpWindowPg1(1, statsBefore, statsAfter, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY);
+    KPSA_DrawLevelUpWindowPg1(1, statsBefore, statsAfter, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY);
     PutWindowTilemap(1);
     CopyWindowToVram(1, COPYWIN_FULL);
 }
@@ -1141,7 +1141,7 @@ void PSA_DrawLevelUpWindowPg1(u16 *statsBefore, u16 *statsAfter)
 // Unused
 void PSA_DrawLevelUpWindowPg2(u16 *currStats)
 {
-    DrawLevelUpWindowPg2(1, currStats, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY);
+    KPSA_DrawLevelUpWindowPg2(1, currStats, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY);
     CopyWindowToVram(1, COPYWIN_GFX);
 }
 
@@ -2010,7 +2010,7 @@ static const u8 *const sLevelUpWindowStatNames[] = {
     sKText_Text_LevelUp_Speed
 };
 
-void DrawLevelUpWindowPg1(u16 windowId, u16 *beforeStats, u16 *afterStats, u8 bgColor, u8 fgColor, u8 shadowColor)
+void KPSA_DrawLevelUpWindowPg1(u16 windowId, u16 *beforeStats, u16 *afterStats, u8 bgColor, u8 fgColor, u8 shadowColor)
 {
     s16 diffStats[6];
     u8 textbuf[12];
@@ -2043,7 +2043,7 @@ void DrawLevelUpWindowPg1(u16 windowId, u16 *beforeStats, u16 *afterStats, u8 bg
     }
 }
 
-void DrawLevelUpWindowPg2(u16 windowId, u16 *currStats, u8 bgColor, u8 fgColor, u8 shadowColor)
+void KPSA_DrawLevelUpWindowPg2(u16 windowId, u16 *currStats, u8 bgColor, u8 fgColor, u8 shadowColor)
 {
     s16 statsRearrange[6];
     u8 textbuf[12];
