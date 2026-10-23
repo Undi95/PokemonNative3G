@@ -47,7 +47,7 @@ contenu dans un seul jeu.
   sert de contexte, le joueur ne récupère pas ses Pokémon de Hoenn avant). POKéDEX Kanto : débloqué par le
   Pokédex de Chen (déjà fait).
 ## À faire (liste de l'utilisateur, 2026-10-23)
-- [ ] Cartes de région : icône du joueur selon le perso choisi (PERSO) sur les deux cartes (aujourd'hui Brice/Flora sur Hoenn, Red/Leaf sur Kanto)
+- [x] Cartes de région : icône du joueur selon le perso choisi (PERSO) sur les deux cartes
 - [ ] Cherche VS à Hoenn : rematchs du PokéNav déclenchables au Cherche VS (aujourd'hui à Hoenn il répond « pas de dresseur », sans planter)
 - [ ] Cherche VS : sprites de Brice/Flora levant le Cherche VS (à pied et à vélo), si faisable au pixel
 - [ ] Évolution par échange en solo (objet du genre « câble link »)
