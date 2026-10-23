@@ -80,7 +80,7 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 1. ~~Ferry Seagallop~~ : fait le 2026-10-23 (`src/kanto_seagallop.c`, menu des destinations dans `script_menu.c`).
 2. Fame Checker : objet rare et écran (fame_checker.c, 64 fonctions ; la macro `famechecker` des scripts existe déjà).
 3. ~~Cinématiques et scènes en stub~~ : faites le 2026-10-23 (S.S. Anne, diplôme, éclairage de la Ligue, téléporteurs de Léo, fossiles du musée). Sans objet : triangle de Deoxys (l'Île Aurore est celle d'Émeraude, avec son puzzle), `DoPicboxCancel` et `BrailleCursorToggle` (aucun script ne les appelle).
-4. Poké Flûte : utilisable ni sur le terrain ni en combat (`checkpokeflute`, BattleScript_UsePokeFlute de RF).
+4. ~~Poké Flûte~~ : faite le 2026-10-23 (terrain + combat).
 5. Tour des Dresseurs (Île 7) : trainer_tower.c, données, type de combat à part, chrono, records.
 6. Combats sauvages scriptés de RF (`BATTLE_TYPE_WILD_SCRIPTED` : IA « mauvaises attaques ») : même approche que le FANTÔME.
 7. Aperçus des donjons (map_preview_screen.c ; données déjà dans kanto_region_map.c).

@@ -130,4 +130,5 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] DEBUG > PORT ÎLE 1 : maintenant au-dessus du marin (en dessous, on était coincé ; signalé par l'utilisateur)
 - [ ] Diplôme de Game Freak à Céladopole (diploma.c de RF ; AVANT : le jeu se bloquait). Vérifié en headless `kanto_diploma.py` (DEBUG > POKéDEX Kanto complet, téléport GAME FREAK). « POKéDEX NATIONAL » si tous les Pokémon sont attrapés (non testé)
 - [ ] Scènes de RF (2026-10-23), vérifiées en headless `kanto_scenes.py` : image des fossiles du musée d'Argenta (DEBUG > MUSÉE ARGENTA ; palette allouée au lieu de la palette 13 de RF), éclairage de la Ligue (DEBUG > LIGUE : OLGA ; couleurs du sol en boucle). Non testé : téléporteurs de la maison de Léo (Route 25, pendant l'histoire de Léo)
+- [ ] Poké Flûte (RF, 2026-10-23) : depuis le sac sur le terrain vérifié en headless (`kanto_poke_flute.py` : « Super!!! Ça c'est du refrain! »). Non testés : réveil d'un Pokémon endormi (fanfare) et usage en combat (réveille tout le monde sauf Anti-Bruit)
 
