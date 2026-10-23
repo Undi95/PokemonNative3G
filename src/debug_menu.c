@@ -54,6 +54,7 @@ enum {
     DEBUG_HOENN_REMATCHES,
     DEBUG_SEVII_PASSES,
     DEBUG_SS_ANNE,
+    DEBUG_KANTO_DEX_FULL,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -94,6 +95,7 @@ static const u8 sWarpName_PokemonTower3F[] = _("TOUR POKéMON 3");
 static const u8 sWarpName_PokemonTower6F[] = _("TOUR POKéMON 6");
 static const u8 sWarpName_RocketHideout[] = _("REPAIRE ROCKET");
 static const u8 sWarpName_OneIslandHarbor[] = _("PORT ÎLE 1");
+static const u8 sWarpName_GameFreak[] = _("GAME FREAK");
 
 // Kanto : points d'arrivée du Vol de Rouge Feu (heal_locations.json)
 static const struct DebugWarp sDebugWarps[] =
@@ -127,6 +129,7 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_PokemonTower6F, MAP_GROUP(MAP_POKEMON_TOWER_6F), MAP_NUM(MAP_POKEMON_TOWER_6F), 12, 13}, // 3 pas vers le bas : Ossatueur
     {sWarpName_RocketHideout, MAP_GROUP(MAP_ROCKET_HIDEOUT_B4F), MAP_NUM(MAP_ROCKET_HIDEOUT_B4F), 19, 5}, // sous Giovanni (Scope Sylph)
     {sWarpName_OneIslandHarbor, MAP_GROUP(MAP_ONE_ISLAND_HARBOR), MAP_NUM(MAP_ONE_ISLAND_HARBOR), 8, 5}, // au-dessus du marin du Seagallop (arrivée du ferry)
+    {sWarpName_GameFreak, MAP_GROUP(MAP_CELADON_CITY_CONDOMINIUMS_3F), MAP_NUM(MAP_CELADON_CITY_CONDOMINIUMS_3F), 3, 9}, // sous le designer (diplôme)
 };
 
 // Tous les objets du jeu (Hoenn + Kanto) : 99 de chaque (1 pour les objets rares et les CS).
@@ -164,6 +167,7 @@ static const u8 sText_FlyMap[] = _("Carte VOL (2 régions)");
 static const u8 sText_HoennRematches[] = _("Revanches PokéNav");
 static const u8 sText_SeviiPasses[] = _("Pass îles Sevii");
 static const u8 sText_SSAnne[] = _("Départ S.S. Anne");
+static const u8 sText_KantoDexFull[] = _("POKéDEX Kanto complet");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -207,6 +211,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_HOENN_REMATCHES].name = sText_HoennRematches;
         sItems[DEBUG_SEVII_PASSES].name = sText_SeviiPasses;
         sItems[DEBUG_SS_ANNE].name = sText_SSAnne;
+        sItems[DEBUG_KANTO_DEX_FULL].name = sText_KantoDexFull;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -389,6 +394,20 @@ static void Task_DebugMenu(u8 taskId)
         SetWarpDestination(MAP_GROUP(MAP_SSANNE_EXTERIOR), MAP_NUM(MAP_SSANNE_EXTERIOR), WARP_ID_NONE, 32, 13);
         DoWarp();
         return;
+    case DEBUG_KANTO_DEX_FULL:
+        // diplôme de Game Freak (Céladopole) : les 151 de Kanto vus et attrapés
+        FlagSet(FLAG_SYS_POKEDEX_GET);
+        FlagSet(FLAG_KANTO_SYS_POKEDEX_GET);
+        {
+            u16 i;
+            for (i = 1; i <= KANTO_DEX_COUNT; i++)
+            {
+                GetSetPokedexFlag(i, FLAG_SET_SEEN);
+                GetSetPokedexFlag(i, FLAG_SET_CAUGHT);
+            }
+        }
+        PlaySE(SE_USE_ITEM);
+        break;
     case DEBUG_CLOSE:
     case LIST_CANCEL:
         DebugMenu_Close(taskId);
