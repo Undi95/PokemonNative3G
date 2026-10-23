@@ -96,6 +96,8 @@ static const u8 sWarpName_PokemonTower6F[] = _("TOUR POKéMON 6");
 static const u8 sWarpName_RocketHideout[] = _("REPAIRE ROCKET");
 static const u8 sWarpName_OneIslandHarbor[] = _("PORT ÎLE 1");
 static const u8 sWarpName_GameFreak[] = _("GAME FREAK");
+static const u8 sWarpName_PewterMuseum[] = _("MUSÉE ARGENTA");
+static const u8 sWarpName_LoreleisRoom[] = _("LIGUE : OLGA");
 
 // Kanto : points d'arrivée du Vol de Rouge Feu (heal_locations.json)
 static const struct DebugWarp sDebugWarps[] =
@@ -130,6 +132,8 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_RocketHideout, MAP_GROUP(MAP_ROCKET_HIDEOUT_B4F), MAP_NUM(MAP_ROCKET_HIDEOUT_B4F), 19, 5}, // sous Giovanni (Scope Sylph)
     {sWarpName_OneIslandHarbor, MAP_GROUP(MAP_ONE_ISLAND_HARBOR), MAP_NUM(MAP_ONE_ISLAND_HARBOR), 8, 5}, // au-dessus du marin du Seagallop (arrivée du ferry)
     {sWarpName_GameFreak, MAP_GROUP(MAP_CELADON_CITY_CONDOMINIUMS_3F), MAP_NUM(MAP_CELADON_CITY_CONDOMINIUMS_3F), 3, 9}, // sous le designer (diplôme)
+    {sWarpName_PewterMuseum, MAP_GROUP(MAP_PEWTER_CITY_MUSEUM_1F), MAP_NUM(MAP_PEWTER_CITY_MUSEUM_1F), 4, 5}, // sous le fossile d'Ptéra
+    {sWarpName_LoreleisRoom, MAP_GROUP(MAP_POKEMON_LEAGUE_LORELEIS_ROOM), MAP_NUM(MAP_POKEMON_LEAGUE_LORELEIS_ROOM), 6, 11}, // éclairage de la Ligue
 };
 
 // Tous les objets du jeu (Hoenn + Kanto) : 99 de chaque (1 pour les objets rares et les CS).
