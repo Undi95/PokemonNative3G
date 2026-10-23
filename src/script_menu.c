@@ -408,6 +408,125 @@ static void CreatePCMultichoice(void)
     InitMultichoiceCheckWrap(FALSE, numChoices, windowId, MULTI_PC);
 }
 
+// ---- Rouge Feu (script_menu.c) : image des fossiles du musée d'Argenta ----
+#define GFXTAG_FOSSIL 7000
+#define tMState    data[0]
+#define tMSpriteId data[2]
+#define tMWindowId data[5]
+static const union AnimCmd sMuseumFossilAnim0[] = {
+    ANIMCMD_FRAME(0, 10),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sMuseumFossilAnimCmdTable[] = {
+    sMuseumFossilAnim0
+};
+
+static const struct OamData sMuseumFossilOamData = {
+    .shape = SPRITE_SHAPE(64x64),
+    .size = SPRITE_SIZE(64x64)
+};
+
+static const struct SpriteTemplate sMuseumFossilSprTemplate = {
+    .tileTag = GFXTAG_FOSSIL,
+    .paletteTag = TAG_NONE,
+    .oam = &sMuseumFossilOamData,
+    .anims = sMuseumFossilAnimCmdTable,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
+};
+
+static const u16 sMuseumAerodactylSprTiles[] = INCGFX_U16("graphics/kanto/script_menu/aerodactyl_fossil.png", ".4bpp");
+static const u16 sMuseumAerodactylSprPalette[] = INCGFX_U16("graphics/kanto/script_menu/aerodactyl_fossil.png", ".gbapal");
+static const u16 sMuseumKabutopsSprTiles[] = INCGFX_U16("graphics/kanto/script_menu/kabutops_fossil.png", ".4bpp");
+static const u16 sMuseumKabutopsSprPalette[] = INCGFX_U16("graphics/kanto/script_menu/kabutops_fossil.png", ".gbapal");
+
+static const struct SpriteSheet sMuseumKabutopsSprSheets[] = {
+    {sMuseumKabutopsSprTiles, sizeof(sMuseumKabutopsSprTiles), GFXTAG_FOSSIL},
+    {}
+};
+
+static const struct SpriteSheet sMuseumAerodactylSprSheets[] = {
+    {sMuseumAerodactylSprTiles, sizeof(sMuseumAerodactylSprTiles), GFXTAG_FOSSIL},
+    {}
+};
+
+static void Task_WaitMuseumFossilPic(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    switch (task->tMState)
+    {
+    case 0:
+        task->tMState++;
+        break;
+    case 1:
+        break;
+    case 2:
+        DestroySprite(&gSprites[task->tMSpriteId]);
+        FreeSpriteTilesByTag(GFXTAG_FOSSIL);
+        FreeSpritePaletteByTag(GFXTAG_FOSSIL);
+        task->tMState++;
+        break;
+    case 3:
+        ClearStdWindowAndFrameToTransparent(task->tMWindowId, TRUE); // RF : DestroyScriptMenuWindow
+        RemoveWindow(task->tMWindowId);
+        DestroyTask(taskId);
+        break;
+    }
+}
+
+bool8 OpenMuseumFossilPic(void)
+{
+    u8 spriteId;
+    u8 taskId;
+    if (FindTaskIdByFunc(Task_WaitMuseumFossilPic) != TASK_NONE)
+        return FALSE;
+    if (gSpecialVar_0x8004 == SPECIES_KABUTOPS)
+    {
+        LoadSpriteSheets(sMuseumKabutopsSprSheets);
+        LoadPalette(sMuseumKabutopsSprPalette, OBJ_PLTT_ID(AllocSpritePalette(GFXTAG_FOSSIL)), sizeof(sMuseumKabutopsSprPalette));
+    }
+    else if (gSpecialVar_0x8004 == SPECIES_AERODACTYL)
+    {
+        LoadSpriteSheets(sMuseumAerodactylSprSheets);
+        LoadPalette(sMuseumAerodactylSprPalette, OBJ_PLTT_ID(AllocSpritePalette(GFXTAG_FOSSIL)), sizeof(sMuseumAerodactylSprPalette));
+    }
+    else
+    {
+        return FALSE;
+    }
+    spriteId = CreateSprite(&sMuseumFossilSprTemplate, gSpecialVar_0x8005 * 8 + 40, gSpecialVar_0x8006 * 8 + 40, 0);
+    gSprites[spriteId].oam.paletteNum = IndexOfSpritePaletteTag(GFXTAG_FOSSIL);
+    taskId = CreateTask(Task_WaitMuseumFossilPic, 80);
+    gTasks[taskId].tMWindowId = CreateWindowFromRect(gSpecialVar_0x8005, gSpecialVar_0x8006, 8, 8);
+    gTasks[taskId].tMState = 0;
+    gTasks[taskId].tMSpriteId = spriteId;
+    SetStandardWindowBorderStyle(gTasks[taskId].tMWindowId, TRUE);
+    ScheduleBgCopyTilemapToVram(0);
+    return TRUE;
+}
+
+bool8 CloseMuseumFossilPic(void)
+{
+    u8 taskId = FindTaskIdByFunc(Task_WaitMuseumFossilPic);
+    if (taskId == TASK_NONE)
+        return FALSE;
+    gTasks[taskId].tMState++;
+    return TRUE;
+}
+
+bool8 CloseMuseumFossilPic(void)
+{
+    u8 taskId = FindTaskIdByFunc(Task_WaitMuseumFossilPic);
+    if (taskId == TASK_NONE)
+        return FALSE;
+    gTasks[taskId].tMState++;
+    return TRUE;
+}
+#undef tMState
+#undef tMSpriteId
+#undef tMWindowId
+
 // ---- Rouge Feu (script_menu.c) : menu des destinations du ferry Seagallop, une fois le Rainbow Pass obtenu ----
 static const u8 sKText_Vermilion[] = _("CARMIN SUR MER");
 static const u8 sKText_OneIsland[] = _("ILE 1");

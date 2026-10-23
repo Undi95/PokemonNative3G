@@ -35,14 +35,9 @@ u16 ChooseBattleTowerPlayerParty(void) { KantoSpecialStub("ChooseBattleTowerPlay
 u16 ReducePlayerPartyToThree(void) { KantoSpecialStub("ReducePlayerPartyToThree"); return 0; }
 u16 Dummy_TryEnableBravoTrainerBattleTower(void) { KantoSpecialStub("Dummy_TryEnableBravoTrainerBattleTower"); return 0; }
 u16 DoPicboxCancel(void) { KantoSpecialStub("DoPicboxCancel"); return 0; }
-u16 OpenMuseumFossilPic(void) { KantoSpecialStub("OpenMuseumFossilPic"); return 0; }
-u16 CloseMuseumFossilPic(void) { KantoSpecialStub("CloseMuseumFossilPic"); return 0; }
 u16 CallTrainerTowerFunc(void) { KantoSpecialStub("CallTrainerTowerFunc"); return 0; }
-u16 DoPokemonLeagueLightingEffect(void) { KantoSpecialStub("DoPokemonLeagueLightingEffect"); return 0; }
 
 u16 DoDeoxysTriangleInteraction(void) { KantoSpecialStub("DoDeoxysTriangleInteraction"); return 0; }
 u16 SetDeoxysTrianglePalette(void) { KantoSpecialStub("SetDeoxysTrianglePalette"); return 0; }
 u16 ReadTrainerTowerAndValidate(void) { KantoSpecialStub("ReadTrainerTowerAndValidate"); return 0; }
 u16 BrailleCursorToggle(void) { KantoSpecialStub("BrailleCursorToggle"); return 0; }
-u16 AnimateTeleporterHousing(void) { KantoSpecialStub("AnimateTeleporterHousing"); return 0; }
-u16 AnimateTeleporterCable(void) { KantoSpecialStub("AnimateTeleporterCable"); return 0; }
