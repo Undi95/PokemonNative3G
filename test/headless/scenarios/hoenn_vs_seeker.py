@@ -25,7 +25,7 @@ def play(game):
     game.wait(120); log(game, "réponses")
     game.tap("RIGHT", hold=16); game.wait(30); game.tap("RIGHT"); game.wait(20)
     game.tap("A"); game.wait(400); log(game, "Calvin")
-    for _ in range(80):
+    for _ in range(300):
         if game.state.free:
             break
         game.tap("A"); game.wait(60)

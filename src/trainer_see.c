@@ -210,10 +210,16 @@ static const union AnimCmd *const sSpriteAnimTable_KantoEmoticons[] =
     sAnimCmd_X,
 };
 
+// Rouge Feu : les émoticônes utilisent la palette 0 de l'OAM, celle de Red ; ici sa palette à elle,
+// quel que soit le personnage joué
+#define FLDEFF_PAL_TAG_KANTO_EMOTICONS 0x1012
+extern const u16 gKantoObjectEventPal_Player[];
+static const struct SpritePalette sSpritePalette_KantoEmoticons = {gKantoObjectEventPal_Player, FLDEFF_PAL_TAG_KANTO_EMOTICONS};
+
 static const struct SpriteTemplate sSpriteTemplate_KantoEmoticons =
 {
     .tileTag = TAG_NONE,
-    .paletteTag = TAG_NONE,
+    .paletteTag = FLDEFF_PAL_TAG_KANTO_EMOTICONS,
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_KantoEmoticons,
     .images = sSpriteImageTable_KantoEmoticons,
@@ -764,29 +770,27 @@ u8 FldEff_QuestionMarkIcon(void)
     return 0;
 }
 
-// Rouge Feu : émoticônes du Cherche VS (palette du joueur, comme ! et ?)
+// Rouge Feu : émoticônes du Cherche VS
 u8 FldEff_DoubleExclMarkIcon(void)
 {
-    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoEmoticons, 0, 0, 0x52);
+    u8 spriteId;
 
+    LoadSpritePalette(&sSpritePalette_KantoEmoticons);
+    spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoEmoticons, 0, 0, 0x52);
     if (spriteId != MAX_SPRITES)
-    {
         SetIconSpriteData(&gSprites[spriteId], FLDEFF_DOUBLE_EXCL_MARK_ICON, 0);
-        gSprites[spriteId].oam.paletteNum = GetPlayerIconPaletteNum();
-    }
 
     return 0;
 }
 
 u8 FldEff_XIcon(void)
 {
-    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoEmoticons, 0, 0, 0x52);
+    u8 spriteId;
 
+    LoadSpritePalette(&sSpritePalette_KantoEmoticons);
+    spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoEmoticons, 0, 0, 0x52);
     if (spriteId != MAX_SPRITES)
-    {
         SetIconSpriteData(&gSprites[spriteId], FLDEFF_X_ICON, 1);
-        gSprites[spriteId].oam.paletteNum = GetPlayerIconPaletteNum();
-    }
 
     return 0;
 }
