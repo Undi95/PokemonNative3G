@@ -22,6 +22,8 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
+#define FONT_NORMAL FONT_KANTO // police de RF (comme les autres écrans de RF)
+
 void KantoCB2_ShowDiploma(void);
 
 // Rouge Feu (strings_*_fr.h)

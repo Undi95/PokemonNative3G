@@ -36,6 +36,8 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 
+#define FONT_NORMAL FONT_KANTO // police de RF (comme les autres écrans de RF)
+
 enum {
     FCWINDOWID_LIST,
     FCWINDOWID_UIHELP,

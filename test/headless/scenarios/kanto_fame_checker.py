@@ -13,7 +13,7 @@ def play(game):
     game.wait(120)
     game.tap("A", 210, hold=4, gap=26)
     wait_until(game, lambda s: s.free); game.wait(30)
-    game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 13, gap=10); game.tap("A"); game.wait(60)
+    game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 12, gap=10); game.tap("A"); game.wait(60)
     close_menus(game)
     game.tap("START"); game.wait(30); game.tap("DOWN"); game.wait(10); game.tap("A"); game.wait(200)
     game.tap("RIGHT", 4, gap=40); game.wait(60)
