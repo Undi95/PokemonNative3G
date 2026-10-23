@@ -19,6 +19,7 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Sac de RF pour : donner un objet depuis l'équipe, vendre en boutique (et vendre des CT / baies depuis la Boîte à CT / le Sac à Baies), déposer au PC (objets), donner un objet depuis le PC (boîtes)
 - [ ] Boîte à CT / Sac à Baies enregistrés sur SELECT, ouverts depuis la carte
 - [ ] SAC = HOENN : le sac d'Émeraude comme avant (arbres à baies, mixeur, dames : toujours le sac d'Émeraude)
+- [ ] Sac de RF : scène de RF quand on utilise un objet sur un Pokémon hors combat (2026-10-24, kanto_pokemon_special_anim*.c). Vérifié en headless : SUPER BONBON (scène, puis « monte au N. 71 » et statistiques dans le menu d'équipe ; `kanto_item_use_anim.py`). Non testés : soins (POTION, TOTAL SOIN…), HUILE / ÉLIXIR (choix de la capacité puis scène), CT/CS (scène « appareil prêt »), CT en remplaçant une capacité (« 1, 2 et… Tadaa ! » dans la scène), pierres d'évolution (scène puis évolution), objet sans effet (message sans scène). En combat : pas de scène (comme RF)
 ## Plateformes (docs/PLATEFORMES.md)
 - [ ] Android : installer `out/android/PokemonNative3G.apk` (autoriser les sources inconnues), le jeu démarre en paysage, son OK, icône = celle de Windows
 - [ ] Android : touches tactiles (croix 8 directions, A/B, L/R, SELECT / RESET / START ; RESET maintenu 1 s = retour à l'écran titre), plusieurs doigts à la fois
