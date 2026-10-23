@@ -515,14 +515,6 @@ bool8 CloseMuseumFossilPic(void)
     return TRUE;
 }
 
-bool8 CloseMuseumFossilPic(void)
-{
-    u8 taskId = FindTaskIdByFunc(Task_WaitMuseumFossilPic);
-    if (taskId == TASK_NONE)
-        return FALSE;
-    gTasks[taskId].tMState++;
-    return TRUE;
-}
 #undef tMState
 #undef tMSpriteId
 #undef tMWindowId
