@@ -75,6 +75,7 @@ static const u8 sWarpName_SevenIsland[] = _("ÎLE 7");
 static const u8 sWarpName_Littleroot[] = _("BOURG-EN-VOL");
 static const u8 sWarpName_Lilycove[] = _("NÉNUCRIQUE");
 static const u8 sWarpName_SaffronGym[] = _("ARÈNE SAFRANIA");
+static const u8 sWarpName_KantoHof[] = _("PANTHÉON KANTO");
 
 // Kanto : points d'arrivée du Vol de Rouge Feu (heal_locations.json)
 static const struct DebugWarp sDebugWarps[] =
@@ -102,6 +103,7 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_Littleroot, MAP_GROUP(MAP_LITTLEROOT_TOWN), MAP_NUM(MAP_LITTLEROOT_TOWN), 10, 10},
     {sWarpName_Lilycove, MAP_GROUP(MAP_LILYCOVE_CITY), MAP_NUM(MAP_LILYCOVE_CITY), 20, 20},
     {sWarpName_SaffronGym, MAP_GROUP(MAP_SAFFRON_CITY_GYM), MAP_NUM(MAP_SAFFRON_CITY_GYM), 14, 22}, // téléporteurs
+    {sWarpName_KantoHof, MAP_GROUP(MAP_POKEMON_LEAGUE_HALL_OF_FAME), MAP_NUM(MAP_POKEMON_LEAGUE_HALL_OF_FAME), 6, 19},
 };
 
 // Tous les objets du jeu (Hoenn + Kanto) : 99 de chaque (1 pour les objets rares et les CS).

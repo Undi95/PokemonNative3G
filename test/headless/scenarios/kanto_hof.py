@@ -1,0 +1,17 @@
+# Build KANTO_DEBUG=1 : téléport DEBUG au Panthéon de Kanto, enregistrement (moniteur RF),
+# Panthéon puis crédits de Kanto (musique continue : --audio).
+import os, sys
+import driver
+sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
+from kanto_tour import log, debug_warp, give_mewtwo
+
+
+def play(game):
+    game.wait(300); game.tap("START"); game.wait(120); game.tap("START"); game.wait(90); game.tap("A")
+    game.wait(120)
+    game.tap("A", 210, hold=4, gap=26)
+    give_mewtwo(game)
+    debug_warp(game, 24); log(game, "Panthéon")
+    for _ in range(300):
+        game.tap("A", gap=60)
+    log(game, "fin")
