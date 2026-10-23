@@ -17,7 +17,6 @@ u16 TryContestLinkup(void) { KantoSpecialStub("TryContestLinkup"); return 0; }
 u16 ShowEasyChatMessage(void) { KantoSpecialStub("ShowEasyChatMessage"); return 0; }
 u16 BufferRandomHobbyOrLifestyleString(void) { KantoSpecialStub("BufferRandomHobbyOrLifestyleString"); return 0; }
 u16 ShowBattleRecords(void) { KantoSpecialStub("ShowBattleRecords"); return 0; }
-u16 GetProfOaksRatingMessage(void) { KantoSpecialStub("GetProfOaksRatingMessage"); return 0; }
 u16 BattleTowerMapScript2(void) { KantoSpecialStub("BattleTowerMapScript2"); return 0; }
 u16 ChooseNextBattleTowerTrainer(void) { KantoSpecialStub("ChooseNextBattleTowerTrainer"); return 0; }
 u16 CheckPartyBattleTowerBanlist(void) { KantoSpecialStub("CheckPartyBattleTowerBanlist"); return 0; }
