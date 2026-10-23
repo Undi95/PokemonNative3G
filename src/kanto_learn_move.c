@@ -33,6 +33,7 @@
 #include "kanto_bag_internal.h" // noms de RF (après les en-têtes d'Émeraude)
 
 void KantoTeachMoveRelearnerMove(void);
+extern const u8 *const gKantoMoveDescriptionPointers[]; // kanto_move_descriptions.c (RF)
 
 static const u32 sKMoveRelearner_Gfx[] = INCGFX_U32("graphics/kanto/interface/learn_move.png", ".4bpp.lz");
 static const u16 sKMoveRelearner_Pal[] = INCGFX_U16("graphics/kanto/interface/learn_move.png", ".gbapal");
@@ -874,7 +875,7 @@ static void PrintMoveInfo(u16 move)
     }
     ConvertIntToDecimalStringN(buffer, gBattleMoves[move].pp, STR_CONV_MODE_LEFT_ALIGN, 2);
     PrintTextOnWindow(4, buffer, 2, 2, 0, 0);
-    PrintTextOnWindow(5, gMoveDescriptionPointers[move - 1], 1, 0, 0, 0);
+    PrintTextOnWindow(5, gKantoMoveDescriptionPointers[move - 1], 1, 0, 0, 0);
 }
 
 static void LoadMoveInfoUI(void)

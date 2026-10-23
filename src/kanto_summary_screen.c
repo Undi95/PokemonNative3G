@@ -50,6 +50,7 @@
 #include "constants/sound.h"
 #include "constants/rgb.h"
 #include "constants/kanto/help_system.h"
+extern const u8 *const gKantoMoveDescriptionPointers[]; // kanto_move_descriptions.c (RF)
 
 // Les noms globaux de RF qui existent aussi dans Émeraude prennent le préfixe Kanto
 #define ShowPokemonSummaryScreen KantoShowPokemonSummaryScreen
@@ -3009,7 +3010,7 @@ static void PokeSum_PrintSelectedMoveStats(void)
                                      7, 42,
                                      0, 0,
                                      sLevelNickTextColors[0], TEXT_SKIP_DRAW,
-                                     gMoveDescriptionPointers[sMonSummaryScreen->moveIds[sMoveSelectionCursorPos] - 1]);
+                                     gKantoMoveDescriptionPointers[sMonSummaryScreen->moveIds[sMoveSelectionCursorPos] - 1]);
     }
 }
 
