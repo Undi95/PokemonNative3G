@@ -37,6 +37,8 @@
 #include "kanto_save.h"
 #include "constants/rematches.h"
 
+void FullyUnlockFameChecker(void); // kanto_fame_checker.c
+
 bool8 gDebugNoClip = FALSE;
 bool8 gDebugNoEncounters = FALSE;
 
@@ -55,6 +57,7 @@ enum {
     DEBUG_SEVII_PASSES,
     DEBUG_SS_ANNE,
     DEBUG_KANTO_DEX_FULL,
+    DEBUG_FAME_CHECKER,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -172,6 +175,7 @@ static const u8 sText_HoennRematches[] = _("Revanches PokéNav");
 static const u8 sText_SeviiPasses[] = _("Pass îles Sevii");
 static const u8 sText_SSAnne[] = _("Départ S.S. Anne");
 static const u8 sText_KantoDexFull[] = _("POKéDEX Kanto complet");
+static const u8 sText_FameChecker[] = _("MEMORYDEX complet");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -216,6 +220,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_SEVII_PASSES].name = sText_SeviiPasses;
         sItems[DEBUG_SS_ANNE].name = sText_SSAnne;
         sItems[DEBUG_KANTO_DEX_FULL].name = sText_KantoDexFull;
+        sItems[DEBUG_FAME_CHECKER].name = sText_FameChecker;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -410,6 +415,12 @@ static void Task_DebugMenu(u8 taskId)
                 GetSetPokedexFlag(i, FLAG_SET_CAUGHT);
             }
         }
+        PlaySE(SE_USE_ITEM);
+        break;
+    case DEBUG_FAME_CHECKER:
+        // MEMORYDEX (Fame Checker) : toutes les personnes et toutes les fiches (FullyUnlockFameChecker de RF)
+        AddBagItem(ITEM_FAME_CHECKER, 1);
+        FullyUnlockFameChecker();
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_CLOSE:
