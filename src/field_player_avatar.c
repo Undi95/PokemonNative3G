@@ -2291,7 +2291,7 @@ void SeafoamIslandsB4F_CurrentDumpsPlayerOnLand(void)
 // Seulement avec Red/Leaf (option PERSO) : Brice et Flora n'ont pas de sprite avec le Cherche VS.
 #define ANIM_VS_SEEKER 0 // tables d'animations des sprites du Cherche VS (kanto_object_events.h)
 
-static const u8 sPlayerAvatarVsSeekerGfxIds[][GENDER_COUNT] = {
+static const u16 sPlayerAvatarVsSeekerGfxIds[][GENDER_COUNT] = { // PokemonNative3G : 16 bits (sprites de RF à partir de 0x100)
     {OBJ_EVENT_GFX_KANTO_RED_VS_SEEKER,      OBJ_EVENT_GFX_KANTO_GREEN_VS_SEEKER},
     {OBJ_EVENT_GFX_KANTO_RED_VS_SEEKER_BIKE, OBJ_EVENT_GFX_KANTO_GREEN_VS_SEEKER_BIKE},
 };

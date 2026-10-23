@@ -1,4 +1,7 @@
 #include "global.h"
+#include "bg.h"
+#include "decompress.h"
+#include "malloc.h"
 #include "graphics.h"
 #include "battle.h"
 #include "battle_anim.h"

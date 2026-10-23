@@ -183,6 +183,7 @@ u8 GetBattlerSpriteCoord(u8 battler, u8 coordType);
 bool8 IsBattlerSpritePresent(u8 battler);
 void ClearBattleAnimBg(u32 bgId);
 u8 GetGhostSpriteDefault_Y(u8 battlerId); // Rouge Feu
+bool8 TranslateAnimVerticalArc(struct Sprite *sprite);
 u8 GetAnimBattlerSpriteId(u8 animBattler);
 bool8 IsDoubleBattle(void);
 u8 GetBattleBgPaletteNum(void);

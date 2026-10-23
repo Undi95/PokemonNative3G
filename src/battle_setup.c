@@ -1,4 +1,5 @@
 #include "global.h"
+#include "item.h"
 #include "kanto_vs_seeker.h"
 #include "constants/kanto_trainers.h"
 #include "battle.h"
