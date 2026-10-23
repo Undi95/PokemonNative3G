@@ -115,12 +115,12 @@ extern const union AffineAnimCmd *const gAffineAnims_BattleSpriteOpponentSide[];
 extern const union AffineAnimCmd *const gAffineAnims_BattleSpriteContest[];
 
 extern const union AnimCmd *const gAnims_MonPic[];
-extern const struct MonCoords gMonFrontPicCoords[];
+extern const struct MonCoords gHoennMonFrontPicCoords[];
 extern const struct CompressedSpriteSheet gMonStillFrontPicTable[];
-extern const struct MonCoords gMonBackPicCoords[];
-extern const struct CompressedSpriteSheet gMonBackPicTable[];
-extern const struct CompressedSpritePalette gMonPaletteTable[];
-extern const struct CompressedSpritePalette gMonShinyPaletteTable[];
+extern const struct MonCoords gHoennMonBackPicCoords[];
+extern const struct CompressedSpriteSheet gHoennMonBackPicTable[];
+extern const struct CompressedSpritePalette gHoennMonPaletteTable[];
+extern const struct CompressedSpritePalette gHoennMonShinyPaletteTable[];
 extern const union AnimCmd *const *const gTrainerFrontAnimsPtrTable[];
 extern const struct MonCoords gTrainerFrontPicCoords[];
 extern const struct CompressedSpriteSheet gTrainerFrontPicTable[];
@@ -130,14 +130,31 @@ extern const struct MonCoords gTrainerBackPicCoords[];
 extern const struct CompressedSpriteSheet gTrainerBackPicTable[]; // functionally unused
 extern const struct CompressedSpritePalette gTrainerBackPicPaletteTable[];
 
-extern const u8 gEnemyMonElevation[NUM_SPECIES];
+extern const u8 gHoennEnemyMonElevation[NUM_SPECIES];
 
 extern const union AnimCmd *const *const gMonFrontAnimsPtrTable[];
-extern const struct CompressedSpriteSheet gMonFrontPicTable[];
+extern const struct CompressedSpriteSheet gHoennMonFrontPicTable[];
 
 extern const struct Trainer gTrainers[];
 extern const u8 gTrainerClassNames[][13];
 extern const u8 gSpeciesNames[][POKEMON_NAME_LENGTH + 1];
 extern const u8 gMoveNames[MOVES_COUNT][MOVE_NAME_LENGTH + 1];
+
+// PokemonNative3G : sprites des Pokémon d'Émeraude ou de Rouge Feu (Options > POKéMON)
+extern const struct CompressedSpriteSheet gKantoMonFrontPicTable[];
+extern const struct CompressedSpriteSheet gKantoMonBackPicTable[];
+extern const struct CompressedSpritePalette gKantoMonPaletteTable[];
+extern const struct CompressedSpritePalette gKantoMonShinyPaletteTable[];
+extern const struct MonCoords gKantoMonFrontPicCoords[];
+extern const struct MonCoords gKantoMonBackPicCoords[];
+extern const u8 gKantoEnemyMonElevation[NUM_SPECIES];
+#define MON_PICS_KANTO (gSaveBlock2Ptr->optionsMonSprites)
+#define gMonFrontPicTable (MON_PICS_KANTO ? gKantoMonFrontPicTable : gHoennMonFrontPicTable)
+#define gMonBackPicTable (MON_PICS_KANTO ? gKantoMonBackPicTable : gHoennMonBackPicTable)
+#define gMonPaletteTable (MON_PICS_KANTO ? gKantoMonPaletteTable : gHoennMonPaletteTable)
+#define gMonShinyPaletteTable (MON_PICS_KANTO ? gKantoMonShinyPaletteTable : gHoennMonShinyPaletteTable)
+#define gMonFrontPicCoords (MON_PICS_KANTO ? gKantoMonFrontPicCoords : gHoennMonFrontPicCoords)
+#define gMonBackPicCoords (MON_PICS_KANTO ? gKantoMonBackPicCoords : gHoennMonBackPicCoords)
+#define gEnemyMonElevation (MON_PICS_KANTO ? gKantoEnemyMonElevation : gHoennEnemyMonElevation)
 
 #endif // GUARD_DATA_H

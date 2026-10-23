@@ -2740,7 +2740,6 @@ static void SpriteCB_Flicker(struct Sprite *sprite)
 #undef sNumFlickers
 #undef sDelay
 
-extern const struct MonCoords gMonFrontPicCoords[];
 extern const struct MonCoords gCastformFrontSpriteCoords[];
 
 void SpriteCB_FaintOpponentMon(struct Sprite *sprite)

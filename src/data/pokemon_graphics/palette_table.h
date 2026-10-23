@@ -1,4 +1,4 @@
-const struct CompressedSpritePalette gMonPaletteTable[] =
+const struct CompressedSpritePalette gHoennMonPaletteTable[] =
 {
     SPECIES_PAL(NONE, gMonPalette_CircledQuestionMark),
     SPECIES_PAL(BULBASAUR, gMonPalette_Bulbasaur),

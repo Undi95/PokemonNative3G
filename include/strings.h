@@ -324,6 +324,7 @@ extern const u8 gText_CharacterLeaf[];
 extern const u8 gText_TitleScreen[];
 extern const u8 gText_DialogStyle[];
 extern const u8 gText_BattleUI[];
+extern const u8 gText_MonSprites[];
 extern const u8 gText_PokedexStyle[];
 extern const u8 gText_MenuStyle[];
 extern const u8 gText_BagStyle[];

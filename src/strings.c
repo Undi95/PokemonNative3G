@@ -1510,6 +1510,7 @@ const u8 gText_CharacterLeaf[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}LEAF");
 const u8 gText_TitleScreen[] = _("TITRE");
 const u8 gText_DialogStyle[] = _("DIALOGUE");
 const u8 gText_BattleUI[] = _("BOITES COMBAT");
+const u8 gText_MonSprites[] = _("POKéMON");
 const u8 gText_PokedexStyle[] = _("POKéDEX");
 const u8 gText_MenuStyle[] = _("MENUS");
 const u8 gText_BagStyle[] = _("SAC");

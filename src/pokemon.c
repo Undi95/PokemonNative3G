@@ -6826,6 +6826,8 @@ void DoMonFrontSpriteAnimation(struct Sprite *sprite, u16 species, bool8 noCry, 
         pan = 0;
         break;
     }
+    if (MON_PICS_KANTO) // PokemonNative3G : les Pokémon de Rouge Feu ne s'animent pas
+        panModeAnimFlag |= SKIP_FRONT_ANIM;
     if (panModeAnimFlag & SKIP_FRONT_ANIM)
     {
         // No animation, only check if cry needs to be played
@@ -6860,6 +6862,8 @@ void DoMonFrontSpriteAnimation(struct Sprite *sprite, u16 species, bool8 noCry, 
 
 void PokemonSummaryDoMonAnimation(struct Sprite *sprite, u16 species, bool8 oneFrame)
 {
+    if (MON_PICS_KANTO) // PokemonNative3G : pas d'animation avec les sprites de Rouge Feu
+        return;
     if (!oneFrame && HasTwoFramesAnimation(species))
         StartSpriteAnim(sprite, 1);
     if (sMonAnimationDelayTable[species - 1] != 0)
@@ -6888,7 +6892,8 @@ void StopPokemonAnimationDelayTask(void)
 
 void BattleAnimateBackSprite(struct Sprite *sprite, u16 species)
 {
-    if (gHitMarker & HITMARKER_NO_ANIMATIONS && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)))
+    if (MON_PICS_KANTO // PokemonNative3G : pas d'animation avec les sprites de Rouge Feu
+     || (gHitMarker & HITMARKER_NO_ANIMATIONS && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))))
     {
         sprite->callback = SpriteCallbackDummy;
     }
@@ -6996,7 +7001,8 @@ const u8 *GetTrainerNameFromId(u16 trainerId)
 
 bool8 HasTwoFramesAnimation(u16 species)
 {
-    return (species != SPECIES_CASTFORM
+    return (!MON_PICS_KANTO // PokemonNative3G : une seule image chez Rouge Feu
+         && species != SPECIES_CASTFORM
          && species != SPECIES_DEOXYS
          && species != SPECIES_SPINDA
          && species != SPECIES_UNOWN);
