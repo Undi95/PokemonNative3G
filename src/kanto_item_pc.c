@@ -9,7 +9,6 @@
 #include "item.h"
 #include "item_menu.h"
 #include "item_use.h"
-#include "kanto_bag_internal.h"
 #include "kanto_pc_screen_effect.h"
 #include "list_menu.h"
 #include "main.h"
@@ -30,6 +29,8 @@
 #include "constants/items.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "kanto_bag_internal.h" // noms de RF du sac de RF (après les en-têtes d'Émeraude)
+#define FONT_NORMAL_COPY_2 FONT_KANTO
 
 void ItemPc_Init(u8 kind, MainCallback callback);
 
@@ -550,11 +551,11 @@ static void ItemPc_BuildListMenuTemplate(void)
 
     for (i = 0; i < sStateDataPtr->nItems; i++)
     {
-        sListMenuItems[i].label = ItemId_GetName(gSaveBlock1Ptr->pcItems[i].itemId);
-        sListMenuItems[i].index = i;
+        sListMenuItems[i].name = ItemId_GetName(gSaveBlock1Ptr->pcItems[i].itemId);
+        sListMenuItems[i].id = i;
     }
-    sListMenuItems[i].label = sKText_FameCheckerText_Cancel;
-    sListMenuItems[i].index = -2;
+    sListMenuItems[i].name = sKText_FameCheckerText_Cancel;
+    sListMenuItems[i].id = -2;
 
     gMultiuseListMenuTemplate.items = sListMenuItems;
     gMultiuseListMenuTemplate.totalItems = sStateDataPtr->nItems + 1;
@@ -590,7 +591,7 @@ static void ItemPc_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *
         {
             itemId = ItemPc_GetItemIdBySlotId(itemIndex);
             CreateItemMenuIcon(itemId, sStateDataPtr->itemMenuIconSlot);
-            if (ItemId_GetPocket(itemId) == POCKET_TM_CASE)
+            if (ItemId_GetPocket(itemId) == POCKET_TM_HM)
                 desc = gMoveNames[ItemIdToBattleMoveId(itemId)];
             else
                 desc = ItemId_GetDescription(itemId);
@@ -967,7 +968,7 @@ static void ItemPc_DoWithdraw(u8 taskId)
 
     if (AddBagItem(itemId, data[8]) == TRUE)
     {
-        ItemUse_SetQuestLogEvent(QL_EVENT_WITHDREW_ITEM_PC, NULL, itemId, 0xFFFF);
+        // RF : ItemUse_SetQuestLogEvent (journal de quête)
         CopyItemName(itemId, gStringVar1);
         ConvertIntToDecimalStringN(gStringVar2, data[8], STR_CONV_MODE_LEFT_ALIGN, 3);
         StringExpandPlaceholders(gStringVar4, sKText_Text_WithdrewQuantItem);
