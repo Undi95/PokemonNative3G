@@ -197,18 +197,28 @@ void InitHeap(void *heapStart, u32 heapSize)
     PutFirstMemBlockHeader(heapStart, heapSize);
 }
 
+#include <stdio.h>
+bool8 gDbgAlloc;
 void *Alloc(u32 size)
 {
-    return AllocInternal(sHeapStart, size);
+    void *p = AllocInternal(sHeapStart, size);
+    if (gDbgAlloc) fprintf(stderr, "DBGA %p %x %p
+", p, size, __builtin_return_address(0));
+    return p;
 }
 
 void *AllocZeroed(u32 size)
 {
-    return AllocZeroedInternal(sHeapStart, size);
+    void *p = AllocZeroedInternal(sHeapStart, size);
+    if (gDbgAlloc) fprintf(stderr, "DBGA %p %x %p
+", p, size, __builtin_return_address(0));
+    return p;
 }
 
 void Free(void *pointer)
 {
+    if (gDbgAlloc) fprintf(stderr, "DBGF %p
+", pointer);
     FreeInternal(sHeapStart, pointer);
 }
 

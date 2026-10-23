@@ -889,6 +889,7 @@ static void InitBgDarkenEffect(void)
 
 static void CreateCreditsWindow(void)
 {
+    { extern bool8 gDbgAlloc; gDbgAlloc = 1; }
     sCreditsMgr->windowId = AddWindow(&sCreditsWindowTemplate);
     { int i, n = 0; for (i = 0; i < WINDOWS_MAX; i++) n += gWindows[i].window.bg != 0xFF; void *pr = Alloc(0x800); fprintf(stderr, "DBG win=%d used=%d probe=%p\n", sCreditsMgr->windowId, n, pr); Free(pr); }
     FillWindowPixelBuffer(sCreditsMgr->windowId, PIXEL_FILL(0));
