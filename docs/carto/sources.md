@@ -14,10 +14,8 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | quest_log_player.c | RF seul | 15 | 15 | 0 | 0 | 0 | 0 | 0 |  |
 | mailbox_pc.c | RF seul | 9 | 9 | 0 | 0 | 0 | 0 | 0 |  |
 | pokemon_storage_system_graphics.c | RF seul | 65 | 9 | 0 | 0 | 0 | 5 | 51 |  |
-| ss_anne.c | RF seul | 8 | 8 | 0 | 0 | 0 | 0 | 0 |  |
 | cereader_tool.c | RF seul | 8 | 7 | 0 | 0 | 0 | 0 | 1 |  |
 | pokemon_storage_system_tasks.c | RF seul | 82 | 5 | 0 | 0 | 0 | 6 | 71 |  |
-| special_field_anim.c | RF seul | 10 | 4 | 0 | 0 | 0 | 0 | 6 |  |
 | buy_menu_helpers.c | RF seul | 7 | 3 | 0 | 0 | 0 | 0 | 4 |  |
 | quest_log_battle.c | RF seul | 3 | 3 | 0 | 0 | 0 | 0 | 0 |  |
 | quest_log_objects.c | RF seul | 3 | 3 | 0 | 0 | 0 | 0 | 0 |  |
@@ -48,7 +46,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | fame_checker.c | RF seul | 64 | 64 | 4 | 3 | 10 | 0 | 0 | kanto_field_specials.c (3) |
 | help_system.c | RF seul | 41 | 41 | 0 | 6 | 14 | 0 | 0 | kanto_specials.c (6) |
 | new_menu_helpers.c | RF seul | 54 | 19 | 3 | 0 | 15 | 11 | 24 |  |
-| seagallop.c | RF seul | 22 | 22 | 2 | 2 | 18 | 0 | 0 | kanto_specials.c (2) |
 | pokemon_storage_system_misc.c | RF seul | 70 | 15 | 3 | 0 | 20 | 16 | 39 |  |
 | battle_anim_special.c | RF seul | 81 | 42 | 6 | 3 | 21 | 15 | 24 | battle_anim_throw.c (3) |
 | map_preview_screen.c | RF seul | 14 | 14 | 1 | 2 | 21 | 0 | 0 | kanto_region_map.c (2) |
@@ -61,12 +58,15 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | pokedex_screen.c | RF seul | 68 | 67 | 0 | 67 | 100 | 1 | 0 | copie kanto_pokedex_screen.c : 68/68 fonctions |
 | vs_seeker.c | RF seul | 41 | 38 | 0 | 38 | 100 | 0 | 3 | copie kanto_vs_seeker.c : 41/41 fonctions |
 | itemfinder.c | RF seul | 24 | 22 | 0 | 22 | 100 | 0 | 2 | copie kanto_itemfinder.c : 24/24 fonctions |
+| seagallop.c | RF seul | 22 | 22 | 0 | 22 | 100 | 0 | 0 | copie kanto_seagallop.c : 20/22 fonctions; kanto_specials.c (2) |
 | bag.c | RF seul | 13 | 13 | 0 | 13 | 100 | 0 | 0 | copie kanto_bag.c : 13/13 fonctions |
 | trainer_fan_club.c | RF seul | 23 | 9 | 0 | 9 | 100 | 1 | 13 | copie kanto_trainer_fan_club.c : 23/23 fonctions |
+| ss_anne.c | RF seul | 8 | 8 | 0 | 8 | 100 | 0 | 0 | copie kanto_ss_anne.c : 8/8 fonctions |
 | pc_screen_effect.c | RF seul | 7 | 7 | 0 | 7 | 100 | 0 | 0 | kanto_hall_of_fame.c (7) |
 | wild_pokemon_area.c | RF seul | 7 | 7 | 0 | 7 | 100 | 0 | 0 | kanto_pokedex_area.c (7) |
 | pokedex_area_markers.c | RF seul | 5 | 5 | 0 | 5 | 100 | 0 | 0 | kanto_pokedex_area.c (5) |
 | renewable_hidden_items.c | RF seul | 4 | 4 | 0 | 4 | 100 | 0 | 0 | copie kanto_renewable_hidden_items.c : 4/4 fonctions |
+| special_field_anim.c | RF seul | 10 | 4 | 0 | 4 | 100 | 0 | 6 | kanto_field_anims.c (4) |
 | prof_pc.c | RF seul | 3 | 3 | 0 | 3 | 100 | 0 | 0 | kanto_field_specials.c (3) |
 | party_menu_specials.c | RF seul | 9 | 1 | 0 | 1 | 100 | 3 | 5 | kanto_specials.c (1) |
 | bg_regs.c | RF seul | 0 | 0 | 0 | 0 | 100 | 0 | 0 |  |
@@ -124,7 +124,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | bg.c | commun | 50 | 1 | 0 | 0 | 0 | 7 | 42 |  |
 | naming_screen.c | commun | 109 | 3 | 0 | 0 | 0 | 69 | 37 |  |
 | battle_controller_opponent.c | commun | 87 | 10 | 5 | 0 | 50 | 43 | 34 |  |
-| field_specials.c | commun | 118 | 89 | 0 | 71 | 79 | 9 | 20 | copie kanto_field_specials.c+kanto_list_menu.c+kanto_specials.c : 66/118 fonctions; kanto_itemfinder.c (2), kanto_region_map.c (1), kanto_summary_screen.c (1) |
 | easy_chat.c | commun | 40 | 27 | 0 | 0 | 0 | 3 | 10 |  |
 | fieldmap.c | commun | 54 | 3 | 0 | 0 | 0 | 17 | 34 |  |
 | battle_anim_effects_2.c | commun | 121 | 3 | 2 | 0 | 66 | 83 | 35 |  |
@@ -135,20 +134,20 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_gfx_sfx_util.c | commun | 48 | 6 | 1 | 1 | 33 | 13 | 29 | battle_gfx_sfx_util.c (1) |
 | battle_setup.c | commun | 66 | 20 | 0 | 12 | 60 | 21 | 25 | battle_setup.c (11), kanto_battle_bg.c (1) |
 | cable_club.c | commun | 54 | 7 | 2 | 0 | 28 | 19 | 28 |  |
+| field_specials.c | commun | 118 | 89 | 0 | 76 | 85 | 9 | 20 | copie kanto_field_specials.c+kanto_list_menu.c+kanto_specials.c : 66/118 fonctions; kanto_field_anims.c (4), kanto_itemfinder.c (2), kanto_diploma.c (1) |
 | item.c | commun | 49 | 29 | 15 | 2 | 58 | 0 | 20 | kanto_specials.c (1), kanto_tm_case.c (1) |
 | text.c | commun | 37 | 15 | 0 | 0 | 0 | 5 | 17 |  |
 | battle_anim_utility_funcs.c | commun | 42 | 1 | 0 | 0 | 0 | 12 | 29 |  |
 | wild_encounter.c | commun | 36 | 18 | 0 | 0 | 0 | 6 | 12 |  |
 | script.c | commun | 55 | 17 | 0 | 2 | 11 | 25 | 13 | kanto_specials.c (2) |
-| script_menu.c | commun | 29 | 21 | 0 | 1 | 4 | 0 | 8 | kanto_specials.c (1) |
 | field_weather.c | commun | 50 | 13 | 1 | 0 | 7 | 22 | 15 |  |
 | main_menu.c | commun | 29 | 25 | 0 | 0 | 0 | 2 | 2 |  |
 | battle_anim.c | commun | 77 | 0 | 0 | 0 | 100 | 51 | 26 |  |
 | battle_anim_normal.c | commun | 36 | 5 | 1 | 0 | 20 | 9 | 22 |  |
-| battle_records.c | commun | 31 | 21 | 2 | 0 | 9 | 3 | 7 |  |
 | pokemon_jump.c | commun | 186 | 0 | 0 | 0 | 100 | 160 | 26 |  |
 | save.c | commun | 33 | 0 | 0 | 0 | 100 | 7 | 26 |  |
 | trainer_see.c | commun | 37 | 25 | 5 | 3 | 32 | 3 | 9 | trainer_see.c (3) |
+| battle_records.c | commun | 31 | 21 | 2 | 1 | 14 | 3 | 7 | kanto_seagallop.c (1) |
 | item_menu.c | commun | 116 | 100 | 0 | 88 | 88 | 3 | 13 | copie kanto_item_menu.c : 101/116 fonctions |
 | list_menu.c | commun | 31 | 2 | 0 | 2 | 100 | 4 | 25 | kanto_pokedex_screen.c (2) |
 | battle_anim_mon_movement.c | commun | 34 | 2 | 0 | 0 | 0 | 10 | 22 |  |
@@ -156,6 +155,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_controller_link_partner.c | commun | 85 | 3 | 0 | 0 | 0 | 62 | 20 |  |
 | bike.c | commun | 24 | 11 | 0 | 0 | 0 | 1 | 12 |  |
 | hall_of_fame.c | commun | 42 | 16 | 0 | 16 | 100 | 3 | 23 | copie kanto_hall_of_fame.c : 42/42 fonctions |
+| script_menu.c | commun | 29 | 21 | 0 | 6 | 28 | 0 | 8 | script_menu.c (5), kanto_specials.c (1) |
 | string_util.c | commun | 40 | 0 | 0 | 0 | 100 | 17 | 23 |  |
 | battle_anim_ice.c | commun | 32 | 1 | 1 | 0 | 100 | 9 | 22 |  |
 | battle_controller_link_opponent.c | commun | 86 | 2 | 0 | 0 | 0 | 64 | 20 |  |
@@ -210,7 +210,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | mail_data.c | commun | 12 | 4 | 0 | 0 | 0 | 3 | 5 |  |
 | window.c | commun | 21 | 1 | 0 | 0 | 0 | 12 | 8 |  |
 | decompress.c | commun | 18 | 0 | 0 | 0 | 100 | 10 | 8 |  |
-| diploma.c | commun | 10 | 9 | 2 | 0 | 22 | 0 | 1 |  |
 | event_object_lock.c | commun | 11 | 4 | 0 | 1 | 25 | 2 | 5 | kanto_itemfinder.c (1) |
 | item_menu_icons.c | commun | 17 | 9 | 0 | 9 | 100 | 0 | 8 | copie kanto_item_menu_icons.c : 17/17 fonctions |
 | new_game.c | commun | 11 | 3 | 1 | 0 | 33 | 2 | 6 |  |
@@ -272,6 +271,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | blit.c | commun | 5 | 0 | 0 | 0 | 100 | 4 | 1 |  |
 | coord_event_weather.c | commun | 1 | 0 | 0 | 0 | 100 | 0 | 1 |  |
 | credits.c | commun | 16 | 14 | 0 | 14 | 100 | 1 | 1 | copie kanto_credits.c : 16/16 fonctions |
+| diploma.c | commun | 10 | 9 | 0 | 9 | 100 | 0 | 1 | copie kanto_diploma.c : 10/10 fonctions |
 | hof_pc.c | commun | 5 | 2 | 0 | 2 | 100 | 2 | 1 | kanto_specials.c (2) |
 | image_processing_effects.c | commun | 38 | 0 | 0 | 0 | 100 | 37 | 1 |  |
 | librfu_sio32id.c | commun | 4 | 0 | 0 | 0 | 100 | 3 | 1 |  |

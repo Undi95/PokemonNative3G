@@ -6,7 +6,7 @@
 
 Émeraude 524, Rouge Feu 272, communs 125.
 
-**RF seul — portés (106)** :
+**RF seul — portés (116)** :
 NullFieldSpecial, Script_HasTrainerBeenFought, EndTrainerApproach, StartRematchBattle, HasLeadMonBeenRenamed,
 Field_AskSaveTheGame, GetHeracrossSizeRecordInfo, CompareHeracrossSize, GetMagikarpSizeRecordInfo,
 CompareMagikarpSize, NameRaterWasNicknameChanged, RegisteredItemHandleBikeSwap, GetPlayerXY,
@@ -15,7 +15,7 @@ Script_IsFanClubMemberFanOfPlayer, Script_GetNumFansOfPlayerInTrainerFanClub, Sc
 Script_TryLoseFansFromPlayTimeAfterLinkBattle, Script_TryLoseFansFromPlayTime, Script_SetPlayerGotFirstFans,
 Script_UpdateTrainerFanClubGameClear, DaycareMonReceivedMail, GetPokedexCount, GetProfOaksRatingMessage,
 AnimatePcTurnOn, AnimatePcTurnOff, GetElevatorFloor, SelectMoveDeleterMove, GetLeadMonFriendship, ShowTownMap,
-CreatePCMenu, HallOfFamePCBeginFade, EnterHallOfFame, AnimateElevator, GetRandomSlotMachineId,
+CreatePCMenu, HallOfFamePCBeginFade, ShowDiploma, EnterHallOfFame, AnimateElevator, GetRandomSlotMachineId,
 AreLeadMonEVsMaxedOut, PlayerHasGrassPokemonInParty, IsStarterFirstStageInParty,
 IsThereRoomInAnyBoxForMorePokemon, DrawElevatorCurrentFloorWindow, SetIcefallCaveCrackedIceMetatiles,
 ShakeScreen, StartLegendaryBattle, SetUpTrainerMovement, StartSouthernIslandBattle, GetPartyMonSpecies,
@@ -27,27 +27,26 @@ UpdateTrainerCardPhotoIcons, StickerManGetBragFlags, SetUsedPkmnCenterQuestLogEv
 DisableMsgBoxWalkaway, VsSeekerFreezeObjectsAfterChargeComplete, SetFlavorTextFlagFromSpecialVars,
 UpdatePickStateFromSpecialVar8005, OverworldWhiteOutGetMoneyLoss, PutMonInRoute5Daycare,
 GetCostToWithdrawRoute5DaycareMon, IsThereMonInRoute5Daycare, GetNumLevelsGainedForRoute5DaycareMon,
-TakePokemonFromRoute5Daycare, DoesPlayerPartyContainSpecies, Script_SetHelpContext, BackupHelpContext,
-RestoreHelpContext, QuestLog_StartRecordingInputsAfterDeferredEvent, GetMartClerkObjectId, GetQuestLogState,
-QuestLog_CutRecording, SetBattledTrainerFlag, SetHelpContextForMap, IsNationalPokedexEnabled,
-DaisyMassageServices, HelpSystem_Disable, HelpSystem_Enable, Script_HasEnoughBerryPowder,
-Script_TakeBerryPowder, CapeBrinkGetMoveToTeachLeadPokemon, HasLearnedAllMovesFromCapeBrinkTutor, DoCredits,
-GetSeagallopNumber, IsPlayerLeftOfVermilionSailor, HasAllMons, IsPlayerNotInTrainerTowerLobby,
-PlayerPartyContainsSpeciesWithPlayerID, InitElevatorFloorSelectMenuPos, UpdateLoreleiDollCollection,
-LoopWingFlapSound
+TakePokemonFromRoute5Daycare, DoSeagallopFerryScene, DoesPlayerPartyContainSpecies, Script_SetHelpContext,
+BackupHelpContext, RestoreHelpContext, QuestLog_StartRecordingInputsAfterDeferredEvent, GetMartClerkObjectId,
+GetQuestLogState, QuestLog_CutRecording, OpenMuseumFossilPic, CloseMuseumFossilPic, SetBattledTrainerFlag,
+SetHelpContextForMap, DoSSAnneDepartureCutscene, IsNationalPokedexEnabled, DaisyMassageServices,
+HelpSystem_Disable, HelpSystem_Enable, Script_HasEnoughBerryPowder, Script_TakeBerryPowder,
+DoPokemonLeagueLightingEffect, CapeBrinkGetMoveToTeachLeadPokemon, HasLearnedAllMovesFromCapeBrinkTutor,
+DoCredits, DrawSeagallopDestinationMenu, GetSelectedSeagallopDestination, GetSeagallopNumber,
+IsPlayerLeftOfVermilionSailor, HasAllMons, IsPlayerNotInTrainerTowerLobby,
+PlayerPartyContainsSpeciesWithPlayerID, AnimateTeleporterHousing, AnimateTeleporterCable,
+InitElevatorFloorSelectMenuPos, UpdateLoreleiDollCollection, LoopWingFlapSound
 
-**RF seul — stubs (41)** (`src/kanto_specials_stubs.c`) :
+**RF seul — stubs (31)** (`src/kanto_specials_stubs.c`) :
 EnterColosseumPlayerSpot, EnterTradeSeat, StartWiredCableClubTrade, CableClub_AskSaveTheGame, TryContestLinkup,
 ShowEasyChatMessage, BufferRandomHobbyOrLifestyleString, ShowBattleRecords, BattleTowerMapScript2,
 ChooseNextBattleTowerTrainer, CheckPartyBattleTowerBanlist, PrintBattleTowerTrainerGreeting,
 BufferEReaderTrainerGreeting, StartSpecialBattle, SetBattleTowerProperty, BattleTowerUtil, SetBattleTowerParty,
 SaveBattleTowerProgress, BattleTower_SoftReset, DetermineBattleTowerPrize, GiveBattleTowerPrize,
-AwardBattleTowerRibbons, ChooseBattleTowerPlayerParty, ReducePlayerPartyToThree, ShowDiploma,
-Dummy_TryEnableBravoTrainerBattleTower, DoPicboxCancel, DoSeagallopFerryScene, OpenMuseumFossilPic,
-CloseMuseumFossilPic, DoSSAnneDepartureCutscene, CallTrainerTowerFunc, DoPokemonLeagueLightingEffect,
-DrawSeagallopDestinationMenu, GetSelectedSeagallopDestination, DoDeoxysTriangleInteraction,
-SetDeoxysTrianglePalette, ReadTrainerTowerAndValidate, BrailleCursorToggle, AnimateTeleporterHousing,
-AnimateTeleporterCable
+AwardBattleTowerRibbons, ChooseBattleTowerPlayerParty, ReducePlayerPartyToThree,
+Dummy_TryEnableBravoTrainerBattleTower, DoPicboxCancel, CallTrainerTowerFunc, DoDeoxysTriangleInteraction,
+SetDeoxysTrianglePalette, ReadTrainerTowerAndValidate, BrailleCursorToggle
 
 **RF seul — absents (0)** :
 (aucun)

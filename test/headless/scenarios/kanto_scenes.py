@@ -14,7 +14,7 @@ def play(game):
     wait_until(game, lambda s: s.free); game.wait(30)
     debug_warp(game, 30); log(game, "musée")
     game.tap("UP"); game.wait(30); game.tap("A"); game.wait(200); log(game, "fossile")
-    game.tap("A"); game.wait(100); game.tap("A"); game.wait(100)
+    game.tap("A"); game.wait(150)
     wait_until(game, lambda s: s.free); log(game, "fermé")
     debug_warp(game, 31); log(game, "Olga")
     game.wait(400); log(game, "éclairage")

@@ -543,7 +543,7 @@ LoadSpecialPokePic_DontHandleDeoxys
 DigitObjUtil_CreatePrinter, DrawNumObjsMinusInBack
 
 ### diploma.c
-CB2_ShowDiploma
+CB2_ShowDiploma ✓
 
 ### dma3_manager.c
 ClearDma3Requests, ProcessDma3Requests, RequestDma3Copy, RequestDma3Fill

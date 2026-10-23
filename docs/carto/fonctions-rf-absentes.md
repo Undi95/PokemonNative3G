@@ -141,12 +141,11 @@ HandleAction_ThrowRock
 Localize_TrainerClass_SchoolKid, Localize_TrainerClass_PkmnTrainer, Localize_TrainerClass_Leader,
 Localize_TrainerClass_Names, BattleStringShouldBeColored
 
-### battle_records.c (commun, 19/21)
+### battle_records.c (commun, 18/21)
 ShowBattleRecords, MainCB2_SetUp, Task_WaitFadeIn, Task_WaitButton, Task_FadeOut, Task_DestroyAndReturnToField,
-ResetGpu, StopAllRunningTasks, EnableDisplay, ResetBGPos, IndexOfOpponentLinkBattleRecord,
-AddOpponentLinkBattleRecord, IncTrainerCardWinCount, IncTrainerCardLossCount,
-UpdateBattleOutcomeOnTrainerCards, PrintTotalRecord, PrintOpponentBattleRecord, PrintBattleRecords,
-LoadFrameGfxOnBg
+ResetGpu, StopAllRunningTasks, EnableDisplay, IndexOfOpponentLinkBattleRecord, AddOpponentLinkBattleRecord,
+IncTrainerCardWinCount, IncTrainerCardLossCount, UpdateBattleOutcomeOnTrainerCards, PrintTotalRecord,
+PrintOpponentBattleRecord, PrintBattleRecords, LoadFrameGfxOnBg
 
 ### battle_script_commands.c (commun, 3/3)
 Cmd_callterrainattack, Cmd_cureifburnedparalysedorpoisoned, Cmd_settypetoterrain
@@ -219,10 +218,6 @@ PrintCoinsString_Parameterized, ShowCoinsWindow_Parameterized
 ### daycare.c (commun, 11/18)
 DayCare_GetMonNickname, DayCare_GetBoxMonNickname, CreatedHatchedMon, CB2_EggHatch_0, CB2_EggHatch_1,
 SpriteCB_Egg_0, SpriteCB_Egg_1, SpriteCB_Egg_2, SpriteCB_Egg_3, SpriteCB_Egg_4, SpriteCB_Egg_5
-
-### diploma.c (commun, 7/9)
-Task_DiplomaInit, Task_HandleDiplomaInput, Task_DiplomaExit, DiplomaReset, DiplomaInitScreen, DiplomaLoadGfx,
-DiplomaPrintText
 
 ### dma3_manager.c (commun, 1/1)
 WaitDma3Request
@@ -429,11 +424,9 @@ FieldCB_RushInjuredPokemonToCenter
 ### field_special_scene.c (commun, 4/4)
 FieldSpecialScene_Dummy0, FieldSpecialScene_Dummy1, FieldSpecialScene_Dummy2, FieldSpecialScene_Dummy3
 
-### field_specials.c (commun, 18/89)
-ShowDiploma, DoPicboxCancel, ResetContextNpcTextColor, ContextNpcGetTextColor,
-QuestLog_CheckDepartingIndoorsMap, QuestLog_TryRecordDepartedLocation, DoPokemonLeagueLightingEffect,
-Task_RunPokemonLeagueLightingEffect, Task_CancelPokemonLeagueLightingEffect,
-StopPokemonLeagueLightingEffectTask, CutMoveRuinValleyCheck, CutMoveOpenDottedHoleDoor,
+### field_specials.c (commun, 13/89)
+DoPicboxCancel, ResetContextNpcTextColor, ContextNpcGetTextColor, QuestLog_CheckDepartingIndoorsMap,
+QuestLog_TryRecordDepartedLocation, CutMoveRuinValleyCheck, CutMoveOpenDottedHoleDoor,
 DoDeoxysTriangleInteraction, Task_DoDeoxysTriangleInteraction, MoveDeoxysObject, Task_WaitDeoxysFieldEffect,
 SetDeoxysTrianglePalette, BrailleCursorToggle
 
@@ -901,22 +894,14 @@ ClearQuestLogInput, GetRegisteredQuestLogInput, EnableMsgBoxWalkaway, IsMsgBoxWa
 ClearMsgBoxCancelableState, CanWalkAwayToCancelMsgBox, MsgSetSignpost, MsgSetNotSignpost, IsMsgSignpost,
 ResetFacingNpcOrSignpostVars, ValidateRamScript
 
-### script_menu.c (commun, 20/21)
+### script_menu.c (commun, 15/21)
 GetStringTilesWide, GetMenuWidthFromList, DrawVerticalMultichoiceMenu, GetMCWindowHeight,
 CreateMCMenuInputHandlerTask, Task_MultichoiceMenu_HandleInput, MultiChoicePrintHelpDescription,
 Task_YesNoMenu_HandleInput, Hask_MultichoiceGridMenu_HandleInput, CreatePCMenuWindow, Task_ScriptShowMonPic,
-PicboxWait, PicboxCancel, Task_WaitMuseumFossilPic, OpenMuseumFossilPic, CloseMuseumFossilPic,
-DestroyScriptMenuWindow, QL_DestroyAbortedDisplay, DrawSeagallopDestinationMenu,
-GetSelectedSeagallopDestination
+PicboxWait, PicboxCancel, DestroyScriptMenuWindow, QL_DestroyAbortedDisplay
 
 ### script_pokemon_util.c (commun, 3/3)
 ChooseBattleTowerPlayerParty, CB2_ReturnFromChooseBattleTowerParty, ReducePlayerPartyToThree
-
-### seagallop.c (RF seul, 18/22)
-DoSeagallopFerryScene, CB2_SetUpSeagallopScene, Task_Seagallop_0, ScrollBG, Task_Seagallop_1, Task_Seagallop_2,
-Task_Seagallop_3, ResetGPU, ResetAllAssets, SetDispcnt, ResetBGPos, LoadFerrySpriteResources,
-FreeFerrySpriteResources, CreateFerrySprite, SpriteCB_Ferry, CreateWakeSprite, SpriteCB_Wake,
-GetDirectionOfTravel
 
 ### shop.c (commun, 15/17)
 GetMartTypeFromItemList, ClearShopMenuWindow, InitShopData, RecolorItemDescriptionBox,
@@ -946,15 +931,8 @@ InitReelButtonTileMem, SetReelButtonPressed, ReleaseReelButtons, PressReelButton
 ### sound.c (commun, 2/2)
 SetBGMVolume_SuppressHelpSystemReduction, BGMVolumeMax_EnableHelpSystemReduction
 
-### special_field_anim.c (RF seul, 4/4)
-AnimateTeleporterHousing, Task_DrawTeleporterHousing, AnimateTeleporterCable, Task_DrawTeleporterCable
-
 ### sprite.c (commun, 1/1)
 FreeSpriteTilesIfNotUsingSheet
-
-### ss_anne.c (RF seul, 8/8)
-DoSSAnneDepartureCutscene, Task_SSAnneInit, Task_SSAnneRun, Task_SSAnneFinish, CreateWakeBehindBoat,
-WakeSpriteCallback, CreateSmokeSprite, SmokeSpriteCallback
 
 ### start_menu.c (commun, 53/55)
 SetHasPokedexAndPokemon, SetUpStartMenu, AppendToStartMenuItems, SetUpStartMenu_NormalField,
