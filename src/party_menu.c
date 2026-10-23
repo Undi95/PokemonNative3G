@@ -5843,10 +5843,27 @@ static void DisplayItemMustBeRemovedFirstMessage(u8 taskId)
 
 static void RemoveItemToGiveFromBag(u16 item)
 {
-    if (gPartyMenu.action == PARTY_ACTION_GIVE_PC_ITEM) // Unused, never occurs
-        RemovePCItem(item, 1);
+    if (gPartyMenu.action == PARTY_ACTION_GIVE_PC_ITEM) // PokemonNative3G : PC objets de RF (option MENUS = KANTO)
+    {
+        // RemovePCItem d'Émeraude prend un emplacement (RF : l'objet)
+        u8 i;
+        for (i = 0; i < PC_ITEMS_COUNT; i++)
+        {
+            if (gSaveBlock1Ptr->pcItems[i].itemId == item)
+            {
+                RemovePCItem(i, 1);
+                break;
+            }
+        }
+    }
     else
         RemoveBagItem(item, 1);
+}
+
+// Rouge Feu (item_pc.c, ItemPc_CB2_SwitchToPartyMenu) : donner un objet du PC à un Pokémon
+void KantoItemPc_InitPartyMenuForGive(MainCallback callback)
+{
+    InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_GIVE_PC_ITEM, FALSE, PARTY_MSG_GIVE_TO_WHICH_MON, Task_HandleChooseMonInput, callback);
 }
 
 // Returns FALSE if there was no space to return the item

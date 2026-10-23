@@ -33,6 +33,7 @@
 #define FONT_NORMAL_COPY_2 FONT_KANTO
 
 void ItemPc_Init(u8 kind, MainCallback callback);
+void ItemPc_SetInitializedFlag(bool8 flag);
 
 // Rouge Feu (item.c) : quantités du PC non chiffrées, retrait par objet
 static u16 GetPcItemQuantity(u16 *ptr)
@@ -74,7 +75,7 @@ static void PrintTextArray(u8 windowId, u8 fontId, u8 left, u8 top, u8 lineHeigh
 }
 
 static const u32 gItemPcBgPals[] = INCGFX_U32("graphics/kanto/item_pc/bg.png", ".gbapal.lz");
-static const u8 gItemPcTilemap[] = INCGFX_U8("graphics/kanto/item_pc/bg.bin", ".lz");
+static const u32 gItemPcTilemap[] = INCGFX_U32("graphics/kanto/item_pc/bg.bin", ".lz");
 static const u8 gItemPcTiles[] = INCGFX_U8("graphics/kanto/item_pc/bg.png", ".4bpp.lz");
 
 // Rouge Feu (strings_*_fr.h)
@@ -591,7 +592,7 @@ static void ItemPc_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *
         {
             itemId = ItemPc_GetItemIdBySlotId(itemIndex);
             CreateItemMenuIcon(itemId, sStateDataPtr->itemMenuIconSlot);
-            if (ItemId_GetPocket(itemId) == POCKET_TM_HM)
+            if (GetItemPocket(itemId) == POCKET_TM_HM)
                 desc = gMoveNames[ItemIdToBattleMoveId(itemId)];
             else
                 desc = ItemId_GetDescription(itemId);
@@ -1096,7 +1097,7 @@ static void Task_ItemPcGive(u8 taskId)
 
 static void ItemPc_CB2_SwitchToPartyMenu(void)
 {
-    InitPartyMenu(0, 0, 6, 0, 6, Task_HandleChooseMonInput, ItemPc_CB2_ReturnFromPartyMenu);
+    KantoItemPc_InitPartyMenuForGive(ItemPc_CB2_ReturnFromPartyMenu); // RF : InitPartyMenu(FIELD, SINGLE, GIVE_PC_ITEM, 0, GIVE_TO_WHICH_MON, ...)
     gPartyMenu.bagItem = ItemPc_GetItemIdBySlotId(ItemPc_GetCursorPosition());
 }
 
