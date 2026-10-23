@@ -81,7 +81,7 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 2. ~~Fame Checker~~ : fait le 2026-10-23 (`src/kanto_fame_checker.c`, MEMORYDEX depuis le sac des deux styles ou SELECT).
 3. ~~Cinématiques et scènes en stub~~ : faites le 2026-10-23 (S.S. Anne, diplôme, éclairage de la Ligue, téléporteurs de Léo, fossiles du musée). Sans objet : triangle de Deoxys (l'Île Aurore est celle d'Émeraude, avec son puzzle), `DoPicboxCancel` et `BrailleCursorToggle` (aucun script ne les appelle).
 4. ~~Poké Flûte~~ : faite le 2026-10-23 (terrain + combat).
-5. Tour des Dresseurs (Île 7) : trainer_tower.c, données, type de combat à part, chrono, records.
+5. ~~Tour des Dresseurs~~ : faite le 2026-10-24 (`src/kanto_trainer_tower.c` + `kanto_trainer_tower_sets.c` ; combats au type de la Colline des Dresseurs d'Émeraude, aiguillés par `gBattleTrainerTowerFrlg` ; 16 dispositions d'étage ajoutées, cf. `tools/kanto/import_kanto.py`).
 6. Combats sauvages scriptés de RF (`BATTLE_TYPE_WILD_SCRIPTED` : IA « mauvaises attaques ») : même approche que le FANTÔME.
 7. Aperçus des donjons (map_preview_screen.c ; données déjà dans kanto_region_map.c).
 8. PNJ en stub : `ShowEasyChatMessage` (2 scripts), `BufferRandomHobbyOrLifestyleString` (1 script).
