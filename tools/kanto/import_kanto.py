@@ -329,6 +329,10 @@ class Importer:
                 if os.path.exists(f'{self.fr}/data/maps/{m}/scripts.inc'))))):
             import_layout(self.fr_layouts[lid])
 
+        # layouts posés par le code C : étages doubles / éliminatoires de la Tour des Dresseurs (trainer_tower.c)
+        for lid in sorted(l for l in self.fr_layouts if re.match(r'LAYOUT_TRAINER_TOWER_\dF_(DOUBLES|KNOCKOUT)$', l)):
+            import_layout(self.fr_layouts[lid])
+
         for m, j in self.fr_maps.items():
             if m in self.skip:
                 continue
