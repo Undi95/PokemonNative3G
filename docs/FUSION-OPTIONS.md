@@ -57,7 +57,7 @@ contenu dans un seul jeu.
 - [ ] Aperçus de donjons/lieux de RF à Kanto (map_preview_screen.c ; données déjà dans kanto_region_map.c)
 - [ ] « Précédemment dans votre quête » (journal de RF) : partout si possible, avec une option (désactivé par défaut)
 - [x] Courir partout (intérieurs compris ; bike.c, IsRunningDisallowed)
-- [ ] Cherch'Objet : Hoenn et Kanto l'utilisent différemment, avoir le bon selon la région
+- [x] Cherch'Objet selon la région (kanto_itemfinder.c = RF à Kanto, Émeraude à Hoenn) ; objets « sous les pieds » de RF perdus à l'import des cartes (traités comme des objets cachés normaux)
 - [ ] Objets donnés deux fois (CS, cannes, Passe Bateau…) : voir docs/OBJETS-EN-DOUBLE.md
 
 ## Notes

@@ -1,5 +1,7 @@
 #include "global.h"
 #include "kanto_vs_seeker.h"
+#include "kanto_field_door.h"
+void KantoItemUseOnFieldCB_Itemfinder(u8 taskId); // kanto_itemfinder.c
 #include "constants/map_types.h"
 #include "item_use.h"
 #include "battle.h"
@@ -285,7 +287,8 @@ static void ItemUseOnFieldCB_Rod(u8 taskId)
 void ItemUseOutOfBattle_Itemfinder(u8 var)
 {
     IncrementGameStat(GAME_STAT_USED_ITEMFINDER);
-    sItemUseOnFieldCB = ItemUseOnFieldCB_Itemfinder;
+    // PokemonNative3G : à Kanto, le Cherch'Objet de Rouge Feu (flèches vers l'objet)
+    sItemUseOnFieldCB = IsKantoTilesetMap() ? KantoItemUseOnFieldCB_Itemfinder : ItemUseOnFieldCB_Itemfinder;
     SetUpItemUseOnFieldCallback(var);
 }
 
