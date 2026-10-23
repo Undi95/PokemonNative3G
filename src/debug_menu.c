@@ -87,6 +87,8 @@ static const u8 sWarpName_Lilycove[] = _("NÉNUCRIQUE");
 static const u8 sWarpName_Route102[] = _("ROUTE 102");
 static const u8 sWarpName_SaffronGym[] = _("ARÈNE SAFRANIA");
 static const u8 sWarpName_KantoHof[] = _("PANTHÉON KANTO");
+static const u8 sWarpName_PokemonTower3F[] = _("TOUR POKéMON 3");
+static const u8 sWarpName_PokemonTower6F[] = _("TOUR POKéMON 6");
 
 // Kanto : points d'arrivée du Vol de Rouge Feu (heal_locations.json)
 static const struct DebugWarp sDebugWarps[] =
@@ -116,6 +118,8 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_Route102, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), 31, 14}, // à côté de Calvin (revanche)
     {sWarpName_SaffronGym, MAP_GROUP(MAP_SAFFRON_CITY_GYM), MAP_NUM(MAP_SAFFRON_CITY_GYM), 14, 22}, // téléporteurs
     {sWarpName_KantoHof, MAP_GROUP(MAP_POKEMON_LEAGUE_HALL_OF_FAME), MAP_NUM(MAP_POKEMON_LEAGUE_HALL_OF_FAME), 6, 19},
+    {sWarpName_PokemonTower3F, MAP_GROUP(MAP_POKEMON_TOWER_3F), MAP_NUM(MAP_POKEMON_TOWER_3F), 17, 12}, // SPECTRES sauvages
+    {sWarpName_PokemonTower6F, MAP_GROUP(MAP_POKEMON_TOWER_6F), MAP_NUM(MAP_POKEMON_TOWER_6F), 12, 13}, // 3 pas vers le bas : Ossatueur
 };
 
 // Tous les objets du jeu (Hoenn + Kanto) : 99 de chaque (1 pour les objets rares et les CS).
