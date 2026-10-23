@@ -1,5 +1,6 @@
 #include "global.h"
 #include "constants/songs.h"
+#include "sound.h"
 #include "event_data.h"
 #include "constants/kanto.h"
 #include "option_menu.h"
