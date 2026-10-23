@@ -20,6 +20,7 @@
 #include "strings.h"
 #include "text.h"
 #include "trainer_hill.h"
+#include "kanto_trainer_tower.h"
 #include "window.h"
 #include "util.h"
 #include "constants/battle_ai.h"
@@ -297,6 +298,9 @@ u8 GetTrainerHillOpponentClass(u16 trainerId)
 {
     u8 id = trainerId - 1;
 
+    if (gBattleTrainerTowerFrlg) // Tour des Dresseurs de RF (même type de combat)
+        return GetTrainerTowerOpponentClass();
+
     return gFacilityClassToTrainerClass[sFloorTrainers->facilityClass[id]];
 }
 
@@ -305,6 +309,12 @@ void GetTrainerHillTrainerName(u8 *dst, u16 trainerId)
     s32 i;
     u8 id = trainerId - 1;
 
+    if (gBattleTrainerTowerFrlg)
+    {
+        GetTrainerTowerOpponentName(dst);
+        return;
+    }
+
     for (i = 0; i < TRAINER_NAME_LENGTH + 1; i++)
         dst[i] = sFloorTrainers->name[id][i];
 }
@@ -312,6 +322,9 @@ void GetTrainerHillTrainerName(u8 *dst, u16 trainerId)
 u8 GetTrainerHillTrainerFrontSpriteId(u16 trainerId)
 {
     u8 id, facilityClass;
+
+    if (gBattleTrainerTowerFrlg)
+        return GetTrainerTowerTrainerFrontSpriteId();
 
     SetUpDataStruct();
     id = trainerId - 1;
@@ -324,6 +337,12 @@ u8 GetTrainerHillTrainerFrontSpriteId(u16 trainerId)
 void InitTrainerHillBattleStruct(void)
 {
     s32 i, j;
+
+    if (gBattleTrainerTowerFrlg)
+    {
+        InitTrainerTowerBattleStruct();
+        return;
+    }
 
     SetUpDataStruct();
     sFloorTrainers = AllocZeroed(sizeof(*sFloorTrainers));
@@ -341,6 +360,11 @@ void InitTrainerHillBattleStruct(void)
 
 void FreeTrainerHillBattleStruct(void)
 {
+    if (gBattleTrainerTowerFrlg)
+    {
+        FreeTrainerTowerBattleStruct();
+        return;
+    }
     TRY_FREE_AND_SET_NULL(sFloorTrainers);
 }
 
@@ -369,6 +393,16 @@ static void FreeDataStruct(void)
 void CopyTrainerHillTrainerText(u8 which, u16 localId)
 {
     u8 id, floorId;
+
+    // Tour des Dresseurs de RF : répliques de fin de combat (dans gStringVar4, comme FrontierSpeechToString)
+    if (gBattleTrainerTowerFrlg)
+    {
+        if (which == TRAINER_HILL_TEXT_PLAYER_WON)
+            GetTrainerTowerOpponentLoseText(gStringVar4, localId != gTrainerBattleOpponent_A);
+        else if (which == TRAINER_HILL_TEXT_PLAYER_LOST)
+            GetTrainerTowerOpponentWinText(gStringVar4, localId != gTrainerBattleOpponent_A);
+        return;
+    }
 
     SetUpDataStruct();
     floorId = GetFloorId();

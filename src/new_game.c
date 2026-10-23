@@ -52,6 +52,7 @@ void ResetTrainerFanClub(void); // kanto_trainer_fan_club.c
 extern const u8 EventScript_ResetAllMapFlags[];
 extern const u8 Kanto_EventScript_ResetAllMapFlags[];
 void ResetFameChecker(void);
+void ResetTrainerTowerResults(void);
 
 static void ClearFrontierRecord(void);
 static void WarpToTruck(void);
@@ -225,6 +226,7 @@ void NewGameInitData(void)
     RunScriptImmediately(Kanto_EventScript_ResetAllMapFlags);
     SetAllRenewableItemFlags(); // Rouge Feu (new_game.c)
     ResetFameChecker();
+    ResetTrainerTowerResults();
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();
     InitLilycoveLady();
