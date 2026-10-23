@@ -4020,7 +4020,8 @@ static void Cmd_playanimation(void)
 
     if (gBattlescriptCurrInstr[DSIZE8BIT + DSIZE8BIT] == B_ANIM_STATS_CHANGE
      || gBattlescriptCurrInstr[DSIZE8BIT + DSIZE8BIT] == B_ANIM_SNATCH_MOVE
-     || gBattlescriptCurrInstr[DSIZE8BIT + DSIZE8BIT] == B_ANIM_SUBSTITUTE_FADE)
+     || gBattlescriptCurrInstr[DSIZE8BIT + DSIZE8BIT] == B_ANIM_SUBSTITUTE_FADE
+     || gBattlescriptCurrInstr[DSIZE8BIT + DSIZE8BIT] == B_ANIM_SILPH_SCOPED) // Rouge Feu
     {
         SAFE_BtlController_EmitBattleAnimation(B_COMM_TO_CONTROLLER, gBattlescriptCurrInstr[DSIZE8BIT + DSIZE8BIT]);
         MarkBattlerForControllerExec(gActiveBattler);
@@ -4705,6 +4706,7 @@ static void Cmd_switchinanim(void)
 
     if (GetBattlerSide(gActiveBattler) == B_SIDE_OPPONENT
         && !IsOldManTutorialBattle() // Rouge Feu : pas « vu » pendant la démonstration
+        && !IS_BATTLE_TYPE_GHOST(gBattleTypeFlags) // Rouge Feu
         && !(gBattleTypeFlags & (BATTLE_TYPE_LINK
                                  | BATTLE_TYPE_EREADER_TRAINER
                                  | BATTLE_TYPE_RECORDED_LINK
@@ -7627,6 +7629,13 @@ static void Cmd_setsandstorm(void)
 
 static void Cmd_weatherdamage(void)
 {
+    if (IS_BATTLE_TYPE_GHOST_WITHOUT_SCOPE(gBattleTypeFlags) // Rouge Feu
+     && (GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT))
+    {
+        gBattleMoveDamage = 0;
+        gBattlescriptCurrInstr++;
+        return;
+    }
     if (WEATHER_HAS_EFFECT)
     {
         if (gBattleWeather & B_WEATHER_SANDSTORM)
@@ -9938,7 +9947,13 @@ static void Cmd_handleballthrow(void)
     gActiveBattler = gBattlerAttacker;
     gBattlerTarget = BATTLE_OPPOSITE(gBattlerAttacker);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    if (IS_BATTLE_TYPE_GHOST(gBattleTypeFlags)) // Rouge Feu
+    {
+        BtlController_EmitBallThrowAnim(B_COMM_TO_CONTROLLER, BALL_GHOST_DODGE);
+        MarkBattlerForControllerExec(gActiveBattler);
+        gBattlescriptCurrInstr = BattleScript_GhostBallDodge;
+    }
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         BtlController_EmitBallThrowAnim(B_COMM_TO_CONTROLLER, BALL_TRAINER_BLOCK);
         MarkBattlerForControllerExec(gActiveBattler);

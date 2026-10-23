@@ -70,6 +70,8 @@ static void SpriteCB_Ball_Capture_Step(struct Sprite *);
 static void MakeCaptureStars(struct Sprite *);
 static void SpriteCB_Ball_FadeOut(struct Sprite *);
 static void DestroySpriteAfterOneFrame(struct Sprite *);
+static void GhostBallDodge(struct Sprite *sprite);
+static void GhostBallDodge2(struct Sprite *sprite);
 static void LoadBallParticleGfx(u8);
 static void SpriteCB_CaptureStar_Flicker(struct Sprite *);
 static void SpriteCB_Ball_Release_Wait(struct Sprite *);
@@ -719,6 +721,8 @@ void AnimTask_IsBallBlockedByTrainer(u8 taskId)
 {
     if (gBattleSpritesDataPtr->animationData->ballThrowCaseId == BALL_TRAINER_BLOCK)
         gBattleAnimArgs[ARG_RET_ID] = -1;
+    else if (gBattleSpritesDataPtr->animationData->ballThrowCaseId == BALL_GHOST_DODGE) // Rouge Feu
+        gBattleAnimArgs[ARG_RET_ID] = -2;
     else
         gBattleAnimArgs[ARG_RET_ID] = 0;
 
@@ -893,6 +897,10 @@ static void SpriteCB_Ball_Arc(struct Sprite *sprite)
         if (gBattleSpritesDataPtr->animationData->ballThrowCaseId == BALL_TRAINER_BLOCK)
         {
             sprite->callback = SpriteCB_Ball_Block;
+        }
+        else if (gBattleSpritesDataPtr->animationData->ballThrowCaseId == BALL_GHOST_DODGE) // Rouge Feu
+        {
+            sprite->callback = GhostBallDodge;
         }
         else
         {
@@ -2509,5 +2517,53 @@ void AnimTask_GetBattlersFromArg(u8 taskId)
 {
     gBattleAnimAttacker = gBattleSpritesDataPtr->animationData->animArg;
     gBattleAnimTarget = gBattleSpritesDataPtr->animationData->animArg >> 8;
+    DestroyAnimVisualTask(taskId);
+}
+
+// Rouge Feu (battle_anim_special.c) : la Ball rebondit sur le SPECTRE
+static void GhostBallDodge(struct Sprite *sprite)
+{
+    sprite->x += sprite->x2;
+    sprite->y += sprite->y2;
+    sprite->x2 = sprite->y2 = 0;
+    sprite->data[0] = 0x22;
+    sprite->data[1] = sprite->x;
+    sprite->data[2] = sprite->x - 8;
+    sprite->data[3] = sprite->y;
+    sprite->data[4] = 0x90;
+    sprite->data[5] = 0x20;
+    InitAnimArcTranslation(sprite);
+    TranslateAnimVerticalArc(sprite);
+    sprite->callback = GhostBallDodge2;
+}
+
+static void GhostBallDodge2(struct Sprite *sprite)
+{
+    if (!TranslateAnimVerticalArc(sprite))
+    {
+        if ((sprite->y + sprite->y2) < 65)
+            return;
+    }
+    
+    sprite->data[0] = 0;
+    sprite->callback = DestroySpriteAfterOneFrame;
+    gDoingBattleAnim = FALSE;
+    UpdateOamPriorityInAllHealthboxes(1);
+}
+
+void AnimTask_SafariOrGhost_DecideAnimSides(u8 taskId)
+{
+    switch (gBattleAnimArgs[0])
+    {
+    case 0:
+        gBattleAnimAttacker = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+        gBattleAnimTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        break;
+    case 1:
+        gBattleAnimAttacker = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        gBattleAnimTarget = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+        break;
+    }
+
     DestroyAnimVisualTask(taskId);
 }

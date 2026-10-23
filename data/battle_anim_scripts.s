@@ -410,6 +410,9 @@ gBattleAnims_General::
 	ptrvalue General_FocusPunchSetUp          /* B_ANIM_FOCUS_PUNCH_SETUP*/
 	ptrvalue General_IngrainHeal              /* B_ANIM_INGRAIN_HEAL*/
 	ptrvalue General_WishHeal                 /* B_ANIM_WISH_HEAL*/
+	ptrvalue General_MonScared                /* B_ANIM_MON_SCARED (Rouge Feu)*/
+	ptrvalue General_GhostGetOut              /* B_ANIM_GHOST_GET_OUT (Rouge Feu)*/
+	ptrvalue General_SilphScoped              /* B_ANIM_SILPH_SCOPED (Rouge Feu)*/
 
 	ptr_align
 gBattleAnims_Special::
@@ -10729,6 +10732,7 @@ Special_BallThrow:
 	createvisualtask AnimTask_ThrowBall, 2
 	createvisualtask AnimTask_IsBallBlockedByTrainer, 2
 	jumpreteq -1, BallThrowTrainerBlock
+	jumpreteq -2, BallThrowGhostDodged
 BallThrowEnd:
 	waitforvisualfinish
 	createvisualtask AnimTask_FreeBallGfx, 2
@@ -10745,6 +10749,67 @@ BallThrowTrainerBlock:
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	goto BallThrowEnd
+
+BallThrowGhostDodged:
+	delay 16
+	createvisualtask AnimTask_WindUpLunge, 2, ANIM_TARGET, 48, 6, 16, 48, -48, 16
+	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_TARGET
+	waitplaysewithpan SE_M_TAKE_DOWN, SOUND_PAN_TARGET, 48
+	waitforvisualfinish
+	goto BallThrowEnd
+
+@ Rouge Feu : combats FANTÔME
+General_MonScared:
+	createvisualtask AnimTask_SafariOrGhost_DecideAnimSides, 2, 1
+	waitforvisualfinish
+	loadspritegfx ANIM_TAG_SWEAT_BEAD
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 0, F_PAL_TARGET, 2, 0, 10, RGB(0, 23, 25)
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 10, 1
+	delay 20
+	createsprite gSprayWaterDropletSpriteTemplate, ANIM_TARGET, 5, 0, 1
+	playsewithpan SE_M_SKETCH, SOUND_PAN_TARGET
+	createsprite gSprayWaterDropletSpriteTemplate, ANIM_TARGET, 5, 1, 1
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 5, 1
+	createvisualtask AnimTask_StretchTargetUp, 3
+	waitforvisualfinish
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 0, F_PAL_TARGET, 2, 10, 0, RGB(0, 23, 25)
+	waitforvisualfinish
+	end
+
+General_GhostGetOut:
+	createvisualtask AnimTask_SafariOrGhost_DecideAnimSides, 2, 1
+	waitforvisualfinish
+	fadetobg BG_GHOST
+	waitbgfadeout
+	monbg_static ANIM_ATTACKER
+	createvisualtask AnimTask_GhostGetOut, 2
+	waitbgfadein
+	loopsewithpan SE_M_PSYBEAM, SOUND_PAN_TARGET, 20, 3
+	waitforvisualfinish
+	clearmonbg_static ANIM_ATTACKER
+	delay 1
+	loadspritegfx ANIM_TAG_SWEAT_BEAD
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 0, F_PAL_TARGET, -1, 0, 6, RGB(21, 22, 26)
+	createsprite gSprayWaterDropletSpriteTemplate, ANIM_TARGET, 5, 0, 1
+	createsprite gSprayWaterDropletSpriteTemplate, ANIM_TARGET, 5, 1, 1
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 5, 1
+	createvisualtask AnimTask_StretchTargetUp, 3
+	waitforvisualfinish
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 0, F_PAL_TARGET, -1, 6, 0, RGB(21, 22, 26)
+	waitforvisualfinish
+	restorebg
+	waitbgfadein
+	end
+
+General_SilphScoped:
+	monbg ANIM_ATTACKER
+	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
+	waitplaysewithpan SE_M_MINIMIZE, SOUND_PAN_ATTACKER, 48
+	createvisualtask AnimTask_TransformMon, 2, 255
+	waitsound
+	waitforvisualfinish
+	clearmonbg ANIM_ATTACKER
+	end
 
 Special_BallThrowWithTrainer:
 	createvisualtask AnimTask_LoadBallGfx, 2

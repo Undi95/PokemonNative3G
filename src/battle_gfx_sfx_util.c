@@ -953,6 +953,23 @@ void CopyBattleSpriteInvisibility(u8 battler)
     gBattleSpritesDataPtr->battlerData[battler].invisible = gSprites[gBattlerSpriteIds[battler]].invisible;
 }
 
+// Rouge Feu : image du SPECTRE (une seule image : copiée sur les deux d'Émeraude)
+void DecompressGhostFrontPic(struct Pokemon *unused, u8 battlerId)
+{
+    u16 palOffset;
+    void *buffer;
+    u8 position = GetBattlerPosition(battlerId);
+
+    LZDecompressWram(gGhostFrontPic, gMonSpritesGfxPtr->sprites.ptr[position]);
+    CpuCopy32(gMonSpritesGfxPtr->sprites.ptr[position], gMonSpritesGfxPtr->sprites.ptr[position] + MON_PIC_SIZE, MON_PIC_SIZE);
+    palOffset = OBJ_PLTT_ID(battlerId);
+    buffer = AllocZeroed(0x400);
+    LZDecompressWram(gGhostPalette, buffer);
+    LoadPalette(buffer, palOffset, PLTT_SIZE_4BPP);
+    LoadPalette(buffer, BG_PLTT_ID(8) + BG_PLTT_ID(battlerId), PLTT_SIZE_4BPP);
+    Free(buffer);
+}
+
 void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool8 castform)
 {
     u16 paletteOffset;
@@ -961,7 +978,30 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool8 castform)
     u8 position;
     const u32 *lzPaletteData;
 
-    if (castform)
+    if (castform == 255) // Rouge Feu : SPECTRE révélé par le Scope Sylph
+    {
+        u16 targetSpecies;
+
+        position = GetBattlerPosition(battlerAtk);
+        targetSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_SPECIES);
+        personalityValue = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_PERSONALITY);
+        otId = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_OT_ID);
+        HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[targetSpecies],
+                                                  gMonSpritesGfxPtr->sprites.ptr[position],
+                                                  targetSpecies,
+                                                  personalityValue);
+        DmaCopy32Defvars(3, gMonSpritesGfxPtr->sprites.ptr[position], (void *)(OBJ_VRAM0 + gSprites[gBattlerSpriteIds[battlerAtk]].oam.tileNum * 32), MON_PIC_SIZE);
+        paletteOffset = OBJ_PLTT_ID(battlerAtk);
+        lzPaletteData = GetMonSpritePalFromSpeciesAndPersonality(targetSpecies, otId, personalityValue);
+        LZDecompressWram(lzPaletteData, gDecompressionBuffer);
+        LoadPalette(gDecompressionBuffer, paletteOffset, PLTT_SIZE_4BPP);
+        gSprites[gBattlerSpriteIds[battlerAtk]].y = GetBattlerSpriteDefault_Y(battlerAtk);
+        StartSpriteAnim(&gSprites[gBattlerSpriteIds[battlerAtk]], gBattleMonForms[battlerAtk]);
+        SetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_NICKNAME, gSpeciesNames[targetSpecies]);
+        UpdateNickInHealthbox(gHealthboxSpriteIds[battlerAtk], &gEnemyParty[gBattlerPartyIndexes[battlerAtk]]);
+        TryAddPokeballIconToHealthbox(gHealthboxSpriteIds[battlerAtk], 1);
+    }
+    else if (castform)
     {
         StartSpriteAnim(&gSprites[gBattlerSpriteIds[battlerAtk]], gBattleSpritesDataPtr->animationData->animArg);
         paletteOffset = OBJ_PLTT_ID(battlerAtk);

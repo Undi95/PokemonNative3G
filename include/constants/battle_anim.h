@@ -377,6 +377,9 @@
 #define B_ANIM_FOCUS_PUNCH_SETUP        20
 #define B_ANIM_INGRAIN_HEAL             21
 #define B_ANIM_WISH_HEAL                22
+#define B_ANIM_MON_SCARED               23 // Rouge Feu
+#define B_ANIM_GHOST_GET_OUT            24 // Rouge Feu
+#define B_ANIM_SILPH_SCOPED             25 // Rouge Feu
 
 // special animations table (gBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0

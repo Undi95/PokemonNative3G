@@ -450,6 +450,11 @@ bool8 TryRunFromBattle(u8 battler)
             effect++;
         }
     }
+    else if (IS_BATTLE_TYPE_GHOST_WITHOUT_SCOPE(gBattleTypeFlags)) // Rouge Feu : on fuit toujours le SPECTRE
+    {
+        if (GetBattlerSide(battler) == B_SIDE_PLAYER)
+            effect++;
+    }
     else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL) && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         effect++;
@@ -1981,6 +1986,7 @@ enum
     CANCELER_IMPRISONED,
     CANCELER_CONFUSED,
     CANCELER_PARALYZED,
+    CANCELER_GHOST, // Rouge Feu
     CANCELER_IN_LOVE,
     CANCELER_BIDE,
     CANCELER_THAW,
@@ -2181,6 +2187,18 @@ u8 AtkCanceler_UnableToUseMove(void)
                 //CancelMultiTurnMoves(gBattlerAttacker);
                 gBattlescriptCurrInstr = BattleScript_MoveUsedIsParalyzed;
                 gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
+                effect = 1;
+            }
+            gBattleStruct->atkCancelerTracker++;
+            break;
+        case CANCELER_GHOST: // GHOST in pokemon tower (Rouge Feu)
+            if (IS_BATTLE_TYPE_GHOST_WITHOUT_SCOPE(gBattleTypeFlags))
+            {
+                if (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER)
+                    gBattlescriptCurrInstr = BattleScript_TooScaredToMove;
+                else
+                    gBattlescriptCurrInstr = BattleScript_GhostGetOutGetOut;
+                gBattleCommunication[MULTISTRING_CHOOSER] = 0;
                 effect = 1;
             }
             gBattleStruct->atkCancelerTracker++;
@@ -2467,6 +2485,10 @@ u8 AbilityBattleEffects(u8 caseID, u8 battler, u8 ability, u8 special, u16 moveA
             move = gCurrentMove;
 
         GET_MOVE_TYPE(move, moveType);
+
+        if (IS_BATTLE_TYPE_GHOST_WITHOUT_SCOPE(gBattleTypeFlags) // Rouge Feu
+         && (gLastUsedAbility == ABILITY_INTIMIDATE || gLastUsedAbility == ABILITY_TRACE))
+            return effect;
 
         switch (caseID)
         {

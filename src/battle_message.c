@@ -893,6 +893,11 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT - BATTLESTRINGS_TABLE_ST
     [STRINGID_TRAINER1MON1COMEBACK - BATTLESTRINGS_TABLE_START] = sText_Trainer1RecallPkmn1,
     [STRINGID_GOTCHAPKMNCAUGHT2 - BATTLESTRINGS_TABLE_START] = sText_GotchaPkmnCaught2,
     [STRINGID_OLDMANUSEDITEM - BATTLESTRINGS_TABLE_START] = sText_OldManUsedItem,
+    [STRINGID_ITDODGEDBALL - BATTLESTRINGS_TABLE_START] = sText_ItDodgedBall,
+    [STRINGID_MONTOOSCAREDTOMOVE - BATTLESTRINGS_TABLE_START] = sText_TooScaredToMove,
+    [STRINGID_GHOSTGETOUTGETOUT - BATTLESTRINGS_TABLE_START] = sText_GetOutGetOut,
+    [STRINGID_SILPHSCOPEUNVEILED - BATTLESTRINGS_TABLE_START] = sText_SilphScopeUnveil,
+    [STRINGID_GHOSTWASMAROWAK - BATTLESTRINGS_TABLE_START] = sText_TheGhostWas,
 };
 
 const u16 gMissStringIds[] =
@@ -1435,6 +1440,14 @@ static const u8 sText_Trainer2WinText[] = _("{B_TRAINER2_WIN_TEXT}");
 // Rouge Feu (battle_message_1_fr.h)
 static const u8 sText_Trainer1RecallPkmn1[] = _("{B_TRAINER1_NAME}: Reviens, {B_OPPONENT_MON1_NAME}!");
 static const u8 sText_OldManUsedItem[] = _("Le vieil homme utilise\n{B_LAST_ITEM}!");
+// Rouge Feu : combats FANTÔME de la Tour Pokémon
+static const u8 sText_GhostAppearedCantId[] = _("Le SPECTRE apparaît!\pMince!\nLe SPECTRE ne peut être identifié!\p");
+static const u8 sText_TheGhostAppeared[] = _("Le SPECTRE apparaît!\p");
+static const u8 sText_SilphScopeUnveil[] = _("Le SCOPE SYLPHE révèle l'identité\ndu SPECTRE!");
+static const u8 sText_TheGhostWas[] = _("Le SPECTRE était OSSATUEUR!");
+static const u8 sText_ItDodgedBall[] = _("Il a évité la BALL!\nCe POKéMON ne se laisse pas faire!");
+static const u8 sText_TooScaredToMove[] = _("{B_ATK_NAME_WITH_PREFIX} a peur\nde bouger!");
+static const u8 sText_GetOutGetOut[] = _("SPECTRE: Va t'en…\nDehors…");
 static const u8 sText_GotchaPkmnCaught2[] = _("Et hop!\n{B_OPPONENT_MON1_NAME} est attrapé!{WAIT_SE}{PLAY_BGM MUS_RG_CAUGHT}{PAUSE 127}");
 static const u8 sText_Trainer1Fled[] = _("{PLAY_SE SE_FLEE}{B_TRAINER1_CLASS} {B_TRAINER1_NAME} fled!");
 static const u8 sText_PlayerLostAgainstTrainer1[] = _("{B_TRAINER1_CLASS} {B_TRAINER1_NAME} a\ngagné!");
@@ -2044,7 +2057,14 @@ void BufferStringBattle(u16 stringID)
         }
         else
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+            if (IS_BATTLE_TYPE_GHOST(gBattleTypeFlags)) // Rouge Feu
+            {
+                if (IS_BATTLE_TYPE_GHOST_WITH_SCOPE(gBattleTypeFlags))
+                    stringPtr = sText_TheGhostAppeared;
+                else
+                    stringPtr = sText_GhostAppearedCantId;
+            }
+            else if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
                 stringPtr = sText_LegendaryPkmnAppeared;
             else if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE) // interesting, looks like they had something planned for wild double battles
                 stringPtr = sText_TwoWildPkmnAppeared;

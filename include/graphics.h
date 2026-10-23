@@ -4652,6 +4652,8 @@ extern const u32 gBattleAnimSpritePal_ElectricOrbs[];
 extern const u32 gBattleAnimSpritePal_MovementWaves[];
 extern const u32 gBattleAnimBgPalette_ScaryFace[];
 extern const u32 gBattleAnimBgImage_ScaryFace[];
+extern const u32 gGhostFrontPic[]; // Rouge Feu
+extern const u32 gGhostPalette[]; // Rouge Feu
 extern const u32 gBattleAnimSpritePal_RedHeart[];
 extern const u32 gBattleAnimSpritePal_RedOrb[];
 extern const u32 gBattleAnimSpritePal_EyeSparkle[];

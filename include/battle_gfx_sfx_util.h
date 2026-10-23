@@ -44,4 +44,6 @@ void AllocateMonSpritesGfx(void);
 void FreeMonSpritesGfx(void);
 bool32 ShouldPlayNormalMonCry(struct Pokemon *mon);
 
+void DecompressGhostFrontPic(struct Pokemon *unused, u8 battlerId); // Rouge Feu
+
 #endif // GUARD_BATTLE_GFX_SFX_UTIL_H

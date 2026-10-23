@@ -1872,3 +1872,4 @@ const u8 gText_Berries[] = _("BAIES");
 const u8 gText_Eleve[] = _("ELEVE");
 const u8 gText_Dresseur[] = _("DRESSEUR");
 const u8 gText_Champion[] = _("CHAMPION");
+const u8 gText_Ghost[] = _("SPECTRE"); // Rouge Feu

@@ -744,6 +744,9 @@ const u32 gBattleAnimSpriteGfx_MovementWaves[] = INCGFX_U32("graphics/battle_ani
 const u32 gBattleAnimSpritePal_MovementWaves[] = INCGFX_U32("graphics/battle_anims/sprites/movement_waves.png", ".gbapal.lz");
 
 const u32 gBattleAnimBgPalette_ScaryFace[] = INCGFX_U32("graphics/battle_anims/backgrounds/scary_face.png", ".gbapal.lz");
+// Rouge Feu : SPECTRE de la Tour Pokémon
+const u32 gGhostPalette[] = INCGFX_U32("graphics/kanto/pokemon_ghost/front.png", ".gbapal.lz");
+const u32 gGhostFrontPic[] = INCGFX_U32("graphics/kanto/pokemon_ghost/front.png", ".4bpp.lz");
 const u32 gBattleAnimBgImage_ScaryFace[] = INCGFX_U32("graphics/battle_anims/backgrounds/scary_face.png", ".4bpp.lz");
 
 const u32 gBattleAnimSpritePal_EyeSparkle[] = INCGFX_U32("graphics/battle_anims/sprites/eye_sparkle.png", ".gbapal.lz");

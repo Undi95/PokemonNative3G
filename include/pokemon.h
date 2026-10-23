@@ -555,4 +555,6 @@ struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 managerId, u8 mode);
 void DestroyMonSpritesGfxManager(u8 managerId);
 u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum);
 
+bool8 CheckBattleTypeGhost(struct Pokemon *mon, u8 battlerId); // Rouge Feu
+
 #endif // GUARD_POKEMON_H

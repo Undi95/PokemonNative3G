@@ -729,4 +729,18 @@ extern u8 gMultiUsePlayerCursor;
 extern u8 gNumberOfMovesToChoose;
 extern u8 gBattleControllerData[MAX_BATTLERS_COUNT];
 
+// PokemonNative3G : combats FANTÔME de la Tour Pokémon (Rouge Feu). Dans RF, BATTLE_TYPE_GHOST et
+// BATTLE_TYPE_GHOST_UNVEILED sont des bits de gBattleTypeFlags, tous pris dans Émeraude : l'état est à part,
+// posé par DoGhostBattle / StartMarowakBattle et remis à zéro au retour sur le terrain.
+enum
+{
+    GHOST_BATTLE_NONE,
+    GHOST_BATTLE_HIDDEN,   // BATTLE_TYPE_GHOST
+    GHOST_BATTLE_UNVEILED, // BATTLE_TYPE_GHOST | BATTLE_TYPE_GHOST_UNVEILED (Scope Sylph)
+};
+extern u8 gBattleGhostType;
+#define IS_BATTLE_TYPE_GHOST(flags)               ((void)(flags), gBattleGhostType != GHOST_BATTLE_NONE)
+#define IS_BATTLE_TYPE_GHOST_WITHOUT_SCOPE(flags) ((void)(flags), gBattleGhostType == GHOST_BATTLE_HIDDEN)
+#define IS_BATTLE_TYPE_GHOST_WITH_SCOPE(flags)    ((void)(flags), gBattleGhostType == GHOST_BATTLE_UNVEILED)
+
 #endif // GUARD_BATTLE_H

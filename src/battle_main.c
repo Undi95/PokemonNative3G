@@ -124,6 +124,7 @@ static void HandleEndTurn_FinishBattle(void);
 static void SpriteCB_UnusedBattleInit(struct Sprite *sprite);
 static void SpriteCB_UnusedBattleInit_Main(struct Sprite *sprite);
 
+EWRAM_DATA u8 gBattleGhostType = 0; // PokemonNative3G : combats FANTÔME de Rouge Feu (battle.h)
 EWRAM_DATA u16 gBattle_BG0_X = 0;
 EWRAM_DATA u16 gBattle_BG0_Y = 0;
 EWRAM_DATA u16 gBattle_BG1_X = 0;
@@ -3442,7 +3443,7 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
                 MarkBattlerForControllerExec(gActiveBattler);
             }
             if (GetBattlerSide(gActiveBattler) == B_SIDE_OPPONENT
-             && !IsOldManTutorialBattle() && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
+             && !IsOldManTutorialBattle() && !IS_BATTLE_TYPE_GHOST(gBattleTypeFlags) && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
                                       | BATTLE_TYPE_FRONTIER
                                       | BATTLE_TYPE_LINK
                                       | BATTLE_TYPE_RECORDED_LINK
@@ -3455,7 +3456,12 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
         {
             if (GetBattlerSide(gActiveBattler) == B_SIDE_OPPONENT)
             {
-                if (!IsOldManTutorialBattle() && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
+                if (IS_BATTLE_TYPE_GHOST(gBattleTypeFlags)) // Rouge Feu : « vu » seulement une fois révélé
+                {
+                    if (!IS_BATTLE_TYPE_GHOST_WITHOUT_SCOPE(gBattleTypeFlags))
+                        HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[gActiveBattler].species), FLAG_SET_SEEN, gBattleMons[gActiveBattler].personality);
+                }
+                else if (!IsOldManTutorialBattle() && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
                                       | BATTLE_TYPE_FRONTIER
                                       | BATTLE_TYPE_LINK
                                       | BATTLE_TYPE_RECORDED_LINK
@@ -3580,6 +3586,11 @@ static void BattleIntroPrintWildMonAttacked(void)
     {
         gBattleMainFunc = BattleIntroPrintPlayerSendsOut;
         PrepareStringBattle(STRINGID_INTROMSG, 0);
+        if (IS_BATTLE_TYPE_GHOST_WITH_SCOPE(gBattleTypeFlags)) // Rouge Feu
+        {
+            gBattleScripting.battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+            BattleScriptExecute(BattleScript_SilphScopeUnveiled);
+        }
     }
 }
 
@@ -3692,7 +3703,7 @@ static void BattleIntroRecordMonsToDex(void)
         for (gActiveBattler = 0; gActiveBattler < gBattlersCount; gActiveBattler++)
         {
             if (GetBattlerSide(gActiveBattler) == B_SIDE_OPPONENT
-             && !IsOldManTutorialBattle() && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
+             && !IsOldManTutorialBattle() && !IS_BATTLE_TYPE_GHOST(gBattleTypeFlags) && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
                                       | BATTLE_TYPE_FRONTIER
                                       | BATTLE_TYPE_LINK
                                       | BATTLE_TYPE_RECORDED_LINK

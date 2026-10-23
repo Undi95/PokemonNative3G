@@ -7232,3 +7232,18 @@ u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum)
         return gfx->spritePointers[spriteNum];
     }
 }
+
+// Rouge Feu : le SPECTRE de la Tour Pokémon (surnom « SPECTRE » donné par DoGhostBattle / StartMarowakBattle)
+bool8 CheckBattleTypeGhost(struct Pokemon *mon, u8 battlerId)
+{
+    u8 nickname[POKEMON_NAME_LENGTH + 1];
+
+    if (IS_BATTLE_TYPE_GHOST(gBattleTypeFlags) && GetBattlerSide(battlerId) != B_SIDE_PLAYER)
+    {
+        GetMonData(mon, MON_DATA_NICKNAME, nickname);
+        StringGet_Nickname(nickname);
+        if (!StringCompare(nickname, gText_Ghost))
+            return TRUE;
+    }
+    return FALSE;
+}

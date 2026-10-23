@@ -3083,5 +3083,6 @@ extern const u8 gText_TellHimTheWords[];
 extern const u8 gText_Eleve[];
 extern const u8 gText_Dresseur[];
 extern const u8 gText_Champion[];
+extern const u8 gText_Ghost[]; // Rouge Feu
 
 #endif // GUARD_STRINGS_H

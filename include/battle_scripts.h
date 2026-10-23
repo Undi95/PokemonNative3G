@@ -219,6 +219,10 @@ extern const u8 BattleScript_WallyBallThrow[];
 extern const u8 BattleScript_OldMan_Pokedude_CaughtMessage[];
 extern const u8 BattleScript_ShakeBallThrow[];
 extern const u8 BattleScript_TrainerBallBlock[];
+extern const u8 BattleScript_GhostBallDodge[]; // Rouge Feu
+extern const u8 BattleScript_TooScaredToMove[]; // Rouge Feu
+extern const u8 BattleScript_GhostGetOutGetOut[]; // Rouge Feu
+extern const u8 BattleScript_SilphScopeUnveiled[]; // Rouge Feu
 extern const u8 BattleScript_RunByUsingItem[];
 extern const u8 BattleScript_ActionWatchesCarefully[];
 extern const u8 BattleScript_ActionGetNear[];
