@@ -77,7 +77,7 @@ reconnaît les corps identiques (187 fonctions) mais pas les corps voisins.
 Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis la présentation (options), le reste à décider.
 
 **A. Aventure (solo)**
-1. Ferry Seagallop : cinématique + menu des destinations (`DoSeagallopFerryScene`, `DrawSeagallopDestinationMenu`, `GetSelectedSeagallopDestination` = stubs ; seagallop.c 18 %). Transport vers les îles Sevii.
+1. ~~Ferry Seagallop~~ : fait le 2026-10-23 (`src/kanto_seagallop.c`, menu des destinations dans `script_menu.c`).
 2. Fame Checker : objet rare et écran (fame_checker.c, 64 fonctions ; la macro `famechecker` des scripts existe déjà).
 3. Cinématiques et scènes encore en stub (appelées par des scripts de Kanto) : départ du S.S. Anne (ss_anne.c), éclairage de la Ligue, téléporteurs de Léo, fossiles du musée et `DoPicboxCancel`, diplôme, triangle de Deoxys (Île Aurore), curseur du braille.
 4. Poké Flûte : utilisable ni sur le terrain ni en combat (`checkpokeflute`, BattleScript_UsePokeFlute de RF).
