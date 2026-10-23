@@ -66,7 +66,7 @@ Contenu de RF à importer :
 - [x] Objets cachés qui réapparaissent (`src/kanto_renewable_hidden_items.c`, 2026-10-23)
 - [ ] Fame Checker (fame_checker.c ; sauvegarde déjà réservée dans gSaveBlockKanto)
 - [ ] Animation quand on utilise un objet sur un Pokémon (pokemon_special_anim*.c : CT, Super Bonbon…) : jouée avec le sac KANTO (option SAC), sac HOENN comme Émeraude
-- [ ] Note du Pokédex par Chen : même système que le PC du Prof. Seko (birch_pc.c), à intégrer à Kanto (prof_pc.c de RF : textes et compte du Pokédex de Kanto)
+- [x] Note du Pokédex par Chen (2026-10-23) : GetProfOaksRatingMessage de RF (PC, Chen en personne, ses aides) ; « PC du PROF. CHEN » ajouté au menu PC à Kanto une fois son Pokédex reçu
 - [ ] TOUTES les cinématiques de RF : départ du S.S. Anne, ferry Seagallop, et les autres stubs de `kanto_specials_stubs.c` (éclairage de la Ligue, téléporteurs de Léo, triangle de Deoxys, fossiles du musée, diplôme…)
 - [ ] IA des légendaires de RF (`BATTLE_TYPE_LEGENDARY_FRLG` : état à part comme le FANTÔME)
 

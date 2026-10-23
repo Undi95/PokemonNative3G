@@ -804,9 +804,6 @@ Item_SwitchMonsWithMoving, Item_GiveMovingToMon, Item_TakeMons, IsActiveItemMovi
 LoadsMiscSpritePalette, StartDisplayMonMosaic, IsDisplayMonMosaicActive, PrintStorageMessage,
 SetPokeStorageQuestLogEvent
 
-### prof_pc.c (RF seul, 2/3)
-GetProfOaksRatingMessageByCount, GetProfOaksRatingMessage
-
 ### quest_log.c (RF seul, 86/88)
 QL_AddASLROffset, ResetQuestLog, ClearSavedScene, QL_ResetDefeatedWildMonRecord, RunQuestLogCB,
 QL_IsRoomToSaveEvent, QL_IsRoomToSaveAction, SetQuestLogState, QLogCB_Recording, QLogCB_Playback,

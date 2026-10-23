@@ -53,7 +53,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_anim_special.c | RF seul | 81 | 42 | 6 | 3 | 21 | 15 | 24 | battle_anim_throw.c (3) |
 | map_preview_screen.c | RF seul | 14 | 14 | 1 | 2 | 21 | 0 | 0 | kanto_region_map.c (2) |
 | pokemon_storage_system_menu.c | RF seul | 29 | 6 | 2 | 0 | 33 | 10 | 13 |  |
-| prof_pc.c | RF seul | 3 | 3 | 0 | 1 | 33 | 0 | 0 | kanto_field_specials.c (1) |
 | field_fadetransition.c | RF seul | 59 | 30 | 2 | 11 | 43 | 5 | 24 | field_screen_effect.c (11) |
 | menu2.c | RF seul | 10 | 6 | 0 | 3 | 50 | 0 | 4 | kanto_intro.c (3) |
 | help_message.c | RF seul | 7 | 7 | 0 | 6 | 85 | 0 | 0 | copie kanto_help_message.c : 6/7 fonctions |
@@ -68,6 +67,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | wild_pokemon_area.c | RF seul | 7 | 7 | 0 | 7 | 100 | 0 | 0 | kanto_pokedex_area.c (7) |
 | pokedex_area_markers.c | RF seul | 5 | 5 | 0 | 5 | 100 | 0 | 0 | kanto_pokedex_area.c (5) |
 | renewable_hidden_items.c | RF seul | 4 | 4 | 0 | 4 | 100 | 0 | 0 | copie kanto_renewable_hidden_items.c : 4/4 fonctions |
+| prof_pc.c | RF seul | 3 | 3 | 0 | 3 | 100 | 0 | 0 | kanto_field_specials.c (3) |
 | party_menu_specials.c | RF seul | 9 | 1 | 0 | 1 | 100 | 3 | 5 | kanto_specials.c (1) |
 | bg_regs.c | RF seul | 0 | 0 | 0 | 0 | 100 | 0 | 0 |  |
 | braille_text.c | RF seul | 3 | 0 | 0 | 0 | 100 | 1 | 2 |  |
