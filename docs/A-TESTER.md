@@ -100,13 +100,11 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Options > MENUS = KANTO : menu Start de RF (police, espacement, bande de description bleue en bas qui suit le curseur ; 8 entrées avec le POKéNAV : resserrées, la bande reste visible), équipe aux couleurs de RF, résumé du Pokémon de RF (pages INFOS/STATS/CAPACITÉS, changer de Pokémon, depuis l'équipe, le PC, l'échange ; apprendre une capacité au niveau supérieur, Maître des capacités / Effaceur)
 - [ ] Animations des tuiles de Kanto (RF) : fleurs, eau et sable des rivages, fontaines de Céladopole et de Sylphe SARL, vapeur du Mont Braise, fleurs de l'arène de Céladopole, porte motorisée de l'arène de Carmin
 - [ ] Centre Pokémon de Kanto : moniteur de soin qui clignote (RF), écran du PC qui s'allume/s'éteint (RF), aussi le PC de la chambre
-- [ ] À FAIRE : sac de Kanto (RF) + Boîte CT et Sac à Baies de RF pour les poches CT/Baies d'Émeraude
 
 - [ ] Kanto : musique des crédits continue sur tout le défilé ; moniteur RF (pas les écrans d'Émeraude) à l'enregistrement du Panthéon ; fonds de boîtes de Kanto aux bonnes couleurs.
 - [ ] Sprites Red/Leaf vélo cross refaits : pédalage = images de vélo de Rouge Feu telles quelles, plus de noir, tête dans la bonne direction sur les figures. Revérifier roue arrière + sauts.
 - [ ] CS à Kanto : badges de Kanto (Roche = Flash, Cascade = Coupe, Foudre = Vol, Prisme = Force, Âme = Surf, Marais = Éclate-Roc, Volcan = Cascade) depuis le menu d'équipe et sur l'eau (Surf, Cascade) ; à Hoenn, badges de Hoenn comme avant
 - [ ] Options > POKéMON = KANTO : sprites de Rouge Feu (face, dos, couleurs, shiny) sans animation, en combat (sauvage, dresseur, double), résumé, Pokédex, PC, évolution, éclosion ; Deoxys = forme Attaque. HOENN = animés d'Émeraude comme avant
-- [ ] À FAIRE : objets donnés deux fois (CS, cannes, Passe Bateau…) → voir docs/OBJETS-EN-DOUBLE.md
 - [ ] Deoxys : menu de l'équipe > FORME > NORMALE / ATTAQUE / DÉFENSE / VITESSE : message, sprite (face et dos, combat, résumé) et stats de la forme ; par défaut VITESSE (comme Émeraude). Forme commune à tous les Deoxys du joueur
 - [ ] Obéissance : à Kanto, paliers des badges de Kanto (2 = N.30, 4 = N.50, 6 = N.70, 8 = tous) ; à Hoenn, ceux de Hoenn
 - [ ] Carte de Kanto (RF) : Vol depuis Kanto (vérifié en headless, scénario `kanto_fly_map.py`), objet CARTE (sac et SELECT), cartes murales de Kanto ; bascule Kanto / Îles Sevii (bouton en bas à droite) ; aperçu des donjons (A sur une grotte)

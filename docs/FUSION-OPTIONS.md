@@ -38,14 +38,28 @@ contenu dans un seul jeu.
 - [x] Écran de nom (MENUS : police + icône PC de RF ; sprite selon PERSO ; Easy Chat gardé d'Émeraude) (option, décision 2026-10-23) : clavier de RF, avec le sprite du perso choisi (Brice/Flora ou Red/Leaf) ;
   aussi l'écran de sélection de mots (Easy Chat)
 - [x] Intro (KANTO par défaut) : option INTRO HOENN/KANTO près de ÉCRAN TITRE (Flygon / Nidorino-Ectoplasma)
-- [~] Crédits (kanto_credits.c porté + caméra des cartes dans overworld.c, compile, NON TESTÉ) : ceux de la Ligue finie (Hoenn après Hoenn, Kanto après Kanto), pas d'option
-- [~] Panthéon (kanto_hall_of_fame.c porté, sauvegarde annexe @8192, PC par région, compile, NON TESTÉ ; test prévu : warp debug vers PokemonLeague_HallOfFame) : deux Panthéons séparés ; le PC de Kanto montre celui de Kanto, le PC de Hoenn celui de Hoenn
-- [ ] Sprites des Pokémon (option, combats sauvages compris) : Émeraude animés / Rouge Feu fixes
-- [ ] Carte de la région / Vol (pas d'option) : carte RF à Kanto (avec Sevii), carte d'Émeraude à Hoenn ; une touche
+- [x] Crédits (kanto_credits.c, testés en headless, musique continue) : ceux de la Ligue finie (Hoenn après Hoenn, Kanto après Kanto), pas d'option
+- [x] Panthéon (kanto_hall_of_fame.c, sauvegarde annexe @8192, PC par région, testé en headless) : deux Panthéons séparés ; le PC de Kanto montre celui de Kanto, le PC de Hoenn celui de Hoenn
+- [x] Sprites des Pokémon (option POKéMON) : Émeraude animés / Rouge Feu fixes ; Deoxys : forme au choix (menu de l'équipe)
+- [x] Carte de la région / Vol (pas d'option ; kanto_region_map.c, SELECT entre régions) : carte RF à Kanto (avec Sevii), carte d'Émeraude à Hoenn ; une touche
   bascule vers l'autre région et permet d'y voler (villes visitées). Bascule débloquée seulement quand la Ligue de
   Kanto est finie ET le Rubis/Saphir rendu à Céladon (quête post-game RF qui relie le PC de Kanto à Hoenn :
   sert de contexte, le joueur ne récupère pas ses Pokémon de Hoenn avant). POKéDEX Kanto : débloqué par le
   Pokédex de Chen (déjà fait).
+## À faire (liste de l'utilisateur, 2026-10-23)
+- [ ] Cartes de région : icône du joueur selon le perso choisi (PERSO) sur les deux cartes (aujourd'hui Brice/Flora sur Hoenn, Red/Leaf sur Kanto)
+- [ ] Cherche VS à Hoenn : rematchs du PokéNav déclenchables au Cherche VS (aujourd'hui à Hoenn il répond « pas de dresseur », sans planter)
+- [ ] Cherche VS : sprites de Brice/Flora levant le Cherche VS (à pied et à vélo), si faisable au pixel
+- [ ] Évolution par échange en solo (objet du genre « câble link »)
+- [ ] Pokémon exclusifs à Rubis, Saphir et Vert Feuille : les rendre obtenables
+- [ ] Légendaires manquants (vers la fin)
+- [ ] Événements en jeu à Hoenn (ceux de RF + Mew) et objets requis (Ticket Aurora, Ticket Mystique, etc.)
+- [ ] Aperçus de donjons/lieux de RF à Kanto (map_preview_screen.c ; données déjà dans kanto_region_map.c)
+- [ ] « Précédemment dans votre quête » (journal de RF) : partout si possible, avec une option (désactivé par défaut)
+- [ ] Courir partout (intérieurs compris)
+- [ ] Cherch'Objet : Hoenn et Kanto l'utilisent différemment, avoir le bon selon la région
+- [ ] Objets donnés deux fois (CS, cannes, Passe Bateau…) : voir docs/OBJETS-EN-DOUBLE.md
+
 ## Notes
 - Piste (utilisateur) : Émeraude a été construit à partir de Rouge Feu ; il garde des fonctions vidées et des entrées inutilisées de RF (ex. BgTileAllocOp « Dummied out », LoadMonPicInWindow UNUSED). Les rétablir avec le code de RF avant de réinventer.
 - Comparaison des cadres : script PIL (pixels RGB identiques) ; refaire de même pour chaque liste.
