@@ -5382,7 +5382,7 @@ bool8 PokemonItemUseNoEffect(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mo
     }
     else
     {
-        holdEffect = ItemId_GetHoldEffect(heldItem);
+        holdEffect = GetItemHoldEffect(heldItem);
     }
 
     // Get battler id (if relevant)
@@ -5408,7 +5408,7 @@ bool8 PokemonItemUseNoEffect(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mo
     }
 
     // Skip using the item if it won't do anything
-    if (!IS_POKEMON_ITEM(item))
+    if (!ITEM_HAS_EFFECT(item))
         return TRUE;
     if (gItemEffectTable[item - ITEM_POTION] == NULL && item != ITEM_ENIGMA_BERRY)
         return TRUE;
