@@ -41,6 +41,17 @@
 #include "kanto_bag_internal.h" // noms de RF du sac de RF (après les en-têtes d'Émeraude)
 
 void KantoCreatePokemartMenu(const u16 *itemsForSale);
+static u8 GetMartFontId(void);
+
+#define INDEX_CANCEL LIST_CANCEL // RF : shop.h
+
+// Rouge Feu (item_menu.c) : DisplayItemMessageOnField avec la police (Émeraude : police normale)
+static void KShop_DisplayItemMessageOnField(u8 taskId, u8 fontId, const u8 *str, TaskFunc callback)
+{
+    LoadMessageBoxAndBorderGfx(); // RF : LoadStdWindowFrameGfx
+    DisplayMessageAndContinueTask(taskId, 0, DLG_WINDOW_BASE_TILE_NUM, DLG_WINDOW_PALETTE_NUM, fontId, GetPlayerTextSpeedDelay(), str, callback);
+    ScheduleBgCopyTilemapToVram(0);
+}
 
 static const u32 sKBuyMenuFrame_Gfx[] = INCGFX_U32("graphics/kanto/shop_menu/shop_menu.png", ".4bpp.lz");
 static const u32 sKBuyMenuFrame_Pal[] = INCGFX_U32("graphics/kanto/shop_menu/shop_menu.png", ".gbapal.lz");
@@ -321,7 +332,7 @@ static void SetShopMenuCallback(MainCallback callback);
 static void Task_ShopMenu(u8 taskId);
 static void Task_HandleShopMenuBuy(u8 taskId);
 static void Task_HandleShopMenuSell(u8 taskId);
-static void CB2_GoToSellMenu(void);
+static void KShop_CB2_GoToSellMenu(void);
 static void Task_HandleShopMenuQuit(u8 taskId);
 static void ClearShopMenuWindow(void);
 static void Task_GoToBuyOrSellMenu(u8 taskId);
@@ -436,10 +447,7 @@ static u8 CreateShopMenu(u8 martType)
 {
     sShopData.martType = GetMartTypeFromItemList(martType);
     sShopData.selectedRow = 0;
-    if (ContextNpcGetTextColor() == NPC_TEXT_COLOR_MALE)
-        sShopData.fontId = FONT_MALE;
-    else
-        sShopData.fontId = FONT_FEMALE;
+    sShopData.fontId = FONT_KANTO; // RF : FONT_MALE / FONT_FEMALE selon le vendeur (polices de RF pas encore importées)
 
     sShopMenuWindowId = AddWindow(&sShopMenuWindowTemplate);
     SetStdWindowBorderStyle(sShopMenuWindowId, 0);
@@ -459,7 +467,7 @@ static u8 GetMartTypeFromItemList(u32 martType)
 
     for (i = 0; i < sShopData.itemCount && sShopData.itemList[i] != 0; i++)
     {
-        if (ItemId_GetPocket(sShopData.itemList[i]) == POCKET_TM_CASE)
+        if (ItemId_GetPocket(sShopData.itemList[i]) == POCKET_TM_HM)
             return MART_TYPE_TMHM;
     }
     return MART_TYPE_REGULAR;
@@ -510,12 +518,12 @@ static void Task_HandleShopMenuBuy(u8 taskId)
 
 static void Task_HandleShopMenuSell(u8 taskId)
 {
-    SetWordTaskArg(taskId, 0xE, (u32)CB2_GoToSellMenu);
+    SetWordTaskArg(taskId, 0xE, (u32)KShop_CB2_GoToSellMenu);
     FadeScreen(FADE_TO_BLACK, 0);
     gTasks[taskId].func = Task_GoToBuyOrSellMenu;
 }
 
-static void CB2_GoToSellMenu(void)
+static void KShop_CB2_GoToSellMenu(void)
 {
     GoToBagMenu(ITEMMENULOCATION_SHOP, OPEN_BAG_LAST, CB2_ReturnToField);
     gFieldCallback = MapPostLoadHook_ReturnToShopMenu;
@@ -557,7 +565,7 @@ static void Task_ReturnToShopMenu(u8 taskId)
     if (IsWeatherNotFadingIn() != TRUE)
         return;
 
-    DisplayItemMessageOnField(taskId, GetMartFontId(), sKText_Text_AnythingElseICanHelp, ShowShopMenuAfterExitingBuyOrSellMenu);
+    KShop_DisplayItemMessageOnField(taskId, GetMartFontId(), sKText_Text_AnythingElseICanHelp, ShowShopMenuAfterExitingBuyOrSellMenu);
 }
 
 static void ShowShopMenuAfterExitingBuyOrSellMenu(u8 taskId)
@@ -753,8 +761,8 @@ static bool8 BuyMenuBuildListMenuTemplate(void)
         PokeMartWriteNameAndIdAt(&sShopMenuListMenu[i], sShopData.itemList[i], sShopMenuItemStrings[i]);
     }
     StringCopy(sShopMenuItemStrings[i], sKText_FameCheckerText_Cancel);
-    sShopMenuListMenu[i].label = sShopMenuItemStrings[i];
-    sShopMenuListMenu[i].index = -2;
+    sShopMenuListMenu[i].name = sShopMenuItemStrings[i];
+    sShopMenuListMenu[i].id = -2;
     gMultiuseListMenuTemplate.items = sShopMenuListMenu;
     gMultiuseListMenuTemplate.totalItems = sShopData.itemCount + 1;
     gMultiuseListMenuTemplate.windowId = 4;
@@ -790,8 +798,8 @@ static bool8 BuyMenuBuildListMenuTemplate(void)
 static void PokeMartWriteNameAndIdAt(struct ListMenuItem *list, u16 index, u8 *dst)
 {
     CopyItemName(index, dst);
-    list->label = dst;
-    list->index = index;
+    list->name = dst;
+    list->id = index;
 }
 
 static void BuyMenuPrintItemDescriptionAndShowItemIcon(s32 item, bool8 onInit, struct ListMenu *list)
@@ -1290,7 +1298,4 @@ void KantoCreatePokemartMenu(const u16 *itemsForSale)
     CreateShopMenu(MART_TYPE_REGULAR);
     SetShopMenuCallback(ScriptContext_Enable);
     // RF : DebugFunc_PrintShopMenuHistoryBeforeClearMaybe (journal de quête)
-    memset(&sHistory, 0, sizeof(sHistory));
-    sHistory[0].mapSec = gMapHeader.regionMapSectionId;
-    sHistory[1].mapSec = gMapHeader.regionMapSectionId;
 }
