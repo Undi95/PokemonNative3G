@@ -420,6 +420,7 @@ void GetProfOaksRatingMessage(void)
 
 // ---- Rouge Feu (easy_chat.c) ----
 // ShowEasyChatMessage : le ShowEasyChatProfile d'Émeraude sous son nom de RF (club Mystery Event)
+void ShowEasyChatProfile(void); // easy_chat.c (special d'Émeraude, sans déclaration)
 void ShowEasyChatMessage(void)
 {
     ShowEasyChatProfile();
