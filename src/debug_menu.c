@@ -27,6 +27,11 @@
 #include "constants/kanto.h"
 #include "item.h"
 #include "constants/characters.h"
+#include "field_weather.h"
+#include "kanto_field_door.h"
+#include "kanto_region_map.h"
+#include "palette.h"
+#include "region_map.h"
 
 bool8 gDebugNoClip = FALSE;
 bool8 gDebugNoEncounters = FALSE;
@@ -41,6 +46,7 @@ enum {
     DEBUG_GIVE_MON,
     DEBUG_GIVE_ITEMS,
     DEBUG_UNLOCK_DEXES,
+    DEBUG_FLY_MAP,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -137,6 +143,7 @@ static const u8 sText_Heal[] = _("Soigner l'équipe");
 static const u8 sText_GiveMon[] = _("Recevoir MEWTWO");
 static const u8 sText_GiveItems[] = _("Ajout objets");
 static const u8 sText_UnlockDexes[] = _("Débloquer les 2 POKéDEX");
+static const u8 sText_FlyMap[] = _("Carte VOL (2 régions)");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -176,6 +183,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_GIVE_MON].name = sText_GiveMon;
         sItems[DEBUG_GIVE_ITEMS].name = sText_GiveItems;
         sItems[DEBUG_UNLOCK_DEXES].name = sText_UnlockDexes;
+        sItems[DEBUG_FLY_MAP].name = sText_FlyMap;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -221,6 +229,17 @@ static void DebugMenu_Close(u8 taskId)
     DestroyTask(taskId);
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
+}
+
+// Carte de vol de la région où l'on est (Kanto : Rouge Feu, Hoenn : Émeraude), sans Pokémon ni badge
+static void Task_DebugOpenFlyMap(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        CleanupOverworldWindowsAndTilemaps();
+        SetMainCallback2(IsKantoTilesetMap() ? KantoCB2_OpenFlyMap : CB2_OpenFlyMap);
+        DestroyTask(taskId);
+    }
 }
 
 static void Task_DebugMenu(u8 taskId)
@@ -303,6 +322,15 @@ static void Task_DebugMenu(u8 taskId)
     case DEBUG_GIVE_ITEMS:
         DebugMenu_GiveAllItems();
         PlaySE(SE_USE_ITEM);
+        break;
+    case DEBUG_FLY_MAP:
+        // conditions du Vol entre régions (SELECT sur la carte) : Ligue de Kanto finie, Rubis/Saphir rendus
+        FlagSet(FLAG_KANTO_SYS_GAME_CLEAR);
+        FlagSet(FLAG_KANTO_SYS_CAN_LINK_WITH_RS);
+        DebugMenu_Close(taskId);
+        LockPlayerFieldControls();
+        FadeScreen(FADE_TO_BLACK, 0);
+        CreateTask(Task_DebugOpenFlyMap, 0);
         break;
     case DEBUG_CLOSE:
     case LIST_CANCEL:

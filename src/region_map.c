@@ -20,6 +20,7 @@
 #include "field_specials.h"
 #include "fldeff.h"
 #include "region_map.h"
+#include "kanto_region_map.h"
 #include "constants/region_map_sections.h"
 #include "heal_location.h"
 #include "constants/field_specials.h"
@@ -1118,6 +1119,13 @@ static void InitMapBasedOnPlayerLocation(void)
     }
     sRegionMap->cursorPosX = gRegionMapEntries[sRegionMap->mapSecId].x + x + MAPCURSOR_X_MIN;
     sRegionMap->cursorPosY = gRegionMapEntries[sRegionMap->mapSecId].y + y + MAPCURSOR_Y_MIN;
+    // PokemonNative3G : ouverte depuis Kanto (Vol entre régions) : curseur sur Bourg-en-Vol
+    if (sRegionMap->mapSecId >= KANTO_MAPSEC_START && sRegionMap->mapSecId <= KANTO_MAPSEC_END)
+    {
+        sRegionMap->mapSecId = MAPSEC_LITTLEROOT_TOWN;
+        sRegionMap->cursorPosX = gRegionMapEntries[MAPSEC_LITTLEROOT_TOWN].x + MAPCURSOR_X_MIN;
+        sRegionMap->cursorPosY = gRegionMapEntries[MAPSEC_LITTLEROOT_TOWN].y + MAPCURSOR_Y_MIN;
+    }
 }
 
 static void RegionMap_InitializeStateBasedOnSSTidalLocation(void)
@@ -1451,7 +1459,8 @@ void CreateRegionMapPlayerIcon(u16 tileTag, u16 paletteTag)
     struct SpritePalette palette = {sRegionMapPlayerIcon_BrendanPal, paletteTag};
     struct SpriteTemplate template = {tileTag, paletteTag, &sRegionMapPlayerIconOam, sRegionMapPlayerIconAnimTable, NULL, gDummySpriteAffineAnimTable, SpriteCallbackDummy};
 
-    if (IsEventIslandMapSecId(gMapHeader.regionMapSectionId))
+    if (IsEventIslandMapSecId(gMapHeader.regionMapSectionId)
+     || (gMapHeader.regionMapSectionId >= KANTO_MAPSEC_START && gMapHeader.regionMapSectionId <= KANTO_MAPSEC_END)) // PokemonNative3G : joueur à Kanto
     {
         sRegionMap->playerIconSprite = NULL;
         return;
@@ -1960,6 +1969,15 @@ static void CB_HandleFlyMapInput(void)
         switch (DoRegionMapInputCallback())
         {
         case MAP_INPUT_NONE:
+            // PokemonNative3G : SELECT = carte de vol de Kanto (après la Ligue de Kanto et le Rubis/Saphir rendus)
+            if (JOY_NEW(SELECT_BUTTON) && CanFlyBetweenRegions())
+            {
+                m4aSongNumStart(SE_SELECT);
+                sFlyMap->choseFlyLocation = FALSE;
+                gFlyMapSwitchRegion = TRUE;
+                SetFlyMapCallback(CB_ExitFlyMap);
+            }
+            break;
         case MAP_INPUT_MOVE_START:
         case MAP_INPUT_MOVE_CONT:
             break;
@@ -2019,6 +2037,11 @@ static void CB_ExitFlyMap(void)
                     break;
                 }
                 ReturnToFieldFromFlyMapSelect();
+            }
+            else if (gFlyMapSwitchRegion) // PokemonNative3G : SELECT, carte de l'autre région
+            {
+                gFlyMapSwitchRegion = FALSE;
+                SetMainCallback2(KantoCB2_OpenFlyMap);
             }
             else
             {

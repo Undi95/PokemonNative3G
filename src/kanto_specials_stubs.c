@@ -34,7 +34,6 @@ u16 GiveBattleTowerPrize(void) { KantoSpecialStub("GiveBattleTowerPrize"); retur
 u16 AwardBattleTowerRibbons(void) { KantoSpecialStub("AwardBattleTowerRibbons"); return 0; }
 u16 ChooseBattleTowerPlayerParty(void) { KantoSpecialStub("ChooseBattleTowerPlayerParty"); return 0; }
 u16 ReducePlayerPartyToThree(void) { KantoSpecialStub("ReducePlayerPartyToThree"); return 0; }
-u16 ShowTownMap(void) { KantoSpecialStub("ShowTownMap"); return 0; }
 u16 ShowDiploma(void) { KantoSpecialStub("ShowDiploma"); return 0; }
 u16 Dummy_TryEnableBravoTrainerBattleTower(void) { KantoSpecialStub("Dummy_TryEnableBravoTrainerBattleTower"); return 0; }
 u16 StartMarowakBattle(void) { KantoSpecialStub("StartMarowakBattle"); return 0; }

@@ -74,6 +74,7 @@
 #include "constants/songs.h"
 #include "constants/kanto_flags_vars.h"
 #include "kanto_field_door.h"
+#include "kanto_region_map.h"
 
 enum {
     MENU_SUMMARY,
@@ -3797,7 +3798,7 @@ static void CursorCb_FieldMove(u8 taskId)
                 sPartyMenuInternal->data[0] = fieldMove;
                 break;
             case FIELD_MOVE_FLY:
-                gPartyMenu.exitCallback = CB2_OpenFlyMap;
+                gPartyMenu.exitCallback = IsKantoTilesetMap() ? KantoCB2_OpenFlyMap : CB2_OpenFlyMap; // PokemonNative3G
                 Task_ClosePartyMenu(taskId);
                 break;
             default:
