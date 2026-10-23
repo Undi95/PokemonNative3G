@@ -18,6 +18,7 @@
 #include "window.h"
 #include "constants/kanto/seagallop.h"
 #include "constants/maps.h"
+#include "constants/rgb.h"
 #include "constants/songs.h"
 #define MAP(map) MAP_GROUP(map), MAP_NUM(map) // Rouge Feu (constants/maps.h)
 
