@@ -385,8 +385,11 @@
 #define STRINGID_GHOSTGETOUTGETOUT          385 // Rouge Feu
 #define STRINGID_SILPHSCOPEUNVEILED         386 // Rouge Feu
 #define STRINGID_GHOSTWASMAROWAK            387 // Rouge Feu
+#define STRINGID_POKEFLUTECATCHY            388 // Rouge Feu (Poké Flûte)
+#define STRINGID_POKEFLUTE                  389 // Rouge Feu
+#define STRINGID_MONHEARINGFLUTEAWOKE       390 // Rouge Feu
 
-#define BATTLESTRINGS_COUNT                 388
+#define BATTLESTRINGS_COUNT                 391
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,

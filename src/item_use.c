@@ -1157,3 +1157,60 @@ void Task_ItemUse_CloseMessageBoxAndReturnToField_VsSeeker(u8 taskId)
 {
     Task_CloseCantUseKeyItemMessage(taskId);
 }
+
+// ---- Rouge Feu (item_use.c) : Poké Flûte (réveille les Pokémon endormis de l'équipe) ----
+static const u8 sKText_PlayedPokeFluteCatchy[] = _("Vous jouez de la POKéFLUTE.\pSuper!!! Ça c'est du refrain!{PAUSE_UNTIL_PRESS}");
+static const u8 sKText_PlayedPokeFlute[] = _("Vous jouez de la POKéFLUTE.");
+static const u8 sKText_PokeFluteAwakenedMon[] = _("La POKéFLUTE a réveillé le\nPOKéMON endormi.");
+static void Task_PlayPokeFlute(u8 taskId);
+static void Task_DisplayPokeFluteMessage(u8 taskId);
+
+void ItemUseOutOfBattle_PokeFlute(u8 taskId)
+{
+    bool8 wokeSomeoneUp = FALSE;
+    u8 i;
+
+    for (i = 0; i < CalculatePlayerPartyCount(); i++)
+    {
+        if (!ExecuteTableBasedItemEffect(&gPlayerParty[i], ITEM_AWAKENING, i, 0))
+            wokeSomeoneUp = TRUE;
+    }
+
+    if (wokeSomeoneUp)
+    {
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
+            DisplayItemMessage(taskId, FONT_NORMAL, sKText_PlayedPokeFlute, Task_PlayPokeFlute);
+        else
+            DisplayItemMessageOnField(taskId, sKText_PlayedPokeFlute, Task_PlayPokeFlute);
+    }
+    else
+    {
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
+            DisplayItemMessage(taskId, FONT_NORMAL, sKText_PlayedPokeFluteCatchy, CloseItemMessage);
+        else
+            DisplayItemMessageOnField(taskId, sKText_PlayedPokeFluteCatchy, Task_CloseCantUseKeyItemMessage);
+    }
+}
+
+static void Task_PlayPokeFlute(u8 taskId)
+{
+    PlayFanfareByFanfareNum(FANFARE_RG_POKE_FLUTE);
+    gTasks[taskId].func = Task_DisplayPokeFluteMessage;
+}
+
+static void Task_DisplayPokeFluteMessage(u8 taskId)
+{
+    if (WaitFanfare(FALSE))
+    {
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
+            DisplayItemMessage(taskId, FONT_NORMAL, sKText_PokeFluteAwakenedMon, CloseItemMessage);
+        else
+            DisplayItemMessageOnField(taskId, sKText_PokeFluteAwakenedMon, Task_CloseCantUseKeyItemMessage);
+    }
+}
+
+// Rouge Feu : BattleUseFunc_PokeFlute (le combat joue BattleScript_UsePokeFlute)
+void ItemUseInBattle_PokeFlute(u8 taskId)
+{
+    Task_FadeAndCloseBagMenu(taskId);
+}

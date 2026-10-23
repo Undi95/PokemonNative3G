@@ -39,6 +39,7 @@ gBattlescriptsForUsingItem::
 	ptr_align
 gBattlescriptsForRunningByItem::
 	ptrvalue BattleScript_RunByUsingItem
+	ptrvalue BattleScript_UsePokeFlute        /* Rouge Feu*/
 
 	ptr_align
 gBattlescriptsForSafariActions::
@@ -214,3 +215,23 @@ BattleScript_ActionWallyThrow:
 	printstring STRINGID_YOUTHROWABALLNOWRIGHT
 	waitmessage B_WAIT_TIME_LONG
 	end2
+
+@ Rouge Feu : Poké Flûte en combat
+BattleScript_UsePokeFlute::
+	checkpokeflute BS_ATTACKER
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, 1, BattleScript_PokeFluteWakeUp
+	printstring STRINGID_POKEFLUTECATCHY
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_PokeFluteEnd
+
+BattleScript_PokeFluteWakeUp::
+	printstring STRINGID_POKEFLUTE
+	waitmessage B_WAIT_TIME_LONG
+	fanfare MUS_RG_POKE_FLUTE
+	waitfanfare BS_ATTACKER
+	printstring STRINGID_MONHEARINGFLUTEAWOKE
+	waitmessage B_WAIT_TIME_LONG
+	updatestatusicon BS_PLAYER2
+	waitstate
+BattleScript_PokeFluteEnd::
+	finishaction

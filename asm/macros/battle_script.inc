@@ -1362,6 +1362,15 @@
 	various \battler, VARIOUS_PLAY_TRAINER_DEFEATED_MUSIC
 	.endm
 
+	@ Rouge Feu : Poké Flûte
+	.macro checkpokeflute battler:req
+	various \battler, VARIOUS_CHECK_POKEFLUTE
+	.endm
+
+	.macro waitfanfare battler:req
+	various \battler, VARIOUS_WAIT_FANFARE
+	.endm
+
 /* helpful macros*/
 	.macro setstatchanger stat:req, stages:req, down:req
 	setbyte sSTATCHANGER, \stat | \stages << 4 | \down << 7

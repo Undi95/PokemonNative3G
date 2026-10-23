@@ -330,6 +330,10 @@ void HandleAction_UseItem(void)
     {
         gBattlescriptCurrInstr = gBattlescriptsForRunningByItem[0]; // BattleScript_RunByUsingItem
     }
+    else if (gLastUsedItem == ITEM_POKE_FLUTE) // Rouge Feu
+    {
+        gBattlescriptCurrInstr = gBattlescriptsForRunningByItem[1]; // BattleScript_UsePokeFlute
+    }
     else if (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER)
     {
         gBattlescriptCurrInstr = gBattlescriptsForUsingItem[0]; // BattleScript_PlayerUsesItem
