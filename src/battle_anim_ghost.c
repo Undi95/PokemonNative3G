@@ -1,4 +1,5 @@
 #include "global.h"
+#include "graphics.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "gpu_regs.h"
@@ -1404,12 +1405,12 @@ static void AnimTask_GhostGetOut_Step1(u8 taskId)
         break;
     case 3:
         GetBattleAnimBgData(&animBgData, 2);
-        gMonSpritesGfxPtr->multiUseBuffer = AllocZeroed(0x2000);
-        LZDecompressWram(gBattleAnimBgTilemap_ScaryFacePlayer, gMonSpritesGfxPtr->multiUseBuffer);
-        RelocateBattleBgPal(animBgData.paletteId, gMonSpritesGfxPtr->multiUseBuffer, 256, 0);
-        CopyToBgTilemapBufferRect_ChangePalette(animBgData.bgId, gMonSpritesGfxPtr->multiUseBuffer, 0, 0, 0x20, 0x20, 0x11);
+        gMonSpritesGfxPtr->buffer = AllocZeroed(0x2000);
+        LZDecompressWram(gBattleAnimBgTilemap_ScaryFacePlayer, gMonSpritesGfxPtr->buffer);
+        RelocateBattleBgPal(animBgData.paletteId, gMonSpritesGfxPtr->buffer, 256, 0);
+        CopyToBgTilemapBufferRect_ChangePalette(animBgData.bgId, gMonSpritesGfxPtr->buffer, 0, 0, 0x20, 0x20, 0x11);
         CopyBgTilemapBufferToVram(2);
-        FREE_AND_SET_NULL(gMonSpritesGfxPtr->multiUseBuffer);
+        FREE_AND_SET_NULL(gMonSpritesGfxPtr->buffer);
         break;
     case 4:
         ++task->data[1];
