@@ -71,7 +71,7 @@ Contenu de RF à importer :
 - [x] IA des légendaires de RF (2026-10-23, `gBattleLegendaryFrlg` : StartLegendaryBattle de Kanto, IA « mauvaises attaques + K.O. + viabilité ») — sans effet en jeu, dans RF aussi : l'IA n'est consultée que pour les dresseurs, le Safari, les errants et le premier combat ; idem pour les sauvages scriptés (`gBattleWildScriptedFrlg`, 2026-10-24)
 
 Choix HOENN / KANTO :
-- [ ] PC objets : interface de RF en option ; les objets stockés restent communs aux deux régions (même stockage)
+- [x] PC objets (2026-10-24) : interface de RF avec l'option MENUS = KANTO (RETIRER = PC objets plein écran de RF, `kanto_item_pc.c` ; boîte aux lettres aux fenêtres de RF) ; les objets stockés restent communs aux deux régions (même stockage). Les interfaces de RF suivantes (boutique, Maître des capacités) passent aussi par MENUS
 - [ ] Maître des capacités (réapprentissage) : interface de RF en option (learn_move.c), rendu seulement. Les deux proposent déjà les mêmes attaques (capacités par niveau, mêmes données) : rien à fusionner
 - Donneurs de capacités : chacun reste exclusif à sa région (pas de changement)
 - [ ] Boutique : interface de RF en option

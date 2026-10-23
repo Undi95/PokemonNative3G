@@ -89,7 +89,7 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 
 **B. Présentation (choix HOENN/KANTO ou règle par région)**
 - ~~Animation d'objet sur un Pokémon avec le sac KANTO~~ : faite le 2026-10-24 (`kanto_pokemon_special_anim*.c`, préambules de RF dans party_menu.c, `PokemonItemUseNoEffect` de RF dans pokemon.c).
-- Interfaces de RF en option : PC objets + boîte aux lettres (item_pc.c, mailbox_pc.c), boutique (buy_menu_helpers.c + shop.c), menu Start (start_menu.c), Maître des capacités (learn_move.c).
+- Interfaces de RF en option (MENUS = KANTO) : ~~PC objets + boîte aux lettres~~ (2026-10-24), boutique (buy_menu_helpers.c + shop.c), ~~menu Start~~ (déjà fait par MENUS : police, espacement, descriptions), Maître des capacités (learn_move.c).
 - Machine à sous de RF au Casino de Céladopole (slot_machine.c de RF : 73 fonctions propres).
 - Panneaux de RF (signpost), polices homme/femme et couleurs de texte de RF.
 
