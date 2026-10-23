@@ -15,6 +15,7 @@
 #include "script_pokemon_util.h"
 #include "constants/heal_locations.h"
 #include "m4a.h"
+#include "kanto_credits.h"
 #include "main.h"
 #include "malloc.h"
 #include "menu.h"
@@ -1013,6 +1014,7 @@ static void SetWarpsToRollCredits(void)
 {
     VarSet(VAR_KANTO_MAP_SCENE_INDIGO_PLATEAU_EXTERIOR, 1);
     FlagSet(FLAG_HIDE_MAP_NAME_POPUP);
+    gDisableMapMusicChangeOnMapLoad = MUSIC_DISABLE_KEEP;
     SetWarpDestination(MAP_GROUP(MAP_INDIGO_PLATEAU_EXTERIOR), MAP_NUM(MAP_INDIGO_PLATEAU_EXTERIOR), -1, 11, 6);
     DoWarp();
     ResetInitialPlayerAvatarState();

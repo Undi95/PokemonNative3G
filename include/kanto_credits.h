@@ -25,6 +25,12 @@ struct CreditsOverworldCmd
     s16 unk_4;
 };
 
+// Rouge Feu (overworld.h) : la carte chargée ne change pas la musique
+#define MUSIC_DISABLE_OFF 0
+#define MUSIC_DISABLE_STOP 1
+#define MUSIC_DISABLE_KEEP 2
+extern bool8 gDisableMapMusicChangeOnMapLoad;
+
 void Overworld_CreditsMainCB(void);
 bool32 Overworld_DoScrollSceneForCredits(u8 *state, const struct CreditsOverworldCmd *script, u8 tintMode);
 

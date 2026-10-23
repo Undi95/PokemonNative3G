@@ -1087,6 +1087,47 @@ static void PokecenterHealEffect_WaitForSoundAndEnd(struct Task *task)
     }
 }
 
+// ---- Rouge Feu (field_effect.c) : moniteur du Panthéon de Kanto ----
+#define TAG_KANTO_HOF_MONITOR 0x1130
+static const u16 sKantoHofMonitor_Pal[] = INCGFX_U16("graphics/kanto/field_effects/pics/hof_monitor.png", ".gbapal");
+static const u16 sKantoHofMonitor_Gfx[] = INCGFX_U16("graphics/kanto/field_effects/pics/hof_monitor.png", ".4bpp");
+static const struct SpritePalette sKantoSpritePalette_HofMonitor = {sKantoHofMonitor_Pal, TAG_KANTO_HOF_MONITOR};
+static const struct OamData sKantoOamData_16x16 = {.shape = SPRITE_SHAPE(16x16), .size = SPRITE_SIZE(16x16)};
+static const struct SpriteFrameImage sKantoPicTable_HofMonitor[] = {
+    {sKantoHofMonitor_Gfx + 0x00, 0x80},
+    {sKantoHofMonitor_Gfx + 0x40, 0x80},
+    {sKantoHofMonitor_Gfx + 0x80, 0x80},
+    {sKantoHofMonitor_Gfx + 0xC0, 0x80}
+};
+static const union AnimCmd sKantoAnim_HofMonitor[] = {
+    ANIMCMD_FRAME(3, 8),
+    ANIMCMD_FRAME(2, 8),
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(2, 8),
+    ANIMCMD_LOOP(2),
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_END
+};
+static const union AnimCmd *const sKantoAnims_HofMonitor[] = {sKantoAnim_HofMonitor};
+static void SpriteCB_KantoHallOfFameMonitor(struct Sprite *sprite)
+{
+    if (sprite->animEnded)
+        FieldEffectFreeGraphicsResources(sprite);
+}
+static const struct SpriteTemplate sKantoSpriteTemplate_HofMonitor = {
+    .tileTag = TAG_NONE,
+    .paletteTag = TAG_KANTO_HOF_MONITOR,
+    .oam = &sKantoOamData_16x16,
+    .anims = sKantoAnims_HofMonitor,
+    .images = sKantoPicTable_HofMonitor,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_KantoHallOfFameMonitor
+};
+#define tIsKanto data[14]
+
 bool8 FldEff_HallOfFameRecord(void)
 {
     u8 nPokemon;
@@ -1097,6 +1138,12 @@ bool8 FldEff_HallOfFameRecord(void)
     task->tNumMons = nPokemon;
     task->tFirstBallX = 117;
     task->tFirstBallY = 52;
+    if (IsKantoTilesetMap())
+    {
+        task->tIsKanto = TRUE;
+        task->tFirstBallY = 60;
+        LoadSpritePalette(&sKantoSpritePalette_HofMonitor);
+    }
     return FALSE;
 }
 
@@ -1112,6 +1159,8 @@ static void HallOfFameRecordEffect_Init(struct Task *task)
     u8 taskId;
     task->tState++;
     task->tBallSpriteId = CreateGlowingPokeballsEffect(task->tNumMons, task->tFirstBallX, task->tFirstBallY, FALSE);
+    if (task->tIsKanto)
+        return;
     taskId = FindTaskIdByFunc(Task_HallOfFameRecord);
     CreateHofMonitorSprite(taskId, 120, 24, FALSE);
     CreateHofMonitorSprite(taskId, 40, 8, TRUE);
@@ -1124,6 +1173,8 @@ static void HallOfFameRecordEffect_WaitForBallPlacement(struct Task *task)
 {
     if (gSprites[task->tBallSpriteId].sState > 1)
     {
+        if (task->tIsKanto)
+            CreateSpriteAtEnd(&sKantoSpriteTemplate_HofMonitor, 120, 25, 0);
         task->tStartHofFlash++;
         task->tState++;
     }

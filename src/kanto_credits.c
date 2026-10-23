@@ -864,6 +864,7 @@ static void CB2_Credits(void)
         break;
     case 2:
         FlagClear(FLAG_HIDE_MAP_NAME_POPUP);
+        gDisableMapMusicChangeOnMapLoad = MUSIC_DISABLE_OFF;
         Free(sCreditsMgr);
         SoftReset(RESET_ALL);
         // noreturn
@@ -910,6 +911,7 @@ static bool32 DoOverworldMapScrollScene(u8 whichMon)
     {
     case 0:
         FlagSet(FLAG_HIDE_MAP_NAME_POPUP);
+        gDisableMapMusicChangeOnMapLoad = MUSIC_DISABLE_KEEP;
         sCreditsMgr->ovwldseqno = 0;
         sCreditsMgr->subseqno++;
         // fallthrough
