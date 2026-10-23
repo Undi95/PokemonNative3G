@@ -30,6 +30,8 @@
 
 #define FONT_NORMAL FONT_KANTO // police de RF (écran de RF)
 #include "constants/rgb.h"
+#include "dma3.h"
+#include "kanto_bag_internal.h" // noms de RF (sac de RF) : AddItemIconObject, GetTextSpeedSetting, ItemId_GetName...
 #define DMA3_32BIT 1 // RF : dma3.h (même valeur pour RequestDma3Fill d'Émeraude)
 
 // Rouge Feu (strings_*_fr.h)

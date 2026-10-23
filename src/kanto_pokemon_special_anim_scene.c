@@ -30,6 +30,8 @@
 
 #define FONT_NORMAL FONT_KANTO // police de RF (écran de RF)
 #include "constants/rgb.h"
+#include "dma3.h"
+#include "kanto_bag_internal.h" // noms de RF (sac de RF) : AddItemIconObject, GetTextSpeedSetting, ItemId_GetName...
 #define DMA3_32BIT 1 // RF : dma3.h (même valeur pour RequestDma3Fill d'Émeraude)
 
 // Rouge Feu (strings_*_fr.h)
@@ -491,6 +493,12 @@ static const u8 sMonPosAttributes[][PSA_MON_ATTR_COUNT] = {
     [SPECIES_OLD_UNOWN_EMARK - 1] = {32, 33,  8, 32, 43},
     [SPECIES_OLD_UNOWN_QMARK - 1] = {32, 35,  8, 32, 45}
 };
+
+// Rouge Feu (wild_encounter.c)
+static u8 GetUnownLetterByPersonalityLoByte(u32 personality)
+{
+    return GET_UNOWN_LETTER(personality);
+}
 
 static u8 Menu2_GetMonPosAttribute(u16 species, u32 personality, u8 attributeId)
 {
