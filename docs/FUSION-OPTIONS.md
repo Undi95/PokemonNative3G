@@ -68,7 +68,7 @@ Contenu de RF à importer :
 - [ ] Animation quand on utilise un objet sur un Pokémon (pokemon_special_anim*.c : CT, Super Bonbon…) : jouée avec le sac KANTO (option SAC), sac HOENN comme Émeraude
 - [x] Note du Pokédex par Chen (2026-10-23) : GetProfOaksRatingMessage de RF (PC, Chen en personne, ses aides) ; « PC du PROF. CHEN » ajouté au menu PC à Kanto une fois son Pokédex reçu
 - [ ] TOUTES les cinématiques de RF : départ du S.S. Anne, ferry Seagallop, et les autres stubs de `kanto_specials_stubs.c` (éclairage de la Ligue, téléporteurs de Léo, triangle de Deoxys, fossiles du musée, diplôme…)
-- [ ] IA des légendaires de RF (`BATTLE_TYPE_LEGENDARY_FRLG` : état à part comme le FANTÔME)
+- [x] IA des légendaires de RF (2026-10-23, `gBattleLegendaryFrlg` : StartLegendaryBattle de Kanto, IA « mauvaises attaques + K.O. + viabilité »)
 
 Choix HOENN / KANTO :
 - [ ] PC objets : interface de RF en option ; les objets stockés restent communs aux deux régions (même stockage)

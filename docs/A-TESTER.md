@@ -124,4 +124,4 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Objets cachés qui réapparaissent (Kanto, non testé) : Route 20, 21 Nord, souterrains, etc. (15 cartes de RF). Cachés en début de partie ; après 1 500 pas, en entrant sur une de ces cartes, un tirage en fait réapparaître (rares 10 %, peu communs 30 %, communs 60 %). Avec le Cherch'Objet de Kanto
 - [ ] Chen dans la salle du champion de Kanto : rappelle maintenant le starter choisi à Kanto (il lisait celui de Hoenn). Même correctif pour le special IsStarterFirstStageInParty
 - [ ] Note du Pokédex par Chen (vérifié en headless `kanto_oak_pc.py`) : à Kanto, menu PC = PC de ???, PC de <joueur>, PC du PROF. CHEN, (PANTHEON), DECONNEXION ; note selon le nombre de Pokémon de Kanto attrapés. Non vérifiés : Chen en personne au labo (Bourg Palette) et ses aides sur les routes, qui utilisent la même fonction (avant, elle ne faisait rien)
-
+- [ ] Légendaires de Kanto (Mewtwo, Électhor, Sulfura, Artikodin…) : IA de RF (évite les attaques inutiles, cherche le K.O.) ; non visible en headless
