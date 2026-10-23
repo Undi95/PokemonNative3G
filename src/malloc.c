@@ -202,14 +202,14 @@ bool8 gDbgAlloc;
 void *Alloc(u32 size)
 {
     void *p = AllocInternal(sHeapStart, size);
-    if (gDbgAlloc) fprintf(stderr, "DBGA %p %x %p\n", p, size, __builtin_return_address(0));
+    if (gDbgAlloc) fprintf(stderr, "DBGA %p %x %p\n", p, size, (void*)((char*)__builtin_return_address(0) - (char*)Alloc));
     return p;
 }
 
 void *AllocZeroed(u32 size)
 {
     void *p = AllocZeroedInternal(sHeapStart, size);
-    if (gDbgAlloc) fprintf(stderr, "DBGA %p %x %p\n", p, size, __builtin_return_address(0));
+    if (gDbgAlloc) fprintf(stderr, "DBGA %p %x %p\n", p, size, (void*)((char*)__builtin_return_address(0) - (char*)Alloc));
     return p;
 }
 
