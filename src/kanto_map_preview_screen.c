@@ -356,7 +356,7 @@ static const struct WindowTemplate sMapNameWindow = {
     .width = 13,
     .height = 2,
     .paletteNum = 14,
-    .baseBlock = 0x1C2
+    .baseBlock = 0x2C0 // RF : 0x1C2, recouvert ici par la boîte de dialogue du terrain (0x194-0x1FF)
 };
 
 static const struct BgTemplate sMapPreviewBgTemplate[1] = {
