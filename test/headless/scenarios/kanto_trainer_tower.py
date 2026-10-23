@@ -14,7 +14,7 @@ def play(game):
     give_mewtwo(game)
     debug_warp(game, 32); log(game, "hall")
     walk_to(game, 9, 7); log(game, "défi")
-    walk_to(game, 9, 3); game.press("UP", 20); wait_until(game, lambda s: s.free); log(game, "1er étage")
+    walk_to(game, 9, 2); game.press("RIGHT", 20); wait_until(game, lambda s: s.free and s.map_name != "TrainerTower_Lobby"); log(game, "1er étage")
     game.wait(60)
     walk_to(game, 10, 12); log(game, "avant combat")
     game.press("DOWN", 4); game.wait(30)

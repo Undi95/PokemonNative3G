@@ -1,5 +1,6 @@
 #include "global.h"
 #include "kanto_save.h"
+#include "constants/kanto/trainer_tower.h"
 #include "platform.h"
 #include "save.h"
 #include "string_util.h"
@@ -26,6 +27,19 @@ void KantoSave_Clear(void)
     StringCopy(gSaveBlockKanto.rivalName, sText_KantoRivalDefaultName);
 }
 
+// Temps record de la Tour des Dresseurs (chiffrés avec la clé de SaveBlock2, cf. load_save.c) : une sauvegarde
+// d'avant leur import n'a que des zéros, que RF n'a jamais (ResetTrainerTowerResults à la nouvelle partie)
+static void KantoSave_InitTrainerTowerTimes(void)
+{
+    s32 i;
+
+    for (i = 0; i < NUM_TOWER_CHALLENGE_TYPES; i++)
+    {
+        if (gSaveBlockKanto.trainerTower[i].bestTime == 0 && gSaveBlockKanto.trainerTower[i].unk9 == 0)
+            gSaveBlockKanto.trainerTower[i].bestTime = TRAINER_TOWER_MAX_TIME ^ gSaveBlock2Ptr->encryptionKey;
+    }
+}
+
 void KantoSave_Write(void)
 {
 #ifdef PORTABLE
@@ -44,6 +58,7 @@ void KantoSave_Read(void)
      || gSaveBlockKanto.magic != KANTO_SAVE_MAGIC
      || gSaveBlockKanto.checksum != KantoSave_Checksum())
         KantoSave_Clear();
+    KantoSave_InitTrainerTowerTimes();
 #endif
 }
 

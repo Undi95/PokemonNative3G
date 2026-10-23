@@ -3,6 +3,7 @@
 #include "berry_powder.h"
 #include "item.h"
 #include "load_save.h"
+#include "kanto_save.h"
 #include "main.h"
 #include "overworld.h"
 #include "pokemon.h"
@@ -15,6 +16,7 @@
 #include "agb_flash.h"
 
 static void ApplyNewEncryptionKeyToAllEncryptedData(u32 encryptionKey);
+static void ApplyNewEncryptionKeyToTrainerTowerTimes(u32 encryptionKey);
 
 #define SAVEBLOCK_MOVE_RANGE    128
 
@@ -307,4 +309,14 @@ static void ApplyNewEncryptionKeyToAllEncryptedData(u32 encryptionKey)
     ApplyNewEncryptionKeyToBerryPowder(encryptionKey);
     ApplyNewEncryptionKeyToWord(&gSaveBlock1Ptr->money, encryptionKey);
     ApplyNewEncryptionKeyToHword(&gSaveBlock1Ptr->coins, encryptionKey);
+    ApplyNewEncryptionKeyToTrainerTowerTimes(encryptionKey);
+}
+
+// Rouge Feu (load_save.c) : temps record de la Tour des Dresseurs, chiffrés eux aussi
+static void ApplyNewEncryptionKeyToTrainerTowerTimes(u32 encryptionKey)
+{
+    int i;
+
+    for (i = 0; i < NUM_TOWER_CHALLENGE_TYPES; i++)
+        ApplyNewEncryptionKeyToWord(&gSaveBlockKanto.trainerTower[i].bestTime, encryptionKey);
 }
