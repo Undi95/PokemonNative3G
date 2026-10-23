@@ -729,6 +729,7 @@ static void CB2_EndWildBattle(void)
 
 static void CB2_EndScriptedWildBattle(void)
 {
+    gBattleLegendaryFrlg = FALSE; // PokemonNative3G
     CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
 
@@ -2168,6 +2169,7 @@ void StartLegendaryBattle(void)
     LockPlayerFieldControls();
     gMain.savedCallback = CB2_EndScriptedWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_LEGENDARY;
+    gBattleLegendaryFrlg = TRUE; // Rouge Feu : BATTLE_TYPE_LEGENDARY | BATTLE_TYPE_LEGENDARY_FRLG
     species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
     switch (species)
     {

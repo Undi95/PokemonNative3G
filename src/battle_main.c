@@ -124,6 +124,7 @@ static void HandleEndTurn_FinishBattle(void);
 static void SpriteCB_UnusedBattleInit(struct Sprite *sprite);
 static void SpriteCB_UnusedBattleInit_Main(struct Sprite *sprite);
 
+EWRAM_DATA bool8 gBattleLegendaryFrlg = FALSE; // PokemonNative3G : BATTLE_TYPE_LEGENDARY_FRLG de Rouge Feu (battle.h)
 EWRAM_DATA u8 gBattleGhostType = 0; // PokemonNative3G : combats FANTÔME de Rouge Feu (battle.h)
 EWRAM_DATA u16 gBattle_BG0_X = 0;
 EWRAM_DATA u16 gBattle_BG0_Y = 0;

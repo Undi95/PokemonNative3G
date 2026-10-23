@@ -739,6 +739,8 @@ enum
     GHOST_BATTLE_UNVEILED, // BATTLE_TYPE_GHOST | BATTLE_TYPE_GHOST_UNVEILED (Scope Sylph)
 };
 extern u8 gBattleGhostType;
+// PokemonNative3G : BATTLE_TYPE_LEGENDARY_FRLG de Rouge Feu (StartLegendaryBattle : IA plus fine), même raison
+extern bool8 gBattleLegendaryFrlg;
 #define IS_BATTLE_TYPE_GHOST(flags)               ((void)(flags), gBattleGhostType != GHOST_BATTLE_NONE)
 #define IS_BATTLE_TYPE_GHOST_WITHOUT_SCOPE(flags) ((void)(flags), gBattleGhostType == GHOST_BATTLE_HIDDEN)
 #define IS_BATTLE_TYPE_GHOST_WITH_SCOPE(flags)    ((void)(flags), gBattleGhostType == GHOST_BATTLE_UNVEILED)
