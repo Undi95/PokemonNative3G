@@ -1,5 +1,6 @@
 // Rouge Feu : trainer_tower_sets.c (étages de la Tour des Dresseurs de l'Île 7)
 #include "global.h"
+#include "kanto_save.h"
 #include "kanto_trainer_tower.h"
 #include "text.h"
 #include "constants/easy_chat.h"
