@@ -604,6 +604,7 @@ gStdScripts_End::
 	.include "data/scripts/fusion_fishing.inc"
 	.include "data/scripts/fusion_bike.inc"
 	.include "data/scripts/fusion_charms.inc"
+	.include "data/scripts/fusion_kanto_travel.inc"
 
 	.include "data/scripts/std_msgbox.inc"
 	.include "data/scripts/trainer_battle.inc"

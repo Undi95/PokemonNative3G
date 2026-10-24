@@ -20,5 +20,6 @@ void FishingChain_TryShiny(struct Pokemon *mon);
 u8 OvoChrono_EggCycles(u8 toSub);
 u8 OvalCharm_Compatibility(u8 compatibility);
 u32 ShinyCharm_EggPersonality(u32 personality);
+bool8 Fusion_IsBoxMonLockedInHoenn(struct BoxPokemon *mon);
 
 #endif // GUARD_FUSION_EVENTS_H

@@ -163,6 +163,7 @@ SlateportCity_Harbor_EventScript_FerryAttendant::
 	end
 
 SlateportCity_Harbor_EventScript_AskForTicket::
+	call Fusion_EventScript_HoennHarborKanto @ PokemonNative3G : data/scripts/fusion_kanto_travel.inc
 	msgbox SlateportCity_Harbor_Text_MayISeeYourTicket, MSGBOX_DEFAULT
 	message SlateportCity_Harbor_Text_FlashedTicketWhereTo
 	waitmessage

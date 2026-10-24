@@ -1,6 +1,7 @@
 .equ SIGN_LADY_READY, VAR_TEMP_2
 
 PalletTown_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, Fusion_PalletTown_OnLoad @ PokemonNative3G : maison fermée tant qu'elle n'est pas achetée
 	map_script MAP_SCRIPT_ON_TRANSITION, PalletTown_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, PalletTown_OnFrame
 	.byte 0
@@ -398,6 +399,7 @@ PalletTown_EventScript_OaksLabSign::
 	end
 
 PalletTown_EventScript_PlayersHouseSign::
+	goto_if_unset FLAG_PALLET_HOUSE_BOUGHT, Fusion_EventScript_PalletHouseForSale @ PokemonNative3G
 	msgbox PalletTown_Text_PlayersHouse, MSGBOX_SIGN
 	end
 

@@ -4520,6 +4520,22 @@ static u8 CopyMonToPC(struct Pokemon *mon)
     return MON_CANT_GIVE;
 }
 
+// PokemonNative3G : premier départ pour Kanto, toute l'équipe part au PC (ceux qui n'y tiennent pas restent)
+void Fusion_StorePartyInPC(void)
+{
+    u32 i;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
+            continue;
+        if (CopyMonToPC(&gPlayerParty[i]) == MON_GIVEN_TO_PC)
+            ZeroMonData(&gPlayerParty[i]);
+    }
+    CompactPartySlots();
+    CalculatePlayerPartyCount();
+}
+
 u8 CalculatePlayerPartyCount(void)
 {
     gPlayerPartyCount = 0;

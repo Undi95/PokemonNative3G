@@ -356,6 +356,8 @@ gSpecials::
 	def_special GetDaysUntilPacifidlogTMAvailable
 	def_special HasAllHoennMons
 	def_special HasAllMons @ PokemonNative3G
+	def_special Fusion_StorePartyInPC @ PokemonNative3G
+	def_special CanFlyBetweenRegions @ PokemonNative3G
 	def_special MonOTNameNotPlayer
 	def_special BufferLottoTicketNumber
 	def_special TryHideBattleTowerReporter

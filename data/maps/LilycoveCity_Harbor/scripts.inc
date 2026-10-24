@@ -10,6 +10,7 @@ LilycoveCity_Harbor_EventScript_FerryAttendant::
 	lock
 	faceplayer
 	goto_if_unset FLAG_SYS_GAME_CLEAR, LilycoveCity_Harbor_EventScript_FerryUnavailable
+	call Fusion_EventScript_HoennHarborKanto @ PokemonNative3G : data/scripts/fusion_kanto_travel.inc
 	call LilycoveCity_Harbor_EventScript_GetEonTicketState
 	call LilycoveCity_Harbor_EventScript_GetAuroraTicketState
 	call LilycoveCity_Harbor_EventScript_GetOldSeaMapState

@@ -8,6 +8,7 @@
 #include "event_data.h"
 #include "fusion_events.h"
 #include "item.h"
+#include "kanto_region_map.h"
 #include "kanto_field_door.h"
 #include "pokedex.h"
 #include "pokemon.h"
@@ -311,4 +312,19 @@ void GiveShinyChansey(void)
     GiveMonToPlayer(&mon);
     GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_CHANSEY), FLAG_SET_SEEN);
     GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_CHANSEY), FLAG_SET_CAUGHT);
+}
+
+// POKéMON de Hoenn pendant le voyage à Kanto : grisés au PC, ils ne peuvent pas rejoindre l'équipe tant que la Ligue
+// de Kanto n'est pas finie et le Rubis/Saphir rendu à CILEO (comme le vol entre régions). « De Hoenn » = rencontré
+// hors de Kanto (oeufs de Hoenn compris), sauf échanges et rencontres spéciales.
+bool8 Fusion_IsBoxMonLockedInHoenn(struct BoxPokemon *mon)
+{
+    u8 location;
+
+    if (!FlagGet(FLAG_FUSION_KANTO_VISITED) || CanFlyBetweenRegions())
+        return FALSE;
+    if (GetBoxMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
+        return FALSE;
+    location = GetBoxMonData(mon, MON_DATA_MET_LOCATION);
+    return location < KANTO_MAPSEC_START || (location > KANTO_MAPSEC_END && location < METLOC_SPECIAL_EGG);
 }

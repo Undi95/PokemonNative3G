@@ -49,6 +49,7 @@ VermilionCity_EventScript_OldMan1SSAnneLeft::
 VermilionCity_EventScript_FerrySailor::
 	lock
 	faceplayer
+	call Fusion_EventScript_VermilionHoenn @ PokemonNative3G : data/scripts/fusion_kanto_travel.inc
 	goto_if_eq VAR_KANTO_MAP_SCENE_VERMILION_CITY, 3, VermilionCity_EventScript_CheckSeagallopPresent
 	msgbox VermilionCity_Text_WelcomeToTheSSAnne
 	release

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h"
 #include "malloc.h"
 #include "bg.h"
 #include "data.h"
@@ -93,6 +94,7 @@ enum {
     MSG_ITEM_IS_HELD,
     MSG_CHANGED_TO_ITEM,
     MSG_CANT_STORE_MAIL,
+    MSG_HOENN_LOCKED, // PokemonNative3G
 };
 
 // IDs for how to resolve variables in the above messages
@@ -1085,6 +1087,9 @@ static const struct SpriteTemplate sSpriteTemplate_DisplayMon =
     .callback = SpriteCallbackDummy,
 };
 
+// PokemonNative3G : POKéMON de Hoenn pendant le voyage à Kanto (Fusion_IsBoxMonLockedInHoenn)
+static const u8 sText_HoennLocked[] = _("Aucune connexion avec HOENN…\nIl ne peut pas venir!");
+
 static const struct StorageMessage sMessages[] =
 {
     [MSG_EXIT_BOX]             = {gText_ExitFromBox,             MSG_VAR_NONE},
@@ -1102,6 +1107,7 @@ static const struct StorageMessage sMessages[] =
     [MSG_MARK_POKE]            = {gText_MarkYourPkmn,            MSG_VAR_NONE},
     [MSG_LAST_POKE]            = {gText_ThatsYourLastPkmn,       MSG_VAR_NONE},
     [MSG_PARTY_FULL]           = {gText_YourPartysFull,          MSG_VAR_NONE},
+    [MSG_HOENN_LOCKED]         = {sText_HoennLocked,             MSG_VAR_NONE}, // PokemonNative3G
     [MSG_HOLDING_POKE]         = {gText_YoureHoldingAPkmn,       MSG_VAR_NONE},
     [MSG_WHICH_ONE_WILL_TAKE]  = {gText_WhichOneWillYouTake,     MSG_VAR_NONE},
     [MSG_CANT_RELEASE_EGG]     = {gText_YouCantReleaseAnEgg,     MSG_VAR_NONE},
@@ -2095,7 +2101,7 @@ static void InitStartingPosData(void)
 
 static void SetMonIconTransparency(void)
 {
-    if (sStorage->boxOption == OPTION_MOVE_ITEMS)
+    // PokemonNative3G : aussi hors mode objets, pour les POKéMON de Hoenn grisés
     {
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT2_ALL);
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(7, 11));
@@ -2782,8 +2788,25 @@ static void Task_PlaceMon(u8 taskId)
     switch (sStorage->state)
     {
     case 0:
+        if (sCursorArea == CURSOR_AREA_IN_PARTY && Fusion_IsBoxMonLockedInHoenn(&sStorage->movingMon.box)) // PokemonNative3G
+        {
+            PlaySE(SE_FAILURE);
+            PrintMessage(MSG_HOENN_LOCKED);
+            sStorage->state = 10;
+            break;
+        }
         InitMonPlaceChange(CHANGE_PLACE);
         sStorage->state++;
+        break;
+    case 10:
+        if (JOY_NEW(A_BUTTON | B_BUTTON | DPAD_ANY))
+        {
+            ClearBottomWindow();
+            if (sInPartyMenu)
+                SetPokeStorageTask(Task_HandleMovingMonFromParty);
+            else
+                SetPokeStorageTask(Task_PokeStorageMain);
+        }
         break;
     case 1:
         if (!DoMonPlaceChange())
@@ -2802,8 +2825,25 @@ static void Task_ShiftMon(u8 taskId)
     switch (sStorage->state)
     {
     case 0:
+        if (sCursorArea == CURSOR_AREA_IN_PARTY && Fusion_IsBoxMonLockedInHoenn(&sStorage->movingMon.box)) // PokemonNative3G
+        {
+            PlaySE(SE_FAILURE);
+            PrintMessage(MSG_HOENN_LOCKED);
+            sStorage->state = 10;
+            break;
+        }
         InitMonPlaceChange(CHANGE_SHIFT);
         sStorage->state++;
+        break;
+    case 10:
+        if (JOY_NEW(A_BUTTON | B_BUTTON | DPAD_ANY))
+        {
+            ClearBottomWindow();
+            if (sInPartyMenu)
+                SetPokeStorageTask(Task_HandleMovingMonFromParty);
+            else
+                SetPokeStorageTask(Task_PokeStorageMain);
+        }
         break;
     case 1:
         if (!DoMonPlaceChange())
@@ -2820,7 +2860,13 @@ static void Task_WithdrawMon(u8 taskId)
     switch (sStorage->state)
     {
     case 0:
-        if (CalculatePlayerPartyCount() == PARTY_SIZE)
+        if (Fusion_IsBoxMonLockedInHoenn(GetBoxedMonPtr(StorageGetCurrentBox(), sCursorPosition))) // PokemonNative3G
+        {
+            PlaySE(SE_FAILURE);
+            PrintMessage(MSG_HOENN_LOCKED);
+            sStorage->state = 1;
+        }
+        else if (CalculatePlayerPartyCount() == PARTY_SIZE)
         {
             PrintMessage(MSG_PARTY_FULL);
             sStorage->state = 1;
@@ -4534,6 +4580,8 @@ static void InitBoxMonSprites(u8 boxId)
             {
                 personality = GetBoxMonDataAt(boxId, boxPosition, MON_DATA_PERSONALITY);
                 sStorage->boxMonsSprites[count] = CreateMonIconSprite(species, personality, 8 * (3 * j) + 100, 8 * (3 * i) + 44, 2, 19 - j);
+                if (sStorage->boxMonsSprites[count] != NULL && Fusion_IsBoxMonLockedInHoenn(GetBoxedMonPtr(boxId, boxPosition))) // PokemonNative3G
+                    sStorage->boxMonsSprites[count]->oam.objMode = ST_OAM_OBJ_BLEND;
             }
             else
             {
@@ -4573,6 +4621,8 @@ static void CreateBoxMonIconAtPos(u8 boxPosition)
         u32 personality = GetCurrentBoxMonData(boxPosition, MON_DATA_PERSONALITY);
 
         sStorage->boxMonsSprites[boxPosition] = CreateMonIconSprite(species, personality, x, y, 2, 19 - (boxPosition % IN_BOX_COLUMNS));
+        if (sStorage->boxMonsSprites[boxPosition] != NULL && Fusion_IsBoxMonLockedInHoenn(GetBoxedMonPtr(StorageGetCurrentBox(), boxPosition))) // PokemonNative3G
+            sStorage->boxMonsSprites[boxPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
         if (sStorage->boxOption == OPTION_MOVE_ITEMS)
             sStorage->boxMonsSprites[boxPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
     }
@@ -4678,6 +4728,8 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
                     sStorage->boxMonsSprites[boxPosition]->sSpeed = speed;
                     sStorage->boxMonsSprites[boxPosition]->sScrollInDestX = xDest;
                     sStorage->boxMonsSprites[boxPosition]->callback = SpriteCB_BoxMonIconScrollIn;
+                    if (Fusion_IsBoxMonLockedInHoenn(GetBoxedMonPtr(sStorage->incomingBoxId, boxPosition))) // PokemonNative3G
+                        sStorage->boxMonsSprites[boxPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
                     iconsCreated++;
                 }
             }
