@@ -8,6 +8,7 @@
 #include "gpu_regs.h"
 #include "main.h"
 #include "malloc.h"
+bool32 CheckHeap(void);
 #include "menu.h"
 #include "overworld.h"
 #include "palette.h"
@@ -939,7 +940,14 @@ static void CleanSupSlotMachineState(void)
 
 static void CB2_RunSlotMachine(void)
 {
+    static bool8 sReported2;
     RunTasks();
+    if (!sReported2 && !CheckHeap())
+    {
+        sReported2 = TRUE;
+        fprintf(stderr, "[slot] tas corrompu après RunTasks\n");
+        fflush(stderr);
+    }
     AnimateSprites();
     BuildOamBuffer();
     UpdatePaletteFade();
@@ -1977,7 +1985,18 @@ static void Task_SlotMachine(u8 taskId)
     for (i = 0; i < (int)ARRAY_COUNT(ptr->tasks); i++)
     {
         if (ptr->tasks[i].active)
+        {
+            static bool8 sReported;
+            u16 f = ptr->tasks[i].funcno;
+            u8 st = ptr->tasks[i].state;
             ptr->tasks[i].active = sSlotMachineSetupTasks[ptr->tasks[i].funcno](&ptr->tasks[i].state, ptr);
+            if (!sReported && !CheckHeap())
+            {
+                sReported = TRUE;
+                fprintf(stderr, "[slot] tas corrompu après la tâche %d (état %d)\n", f, st);
+                fflush(stderr);
+            }
+        }
     }
 }
 
