@@ -26,6 +26,9 @@
 #include "kanto_bag_internal.h" // noms de RF (après les en-têtes d'Émeraude)
 
 void KantoPlaySlotMachine(u16 machineIdx, MainCallback savedCallback);
+#include <stdio.h>
+#define DBGTRACE(s) do { fprintf(stderr, "[slot] %s
+", s); fflush(stderr); } while (0)
 #define DMA3_32BIT 1 // RF : dma3.h
 
 // Rouge Feu (strings_*_fr.h)
@@ -1105,6 +1108,7 @@ static void MainTask_ConfirmExitGame(u8 taskId)
     switch (data[0])
     {
     case 0:
+        DBGTRACE("B");
         SetSlotMachineSetupTask(SLOTTASK_ASK_QUIT, 0);
         data[0]++;
         break;
@@ -2202,9 +2206,13 @@ static bool8 SlotsTask_AskQuitPlaying(u8 * state, struct SlotMachineSetupTaskDat
     switch (*state)
     {
     case 0:
+        DBGTRACE("quit 0");
         Slot_PrintOnWindow0(sKText_String_QuitPlaying);
+        DBGTRACE("quit 1");
         Slot_CreateYesNoMenu(0);
+        DBGTRACE("quit 2");
         CopyWindowToVram(0, COPYWIN_FULL);
+        DBGTRACE("quit 3");
         (*state)++;
         break;
     case 1:
