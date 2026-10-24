@@ -1369,7 +1369,12 @@ static bool32 DoCopyrightOrTheEndGfxScene(void)
         ChangeBgY(0, 0, BG_COORD_SET);
         DecompressAndLoadBgGfxUsingHeap(0, sCopyrightOrTheEndGfxHeaders[sCreditsMgr->whichMon].tiles, 0x2000, 0, 0);
         DecompressAndLoadBgGfxUsingHeap(0, sCopyrightOrTheEndGfxHeaders[sCreditsMgr->whichMon].map, 0x800, 0, 1);
+#ifdef UBFIX
+        // The palettes only have 16 colors: loading 16 palettes reads past them
+        LoadPalette(sCopyrightOrTheEndGfxHeaders[sCreditsMgr->whichMon].palette, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+#else
         LoadPalette(sCopyrightOrTheEndGfxHeaders[sCreditsMgr->whichMon].palette, BG_PLTT_ID(0), 16 * PLTT_SIZE_4BPP);
+#endif
         SetVBlankCallback(VBlankCB);
         EnableInterrupts(INTR_FLAG_VBLANK);
         sCreditsMgr->subseqno++;
