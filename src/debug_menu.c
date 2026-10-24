@@ -23,6 +23,7 @@
 #include "constants/maps.h"
 #include "constants/songs.h"
 #include "constants/items.h"
+#include "constants/moves.h"
 #include "constants/species.h"
 #include "event_data.h"
 #include "pokemon.h"
