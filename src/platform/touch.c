@@ -9,9 +9,9 @@
 #include "platform/touch.h"
 
 #define MAX_FINGERS 10
-#define RESET_HOLD_MS 1000
+#define RESET_HOLD_MS 300
 
-enum { ZONE_DPAD, ZONE_A, ZONE_B, ZONE_L, ZONE_R, ZONE_SELECT, ZONE_RESET, ZONE_START, NUM_ZONES };
+enum { ZONE_DPAD, ZONE_A, ZONE_B, ZONE_L, ZONE_R, ZONE_SELECT, ZONE_RESET, ZONE_START, ZONE_FAST, NUM_ZONES };
 
 struct Zone
 {
@@ -34,11 +34,12 @@ static u16 sLatched; // PokemonNative3G : touches appuyées depuis la dernière 
 static bool sResetHeld;
 static Uint32 sResetSince;
 static bool sResetFired;
+static bool sFastOn, sFastHeld; // PokemonNative3G : avance rapide, interrupteur
 
 // 3x5 letters for the labels
 static const char *const sGlyphs[] = {
     "A", "010101111101101", "B", "110101110101110", "C", "011100100100011",
-    "E", "111100110100111", "L", "100100100100111", "R", "110101110101101",
+    "E", "111100110100111", "F", "111100110100100", "L", "100100100100111", "R", "110101110101101",
     "S", "011100010001110", "T", "111010010010010",
 };
 
@@ -62,6 +63,7 @@ static void LayOut(int w, int h)
     sZones[ZONE_SELECT] = (struct Zone){w / 2.0f - 37 * u, h - 8 * u, 22 * u, 7 * u, false};
     sZones[ZONE_RESET] = (struct Zone){w / 2.0f - 11 * u, h - 8 * u, 22 * u, 7 * u, false};
     sZones[ZONE_START] = (struct Zone){w / 2.0f + 15 * u, h - 8 * u, 22 * u, 7 * u, false};
+    sZones[ZONE_FAST] = (struct Zone){w / 2.0f - 11 * u, 0, 22 * u, 9 * u, false};
 }
 
 static bool InZone(const struct Zone *zone, float x, float y, float margin)
@@ -81,7 +83,7 @@ static void Update(void)
         [ZONE_A] = A_BUTTON, [ZONE_B] = B_BUTTON, [ZONE_L] = L_BUTTON, [ZONE_R] = R_BUTTON,
         [ZONE_SELECT] = SELECT_BUTTON, [ZONE_START] = START_BUTTON,
     };
-    bool reset = false;
+    bool reset = false, fast = false;
 
     sHeld = 0;
     for (int i = 0; i < MAX_FINGERS; i++)
@@ -115,6 +117,8 @@ static void Update(void)
                 sLatched |= sZoneKeys[zone];
                 if (zone == ZONE_RESET)
                     reset = true;
+                if (zone == ZONE_FAST)
+                    fast = true;
                 break;
             }
         }
@@ -125,6 +129,14 @@ static void Update(void)
         sResetFired = false;
     }
     sResetHeld = reset;
+    if (fast && !sFastHeld)
+        sFastOn = !sFastOn;
+    sFastHeld = fast;
+}
+
+bool Touch_FastForward(void)
+{
+    return sFastOn;
 }
 
 void Touch_Init(void)
@@ -224,7 +236,7 @@ static void DrawLabel(SDL_Renderer *renderer, const char *text, float cx, float 
 
 void Touch_Draw(SDL_Renderer *renderer, SDL_Window *window)
 {
-    static const char *const sLabels[NUM_ZONES] = {"", "A", "B", "L", "R", "SELECT", "RESET", "START"};
+    static const char *const sLabels[NUM_ZONES] = {"", "A", "B", "L", "R", "SELECT", "RESET", "START", "FAST"};
     SDL_Color idle = {255, 255, 255, 70}, pressed = {255, 255, 255, 150};
     int w, h;
     float u;
@@ -265,7 +277,7 @@ void Touch_Draw(SDL_Renderer *renderer, SDL_Window *window)
             [ZONE_A] = A_BUTTON, [ZONE_B] = B_BUTTON, [ZONE_L] = L_BUTTON, [ZONE_R] = R_BUTTON,
             [ZONE_SELECT] = SELECT_BUTTON, [ZONE_START] = START_BUTTON,
         };
-        bool down = (zone == ZONE_RESET) ? sResetHeld : (sHeld & sKeys[zone]) != 0;
+        bool down = (zone == ZONE_RESET) ? sResetHeld : (zone == ZONE_FAST) ? sFastOn : (sHeld & sKeys[zone]) != 0;
         SDL_Color c = down ? pressed : idle;
         float cx, cy;
 

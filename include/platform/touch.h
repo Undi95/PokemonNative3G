@@ -11,6 +11,7 @@ void Touch_HandleEvent(const SDL_Event *event, SDL_Window *window);
 u16 Touch_GetButtons(void);
 // True once when the RESET button has been held long enough
 bool Touch_ResetRequested(void);
+bool Touch_FastForward(void);
 void Touch_Draw(SDL_Renderer *renderer, SDL_Window *window);
 
 #endif // GUARD_PLATFORM_TOUCH_H

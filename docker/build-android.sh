@@ -3,6 +3,8 @@
 # /repo = dépôt monté en lecture, /work = volume interne (build rapide), /out = sortie
 # Produit /out/android/PokemonNative3G.apk (arm64-v8a)
 set -eo pipefail
+# clé de debug gardée dans le volume : même signature d'un build à l'autre (mise à jour sans perdre la sauvegarde)
+mkdir -p /work/.android; rm -rf ~/.android; ln -sfn /work/.android ~/.android
 if [ ! -d /work/src/.git ]; then git clone -q /repo /work/src; fi
 cd /work/src
 git fetch -q /repo HEAD && git reset -q --hard FETCH_HEAD

@@ -165,6 +165,9 @@ int main(int argc, char **argv)
     videoScale = gSettings.scale;
     sdlWindow = SDL_CreateWindow("PokemonNative3G", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DISPLAY_WIDTH * videoScale, DISPLAY_HEIGHT * videoScale,
                                  SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | (gSettings.fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+#ifdef __ANDROID__
+    SDL_SetWindowFullscreen(sdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP); // PokemonNative3G
+#endif
     if (sdlWindow == NULL)
     {
         DBGPRINTF("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -492,6 +495,12 @@ void ProcessEvents(void)
             break;
         case SDL_WINDOWEVENT:
             // Keep the window a whole multiple of the GBA screen
+#ifdef __ANDROID__
+            // PokemonNative3G : toujours plein écran (immersif) sur Android
+            if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED || event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED)
+                SDL_SetWindowFullscreen(sdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+            break;
+#endif
             if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED
              && !(SDL_GetWindowFlags(sdlWindow) & SDL_WINDOW_FULLSCREEN))
             {
@@ -514,6 +523,7 @@ void ProcessEvents(void)
 
     // Fast-forward while it's held
     Input_GetButtons(&speedUp);
+    speedUp |= Touch_FastForward();
     timeScale = speedUp ? 5.0 : 1.0;
 
     // Soft reset when its key (key_reset in the settings, F5 by default) goes down
