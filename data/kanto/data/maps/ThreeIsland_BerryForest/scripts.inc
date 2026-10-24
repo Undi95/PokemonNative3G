@@ -5,6 +5,7 @@ ThreeIsland_BerryForest_MapScripts::
 ThreeIsland_BerryForest_OnTransition::
 	setworldmapflag FLAG_KANTO_WORLD_MAP_THREE_ISLAND_BERRY_FOREST
 	setescapewarp MAP_THREE_ISLAND_BOND_BRIDGE, 12, 6
+	setflag FLAG_TEMP_11 @ PokemonNative3G : CELEBI caché (data/scripts/fusion_celebi.inc)
 	end
 
 ThreeIsland_BerryForest_EventScript_Lostelle::

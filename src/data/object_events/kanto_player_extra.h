@@ -229,3 +229,29 @@ const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_GreenUnderwat
     .images = sKantoPicTable_GreenUnderwater,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+
+// PokemonNative3G : autel de Celebi (Forêt Baies), dessiné pour la fusion dans la palette des PNJ de Kanto
+// (graphics/fusion/object_events/shrine.png ; même format que le panneau d'arène)
+const u16 gKantoObjectEventPic_Shrine[] = INCGFX_U16("graphics/fusion/object_events/shrine.png", ".4bpp");
+static const struct SpriteFrameImage sKantoPicTable_Shrine[] = {
+    overworld_frame(gKantoObjectEventPic_Shrine, 2, 4, 0),
+};
+
+const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_Shrine = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_KANTO_NPC_WHITE,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 256,
+    .width = 16,
+    .height = 32,
+    .paletteSlot = PALSLOT_NPC_4,
+    .shadowSize = SHADOW_SIZE_S,
+    .inanimate = TRUE,
+    .disableReflectionPaletteLoad = FALSE,
+    .tracks = TRACKS_NONE,
+    .oam = &gKantoObjectEventBaseOam_16x32,
+    .subspriteTables = gKantoObjectEventSpriteOamTables_16x32,
+    .anims = sKantoAnimTable_Inanimate,
+    .images = sKantoPicTable_Shrine,
+    .affineAnims = gDummySpriteAffineAnimTable,
+};
