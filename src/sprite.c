@@ -1053,7 +1053,12 @@ void JumpToTopOfAnimLoop(struct Sprite *sprite)
     {
         sprite->animCmdIndex--;
 
+#ifdef UBFIX
+        // At the start of the animation, the check below would read the command before it
+        while (sprite->animCmdIndex != 0 && sprite->anims[sprite->animNum][sprite->animCmdIndex - 1].type != -3)
+#else
         while (sprite->anims[sprite->animNum][sprite->animCmdIndex - 1].type != -3)
+#endif
         {
             if (sprite->animCmdIndex == 0)
                 break;
