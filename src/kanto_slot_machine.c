@@ -931,9 +931,11 @@ static void CB2_InitSlotMachine(void)
 static void CleanSupSlotMachineState(void)
 {
     DestroySlotMachine();
+    DBGTRACE("avant free état");
     if (sSlotMachineState != NULL)
     {
         Free(sSlotMachineState);
+        DBGTRACE("free état fait");
         sSlotMachineState = NULL;
     }
 }
