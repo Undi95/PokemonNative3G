@@ -55,7 +55,7 @@ contenu dans un seul jeu.
 - [ ] Légendaires manquants (vers la fin)
 - [ ] Événements en jeu à Hoenn (ceux de RF + Mew) et objets requis (Ticket Aurora, Ticket Mystique, etc.)
 - [x] Aperçus de donjons/lieux de RF à Kanto (2026-10-24, `src/kanto_map_preview_screen.c`)
-- [ ] « Précédemment dans votre quête » (journal de RF) : partout si possible, avec une option (désactivé par défaut)
+- [-] « Précédemment dans votre quête » (journal de RF) : abandonné (décision de l'utilisateur, 2026-10-24)
 - [x] Courir partout (intérieurs compris ; bike.c, IsRunningDisallowed)
 - [x] Cherch'Objet selon la région (kanto_itemfinder.c = RF à Kanto, Émeraude à Hoenn) ; objets « sous les pieds » de RF perdus à l'import des cartes (traités comme des objets cachés normaux)
 - [ ] Objets donnés deux fois (CS, cannes, Passe Bateau…) : voir docs/OBJETS-EN-DOUBLE.md
