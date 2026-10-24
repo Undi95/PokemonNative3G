@@ -26,6 +26,8 @@
 #include "kanto_bag_internal.h" // noms de RF (après les en-têtes d'Émeraude)
 
 void KantoPlaySlotMachine(u16 machineIdx, MainCallback savedCallback);
+#include <stdio.h>
+#define DBGTRACE(s) do { fprintf(stderr, "[slot] %s\n", s); fflush(stderr); } while (0)
 #define DMA3_32BIT 1 // RF : dma3.h
 
 // Rouge Feu (strings_*_fr.h)
@@ -936,11 +938,18 @@ static void CleanSupSlotMachineState(void)
 
 static void CB2_RunSlotMachine(void)
 {
+    DBGTRACE("run");
     RunTasks();
+    DBGTRACE("anim");
     AnimateSprites();
+    DBGTRACE("oam");
     BuildOamBuffer();
+    DBGTRACE("fade");
     UpdatePaletteFade();
+    DBGTRACE("fin");
 }
+
+static void VBlankTrace(void) {}
 
 static void MainTask_SlotsGameLoop(u8 taskId)
 {
@@ -1979,6 +1988,7 @@ static void Task_SlotMachine(u8 taskId)
 
 static void VBlankCB_SlotMachine(void)
 {
+    DBGTRACE("vblank");
     TransferPlttBuffer();
     LoadOam();
     ProcessSpriteCopyRequests();
