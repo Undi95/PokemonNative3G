@@ -1069,12 +1069,19 @@ static void SerialCB_CopyrightScreen(void)
     GameCubeMultiBoot_HandleSerialInterrupt(&gMultibootProgramStruct);
 }
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define DBG_ANDROID(s) __android_log_print(ANDROID_LOG_INFO, "SDL/APP", s)
+#else
+#define DBG_ANDROID(s)
+#endif
 static u8 SetUpCopyrightScreen(void)
 {
     switch (gMain.state)
     {
     case COPYRIGHT_INITIALIZE:
         SetVBlankCallback(NULL);
+        DBG_ANDROID("PN3G: cs 0");
         SetGpuReg(REG_OFFSET_BLDCNT, 0);
         SetGpuReg(REG_OFFSET_BLDALPHA, 0);
         SetGpuReg(REG_OFFSET_BLDY, 0);
@@ -1083,15 +1090,20 @@ static u8 SetUpCopyrightScreen(void)
         SetGpuReg(REG_OFFSET_BG0HOFS, 0);
         SetGpuReg(REG_OFFSET_BG0VOFS, 0);
         CpuFill32(0, (void *)VRAM, VRAM_SIZE);
+        DBG_ANDROID("PN3G: cs 1");
         CpuFill32(0, (void *)OAM, OAM_SIZE);
         CpuFill16(0, (void *)(PLTT + 2), PLTT_SIZE - 2);
+        DBG_ANDROID("PN3G: cs 2");
         ResetPaletteFade();
         LoadCopyrightGraphics(0, 0x3800, BG_PLTT_ID(0));
+        DBG_ANDROID("PN3G: cs 3");
         ScanlineEffect_Stop();
         ResetTasks();
         ResetSpriteData();
+        DBG_ANDROID("PN3G: cs 4");
         FreeAllSpritePalettes();
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_WHITEALPHA);
+        DBG_ANDROID("PN3G: cs 5");
         SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0)
                                    | BGCNT_CHARBASE(0)
                                    | BGCNT_SCREENBASE(7)
@@ -1101,11 +1113,15 @@ static u8 SetUpCopyrightScreen(void)
         SetVBlankCallback(VBlankCB_Intro);
         REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON;
         SetSerialCallback(SerialCB_CopyrightScreen);
+        DBG_ANDROID("PN3G: cs 6");
         GameCubeMultiBoot_Init(&gMultibootProgramStruct);
+        DBG_ANDROID("PN3G: cs 7");
     default:
         UpdatePaletteFade();
         gMain.state++;
+        DBG_ANDROID("PN3G: gcmb main");
         GameCubeMultiBoot_Main(&gMultibootProgramStruct);
+        DBG_ANDROID("PN3G: gcmb main ok");
         break;
     case COPYRIGHT_START_FADE:
         GameCubeMultiBoot_Main(&gMultibootProgramStruct);
@@ -1152,12 +1168,6 @@ static u8 SetUpCopyrightScreen(void)
     return 1;
 }
 
-#ifdef __ANDROID__
-#include <android/log.h>
-#define DBG_ANDROID(s) __android_log_print(ANDROID_LOG_INFO, "SDL/APP", s)
-#else
-#define DBG_ANDROID(s)
-#endif
 void CB2_InitCopyrightScreenAfterBootup(void)
 {
     if (!SetUpCopyrightScreen())
