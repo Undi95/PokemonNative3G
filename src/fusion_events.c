@@ -9,6 +9,7 @@
 #include "fusion_events.h"
 #include "item.h"
 #include "kanto_region_map.h"
+#include "constants/region_map_sections.h"
 #include "kanto_field_door.h"
 #include "pokedex.h"
 #include "pokemon.h"
