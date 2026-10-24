@@ -107,6 +107,7 @@ static const u8 sWarpName_LoreleisRoom[] = _("LIGUE : OLGA");
 static const u8 sWarpName_TrainerTower[] = _("TOUR DRESSEURS");
 static const u8 sWarpName_BerryForest[] = _("FORÊT BAIES");
 static const u8 sWarpName_MeteorFalls[] = _("CHUTES MÉTÉORE");
+static const u8 sWarpName_SlateportHarbor[] = _("PORT POIVRESSEL");
 
 // Kanto : points d'arrivée du Vol de Rouge Feu (heal_locations.json)
 static const struct DebugWarp sDebugWarps[] =
@@ -146,6 +147,7 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_TrainerTower, MAP_GROUP(MAP_TRAINER_TOWER_LOBBY), MAP_NUM(MAP_TRAINER_TOWER_LOBBY), 9, 10}, // Tour des Dresseurs (Île 7)
     {sWarpName_BerryForest, MAP_GROUP(MAP_THREE_ISLAND_BERRY_FOREST), MAP_NUM(MAP_THREE_ISLAND_BERRY_FOREST), 43, 7}, // autel de Celebi
     {sWarpName_MeteorFalls, MAP_GROUP(MAP_METEOR_FALLS_B1F_2R), MAP_NUM(MAP_METEOR_FALLS_B1F_2R), 6, 4}, // météorite de Jirachi
+    {sWarpName_SlateportHarbor, MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR), 8, 11}, // bateau pour Kanto
 };
 
 // Tous les objets du jeu (Hoenn + Kanto) : 99 de chaque (1 pour les objets rares et les CS).
