@@ -484,7 +484,7 @@ static const u8 sMonPosAttributes[][PSA_MON_ATTR_COUNT] = {
     [SPECIES_LATIAS          - 1] = {30, 12, 16, 35, 25},
     [SPECIES_LATIOS          - 1] = { 5, 14, 16,  5, 29},
     [SPECIES_JIRACHI         - 1] = {28, 21,  8, 30, 34},
-#if defined(FIRERED)
+#if 1 // PokemonNative3G : Rouge Feu
     [SPECIES_DEOXYS          - 1] = {27,  8, 40, 28, 22},
 #elif defined(LEAFGREEN)
     [SPECIES_DEOXYS          - 1] = {26,  9, 40, 26, 23},
