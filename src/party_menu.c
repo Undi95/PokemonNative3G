@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/hold_effects.h"
 #include "malloc.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -5571,6 +5572,8 @@ static bool8 MonCanEvolve(void)
 
 // PokemonNative3G : CÂBLE LINK. Le Pokémon évolue comme s'il était échangé (EVO_TRADE, ou EVO_TRADE_ITEM avec l'objet
 // tenu, qui est alors retiré) ; le câble est consommé, comme une pierre.
+extern const struct Evolution gEvolutionTable[NUM_SPECIES][EVOS_PER_MON]; // pokemon.c
+
 static bool8 LinkCableCanEvolve(struct Pokemon *mon)
 {
     u16 species = GetMonData(mon, MON_DATA_SPECIES);
