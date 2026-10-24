@@ -68,6 +68,7 @@
 	braillemessage \text
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
+	closebraillemessage @ PokemonNative3G : le braille d'Émeraude a sa propre fenêtre
 	.endm
 
 	/* Combat contre le rival avec texte de victoire s'il gagne ; flags : RIVAL_BATTLE_* */

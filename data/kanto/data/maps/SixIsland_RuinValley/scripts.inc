@@ -29,6 +29,7 @@ SixIsland_RuinValley_EventScript_DottedHoleDoor::
 	msgbox SixIsland_RuinValley_Text_SeveralDotsOnTheDoor
 	braillemessage Braille_Text_Cut
 	waitbuttonpress
+	closebraillemessage
 	releaseall
 	end
 

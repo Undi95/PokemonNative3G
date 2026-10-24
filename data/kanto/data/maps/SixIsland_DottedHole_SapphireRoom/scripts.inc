@@ -236,5 +236,6 @@ SixIsland_DottedHole_SapphireRoom_EventScript_BrailleMessage::
 	braillemessage_wait Braille_Text_WorldWaits
 	braillemessage Braille_Text_ForYou
 	waitbuttonpress
+	closebraillemessage
 	releaseall
 	end
