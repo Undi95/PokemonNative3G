@@ -23,10 +23,10 @@ def wr(p, t):
 
 def once(p, a, b, cnt=1):
     t = rd(p)
-    if b in t:
-        return
     if '\r\n' in t:
         a = a.replace('\n', '\r\n'); b = b.replace('\n', '\r\n')
+    if b in t:
+        return
     assert t.count(a) == cnt, (p, a[:80], t.count(a))
     wr(p, t.replace(a, b))
 
