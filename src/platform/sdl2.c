@@ -94,6 +94,24 @@ static void FindDataFiles(void);
 static void ToggleFullscreen(void);
 static int RunTestMode(void);
 
+#ifdef __ANDROID__
+#include <dlfcn.h>
+// PokemonNative3G : écran noir sur Android : après 4 s, écrit l'écran du jeu en cours (adresses relatives à la .so)
+static int DebugWatchdog(void *unused)
+{
+    int i;
+    for (i = 0; i < 5; i++)
+    {
+        Dl_info info;
+        SDL_Delay(4000);
+        if (dladdr((void *)DebugWatchdog, &info))
+            SDL_Log("PN3G: cb1=+%lx cb2=+%lx vblank=+%lx state=%u", (unsigned long)((char *)gMain.callback1 - (char *)info.dli_fbase),
+                    (unsigned long)((char *)gMain.callback2 - (char *)info.dli_fbase), (unsigned long)((char *)gMain.vblankCallback - (char *)info.dli_fbase), gMain.state);
+    }
+    return 0;
+}
+#endif
+
 int main(int argc, char **argv)
 {
     if (!ParseArgs(argc, argv))
@@ -206,6 +224,7 @@ int main(int argc, char **argv)
     AgbMain();
 #ifdef __ANDROID__
     SDL_Log("PN3G: AgbMain fini, boucle principale");
+    SDL_CreateThread(DebugWatchdog, "pn3g-watchdog", NULL);
 #endif
 
     double accumulator = 0.0;
