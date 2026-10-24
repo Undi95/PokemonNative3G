@@ -102,18 +102,18 @@ def reddish(r, g, b):
 shutil.copy('graphics/items/icons/repel.png', 'graphics/items/icons/auto_repel.png')
 recolor('graphics/items/icon_palettes/max_repel.pal', 'graphics/items/icon_palettes/auto_repel.pal', hue(0.33))
 recolor('graphics/items/icon_palettes/meteorite.pal', 'graphics/items/icon_palettes/kanto_meteorite.pal', reddish)
-for name, sym in (('ocean_pass', 'OceanPass'), ('auto_repel', 'AutoRepel')):
-    once('src/data/graphics/items.h', 'const u32 gItemIcon_OldSeaMap[]',
-         'const u32 gItemIcon_%s[] = INCGFX_U32("graphics/items/icons/%s.png", ".4bpp.lz"); // PokemonNative3G\n'
-         'const u32 gItemIconPalette_%s[] = INCGFX_U32("graphics/items/icon_palettes/%s.pal", ".gbapal.lz");\n'
-         'const u32 gItemIcon_OldSeaMap[]' % (sym, name, sym, name))
-    once('include/graphics.h', 'extern const u32 gItemIcon_OldSeaMap[];\n',
-         'extern const u32 gItemIcon_OldSeaMap[];\nextern const u32 gItemIcon_%s[];\nextern const u32 gItemIconPalette_%s[];\n' % (sym, sym))
-once('src/data/graphics/items.h', 'const u32 gItemIcon_OldSeaMap[]',
-     'const u32 gItemIconPalette_KantoMeteorite[] = INCGFX_U32("graphics/items/icon_palettes/kanto_meteorite.pal", ".gbapal.lz"); // PokemonNative3G : rougeâtre\n'
-     'const u32 gItemIcon_OldSeaMap[]')
-once('include/graphics.h', 'extern const u32 gItemIcon_OldSeaMap[];\n',
-     'extern const u32 gItemIcon_OldSeaMap[];\nextern const u32 gItemIconPalette_KantoMeteorite[];\n')
+DECLS = [('gItemIcon_OceanPass', 'graphics/items/icons/ocean_pass.png', '.4bpp.lz'),
+         ('gItemIconPalette_OceanPass', 'graphics/items/icon_palettes/ocean_pass.pal', '.gbapal.lz'),
+         ('gItemIcon_AutoRepel', 'graphics/items/icons/auto_repel.png', '.4bpp.lz'),
+         ('gItemIconPalette_AutoRepel', 'graphics/items/icon_palettes/auto_repel.pal', '.gbapal.lz'),
+         ('gItemIconPalette_KantoMeteorite', 'graphics/items/icon_palettes/kanto_meteorite.pal', '.gbapal.lz')]
+for sym, path, ext in DECLS:  # PokemonNative3G : un symbole à la fois (relançable)
+    if sym + '[]' not in rd('src/data/graphics/items.h'):
+        once('src/data/graphics/items.h', 'const u32 gItemIcon_OldSeaMap[]',
+             'const u32 %s[] = INCGFX_U32("%s", "%s"); // PokemonNative3G\nconst u32 gItemIcon_OldSeaMap[]' % (sym, path, ext))
+    if sym + '[]' not in rd('include/graphics.h'):
+        once('include/graphics.h', 'extern const u32 gItemIcon_OldSeaMap[];\n',
+             'extern const u32 gItemIcon_OldSeaMap[];\nextern const u32 %s[];\n' % sym)
 once('src/data/item_icon_table.h', '    [ITEM_KANTO_METEORITE] = {gItemIcon_Meteorite, gItemIconPalette_Meteorite}, // même icône dans RF\n',
      '    [ITEM_KANTO_METEORITE] = {gItemIcon_Meteorite, gItemIconPalette_KantoMeteorite}, // même icône que RF, en rougeâtre\n'
      '    [ITEM_OCEAN_PASS] = {gItemIcon_OceanPass, gItemIconPalette_OceanPass},\n'
