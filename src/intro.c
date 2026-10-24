@@ -1152,18 +1152,30 @@ static u8 SetUpCopyrightScreen(void)
     return 1;
 }
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define DBG_ANDROID(s) __android_log_print(ANDROID_LOG_INFO, "SDL/APP", s)
+#else
+#define DBG_ANDROID(s)
+#endif
 void CB2_InitCopyrightScreenAfterBootup(void)
 {
     if (!SetUpCopyrightScreen())
     {
+        DBG_ANDROID("PN3G: copyright 1");
         SetSaveBlocksPointers(GetSaveBlocksPointersBaseOffset());
+        DBG_ANDROID("PN3G: copyright 2");
         ResetMenuAndMonGlobals();
+        DBG_ANDROID("PN3G: copyright 3");
         Save_ResetSaveCounters();
         LoadGameSave(SAVE_NORMAL);
+        DBG_ANDROID("PN3G: copyright 4");
         if (gSaveFileStatus == SAVE_STATUS_EMPTY || gSaveFileStatus == SAVE_STATUS_CORRUPT)
             Sav2_ClearSetDefault();
+        DBG_ANDROID("PN3G: copyright 5");
         SetPokemonCryStereo(gSaveBlock2Ptr->optionsSound);
         InitHeap(gHeap, HEAP_SIZE);
+        DBG_ANDROID("PN3G: copyright 6");
         // PokemonNative3G : au démarrage, l'option INTRO n'est lue qu'une fois la sauvegarde chargée
         if (!gSaveBlock2Ptr->optionsIntroHoenn)
             SetMainCallback2(KantoIntro_Start);
