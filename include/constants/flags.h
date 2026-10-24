@@ -45,9 +45,9 @@
 
 #define FLAG_CAUGHT_CELEBI   0x20 // PokemonNative3G : autel de la Forêt Baies (data/scripts/fusion_celebi.inc)
 #define FLAG_DEFEATED_CELEBI 0x21 // PokemonNative3G
-#define FLAG_UNUSED_0x022    0x22 // Unused Flag
-#define FLAG_UNUSED_0x023    0x23 // Unused Flag
-#define FLAG_UNUSED_0x024    0x24 // Unused Flag
+#define FLAG_CAUGHT_JIRACHI  0x22 // PokemonNative3G : météorite des Chutes Météore (data/scripts/fusion_jirachi.inc)
+#define FLAG_DEFEATED_JIRACHI 0x23 // PokemonNative3G
+#define FLAG_JIRACHI_NEWS_SEEN 0x24 // PokemonNative3G : flash spécial de la TV (comète du millénaire)
 #define FLAG_UNUSED_0x025    0x25 // Unused Flag
 #define FLAG_UNUSED_0x026    0x26 // Unused Flag
 #define FLAG_UNUSED_0x027    0x27 // Unused Flag

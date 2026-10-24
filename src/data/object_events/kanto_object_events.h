@@ -8102,4 +8102,5 @@ const struct ObjectEventGraphicsInfo *const gKantoObjectEventGraphicsInfoPointer
     [OBJ_EVENT_GFX_KANTO_GREEN_WATERING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_GreenWatering,
     [OBJ_EVENT_GFX_KANTO_GREEN_UNDERWATER - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_GreenUnderwater,
     [OBJ_EVENT_GFX_KANTO_SHRINE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_Shrine,
+    [OBJ_EVENT_GFX_FUSION_METEORITE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_FusionMeteorite,
 };

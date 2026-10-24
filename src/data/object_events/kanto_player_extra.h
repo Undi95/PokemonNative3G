@@ -255,3 +255,29 @@ const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_Shrine = {
     .images = sKantoPicTable_Shrine,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+
+// PokemonNative3G : météorite de Jirachi (Chutes Météore, Hoenn), dessinée pour la fusion dans la palette
+// des PNJ d'Émeraude (NPC_1, comme le rocher cassable) : graphics/fusion/object_events/meteorite.png
+const u16 gKantoObjectEventPic_FusionMeteorite[] = INCGFX_U16("graphics/fusion/object_events/meteorite.png", ".4bpp");
+static const struct SpriteFrameImage sKantoPicTable_FusionMeteorite[] = {
+    overworld_frame(gKantoObjectEventPic_FusionMeteorite, 2, 2, 0),
+};
+
+const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_FusionMeteorite = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_1,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 128,
+    .width = 16,
+    .height = 16,
+    .paletteSlot = PALSLOT_NPC_1,
+    .shadowSize = SHADOW_SIZE_S,
+    .inanimate = TRUE,
+    .disableReflectionPaletteLoad = FALSE,
+    .tracks = TRACKS_NONE,
+    .oam = &gKantoObjectEventBaseOam_16x16,
+    .subspriteTables = gKantoObjectEventSpriteOamTables_16x16,
+    .anims = sKantoAnimTable_Inanimate,
+    .images = sKantoPicTable_FusionMeteorite,
+    .affineAnims = gDummySpriteAffineAnimTable,
+};

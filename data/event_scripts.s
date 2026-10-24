@@ -599,6 +599,7 @@ gStdScripts_End::
 	.include "data/kanto/scripts.inc"
 	.include "data/scripts/fusion_starter_eggs.inc"
 	.include "data/scripts/fusion_celebi.inc"
+	.include "data/scripts/fusion_jirachi.inc"
 
 	.include "data/scripts/std_msgbox.inc"
 	.include "data/scripts/trainer_battle.inc"
