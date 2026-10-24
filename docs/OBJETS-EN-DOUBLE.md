@@ -12,6 +12,7 @@ don dans `data/**/*.inc`, sépare `data/kanto/`, garde les poches Objets rares /
 
 **CS01 à CS07 : réglées (2026-10-24)** : à Kanto, POKé MONTURE au lieu des CS (voir docs/FUSION-OPTIONS.md) ;
 les CS ne sont plus données qu'à Hoenn.
+**Cannes : réglées (2026-10-24)** : les pêcheurs de Kanto améliorent la canne (chaîne de pêche chromatique).
 
 | Objet | Hoenn (data/maps/…) | Kanto (data/kanto/data/maps/…) |
 |---|---|---|
