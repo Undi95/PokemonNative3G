@@ -275,14 +275,32 @@ int main(int argc, char **argv)
                 }
                 if (!isGameStepDrawn)
                 {
+#ifdef __ANDROID__
+                { static u32 n; if (n++ < 3) SDL_Log("PN3G: avant vdraw");}
+#endif
                     VDraw(sdlTexture);
+#ifdef __ANDROID__
+                { static u32 m; if (m++ < 3) SDL_Log("PN3G: apres vdraw");}
+#endif
                     //SDL_RenderClear(sdlRenderer);
                     isGameStepDrawn = true;
                 }
+#ifdef __ANDROID__
+                { static u32 n; if (n++ < 3) SDL_Log("PN3G: avant vblank");}
+#endif
                 RunDMAsAndVBlank();
+#ifdef __ANDROID__
+                { static u32 m; if (m++ < 3) SDL_Log("PN3G: apres vblank");}
+#endif
                 // The sound engine runs once a frame, like in the GBA's VBlank
                 // interrupt, so the music keeps time with the game
+#ifdef __ANDROID__
+                { static u32 n; if (n++ < 3) SDL_Log("PN3G: avant audio");}
+#endif
                 AudioUpdate();
+#ifdef __ANDROID__
+                { static u32 m; if (m++ < 3) SDL_Log("PN3G: apres audio");}
+#endif
 
                 accumulator -= fixedTimestep;
             }
