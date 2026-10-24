@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h"
 #include "constants/kanto/seagallop.h"
 #include "constants/kanto/menu.h"
 #include "constants/kanto.h"
@@ -396,7 +397,9 @@ static void CreatePCMultichoice(void)
     }
 
     // Change PC name if player has met Lanette
-    if (FlagGet(FLAG_SYS_PC_LANETTE))
+    if (Fusion_GetPCOwner() == PC_OWNER_BILL) // PokemonNative3G : LÉO à Kanto
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_BillsPC, x, 1, TEXT_SKIP_DRAW, NULL);
+    else if (Fusion_GetPCOwner() == PC_OWNER_LANETTE)
         AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_LanettesPC, x, 1, TEXT_SKIP_DRAW, NULL);
     else
         AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_SomeonesPC, x, 1, TEXT_SKIP_DRAW, NULL);

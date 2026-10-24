@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h"
 #include "naming_screen.h"
 #include "malloc.h"
 #include "palette.h"
@@ -739,9 +740,12 @@ static void DisplaySentToPCMessage(void)
         stringToDisplay = 2;
     }
 
-    if (FlagGet(FLAG_SYS_PC_LANETTE))
+    if (Fusion_GetPCOwner() != PC_OWNER_UNKNOWN) // PokemonNative3G : LÉO à Kanto
         stringToDisplay++;
 
+    if (Fusion_GetPCOwner() == PC_OWNER_BILL)
+        StringExpandPlaceholders(gStringVar4, stringToDisplay == 1 ? gText_PkmnTransferredBillsPC : gText_PkmnTransferredBillsPCBoxFull);
+    else
     StringExpandPlaceholders(gStringVar4, sTransferredToPCMessages[stringToDisplay]);
     DrawDialogueFrame(0, FALSE);
     gTextFlags.canABSpeedUpPrint = TRUE;

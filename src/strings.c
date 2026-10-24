@@ -706,6 +706,7 @@ const u8 gText_TMs_Hms[] = _("CT & CS");
 const u8 gText_Berries2[] = _("BAIES");
 const u8 gText_SomeonesPC[] = _("PC de ???");
 const u8 gText_LanettesPC[] = _("PC d'ANNETTE");
+const u8 gText_BillsPC[] = _("PC de LÉO"); // PokemonNative3G
 const u8 gText_PlayersPC[] = _("PC de {PLAYER}");
 const u8 gText_HallOfFame[] = _("PANTHEON");
 const u8 gText_LogOff[] = _("DECONNEXION");

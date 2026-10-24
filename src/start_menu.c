@@ -378,7 +378,7 @@ static void BuildNormalStartMenu(void)
     {
         AddStartMenuAction(MENU_ACTION_POKEDEX);
     }
-    if (FlagGet(FLAG_SYS_POKEMON_GET) == TRUE)
+    if (FlagGet(FLAG_SYS_POKEMON_GET) == TRUE && CalculatePlayerPartyCount() != 0) // PokemonNative3G : équipe vide (Kanto)
     {
         AddStartMenuAction(MENU_ACTION_POKEMON);
     }

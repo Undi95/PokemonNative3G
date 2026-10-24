@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h"
 #include "kanto_pokedex.h"
 #include "constants/kanto.h"
 #include "battle.h"
@@ -10183,7 +10184,7 @@ static void Cmd_givecaughtmon(void)
         }
 
         // Change to B_MSG_SENT_LANETTES_PC or B_MSG_LANETTES_BOX_FULL
-        if (FlagGet(FLAG_SYS_PC_LANETTE))
+        if (Fusion_GetPCOwner() != PC_OWNER_UNKNOWN) // PokemonNative3G : LÉO à Kanto
             gBattleCommunication[MULTISTRING_CHOOSER]++;
     }
 

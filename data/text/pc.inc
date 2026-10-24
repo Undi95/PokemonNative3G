@@ -15,3 +15,6 @@ gText_AccessedPlayersPC::
 
 gText_AccessedLanettesPC::
     .string "PC d'ANNETTE connecté.$"
+
+gText_AccessedBillsPC:: @ PokemonNative3G
+    .string "PC de LÉO connecté.$"

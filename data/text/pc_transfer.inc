@@ -10,6 +10,18 @@ gText_PkmnTransferredLanettesPC::
     .string "Il a été placé dans la BOITE\n"
     .string "appelée “{STR_VAR_1}”.$"
 
+gText_PkmnTransferredBillsPC:: @ PokemonNative3G
+    .string "{STR_VAR_2} a été transféré sur le\n"
+    .string "PC de LÉO.\p"
+    .string "Il a été placé dans la BOITE\n"
+    .string "appelée “{STR_VAR_1}”.$"
+
+gText_PkmnTransferredBillsPCBoxFull:: @ PokemonNative3G
+    .string "La BOITE “{STR_VAR_3}” sur le PC\n"
+    .string "de LÉO est pleine.\p"
+    .string "{STR_VAR_2} a été placé dans la\n"
+    .string "BOITE appelée “{STR_VAR_1}”.$"
+
 gText_PkmnTransferredSomeonesPCBoxFull::
     .string "La BOITE {STR_VAR_3} sur le PC\n"
     .string "de ??? est pleine.\p"

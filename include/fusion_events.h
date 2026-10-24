@@ -21,5 +21,9 @@ u8 OvoChrono_EggCycles(u8 toSub);
 u8 OvalCharm_Compatibility(u8 compatibility);
 u32 ShinyCharm_EggPersonality(u32 personality);
 bool8 Fusion_IsBoxMonLockedInHoenn(struct BoxPokemon *mon);
+u8 Fusion_GetPCOwner(void);
+#define PC_OWNER_UNKNOWN 0
+#define PC_OWNER_LANETTE 1
+#define PC_OWNER_BILL    2
 
 #endif // GUARD_FUSION_EVENTS_H

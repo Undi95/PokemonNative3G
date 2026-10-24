@@ -9,6 +9,7 @@
 #include "fusion_events.h"
 #include "item.h"
 #include "kanto_region_map.h"
+#include "kanto_field_door.h"
 #include "constants/region_map_sections.h"
 #include "kanto_field_door.h"
 #include "pokedex.h"
@@ -328,4 +329,12 @@ bool8 Fusion_IsBoxMonLockedInHoenn(struct BoxPokemon *mon)
         return FALSE;
     location = GetBoxMonData(mon, MON_DATA_MET_LOCATION);
     return location < KANTO_MAPSEC_START || (location > KANTO_MAPSEC_END && location < METLOC_SPECIAL_EGG);
+}
+
+// Propriétaire du PC selon la région : LÉO à Kanto (une fois rencontré), ANNETTE à Hoenn (idem), sinon « ??? »
+u8 Fusion_GetPCOwner(void)
+{
+    if (IsKantoTilesetMap())
+        return FlagGet(FLAG_KANTO_SYS_NOT_SOMEONES_PC) ? PC_OWNER_BILL : PC_OWNER_UNKNOWN;
+    return FlagGet(FLAG_SYS_PC_LANETTE) ? PC_OWNER_LANETTE : PC_OWNER_UNKNOWN;
 }

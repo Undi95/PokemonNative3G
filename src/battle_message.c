@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h"
 #include "kanto_save.h"
 #include "malloc.h"
 #include "battle.h"
@@ -477,6 +478,10 @@ static const u8 sText_GiveNicknameCaptured[] = _("Donner un surnom au\n{B_OPPONE
 static const u8 sText_PkmnSentToPC[] = _("{B_OPPONENT_MON1_NAME} est envoyé au\nPC {B_PC_CREATOR_NAME}.");
 static const u8 sText_Someones[] = _("de quelqu'un");
 static const u8 sText_Lanettes[] = _("d'ANNETTE");
+static const u8 sText_Bills[] = _("de LÉO"); // PokemonNative3G
+// PokemonNative3G : comme gText_PkmnTransferredLanettesPC(BoxFull), avec le nom du propriétaire (ANNETTE ou LÉO)
+static const u8 sText_PkmnTransferredOwnersPC[] = _("{STR_VAR_2} a été transféré sur le\nPC {B_PC_CREATOR_NAME}.\pIl a été placé dans la BOITE\nappelée “{STR_VAR_1}”.");
+static const u8 sText_PkmnTransferredOwnersPCBoxFull[] = _("La BOITE “{STR_VAR_3}” sur le PC\n{B_PC_CREATOR_NAME} est pleine.\p{STR_VAR_2} a été placé dans la\nBOITE appelée “{STR_VAR_1}”.");
 static const u8 sText_PkmnDataAddedToDex[] = _("Les données de {B_OPPONENT_MON1_NAME} sont\najoutées au POKéDEX.\p");
 static const u8 sText_ItIsRaining[] = _("Il pleut.");
 static const u8 sText_SandstormIsRaging[] = _("La tempête de sable\nfait rage.");
@@ -894,9 +899,9 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT - BATTLESTRINGS_TABLE_ST
     [STRINGID_QUESTIONFORFEITMATCH - BATTLESTRINGS_TABLE_START] = sText_QuestionForfeitMatch,
     [STRINGID_FORFEITEDMATCH - BATTLESTRINGS_TABLE_START] = sText_ForfeitedMatch,
     [STRINGID_PKMNTRANSFERREDSOMEONESPC - BATTLESTRINGS_TABLE_START] = gText_PkmnTransferredSomeonesPC,
-    [STRINGID_PKMNTRANSFERREDLANETTESPC - BATTLESTRINGS_TABLE_START] = gText_PkmnTransferredLanettesPC,
+    [STRINGID_PKMNTRANSFERREDLANETTESPC - BATTLESTRINGS_TABLE_START] = sText_PkmnTransferredOwnersPC, // PokemonNative3G
     [STRINGID_PKMNBOXSOMEONESPCFULL - BATTLESTRINGS_TABLE_START] = gText_PkmnTransferredSomeonesPCBoxFull,
-    [STRINGID_PKMNBOXLANETTESPCFULL - BATTLESTRINGS_TABLE_START] = gText_PkmnTransferredLanettesPCBoxFull,
+    [STRINGID_PKMNBOXLANETTESPCFULL - BATTLESTRINGS_TABLE_START] = sText_PkmnTransferredOwnersPCBoxFull, // PokemonNative3G
     [STRINGID_TRAINER1WINTEXT - BATTLESTRINGS_TABLE_START] = sText_Trainer1WinText,
     [STRINGID_TRAINER2WINTEXT - BATTLESTRINGS_TABLE_START] = sText_Trainer2WinText,
     [STRINGID_TRAINER1MON1COMEBACK - BATTLESTRINGS_TABLE_START] = sText_Trainer1RecallPkmn1,
@@ -2757,7 +2762,9 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst)
                 HANDLE_NICKNAME_STRING_CASE(gBattleScripting.battler, *(&gBattleStruct->scriptPartyIdx))
                 break;
             case B_TXT_PC_CREATOR_NAME: // lanette pc
-                if (FlagGet(FLAG_SYS_PC_LANETTE))
+                if (Fusion_GetPCOwner() == PC_OWNER_BILL) // PokemonNative3G
+                    toCpy = sText_Bills;
+                else if (Fusion_GetPCOwner() == PC_OWNER_LANETTE)
                     toCpy = sText_Lanettes;
                 else
                     toCpy = sText_Someones;
