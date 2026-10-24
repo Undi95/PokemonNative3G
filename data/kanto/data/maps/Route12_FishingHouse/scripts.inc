@@ -14,6 +14,9 @@ Route12_FishingHouse_EventScript_FishingGuruBrother::
 Route12_FishingHouse_EventScript_GiveSuperRod::
 	checkitem ITEM_SUPER_ROD @ PokemonNative3G : déjà une MEGA CANNE (Hoenn) : il l'améliore (data/scripts/fusion_fishing.inc)
 	goto_if_eq VAR_RESULT, TRUE, Route12_FishingHouse_EventScript_UpgradeSuperRod
+	msgbox Fusion_Text_SuperRodWhere @ PokemonNative3G : pas de MEGA CANNE -> il dit où la trouver (Hoenn)
+	release
+	end
 	checkitemspace ITEM_SUPER_ROD
 	goto_if_eq VAR_RESULT, FALSE, Route12_FishingHouse_EventScript_NoRoomForSuperRod
 	additem ITEM_SUPER_ROD

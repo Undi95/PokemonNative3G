@@ -58,3 +58,25 @@ Route12_FishingHouse_Text_ExplainRodChain:
 	.string "pêché attire les chromatiques!\p"
 	.string "Si ça ne mord pas, ou si tu\n"
 	.string "bouges, tout est à refaire!$"
+
+@ Sans la canne de Hoenn, rien à améliorer : ils disent où la trouver
+Fusion_Text_OldRodWhere:
+	.string "Tu n'as même pas de CANNE?\p"
+	.string "Va voir le pêcheur de\n"
+	.string "VILLAGE MYOKARA, à HOENN!\p"
+	.string "Reviens me la montrer, et je\n"
+	.string "l'améliorerai!$"
+
+Fusion_Text_GoodRodWhere:
+	.string "Pas de SUPER CANNE? Dommage!\p"
+	.string "Un pêcheur de la ROUTE 118,\n"
+	.string "à HOENN, en donne une.\p"
+	.string "Ramène-la-moi, je lui mettrai\n"
+	.string "mon moulinet spécial!$"
+
+Fusion_Text_SuperRodWhere:
+	.string "Pas de MEGA CANNE? Hmpf!\p"
+	.string "Il y a un pêcheur à ALGATIA,\n"
+	.string "à HOENN, qui en a une.\p"
+	.string "Rapporte-la, et j'y nouerai\n"
+	.string "mon fil d'or!$"

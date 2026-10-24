@@ -19,6 +19,9 @@ VermilionCity_House1_EventScript_AlreadyGotOldRod::
 VermilionCity_House1_EventScript_GiveOldRod::
 	checkitem ITEM_OLD_ROD @ PokemonNative3G : déjà une CANNE (Hoenn) : il l'améliore (data/scripts/fusion_fishing.inc)
 	goto_if_eq VAR_RESULT, TRUE, VermilionCity_House1_EventScript_UpgradeOldRod
+	msgbox Fusion_Text_OldRodWhere @ PokemonNative3G : pas de CANNE -> il dit où la trouver (Hoenn)
+	release
+	end
 	checkitemspace ITEM_OLD_ROD
 	goto_if_eq VAR_RESULT, FALSE, VermilionCity_House1_EventScript_NoRoomForOldRod
 	additem ITEM_OLD_ROD
