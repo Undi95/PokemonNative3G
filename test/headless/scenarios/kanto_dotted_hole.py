@@ -8,7 +8,7 @@ from redleaf_acro import close_menus
 from driver import wait_until, finish_dialog
 
 
-def play(game):
+def play(game, before_warp=None):
     game.wait(300); game.tap("START"); game.wait(120); game.tap("START"); game.wait(90); game.tap("A")
     game.wait(120)
     game.tap("A", 210, hold=4, gap=26)
@@ -18,6 +18,8 @@ def play(game):
     game.wait(60); close_menus(game)
     game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 13, gap=10); game.tap("A")
     game.wait(60); close_menus(game)
+    if before_warp:
+        before_warp(game)
     debug_warp(game, 37); log(game, "vallée")
     game.press("UP", 16); game.wait(30); game.press("UP", 2); game.wait(20); log(game, "devant la porte")
     game.tap("A"); game.wait(60); game.tap("A"); game.wait(60)          # examiner : OUI

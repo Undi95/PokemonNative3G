@@ -71,6 +71,7 @@ extern const u8 *gStdScripts[];
 extern const u8 *gStdScripts_End[];
 
 static void CloseBrailleWindow(void);
+static EWRAM_DATA bool8 sBrailleInDialogueBox = FALSE; // PokemonNative3G
 
 // This is defined in here so the optimizer can't see its value when compiling
 // script.c.
@@ -1499,6 +1500,18 @@ bool8 ScrCmd_braillemessage(struct ScriptContext *ctx)
     // in Emerald they are unused and position is calculated below instead
     StringExpandPlaceholders(gStringVar4, ptr + 6);
 
+    // PokemonNative3G : option DIALOGUE = KANTO : comme RF, le braille s'écrit dans la boîte de dialogue
+    if (gSaveBlock2Ptr->optionsDialogStyle)
+    {
+        sBrailleInDialogueBox = TRUE;
+        DrawDialogueFrame(0, TRUE);
+        FillWindowPixelBuffer(0, PIXEL_FILL(1));
+        AddTextPrinterParameterized(0, FONT_BRAILLE, gStringVar4, 0, 1, 0, NULL);
+        CopyWindowToVram(0, COPYWIN_FULL);
+        return FALSE;
+    }
+    sBrailleInDialogueBox = FALSE;
+
     width = GetStringWidth(FONT_BRAILLE, gStringVar4, -1) / 8u;
 
     if (width > 28)
@@ -2289,6 +2302,12 @@ bool8 ScrCmd_setmonmetlocation(struct ScriptContext *ctx)
 
 static void CloseBrailleWindow(void)
 {
+    if (sBrailleInDialogueBox) // PokemonNative3G
+    {
+        sBrailleInDialogueBox = FALSE;
+        ClearDialogWindowAndFrame(0, TRUE);
+        return;
+    }
     ClearStdWindowAndFrame(sBrailleWindowId, TRUE);
     RemoveWindow(sBrailleWindowId);
 }

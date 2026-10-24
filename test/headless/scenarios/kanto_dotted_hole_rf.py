@@ -1,0 +1,17 @@
+# Comme kanto_dotted_hole, avec Options > DIALOGUE = KANTO : le braille s'écrit dans la boîte de dialogue de RF.
+import os, sys
+import driver
+sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
+import kanto_dotted_hole
+from driver import wait_until
+
+
+def set_dialog_kanto(game):
+    wait_until(game, lambda s: s.free); game.wait(30)
+    game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
+    game.tap("R"); game.wait(30); game.tap("DOWN", 2, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120); game.tap("B")
+    wait_until(game, lambda s: s.free)
+
+
+def play(game):
+    kanto_dotted_hole.play(game, before_warp=set_dialog_kanto)
