@@ -35,7 +35,7 @@ SixIsland_RuinValley_EventScript_DottedHoleDoor::
 	goto_if_eq VAR_RESULT, PARTY_SIZE, SixIsland_RuinValley_EventScript_DottedHoleDoorEnd
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	buffermovename STR_VAR_2, MOVE_CUT
-	msgbox Text_WantToCut, MSGBOX_YESNO
+	msgbox SixIsland_RuinValley_Text_WantToCutDoor, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, SixIsland_RuinValley_EventScript_DottedHoleDoorEnd
 	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
 	closemessage
@@ -46,6 +46,11 @@ SixIsland_RuinValley_EventScript_DottedHoleDoor::
 SixIsland_RuinValley_EventScript_DottedHoleDoorEnd::
 	releaseall
 	end
+
+SixIsland_RuinValley_Text_WantToCutDoor:
+	.string "Les points disent: COUPE.
+"
+	.string "Voulez-vous utiliser COUPE?$"
 
 SixIsland_RuinValley_EventScript_DottedHoleDoorOpen::
 	msgbox SixIsland_RuinValley_Text_DoorIsOpen

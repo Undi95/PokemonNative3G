@@ -19,7 +19,7 @@ def play(game):
     game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 13, gap=10); game.tap("A")
     game.wait(60); close_menus(game)
     debug_warp(game, 37); log(game, "vallée")
-    game.press("UP", 8); game.wait(30); log(game, "devant la porte")
+    game.press("UP", 16); game.wait(30); game.press("UP", 2); game.wait(20); log(game, "devant la porte")
     game.tap("A"); game.wait(60); game.tap("A"); game.wait(60)          # examiner : OUI
     game.tap("A"); game.wait(90); game.tap("A"); game.wait(90)          # points, braille
     game.tap("A"); game.wait(60); log(game, "coupe ?")
