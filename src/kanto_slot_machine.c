@@ -744,9 +744,9 @@ bool8 (*const sSlotMachineSetupTasks[])(u8 *, struct SlotMachineSetupTaskData *)
 };
 
 #if 1 // PokemonNative3G : Rouge Feu
-extern const u16 sBg_Pal[][16];
-extern const u32 sBg_Tiles[];
-extern const u32 sBg_Tilemap[];
+static const u16 sBg_Pal[][16] = INCGFX_U16("graphics/kanto/slot_machine/firered/bg.png", ".gbapal"); // RF : graphics.c
+static const u32 sBg_Tiles[] = INCGFX_U32("graphics/kanto/slot_machine/firered/bg.png", ".4bpp.lz");
+static const u32 sBg_Tilemap[] = INCGFX_U32("graphics/kanto/slot_machine/firered/bg.bin", ".lz");
 
 static const u16 sBgPal_MatchLines[]       = INCGFX_U16("graphics/kanto/slot_machine/firered/match_lines.pal", ".gbapal");
 static const u16 sBgPal_PayoutLight[][16]  = INCGFX_U16("graphics/kanto/slot_machine/firered/payout_lights.pal", ".gbapal");
