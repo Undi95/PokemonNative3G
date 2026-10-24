@@ -862,34 +862,8 @@ uint16_t *memsetu16(uint16_t *dst, uint16_t fill, size_t count)
     return dst;
 }
 
-// TMP PALDBG
-#include <stdio.h>
-#ifdef __ANDROID__
-#include <android/log.h>
-#endif
-extern u16 gPlttBufferFaded[], gPlttBufferUnfaded[];
-#include "main.h"
-static void PalDbg(void)
-{
-    static unsigned frame, last;
-    unsigned v = *(uint16_t *)PLTT | ((unsigned)gPlttBufferFaded[0] << 16);
-    frame++;
-    if (frame < 3000 && v != last)
-    {
-        char buf[128];
-        snprintf(buf, sizeof(buf), "PALDBG f=%u hw=%04x faded=%04x unfaded=%04x cb2=%p", frame, *(uint16_t *)PLTT, gPlttBufferFaded[0], gPlttBufferUnfaded[0], (void *)gMain.callback2);
-#ifdef __ANDROID__
-        __android_log_print(ANDROID_LOG_INFO, "PN3G", "%s", buf);
-#else
-        fprintf(stderr, "%s\n", buf);
-#endif
-        last = v;
-    }
-}
-
 void DrawFrame(uint16_t *pixels)
 {
-    PalDbg();
     int i;
 
     for (i = 0; i < DISPLAY_HEIGHT; i++)
