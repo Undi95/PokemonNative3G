@@ -12,7 +12,7 @@ def play(game):
     game.tap("A", 210, hold=4, gap=26)
     wait_until(game, lambda s: s.free)
     give_mewtwo(game)
-    debug_warp(game, 22); log(game, "arène")
+    debug_warp(game, 23); log(game, "arène")
     walk_to(game, 18, 21); log(game, "devant le téléporteur")
     game.press("UP", 16)
     game.wait(20); log(game, "départ")

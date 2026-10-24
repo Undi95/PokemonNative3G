@@ -1,4 +1,4 @@
-# Build KANTO_DEBUG=1 : nouvelle partie à Bourg Palette, entre dans les maisons, le labo,
+# Build KANTO_DEBUG=1 : nouvelle partie à Bourg Palette, porte de la maison (fermée, à vendre), le labo,
 # parle aux PNJ, puis téléport à Jadielle et soin au Centre Pokémon.
 from driver import finish_dialog, leave_map, talk_to, walk_to, wait_until
 
@@ -28,11 +28,7 @@ def play(game):
     wait_until(game, lambda s: s.free)
     log(game, "arrivée")
     walk_to(game, 3, 11); talk_to(game, "UP"); log(game, "dame du panneau")
-    walk_to(game, 6, 8); leave_map(game, "UP"); log(game, "maison 1F")
-    walk_to(game, 8, 5); talk_to(game, "UP"); log(game, "maman")
-    walk_to(game, 10, 3); leave_map(game, "UP"); log(game, "maison 2F")
-    walk_to(game, 10, 2); wait_until(game, lambda s: s.free); log(game, "retour 1F")
-    walk_to(game, 4, 7); leave_map(game, "DOWN"); log(game, "dehors")
+    walk_to(game, 6, 8); talk_to(game, "UP"); log(game, "maison à vendre : fermée")   # porte fermée tant qu'elle n'est pas achetée
     walk_to(game, 16, 14); leave_map(game, "UP"); log(game, "labo")
     walk_to(game, 3, 12); talk_to(game, "UP"); log(game, "assistant")
     walk_to(game, 6, 11); leave_map(game, "DOWN"); log(game, "dehors")

@@ -358,6 +358,7 @@ static void Task_DebugMenu(u8 taskId)
             SetMonData(mon, MON_DATA_PP4, &pp1);
         }
         ScriptGiveMon(SPECIES_KADABRA, 30, ITEM_NONE, 0, 0, 0); // CÂBLE LINK : évolution par échange
+        gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET; // tests headless : pas de « Changer de POKéMON ? »
         FlagSet(FLAG_SYS_POKEMON_GET);
         PlaySE(SE_USE_ITEM);
         break;
