@@ -55,7 +55,7 @@ Fusion_PalletTown_OnLoad::
 
 Fusion_EventScript_PalletCloseHouse::
 	setmetatile 6, 7, 0x2A3, TRUE
-	setmetatile 4, 6, 0x297, FALSE @ pancarte en bois à la place de la boîte aux lettres (haut : herbe)
+	setmetatile 4, 6, 0x011, FALSE @ pancarte en bois à la place de la boîte aux lettres (2 cases ; haut : herbe, comme en 4,5)
 	setmetatile 4, 7, 0x002, TRUE
 	return
 
