@@ -236,6 +236,6 @@ void HeapDebugDump(const char *tag)
     struct MemBlock *b = sHeapStart;
     u32 used = 0, n = 0;
     fprintf(stderr, "DBGHEAP %s:", tag);
-    do { if (b->flag) { used += b->size; n++; fprintf(stderr, " %x", b->size); } b = b->next; } while (b != sHeapStart);
+    do { if (b->magic != MALLOC_SYSTEM_ID) { fprintf(stderr, " CORRUPT@%p", (void *)b); break; } if (b->flag) { used += b->size; n++; fprintf(stderr, " %x", b->size); } b = b->next; } while (b != sHeapStart);
     fprintf(stderr, " | used=%x n=%u\n", used, n);
 }
