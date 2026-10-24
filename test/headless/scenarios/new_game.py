@@ -1,7 +1,7 @@
 # Starts a new game, goes through the intro, sets the clock, opens the bag
 # and the trainer card, and saves in the player's room (Brendan's house 2F).
 steps = wait(300) + tap("START") + wait(120) + tap("START") + wait(90) + tap("A") + wait(120)
-steps += tap("A", 175, hold=4, gap=26)                 # Birch's speech, naming (AAAAAAA)
+steps += tap("A", 190, hold=4, gap=26)                 # Birch's speech, naming (AAAAAAA)
 steps += wait(700)                                      # truck ride, the door opens
 steps += walk("RIGHT", 4)                               # leave the truck
 steps += tap("A", 90, hold=4, gap=26)                  # Mom

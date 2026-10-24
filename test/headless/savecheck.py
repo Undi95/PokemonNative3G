@@ -75,7 +75,11 @@ class Save:
                 if signature != SECTOR_SIGNATURE or sector_id >= SECTORS_PER_SLOT:
                     break
                 if chk != checksum(sector, sizes[sector_id]):
-                    break
+                    # PokemonNative3G : les flags de Kanto agrandissent SaveBlock1 ; la taille de son dernier
+                    # morceau va de celle d'Émeraude à un secteur plein
+                    if sector_id != 4 or not any(chk == checksum(sector, size)
+                                                 for size in range(sizes[4], SECTOR_DATA_SIZE + 1, 4)):
+                        break
                 sectors[sector_id] = sector[:SECTOR_DATA_SIZE]
             if len(sectors) == SECTORS_PER_SLOT and (best is None or counter > best[0]):
                 best = (counter, slot, sectors)
