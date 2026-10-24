@@ -68,6 +68,6 @@ bool8 ScrCmd_getbraillestringwidth(struct ScriptContext *ctx)
     if (msg == NULL)
         msg = (u8 *)ctx->data[0];
 
-    gSpecialVar_0x8004 = GetStringWidth(FONT_BRAILLE, msg, -1);
+    gSpecialVar_0x8004 = GetStringWidth(FONT_BRAILLE, msg + 6, -1); // PokemonNative3G : en-tête brailleformat (comme braillemessage)
     return FALSE;
 }

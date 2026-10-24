@@ -22,7 +22,7 @@ def play(game):
     game.press("UP", 16); game.wait(30); game.press("UP", 2); game.wait(20); log(game, "devant la porte")
     game.tap("A"); game.wait(60); game.tap("A"); game.wait(60)          # examiner : OUI
     game.tap("A"); game.wait(90); game.tap("A"); game.wait(90)          # points, braille
-    game.tap("A"); game.wait(60); log(game, "coupe ?")
+    game.wait(60); log(game, "braille")
     game.tap("A"); game.wait(60)                                         # OUI
     finish_dialog(game); game.wait(90); log(game, "porte ouverte")
     game.press("UP", 16); game.wait(200); log(game, "entré")
