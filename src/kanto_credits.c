@@ -1,3 +1,4 @@
+#include <stdio.h>
 // Rouge Feu : credits.c (crédits de la Ligue de Kanto, special DoCredits du Plateau Indigo).
 #include "global.h"
 #include "bg.h"
@@ -889,6 +890,9 @@ static void InitBgDarkenEffect(void)
 static void CreateCreditsWindow(void)
 {
     sCreditsMgr->windowId = AddWindow(&sCreditsWindowTemplate);
+    { extern struct Window gWindows[]; int n = 0, k; for (k = 0; k < WINDOWS_MAX; k++) n += gWindows[k].window.bg != 0xFF;
+      fprintf(stderr, "DBGWIN id=%d used=%d bg0=%p
+", sCreditsMgr->windowId, n, GetBgTilemapBuffer(sCreditsWindowTemplate.bg)); }
     FillWindowPixelBuffer(sCreditsMgr->windowId, PIXEL_FILL(0));
     PutWindowTilemap(sCreditsMgr->windowId);
     CopyWindowToVram(sCreditsMgr->windowId, COPYWIN_FULL);
