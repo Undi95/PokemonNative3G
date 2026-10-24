@@ -34,7 +34,7 @@ struct DoorGraphics
 };
 
 static void DrawClosedDoorTiles(const struct DoorGraphics *gfx, int x, int y);
-static void CopyDoorTilesToVram(const u8 *tiles);
+static void CopyDoorTilesToVram(const u8 *tiles, u8 size);
 static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, int x, int y, const u8 *paletteNums);
 static void BuildDoorTiles(u16 *tiles, u16 tileNum, const u8 *paletteNums);
 static bool32 AnimateDoorFrame(const struct DoorGraphics *gfx, const struct DoorAnimFrame *frames, s16 *data);
@@ -295,7 +295,7 @@ static void DrawDoor(const struct DoorGraphics *gfx, const struct DoorAnimFrame 
         DrawClosedDoorTiles(gfx, x, y);
     else
     {
-        CopyDoorTilesToVram(&gfx->tiles[frames->tileOffset]);
+        CopyDoorTilesToVram(&gfx->tiles[frames->tileOffset], gfx->size);
         DrawCurrentDoorAnimFrame(gfx, x, y, gfx->paletteNums);
     }
 }
@@ -317,8 +317,16 @@ static void DrawClosedDoorTiles(const struct DoorGraphics *gfx, int x, int y)
 //       animation is played, they will be overwritten.
 #define DOOR_TILE_START (NUM_TILES_TOTAL - 8)
 
-static void CopyDoorTilesToVram(const u8 *tiles)
+static void CopyDoorTilesToVram(const u8 *tiles, u8 size)
 {
+#ifdef UBFIX
+    // A 1x1 door only has 4 tiles per frame: copying 8 reads past the last frame
+    if (size == DOOR_SIZE_1x1)
+    {
+        CpuFastCopy(tiles, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START)), 4 * TILE_SIZE_4BPP);
+        return;
+    }
+#endif
     CpuFastCopy(tiles, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START)), 8 * TILE_SIZE_4BPP);
 }
 
