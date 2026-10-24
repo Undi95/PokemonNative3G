@@ -215,7 +215,15 @@ int main(int argc, char **argv)
     {
         double deltaTime;
 
+#ifdef __ANDROID__
+        static u32 sDbgLoops;
+        if (sDbgLoops < 3) SDL_Log("PN3G: boucle %u, ProcessEvents", sDbgLoops);
+#endif
         ProcessEvents();
+#ifdef __ANDROID__
+        if (sDbgLoops < 3) SDL_Log("PN3G: boucle %u, apres ProcessEvents", sDbgLoops);
+        sDbgLoops++;
+#endif
 
         curGameTime = SDL_GetPerformanceCounter();
         deltaTime = (double)((curGameTime - lastGameTime) / (double)SDL_GetPerformanceFrequency());
@@ -231,6 +239,13 @@ int main(int argc, char **argv)
             {
                 //run game logic, draw frame and process DMAs and vblank
                 ENTER_VBLANK(); //you must be in VBlank before running a game tick
+#ifdef __ANDROID__
+                {
+                    static u32 sDbgTicks;
+                    if (sDbgTicks < 3 || (sDbgTicks % 600) == 0) SDL_Log("PN3G: tick %u", sDbgTicks);
+                    sDbgTicks++;
+                }
+#endif
                 if (!RunMainLoop())
                 {
                     // Soft reset: drop the old sound, and start the next frame with MainLoop
