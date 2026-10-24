@@ -1,4 +1,6 @@
 #include "global.h"
+#include "kanto_region_map.h"
+#include "fusion_events.h"
 #include "malloc.h"
 #include "task.h"
 #include "main.h"
@@ -42,6 +44,8 @@ static bool32 AnyMonHasRibbon(void);
 static void InitPokenavResources(struct PokenavResources *);
 static void InitKeys_(void);
 static void FreePokenavResources(void);
+static void CB2_OpenKantoMapFromPokenav(void);
+static bool8 sOpenKantoMap; // PokemonNative3G
 static void VBlankCB_Pokenav(void);
 static void CB2_Pokenav(void);
 static void Task_RunLoopedTask_LinkMode(u8);
@@ -460,6 +464,15 @@ static void Task_Pokenav(u8 taskId)
             ShutdownPokenav();
             tState = 5;
         }
+        else if (menuId == POKENAV_REGION_MAP && Fusion_IsInKanto())
+        {
+            // PokemonNative3G : à Kanto, la carte de Kanto de RF (plein écran), puis retour au POKéNAV
+            PokenavMenuCallbacks[gPokenavResources->currentMenuIndex].free2();
+            PokenavMenuCallbacks[gPokenavResources->currentMenuIndex].free1();
+            sOpenKantoMap = TRUE;
+            ShutdownPokenav();
+            tState = 5;
+        }
         else if (menuId >= POKENAV_MENU_IDS_START)
         {
             PokenavMenuCallbacks[gPokenavResources->currentMenuIndex].free2();
@@ -492,7 +505,12 @@ static void Task_Pokenav(u8 taskId)
 
             FreeMenuHandlerSubstruct1();
             FreePokenavResources();
-            if (calledFromScript)
+            if (sOpenKantoMap)
+            {
+                sOpenKantoMap = FALSE;
+                SetMainCallback2(CB2_OpenKantoMapFromPokenav);
+            }
+            else if (calledFromScript)
                 SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
             else
                 SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
@@ -587,4 +605,10 @@ u32 GetSelectedConditionSearch(void)
 bool32 CanViewRibbonsMenu(void)
 {
     return gPokenavResources->hasAnyRibbons;
+}
+
+// PokemonNative3G : onglet CARTE à Kanto (îles Sevii comprises) : carte de RF, B = retour au menu du POKéNAV
+static void CB2_OpenKantoMapFromPokenav(void)
+{
+    KantoInitRegionMapWithExitCB(REGIONMAP_TYPE_NORMAL, CB2_InitPokeNav);
 }
