@@ -59,6 +59,7 @@ enum {
     DEBUG_SS_ANNE,
     DEBUG_KANTO_DEX_FULL,
     DEBUG_FAME_CHECKER,
+    DEBUG_BOTH_LEAGUES,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -103,6 +104,7 @@ static const u8 sWarpName_GameFreak[] = _("GAME FREAK");
 static const u8 sWarpName_PewterMuseum[] = _("MUSÉE ARGENTA");
 static const u8 sWarpName_LoreleisRoom[] = _("LIGUE : OLGA");
 static const u8 sWarpName_TrainerTower[] = _("TOUR DRESSEURS");
+static const u8 sWarpName_BerryForest[] = _("FORÊT BAIES");
 
 // Kanto : points d'arrivée du Vol de Rouge Feu (heal_locations.json)
 static const struct DebugWarp sDebugWarps[] =
@@ -140,6 +142,7 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_PewterMuseum, MAP_GROUP(MAP_PEWTER_CITY_MUSEUM_1F), MAP_NUM(MAP_PEWTER_CITY_MUSEUM_1F), 4, 5}, // sous le fossile d'Ptéra
     {sWarpName_LoreleisRoom, MAP_GROUP(MAP_POKEMON_LEAGUE_LORELEIS_ROOM), MAP_NUM(MAP_POKEMON_LEAGUE_LORELEIS_ROOM), 6, 11}, // éclairage de la Ligue
     {sWarpName_TrainerTower, MAP_GROUP(MAP_TRAINER_TOWER_LOBBY), MAP_NUM(MAP_TRAINER_TOWER_LOBBY), 9, 10}, // Tour des Dresseurs (Île 7)
+    {sWarpName_BerryForest, MAP_GROUP(MAP_THREE_ISLAND_BERRY_FOREST), MAP_NUM(MAP_THREE_ISLAND_BERRY_FOREST), 43, 7}, // autel de Celebi
 };
 
 // Tous les objets du jeu (Hoenn + Kanto) : 99 de chaque (1 pour les objets rares et les CS).
@@ -179,6 +182,7 @@ static const u8 sText_SeviiPasses[] = _("Pass îles Sevii");
 static const u8 sText_SSAnne[] = _("Départ S.S. Anne");
 static const u8 sText_KantoDexFull[] = _("POKéDEX Kanto complet");
 static const u8 sText_FameChecker[] = _("MEMORYDEX complet");
+static const u8 sText_BothLeagues[] = _("Deux Ligues finies");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -224,6 +228,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_SS_ANNE].name = sText_SSAnne;
         sItems[DEBUG_KANTO_DEX_FULL].name = sText_KantoDexFull;
         sItems[DEBUG_FAME_CHECKER].name = sText_FameChecker;
+        sItems[DEBUG_BOTH_LEAGUES].name = sText_BothLeagues;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -428,6 +433,12 @@ static void Task_DebugMenu(u8 taskId)
         // MEMORYDEX (Fame Checker) : toutes les personnes et toutes les fiches (FullyUnlockFameChecker de RF)
         AddBagItem(ITEM_FAME_CHECKER, 1);
         FullyUnlockFameChecker();
+        PlaySE(SE_USE_ITEM);
+        break;
+    case DEBUG_BOTH_LEAGUES:
+        // événements d'après les deux Ligues (Celebi, Jirachi, œufs de starters…)
+        FlagSet(FLAG_SYS_GAME_CLEAR);
+        FlagSet(FLAG_KANTO_SYS_GAME_CLEAR);
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_CLOSE:
