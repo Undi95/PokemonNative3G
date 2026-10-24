@@ -3371,7 +3371,10 @@ static bool8 MapLdr_Credits(void)
     switch (*state)
     {
     case 0:
-        // InitOverworldBgs : déjà fait par InitOverworldGraphicsRegisters (case 2) dans Émeraude
+        // InitOverworldBgs : déjà fait par InitOverworldGraphicsRegisters (case 2) dans Émeraude ; mais la remise à
+        // zéro des BG de RF (InitOverworldBgs_NoResetHeap) coupe aussi l'allocation automatique des tuiles des fenêtres,
+        // activée par les scènes de Pokémon des crédits : sans elle, la fenêtre des crédits ne peut plus être créée
+        ResetBgsAndClearDma3BusyFlags(FALSE);
         LoadMapFromWarp(FALSE);
         (*state)++;
         break;

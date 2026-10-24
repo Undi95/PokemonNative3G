@@ -1,7 +1,6 @@
 // Rouge Feu : hall_of_fame.c (Panthéon de Kanto). Équipes gardées à part de celles de Hoenn
 // (KantoHallOfFame_Read/Write, src/kanto_save.c) ; vu depuis un PC de Kanto.
 #include "global.h"
-#include "kanto_pc_screen_effect.h"
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
@@ -183,22 +182,22 @@ static void BeginPCScreenEffect(TaskFunc func, u16 a2, u16 a3, u8 priority);
 static void Task_PCScreenEffect_TurnOn(u8 taskId);
 static void Task_PCScreenEffect_TurnOff(u8 taskId);
 
-void BeginPCScreenEffect_TurnOn(u16 xspeed, u16 yspeed, u8 priority)
+static void BeginPCScreenEffect_TurnOn(u16 xspeed, u16 yspeed, u8 priority)
 {
     BeginPCScreenEffect(Task_PCScreenEffect_TurnOn, xspeed, yspeed, priority);
 }
 
-void BeginPCScreenEffect_TurnOff(u16 xspeed, u16 yspeed, u8 priority)
+static void BeginPCScreenEffect_TurnOff(u16 xspeed, u16 yspeed, u8 priority)
 {
     BeginPCScreenEffect(Task_PCScreenEffect_TurnOff, xspeed, yspeed, priority);
 }
 
-bool8 IsPCScreenEffectRunning_TurnOn(void)
+static bool8 IsPCScreenEffectRunning_TurnOn(void)
 {
     return FuncIsActiveTask(Task_PCScreenEffect_TurnOn);
 }
 
-bool8 IsPCScreenEffectRunning_TurnOff(void)
+static bool8 IsPCScreenEffectRunning_TurnOff(void)
 {
     return FuncIsActiveTask(Task_PCScreenEffect_TurnOff);
 }
@@ -681,7 +680,6 @@ static bool8 InitHallOfFameScreen(void)
 
 void KantoCB2_DoHallOfFameScreen(void)
 {
-    { void HeapDebugDump(const char *); HeapDebugDump("hof"); }
     u8 taskId;
     if (!InitHallOfFameScreen())
     {

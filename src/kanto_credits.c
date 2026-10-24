@@ -1,4 +1,3 @@
-#include <stdio.h>
 // Rouge Feu : credits.c (crédits de la Ligue de Kanto, special DoCredits du Plateau Indigo).
 #include "global.h"
 #include "bg.h"
@@ -831,7 +830,6 @@ static const struct CreditsTextHeader sCreditsTexts[] = {
 
 static void KantoDoCredits_Start(void)
 {
-    { void HeapDebugDump(const char *); HeapDebugDump("credits"); }
     sCreditsMgr = AllocZeroed(sizeof(*sCreditsMgr));
     ResetTasks();
     sCreditsMgr->taskId = TASK_NONE;
@@ -891,8 +889,6 @@ static void InitBgDarkenEffect(void)
 static void CreateCreditsWindow(void)
 {
     sCreditsMgr->windowId = AddWindow(&sCreditsWindowTemplate);
-    { extern struct Window gWindows[]; int n = 0, k; for (k = 0; k < WINDOWS_MAX; k++) n += gWindows[k].window.bg != 0xFF;
-      fprintf(stderr, "DBGWIN id=%d used=%d bg0=%p\n",sCreditsMgr->windowId, n, GetBgTilemapBuffer(sCreditsWindowTemplate.bg)); }
     FillWindowPixelBuffer(sCreditsMgr->windowId, PIXEL_FILL(0));
     PutWindowTilemap(sCreditsMgr->windowId);
     CopyWindowToVram(sCreditsMgr->windowId, COPYWIN_FULL);
@@ -1373,12 +1369,7 @@ static bool32 DoCopyrightOrTheEndGfxScene(void)
         ChangeBgY(0, 0, BG_COORD_SET);
         DecompressAndLoadBgGfxUsingHeap(0, sCopyrightOrTheEndGfxHeaders[sCreditsMgr->whichMon].tiles, 0x2000, 0, 0);
         DecompressAndLoadBgGfxUsingHeap(0, sCopyrightOrTheEndGfxHeaders[sCreditsMgr->whichMon].map, 0x800, 0, 1);
-#ifdef UBFIX
-        // The palettes only have 16 colors: loading 16 palettes reads past them
-        LoadPalette(sCopyrightOrTheEndGfxHeaders[sCreditsMgr->whichMon].palette, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
-#else
         LoadPalette(sCopyrightOrTheEndGfxHeaders[sCreditsMgr->whichMon].palette, BG_PLTT_ID(0), 16 * PLTT_SIZE_4BPP);
-#endif
         SetVBlankCallback(VBlankCB);
         EnableInterrupts(INTR_FLAG_VBLANK);
         sCreditsMgr->subseqno++;
