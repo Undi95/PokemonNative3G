@@ -50,7 +50,7 @@ contenu dans un seul jeu.
 - [x] Cartes de région : icône du joueur selon le perso choisi (PERSO) sur les deux cartes
 - [x] Cherche VS à Hoenn : il déclenche les revanches du PokéNav (dresseurs inscrits ; 70 % comme RF, 100 % si un appel l'avait déjà décidé) ; les dresseurs de Hoenn sautent au lieu de lever la main (pas d'image « main levée » dans les sprites d'Émeraude)
 - [-] Cherche VS : sprites de Brice/Flora levant le Cherche VS : pas faisable simplement (tout le corps change de pose dans les images de RF, il faudrait redessiner) ; Brice/Flora se tournent vers le bas, comme Red
-- [ ] Évolution par échange en solo (objet du genre « câble link »)
+- [x] Évolution par échange en solo (2026-10-24) : CÂBLE LINK, 2100₽, vendu dans toutes les boutiques (`tools/link_cable.py`) ; utilisé comme une pierre, le Pokémon évolue comme après un échange (avec son objet tenu pour Tarinor, Coquiperl…). Icône : « linking_cord » de pokeemerald-expansion (rh-hideout, github.com/rh-hideout/pokeemerald-expansion)
 - [ ] Pokémon exclusifs à Rubis, Saphir et Vert Feuille : les rendre obtenables
 - [ ] Légendaires manquants (vers la fin)
 - [ ] Événements en jeu à Hoenn (ceux de RF + Mew) et objets requis (Ticket Aurora, Ticket Mystique, etc.)
