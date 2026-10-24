@@ -681,6 +681,7 @@ static bool8 InitHallOfFameScreen(void)
 
 void KantoCB2_DoHallOfFameScreen(void)
 {
+    { void HeapDebugDump(const char *); HeapDebugDump("hof"); }
     u8 taskId;
     if (!InitHallOfFameScreen())
     {

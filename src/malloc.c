@@ -229,3 +229,13 @@ bool32 CheckHeap()
 
     return TRUE;
 }
+
+#include <stdio.h>
+void HeapDebugDump(const char *tag)
+{
+    struct MemBlock *b = sHeapStart;
+    u32 used = 0, n = 0;
+    fprintf(stderr, "DBGHEAP %s:", tag);
+    do { if (b->flag) { used += b->size; n++; fprintf(stderr, " %x", b->size); } b = b->next; } while (b != sHeapStart);
+    fprintf(stderr, " | used=%x n=%u\n", used, n);
+}

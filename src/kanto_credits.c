@@ -831,6 +831,7 @@ static const struct CreditsTextHeader sCreditsTexts[] = {
 
 static void KantoDoCredits_Start(void)
 {
+    { void HeapDebugDump(const char *); HeapDebugDump("credits"); }
     sCreditsMgr = AllocZeroed(sizeof(*sCreditsMgr));
     ResetTasks();
     sCreditsMgr->taskId = TASK_NONE;
