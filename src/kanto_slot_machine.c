@@ -1258,6 +1258,7 @@ static void MainTask_ExitSlots(u8 taskId)
         data[0]++;
         break;
     case 1:
+        DBGTRACE(sSlotMachineState == NULL ? "exit: état NULL" : "exit 1");
         if (!IsSlotMachineSetupTaskActive(0))
         {
             SetMainCallback2(sSlotMachineState->savedCallback);
