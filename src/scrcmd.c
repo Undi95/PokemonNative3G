@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_field_door.h"
 #include "frontier_util.h"
 #include "battle_setup.h"
 #include "berry.h"
@@ -1916,10 +1917,15 @@ bool8 ScrCmd_pokemartdecoration2(struct ScriptContext *ctx)
     return TRUE;
 }
 
+void KantoPlaySlotMachine(u16 machineIdx, MainCallback savedCallback); // kanto_slot_machine.c
+
 bool8 ScrCmd_playslotmachine(struct ScriptContext *ctx)
 {
     u8 machineId = VarGet(ScriptReadHalfword(ctx));
 
+    if (IsKantoTilesetMap()) // PokemonNative3G : machine à sous de RF au Casino de Céladopole
+        KantoPlaySlotMachine(machineId, CB2_ReturnToFieldContinueScriptPlayMapMusic);
+    else
     PlaySlotMachine(machineId, CB2_ReturnToFieldContinueScriptPlayMapMusic);
     ScriptContext_Stop();
     return TRUE;
