@@ -467,8 +467,7 @@ static void Task_Pokenav(u8 taskId)
         else if (menuId == POKENAV_REGION_MAP && Fusion_IsInKanto())
         {
             // PokemonNative3G : à Kanto, la carte de Kanto de RF (plein écran), puis retour au POKéNAV
-            PokenavMenuCallbacks[gPokenavResources->currentMenuIndex].free2();
-            PokenavMenuCallbacks[gPokenavResources->currentMenuIndex].free1();
+            // (comme POKENAV_MENU_FUNC_EXIT : ShutdownPokenav puis l'état 5 libère tout)
             sOpenKantoMap = TRUE;
             ShutdownPokenav();
             tState = 5;
