@@ -6,4 +6,4 @@
 #define SE_RS_DOOR SE_DOOR
 #define SE_RS_SHOP SE_SHOP
 #define MOVEMENT_TYPE_WANDER_AROUND_SLOWER MOVEMENT_TYPE_WANDER_AROUND
-#define STEP_CB_ICE STEP_CB_DUMMY // TODO Kanto : glace de la Grotte Glaciale
+#define STEP_CB_ICE STEP_CB_SOOTOPOLIS_ICE // glace de la Grotte Glacée : aiguillée vers IcefallCaveIcePerStepCallback à Kanto

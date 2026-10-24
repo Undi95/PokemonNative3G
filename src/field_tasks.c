@@ -702,8 +702,6 @@ void SetIcefallCaveCrackedIceMetatiles(void)
     }
 }
 
-#include <stdio.h>
-static void DebugPrintIce(int x, int y, int b, int m) { fprintf(stderr, "ICE %d %d b=%x m=%x\n", x, y, b, m); } // TMPICE
 static void IcefallCaveIcePerStepCallback(u8 taskId)
 {
     s16 x, y;
@@ -726,7 +724,6 @@ static void IcefallCaveIcePerStepCallback(u8 taskId)
             tPrevX = x;
             tPrevY = y;
             tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-            DebugPrintIce(x, y, tileBehavior, MapGridGetMetatileIdAt(x, y)); // TMPICE
             if (MetatileBehavior_IsThinIce(tileBehavior) == TRUE)
             {
                 // Thin ice, set it to cracked ice
@@ -788,7 +785,6 @@ static void SootopolisGymIcePerStepCallback(u8 taskId)
     u16 *iceStepCount;
     s16 *data = gTasks[taskId].data;
     // Kanto : STEP_CB_ICE = glace de la grotte Gelée de RF
-    fprintf(stderr, "ICECB kanto=%d\n", IsKantoTilesetMap()); // TMPICE
     if (IsKantoTilesetMap())
     {
         IcefallCaveIcePerStepCallback(taskId);

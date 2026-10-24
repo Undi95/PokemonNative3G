@@ -11,5 +11,6 @@ def play(game):
     game.tap("A", 210, hold=4, gap=26)
     give_mewtwo(game)
     debug_warp(game, 38); log(game, "grotte")
-    for d in ("DOWN", "DOWN", "LEFT", "RIGHT", "LEFT", "RIGHT"):
+    for d in ("DOWN", "DOWN", "LEFT", "RIGHT"):        # (9,9) : glace fragile -> fissurée
         game.press(d, 16); game.wait(40); log(game, d)
+    game.press("LEFT", 16); game.wait(200); log(game, "trou")   # glace fissurée -> trou, chute au sous-sol
