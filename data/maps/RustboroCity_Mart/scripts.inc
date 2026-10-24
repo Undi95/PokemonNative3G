@@ -28,6 +28,7 @@ RustboroCity_Mart_Pokemart_Basic:
 	.short ITEM_X_SPEED
 	.short ITEM_X_ATTACK
 	.short ITEM_X_DEFEND
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 RustboroCity_Mart_EventScript_PokemartExpanded::
@@ -50,6 +51,7 @@ RustboroCity_Mart_Pokemart_Expanded:
 	.short ITEM_X_SPEED
 	.short ITEM_X_ATTACK
 	.short ITEM_X_DEFEND
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 RustboroCity_Mart_EventScript_PokefanF::

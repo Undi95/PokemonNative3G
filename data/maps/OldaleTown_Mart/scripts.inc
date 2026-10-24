@@ -18,6 +18,7 @@ OldaleTown_Mart_Pokemart_Basic:
 	.short ITEM_ANTIDOTE
 	.short ITEM_PARALYZE_HEAL
 	.short ITEM_AWAKENING
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 OldaleTown_Mart_ExpandedItems::
@@ -33,6 +34,7 @@ OldaleTown_Mart_Pokemart_Expanded:
 	.short ITEM_ANTIDOTE
 	.short ITEM_PARALYZE_HEAL
 	.short ITEM_AWAKENING
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 OldaleTown_Mart_EventScript_Woman::

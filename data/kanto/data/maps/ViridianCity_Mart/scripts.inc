@@ -67,6 +67,7 @@ ViridianCity_Mart_Items::
 	.2byte ITEM_POTION
 	.2byte ITEM_ANTIDOTE
 	.2byte ITEM_PARALYZE_HEAL
+	.2byte ITEM_LINK_CABLE
 	.2byte ITEM_NONE
 	release
 	end

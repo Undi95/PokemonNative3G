@@ -80,6 +80,7 @@ void ItemUseCB_TMHM(u8 taskId, TaskFunc task);
 void ItemUseCB_RareCandy(u8 taskId, TaskFunc task);
 void ItemUseCB_SacredAsh(u8 taskId, TaskFunc task);
 void ItemUseCB_EvolutionStone(u8 taskId, TaskFunc task);
+void ItemUseCB_LinkCable(u8 taskId, TaskFunc task);
 void KantoItemUseCB_Medicine(u8 taskId, TaskFunc func);
 void KantoItemPc_InitPartyMenuForGive(MainCallback callback);
 void KantoItemUseCB_TMHM(u8 taskId, TaskFunc func);

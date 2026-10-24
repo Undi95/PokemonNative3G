@@ -41,6 +41,7 @@ EverGrandeCity_PokemonLeague_1F_Pokemart:
 	.short ITEM_FULL_HEAL
 	.short ITEM_REVIVE
 	.short ITEM_MAX_REPEL
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 /* The door guards only check for FLAG_BADGE06_GET because Winonas badge is the only one that can be skipped*/

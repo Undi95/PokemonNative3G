@@ -259,6 +259,7 @@ TrainerHill_Entrance_Pokemart_Basic:
 	.short ITEM_DIRE_HIT
 	.short ITEM_GUARD_SPEC
 	.short ITEM_X_ACCURACY
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 TrainerHill_Entrance_EventScript_ExpandedPokemart::
@@ -281,6 +282,7 @@ TrainerHill_Entrance_Pokemart_Expanded:
 	.short ITEM_DIRE_HIT
 	.short ITEM_GUARD_SPEC
 	.short ITEM_X_ACCURACY
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 TrainerHill_Entrance_Text_StillGettingReady:

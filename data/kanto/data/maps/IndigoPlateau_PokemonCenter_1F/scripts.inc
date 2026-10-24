@@ -58,6 +58,7 @@ IndigoPlateau_PokemonCenter_1F_Items::
 	.2byte ITEM_REVIVE
 	.2byte ITEM_FULL_HEAL
 	.2byte ITEM_MAX_REPEL
+	.2byte ITEM_LINK_CABLE
 	.2byte ITEM_NONE
 	release
 	end

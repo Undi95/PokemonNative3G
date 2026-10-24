@@ -5569,6 +5569,46 @@ static bool8 MonCanEvolve(void)
     return TRUE;
 }
 
+// PokemonNative3G : CÂBLE LINK. Le Pokémon évolue comme s'il était échangé (EVO_TRADE, ou EVO_TRADE_ITEM avec l'objet
+// tenu, qui est alors retiré) ; le câble est consommé, comme une pierre.
+static bool8 LinkCableCanEvolve(struct Pokemon *mon)
+{
+    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    u16 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
+    s32 i;
+
+    if (GetMonData(mon, MON_DATA_IS_EGG) || GetItemHoldEffect(heldItem) == HOLD_EFFECT_PREVENT_EVOLVE)
+        return FALSE;
+    for (i = 0; i < EVOS_PER_MON; i++)
+    {
+        if (gEvolutionTable[species][i].method == EVO_TRADE
+         || (gEvolutionTable[species][i].method == EVO_TRADE_ITEM && gEvolutionTable[species][i].param == heldItem))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+void ItemUseCB_LinkCable(u8 taskId, TaskFunc task)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    u16 targetSpecies;
+
+    PlaySE(SE_SELECT);
+    if (!LinkCableCanEvolve(mon))
+    {
+        gPartyMenuUseExitCallback = FALSE;
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = task;
+        return;
+    }
+    gCB2_AfterEvolution = gPartyMenu.exitCallback;
+    targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_TRADE, ITEM_NONE);
+    BeginEvolutionScene(mon, targetSpecies, FALSE, gPartyMenu.slotId);
+    RemoveBagItem(gSpecialVar_ItemId, 1);
+    FreePartyPointers();
+}
+
 u8 GetItemEffectType(u16 item)
 {
     const u8 *itemEffect;

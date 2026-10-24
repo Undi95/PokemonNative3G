@@ -36,6 +36,7 @@ LilycoveCity_DepartmentStore_2F_Pokemart1:
 	.short ITEM_ICE_HEAL
 	.short ITEM_AWAKENING
 	.short ITEM_FLUFFY_TAIL
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 LilycoveCity_DepartmentStore_2F_EventScript_ClerkRight::
@@ -60,6 +61,7 @@ LilycoveCity_DepartmentStore_2F_Pokemart2:
 	.short ITEM_MAX_REPEL
 	.short ITEM_WAVE_MAIL
 	.short ITEM_MECH_MAIL
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 LilycoveCity_DepartmentStore_2F_Text_LearnToUseItemsProperly:

@@ -25,6 +25,7 @@ PetalburgCity_Mart_Pokemart_Basic:
 	.short ITEM_X_ATTACK
 	.short ITEM_X_DEFEND
 	.short ITEM_ORANGE_MAIL
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 PetalburgCity_Mart_EventScript_ExpandedItems::
@@ -48,6 +49,7 @@ PetalburgCity_Mart_Pokemart_Expanded:
 	.short ITEM_X_ATTACK
 	.short ITEM_X_DEFEND
 	.short ITEM_ORANGE_MAIL
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 PetalburgCity_Mart_EventScript_Woman::

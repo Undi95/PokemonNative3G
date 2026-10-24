@@ -3851,6 +3851,8 @@ extern const u32 gItemIconPalette_Sapphire[];
 extern const u32 gItemIcon_MagmaEmblem[];
 extern const u32 gItemIconPalette_MagmaEmblem[];
 extern const u32 gItemIcon_OldSeaMap[];
+extern const u32 gItemIcon_LinkCable[];
+extern const u32 gItemIconPalette_LinkCable[];
 extern const u32 gItemIconPalette_OldSeaMap[];
 
 extern const u32 gItemIcon_ReturnToFieldArrow[];

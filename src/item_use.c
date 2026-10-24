@@ -934,6 +934,13 @@ void ItemUseOutOfBattle_EscapeRope(u8 taskId)
     }
 }
 
+// PokemonNative3G : CÂBLE LINK, évolution par échange en solo
+void ItemUseOutOfBattle_LinkCable(u8 taskId)
+{
+    gItemUseCB = ItemUseCB_LinkCable;
+    SetUpItemUseCallback(taskId);
+}
+
 void ItemUseOutOfBattle_EvolutionStone(u8 taskId)
 {
     gItemUseCB = gSaveBlock2Ptr->optionsBagStyle ? KantoItemUseCB_EvolutionStone : ItemUseCB_EvolutionStone; // sac de RF : scène de RF

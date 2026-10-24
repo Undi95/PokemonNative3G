@@ -359,6 +359,11 @@ static const u8 sMoonStoneDesc[] = _(
     "certaines espèces\n"
     "de POKéMON.");
 
+static const u8 sLinkCableDesc[] = _(
+    "Câble de jeu. Fait\n"
+    "évoluer un POKéMON\n"
+    "comme un échange.");
+
 static const u8 sFireStoneDesc[] = _(
     "Fait évoluer\n"
     "certaines espèces\n"

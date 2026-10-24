@@ -26,6 +26,7 @@ BattleFrontier_Mart_Pokemart:
 	.short ITEM_ZINC
 	.short ITEM_CARBOS
 	.short ITEM_HP_UP
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 BattleFrontier_Mart_EventScript_OldMan::

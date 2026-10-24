@@ -734,5 +734,7 @@ const u32 gItemIconPalette_Sapphire[] = INCGFX_U32("graphics/items/icon_palettes
 const u32 gItemIcon_MagmaEmblem[] = INCGFX_U32("graphics/items/icons/magma_emblem.png", ".4bpp.lz");
 const u32 gItemIconPalette_MagmaEmblem[] = INCGFX_U32("graphics/items/icon_palettes/magma_emblem.pal", ".gbapal.lz");
 
+const u32 gItemIcon_LinkCable[] = INCGFX_U32("graphics/items/icons/link_cable.png", ".4bpp.lz"); // pokeemerald-expansion (linking_cord)
+const u32 gItemIconPalette_LinkCable[] = INCGFX_U32("graphics/items/icon_palettes/link_cable.pal", ".gbapal.lz");
 const u32 gItemIcon_OldSeaMap[] = INCGFX_U32("graphics/items/icons/old_sea_map.png", ".4bpp.lz");
 const u32 gItemIconPalette_OldSeaMap[] = INCGFX_U32("graphics/items/icon_palettes/old_sea_map.pal", ".gbapal.lz");

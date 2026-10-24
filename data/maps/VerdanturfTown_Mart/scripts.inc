@@ -24,6 +24,7 @@ VerdanturfTown_Mart_Pokemart:
 	.short ITEM_REPEL
 	.short ITEM_X_SPECIAL
 	.short ITEM_FLUFFY_TAIL
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 VerdanturfTown_Mart_EventScript_Boy::

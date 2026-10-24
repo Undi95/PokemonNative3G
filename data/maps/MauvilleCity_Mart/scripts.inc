@@ -25,6 +25,7 @@ MauvilleCity_Mart_Pokemart:
 	.short ITEM_GUARD_SPEC
 	.short ITEM_DIRE_HIT
 	.short ITEM_X_ACCURACY
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 MauvilleCity_Mart_EventScript_ExpertM::

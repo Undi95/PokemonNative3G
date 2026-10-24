@@ -1181,6 +1181,17 @@ const struct Item gItems[] =
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
     },
 
+    [ITEM_LINK_CABLE] = // PokemonNative3G : évolution par échange en solo
+    {
+        .name = _("CÂBLE LINK"),
+        .itemId = ITEM_LINK_CABLE,
+        .price = 2100,
+        .description = sLinkCableDesc,
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_LinkCable,
+    },
+
     [ITEM_FIRE_STONE] =
     {
         .name = _("PIERRE FEU"),

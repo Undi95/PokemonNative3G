@@ -22,6 +22,7 @@ MossdeepCity_Mart_Pokemart:
 	.short ITEM_MAX_REPEL
 	.short ITEM_X_ATTACK
 	.short ITEM_X_DEFEND
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 MossdeepCity_Mart_EventScript_Woman::

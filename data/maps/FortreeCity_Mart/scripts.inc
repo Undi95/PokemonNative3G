@@ -23,6 +23,7 @@ FortreeCity_Mart_Pokemart:
 	.short ITEM_REVIVE
 	.short ITEM_SUPER_REPEL
 	.short ITEM_WOOD_MAIL
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 FortreeCity_Mart_EventScript_Woman::

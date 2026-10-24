@@ -22,6 +22,7 @@ LavaridgeTown_Mart_Pokemart:
 	.short ITEM_REVIVE
 	.short ITEM_SUPER_REPEL
 	.short ITEM_X_SPEED
+	.short ITEM_LINK_CABLE
 	pokemartlistend
 
 LavaridgeTown_Mart_EventScript_ExpertM::
