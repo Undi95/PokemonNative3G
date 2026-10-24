@@ -358,6 +358,16 @@ static void Task_DebugMenu(u8 taskId)
             SetMonData(mon, MON_DATA_PP4, &pp1);
         }
         ScriptGiveMon(SPECIES_KADABRA, 30, ITEM_NONE, 0, 0, 0); // CÂBLE LINK : évolution par échange
+        { // COUPE en 4e capacité : tests headless (porte du Trou Pointé)
+            struct Pokemon *kadabra = &gPlayerParty[CalculatePlayerPartyCount() - 1];
+            u16 cut = MOVE_CUT;
+            u8 pp = 30;
+            if (GetMonData(kadabra, MON_DATA_SPECIES) == SPECIES_KADABRA)
+            {
+                SetMonData(kadabra, MON_DATA_MOVE4, &cut);
+                SetMonData(kadabra, MON_DATA_PP4, &pp);
+            }
+        }
         gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET; // tests headless : pas de « Changer de POKéMON ? »
         FlagSet(FLAG_SYS_POKEMON_GET);
         PlaySE(SE_USE_ITEM);

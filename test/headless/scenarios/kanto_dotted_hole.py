@@ -1,5 +1,5 @@
 # Build KANTO_DEBUG=1 : DEBUG « MEWTWO + KADABRA », « POKé MONTURE + badges » et « Deux Ligues finies » (scientifique parti), téléport VALLÉE RUINE (37) :
-# porte du Trou Pointé, braille, COUPE proposée (POKé MONTURE) -> porte ouverte, on entre.
+# porte du Trou Pointé, braille, puis COUPE depuis le menu de l'équipe (KADABRA, COUPE en debug) -> porte ouverte, on entre.
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -23,6 +23,9 @@ def play(game):
     game.tap("A"); game.wait(60); game.tap("A"); game.wait(60)          # examiner : OUI
     game.tap("A"); game.wait(90); game.tap("A"); game.wait(90)          # points, braille
     game.wait(60); log(game, "braille")
-    game.tap("A"); game.wait(60)                                         # OUI
-    finish_dialog(game); game.wait(90); log(game, "porte ouverte")
+    game.tap("A"); game.wait(60); finish_dialog(game); game.wait(30)
+    # COUPE depuis l'équipe : KADABRA (2e), 1re ligne du sous-menu = COUPE
+    game.tap("START"); game.wait(30); game.tap("DOWN"); game.wait(10); game.tap("A"); game.wait(120)
+    game.tap("DOWN"); game.wait(20); game.tap("A"); game.wait(40); game.tap("A"); game.wait(200)
+    log(game, "coupe utilisée")
     game.press("UP", 16); game.wait(200); log(game, "entré")
