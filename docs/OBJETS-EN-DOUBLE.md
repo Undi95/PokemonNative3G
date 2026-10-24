@@ -42,7 +42,7 @@ même nom et même icône, identique dans les deux jeux).
 | Rôle | Hoenn | Kanto |
 |---|---|---|
 | Carte | POKéNAV (carte intégrée) | CARTE (PalletTown_RivalsHouse, OneIsland_PokemonCenter_1F) |
-| Vélo | Vélo Course / Vélo Cross (Mauville) | Bicyclette (CeruleanCity_BikeShop) |
+| Vélo | Vélo Course / Vélo Cross (Mauville) | Bicyclette (CeruleanCity_BikeShop) — fait : plus de Bicyclette, le vendeur donne l'autre vélo de Hoenn ; BON COMMANDE remplacé par l'OVO-CHRONO |
 | Pokédex | Pokédex de Hoenn | Pokédex de Kanto (déjà géré : option POKéDEX) |
 
 ## Piste pour les remplacer
