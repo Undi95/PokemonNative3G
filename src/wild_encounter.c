@@ -378,7 +378,16 @@ static u8 PickWildMonNature(void)
     return Random() % NUM_NATURES;
 }
 
+static void CreateWildMon_Base(u16 species, u8 level);
+
+// PokemonNative3G : tirages chromatiques en plus (CHARME CHROMA, chaîne de pêche : src/fusion_events.c)
 static void CreateWildMon(u16 species, u8 level)
+{
+    CreateWildMon_Base(species, level);
+    FishingChain_TryShiny(&gEnemyParty[0]);
+}
+
+static void CreateWildMon_Base(u16 species, u8 level)
 {
     bool32 checkCuteCharm;
 

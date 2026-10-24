@@ -53,8 +53,8 @@
 #define FLAG_GOOD_ROD_UPGRADED  0x27 // PokemonNative3G
 #define FLAG_SUPER_ROD_UPGRADED 0x28 // PokemonNative3G
 #define FLAG_COIN_CASE_MAN_GONE 0x29 // PokemonNative3G : l'homme de la Boîte Jetons (Céladopole) est parti
-#define FLAG_UNUSED_0x02A    0x2A // Unused Flag
-#define FLAG_UNUSED_0x02B    0x2B // Unused Flag
+#define FLAG_GOT_SHINY_CHARM 0x2A // PokemonNative3G
+#define FLAG_GOT_OVAL_CHARM  0x2B // PokemonNative3G
 #define FLAG_UNUSED_0x02C    0x2C // Unused Flag
 #define FLAG_UNUSED_0x02D    0x2D // Unused Flag
 #define FLAG_UNUSED_0x02E    0x2E // Unused Flag

@@ -194,8 +194,12 @@ void FishingChain_TryShiny(struct Pokemon *mon)
     u8 level, nature, i, rerolls = sFishingRerolls;
 
     sFishingRerolls = 0;
+    if (CheckBagHasItem(ITEM_SHINY_CHARM, 1)) // CHARME CHROMA : 2 tirages de plus, comme dans les jeux suivants
+        rerolls += 2;
     otId = GetMonData(mon, MON_DATA_OT_ID);
     personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_UNOWN) // sa lettre dépend de la personnalité
+        return;
     if (rerolls == 0 || GET_SHINY_VALUE(otId, personality) < SHINY_ODDS)
         return;
     for (i = 0; i < rerolls; i++)
@@ -217,6 +221,28 @@ void FishingChain_TryShiny(struct Pokemon *mon)
 }
 
 
+
+// OVO-CHRONO : les cycles d'éclosion comptent double (s'ajoute à Corps Ardent / Armumagma)
+u8 OvoChrono_EggCycles(u8 toSub)
+{
+    if (CheckBagHasItem(ITEM_OVO_CHRONO, 1))
+        return toSub * 2;
+    return toSub;
+}
+
+// CHARME OVALE : chances de trouver un OEUF à la PENSION, valeurs des jeux suivants (20 -> 40, 50 -> 80, 70 -> 88)
+u8 OvalCharm_Compatibility(u8 compatibility)
+{
+    if (!CheckBagHasItem(ITEM_OVAL_CHARM, 1))
+        return compatibility;
+    if (compatibility >= 70)
+        return 88;
+    if (compatibility >= 50)
+        return 80;
+    if (compatibility >= 20)
+        return 40;
+    return compatibility;
+}
 
 // AUTO-REPOUSSE (à la place du Cherch'Objet de Kanto) : VAR_RESULT = un REPOUSSE du sac (le plus faible d'abord), ou
 // ITEM_NONE ; son nom dans STR_VAR_1

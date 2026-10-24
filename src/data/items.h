@@ -1240,6 +1240,42 @@ const struct Item gItems[] =
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
     },
 
+    [ITEM_OVO_CHRONO] = // PokemonNative3G (tools/fusion_charms.py)
+    {
+        .name = _("OVO-CHRONO"),
+        .itemId = ITEM_OVO_CHRONO,
+        .price = 0,
+        .description = sOvoChronoDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_SHINY_CHARM] = // PokemonNative3G (tools/fusion_charms.py)
+    {
+        .name = _("CHARME CHROMA"),
+        .itemId = ITEM_SHINY_CHARM,
+        .price = 0,
+        .description = sShinyCharmDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_OVAL_CHARM] = // PokemonNative3G (tools/fusion_charms.py)
+    {
+        .name = _("CHARME OVALE"),
+        .itemId = ITEM_OVAL_CHARM,
+        .price = 0,
+        .description = sOvalCharmDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
     [ITEM_FIRE_STONE] =
     {
         .name = _("PIERRE FEU"),

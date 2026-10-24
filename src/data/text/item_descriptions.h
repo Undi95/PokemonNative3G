@@ -1071,6 +1071,21 @@ static const u8 sKantoMeteoriteDesc[] = _( // RF
     "Météorite qui s'est jadis\n"
     "écrasé sur le SITE METEORE.");
 
+static const u8 sOvoChronoDesc[] = _( // PokemonNative3G
+    "Les OEUFS de\n"
+    "l'équipe éclosent\n"
+    "deux fois plus vite.");
+
+static const u8 sShinyCharmDesc[] = _( // PokemonNative3G
+    "Charme qui attire\n"
+    "les POKéMON aux\n"
+    "couleurs rares.");
+
+static const u8 sOvalCharmDesc[] = _( // PokemonNative3G
+    "La PENSION trouve\n"
+    "des OEUFS plus\n"
+    "souvent.");
+
 static const u8 sOceanPassDesc[] = _( // RF (PASSE BATEAU)
     "Un ticket pour\n"
     "embarquer sur\n"

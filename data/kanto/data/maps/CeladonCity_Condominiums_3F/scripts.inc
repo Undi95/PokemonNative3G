@@ -27,6 +27,7 @@ CeladonCity_Condominiums_3F_EventScript_CompletedPokedex::
 	end
 
 CeladonCity_Condominiums_3F_EventScript_ShowDiploma::
+	call Fusion_EventScript_TryGiveOvalCharm @ PokemonNative3G : data/scripts/fusion_charms.inc
 	message CeladonCity_Condominiums_3F_Text_CompletedPokedexCongratulations
 	waitmessage
 	delay 60

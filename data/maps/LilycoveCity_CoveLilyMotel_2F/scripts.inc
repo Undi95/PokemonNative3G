@@ -23,6 +23,7 @@ LilycoveCity_CoveLilyMotel_2F_EventScript_AllHoennMonsFanfare::
 	end
 
 LilycoveCity_CoveLilyMotel_2F_EventScript_ShowDiploma::
+	call Fusion_EventScript_TryGiveShinyCharm @ PokemonNative3G : data/scripts/fusion_charms.inc
 	message LilycoveCity_CoveLilyMotel_2F_Text_FilledPokedexGiveYouThis
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare

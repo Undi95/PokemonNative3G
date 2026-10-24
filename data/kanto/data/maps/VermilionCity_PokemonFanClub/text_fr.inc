@@ -53,18 +53,17 @@ VermilionCity_PokemonFanClub_Text_ChairmansStory::
 	.string "Tiens, c'est pour toi!$"
 
 VermilionCity_PokemonFanClub_Text_ReceivedBikeVoucherFromChairman::
-	.string "{PLAYER} reçoit le\n"
-	.string "BON COMMANDE!$"
+	.string "{PLAYER} reçoit l'\n"
+	.string "OVO-CHRONO!$"
 
 VermilionCity_PokemonFanClub_Text_ExplainBikeVoucher::
-	.string "Echange-le contre une BICYCLETTE\n"
-	.string "aux CYCLES A GOGO d'AZURIA!\p"
-	.string "Moi, c'est mon RAPASDEPIC qui me\n"
-	.string "transporte n'importe où!\p"
-	.string "Je n'ai plus besoin de\n"
-	.string "BICYCLETTE!\p"
-	.string "J'espère que tu aimes pédaler!$"
-
+	.string "Garde un OEUF dans ton équipe\n"
+	.string "avec ça, et il éclora deux fois\l"
+	.string "plus vite!\p"
+	.string "Mon GALOPA est né comme ça,\n"
+	.string "il y a bien longtemps…\p"
+	.string "Moi, je n'en ai plus besoin!\n"
+	.string "Prends-en soin!$"
 VermilionCity_PokemonFanClub_Text_ComeBackToHearStory::
 	.string "Reviens quand tu veux. Je te\n"
 	.string "raconterai mes histoires!$"

@@ -17,5 +17,7 @@ void FishingChain_Start(u8 rod);
 void FishingChain_Break(void);
 void FishingChain_Hooked(void);
 void FishingChain_TryShiny(struct Pokemon *mon);
+u8 OvoChrono_EggCycles(u8 toSub);
+u8 OvalCharm_Compatibility(u8 compatibility);
 
 #endif // GUARD_FUSION_EVENTS_H

@@ -407,5 +407,8 @@ const u32 *const gItemIconTable[ITEMS_COUNT + 1][2] =
     [ITEM_OCEAN_PASS] = {gItemIcon_OceanPass, gItemIconPalette_OceanPass},
     [ITEM_AUTO_REPEL] = {gItemIcon_AutoRepel, gItemIconPalette_AutoRepel},
     // Return to field arrow
+    [ITEM_OVO_CHRONO] = {gItemIcon_OvoChrono, gItemIconPalette_OvoChrono},
+    [ITEM_SHINY_CHARM] = {gItemIcon_ShinyCharm, gItemIconPalette_ShinyCharm},
+    [ITEM_OVAL_CHARM] = {gItemIcon_OvalCharm, gItemIconPalette_OvalCharm},
     [ITEMS_COUNT] = {gItemIcon_ReturnToFieldArrow, gItemIconPalette_ReturnToFieldArrow},
 };

@@ -21,10 +21,10 @@ VermilionCity_PokemonFanClub_EventScript_AlreadyHeardStory::
 
 VermilionCity_PokemonFanClub_EventScript_ChairmanStory::
 	msgbox VermilionCity_PokemonFanClub_Text_ChairmansStory
-	checkitemspace ITEM_BIKE_VOUCHER
+	checkitemspace ITEM_OVO_CHRONO @ PokemonNative3G : OVO-CHRONO à la place du BON COMMANDE (un seul vélo, celui de Hoenn)
 	goto_if_eq VAR_RESULT, FALSE, VermilionCity_PokemonFanClub_EventScript_NoRoomForBikeVoucher
 	setflag FLAG_KANTO_GOT_BIKE_VOUCHER
-	giveitem_msg VermilionCity_PokemonFanClub_Text_ReceivedBikeVoucherFromChairman, ITEM_BIKE_VOUCHER, 1, MUS_RG_OBTAIN_KEY_ITEM
+	giveitem_msg VermilionCity_PokemonFanClub_Text_ReceivedBikeVoucherFromChairman, ITEM_OVO_CHRONO, 1, MUS_RG_OBTAIN_KEY_ITEM
 	msgbox VermilionCity_PokemonFanClub_Text_ExplainBikeVoucher
 	release
 	end

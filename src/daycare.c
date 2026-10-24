@@ -20,6 +20,7 @@
 #include "kanto_save.h"
 #include "list_menu.h"
 #include "overworld.h"
+#include "fusion_events.h"
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/region_map_sections.h"
@@ -890,7 +891,7 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
     // Check if an egg should be produced
     if (daycare->offspringPersonality == 0 && validEggs == DAYCARE_MON_COUNT && (daycare->mons[1].steps & 0xFF) == 0xFF)
     {
-        u8 compatibility = GetDaycareCompatibilityScore(daycare);
+        u8 compatibility = OvalCharm_Compatibility(GetDaycareCompatibilityScore(daycare)); // PokemonNative3G
         if (compatibility > (Random() * 100u) / USHRT_MAX)
             TriggerPendingDaycareEgg();
     }
@@ -899,7 +900,7 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
     if (++daycare->stepCounter == 255)
     {
         u32 eggCycles;
-        u8 toSub = GetEggCyclesToSubtract();
+        u8 toSub = OvoChrono_EggCycles(GetEggCyclesToSubtract()); // PokemonNative3G
 
         for (i = 0; i < gPlayerPartyCount; i++)
         {

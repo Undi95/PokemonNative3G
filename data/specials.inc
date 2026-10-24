@@ -355,6 +355,7 @@ gSpecials::
 	def_special SetPacifidlogTMReceivedDay
 	def_special GetDaysUntilPacifidlogTMAvailable
 	def_special HasAllHoennMons
+	def_special HasAllMons @ PokemonNative3G
 	def_special MonOTNameNotPlayer
 	def_special BufferLottoTicketNumber
 	def_special TryHideBattleTowerReporter

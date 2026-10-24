@@ -423,8 +423,11 @@
 #define ITEM_KANTO_METEORITE 379
 #define ITEM_OCEAN_PASS 380
 #define ITEM_AUTO_REPEL 381
+#define ITEM_OVO_CHRONO 382
+#define ITEM_SHINY_CHARM 383
+#define ITEM_OVAL_CHARM 384
 
-#define ITEMS_COUNT 382
+#define ITEMS_COUNT 385
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
 // Its icon is defined at ITEMS_COUNT as the "return to field" arrow
