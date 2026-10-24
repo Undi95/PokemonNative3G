@@ -94,25 +94,6 @@ static void FindDataFiles(void);
 static void ToggleFullscreen(void);
 static int RunTestMode(void);
 
-#ifdef __ANDROID__
-#include <dlfcn.h>
-extern void *gMain[]; // struct Main : callback1, callback2, savedCallback, vblankCallback…
-// PokemonNative3G : écran noir sur Android : après 4 s, écrit l'écran du jeu en cours (adresses relatives à la .so)
-static int DebugWatchdog(void *unused)
-{
-    int i;
-    for (i = 0; i < 5; i++)
-    {
-        Dl_info info;
-        SDL_Delay(4000);
-        if (dladdr((void *)DebugWatchdog, &info))
-            SDL_Log("PN3G: cb1=+%lx cb2=+%lx", (unsigned long)((char *)gMain[0] - (char *)info.dli_fbase),
-                    (unsigned long)((char *)gMain[1] - (char *)info.dli_fbase));
-    }
-    return 0;
-}
-#endif
-
 int main(int argc, char **argv)
 {
     if (!ParseArgs(argc, argv))
@@ -223,10 +204,6 @@ int main(int argc, char **argv)
     }
 
     AgbMain();
-#ifdef __ANDROID__
-    SDL_Log("PN3G: AgbMain fini, boucle principale");
-    SDL_CreateThread(DebugWatchdog, "pn3g-watchdog", NULL);
-#endif
 
     double accumulator = 0.0;
 
@@ -235,15 +212,7 @@ int main(int argc, char **argv)
     {
         double deltaTime;
 
-#ifdef __ANDROID__
-        static u32 sDbgLoops;
-        if (sDbgLoops < 3) SDL_Log("PN3G: boucle %u, ProcessEvents", sDbgLoops);
-#endif
         ProcessEvents();
-#ifdef __ANDROID__
-        if (sDbgLoops < 3) SDL_Log("PN3G: boucle %u, apres ProcessEvents", sDbgLoops);
-        sDbgLoops++;
-#endif
 
         curGameTime = SDL_GetPerformanceCounter();
         deltaTime = (double)((curGameTime - lastGameTime) / (double)SDL_GetPerformanceFrequency());
@@ -259,13 +228,6 @@ int main(int argc, char **argv)
             {
                 //run game logic, draw frame and process DMAs and vblank
                 ENTER_VBLANK(); //you must be in VBlank before running a game tick
-#ifdef __ANDROID__
-                {
-                    static u32 sDbgTicks;
-                    if (sDbgTicks < 3 || (sDbgTicks % 600) == 0) SDL_Log("PN3G: tick %u", sDbgTicks);
-                    sDbgTicks++;
-                }
-#endif
                 if (!RunMainLoop())
                 {
                     // Soft reset: drop the old sound, and start the next frame with MainLoop
@@ -275,32 +237,14 @@ int main(int argc, char **argv)
                 }
                 if (!isGameStepDrawn)
                 {
-#ifdef __ANDROID__
-                { static u32 n; if (n++ < 3) SDL_Log("PN3G: avant vdraw");}
-#endif
                     VDraw(sdlTexture);
-#ifdef __ANDROID__
-                { static u32 m; if (m++ < 3) SDL_Log("PN3G: apres vdraw");}
-#endif
                     //SDL_RenderClear(sdlRenderer);
                     isGameStepDrawn = true;
                 }
-#ifdef __ANDROID__
-                { static u32 n; if (n++ < 3) SDL_Log("PN3G: avant vblank");}
-#endif
                 RunDMAsAndVBlank();
-#ifdef __ANDROID__
-                { static u32 m; if (m++ < 3) SDL_Log("PN3G: apres vblank");}
-#endif
                 // The sound engine runs once a frame, like in the GBA's VBlank
                 // interrupt, so the music keeps time with the game
-#ifdef __ANDROID__
-                { static u32 n; if (n++ < 3) SDL_Log("PN3G: avant audio");}
-#endif
                 AudioUpdate();
-#ifdef __ANDROID__
-                { static u32 m; if (m++ < 3) SDL_Log("PN3G: apres audio");}
-#endif
 
                 accumulator -= fixedTimestep;
             }
@@ -314,13 +258,6 @@ int main(int argc, char **argv)
 
         lastGameTime = curGameTime;
 
-#ifdef __ANDROID__
-        {
-            static u32 sLogFrames;
-            if ((sLogFrames++ % 120) == 0)
-                SDL_Log("PN3G: image %u, %s", sLogFrames, SDL_GetError());
-        }
-#endif
         SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
         Touch_Draw(sdlRenderer, sdlWindow);
         SDL_RenderPresent(sdlRenderer);

@@ -862,9 +862,6 @@ uint16_t *memsetu16(uint16_t *dst, uint16_t fill, size_t count)
     return dst;
 }
 
-#ifdef __ANDROID__
-#include <android/log.h>
-#endif
 void DrawFrame(uint16_t *pixels)
 {
     int i;
@@ -897,13 +894,7 @@ void DrawFrame(uint16_t *pixels)
         }
 
         memsetu16(&pixels[i * DISPLAY_WIDTH], backdropColor, DISPLAY_WIDTH);
-#ifdef __ANDROID__
-        { static int n; if (n < 400) { n++; __android_log_print(4, "SDL/APP", "PN3G: ligne %d", i); } }
-#endif
         DrawScanline(&pixels[i * DISPLAY_WIDTH], i);
-#ifdef __ANDROID__
-        { static int m; if (m < 400) { m++; __android_log_print(4, "SDL/APP", "PN3G: ligne %d ok", i); } }
-#endif
         
         REG_DISPSTAT |= INTR_FLAG_HBLANK;
 

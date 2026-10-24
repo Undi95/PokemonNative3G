@@ -178,7 +178,9 @@ ifeq ($(PORTABLE),1)
     OS_LFLAGS := -Wl,-no_fixup_chains
   else ifeq ($(TARGET_OS),ANDROID)
     SDL_DIR := /opt/sdl-android
-    OS_CFLAGS := -fPIC
+    # char est non signé sur ARM : -fsigned-char comme sur PC (ex. for (char i = n; i >= 0; i--) du rendu = boucle
+    # infinie, écran noir)
+    OS_CFLAGS := -fPIC -fsigned-char
     OS_LFLAGS := -shared -Wl,-z,text -llog -landroid
     # aarch64's as keeps the names that the macros' .if compare (STR_VAR_1...) as
     # undefined symbols, which the library would then ask the system for
