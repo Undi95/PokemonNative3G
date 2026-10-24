@@ -906,5 +906,14 @@ void DrawFrame(uint16_t *pixels)
         REG_DISPSTAT &= ~INTR_FLAG_HBLANK;
         REG_DISPSTAT &= ~INTR_FLAG_VCOUNT;
     }
+
+    // PokemonNative3G : les pixels sans bit d'opacité (fond sans couche) sont transparents dans la texture
+    // ABGR1555 ; le PC les montre noirs, mais certains GPU Android ignorent l'alpha et montrent leur couleur
+    // (fond blanc / vert fluo). Noir opaque partout, comme sur PC.
+    for (i = 0; i < DISPLAY_WIDTH * DISPLAY_HEIGHT; i++)
+    {
+        if (!(pixels[i] & 0x8000))
+            pixels[i] = 0x8000;
+    }
 }
 #endif // PORTABLE
