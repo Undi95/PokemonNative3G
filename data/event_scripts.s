@@ -758,6 +758,8 @@ Common_EventScript_OutOfCenterPartyHeal::
 	return
 
 EventScript_RegionMap::
+	specialvar VAR_RESULT, Fusion_IsInKanto @ PokemonNative3G : carte murale de Kanto (RF) à Kanto
+	goto_if_eq VAR_RESULT, TRUE, EventScript_WallTownMap
 	lockall
 	msgbox Common_Text_LookCloserAtMap, MSGBOX_DEFAULT
 	fadescreen FADE_TO_BLACK

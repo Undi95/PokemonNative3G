@@ -24,6 +24,7 @@ bool8 Fusion_IsBoxMonLockedInHoenn(struct BoxPokemon *mon);
 void Fusion_MarkAllMonsFromHoenn(void);
 #define HOENN_MON_MARK 0x8 // MON_DATA_UNUSED_RIBBONS : POKéMON du joueur au premier départ pour Kanto
 u8 Fusion_GetPCOwner(void);
+bool8 Fusion_IsInKanto(void);
 #define PC_OWNER_UNKNOWN 0
 #define PC_OWNER_LANETTE 1
 #define PC_OWNER_BILL    2

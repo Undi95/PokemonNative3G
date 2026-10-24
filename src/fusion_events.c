@@ -360,3 +360,9 @@ u8 Fusion_GetPCOwner(void)
         return FlagGet(FLAG_KANTO_SYS_NOT_SOMEONES_PC) ? PC_OWNER_BILL : PC_OWNER_UNKNOWN;
     return FlagGet(FLAG_SYS_PC_LANETTE) ? PC_OWNER_LANETTE : PC_OWNER_UNKNOWN;
 }
+
+// Kanto ou Hoenn (cartes de RF) : carte murale, objet CARTE
+bool8 Fusion_IsInKanto(void)
+{
+    return IsKantoTilesetMap();
+}

@@ -13,6 +13,7 @@
 #include "heal_location.h"
 #include "international_string_util.h"
 #include "kanto_region_map.h"
+#include "fieldmap.h"
 #include "m4a.h"
 #include "main.h"
 #include "malloc.h"
@@ -4776,9 +4777,13 @@ u16 ShowTownMap(void)
 // ---- Rouge Feu (item_use.c) : objet CARTE, depuis le sac ou enregistré (SELECT) ----
 #define tUsingRegisteredKeyItem data[3]
 
+// PokemonNative3G : à Hoenn, la carte de Hoenn (Émeraude, field_region_map.c)
 static void UseTownMapFromBag(void)
 {
-    KantoInitRegionMapWithExitCB(REGIONMAP_TYPE_NORMAL, CB2_ReturnToBagMenuPocket);
+    if (IsPlayerInKanto())
+        KantoInitRegionMapWithExitCB(REGIONMAP_TYPE_NORMAL, CB2_ReturnToBagMenuPocket);
+    else
+        FieldInitRegionMap(CB2_ReturnToBagMenuPocket);
 }
 
 static void Task_UseTownMapFromField(u8 taskId)
@@ -4786,7 +4791,10 @@ static void Task_UseTownMapFromField(u8 taskId)
     if (!gPaletteFade.active)
     {
         CleanupOverworldWindowsAndTilemaps();
-        KantoInitRegionMapWithExitCB(REGIONMAP_TYPE_NORMAL, CB2_ReturnToField);
+        if (IsPlayerInKanto()) // PokemonNative3G : à Hoenn, la carte de Hoenn
+            KantoInitRegionMapWithExitCB(REGIONMAP_TYPE_NORMAL, CB2_ReturnToField);
+        else
+            FieldInitRegionMap(CB2_ReturnToField);
         DestroyTask(taskId);
     }
 }
