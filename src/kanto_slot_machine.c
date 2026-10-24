@@ -27,8 +27,7 @@
 
 void KantoPlaySlotMachine(u16 machineIdx, MainCallback savedCallback);
 #include <stdio.h>
-#define DBGTRACE(s) do { fprintf(stderr, "[slot] %s
-", s); fflush(stderr); } while (0)
+#define DBGTRACE(s) do { fprintf(stderr, "[slot] %s\n", s); fflush(stderr); } while (0)
 #define DMA3_32BIT 1 // RF : dma3.h
 
 // Rouge Feu (strings_*_fr.h)
