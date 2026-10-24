@@ -824,11 +824,13 @@ static void Task_TitleScreenPhase3(u8 taskId)
         UpdateLegendaryMarkingColor(gTasks[taskId].tCounter);
 #ifndef PORTABLE
         if ((gMPlayInfo_BGM.status & 0xFFFF) == 0)
+#else
+        if (IsBGMStopped()) // PokemonNative3G : fin de la musique -> retour à l'intro, comme sur GBA
+#endif
         {
             BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_WHITEALPHA);
             SetMainCallback2(CB2_GoToCopyrightScreen);
         }
-#endif
     }
 }
 
