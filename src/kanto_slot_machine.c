@@ -1964,17 +1964,17 @@ static bool32 CreateSlotMachine(void)
 
 static void DestroySlotMachine(void)
 {
-    DBGTRACE("destroy 0");
+    DBGTRACE("destroy 0"); DBGTRACE(CheckHeap() ? "  tas OK" : "  tas CORROMPU");
     if (FuncIsActiveTask(Task_SlotMachine))
     {
         Free(GetSlotMachineSetupTaskDataPtr());
-        DBGTRACE("destroy 1");
+        DBGTRACE("destroy 1"); DBGTRACE(CheckHeap() ? "  tas OK" : "  tas CORROMPU");
         DestroyTask(FindTaskIdByFunc(Task_SlotMachine));
     }
     DestroyGfxManager();
-    DBGTRACE("destroy 2");
+    DBGTRACE("destroy 2"); DBGTRACE(CheckHeap() ? "  tas OK" : "  tas CORROMPU");
     FreeAllWindowBuffers();
-    DBGTRACE("destroy 3");
+    DBGTRACE("destroy 3"); DBGTRACE(CheckHeap() ? "  tas OK" : "  tas CORROMPU");
 }
 
 static void Task_SlotMachine(u8 taskId)
