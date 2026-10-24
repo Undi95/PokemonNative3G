@@ -26,8 +26,6 @@
 #include "kanto_bag_internal.h" // noms de RF (après les en-têtes d'Émeraude)
 
 void KantoPlaySlotMachine(u16 machineIdx, MainCallback savedCallback);
-#include <stdio.h>
-#define DBGTRACE(s) do { fprintf(stderr, "[slot] %s\n", s); fflush(stderr); } while (0)
 #define DMA3_32BIT 1 // RF : dma3.h
 
 // Rouge Feu (strings_*_fr.h)
@@ -938,18 +936,11 @@ static void CleanSupSlotMachineState(void)
 
 static void CB2_RunSlotMachine(void)
 {
-    DBGTRACE("run");
     RunTasks();
-    DBGTRACE("anim");
     AnimateSprites();
-    DBGTRACE("oam");
     BuildOamBuffer();
-    DBGTRACE("fade");
     UpdatePaletteFade();
-    DBGTRACE("fin");
 }
-
-static void VBlankTrace(void) {}
 
 static void MainTask_SlotsGameLoop(u8 taskId)
 {
@@ -1266,8 +1257,10 @@ static void MainTask_ExitSlots(u8 taskId)
     case 1:
         if (!IsSlotMachineSetupTaskActive(0))
         {
-            // PokemonNative3G : RF laisse tourner ses tâches et ses sprites après avoir libéré ses structures (ils lisent
-            // alors l'adresse 0, sans effet sur GBA ; plantage sur PC) : on les arrête (écran déjà au noir)
+            // PokemonNative3G : RF laisse tourner son HBlank, ses tâches et ses sprites après avoir libéré ses
+            // structures (ils lisent alors l'adresse 0, sans effet sur GBA ; plantage sur PC) : on les arrête
+            // (écran déjà au noir)
+            SetHBlankCallback(NULL);
             DestroyTask(sSlotMachineState->spinReelsTaskId);
             SetMainCallback2(sSlotMachineState->savedCallback);
             CleanSupSlotMachineState();
@@ -1988,7 +1981,6 @@ static void Task_SlotMachine(u8 taskId)
 
 static void VBlankCB_SlotMachine(void)
 {
-    DBGTRACE("vblank");
     TransferPlttBuffer();
     LoadOam();
     ProcessSpriteCopyRequests();
