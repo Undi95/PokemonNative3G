@@ -8,7 +8,6 @@
 #include "gpu_regs.h"
 #include "main.h"
 #include "malloc.h"
-bool32 CheckHeap(void);
 #include "menu.h"
 #include "overworld.h"
 #include "palette.h"
@@ -27,8 +26,6 @@ bool32 CheckHeap(void);
 #include "kanto_bag_internal.h" // noms de RF (après les en-têtes d'Émeraude)
 
 void KantoPlaySlotMachine(u16 machineIdx, MainCallback savedCallback);
-#include <stdio.h>
-#define DBGTRACE(s) do { fprintf(stderr, "[slot] %s\n", s); fflush(stderr); } while (0)
 #define DMA3_32BIT 1 // RF : dma3.h
 
 // Rouge Feu (strings_*_fr.h)
@@ -909,7 +906,6 @@ static void CB2_InitSlotMachine(void)
         {
             SetMainCallback2(sSlotMachineState->savedCallback);
             CleanSupSlotMachineState();
-            DBGTRACE("nettoyé");
         }
         else
         {
@@ -931,25 +927,16 @@ static void CB2_InitSlotMachine(void)
 static void CleanSupSlotMachineState(void)
 {
     DestroySlotMachine();
-    DBGTRACE("avant free état");
     if (sSlotMachineState != NULL)
     {
         Free(sSlotMachineState);
-        DBGTRACE("free état fait");
         sSlotMachineState = NULL;
     }
 }
 
 static void CB2_RunSlotMachine(void)
 {
-    static bool8 sReported2;
     RunTasks();
-    if (!sReported2 && !CheckHeap())
-    {
-        sReported2 = TRUE;
-        fprintf(stderr, "[slot] tas corrompu après RunTasks\n");
-        fflush(stderr);
-    }
     AnimateSprites();
     BuildOamBuffer();
     UpdatePaletteFade();
@@ -1118,7 +1105,6 @@ static void MainTask_ConfirmExitGame(u8 taskId)
     switch (data[0])
     {
     case 0:
-        DBGTRACE("B");
         SetSlotMachineSetupTask(SLOTTASK_ASK_QUIT, 0);
         data[0]++;
         break;
@@ -1269,7 +1255,6 @@ static void MainTask_ExitSlots(u8 taskId)
         data[0]++;
         break;
     case 1:
-        DBGTRACE(sSlotMachineState == NULL ? "exit: état NULL" : "exit 1");
         if (!IsSlotMachineSetupTaskActive(0))
         {
             SetMainCallback2(sSlotMachineState->savedCallback);
@@ -1290,6 +1275,11 @@ static void Task_SpinReels(u8 taskId)
     // taskId is never used
 
     s32 i;
+
+    // PokemonNative3G : à la sortie, cette tâche tourne encore une fois après la libération de l'état (RF lit
+    // alors l'adresse 0, sans effet sur GBA ; plantage sur PC)
+    if (sSlotMachineState == NULL)
+        return;
 
     for (i = 0; i < NUM_REELS; i++)
     {
@@ -1966,17 +1956,13 @@ static bool32 CreateSlotMachine(void)
 
 static void DestroySlotMachine(void)
 {
-    DBGTRACE("destroy 0"); DBGTRACE(CheckHeap() ? "  tas OK" : "  tas CORROMPU");
     if (FuncIsActiveTask(Task_SlotMachine))
     {
         Free(GetSlotMachineSetupTaskDataPtr());
-        DBGTRACE("destroy 1"); DBGTRACE(CheckHeap() ? "  tas OK" : "  tas CORROMPU");
         DestroyTask(FindTaskIdByFunc(Task_SlotMachine));
     }
     DestroyGfxManager();
-    DBGTRACE("destroy 2"); DBGTRACE(CheckHeap() ? "  tas OK" : "  tas CORROMPU");
     FreeAllWindowBuffers();
-    DBGTRACE("destroy 3"); DBGTRACE(CheckHeap() ? "  tas OK" : "  tas CORROMPU");
 }
 
 static void Task_SlotMachine(u8 taskId)
@@ -1987,18 +1973,7 @@ static void Task_SlotMachine(u8 taskId)
     for (i = 0; i < (int)ARRAY_COUNT(ptr->tasks); i++)
     {
         if (ptr->tasks[i].active)
-        {
-            static bool8 sReported;
-            u16 f = ptr->tasks[i].funcno;
-            u8 st = ptr->tasks[i].state;
             ptr->tasks[i].active = sSlotMachineSetupTasks[ptr->tasks[i].funcno](&ptr->tasks[i].state, ptr);
-            if (!sReported && !CheckHeap())
-            {
-                sReported = TRUE;
-                fprintf(stderr, "[slot] tas corrompu après la tâche %d (état %d)\n", f, st);
-                fflush(stderr);
-            }
-        }
     }
 }
 
@@ -2232,13 +2207,9 @@ static bool8 SlotsTask_AskQuitPlaying(u8 * state, struct SlotMachineSetupTaskDat
     switch (*state)
     {
     case 0:
-        DBGTRACE("quit 0");
         Slot_PrintOnWindow0(sKText_String_QuitPlaying);
-        DBGTRACE("quit 1");
         Slot_CreateYesNoMenu(0);
-        DBGTRACE("quit 2");
         CopyWindowToVram(0, COPYWIN_FULL);
-        DBGTRACE("quit 3");
         (*state)++;
         break;
     case 1:
