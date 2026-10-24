@@ -1216,6 +1216,30 @@ const struct Item gItems[] =
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
     },
 
+    [ITEM_OCEAN_PASS] = // PokemonNative3G : PASSE BATEAU de RF (Léo, Route 25), distinct de celui d'Émeraude
+    {
+        .name = _("PASS OCEANE"),
+        .itemId = ITEM_OCEAN_PASS,
+        .price = 0,
+        .description = sOceanPassDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
+    [ITEM_AUTO_REPEL] = // PokemonNative3G : à la place du Cherch'Objet de Kanto (Route 11)
+    {
+        .name = _("AUTO-REPOUSSE"),
+        .itemId = ITEM_AUTO_REPEL,
+        .price = 0,
+        .description = sAutoRepelDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
     [ITEM_FIRE_STONE] =
     {
         .name = _("PIERRE FEU"),

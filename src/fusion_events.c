@@ -215,3 +215,44 @@ void FishingChain_TryShiny(struct Pokemon *mon)
     } while (GetNatureFromPersonality(personality) != nature);
     CreateMon(mon, species, level, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
 }
+
+// AUTO-REPOUSSE (à la place du Cherch'Objet de Kanto) : VAR_RESULT = un REPOUSSE du sac (le plus faible d'abord), ou
+// ITEM_NONE ; son nom dans STR_VAR_1
+u16 AutoRepel_Check(void)
+{
+    static const u16 sRepels[] = {ITEM_REPEL, ITEM_SUPER_REPEL, ITEM_MAX_REPEL};
+    u32 i;
+
+    if (!CheckBagHasItem(ITEM_AUTO_REPEL, 1))
+        return ITEM_NONE;
+    for (i = 0; i < ARRAY_COUNT(sRepels); i++)
+    {
+        if (CheckBagHasItem(sRepels[i], 1))
+        {
+            CopyItemName(sRepels[i], gStringVar1);
+            return sRepels[i];
+        }
+    }
+    return ITEM_NONE;
+}
+
+// VAR_0x8004 = le REPOUSSE choisi par AutoRepel_Check
+void AutoRepel_Use(void)
+{
+    RemoveBagItem(gSpecialVar_0x8004, 1);
+    VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(gSpecialVar_0x8004));
+}
+
+// easter-egg de la Boîte Jetons (Céladopole) : LEVEINARD chromatique N.25
+void GiveShinyChansey(void)
+{
+    struct Pokemon mon;
+    u32 otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
+    u32 hi = Random();
+    u32 personality = (hi << 16) | (HIHALF(otId) ^ LOHALF(otId) ^ hi ^ (Random() % SHINY_ODDS));
+
+    CreateMon(&mon, SPECIES_CHANSEY, 25, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
+    GiveMonToPlayer(&mon);
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_CHANSEY), FLAG_SET_SEEN);
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_CHANSEY), FLAG_SET_CAUGHT);
+}

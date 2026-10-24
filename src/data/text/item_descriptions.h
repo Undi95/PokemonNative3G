@@ -1071,6 +1071,16 @@ static const u8 sKantoMeteoriteDesc[] = _( // RF
     "Météorite qui s'est jadis\n"
     "écrasé sur le SITE METEORE.");
 
+static const u8 sOceanPassDesc[] = _( // RF (PASSE BATEAU)
+    "Un ticket pour\n"
+    "embarquer sur\n"
+    "l'OCEANE.");
+
+static const u8 sAutoRepelDesc[] = _(
+    "Propose un autre\n"
+    "REPOUSSE quand\n"
+    "l'effet se dissipe.");
+
 static const u8 sRoom1KeyDesc[] = _(
     "Une clé pour ouvrir\n"
     "une des portes de\n"

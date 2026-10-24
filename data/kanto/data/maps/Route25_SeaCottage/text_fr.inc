@@ -67,7 +67,7 @@ Route25_SeaCottage_Text_ThanksLadyTakeThis::
 
 Route25_SeaCottage_Text_ReceivedSSTicketFromBill::
 	.string "{PLAYER} obtient le\n"
-	.string "PASSE BATEAU!$"
+	.string "PASS OCEANE!$"
 
 Route25_SeaCottage_Text_YouveGotTooMuchStuff::
 	.string "Ton inventaire est plein!$"

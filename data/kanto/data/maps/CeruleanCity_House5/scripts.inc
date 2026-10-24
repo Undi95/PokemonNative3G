@@ -7,14 +7,37 @@ CeruleanCity_House5_EventScript_BerryPowderMan::
 	goto_if_set FLAG_KANTO_GOT_POWDER_JAR, CeruleanCity_House5_EventScript_AskToExchangePowder
 	msgbox CeruleanCity_House1_Text_AnyInterestInBerries, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, CeruleanCity_House5_EventScript_NoInterestInBerries
-	goto_if_unset FLAG_KANTO_SYS_GOT_BERRY_POUCH, CeruleanCity_House5_EventScript_NoBerries
-	msgbox CeruleanCity_House1_Text_HaveJustTheThing
+	checkitem ITEM_POWDER_JAR @ PokemonNative3G : le POT POUDRE vient de Hoenn ; s'il l'a, assortiment de baies
+	goto_if_eq VAR_RESULT, FALSE, CeruleanCity_House5_EventScript_PowderJarAtHoenn
+	msgbox Fusion_Text_HaveJarTakeBerries
 	setflag FLAG_KANTO_GOT_POWDER_JAR
-	giveitem ITEM_POWDER_JAR
-	goto_if_eq VAR_RESULT, FALSE, EventScript_BagIsFull
+	giveitem ITEM_SITRUS_BERRY, 3
+	giveitem ITEM_LUM_BERRY, 3
+	giveitem ITEM_LEPPA_BERRY, 3
+	giveitem ITEM_LIECHI_BERRY
+	giveitem ITEM_PETAYA_BERRY
 	msgbox CeruleanCity_House1_Text_GoCrushBerriesAtDirectCorner
 	release
 	end
+
+CeruleanCity_House5_EventScript_PowderJarAtHoenn::
+	msgbox Fusion_Text_PowderJarAtHoenn
+	release
+	end
+
+Fusion_Text_HaveJarTakeBerries:
+	.string "Oh! Tu as déjà un POT POUDRE?\n"
+	.string "Tu es un vrai connaisseur!\p"
+	.string "Alors prends ces BAIES de ma\n"
+	.string "collection, elles te seront utiles!$"
+
+Fusion_Text_PowderJarAtHoenn:
+	.string "Pour garder la POUDRE BAIE, il te\n"
+	.string "faut un POT POUDRE.\p"
+	.string "On en donne au marché de\n"
+	.string "POIVRESSEL, à HOENN.\p"
+	.string "Reviens me voir avec, j'aurai\n"
+	.string "un cadeau pour toi!$"
 
 CeruleanCity_House5_EventScript_NoBerries::
 	msgbox CeruleanCity_House1_Text_WhyMustYouLieNoBerries

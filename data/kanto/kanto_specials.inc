@@ -153,3 +153,6 @@
 	@ PokemonNative3G (src/fusion_events.c)
 	def_special GetStarterEggToGive
 	def_special SetStarterEggGiven
+	def_special AutoRepel_Check
+	def_special AutoRepel_Use
+	def_special GiveShinyChansey

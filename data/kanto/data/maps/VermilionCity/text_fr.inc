@@ -62,7 +62,7 @@ VermilionCity_Text_DoYouHaveATicket::
 
 VermilionCity_Text_FlashedSSTicket::
 	.string "{FONT_NORMAL}{PLAYER} montre le\n"
-	.string "PASSE BATEAU en frimant.\p"
+	.string "PASS OCEANE en frimant.\p"
 	.string "{FONT_MALE}Heu… merci!\n"
 	.string "Bienvenue à bord!$"
 

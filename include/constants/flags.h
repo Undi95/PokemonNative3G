@@ -52,7 +52,7 @@
 #define FLAG_OLD_ROD_UPGRADED   0x26 // PokemonNative3G : canne améliorée par le pêcheur de Kanto (chaîne de pêche, fusion_events.c)
 #define FLAG_GOOD_ROD_UPGRADED  0x27 // PokemonNative3G
 #define FLAG_SUPER_ROD_UPGRADED 0x28 // PokemonNative3G
-#define FLAG_UNUSED_0x029    0x29 // Unused Flag
+#define FLAG_COIN_CASE_MAN_GONE 0x29 // PokemonNative3G : l'homme de la Boîte Jetons (Céladopole) est parti
 #define FLAG_UNUSED_0x02A    0x2A // Unused Flag
 #define FLAG_UNUSED_0x02B    0x2B // Unused Flag
 #define FLAG_UNUSED_0x02C    0x2C // Unused Flag

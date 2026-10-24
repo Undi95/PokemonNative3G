@@ -66,9 +66,9 @@ Route11_EastEntrance_2F_EventScript_Aide::
 	call Route11_EastEntrance_2F_EventScript_GetAideRequestInfo
 	goto_if_lt VAR_0x8006, REQUIRED_CAUGHT_MONS, Aide_EventScript_HaventCaughtEnough
 	msgbox Route11_EastEntrance_2F_Text_GreatHereYouGo
-	checkitemspace ITEM_ITEMFINDER
+	checkitemspace ITEM_AUTO_REPEL
 	goto_if_eq VAR_RESULT, FALSE, Aide_EventScript_NoRoomForItem
-	giveitem_msg Route11_EastEntrance_2F_Text_ReceivedItemfinderFromAide, ITEM_ITEMFINDER
+	giveitem_msg Route11_EastEntrance_2F_Text_ReceivedItemfinderFromAide, ITEM_AUTO_REPEL
 	setflag FLAG_KANTO_GOT_ITEMFINDER
 	msgbox Route11_EastEntrance_2F_Text_ExplainItemfinder
 	release
@@ -81,5 +81,5 @@ Route11_EastEntrance_2F_EventScript_AlreadyGotItemfinder::
 
 Route11_EastEntrance_2F_EventScript_GetAideRequestInfo::
 	buffernumberstring STR_VAR_1, REQUIRED_CAUGHT_MONS
-	bufferitemname STR_VAR_2, ITEM_ITEMFINDER
+	bufferitemname STR_VAR_2, ITEM_AUTO_REPEL
 	return
