@@ -24,8 +24,8 @@ def play(game):
     game.tap("A"); game.wait(90); game.tap("A"); game.wait(90)          # points, braille
     game.wait(60); log(game, "braille")
     game.tap("A"); game.wait(60); finish_dialog(game); game.wait(30)
-    # COUPE depuis l'équipe : KADABRA (2e), 1re ligne du sous-menu = COUPE
+    # COUPE depuis l'équipe : KADABRA (2e), 2e ligne du sous-menu = COUPE
     game.tap("START"); game.wait(30); game.tap("DOWN"); game.wait(10); game.tap("A"); game.wait(120)
-    game.tap("DOWN"); game.wait(20); game.tap("A"); game.wait(40); game.tap("A"); game.wait(200)
+    game.tap("DOWN"); game.wait(20); game.tap("A"); game.wait(40); game.tap("DOWN"); game.wait(20); game.tap("A"); game.wait(200)
     log(game, "coupe utilisée")
     game.press("UP", 16); game.wait(200); log(game, "entré")
