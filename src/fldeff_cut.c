@@ -1,4 +1,6 @@
 #include "global.h"
+#include "constants/kanto/metatile_labels.h"
+#include "constants/kanto_flags_vars.h"
 #include "event_object_lock.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
@@ -51,6 +53,9 @@ static void FieldCallback_CutTree(void);
 static void FieldCallback_CutGrass(void);
 static void StartCutTreeFieldEffect(void);
 static void StartCutGrassFieldEffect(void);
+static EWRAM_DATA bool8 sScheduleOpenDottedHole = FALSE; // PokemonNative3G
+bool8 CutMoveRuinValleyCheck(void);
+void CutMoveOpenDottedHoleDoor(void);
 static void SetCutGrassMetatile(s16, s16);
 static void SetCutGrassMetatiles(s16, s16);
 static void CutGrassSpriteCallback1(struct Sprite *);
@@ -143,6 +148,16 @@ bool8 SetUpFieldMove_Cut(void)
     u8 userAbility;
     bool8 cutTiles[CUT_NORMAL_AREA];
     bool8 ret;
+
+    // PokemonNative3G : Coupe sur l'inscription braille de la Vallée Ruine (Île 6) ouvre le Trou Pointé (fldeff_cut.c de RF)
+    sScheduleOpenDottedHole = FALSE;
+    if (CutMoveRuinValleyCheck() == TRUE)
+    {
+        sScheduleOpenDottedHole = TRUE;
+        gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
+        gPostMenuFieldCallback = FieldCallback_CutGrass;
+        return TRUE;
+    }
 
     if (CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_CUTTABLE_TREE) == TRUE)
     {
@@ -308,7 +323,29 @@ bool8 FldEff_UseCutOnTree(void)
 static void StartCutGrassFieldEffect(void)
 {
     FieldEffectActiveListRemove(FLDEFF_USE_CUT_ON_GRASS);
-    FieldEffectStart(FLDEFF_CUT_GRASS);
+    if (sScheduleOpenDottedHole == TRUE) // PokemonNative3G
+        CutMoveOpenDottedHoleDoor();
+    else
+        FieldEffectStart(FLDEFF_CUT_GRASS);
+}
+
+// PokemonNative3G : field_specials.c de RF
+bool8 CutMoveRuinValleyCheck(void)
+{
+    return !FlagGet(FLAG_KANTO_USED_CUT_ON_RUIN_VALLEY_BRAILLE)
+        && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY)
+        && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY)
+        && gSaveBlock1Ptr->pos.x == 24 && gSaveBlock1Ptr->pos.y == 25
+        && GetPlayerFacingDirection() == DIR_NORTH;
+}
+
+void CutMoveOpenDottedHoleDoor(void)
+{
+    MapGridSetMetatileIdAt(31, 31, METATILE_SeviiIslands67_DottedHoleDoor_Open);
+    DrawWholeMapView();
+    PlaySE(SE_BANG);
+    FlagSet(FLAG_KANTO_USED_CUT_ON_RUIN_VALLEY_BRAILLE);
+    UnlockPlayerFieldControls();
 }
 
 bool8 FldEff_CutGrass(void)

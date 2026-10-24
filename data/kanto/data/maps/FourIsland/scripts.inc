@@ -14,7 +14,7 @@ FourIsland_EventScript_ShowRival::
 	return
 
 FourIsland_EventScript_TrySetDayCareManPos::
-	goto_if_unset FLAG_KANTO_PENDING_DAYCARE_EGG, FourIsland_EventScript_EndSetDayCareManPos
+	goto_if_unset FLAG_PENDING_DAYCARE_EGG, FourIsland_EventScript_EndSetDayCareManPos
 	setobjectxyperm LOCALID_KANTO_FOUR_ISLAND_DAYCARE_MAN, 16, 14
 FourIsland_EventScript_EndSetDayCareManPos::
 	return
@@ -87,7 +87,7 @@ FourIsland_EventScript_DaycareEggWaiting::
 	msgbox DayCare_Text_IWillKeepDoYouWantIt, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, FourIsland_EventScript_DaycareAcceptEgg
 	msgbox DayCare_Text_IllKeepIt
-	clearflag FLAG_KANTO_PENDING_DAYCARE_EGG
+	clearflag FLAG_PENDING_DAYCARE_EGG
 	special RejectEggFromDayCare
 	release
 	end
@@ -108,7 +108,7 @@ FourIsland_EventScript_DaycareReceivedEgg::
 	waitbuttonpress
 	msgbox DayCare_Text_TakeGoodCareOfIt
 	special GiveEggFromDaycare
-	clearflag FLAG_KANTO_PENDING_DAYCARE_EGG
+	clearflag FLAG_PENDING_DAYCARE_EGG
 	release
 	end
 
