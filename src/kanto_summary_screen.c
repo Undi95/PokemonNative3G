@@ -4185,6 +4185,13 @@ static void PokeSum_CreateMonPicSprite(void)
     PokeSum_SetMonPicSpriteCallback(spriteId);
 }
 
+// PokemonNative3G : comme SpriteCB_Pokemon du résumé d'Émeraude, l'animation attend la fin du fondu
+static void SpriteCB_PokeSum_EmeraldAnimAfterFade(struct Sprite *sprite)
+{
+    if (!gPaletteFade.active)
+        PokemonSummaryDoMonAnimation(sprite, sprite->data[7], FALSE);
+}
+
 static void PokeSum_SetMonPicSpriteCallback(u16 spriteId)
 {
     u16 curHp;
@@ -4195,7 +4202,8 @@ static void PokeSum_SetMonPicSpriteCallback(u16 spriteId)
     // PokemonNative3G : sprites d'Émeraude (option POKéMON = HOENN) : animés comme dans le résumé d'Émeraude
     if (!MON_PICS_KANTO && sMonSummaryScreen->isEgg != TRUE)
     {
-        PokemonSummaryDoMonAnimation(&gSprites[spriteId], GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES), FALSE);
+        gSprites[spriteId].data[7] = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES);
+        gSprites[spriteId].callback = SpriteCB_PokeSum_EmeraldAnimAfterFade;
         return;
     }
 
