@@ -3,6 +3,7 @@ MtEmber_RubyPath_B4F_MapScripts::
 
 MtEmber_RubyPath_B4F_EventScript_BrailleABC::
 	lockall
+	closemessage
 	braillemessage Braille_Text_ABC
 	waitbuttonpress
 	closebraillemessage
@@ -11,6 +12,7 @@ MtEmber_RubyPath_B4F_EventScript_BrailleABC::
 
 MtEmber_RubyPath_B4F_EventScript_BrailleGHI::
 	lockall
+	closemessage
 	braillemessage Braille_Text_GHI
 	waitbuttonpress
 	closebraillemessage
@@ -19,6 +21,7 @@ MtEmber_RubyPath_B4F_EventScript_BrailleGHI::
 
 MtEmber_RubyPath_B4F_EventScript_BrailleMNO::
 	lockall
+	closemessage
 	braillemessage Braille_Text_MNO
 	waitbuttonpress
 	closebraillemessage
@@ -27,6 +30,7 @@ MtEmber_RubyPath_B4F_EventScript_BrailleMNO::
 
 MtEmber_RubyPath_B4F_EventScript_BrailleTUV::
 	lockall
+	closemessage
 	braillemessage Braille_Text_TUV
 	waitbuttonpress
 	closebraillemessage
@@ -35,6 +39,7 @@ MtEmber_RubyPath_B4F_EventScript_BrailleTUV::
 
 MtEmber_RubyPath_B4F_EventScript_BrailleDEF::
 	lockall
+	closemessage
 	braillemessage Braille_Text_DEF
 	waitbuttonpress
 	closebraillemessage
@@ -43,6 +48,7 @@ MtEmber_RubyPath_B4F_EventScript_BrailleDEF::
 
 MtEmber_RubyPath_B4F_EventScript_BrailleJKL::
 	lockall
+	closemessage
 	braillemessage Braille_Text_JKL
 	waitbuttonpress
 	closebraillemessage
@@ -51,6 +57,7 @@ MtEmber_RubyPath_B4F_EventScript_BrailleJKL::
 
 MtEmber_RubyPath_B4F_EventScript_BraillePQRS::
 	lockall
+	closemessage
 	braillemessage Braille_Text_PQRS
 	waitbuttonpress
 	closebraillemessage
@@ -59,6 +66,7 @@ MtEmber_RubyPath_B4F_EventScript_BraillePQRS::
 
 MtEmber_RubyPath_B4F_EventScript_BrailleWXYZ::
 	lockall
+	closemessage
 	braillemessage Braille_Text_WXYZ
 	waitbuttonpress
 	closebraillemessage
@@ -67,6 +75,7 @@ MtEmber_RubyPath_B4F_EventScript_BrailleWXYZ::
 
 MtEmber_RubyPath_B4F_EventScript_BraillePeriod::
 	lockall
+	closemessage
 	braillemessage Braille_Text_Period
 	waitbuttonpress
 	closebraillemessage
@@ -75,6 +84,7 @@ MtEmber_RubyPath_B4F_EventScript_BraillePeriod::
 
 MtEmber_RubyPath_B4F_EventScript_BrailleComma::
 	lockall
+	closemessage
 	braillemessage Braille_Text_Comma
 	waitbuttonpress
 	closebraillemessage

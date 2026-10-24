@@ -8,6 +8,7 @@ SixIsland_DottedHole_1F_OnTransition::
 
 SixIsland_DottedHole_B1F_EventScript_BrailleUp::
 	lockall
+	closemessage
 	braillemessage Braille_Text_Up
 	waitbuttonpress
 	closebraillemessage
@@ -16,6 +17,7 @@ SixIsland_DottedHole_B1F_EventScript_BrailleUp::
 
 SixIsland_DottedHole_B4F_EventScript_BrailleDown::
 	lockall
+	closemessage
 	braillemessage Braille_Text_Down
 	waitbuttonpress
 	closebraillemessage
@@ -24,6 +26,7 @@ SixIsland_DottedHole_B4F_EventScript_BrailleDown::
 
 SixIsland_DottedHole_B3F_EventScript_BrailleRight::
 	lockall
+	closemessage
 	braillemessage Braille_Text_Right
 	waitbuttonpress
 	closebraillemessage
@@ -32,6 +35,7 @@ SixIsland_DottedHole_B3F_EventScript_BrailleRight::
 
 SixIsland_DottedHole_B2F_EventScript_BrailleLeft::
 	lockall
+	closemessage
 	braillemessage Braille_Text_Left
 	waitbuttonpress
 	closebraillemessage

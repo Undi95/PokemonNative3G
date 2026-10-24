@@ -11,6 +11,7 @@ MtEmber_RubyPath_B5F_EventScript_BrailleMessage::
 	braillemessage_wait Braille_Text_BeingAlive
 	braillemessage_wait Braille_Text_HasMeaning3
 	braillemessage_wait Braille_Text_HaveDreams
+	closemessage
 	braillemessage Braille_Text_UsePower
 	waitbuttonpress
 	closebraillemessage

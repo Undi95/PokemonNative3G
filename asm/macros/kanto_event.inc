@@ -64,6 +64,7 @@
 	.endm
 
 	.macro braillemessage_wait text:req
+	closemessage @ PokemonNative3G : comme dans RF, le braille remplace le message en cours
 	setvar VAR_0x8006, 0
 	braillemessage \text
 	getbraillestringwidth \text
