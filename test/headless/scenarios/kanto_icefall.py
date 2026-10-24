@@ -1,0 +1,15 @@
+# Build KANTO_DEBUG=1 : téléport GROTTE GLACÉE 1F (38), marche sur la glace fragile : elle se fissure, puis casse.
+import os, sys
+import driver
+sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
+from kanto_tour import log, give_mewtwo, debug_warp
+
+
+def play(game):
+    game.wait(300); game.tap("START"); game.wait(120); game.tap("START"); game.wait(90); game.tap("A")
+    game.wait(120)
+    game.tap("A", 210, hold=4, gap=26)
+    give_mewtwo(game)
+    debug_warp(game, 38); log(game, "grotte")
+    for d in ("UP", "UP", "DOWN", "DOWN", "UP", "UP"):
+        game.press(d, 16); game.wait(40); log(game, d)

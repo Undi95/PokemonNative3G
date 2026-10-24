@@ -112,6 +112,7 @@ static const u8 sWarpName_MeteorFalls[] = _("CHUTES MÉTÉORE");
 static const u8 sWarpName_SlateportHarbor[] = _("PORT POIVRESSEL");
 static const u8 sWarpName_LilycoveHarbor[] = _("PORT NENUCRIQUE");
 static const u8 sWarpName_RuinValley[] = _("VALLEE RUINE");
+static const u8 sWarpName_IcefallCave[] = _("GROTTE GLACEE");
 
 // Kanto : points d'arrivée du Vol de Rouge Feu (heal_locations.json)
 static const struct DebugWarp sDebugWarps[] =
@@ -154,6 +155,7 @@ static const struct DebugWarp sDebugWarps[] =
     {sWarpName_SlateportHarbor, MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR), 8, 11}, // bateau pour Kanto
     {sWarpName_LilycoveHarbor, MAP_GROUP(MAP_LILYCOVE_CITY_HARBOR), MAP_NUM(MAP_LILYCOVE_CITY_HARBOR), 8, 11}, // bateau pour Kanto
     {sWarpName_RuinValley, MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY), MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY), 24, 26}, // sous la porte du Trou Pointé
+    {sWarpName_IcefallCave, MAP_GROUP(MAP_FOUR_ISLAND_ICEFALL_CAVE_1F), MAP_NUM(MAP_FOUR_ISLAND_ICEFALL_CAVE_1F), 10, 7}, // glace fragile au-dessus
 };
 
 // Tous les objets du jeu (Hoenn + Kanto) : 99 de chaque (1 pour les objets rares et les CS).
