@@ -12,6 +12,7 @@
 #include <SDL2/SDL.h>
 
 #include "global.h"
+#include "main.h"
 #include "platform.h"
 #include "rtc.h"
 #include "gba/defines.h"
