@@ -25,4 +25,6 @@ def play(game):
     for k in range(3):
         game.tap("A"); game.wait(120)
     game.wait(120); log(game, "boîte")
-    game.wait(200); game.tap("A", hold=4); game.wait(60); game.tap("A", hold=4); game.wait(120); log(game, "retirer (refusé)")
+    game.wait(700); game.press("RIGHT", 4); game.wait(30); game.press("LEFT", 4); game.wait(30)
+    game.press("A", 4); game.wait(60); game.press("A", 4); game.wait(120); log(game, "retirer (refusé)")
+    game.wait(600); log(game, "fin")
