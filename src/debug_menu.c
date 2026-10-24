@@ -3,6 +3,7 @@
 #include "global.h"
 #include "constants/kanto_flags_vars.h"
 #include "debug_menu.h"
+#include "coins.h"
 #include "event_object_lock.h"
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
@@ -360,6 +361,9 @@ static void Task_DebugMenu(u8 taskId)
         break;
     case DEBUG_GIVE_ITEMS:
         DebugMenu_GiveAllItems();
+        FlagSet(FLAG_KANTO_GOT_COIN_CASE); // étui à jetons de Kanto (Casino de Céladopole)
+        if (GetCoins() < 500)
+            SetCoins(500);
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_FLY_MAP:
