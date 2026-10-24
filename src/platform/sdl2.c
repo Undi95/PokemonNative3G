@@ -204,6 +204,9 @@ int main(int argc, char **argv)
     }
 
     AgbMain();
+#ifdef __ANDROID__
+    SDL_Log("PN3G: AgbMain fini, boucle principale");
+#endif
 
     double accumulator = 0.0;
 
@@ -258,6 +261,13 @@ int main(int argc, char **argv)
 
         lastGameTime = curGameTime;
 
+#ifdef __ANDROID__
+        {
+            static u32 sLogFrames;
+            if ((sLogFrames++ % 120) == 0)
+                SDL_Log("PN3G: image %u, %s", sLogFrames, SDL_GetError());
+        }
+#endif
         SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
         Touch_Draw(sdlRenderer, sdlWindow);
         SDL_RenderPresent(sdlRenderer);
