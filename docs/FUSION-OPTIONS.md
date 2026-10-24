@@ -75,7 +75,7 @@ Choix HOENN / KANTO :
 - [x] Maître des capacités (2026-10-24) : interface de RF avec MENUS = KANTO (`kanto_learn_move.c`), rendu seulement. Les deux proposent déjà les mêmes attaques (capacités par niveau, mêmes données) : rien à fusionner
 - Donneurs de capacités : chacun reste exclusif à sa région (pas de changement)
 - [x] Boutique (2026-10-24) : interface de RF avec MENUS = KANTO (`kanto_shop.c` ; boutiques de décorations d'Émeraude inchangées)
-- [ ] Machine à sous : PAS d'option, chacune dans sa région (celle de RF au Casino de Céladopole, celle d'Émeraude à Lavandia)
+- [x] Machine à sous (2026-10-24) : PAS d'option, chacune dans sa région (celle de RF au Casino de Céladopole, `kanto_slot_machine.c` ; celle d'Émeraude à Lavandia)
 - [x] Menu Start de RF : déjà par MENUS = KANTO (police, espacement, curseur, descriptions de RF)
 - [x] Menu Options en pages (2026-10-23, L/R ; titre « {L}{R} PAGE 1/2 : JEU » / « PAGE 2/2 : HOENN/KANTO » ; page 2 : PERSO, POKéMON, DIALOGUE, BOITES COMBAT, MENUS, SAC, POKéDEX, TITRE, INTRO) : page 1 = réglages d'Émeraude, page 2 (et suivantes) = choix HOENN/KANTO ; indiquer clairement qu'il y a d'autres pages (ex. « PAGE 1/2 » et flèches L/R dans le titre)
 
