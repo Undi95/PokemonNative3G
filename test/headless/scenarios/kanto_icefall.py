@@ -11,5 +11,5 @@ def play(game):
     game.tap("A", 210, hold=4, gap=26)
     give_mewtwo(game)
     debug_warp(game, 38); log(game, "grotte")
-    for d in ("UP", "UP", "DOWN", "DOWN", "UP", "UP"):
+    for d in ("DOWN", "DOWN", "LEFT", "RIGHT", "LEFT", "RIGHT"):
         game.press(d, 16); game.wait(40); log(game, d)
