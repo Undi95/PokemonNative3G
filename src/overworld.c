@@ -1,4 +1,5 @@
 #include "global.h"
+#include <stdio.h>
 #include "kanto_renewable_hidden_items.h"
 #include "kanto_vs_seeker.h"
 #include "overworld.h"
@@ -1670,6 +1671,7 @@ static void CB2_LoadMapOnReturnToFieldCableClub(void)
 
 void CB2_ReturnToField(void)
 {
+    fprintf(stderr, "[slot] CB2_ReturnToField\n"); fflush(stderr);
     if (IsOverworldLinkActive() == TRUE)
     {
         SetMainCallback2(CB2_ReturnToFieldLink);
