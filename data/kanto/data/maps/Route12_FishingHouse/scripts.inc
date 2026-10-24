@@ -12,11 +12,21 @@ Route12_FishingHouse_EventScript_FishingGuruBrother::
 	end
 
 Route12_FishingHouse_EventScript_GiveSuperRod::
+	checkitem ITEM_SUPER_ROD @ PokemonNative3G : déjà une MEGA CANNE (Hoenn) : il l'améliore (data/scripts/fusion_fishing.inc)
+	goto_if_eq VAR_RESULT, TRUE, Route12_FishingHouse_EventScript_UpgradeSuperRod
 	checkitemspace ITEM_SUPER_ROD
 	goto_if_eq VAR_RESULT, FALSE, Route12_FishingHouse_EventScript_NoRoomForSuperRod
 	additem ITEM_SUPER_ROD
 	msgbox Route12_FishingHouse_Text_TakeThisAndFish
 	msgreceiveditem Route12_FishingHouse_Text_ReceivedSuperRod, ITEM_SUPER_ROD
+	goto Route12_FishingHouse_EventScript_DoUpgradeSuperRod
+Route12_FishingHouse_EventScript_UpgradeSuperRod::
+	msgbox Route12_FishingHouse_Text_ShowMeYourRod
+Route12_FishingHouse_EventScript_DoUpgradeSuperRod::
+	setflag FLAG_SUPER_ROD_UPGRADED
+	bufferitemname STR_VAR_1, ITEM_SUPER_ROD
+	call Fusion_EventScript_RodUpgraded
+	msgbox Route12_FishingHouse_Text_ExplainRodChain
 	setflag FLAG_KANTO_GOT_SUPER_ROD
 	msgbox Route12_FishingHouse_Text_IfYouCatchBigMagikarpShowMe
 	release

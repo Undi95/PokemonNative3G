@@ -17,11 +17,21 @@ VermilionCity_House1_EventScript_AlreadyGotOldRod::
 	end
 
 VermilionCity_House1_EventScript_GiveOldRod::
+	checkitem ITEM_OLD_ROD @ PokemonNative3G : déjà une CANNE (Hoenn) : il l'améliore (data/scripts/fusion_fishing.inc)
+	goto_if_eq VAR_RESULT, TRUE, VermilionCity_House1_EventScript_UpgradeOldRod
 	checkitemspace ITEM_OLD_ROD
 	goto_if_eq VAR_RESULT, FALSE, VermilionCity_House1_EventScript_NoRoomForOldRod
 	additem ITEM_OLD_ROD
 	msgbox VermilionCity_House1_Text_TakeThisAndFish
 	msgreceiveditem VermilionCity_House1_Text_ReceivedOldRodFromFishingGuru, ITEM_OLD_ROD
+	goto VermilionCity_House1_EventScript_DoUpgradeOldRod
+VermilionCity_House1_EventScript_UpgradeOldRod::
+	msgbox VermilionCity_House1_Text_ShowMeYourRod
+VermilionCity_House1_EventScript_DoUpgradeOldRod::
+	setflag FLAG_OLD_ROD_UPGRADED
+	bufferitemname STR_VAR_1, ITEM_OLD_ROD
+	call Fusion_EventScript_RodUpgraded
+	msgbox VermilionCity_House1_Text_ExplainRodChain
 	setflag FLAG_KANTO_GOT_OLD_ROD
 	msgbox VermilionCity_House1_Text_FishingIsAWayOfLife
 	release
