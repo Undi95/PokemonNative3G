@@ -967,6 +967,7 @@ const u8 gText_JustOnePkmn[] = _("Vous n'avez qu'un POKéMON avec vous.");
 const u8 gText_PartyFull[] = _("L'équipe est pleine!");
 const u8 gText_Box[] = _("BOITE ");
 const u8 gText_CheckMapOfHoenn[] = _("Carte de la région HOENN.");
+const u8 gText_CheckMapOfKanto[] = _("Carte de la région KANTO."); // PokemonNative3G
 const u8 gText_CheckPokemonInDetail[] = _("Informations sur les POKéMON.");
 const u8 gText_CallRegisteredTrainer[] = _("Appareil pour appeler les DRESSEURS.");
 const u8 gText_CheckObtainedRibbons[] = _("RUBANS obtenus.");
