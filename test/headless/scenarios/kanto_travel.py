@@ -26,3 +26,4 @@ def play(game):
     walk_to(game, 6, 8)
     game.press("UP", 1); game.wait(30); log(game, "porte (doit rester en 6,8)")
     talk_to(game, "UP"); log(game, "fermée")
+    game.tap("START"); game.wait(320); log(game, "menu START (sans POKéMON)")
