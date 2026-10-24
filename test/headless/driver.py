@@ -140,14 +140,14 @@ def continue_game(game):
     return wait_until(game, lambda s: s.free)
 
 
-def finish_dialog(game, button="A", limit=400):
+def finish_dialog(game, button="A", limit=400, on_battle=None):
     """Presses button until the player can move: through text, cutscenes, and
     battles that come up (see fight_battle)."""
     for _ in range(limit):
         if game.state.free:
             return game.state
         if game.state.battle:
-            fight_battle(game)
+            (on_battle or fight_battle)(game)
         else:
             game.tap(button, hold=2, gap=10)
     raise GameError(f"still busy after {limit} presses: {game.state}")
@@ -180,7 +180,7 @@ def walk_to(game, x, y, grass_cost=20, on_battle=fight_battle):
             on_battle(game)
             continue
         if state.locked or state.script:
-            finish_dialog(game)
+            finish_dialog(game, on_battle=on_battle)
             continue
         if not state.overworld or state.fade:
             game.wait(2)
