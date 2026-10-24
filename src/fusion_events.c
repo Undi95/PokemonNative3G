@@ -216,20 +216,26 @@ void FishingChain_TryShiny(struct Pokemon *mon)
     CreateMon(mon, species, level, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
 }
 
+u16 gAutoRepelLastItem = ITEM_REPEL; // dernier REPOUSSE utilisé (item_use.c)
+
 // AUTO-REPOUSSE (à la place du Cherch'Objet de Kanto) : VAR_RESULT = un REPOUSSE du sac (le plus faible d'abord), ou
 // ITEM_NONE ; son nom dans STR_VAR_1
 u16 AutoRepel_Check(void)
 {
+    // le même que le dernier utilisé, sinon un plus faible ; aucun : rien
     static const u16 sRepels[] = {ITEM_REPEL, ITEM_SUPER_REPEL, ITEM_MAX_REPEL};
-    u32 i;
+    s32 i, start = ARRAY_COUNT(sRepels) - 1;
 
     if (!CheckBagHasItem(ITEM_AUTO_REPEL, 1))
         return ITEM_NONE;
-    for (i = 0; i < ARRAY_COUNT(sRepels); i++)
+    while (start > 0 && sRepels[start] != gAutoRepelLastItem)
+        start--;
+    for (i = start; i >= 0; i--)
     {
         if (CheckBagHasItem(sRepels[i], 1))
         {
             CopyItemName(sRepels[i], gStringVar1);
+            gAutoRepelLastItem = sRepels[i];
             return sRepels[i];
         }
     }
