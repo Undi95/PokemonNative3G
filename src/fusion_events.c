@@ -2,6 +2,8 @@
 #include "global.h"
 #include "data.h"
 #include "string_util.h"
+#include "random.h"
+#include "constants/game_stat.h"
 #include "event_data.h"
 #include "fusion_events.h"
 #include "item.h"
@@ -129,3 +131,86 @@ u16 PokeMonture_HelperSpecies(void)
     return IsKantoTilesetMap() ? sPokeMontureMoves[i].kantoHelper : sPokeMontureMoves[i].hoennHelper;
 }
 
+
+// Chaîne de pêche (cannes améliorées par les pêcheurs de Kanto, à la place d'une 2e canne) : chaque POKéMON remonté
+// au même endroit, avec la même canne améliorée, donne un tirage chromatique de plus à la prise suivante (comme les
+// chaînes de pêche de X/Y). La série se brise si rien ne mord (ou s'il s'échappe), si le joueur fait un pas ou
+// change de carte, ou s'il change de canne.
+#define FISHING_CHAIN_MAX 40
+
+static const u16 sRodUpgradeFlags[] = {
+    [OLD_ROD]   = FLAG_OLD_ROD_UPGRADED,
+    [GOOD_ROD]  = FLAG_GOOD_ROD_UPGRADED,
+    [SUPER_ROD] = FLAG_SUPER_ROD_UPGRADED,
+};
+
+static struct {
+    u8 count;
+    u8 rod;
+    s8 mapGroup, mapNum;
+    u32 steps;
+} sFishingChain;
+
+static u8 sFishingRerolls; // tirages en plus pour la prise en cours
+
+// début de la pêche (StartFishing) : garde ou brise la série
+void FishingChain_Start(u8 rod)
+{
+    u32 steps = GetGameStat(GAME_STAT_STEPS);
+
+    if (rod >= ARRAY_COUNT(sRodUpgradeFlags) || !FlagGet(sRodUpgradeFlags[rod])
+     || sFishingChain.rod != rod || sFishingChain.steps != steps
+     || sFishingChain.mapGroup != gSaveBlock1Ptr->location.mapGroup
+     || sFishingChain.mapNum != gSaveBlock1Ptr->location.mapNum)
+        sFishingChain.count = 0;
+    sFishingChain.rod = rod;
+    sFishingChain.steps = steps;
+    sFishingChain.mapGroup = gSaveBlock1Ptr->location.mapGroup;
+    sFishingChain.mapNum = gSaveBlock1Ptr->location.mapNum;
+    sFishingRerolls = 0;
+}
+
+// rien n'a mordu, ou il s'est échappé
+void FishingChain_Break(void)
+{
+    sFishingChain.count = 0;
+}
+
+// un POKéMON est remonté (Fishing_StartEncounter, avant FishingWildEncounter)
+void FishingChain_Hooked(void)
+{
+    sFishingRerolls = sFishingChain.count;
+    if (sFishingChain.count < FISHING_CHAIN_MAX)
+        sFishingChain.count++;
+}
+
+// FishingWildEncounter, après la création du POKéMON : tirages en plus ; s'il en gagne un, il est recréé
+// chromatique avec la même espèce, le même niveau et la même nature
+void FishingChain_TryShiny(struct Pokemon *mon)
+{
+    u32 otId, personality, hi;
+    u16 species;
+    u8 level, nature, i, rerolls = sFishingRerolls;
+
+    sFishingRerolls = 0;
+    otId = GetMonData(mon, MON_DATA_OT_ID);
+    personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    if (rerolls == 0 || GET_SHINY_VALUE(otId, personality) < SHINY_ODDS)
+        return;
+    for (i = 0; i < rerolls; i++)
+    {
+        if ((Random() % (0x10000 / SHINY_ODDS)) == 0) // même chance que le tirage normal (8/65536)
+            break;
+    }
+    if (i == rerolls)
+        return;
+    species = GetMonData(mon, MON_DATA_SPECIES);
+    level = GetMonData(mon, MON_DATA_LEVEL);
+    nature = GetNature(mon);
+    do
+    {
+        hi = Random();
+        personality = (hi << 16) | (HIHALF(otId) ^ LOHALF(otId) ^ hi ^ (Random() % SHINY_ODDS));
+    } while (GetNatureFromPersonality(personality) != nature);
+    CreateMon(mon, species, level, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
+}

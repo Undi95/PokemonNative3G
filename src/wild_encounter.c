@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h" // PokemonNative3G
 #include "debug_menu.h"
 #include "battle_setup.h"
 #include "battle_pike.h"
@@ -793,6 +794,7 @@ void FishingWildEncounter(u8 rod)
     {
         species = GenerateFishingWildMon(gWildMonHeaders[GetCurrentMapWildMonHeaderId()].fishingMonsInfo, rod);
     }
+    FishingChain_TryShiny(&gEnemyParty[0]); // PokemonNative3G : chaîne de pêche
     IncrementGameStat(GAME_STAT_FISHING_ENCOUNTERS);
     SetPokemonAnglerSpecies(species);
     BattleSetup_StartWildBattle();

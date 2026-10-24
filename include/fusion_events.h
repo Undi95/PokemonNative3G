@@ -12,4 +12,10 @@ void PokeMonture_SetMove(u16 move);
 u16 PokeMonture_HelperSpecies(void);
 void PokeMonture_StartFlash(void); // fldeff_flash.c
 
+// chaîne de pêche (cannes améliorées)
+void FishingChain_Start(u8 rod);
+void FishingChain_Break(void);
+void FishingChain_Hooked(void);
+void FishingChain_TryShiny(struct Pokemon *mon);
+
 #endif // GUARD_FUSION_EVENTS_H

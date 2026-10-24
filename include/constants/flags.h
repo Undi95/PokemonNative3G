@@ -49,9 +49,9 @@
 #define FLAG_DEFEATED_JIRACHI 0x23 // PokemonNative3G
 #define FLAG_JIRACHI_NEWS_SEEN 0x24 // PokemonNative3G : flash spécial de la TV (comète du millénaire)
 #define FLAG_ISLAND_TRIP_FROM_KANTO 0x25 // PokemonNative3G : venu au ROC NOMBRI / à l'ILE AURORE par le ferry de Carmin (retour à Carmin)
-#define FLAG_UNUSED_0x026    0x26 // Unused Flag
-#define FLAG_UNUSED_0x027    0x27 // Unused Flag
-#define FLAG_UNUSED_0x028    0x28 // Unused Flag
+#define FLAG_OLD_ROD_UPGRADED   0x26 // PokemonNative3G : canne améliorée par le pêcheur de Kanto (chaîne de pêche, fusion_events.c)
+#define FLAG_GOOD_ROD_UPGRADED  0x27 // PokemonNative3G
+#define FLAG_SUPER_ROD_UPGRADED 0x28 // PokemonNative3G
 #define FLAG_UNUSED_0x029    0x29 // Unused Flag
 #define FLAG_UNUSED_0x02A    0x2A // Unused Flag
 #define FLAG_UNUSED_0x02B    0x2B // Unused Flag
