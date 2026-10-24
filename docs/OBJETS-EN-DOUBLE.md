@@ -14,6 +14,9 @@ don dans `data/**/*.inc`, sépare `data/kanto/`, garde les poches Objets rares /
 les CS ne sont plus données qu'à Hoenn.
 **Météorite : réglée (2026-10-24)** : deux objets distincts (ITEM_KANTO_METEORITE pour RF, `tools/kanto_meteorite.py` ;
 même nom et même icône, identique dans les deux jeux).
+**Passe Bateau, Cherch'Objet, Boîte Jetons, Pot Poudre : réglés (2026-10-24, `tools/kanto_doubles.py`)** : PASS OCEANE
+(image de RF) ; AUTO-REPOUSSE à la place du Cherch'Objet de Kanto ; l'homme de la Boîte Jetons a tout perdu
+(easter-egg 9999 jetons) ; le Pot Poudre vient de Hoenn (baies à Azuria si on l'a). Météorite de Kanto rougeâtre.
 **Cannes : réglées (2026-10-24)** : les pêcheurs de Kanto améliorent la canne (chaîne de pêche chromatique).
 
 | Objet | Hoenn (data/maps/…) | Kanto (data/kanto/data/maps/…) |
