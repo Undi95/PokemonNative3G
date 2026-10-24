@@ -254,8 +254,17 @@ static const u16 sBirchSpeechBgPals[][16] = {
 
 static const u32 sBirchSpeechShadowGfx[] = INCGFX_U32("graphics/birch_speech/shadow.png", ".4bpp.lz");
 static const u32 sBirchSpeechBgMap[] = INCGFX_U32("graphics/birch_speech/map.bin", ".lz");
-static const u16 sBirchSpeechBgGradientPal[] = INCGFX_U16("graphics/birch_speech/bg2.pal", ".gbapal");
-static const u16 sBirchSpeechPlatformBlackPal[] = {RGB_BLACK, RGB_BLACK, RGB_BLACK, RGB_BLACK, RGB_BLACK, RGB_BLACK, RGB_BLACK, RGB_BLACK};
+// PokemonNative3G : les fondus de la plateforme lisent jusqu'à 8 couleurs après le dégradé, dans la palette noire qui
+// le suit en ROM. Un seul tableau garantit cet ordre sur toutes les plateformes (ailleurs, vert fluo sur Android).
+static const struct {
+    u16 gradient[8];
+    u16 black[8];
+} sBirchSpeechPlatformPals = {
+    INCGFX_U16("graphics/birch_speech/bg2.pal", ".gbapal"),
+    {RGB_BLACK, RGB_BLACK, RGB_BLACK, RGB_BLACK, RGB_BLACK, RGB_BLACK, RGB_BLACK, RGB_BLACK}
+};
+#define sBirchSpeechBgGradientPal ((const u16 *)&sBirchSpeechPlatformPals)
+#define sBirchSpeechPlatformBlackPal (sBirchSpeechPlatformPals.black)
 
 #define MENU_LEFT 2
 #define MENU_TOP_WIN0 1
