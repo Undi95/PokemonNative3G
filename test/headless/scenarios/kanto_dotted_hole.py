@@ -1,4 +1,4 @@
-# Build KANTO_DEBUG=1 : DEBUG « MEWTWO + KADABRA » et « POKé MONTURE + badges », téléport VALLÉE RUINE (37) :
+# Build KANTO_DEBUG=1 : DEBUG « MEWTWO + KADABRA », « POKé MONTURE + badges » et « Deux Ligues finies » (scientifique parti), téléport VALLÉE RUINE (37) :
 # porte du Trou Pointé, braille, COUPE proposée (POKé MONTURE) -> porte ouverte, on entre.
 import os, sys
 import driver
@@ -15,6 +15,8 @@ def play(game):
     give_mewtwo(game)
     wait_until(game, lambda s: s.free); game.wait(30)
     game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 14, gap=10); game.tap("A")
+    game.wait(60); close_menus(game)
+    game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 13, gap=10); game.tap("A")
     game.wait(60); close_menus(game)
     debug_warp(game, 37); log(game, "vallée")
     game.press("UP", 8); game.wait(30); log(game, "devant la porte")
