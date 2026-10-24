@@ -124,8 +124,43 @@ static const struct BikeHistoryInputInfo sAcroBikeTricksList[] =
 };
 
 // code
+// PokemonNative3G : pentes de la Piste Cyclable, comme RF (bike.c : BikeInputHandler_Normal/Slope,
+// BikeTransition_Downhill/Uphill) : sans B, on descend tout seul ; avec une direction, on avance normalement.
+static bool8 MovePlayerOnCyclingRoadSlope(u8 direction, u16 heldKeys)
+{
+    if (!MetatileBehavior_IsCyclingRoadPullDownTile(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior))
+        return FALSE;
+    if (!(heldKeys & B_BUTTON) && direction < DIR_NORTH)
+    {
+        u8 collision = GetBikeCollision(DIR_SOUTH);
+
+        if (collision == COLLISION_NONE)
+            PlayerWalkFaster(DIR_SOUTH);
+        else if (collision == COLLISION_LEDGE_JUMP)
+            PlayerJumpLedge(DIR_SOUTH);
+        else
+            return FALSE;
+    }
+    else if (direction != DIR_NONE)
+    {
+        if (GetBikeCollision(direction) == COLLISION_NONE)
+            PlayerWalkNormal(direction);
+        else
+            return FALSE;
+    }
+    else
+    {
+        return FALSE;
+    }
+    gPlayerAvatar.bikeSpeed = PLAYER_SPEED_STANDING;
+    gPlayerAvatar.runningState = MOVING;
+    return TRUE;
+}
+
 void MovePlayerOnBike(u8 direction, u16 newKeys, u16 heldKeys)
 {
+    if (MovePlayerOnCyclingRoadSlope(direction, heldKeys))
+        return;
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE)
         MovePlayerOnMachBike(direction, newKeys, heldKeys);
     else
@@ -985,7 +1020,13 @@ void GetOnOffBike(u8 transitionFlags)
 {
     gUnusedBikeCameraAheadPanback = FALSE;
 
-    if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+    // PokemonNative3G : déjà sur l'autre vélo (le vendeur d'Azuria donne les deux) : on change de vélo sans descendre
+    if ((gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+     && !(gPlayerAvatar.flags & transitionFlags))
+    {
+        SetPlayerAvatarTransitionFlags(transitionFlags);
+    }
+    else if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
     {
         SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
         Overworld_ClearSavedMusic();

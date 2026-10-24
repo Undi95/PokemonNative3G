@@ -5,7 +5,10 @@ CeruleanCity_BikeShop_EventScript_Clerk::
 	lock
 	faceplayer
 	goto_if_set FLAG_KANTO_GOT_BICYCLE, CeruleanCity_BikeShop_EventScript_AlreadyGotBicycle
-	goto_if_set FLAG_KANTO_GOT_BIKE_VOUCHER, CeruleanCity_BikeShop_EventScript_ExchangeBikeVoucher
+	goto_if_set FLAG_RECEIVED_BIKE, Fusion_EventScript_BikeShopGiveOtherBike @ PokemonNative3G : data/scripts/fusion_bike.inc
+	msgbox Fusion_Text_BikeShopGoToMauville
+	release
+	end
 	showmoneybox 0, 0
 	message CeruleanCity_BikeShop_Text_WelcomeToBikeShop
 	waitmessage
@@ -56,7 +59,7 @@ CeruleanCity_BikeShop_EventScript_Woman::
 CeruleanCity_BikeShop_EventScript_Youngster::
 	lock
 	faceplayer
-	goto_if_set FLAG_KANTO_GOT_BICYCLE, CeruleanCity_BikeShop_EventScript_YoungsterHaveBike
+	goto_if_set FLAG_RECEIVED_BIKE, CeruleanCity_BikeShop_EventScript_YoungsterHaveBike @ PokemonNative3G
 	msgbox CeruleanCity_BikeShop_Text_BikesCoolButExpensive
 	release
 	end
