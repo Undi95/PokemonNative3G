@@ -1,5 +1,6 @@
 #include "global.h"
 #include "fusion_events.h" // PokemonNative3G : POKé MONTURE
+#include "constants/moves.h"
 #include "braille_puzzles.h"
 #include "event_data.h"
 #include "event_scripts.h"
