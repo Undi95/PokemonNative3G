@@ -3,6 +3,7 @@
 #include "data.h"
 #include "string_util.h"
 #include "random.h"
+#include "overworld.h"
 #include "constants/game_stat.h"
 #include "event_data.h"
 #include "fusion_events.h"
