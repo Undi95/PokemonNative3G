@@ -29,6 +29,21 @@ SixIsland_RuinValley_EventScript_DottedHoleDoor::
 	msgbox SixIsland_RuinValley_Text_SeveralDotsOnTheDoor
 	braillemessage Braille_Text_Cut
 	waitbuttonpress
+	closebraillemessage
+	@ PokemonNative3G : comme devant un arbre, COUPE est proposée (un POKéMON de l'équipe ou la POKé MONTURE)
+	checkpartymove MOVE_CUT
+	goto_if_eq VAR_RESULT, PARTY_SIZE, SixIsland_RuinValley_EventScript_DottedHoleDoorEnd
+	bufferpartymonnick STR_VAR_1, VAR_RESULT
+	buffermovename STR_VAR_2, MOVE_CUT
+	msgbox Text_WantToCut, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, SixIsland_RuinValley_EventScript_DottedHoleDoorEnd
+	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
+	closemessage
+	setmetatile 24, 24, METATILE_SeviiIslands67_DottedHoleDoor_Open, 0
+	special DrawWholeMapView
+	playse SE_BANG
+	setflag FLAG_KANTO_USED_CUT_ON_RUIN_VALLEY_BRAILLE
+SixIsland_RuinValley_EventScript_DottedHoleDoorEnd::
 	releaseall
 	end
 
