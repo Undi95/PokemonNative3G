@@ -25,6 +25,7 @@
 #include "kanto_bag_internal.h" // noms de RF (après les en-têtes d'Émeraude)
 
 void KantoPlaySlotMachine(u16 machineIdx, MainCallback savedCallback);
+#define DMA3_32BIT 1 // RF : dma3.h
 
 // Rouge Feu (strings_*_fr.h)
 static const u8 sKText_String_OutOfCoins[] = _("Vous n'avez plus de JETONS.\nPerdu!");
@@ -956,7 +957,7 @@ static void MainTask_SlotsGameLoop(u8 taskId)
         {
             sSlotMachineState->bet++;
             RemoveCoins(1);
-            PlaySE(SE_RS_SHOP);
+            PlaySE(SE_SHOP); // RF : SE_RS_SHOP (même son)
             SetSlotMachineSetupTask(SLOTTASK_SHOW_AMOUNTS, 0);
             SetSlotMachineSetupTask(SLOTTASK_UPDATE_LINE_LIGHTS, 1);
             data[0] = 1;
@@ -974,7 +975,7 @@ static void MainTask_SlotsGameLoop(u8 taskId)
                 sSlotMachineState->bet += GetCoins();
                 SetCoins(0);
             }
-            PlaySE(SE_RS_SHOP);
+            PlaySE(SE_SHOP); // RF : SE_RS_SHOP (même son)
             SetSlotMachineSetupTask(SLOTTASK_SHOW_AMOUNTS, 0);
             SetSlotMachineSetupTask(SLOTTASK_UPDATE_LINE_LIGHTS, 1);
             data[0] = 1;
@@ -1002,7 +1003,7 @@ static void MainTask_SlotsGameLoop(u8 taskId)
         }
         break;
     case 2:
-        SetQLPlayedTheSlots();
+        // RF : SetQLPlayedTheSlots (journal de quête)
         CalcSlotBias();
         StartReels();
         sSlotMachineState->currentReel = 0;
@@ -2454,7 +2455,7 @@ static void SignalStopWinningLineFlashTask(void)
 
 static void Slot_CreateYesNoMenu(u8 cursorPos)
 {
-    CreateYesNoMenu(&sYesNoWindowTemplate, FONT_NORMAL, 0, 2, 10, 13, cursorPos);
+    CreateYesNoMenu(&sYesNoWindowTemplate, 10, 13, cursorPos); // RF : (…, FONT_NORMAL, 0, 2, 10, 13, …)
     Menu_MoveCursorNoWrapAround(cursorPos);
     GetSlotMachineSetupTaskDataPtr()->yesNoMenuActive = TRUE;
 }
