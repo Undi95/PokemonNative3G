@@ -30,6 +30,7 @@ static struct Zone sZones[NUM_ZONES];
 static float sDpadX, sDpadY, sDpadR;
 static bool sEnabled;
 static u16 sHeld;
+static u16 sLatched; // PokemonNative3G : touches appuyées depuis la dernière lecture (appui bref = au moins une image)
 static bool sResetHeld;
 static Uint32 sResetSince;
 static bool sResetFired;
@@ -102,6 +103,7 @@ static void Update(void)
                     DPAD_LEFT, DPAD_LEFT | DPAD_UP, DPAD_UP, DPAD_UP | DPAD_RIGHT,
                 };
                 sHeld |= sDirs[sector];
+                sLatched |= sDirs[sector];
             }
             continue;
         }
@@ -110,6 +112,7 @@ static void Update(void)
             if (InZone(&sZones[zone], x, y, zone <= ZONE_B ? 1.35f : 1.3f))
             {
                 sHeld |= sZoneKeys[zone];
+                sLatched |= sZoneKeys[zone];
                 if (zone == ZONE_RESET)
                     reset = true;
                 break;
@@ -166,7 +169,10 @@ void Touch_HandleEvent(const SDL_Event *event, SDL_Window *window)
 
 u16 Touch_GetButtons(void)
 {
-    return sHeld;
+    u16 keys = sHeld | sLatched;
+
+    sLatched = 0;
+    return keys;
 }
 
 bool Touch_ResetRequested(void)
