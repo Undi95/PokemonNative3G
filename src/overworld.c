@@ -3381,6 +3381,9 @@ static bool8 MapLdr_Credits(void)
         ResetCameraUpdateInfo();
         InstallCameraPanAheadCallback();
         FieldEffectActiveListClear();
+        // PokemonNative3G : la tâche météo ne survit pas entre deux scènes ici (RF la garde) : sans ça, chaque scène
+        // réserve deux palettes de plus, et à la 8e AllocSpritePalette renvoie 0xFF (écriture hors du tampon, plantage)
+        FreeWeatherPalettesIfStopped();
         StartWeather();
         ResumePausedWeather();
         SetUpFieldTasks();

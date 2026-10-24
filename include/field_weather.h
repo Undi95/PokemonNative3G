@@ -145,6 +145,7 @@ extern const u16 gFogPalette[];
 extern const u8 gWeatherFogHorizontalTiles[];
 
 void StartWeather(void);
+void FreeWeatherPalettesIfStopped(void);
 void SetNextWeather(u8 weather);
 void SetCurrentAndNextWeather(u8 weather);
 void SetCurrentAndNextWeatherNoDelay(u8 weather);

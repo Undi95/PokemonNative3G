@@ -151,6 +151,16 @@ static const u8 ALIGNED(2) sBasePaletteColorMapTypes[32] =
 
 const u16 ALIGNED(4) gFogPalette[] = INCGFX_U16("graphics/weather/fog.pal", ".gbapal");
 
+// PokemonNative3G : palettes de la météo libérées si sa tâche n'existe plus (scènes des crédits de RF)
+void FreeWeatherPalettesIfStopped(void)
+{
+    if (!FuncIsActiveTask(Task_WeatherMain))
+    {
+        FreeSpritePaletteByTag(PALTAG_WEATHER);
+        FreeSpritePaletteByTag(PALTAG_WEATHER_2);
+    }
+}
+
 void StartWeather(void)
 {
     if (!FuncIsActiveTask(Task_WeatherMain))
