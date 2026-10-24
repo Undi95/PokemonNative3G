@@ -1624,3 +1624,222 @@ static void LoadMysteryGiftTextboxBorder(u8 bgId)
 {
     DecompressAndLoadBgGfxUsingHeap(bgId, sTextboxBorder_Gfx, 0x100, 0, 0);
 }
+
+// PokemonNative3G : CADEAU MYSTÈRE de la fusion, sans connexion. Proposé au menu principal une fois le RUBIS et le
+// SAPHIR rendus à CÉLIO (son réseau relie Kanto et Hoenn) et tant qu'un des cadeaux n'est pas reçu. Chaque cadeau
+// est présenté sur une CARTE MYSTÈRE d'Émeraude, puis donné directement, avec les effets des scripts de distribution
+// (data/scripts/gift_*.inc) : TICKET AURORA (ILE AURORE) et TICKET MYSTIK (ROC NOMBRI), au départ de Nénucrique ou
+// de Carmin sur Mer (ferry de RF) ; VIEILLE CARTE (ILE LOINTAINE, Mew), au départ de Nénucrique seulement.
+#include "item.h"
+#include "constants/items.h"
+#include "constants/kanto_flags_vars.h"
+
+struct FusionGift
+{
+    u16 item;
+    u16 receivedFlag;
+    u16 shipFlag;
+    u16 kantoShipFlag; // 0 : pas de traversée depuis Kanto
+    u16 iconSpecies;
+    u8 bgType;
+    const u8 *body[WONDER_CARD_BODY_TEXT_LINES];
+    const u8 *footer1;
+    const u8 *footer2;
+};
+
+static const u8 sFusionGiftText_Subtitle[] = _("RÉSEAU DE CÉLIO");
+static const u8 sFusionGiftText_AuroraBody1[] = _("Ce ticket permet d'embarquer");
+static const u8 sFusionGiftText_AuroraBody2[] = _("pour l'ÎLE AURORE, une île");
+static const u8 sFusionGiftText_AuroraBody3[] = _("lointaine où un POKéMON venu");
+static const u8 sFusionGiftText_AuroraBody4[] = _("de l'espace aurait été vu…");
+static const u8 sFusionGiftText_MysticBody1[] = _("Ce ticket permet d'embarquer");
+static const u8 sFusionGiftText_MysticBody2[] = _("pour le ROC NOMBRI, une île");
+static const u8 sFusionGiftText_MysticBody3[] = _("où dormiraient deux POKéMON");
+static const u8 sFusionGiftText_MysticBody4[] = _("légendaires…");
+static const u8 sFusionGiftText_MapBody1[] = _("Une carte marine très ancienne.");
+static const u8 sFusionGiftText_MapBody2[] = _("Elle indique une île inconnue,");
+static const u8 sFusionGiftText_MapBody3[] = _("l'ÎLE LOINTAINE, au large de");
+static const u8 sFusionGiftText_MapBody4[] = _("HOENN…");
+static const u8 sFusionGiftText_BothPorts[] = _("Port de NÉNUCRIQUE ou de CARMIN SUR MER");
+static const u8 sFusionGiftText_HoennPort[] = _("Port de NÉNUCRIQUE (HOENN) seulement");
+static const u8 sFusionGiftText_ShowSailor[] = _("Montrez-le au marin du port.");
+static const u8 sFusionGiftText_ShowSailorMap[] = _("Montrez-la au marin du port.");
+
+static const struct FusionGift sFusionGifts[] = {
+    {ITEM_AURORA_TICKET, FLAG_RECEIVED_AURORA_TICKET, FLAG_ENABLE_SHIP_BIRTH_ISLAND, FLAG_KANTO_ENABLE_SHIP_BIRTH_ISLAND,
+     SPECIES_DEOXYS, 1,
+     {sFusionGiftText_AuroraBody1, sFusionGiftText_AuroraBody2, sFusionGiftText_AuroraBody3, sFusionGiftText_AuroraBody4},
+     sFusionGiftText_BothPorts, sFusionGiftText_ShowSailor},
+    {ITEM_MYSTIC_TICKET, FLAG_RECEIVED_MYSTIC_TICKET, FLAG_ENABLE_SHIP_NAVEL_ROCK, FLAG_KANTO_ENABLE_SHIP_NAVEL_ROCK,
+     SPECIES_LUGIA, 6,
+     {sFusionGiftText_MysticBody1, sFusionGiftText_MysticBody2, sFusionGiftText_MysticBody3, sFusionGiftText_MysticBody4},
+     sFusionGiftText_BothPorts, sFusionGiftText_ShowSailor},
+    {ITEM_OLD_SEA_MAP, FLAG_RECEIVED_OLD_SEA_MAP, FLAG_ENABLE_SHIP_FARAWAY_ISLAND, 0,
+     SPECIES_MEW, 7,
+     {sFusionGiftText_MapBody1, sFusionGiftText_MapBody2, sFusionGiftText_MapBody3, sFusionGiftText_MapBody4},
+     sFusionGiftText_HoennPort, sFusionGiftText_ShowSailorMap},
+};
+
+static const u8 sFusionGiftText_Connecting[] = _("Connexion au réseau de CÉLIO…\nDes CADEAUX MYSTÈRE sont arrivés!");
+static const u8 sFusionGiftText_Received[] = _("{PLAYER} reçoit\n{STR_VAR_1}!");
+static const u8 sFusionGiftText_PutAway[] = _("{STR_VAR_1} est rangé dans\nla poche OBJETS RARES.");
+static const u8 sFusionGiftText_AllDone[] = _("Tous les CADEAUX MYSTÈRE ont été\nreçus. Bon voyage, {PLAYER}!");
+
+static struct WonderCard sFusionGiftCard;
+static struct WonderCardMetadata sFusionGiftCardMetadata;
+
+static s32 FusionGift_NextPending(void)
+{
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sFusionGifts); i++)
+    {
+        if (!FlagGet(sFusionGifts[i].receivedFlag))
+            return i;
+    }
+    return -1;
+}
+
+bool32 FusionMysteryGift_IsAvailable(void)
+{
+    return FlagGet(FLAG_KANTO_SYS_CAN_LINK_WITH_RS) && FusionGift_NextPending() >= 0;
+}
+
+static void FusionGift_BuildCard(const struct FusionGift *gift)
+{
+    u32 i;
+
+    memset(&sFusionGiftCard, 0, sizeof(sFusionGiftCard));
+    memset(&sFusionGiftCardMetadata, 0, sizeof(sFusionGiftCardMetadata));
+    sFusionGiftCard.type = CARD_TYPE_GIFT;
+    sFusionGiftCard.bgType = gift->bgType;
+    sFusionGiftCard.iconSpecies = gift->iconSpecies;
+    sFusionGiftCardMetadata.iconSpecies = gift->iconSpecies;
+    CopyItemName(gift->item, sFusionGiftCard.titleText);
+    StringCopy(sFusionGiftCard.subtitleText, sFusionGiftText_Subtitle);
+    for (i = 0; i < WONDER_CARD_BODY_TEXT_LINES; i++)
+        StringCopy(sFusionGiftCard.bodyText[i], gift->body[i]);
+    StringCopy(sFusionGiftCard.footerLine1Text, gift->footer1);
+    StringCopy(sFusionGiftCard.footerLine2Text, gift->footer2);
+}
+
+enum {
+    FMG_STATE_INTRO,
+    FMG_STATE_LOAD_CARD,
+    FMG_STATE_ENTER_CARD,
+    FMG_STATE_CARD_INPUT,
+    FMG_STATE_EXIT_CARD,
+    FMG_STATE_GIVE,
+    FMG_STATE_WAIT_FANFARE,
+    FMG_STATE_RECEIVED_MSG,
+    FMG_STATE_PUT_AWAY_MSG,
+    FMG_STATE_ALL_DONE,
+    FMG_STATE_SAVE,
+    FMG_STATE_EXIT,
+};
+
+#define tState     data[0]
+#define tTextState data[1]
+#define tGift      data[2]
+
+static void Task_FusionMysteryGift(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    u8 textState = tTextState;
+
+    switch (tState)
+    {
+    case FMG_STATE_INTRO:
+        if (PrintMysteryGiftMenuMessage(&textState, sFusionGiftText_Connecting))
+            tState = FMG_STATE_LOAD_CARD;
+        break;
+    case FMG_STATE_LOAD_CARD:
+        tGift = FusionGift_NextPending();
+        if (tGift < 0)
+        {
+            tState = FMG_STATE_ALL_DONE;
+            break;
+        }
+        FusionGift_BuildCard(&sFusionGifts[tGift]);
+        WonderCard_Init(&sFusionGiftCard, &sFusionGiftCardMetadata);
+        tState = FMG_STATE_ENTER_CARD;
+        break;
+    case FMG_STATE_ENTER_CARD:
+        if (WonderCard_Enter())
+            tState = FMG_STATE_CARD_INPUT;
+        break;
+    case FMG_STATE_CARD_INPUT:
+        if (JOY_NEW(A_BUTTON | B_BUTTON))
+        {
+            PlaySE(SE_SELECT);
+            tState = FMG_STATE_EXIT_CARD;
+        }
+        break;
+    case FMG_STATE_EXIT_CARD:
+        if (WonderCard_Exit(FALSE))
+        {
+            WonderCard_Destroy();
+            tState = FMG_STATE_GIVE;
+        }
+        break;
+    case FMG_STATE_GIVE:
+    {
+        const struct FusionGift *gift = &sFusionGifts[tGift];
+
+        // effets de data/scripts/gift_*.inc (+ ferry de Carmin sur Mer pour Kanto)
+        AddBagItem(gift->item, 1);
+        FlagSet(gift->receivedFlag);
+        FlagSet(gift->shipFlag);
+        if (gift->kantoShipFlag != 0)
+            FlagSet(gift->kantoShipFlag);
+        CopyItemName(gift->item, gStringVar1);
+        MG_AddMessageTextPrinter(sFusionGiftText_Received);
+        PlayFanfare(MUS_OBTAIN_ITEM);
+        tState = FMG_STATE_WAIT_FANFARE;
+        break;
+    }
+    case FMG_STATE_WAIT_FANFARE:
+        if (IsFanfareTaskInactive())
+        {
+            textState = 1; // message déjà affiché : flèche, puis A
+            tState = FMG_STATE_RECEIVED_MSG;
+        }
+        break;
+    case FMG_STATE_RECEIVED_MSG:
+        if (PrintMysteryGiftMenuMessage(&textState, sFusionGiftText_Received))
+            tState = FMG_STATE_PUT_AWAY_MSG;
+        break;
+    case FMG_STATE_PUT_AWAY_MSG:
+        if (PrintMysteryGiftMenuMessage(&textState, sFusionGiftText_PutAway))
+            tState = FMG_STATE_LOAD_CARD;
+        break;
+    case FMG_STATE_ALL_DONE:
+        if (PrintMysteryGiftMenuMessage(&textState, sFusionGiftText_AllDone))
+            tState = FMG_STATE_SAVE;
+        break;
+    case FMG_STATE_SAVE:
+        if (SaveOnMysteryGiftMenu(&textState))
+            tState = FMG_STATE_EXIT;
+        break;
+    case FMG_STATE_EXIT:
+        DestroyTask(taskId);
+        SetMainCallback2(MainCB_FreeAllBuffersAndReturnToInitTitleScreen);
+        return;
+    }
+    tTextState = textState;
+}
+
+#undef tState
+#undef tTextState
+#undef tGift
+
+void CB2_InitFusionMysteryGift(void)
+{
+    if (HandleMysteryGiftOrEReaderSetup(FALSE))
+    {
+        SetMainCallback2(CB2_MysteryGiftEReader);
+        gGiftIsFromEReader = FALSE;
+        CreateTask(Task_FusionMysteryGift, 0);
+    }
+    RunTasks();
+}

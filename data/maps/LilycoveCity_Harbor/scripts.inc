@@ -324,6 +324,7 @@ LilycoveCity_Harbor_EventScript_GetEventTicketSailor::
 	return
 
 LilycoveCity_Harbor_EventScript_BoardFerryWithSailor::
+	clearflag FLAG_ISLAND_TRIP_FROM_KANTO @ PokemonNative3G
 	applymovement LOCALID_LILYCOVE_HARBOR_FERRY_SAILOR, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	delay 30
@@ -382,6 +383,7 @@ LilycoveCity_Harbor_EventScript_FerryDestinationChangeMind::
 	end
 
 LilycoveCity_Harbor_EventScript_BoardFerry::
+	clearflag FLAG_ISLAND_TRIP_FROM_KANTO @ PokemonNative3G
 	msgbox LilycoveCity_Harbor_Text_PleaseBoard, MSGBOX_DEFAULT
 	closemessage
 	applymovement VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterUp

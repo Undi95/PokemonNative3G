@@ -12,6 +12,8 @@ bool32 PrintMysteryGiftMenuMessage(u8 *textState, const u8 *str);
 void MG_AddMessageTextPrinter(const u8 *str);
 void CB2_InitEReader(void);
 void CB2_InitMysteryGift(void);
+void CB2_InitFusionMysteryGift(void); // PokemonNative3G
+bool32 FusionMysteryGift_IsAvailable(void);
 void MG_DrawTextBorder(u8 windowId);
 s8 DoMysteryGiftYesNo(u8 *textState, u16 *windowId, bool8 yesNoBoxPlacement, const u8 *str);
 

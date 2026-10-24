@@ -48,7 +48,7 @@
 #define FLAG_CAUGHT_JIRACHI  0x22 // PokemonNative3G : météorite des Chutes Météore (data/scripts/fusion_jirachi.inc)
 #define FLAG_DEFEATED_JIRACHI 0x23 // PokemonNative3G
 #define FLAG_JIRACHI_NEWS_SEEN 0x24 // PokemonNative3G : flash spécial de la TV (comète du millénaire)
-#define FLAG_UNUSED_0x025    0x25 // Unused Flag
+#define FLAG_ISLAND_TRIP_FROM_KANTO 0x25 // PokemonNative3G : venu au ROC NOMBRI / à l'ILE AURORE par le ferry de Carmin (retour à Carmin)
 #define FLAG_UNUSED_0x026    0x26 // Unused Flag
 #define FLAG_UNUSED_0x027    0x27 // Unused Flag
 #define FLAG_UNUSED_0x028    0x28 // Unused Flag

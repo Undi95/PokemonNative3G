@@ -140,6 +140,7 @@ VermilionCity_EventScript_HasMysticAndAuroraTickets::
 	end
 
 EventScript_SailToNavelRock::
+	setflag FLAG_ISLAND_TRIP_FROM_KANTO @ PokemonNative3G : le marin de l'île ramènera à Carmin
 	msgbox VermilionCity_Text_Seagallop10Departing
 	setvar VAR_0x8004, SEAGALLOP_VERMILION_CITY
 	setvar VAR_0x8006, SEAGALLOP_NAVEL_ROCK
@@ -147,6 +148,7 @@ EventScript_SailToNavelRock::
 	end
 
 EventScript_SailToBirthIsland::
+	setflag FLAG_ISLAND_TRIP_FROM_KANTO @ PokemonNative3G : le marin de l'île ramènera à Carmin
 	msgbox VermilionCity_Text_Seagallop12Departing
 	setvar VAR_0x8004, SEAGALLOP_VERMILION_CITY
 	setvar VAR_0x8006, SEAGALLOP_BIRTH_ISLAND

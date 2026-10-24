@@ -643,7 +643,7 @@ static void Task_MainMenuCheckSaveFile(u8 taskId)
         {
             case SAVE_STATUS_OK:
                 tMenuType = HAS_SAVED_GAME;
-                if (IsMysteryGiftEnabled())
+                if (IsMysteryGiftEnabled() || FusionMysteryGift_IsAvailable()) // PokemonNative3G : CADEAU MYSTÈRE de la fusion
                     tMenuType++;
                 gTasks[taskId].func = Task_MainMenuCheckBattery;
                 break;
@@ -656,7 +656,7 @@ static void Task_MainMenuCheckSaveFile(u8 taskId)
                 CreateMainMenuErrorWindow(gText_SaveFileCorrupted);
                 gTasks[taskId].func = Task_WaitForSaveFileErrorWindow;
                 tMenuType = HAS_SAVED_GAME;
-                if (IsMysteryGiftEnabled() == TRUE)
+                if (IsMysteryGiftEnabled() == TRUE || FusionMysteryGift_IsAvailable()) // PokemonNative3G
                     tMenuType++;
                 break;
             case SAVE_STATUS_EMPTY:
@@ -994,7 +994,7 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
                         break;
                     case 2:
                         action = ACTION_MYSTERY_GIFT;
-                        if (!wirelessAdapterConnected)
+                        if (!wirelessAdapterConnected && !FusionMysteryGift_IsAvailable()) // PokemonNative3G : sans connexion
                         {
                             action = ACTION_INVALID;
                             gTasks[taskId].tMenuType = HAS_NO_SAVED_GAME;
@@ -1074,7 +1074,10 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
                 DestroyTask(taskId);
                 break;
             case ACTION_MYSTERY_GIFT:
-                SetMainCallback2(CB2_InitMysteryGift);
+                if (FusionMysteryGift_IsAvailable()) // PokemonNative3G : cadeaux de la fusion (mystery_gift_menu.c)
+                    SetMainCallback2(CB2_InitFusionMysteryGift);
+                else
+                    SetMainCallback2(CB2_InitMysteryGift);
                 DestroyTask(taskId);
                 break;
             case ACTION_MYSTERY_EVENTS:
