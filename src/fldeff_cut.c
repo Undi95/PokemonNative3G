@@ -1,6 +1,7 @@
 #include "global.h"
 #include "constants/kanto/metatile_labels.h"
 #include "constants/kanto_flags_vars.h"
+#include "event_data.h"
 #include "event_object_lock.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
