@@ -1642,12 +1642,16 @@ struct FusionGift
     u16 kantoShipFlag; // 0 : pas de traversée depuis Kanto
     u16 iconSpecies;
     u8 bgType;
+    const u8 *title; // nom complet (celui du sac est abrégé : TICKETAURORA)
     const u8 *body[WONDER_CARD_BODY_TEXT_LINES];
     const u8 *footer1;
     const u8 *footer2;
 };
 
 static const u8 sFusionGiftText_Subtitle[] = _("RÉSEAU DE CÉLIO");
+static const u8 sFusionGiftText_AuroraTitle[] = _("TICKET AURORA");
+static const u8 sFusionGiftText_MysticTitle[] = _("TICKET MYSTIK");
+static const u8 sFusionGiftText_MapTitle[] = _("VIEILLE CARTE");
 static const u8 sFusionGiftText_AuroraBody1[] = _("Ce ticket permet d'embarquer");
 static const u8 sFusionGiftText_AuroraBody2[] = _("pour l'ÎLE AURORE, une île");
 static const u8 sFusionGiftText_AuroraBody3[] = _("lointaine où un POKéMON venu");
@@ -1667,15 +1671,15 @@ static const u8 sFusionGiftText_ShowSailorMap[] = _("Montrez-la au marin du port
 
 static const struct FusionGift sFusionGifts[] = {
     {ITEM_AURORA_TICKET, FLAG_RECEIVED_AURORA_TICKET, FLAG_ENABLE_SHIP_BIRTH_ISLAND, FLAG_KANTO_ENABLE_SHIP_BIRTH_ISLAND,
-     SPECIES_DEOXYS, 1,
+     SPECIES_DEOXYS, 1, sFusionGiftText_AuroraTitle,
      {sFusionGiftText_AuroraBody1, sFusionGiftText_AuroraBody2, sFusionGiftText_AuroraBody3, sFusionGiftText_AuroraBody4},
      sFusionGiftText_BothPorts, sFusionGiftText_ShowSailor},
     {ITEM_MYSTIC_TICKET, FLAG_RECEIVED_MYSTIC_TICKET, FLAG_ENABLE_SHIP_NAVEL_ROCK, FLAG_KANTO_ENABLE_SHIP_NAVEL_ROCK,
-     SPECIES_LUGIA, 6,
+     SPECIES_LUGIA, 6, sFusionGiftText_MysticTitle,
      {sFusionGiftText_MysticBody1, sFusionGiftText_MysticBody2, sFusionGiftText_MysticBody3, sFusionGiftText_MysticBody4},
      sFusionGiftText_BothPorts, sFusionGiftText_ShowSailor},
     {ITEM_OLD_SEA_MAP, FLAG_RECEIVED_OLD_SEA_MAP, FLAG_ENABLE_SHIP_FARAWAY_ISLAND, 0,
-     SPECIES_MEW, 7,
+     SPECIES_MEW, 7, sFusionGiftText_MapTitle,
      {sFusionGiftText_MapBody1, sFusionGiftText_MapBody2, sFusionGiftText_MapBody3, sFusionGiftText_MapBody4},
      sFusionGiftText_HoennPort, sFusionGiftText_ShowSailorMap},
 };
@@ -1715,7 +1719,7 @@ static void FusionGift_BuildCard(const struct FusionGift *gift)
     sFusionGiftCard.bgType = gift->bgType;
     sFusionGiftCard.iconSpecies = gift->iconSpecies;
     sFusionGiftCardMetadata.iconSpecies = gift->iconSpecies;
-    CopyItemName(gift->item, sFusionGiftCard.titleText);
+    StringCopy(sFusionGiftCard.titleText, gift->title);
     StringCopy(sFusionGiftCard.subtitleText, sFusionGiftText_Subtitle);
     for (i = 0; i < WONDER_CARD_BODY_TEXT_LINES; i++)
         StringCopy(sFusionGiftCard.bodyText[i], gift->body[i]);
