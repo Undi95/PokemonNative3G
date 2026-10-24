@@ -451,6 +451,7 @@ static void Task_DebugMenu(u8 taskId)
         FlagSet(FLAG_KANTO_SYS_GAME_CLEAR);
         SetMoney(&gSaveBlock1Ptr->money, 999999); // maison de Bourg Palette
         FlagSet(FLAG_KANTO_SYS_NOT_SOMEONES_PC); // PC de LÉO (rencontré)
+        FlagSet(FLAG_SYS_PC_LANETTE); // PC d'ANNETTE (rencontrée)
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_POKE_MONTURE:
