@@ -1067,6 +1067,10 @@ static const u8 sMeteoriteDesc[] = _(
     "Météorite venant \n"
     "du SITE METEORE.");
 
+static const u8 sKantoMeteoriteDesc[] = _( // RF
+    "Météorite qui s'est jadis\n"
+    "écrasé sur le SITE METEORE.");
+
 static const u8 sRoom1KeyDesc[] = _(
     "Une clé pour ouvrir\n"
     "une des portes de\n"

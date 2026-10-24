@@ -1204,6 +1204,18 @@ const struct Item gItems[] =
         .fieldUseFunc = ItemUseOutOfBattle_PokeMonture,
     },
 
+    [ITEM_KANTO_METEORITE] = // PokemonNative3G : celle de RF (Île 1 -> Île 2), distincte de celle d'Émeraude
+    {
+        .name = _("METEORITE"),
+        .itemId = ITEM_KANTO_METEORITE,
+        .price = 0,
+        .description = sKantoMeteoriteDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+    },
+
     [ITEM_FIRE_STONE] =
     {
         .name = _("PIERRE FEU"),

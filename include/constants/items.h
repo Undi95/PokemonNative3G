@@ -420,8 +420,9 @@
 // PokemonNative3G
 #define ITEM_LINK_CABLE 377
 #define ITEM_POKE_MONTURE 378
+#define ITEM_KANTO_METEORITE 379
 
-#define ITEMS_COUNT 379
+#define ITEMS_COUNT 380
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
 // Its icon is defined at ITEMS_COUNT as the "return to field" arrow

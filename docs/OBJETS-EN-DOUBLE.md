@@ -12,6 +12,8 @@ don dans `data/**/*.inc`, sépare `data/kanto/`, garde les poches Objets rares /
 
 **CS01 à CS07 : réglées (2026-10-24)** : à Kanto, POKé MONTURE au lieu des CS (voir docs/FUSION-OPTIONS.md) ;
 les CS ne sont plus données qu'à Hoenn.
+**Météorite : réglée (2026-10-24)** : deux objets distincts (ITEM_KANTO_METEORITE pour RF, `tools/kanto_meteorite.py` ;
+même nom et même icône, identique dans les deux jeux).
 **Cannes : réglées (2026-10-24)** : les pêcheurs de Kanto améliorent la canne (chaîne de pêche chromatique).
 
 | Objet | Hoenn (data/maps/…) | Kanto (data/kanto/data/maps/…) |

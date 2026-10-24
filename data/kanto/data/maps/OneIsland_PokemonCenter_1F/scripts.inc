@@ -97,8 +97,8 @@ OneIsland_PokemonCenter_1F_EventScript_MeetCelioScene::
 	applymovement LOCALID_PLAYER, Kanto_Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	msgbox OneIsland_PokemonCenter_1F_Text_CanYouDeliverThisMeteoritePlayer
-	msgreceiveditem OneIsland_PokemonCenter_1F_Text_AcceptedMeteoriteFromBill, ITEM_METEORITE, 1, MUS_RG_OBTAIN_KEY_ITEM
-	additem ITEM_METEORITE
+	msgreceiveditem OneIsland_PokemonCenter_1F_Text_AcceptedMeteoriteFromBill, ITEM_KANTO_METEORITE, 1, MUS_RG_OBTAIN_KEY_ITEM
+	additem ITEM_KANTO_METEORITE
 	applymovement LOCALID_KANTO_CELIO, Kanto_Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	msgbox OneIsland_PokemonCenter_1F_Text_CelioPleaseTakeThis
