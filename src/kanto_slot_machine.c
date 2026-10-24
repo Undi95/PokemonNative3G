@@ -4,6 +4,7 @@
 #include "bg.h"
 #include "coins.h"
 #include "decompress.h"
+#include "dma3.h"
 #include "gpu_regs.h"
 #include "main.h"
 #include "malloc.h"
