@@ -63,6 +63,7 @@ enum {
     DEBUG_FAME_CHECKER,
     DEBUG_BOTH_LEAGUES,
     DEBUG_POKE_MONTURE,
+    DEBUG_OLD_MAN,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -197,6 +198,7 @@ static const u8 sText_KantoDexFull[] = _("POKéDEX Kanto complet");
 static const u8 sText_FameChecker[] = _("MEMORYDEX complet");
 static const u8 sText_BothLeagues[] = _("Deux Ligues finies");
 static const u8 sText_PokeMonture[] = _("POKé MONTURE + badges");
+static const u8 sText_OldMan[] = _("VIEIL HOMME JADIELLE");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -244,6 +246,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_FAME_CHECKER].name = sText_FameChecker;
         sItems[DEBUG_BOTH_LEAGUES].name = sText_BothLeagues;
         sItems[DEBUG_POKE_MONTURE].name = sText_PokeMonture;
+        sItems[DEBUG_OLD_MAN].name = sText_OldMan;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -470,6 +473,11 @@ static void Task_DebugMenu(u8 taskId)
         FlagSet(FLAG_KANTO_HIDE_RUIN_VALLEY_SCIENTIST); // après la Grotte Glacée : porte du Trou Pointé libre
         FlagSet(FLAG_SYS_PC_LANETTE); // PC d'ANNETTE (rencontrée)
         FlagSet(FLAG_SYS_POKENAV_GET); // POKéNAV (carte à Kanto)
+        PlaySE(SE_USE_ITEM);
+        break;
+    case DEBUG_OLD_MAN:
+        // Colis remis à CHEN : le vieil homme de Jadielle propose sa démonstration de capture (test kanto_old_man)
+        VarSet(VAR_KANTO_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN, 1);
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_POKE_MONTURE:

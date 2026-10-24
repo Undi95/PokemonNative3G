@@ -1,4 +1,4 @@
-# Build KANTO_DEBUG=1 avec VAR_KANTO_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN = 1 : téléport à Jadielle,
+# Build KANTO_DEBUG=1 : DEBUG « VIEIL HOMME JADIELLE » (colis remis), téléport à Jadielle,
 # le vieil homme montre comment attraper un POKéMON (combat de démonstration de RF).
 import os, sys
 import driver
@@ -13,6 +13,8 @@ def play(game):
     game.tap("A", 210, hold=4, gap=26)
     wait_until(game, lambda s: s.free)
     give_mewtwo(game)
+    game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 15, gap=10); game.tap("A")
+    game.wait(60); game.tap("B"); game.wait(30); wait_until(game, lambda s: s.free)
     debug_warp(game, 1); log(game, "Jadielle")
     walk_to(game, 20, 9); log(game, "devant le vieil homme")
     game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(60)
