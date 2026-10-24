@@ -48,5 +48,6 @@ u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority);
 void StartEscapeRopeFieldEffect(void);
 
 u32 FldEff_UseVsSeeker(void); // Rouge Feu
+u32 FldEff_PhotoFlash(void); // Rouge Feu
 
 #endif // GUARD_FIELD_EFFECTS_H
