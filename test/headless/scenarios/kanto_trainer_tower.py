@@ -1,5 +1,5 @@
 # Build KANTO_DEBUG=1 : MEWTWO, DEBUG « TOUR DRESSEURS » (hall), défi SIMPLES (accueil), 1er étage,
-# combat contre le dresseur (type Colline + aiguillage Tour : nom, classe, image, répliques), montée au 2e.
+# début du combat contre le dresseur (type Colline + aiguillage Tour : nom, classe, image, répliques).
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -23,4 +23,4 @@ def play(game):
             break
         game.tap("A", hold=2, gap=20)
     log(game, "combat")
-    finish_dialog(game); log(game, "après combat")
+    game.wait(400); log(game, "combat lancé")   # l'issue dépend du hasard (niveau 70 contre MEWTWO seul) : on s'arrête là
