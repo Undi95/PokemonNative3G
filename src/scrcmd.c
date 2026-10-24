@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h" // PokemonNative3G : POKé MONTURE
 #include "kanto_field_door.h"
 #include "frontier_util.h"
 #include "battle_setup.h"
@@ -1577,6 +1578,11 @@ bool8 ScrCmd_bufferpartymonnick(struct ScriptContext *ctx)
     u8 stringVarIndex = ScriptReadByte(ctx);
     u16 partyIndex = VarGet(ScriptReadHalfword(ctx));
 
+    if (partyIndex == FIELD_MOVE_HELPER_SLOT) // PokemonNative3G : POKéMON appelé par la POKé MONTURE
+    {
+        GetSpeciesName(sScriptStringVars[stringVarIndex], PokeMonture_HelperSpecies());
+        return FALSE;
+    }
     GetMonData(&gPlayerParty[partyIndex], MON_DATA_NICKNAME, sScriptStringVars[stringVarIndex]);
     StringGet_Nickname(sScriptStringVars[stringVarIndex]);
     return FALSE;
@@ -1732,6 +1738,13 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
             gSpecialVar_0x8004 = species;
             break;
         }
+    }
+    // PokemonNative3G : POKé MONTURE, un POKéMON des environs utilise la capacité (fusion_events.c)
+    if (gSpecialVar_Result == PARTY_SIZE && PokeMonture_CanUse(move))
+    {
+        PokeMonture_SetMove(move);
+        gSpecialVar_Result = FIELD_MOVE_HELPER_SLOT;
+        gSpecialVar_0x8004 = PokeMonture_HelperSpecies();
     }
     return FALSE;
 }

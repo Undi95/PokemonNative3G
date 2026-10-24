@@ -364,6 +364,11 @@ static const u8 sLinkCableDesc[] = _(
     "évoluer un POKéMON\n"
     "comme un échange.");
 
+static const u8 sPokeMontureDesc[] = _(
+    "Appelle un POKéMON\n"
+    "des environs pour une\n"
+    "capacité de terrain.");
+
 static const u8 sFireStoneDesc[] = _(
     "Fait évoluer\n"
     "certaines espèces\n"

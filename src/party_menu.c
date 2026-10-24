@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h" // PokemonNative3G : POKé MONTURE
 #include "constants/hold_effects.h"
 #include "malloc.h"
 #include "battle.h"
@@ -3945,6 +3946,12 @@ static bool8 SetUpFieldMove_Fly(void)
 
 void CB2_ReturnToPartyMenuFromFlyMap(void)
 {
+    if (gPartyMenu.slotId == FIELD_MOVE_HELPER_SLOT) // PokemonNative3G : Vol de la POKé MONTURE (sac) annulé
+    {
+        gPartyMenu.slotId = 0;
+        SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
+        return;
+    }
     InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_CHOOSE_MON, TRUE, PARTY_MSG_CHOOSE_MON, Task_HandleChooseMonInput, CB2_ReturnToFieldWithOpenMenu);
 }
 

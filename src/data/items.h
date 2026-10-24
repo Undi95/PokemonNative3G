@@ -1192,6 +1192,18 @@ const struct Item gItems[] =
         .fieldUseFunc = ItemUseOutOfBattle_LinkCable,
     },
 
+    [ITEM_POKE_MONTURE] = // PokemonNative3G : remplace les CS données à Kanto
+    {
+        .name = _("POKé MONTURE"),
+        .itemId = ITEM_POKE_MONTURE,
+        .price = 0,
+        .description = sPokeMontureDesc,
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_PokeMonture,
+    },
+
     [ITEM_FIRE_STONE] =
     {
         .name = _("PIERRE FEU"),

@@ -736,5 +736,7 @@ const u32 gItemIconPalette_MagmaEmblem[] = INCGFX_U32("graphics/items/icon_palet
 
 const u32 gItemIcon_LinkCable[] = INCGFX_U32("graphics/items/icons/link_cable.png", ".4bpp.lz"); // pokeemerald-expansion (linking_cord)
 const u32 gItemIconPalette_LinkCable[] = INCGFX_U32("graphics/items/icon_palettes/link_cable.pal", ".gbapal.lz");
+const u32 gItemIcon_PokeMonture[] = INCGFX_U32("graphics/items/icons/poke_monture.png", ".4bpp.lz"); // dessinée pour la fusion
+const u32 gItemIconPalette_PokeMonture[] = INCGFX_U32("graphics/items/icon_palettes/poke_monture.pal", ".gbapal.lz");
 const u32 gItemIcon_OldSeaMap[] = INCGFX_U32("graphics/items/icons/old_sea_map.png", ".4bpp.lz");
 const u32 gItemIconPalette_OldSeaMap[] = INCGFX_U32("graphics/items/icon_palettes/old_sea_map.pal", ".gbapal.lz");

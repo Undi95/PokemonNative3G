@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h" // PokemonNative3G : POKé MONTURE
 #include "braille_puzzles.h"
 #include "event_data.h"
 #include "event_scripts.h"
@@ -102,6 +103,14 @@ static void FieldCallback_Flash(void)
     u8 taskId = CreateFieldMoveTask();
     gFieldEffectArguments[0] = GetCursorSelectionMonId();
     gTasks[taskId].ptr.funcPtr = FldEff_UseFlash;
+}
+
+// PokemonNative3G : FLASH de la POKé MONTURE (sac), sur le terrain après la fermeture du sac
+void PokeMonture_StartFlash(void)
+{
+    PokeMonture_SetMove(MOVE_FLASH);
+    gPartyMenu.slotId = FIELD_MOVE_HELPER_SLOT;
+    FieldCallback_Flash();
 }
 
 static void FldEff_UseFlash(void)

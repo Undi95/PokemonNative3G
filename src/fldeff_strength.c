@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h" // PokemonNative3G : POKé MONTURE
 #include "event_data.h"
 #include "event_scripts.h"
 #include "field_effect.h"
@@ -37,7 +38,10 @@ bool8 FldEff_UseStrength(void)
 {
     u8 taskId = CreateFieldMoveTask();
     gTasks[taskId].ptr.funcPtr = StartStrengthFieldEffect;
-    GetMonNickname(&gPlayerParty[gFieldEffectArguments[0]], gStringVar1);
+    if (gFieldEffectArguments[0] == FIELD_MOVE_HELPER_SLOT) // PokemonNative3G : POKé MONTURE
+        GetSpeciesName(gStringVar1, PokeMonture_HelperSpecies());
+    else
+        GetMonNickname(&gPlayerParty[gFieldEffectArguments[0]], gStringVar1);
     return FALSE;
 }
 

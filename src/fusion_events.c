@@ -1,9 +1,16 @@
 // PokemonNative3G : événements propres à la fusion (pas dans Émeraude ni dans RF).
 #include "global.h"
+#include "data.h"
+#include "string_util.h"
 #include "event_data.h"
+#include "fusion_events.h"
+#include "item.h"
+#include "kanto_field_door.h"
 #include "pokedex.h"
 #include "pokemon.h"
 #include "constants/flags.h"
+#include "constants/items.h"
+#include "constants/moves.h"
 #include "constants/kanto_flags_vars.h"
 #include "constants/species.h"
 #include "constants/vars.h"
@@ -67,4 +74,64 @@ u16 GetStarterEggToGive(void)
 void SetStarterEggGiven(void)
 {
     VarSet(VAR_STARTER_EGGS_GIVEN, VarGet(VAR_STARTER_EGGS_GIVEN) | StarterEggBit(gSpecialVar_0x8005));
+}
+
+// POKé MONTURE (remplace les CS données à Kanto) : chaque CS de RF reçue (flags de RF) ajoute une capacité. Sans
+// POKéMON de l'équipe qui la connaît, un POKéMON des environs vient l'utiliser (un pour Kanto, un pour Hoenn, qui
+// peuvent tous apprendre la CS) ; les badges restent exigés (HasBadgeForFieldMove, scripts de RF). Partout.
+static const struct {
+    u16 move;
+    u16 flag;
+    u16 kantoHelper;
+    u16 hoennHelper;
+} sPokeMontureMoves[] = {
+    {MOVE_CUT,        FLAG_KANTO_GOT_HM01, SPECIES_SCYTHER,  SPECIES_ABSOL},
+    {MOVE_FLY,        FLAG_KANTO_GOT_HM02, SPECIES_PIDGEOT,  SPECIES_ALTARIA},
+    {MOVE_SURF,       FLAG_KANTO_GOT_HM03, SPECIES_LAPRAS,   SPECIES_WAILORD},
+    {MOVE_STRENGTH,   FLAG_KANTO_GOT_HM04, SPECIES_MACHAMP,  SPECIES_HARIYAMA},
+    {MOVE_FLASH,      FLAG_KANTO_GOT_HM05, SPECIES_PIKACHU,  SPECIES_MANECTRIC},
+    {MOVE_ROCK_SMASH, FLAG_KANTO_GOT_HM06, SPECIES_GOLEM,    SPECIES_AGGRON},
+    {MOVE_WATERFALL,  FLAG_KANTO_HIDE_FOUR_ISLAND_ICEFALL_CAVE_1F_HM07, SPECIES_SEAKING, SPECIES_MILOTIC},
+};
+
+static u16 sPokeMontureMove; // capacité en cours (pour l'image et le nom du POKéMON appelé)
+
+static s32 PokeMonture_Find(u16 move)
+{
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sPokeMontureMoves); i++)
+    {
+        if (sPokeMontureMoves[i].move == move)
+            return i;
+    }
+    return -1;
+}
+
+bool32 PokeMonture_CanUse(u16 move)
+{
+    s32 i = PokeMonture_Find(move);
+
+    return i >= 0 && FlagGet(sPokeMontureMoves[i].flag) && CheckBagHasItem(ITEM_POKE_MONTURE, 1);
+}
+
+void PokeMonture_SetMove(u16 move)
+{
+    sPokeMontureMove = move;
+}
+
+u16 PokeMonture_HelperSpecies(void)
+{
+    s32 i = PokeMonture_Find(sPokeMontureMove);
+
+    if (i < 0)
+        i = 0;
+    return IsKantoTilesetMap() ? sPokeMontureMoves[i].kantoHelper : sPokeMontureMoves[i].hoennHelper;
+}
+
+// script des dons de CS de Kanto : VAR_0x8005 = capacité ; VAR_RESULT = TRUE si c'est la première (objet à donner)
+void PokeMonture_BufferMove(void)
+{
+    gSpecialVar_Result = !CheckBagHasItem(ITEM_POKE_MONTURE, 1);
+    StringCopy(gStringVar2, gMoveNames[gSpecialVar_0x8005]);
 }

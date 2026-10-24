@@ -1,4 +1,9 @@
 #include "global.h"
+#include "fusion_events.h" // PokemonNative3G : POKé MONTURE
+#include "kanto_region_map.h"
+#include "region_map.h"
+#include "overworld.h"
+#include "constants/moves.h"
 #include "kanto_vs_seeker.h"
 #include "kanto_field_door.h"
 void KantoItemUseOnFieldCB_Itemfinder(u8 taskId); // kanto_itemfinder.c
@@ -927,6 +932,37 @@ void ItemUseOutOfBattle_EscapeRope(u8 taskId)
     {
         sItemUseOnFieldCB = ItemUseOnFieldCB_EscapeRope;
         SetUpItemUseOnFieldCallback(taskId);
+    }
+    else
+    {
+        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+    }
+}
+
+// PokemonNative3G : POKé MONTURE (remplace les CS données à Kanto, fusion_events.c). Depuis le sac : FLASH dans une
+// grotte sombre, sinon VOL ; les autres capacités se déclenchent en interagissant (arbre, eau, rocher…).
+static void ItemUseOnFieldCB_PokeMontureFlash(u8 taskId)
+{
+    DestroyTask(taskId);
+    PokeMonture_StartFlash();
+}
+
+void ItemUseOutOfBattle_PokeMonture(u8 taskId)
+{
+    if (PokeMonture_CanUse(MOVE_FLASH) && HasBadgeForFieldMove(FIELD_MOVE_FLASH)
+     && gMapHeader.cave == TRUE && !FlagGet(FLAG_SYS_USE_FLASH))
+    {
+        sItemUseOnFieldCB = ItemUseOnFieldCB_PokeMontureFlash;
+        SetUpItemUseOnFieldCallback(taskId);
+    }
+    else if (PokeMonture_CanUse(MOVE_FLY) && HasBadgeForFieldMove(FIELD_MOVE_FLY)
+          && Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType) == TRUE
+          && !gTasks[taskId].tUsingRegisteredKeyItem)
+    {
+        PokeMonture_SetMove(MOVE_FLY);
+        gPartyMenu.slotId = FIELD_MOVE_HELPER_SLOT;
+        SetBagMenuNewScreenCallback(IsKantoTilesetMap() ? KantoCB2_OpenFlyMap : CB2_OpenFlyMap);
+        Task_FadeAndCloseBagMenu(taskId);
     }
     else
     {

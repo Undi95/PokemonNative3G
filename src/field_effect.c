@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h" // PokemonNative3G : POKé MONTURE
 #include "kanto_field_door.h"
 #include "decompress.h"
 #include "event_object_movement.h"
@@ -1475,7 +1476,7 @@ static void Task_UseFly(u8 taskId)
             return;
 
         gFieldEffectArguments[0] = GetCursorSelectionMonId();
-        if ((int)gFieldEffectArguments[0] > PARTY_SIZE - 1)
+        if ((int)gFieldEffectArguments[0] > PARTY_SIZE - 1 && gFieldEffectArguments[0] != FIELD_MOVE_HELPER_SLOT) // PokemonNative3G
             gFieldEffectArguments[0] = 0;
 
         FieldEffectStart(FLDEFF_USE_FLY);
@@ -2699,6 +2700,18 @@ bool8 FldEff_FieldMoveShowMonInit(void)
 {
     struct Pokemon *pokemon;
     bool32 noDucking = gFieldEffectArguments[0] & SHOW_MON_CRY_NO_DUCKING;
+    if ((u8)gFieldEffectArguments[0] == FIELD_MOVE_HELPER_SLOT)
+    {
+        // PokemonNative3G : POKéMON appelé par la POKé MONTURE (pas chromatique : OT 0, personnalité 0xFFFF0000)
+        gFieldEffectArguments[0] = PokeMonture_HelperSpecies();
+        gFieldEffectArguments[1] = 0;
+        gFieldEffectArguments[2] = 0xFFFF0000;
+        gFieldEffectArguments[0] |= noDucking;
+        gPartyMenu.slotId = 0; // posé par l'utilisation depuis le sac (Vol, Flash)
+        FieldEffectStart(FLDEFF_FIELD_MOVE_SHOW_MON);
+        FieldEffectActiveListRemove(FLDEFF_FIELD_MOVE_SHOW_MON_INIT);
+        return FALSE;
+    }
     pokemon = &gPlayerParty[(u8)gFieldEffectArguments[0]];
     gFieldEffectArguments[0] = GetMonData(pokemon, MON_DATA_SPECIES);
     gFieldEffectArguments[1] = GetMonData(pokemon, MON_DATA_OT_ID);

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_events.h" // PokemonNative3G : POKé MONTURE
 #include "debug_menu.h"
 #include "main.h"
 #include "bike.h"
@@ -1343,6 +1344,8 @@ bool8 PartyHasMonWithSurf(void)
             if (MonKnowsMove(&gPlayerParty[i], MOVE_SURF))
                 return TRUE;
         }
+        if (PokeMonture_CanUse(MOVE_SURF)) // PokemonNative3G : POKé MONTURE
+            return TRUE;
     }
     return FALSE;
 }

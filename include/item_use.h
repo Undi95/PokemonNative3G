@@ -8,6 +8,7 @@ void ItemUseOutOfBattle_Itemfinder(u8 var);
 void ItemUseOutOfBattle_PokeblockCase(u8 taskId);
 void ItemUseOutOfBattle_TownMap(u8 taskId);
 void ItemUseOutOfBattle_LinkCable(u8 taskId);
+void ItemUseOutOfBattle_PokeMonture(u8 taskId);
 void ItemUseOutOfBattle_FameChecker(u8 taskId);
 void ItemUseOutOfBattle_VsSeeker(u8 taskId);
 void ItemUseOutOfBattle_PokeFlute(u8 taskId);
