@@ -48,8 +48,7 @@ SixIsland_RuinValley_EventScript_DottedHoleDoorEnd::
 	end
 
 SixIsland_RuinValley_Text_WantToCutDoor:
-	.string "Les points disent: COUPE.
-"
+	.string "Les points disent: COUPE.\n"
 	.string "Voulez-vous utiliser COUPE?$"
 
 SixIsland_RuinValley_EventScript_DottedHoleDoorOpen::
