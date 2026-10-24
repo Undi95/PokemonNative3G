@@ -47,6 +47,7 @@ contenu dans un seul jeu.
   sert de contexte, le joueur ne récupère pas ses Pokémon de Hoenn avant). POKéDEX Kanto : débloqué par le
   Pokédex de Chen (déjà fait).
 ## À faire (liste de l'utilisateur, 2026-10-23)
+- [x] Braille (2026-10-24) : option DIALOGUE = KANTO -> écrit dans la boîte de dialogue (comme RF) ; HOENN -> fenêtre d'Émeraude ; vérifié en headless (`kanto_dotted_hole.py` / `kanto_dotted_hole_rf.py`)
 - [-] Décorations de Kanto (maison de Bourg Palette) : abandonné (choix utilisateur 2026-10-24) ; la chambre de RF n'a pas les tuiles de décoration d'Émeraude
 - [x] Cartes de région : icône du joueur selon le perso choisi (PERSO) sur les deux cartes
 - [x] Cherche VS à Hoenn : il déclenche les revanches du PokéNav (dresseurs inscrits ; 70 % comme RF, 100 % si un appel l'avait déjà décidé) ; les dresseurs de Hoenn sautent au lieu de lever la main (pas d'image « main levée » dans les sprites d'Émeraude)

@@ -8,10 +8,12 @@ from redleaf_acro import close_menus
 from driver import wait_until, finish_dialog
 
 
-def play(game, before_warp=None):
+def play(game, before_warp=None, at_start=None):
     game.wait(300); game.tap("START"); game.wait(120); game.tap("START"); game.wait(90); game.tap("A")
     game.wait(120)
     game.tap("A", 210, hold=4, gap=26)
+    if at_start:
+        at_start(game)
     give_mewtwo(game)
     wait_until(game, lambda s: s.free); game.wait(30)
     game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 14, gap=10); game.tap("A")
