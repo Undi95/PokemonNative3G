@@ -4525,6 +4525,7 @@ void Fusion_StorePartyInPC(void)
 {
     u32 i;
 
+    Fusion_MarkAllMonsFromHoenn();
     for (i = 0; i < PARTY_SIZE; i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)

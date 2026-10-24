@@ -21,6 +21,8 @@ u8 OvoChrono_EggCycles(u8 toSub);
 u8 OvalCharm_Compatibility(u8 compatibility);
 u32 ShinyCharm_EggPersonality(u32 personality);
 bool8 Fusion_IsBoxMonLockedInHoenn(struct BoxPokemon *mon);
+void Fusion_MarkAllMonsFromHoenn(void);
+#define HOENN_MON_MARK 0x8 // MON_DATA_UNUSED_RIBBONS : POKéMON du joueur au premier départ pour Kanto
 u8 Fusion_GetPCOwner(void);
 #define PC_OWNER_UNKNOWN 0
 #define PC_OWNER_LANETTE 1

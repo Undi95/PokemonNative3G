@@ -1,6 +1,7 @@
 // Menu de debug (builds KANTO_DEBUG=1 uniquement), ouvert depuis le menu Start.
 // Téléportation, traverser les murs, rencontres sauvages, soin de l'équipe.
 #include "global.h"
+#include "money.h"
 #include "constants/kanto_flags_vars.h"
 #include "debug_menu.h"
 #include "coins.h"
@@ -446,6 +447,7 @@ static void Task_DebugMenu(u8 taskId)
         // événements d'après les deux Ligues (Celebi, Jirachi, œufs de starters…)
         FlagSet(FLAG_SYS_GAME_CLEAR);
         FlagSet(FLAG_KANTO_SYS_GAME_CLEAR);
+        SetMoney(&gSaveBlock1Ptr->money, 999999); // maison de Bourg Palette
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_POKE_MONTURE:

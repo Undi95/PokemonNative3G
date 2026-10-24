@@ -55,6 +55,7 @@ Fusion_PalletTown_OnLoad::
 
 Fusion_EventScript_PalletCloseHouse::
 	setmetatile 6, 7, 0x2A3, TRUE
+	setmetatile 4, 7, 0x002, TRUE @ pancarte en bois à la place de la boîte aux lettres
 	return
 
 Fusion_EventScript_PalletHouseDoor::
@@ -72,14 +73,20 @@ Fusion_EventScript_PalletHouseForSale::
 	goto_if_eq VAR_RESULT, FALSE, Fusion_EventScript_PalletHouseNoMoney
 	removemoney 300000
 	updatemoneybox
+	msgbox Fusion_Text_PalletHouseDeal, MSGBOX_DEFAULT
+	closemessage
+	hidemoneybox
+	fadescreen FADE_TO_BLACK
+	setflag FLAG_PALLET_HOUSE_BOUGHT
+	setmetatile 6, 7, 0x2A3, FALSE
+	setmetatile 4, 7, 0x2AD, TRUE
+	special DrawWholeMapView
+	delay 60
+	fadescreen FADE_FROM_BLACK
 	playfanfare MUS_OBTAIN_ITEM
 	msgbox Fusion_Text_PalletHouseBought, MSGBOX_DEFAULT
 	waitfanfare
-	setflag FLAG_PALLET_HOUSE_BOUGHT
-	setmetatile 6, 7, 0x2A3, FALSE
-	special DrawWholeMapView
 	msgbox Fusion_Text_PalletHouseYours, MSGBOX_DEFAULT
-	hidemoneybox
 	releaseall
 	end
 
@@ -131,7 +138,12 @@ Fusion_Text_PalletHouseLocked:
 Fusion_Text_PalletHouseForSale:
 	.string "MAISON À VENDRE\n"
 	.string "Prix: 300 000¥\p"
-	.string "L'acheter?$"
+	.string "Contacter le vendeur et\n"
+	.string "l'acheter?$"
+
+Fusion_Text_PalletHouseDeal:
+	.string "Tu appelles le vendeur…\n"
+	.string "Rendez-vous chez le notaire!$"
 
 Fusion_Text_PalletHouseNoMoney:
 	.string "Tu n'as pas assez d'argent…$"
@@ -140,5 +152,5 @@ Fusion_Text_PalletHouseBought:
 	.string "{PLAYER} achète la maison!$"
 
 Fusion_Text_PalletHouseYours:
-	.string "La pancarte porte maintenant\n"
-	.string "ton nom!$"
+	.string "La boîte aux lettres porte\n"
+	.string "maintenant ton nom!$"

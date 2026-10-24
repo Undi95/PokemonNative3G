@@ -317,18 +317,40 @@ void GiveShinyChansey(void)
 }
 
 // POKéMON de Hoenn pendant le voyage à Kanto : grisés au PC, ils ne peuvent pas rejoindre l'équipe tant que la Ligue
-// de Kanto n'est pas finie et le Rubis/Saphir rendu à CILEO (comme le vol entre régions). « De Hoenn » = rencontré
-// hors de Kanto (oeufs de Hoenn compris), sauf échanges et rencontres spéciales.
+// de Kanto n'est pas finie et le Rubis/Saphir rendu à CILEO (comme le vol entre régions). « De Hoenn » = possédé au
+// premier départ (marque HOENN_MON_MARK, voir Fusion_MarkAllMonsFromHoenn).
 bool8 Fusion_IsBoxMonLockedInHoenn(struct BoxPokemon *mon)
 {
-    u8 location;
-
     if (!FlagGet(FLAG_FUSION_KANTO_VISITED) || CanFlyBetweenRegions())
         return FALSE;
     if (GetBoxMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
         return FALSE;
-    location = GetBoxMonData(mon, MON_DATA_MET_LOCATION);
-    return location < KANTO_MAPSEC_START || (location > KANTO_MAPSEC_END && location < METLOC_SPECIAL_EGG);
+    return (GetBoxMonData(mon, MON_DATA_UNUSED_RIBBONS) & HOENN_MON_MARK) != 0;
+}
+
+// Au premier départ pour Kanto : tous les POKéMON du joueur (équipe et PC) reçoivent la marque « de Hoenn » (échanges,
+// starter et dons compris ; un bit de rubans inutilisé, conservé par l'évolution et le PC)
+static void MarkBoxMonFromHoenn(struct BoxPokemon *mon)
+{
+    u8 ribbons;
+
+    if (GetBoxMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
+        return;
+    ribbons = GetBoxMonData(mon, MON_DATA_UNUSED_RIBBONS) | HOENN_MON_MARK;
+    SetBoxMonData(mon, MON_DATA_UNUSED_RIBBONS, &ribbons);
+}
+
+void Fusion_MarkAllMonsFromHoenn(void)
+{
+    u32 i, j;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+        MarkBoxMonFromHoenn(&gPlayerParty[i].box);
+    for (i = 0; i < TOTAL_BOXES_COUNT; i++)
+    {
+        for (j = 0; j < IN_BOX_COUNT; j++)
+            MarkBoxMonFromHoenn(GetBoxedMonPtr(i, j));
+    }
 }
 
 // Propriétaire du PC selon la région : LÉO à Kanto (une fois rencontré), ANNETTE à Hoenn (idem), sinon « ??? »
