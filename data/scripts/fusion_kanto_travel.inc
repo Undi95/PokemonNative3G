@@ -55,7 +55,8 @@ Fusion_PalletTown_OnLoad::
 
 Fusion_EventScript_PalletCloseHouse::
 	setmetatile 6, 7, 0x2A3, TRUE
-	setmetatile 4, 7, 0x002, TRUE @ pancarte en bois à la place de la boîte aux lettres
+	setmetatile 4, 6, 0x297, FALSE @ pancarte en bois à la place de la boîte aux lettres (haut : herbe)
+	setmetatile 4, 7, 0x002, TRUE
 	return
 
 Fusion_EventScript_PalletHouseDoor::
@@ -79,6 +80,7 @@ Fusion_EventScript_PalletHouseForSale::
 	fadescreen FADE_TO_BLACK
 	setflag FLAG_PALLET_HOUSE_BOUGHT
 	setmetatile 6, 7, 0x2A3, FALSE
+	setmetatile 4, 6, 0x2A5, FALSE
 	setmetatile 4, 7, 0x2AD, TRUE
 	special DrawWholeMapView
 	delay 60
