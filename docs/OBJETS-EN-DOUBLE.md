@@ -10,6 +10,9 @@ don dans `data/**/*.inc`, sépare `data/kanto/`, garde les poches Objets rares /
 
 ## Doublons exacts
 
+**CS01 à CS07 : réglées (2026-10-24)** : à Kanto, POKé MONTURE au lieu des CS (voir docs/FUSION-OPTIONS.md) ;
+les CS ne sont plus données qu'à Hoenn.
+
 | Objet | Hoenn (data/maps/…) | Kanto (data/kanto/data/maps/…) |
 |---|---|---|
 | CS01 Coupe | RustboroCity_CuttersHouse:9 | SSAnne_CaptainsOffice:18 |

@@ -61,7 +61,8 @@ contenu dans un seul jeu.
 - [-] « Précédemment dans votre quête » (journal de RF) : abandonné (décision de l'utilisateur, 2026-10-24)
 - [x] Courir partout (intérieurs compris ; bike.c, IsRunningDisallowed)
 - [x] Cherch'Objet selon la région (kanto_itemfinder.c = RF à Kanto, Émeraude à Hoenn) ; objets « sous les pieds » de RF perdus à l'import des cartes (traités comme des objets cachés normaux)
-- [ ] Objets donnés deux fois (CS, cannes, Passe Bateau…) : voir docs/OBJETS-EN-DOUBLE.md
+- [ ] Objets donnés deux fois : voir docs/OBJETS-EN-DOUBLE.md ; CS réglées (2026-10-24) : POKé MONTURE à Kanto
+- [x] CS (2026-10-24) : les CS restent à Hoenn ; à Kanto, les 7 dons de CS de RF donnent la POKé MONTURE (objet rare, icône dessinée pour la fusion) puis lui ajoutent chaque capacité (flags de RF FLAG_KANTO_GOT_HM01..06 et ramassage de la CS07). Sans POKéMON de l'équipe qui connaît la capacité, un POKéMON des environs vient l'utiliser, partout : Kanto INSECATEUR, ROUCARNAGE, LOKHLASS, MACKOGNEUR, PIKACHU, GROLEM, POISSOROY ; Hoenn ABSOL, ALTARIA, WAILORD, HARIYAMA, ÉLECSPRINT, GALEGON, MILOBELLUS (Coupe, Vol, Surf, Force, Flash, Éclate-Roc, Cascade). Badges toujours exigés ; Vol et Flash depuis le sac. `tools/poke_monture.py`, `data/scripts/fusion_poke_monture.inc`, `src/fusion_events.c`
 
 ## Trouvé par la cartographie — décisions de l'utilisateur (2026-10-23)
 Contenu de RF à importer :
