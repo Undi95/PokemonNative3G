@@ -163,6 +163,9 @@ int main(int argc, char **argv)
     }
 
     videoScale = gSettings.scale;
+#ifdef __ANDROID__
+    SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight"); // PokemonNative3G : paysage seulement
+#endif
     sdlWindow = SDL_CreateWindow("PokemonNative3G", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DISPLAY_WIDTH * videoScale, DISPLAY_HEIGHT * videoScale,
                                  SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | (gSettings.fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
 #ifdef __ANDROID__
