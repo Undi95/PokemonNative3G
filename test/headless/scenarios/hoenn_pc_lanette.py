@@ -18,5 +18,5 @@ def play(game):
     game.wait(60); close_menus(game)
     debug_warp(game, 21)
     walk_to(game, 24, 15); leave_map(game, "UP"); log(game, "Centre")
-    walk_to(game, 11, 2); game.tap("UP"); game.wait(20); game.tap("A"); game.wait(150)
+    walk_to(game, 10, 2); game.tap("UP"); game.wait(20); game.tap("A"); game.wait(150)
     game.tap("A"); game.wait(150); log(game, "PC")
