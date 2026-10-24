@@ -12,8 +12,6 @@
 #include "kanto_field_door.h"
 #include "pokemon_storage_system.h"
 #include "constants/region_map_sections.h"
-#include "kanto_field_door.h"
-#include "pokemon_storage_system.h"
 #include "pokedex.h"
 #include "pokemon.h"
 #include "constants/flags.h"
