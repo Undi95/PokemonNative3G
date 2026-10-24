@@ -4192,6 +4192,13 @@ static void PokeSum_SetMonPicSpriteCallback(u16 spriteId)
 
     sMonSummaryScreen->numMonPicBounces = 0;
 
+    // PokemonNative3G : sprites d'Émeraude (option POKéMON = HOENN) : animés comme dans le résumé d'Émeraude
+    if (!MON_PICS_KANTO && sMonSummaryScreen->isEgg != TRUE)
+    {
+        PokemonSummaryDoMonAnimation(&gSprites[spriteId], GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES), FALSE);
+        return;
+    }
+
     if (sMonSummaryScreen->isEgg == TRUE)
     {
         u8 friendship = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_FRIENDSHIP);
@@ -4241,6 +4248,7 @@ static void PokeSum_ShowOrHideMonPicSprite(u8 invisible)
 
 static void PokeSum_DestroyMonPicSprite(void)
 {
+    StopPokemonAnimationDelayTask(); // PokemonNative3G
     FreeAndDestroyMonPicSprite(sMonSummaryScreen->monPicSpriteId);
     FREE_AND_SET_NULL(sMonPicBounceState);
 }
