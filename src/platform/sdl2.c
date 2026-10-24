@@ -12,7 +12,6 @@
 #include <SDL2/SDL.h>
 
 #include "global.h"
-#include "main.h"
 #include "platform.h"
 #include "rtc.h"
 #include "gba/defines.h"
@@ -97,6 +96,7 @@ static int RunTestMode(void);
 
 #ifdef __ANDROID__
 #include <dlfcn.h>
+extern void *gMain[]; // struct Main : callback1, callback2, savedCallback, vblankCallback…
 // PokemonNative3G : écran noir sur Android : après 4 s, écrit l'écran du jeu en cours (adresses relatives à la .so)
 static int DebugWatchdog(void *unused)
 {
@@ -106,8 +106,8 @@ static int DebugWatchdog(void *unused)
         Dl_info info;
         SDL_Delay(4000);
         if (dladdr((void *)DebugWatchdog, &info))
-            SDL_Log("PN3G: cb1=+%lx cb2=+%lx vblank=+%lx state=%u", (unsigned long)((char *)gMain.callback1 - (char *)info.dli_fbase),
-                    (unsigned long)((char *)gMain.callback2 - (char *)info.dli_fbase), (unsigned long)((char *)gMain.vblankCallback - (char *)info.dli_fbase), gMain.state);
+            SDL_Log("PN3G: cb1=+%lx cb2=+%lx", (unsigned long)((char *)gMain[0] - (char *)info.dli_fbase),
+                    (unsigned long)((char *)gMain[1] - (char *)info.dli_fbase));
     }
     return 0;
 }
