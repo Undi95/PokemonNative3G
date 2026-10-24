@@ -258,6 +258,9 @@ int main(int argc, char **argv)
 
         lastGameTime = curGameTime;
 
+        // PokemonNative3G : bandes autour de l'image en noir (sur Android, le tampon n'est pas effacé : bruit, image en double)
+        SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 255);
+        SDL_RenderClear(sdlRenderer);
         SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
         Touch_Draw(sdlRenderer, sdlWindow);
         SDL_RenderPresent(sdlRenderer);
