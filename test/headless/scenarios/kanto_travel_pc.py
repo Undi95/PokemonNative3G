@@ -25,6 +25,10 @@ def play(game):
     for k in range(3):
         game.tap("A"); game.wait(120)
     game.wait(120); log(game, "boîte")
-    game.wait(700); game.press("RIGHT", 4); game.wait(30); game.press("LEFT", 4); game.wait(30)
+    game.wait(700); game.press("DOWN", 4); game.wait(30)
     game.press("A", 4); game.wait(60); game.press("A", 4); game.wait(120); log(game, "retirer (refusé)")
-    game.wait(600); log(game, "fin")
+    game.wait(300); game.press("A", 4); game.wait(60); game.press("A", 4); game.wait(150); log(game, "fin")
+    game.wait(120); game.press("A", 4); game.wait(60)
+    for k in range(8):
+        game.press("B", 4); game.wait(90)
+    wait_until(game, lambda s: s.free, limit=1500); log(game, "sorti du PC (pas de gel)")
