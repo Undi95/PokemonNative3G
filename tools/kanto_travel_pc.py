@@ -60,7 +60,7 @@ i = t.index('static const struct StorageMessage sMessages[]') if 'static const s
 assert i is not None
 once(S, 'static const struct StorageMessage sMessages[]',
      '// PokemonNative3G : POKéMON de Hoenn pendant le voyage à Kanto (Fusion_IsBoxMonLockedInHoenn)\n'
-     'static const u8 sText_HoennLocked[] = _("Aucune connexion avec HOENN…\\nIl ne peut pas venir!");\n\n'
+     'static const u8 sText_HoennLocked[] = _("Aucun lien avec HOENN!");\n\n'
      'static const struct StorageMessage sMessages[]')
 # icônes grisées (transparentes, comme le mode objets)
 once(S, '''                personality = GetBoxMonDataAt(boxId, boxPosition, MON_DATA_PERSONALITY);

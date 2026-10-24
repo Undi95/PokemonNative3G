@@ -1088,7 +1088,7 @@ static const struct SpriteTemplate sSpriteTemplate_DisplayMon =
 };
 
 // PokemonNative3G : POKéMON de Hoenn pendant le voyage à Kanto (Fusion_IsBoxMonLockedInHoenn)
-static const u8 sText_HoennLocked[] = _("Aucune connexion avec HOENN…\nIl ne peut pas venir!");
+static const u8 sText_HoennLocked[] = _("Aucun lien avec HOENN!");
 
 static const struct StorageMessage sMessages[] =
 {
