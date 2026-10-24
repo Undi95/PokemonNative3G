@@ -398,6 +398,13 @@ void LoadStdWindowGfx(u8 windowId, u16 destOffset, u8 palOffset)
     LoadPalette(sStdTextWindow_Pal, palOffset, PLTT_SIZE_4BPP);
 }
 
+// Rouge Feu (text_window.c) : LoadStdWindowGfxOnBg (machine à sous de RF)
+void LoadStdWindowGfxOnBg(u8 bgId, u16 destOffset, u8 palOffset)
+{
+    LoadBgTiles(bgId, sStdTextWindow_Gfx, 0x120, destOffset);
+    LoadPalette(sStdTextWindow_Pal, palOffset, PLTT_SIZE_4BPP);
+}
+
 // party_menu.c : retour au sac pour choisir l'objet à donner
 void CB2_SelectBagItemToGive(void)
 {

@@ -66,6 +66,9 @@ void Task_BerryPouch_DestroyDialogueWindowAndRefreshListMenu(u8 taskId);
 #define ResetAllBgsCoordinatesAndBgCntRegs KBag_ResetAllBgsCoordinatesAndBgCntRegs
 #define SetBackdropFromPalette           KBag_SetBackdropFromPalette
 #define LoadStdWindowGfx                 KBag_LoadStdWindowGfx
+#define LoadStdWindowGfxOnBg             KBag_LoadStdWindowGfxOnBg
+#define LoadUserWindowGfx2               LoadUserWindowBorderGfx
+#define DestroyYesNoMenu                 EraseYesNoWindow
 #define CB2_SelectBagItemToGive          KBag_CB2_SelectBagItemToGive
 void CB2_ReturnToPokeStorage(void);
 void CB2_GiveHoldItem(void);
@@ -74,5 +77,6 @@ bool8 IsActiveOverworldLinkBusy(void);
 void ResetAllBgsCoordinatesAndBgCntRegs(void);
 void SetBackdropFromPalette(const u16 *palette);
 void LoadStdWindowGfx(u8 windowId, u16 destOffset, u8 palOffset);
+void LoadStdWindowGfxOnBg(u8 bgId, u16 destOffset, u8 palOffset);
 
 #endif // GUARD_KANTO_BAG_COMPAT_H
