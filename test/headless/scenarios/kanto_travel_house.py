@@ -22,4 +22,4 @@ def play(game):
     walk_to(game, 4, 8)
     talk_to(game, "UP"); log(game, "achat")
     walk_to(game, 6, 8)
-    game.press("UP", 1); game.wait(90); log(game, "entrée (doit être dans la maison)")
+    game.press("UP", 1); game.wait(20); game.press("UP", 8); game.wait(120); log(game, "entrée (doit être dans la maison)")
