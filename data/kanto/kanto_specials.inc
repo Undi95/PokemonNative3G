@@ -149,3 +149,7 @@
 	def_special LoopWingFlapSound
 	def_special HasHallOfFameInThisRegion
 	def_special PCMultichoice_GetAction
+
+	@ PokemonNative3G (src/fusion_events.c)
+	def_special GetStarterEggToGive
+	def_special SetStarterEggGiven

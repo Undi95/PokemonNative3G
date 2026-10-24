@@ -597,6 +597,7 @@ gStdScripts_End::
 	.include "data/maps/Route124_DivingTreasureHuntersHouse/scripts.inc"
 
 	.include "data/kanto/scripts.inc"
+	.include "data/scripts/fusion_starter_eggs.inc"
 
 	.include "data/scripts/std_msgbox.inc"
 	.include "data/scripts/trainer_battle.inc"
