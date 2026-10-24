@@ -12,11 +12,8 @@ KantoSafariZone_SecretHouse_Text_ReceivedHM03FromAttendant::
 	.string "de l'intendant!$"
 
 KantoSafariZone_SecretHouse_Text_ExplainSurf::
-	.string "CS03 contient SURF!\p"
-	.string "Un POKéMON pourra te faire\n"
-	.string "naviguer sur les flots!\p"
-	.string "En plus, cette CS peut s'utiliser à\n"
-	.string "l'infini!\p"
+	.string "Avec SURF, un POKéMON pourra\n"
+	.string "te faire naviguer sur les flots!\p"
 	.string "T'en as de la chance!$"
 
 KantoSafariZone_SecretHouse_Text_DontHaveRoomForPrize::

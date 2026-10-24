@@ -9,8 +9,8 @@ Route16_House_Text_ReceivedHM02FromGirl::
 	.string "CS02!$"
 
 Route16_House_Text_ExplainHM02::
-	.string "CS02: VOL. C'est une capacité\n"
-	.string "très pratique.\p"
+	.string "VOL t'emmène dans les villes que\n"
+	.string "tu as déjà visitées.\p"
 	.string "Fais-en bon usage!$"
 
 Route16_House_Text_DontHaveAnyRoomForThis::

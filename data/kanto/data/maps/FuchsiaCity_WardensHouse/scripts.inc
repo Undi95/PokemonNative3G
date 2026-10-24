@@ -23,7 +23,8 @@ FuchsiaCity_WardensHouse_EventScript_GiveGoldTeeth::
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, FuchsiaCity_WardensHouse_EventScript_WardenThanksMale
 	call_if_eq VAR_RESULT, FEMALE, FuchsiaCity_WardensHouse_EventScript_WardenThanksFemale
-	giveitem_msg FuchsiaCity_WardensHouse_Text_ReceivedHM04FromWarden, ITEM_HM04
+	setvar VAR_0x8009, MOVE_STRENGTH @ PokemonNative3G : POKé MONTURE au lieu de la CS (data/scripts/fusion_poke_monture.inc)
+	call Fusion_EventScript_PokeMontureUpgrade
 	setflag FLAG_KANTO_GOT_HM04
 	removeitem ITEM_GOLD_TEETH
 	release

@@ -129,9 +129,3 @@ u16 PokeMonture_HelperSpecies(void)
     return IsKantoTilesetMap() ? sPokeMontureMoves[i].kantoHelper : sPokeMontureMoves[i].hoennHelper;
 }
 
-// script des dons de CS de Kanto : VAR_0x8005 = capacité ; VAR_RESULT = TRUE si c'est la première (objet à donner)
-void PokeMonture_BufferMove(void)
-{
-    gSpecialVar_Result = !CheckBagHasItem(ITEM_POKE_MONTURE, 1);
-    StringCopy(gStringVar2, gMoveNames[gSpecialVar_0x8005]);
-}

@@ -614,9 +614,7 @@ FourIsland_IcefallCave_1F_EventScript_ItemUltraBall::
 	finditem ITEM_ULTRA_BALL
 	end
 
-FourIsland_IcefallCave_1F_EventScript_ItemHM07::
-	finditem ITEM_HM07
-	end
+@ FourIsland_IcefallCave_1F_EventScript_ItemHM07 : PokemonNative3G, data/scripts/fusion_poke_monture.inc (POKé MONTURE)
 
 FourIsland_IcefallCave_B1F_EventScript_ItemFullRestore::
 	finditem ITEM_FULL_RESTORE

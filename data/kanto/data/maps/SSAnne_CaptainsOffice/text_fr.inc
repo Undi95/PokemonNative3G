@@ -16,11 +16,8 @@ SSAnne_CaptainsOffice_Text_ThankYouHaveHMForCut::
 	.string "capacité COUPE?\p"
 	.string "Je pourrais te la montrer, mais\n"
 	.string "j'suis malade.\p"
-	.string "Je sais! Prends ça!\n"
-	.string "C'est une CAPSULE SECRETE!\p"
-	.string "Elle contient la capacité COUPE.\n"
-	.string "Enseigne-la à tes POKéMON\p"
-	.string "pour l'utiliser quand tu veux!$"
+	.string "Je sais! J'ai de quoi t'aider\n"
+	.string "à utiliser COUPE!$"
 
 SSAnne_CaptainsOffice_Text_ObtainedHM01FromCaptain::
 	.string "{PLAYER} obtient\n"

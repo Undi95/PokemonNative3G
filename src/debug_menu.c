@@ -60,6 +60,7 @@ enum {
     DEBUG_KANTO_DEX_FULL,
     DEBUG_FAME_CHECKER,
     DEBUG_BOTH_LEAGUES,
+    DEBUG_POKE_MONTURE,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -185,6 +186,7 @@ static const u8 sText_SSAnne[] = _("Départ S.S. Anne");
 static const u8 sText_KantoDexFull[] = _("POKéDEX Kanto complet");
 static const u8 sText_FameChecker[] = _("MEMORYDEX complet");
 static const u8 sText_BothLeagues[] = _("Deux Ligues finies");
+static const u8 sText_PokeMonture[] = _("POKé MONTURE + badges");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -231,6 +233,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_KANTO_DEX_FULL].name = sText_KantoDexFull;
         sItems[DEBUG_FAME_CHECKER].name = sText_FameChecker;
         sItems[DEBUG_BOTH_LEAGUES].name = sText_BothLeagues;
+        sItems[DEBUG_POKE_MONTURE].name = sText_PokeMonture;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -441,6 +444,27 @@ static void Task_DebugMenu(u8 taskId)
         // événements d'après les deux Ligues (Celebi, Jirachi, œufs de starters…)
         FlagSet(FLAG_SYS_GAME_CLEAR);
         FlagSet(FLAG_KANTO_SYS_GAME_CLEAR);
+        PlaySE(SE_USE_ITEM);
+        break;
+    case DEBUG_POKE_MONTURE:
+        // POKé MONTURE avec ses 7 capacités (flags des CS de RF) et tous les badges des deux régions
+        {
+            u16 i;
+            if (!CheckBagHasItem(ITEM_POKE_MONTURE, 1))
+                AddBagItem(ITEM_POKE_MONTURE, 1);
+            FlagSet(FLAG_KANTO_GOT_HM01);
+            FlagSet(FLAG_KANTO_GOT_HM02);
+            FlagSet(FLAG_KANTO_GOT_HM03);
+            FlagSet(FLAG_KANTO_GOT_HM04);
+            FlagSet(FLAG_KANTO_GOT_HM05);
+            FlagSet(FLAG_KANTO_GOT_HM06);
+            FlagSet(FLAG_KANTO_HIDE_FOUR_ISLAND_ICEFALL_CAVE_1F_HM07);
+            for (i = 0; i < 8; i++)
+            {
+                FlagSet(FLAG_BADGE01_GET + i);
+                FlagSet(FLAG_KANTO_BADGE01_GET + i);
+            }
+        }
         PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_CLOSE:

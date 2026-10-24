@@ -38,9 +38,8 @@ FuchsiaCity_WardensHouse_Text_ReceivedHM04FromWarden::
 	.string "CS04!$"
 
 FuchsiaCity_WardensHouse_Text_ExplainStrength::
-	.string "GARDIEN: la CS04 contient FORCE!\p"
-	.string "Tes POKéMON pourront déplacer des\n"
-	.string "rochers.\p"
+	.string "GARDIEN: avec FORCE, tu pourras\n"
+	.string "déplacer des rochers.\p"
 	.string "Au fait, as-tu trouvé la CABANE\n"
 	.string "SECRETE dans le PARC SAFARI?$"
 

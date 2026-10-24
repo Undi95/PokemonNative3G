@@ -3,7 +3,7 @@ Route2_EastBuilding_Text_GiveHM05IfSeen10Mons::
 	.string "Je suis un assistant du PROF. CHEN!\p"
 	.string "Si tu attrapes dix POKéMON\n"
 	.string "différents, je suis censé t'offrir…\p"
-	.string "cette CS05!\p"
+	.string "de quoi utiliser FLASH!\p"
 	.string "Alors {PLAYER}, as-tu attrapé au\n"
 	.string "moins dix POKéMON différents?$"
 
@@ -18,7 +18,7 @@ Route2_EastBuilding_Text_ReceivedHM05FromAide::
 	.string "CS05!$"
 
 Route2_EastBuilding_Text_ExplainHM05::
-	.string "La CS FLASH peut éclairer les\n"
+	.string "FLASH peut éclairer les\n"
 	.string "endroits sombres.$"
 
 Route2_EastBuilding_Text_CanGetThroughRockTunnel::

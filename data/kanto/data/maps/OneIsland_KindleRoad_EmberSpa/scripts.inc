@@ -30,7 +30,8 @@ OneIsland_KindleRoad_EmberSpa_EventScript_RockSmashMan::
 	faceplayer
 	goto_if_set FLAG_KANTO_GOT_HM06, OneIsland_KindleRoad_EmberSpa_EventScript_AlreadyGotHM06
 	msgbox OneIsland_KindleRoad_EmberSpa_Text_UsedThisToMakeEmberSpa
-	giveitem ITEM_HM06
+	setvar VAR_0x8009, MOVE_ROCK_SMASH @ PokemonNative3G : POKé MONTURE au lieu de la CS (data/scripts/fusion_poke_monture.inc)
+	call Fusion_EventScript_PokeMontureUpgrade
 	setflag FLAG_KANTO_GOT_HM06
 	msgbox OneIsland_KindleRoad_EmberSpa_Text_ExplainHM06
 	release

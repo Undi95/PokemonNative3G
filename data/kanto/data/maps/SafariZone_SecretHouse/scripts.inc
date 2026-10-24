@@ -6,9 +6,8 @@ KantoSafariZone_SecretHouse_EventScript_Attendant::
 	faceplayer
 	goto_if_set FLAG_KANTO_GOT_HM03, KantoSafariZone_SecretHouse_EventScript_ExplainSurf
 	msgbox KantoSafariZone_SecretHouse_Text_CongratsYouveWon
-	checkitemspace ITEM_HM03
-	goto_if_eq VAR_RESULT, FALSE, KantoSafariZone_SecretHouse_EventScript_NoRoomForHM03
-	giveitem_msg KantoSafariZone_SecretHouse_Text_ReceivedHM03FromAttendant, ITEM_HM03
+	setvar VAR_0x8009, MOVE_SURF @ PokemonNative3G : POKé MONTURE au lieu de la CS (data/scripts/fusion_poke_monture.inc)
+	call Fusion_EventScript_PokeMontureUpgrade
 	msgbox KantoSafariZone_SecretHouse_Text_ExplainSurf
 	setflag FLAG_KANTO_GOT_HM03
 	release

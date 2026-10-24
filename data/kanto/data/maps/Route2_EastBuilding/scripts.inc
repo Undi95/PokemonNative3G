@@ -16,9 +16,8 @@ Route2_EastBuilding_EventScript_Aide::
 	call Route2_EastBuilding_EventScript_GetAideRequestInfo
 	goto_if_lt VAR_0x8006, REQUIRED_SEEN_MONS, Aide_EventScript_HaventCaughtEnough
 	msgbox Route2_EastBuilding_Text_GreatHereYouGo
-	checkitemspace ITEM_HM05
-	goto_if_eq VAR_RESULT, FALSE, Aide_EventScript_NoRoomForItem
-	giveitem_msg Route2_EastBuilding_Text_ReceivedHM05FromAide, ITEM_HM05
+	setvar VAR_0x8009, MOVE_FLASH @ PokemonNative3G : POKé MONTURE au lieu de la CS (data/scripts/fusion_poke_monture.inc)
+	call Fusion_EventScript_PokeMontureUpgrade
 	setflag FLAG_KANTO_GOT_HM05
 	msgbox Route2_EastBuilding_Text_ExplainHM05
 	release
@@ -31,7 +30,7 @@ Route2_EastBuilding_EventScript_AlreadyGotHM05::
 
 Route2_EastBuilding_EventScript_GetAideRequestInfo::
 	buffernumberstring STR_VAR_1, REQUIRED_SEEN_MONS
-	bufferitemname STR_VAR_2, ITEM_HM05
+	buffermovename STR_VAR_2, MOVE_FLASH @ PokemonNative3G : POKé MONTURE au lieu de la CS05
 	return
 
 Route2_EastBuilding_EventScript_Rocker::
