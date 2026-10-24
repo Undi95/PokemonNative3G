@@ -485,6 +485,7 @@ static void _TriggerPendingDaycareEgg(struct DayCare *daycare)
         daycare->offspringPersonality = personality;
     }
 
+    daycare->offspringPersonality = ShinyCharm_EggPersonality(daycare->offspringPersonality); // PokemonNative3G
     FlagSet(FLAG_PENDING_DAYCARE_EGG);
 }
 

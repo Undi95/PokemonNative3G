@@ -230,6 +230,30 @@ u8 OvoChrono_EggCycles(u8 toSub)
     return toSub;
 }
 
+// CHARME CHROMA sur les OEUFS de la PENSION : 2 tirages de plus ; s'il en gagne un, nouvelle personnalité
+// chromatique (pour le dresseur) avec la même nature
+u32 ShinyCharm_EggPersonality(u32 personality)
+{
+    u32 otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId), hi, newPersonality;
+    u8 i, nature = GetNatureFromPersonality(personality);
+
+    if (!CheckBagHasItem(ITEM_SHINY_CHARM, 1) || GET_SHINY_VALUE(otId, personality) < SHINY_ODDS)
+        return personality;
+    for (i = 0; i < 2; i++)
+    {
+        if ((Random() % (0x10000 / SHINY_ODDS)) == 0)
+            break;
+    }
+    if (i == 2)
+        return personality;
+    do
+    {
+        hi = Random();
+        newPersonality = (hi << 16) | (HIHALF(otId) ^ LOHALF(otId) ^ hi ^ (Random() % SHINY_ODDS));
+    } while (newPersonality == 0 || GetNatureFromPersonality(newPersonality) != nature);
+    return newPersonality;
+}
+
 // CHARME OVALE : chances de trouver un OEUF à la PENSION, valeurs des jeux suivants (20 -> 40, 50 -> 80, 70 -> 88)
 u8 OvalCharm_Compatibility(u8 compatibility)
 {
