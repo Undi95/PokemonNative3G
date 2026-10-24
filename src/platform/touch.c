@@ -138,7 +138,7 @@ void Touch_HandleEvent(const SDL_Event *event, SDL_Window *window)
     if (event->type != SDL_FINGERDOWN && event->type != SDL_FINGERMOTION && event->type != SDL_FINGERUP)
         return;
     sEnabled = true;
-    SDL_GetWindowSize(window, &w, &h);
+    SDL_GetRendererOutputSize(SDL_GetRenderer(window), &w, &h); // PokemonNative3G : pixels du rendu, comme l'image
     LayOut(w, h);
     for (int i = 0; i < MAX_FINGERS; i++)
     {
@@ -225,12 +225,11 @@ void Touch_Draw(SDL_Renderer *renderer, SDL_Window *window)
 
     if (!sEnabled)
         return;
-    SDL_GetWindowSize(window, &w, &h);
+    SDL_GetRendererOutputSize(SDL_GetRenderer(window), &w, &h); // PokemonNative3G : pixels du rendu, comme l'image
     LayOut(w, h);
     u = h / 100.0f;
 
     // Draw in window pixels, outside the game's area
-    SDL_RenderSetLogicalSize(renderer, 0, 0);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     // D-pad
@@ -281,6 +280,5 @@ void Touch_Draw(SDL_Renderer *renderer, SDL_Window *window)
     }
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-    SDL_RenderSetLogicalSize(renderer, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 }
 #endif // PORTABLE

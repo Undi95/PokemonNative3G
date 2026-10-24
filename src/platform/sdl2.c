@@ -94,6 +94,22 @@ static void FindDataFiles(void);
 static void ToggleFullscreen(void);
 static int RunTestMode(void);
 
+// PokemonNative3G : zone du jeu dans la taille réelle de l'écran (pixels du rendu, comme les touches tactiles) :
+// agrandie au pixel entier, centrée
+void GetGameRect(SDL_Renderer *renderer, SDL_Rect *rect)
+{
+    int w, h, scale;
+
+    SDL_GetRendererOutputSize(renderer, &w, &h);
+    scale = SDL_min(w / DISPLAY_WIDTH, h / DISPLAY_HEIGHT);
+    if (scale < 1)
+        scale = 1;
+    rect->w = DISPLAY_WIDTH * scale;
+    rect->h = DISPLAY_HEIGHT * scale;
+    rect->x = (w - rect->w) / 2;
+    rect->y = (h - rect->h) / 2;
+}
+
 int main(int argc, char **argv)
 {
     if (!ParseArgs(argc, argv))
@@ -165,9 +181,8 @@ int main(int argc, char **argv)
     SDL_SetRenderDrawColor(sdlRenderer, 255, 255, 255, 255);
     SDL_RenderClear(sdlRenderer);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-    SDL_RenderSetLogicalSize(sdlRenderer, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+    // PokemonNative3G : pas de taille logique : l'image est placée à la main (GetGameRect), au pixel entier
     // Whole pixels only, with borders in fullscreen
-    SDL_RenderSetIntegerScale(sdlRenderer, SDL_TRUE);
 
     sdlTexture = SDL_CreateTexture(sdlRenderer,
                                    SDL_PIXELFORMAT_ABGR1555,
@@ -261,7 +276,11 @@ int main(int argc, char **argv)
         // PokemonNative3G : bandes autour de l'image en noir (sur Android, le tampon n'est pas effacé : bruit, image en double)
         SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 255);
         SDL_RenderClear(sdlRenderer);
-        SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+        {
+            SDL_Rect dst;
+            GetGameRect(sdlRenderer, &dst);
+            SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &dst);
+        }
         Touch_Draw(sdlRenderer, sdlWindow);
         SDL_RenderPresent(sdlRenderer);
     }
