@@ -908,6 +908,7 @@ static void CB2_InitSlotMachine(void)
         {
             SetMainCallback2(sSlotMachineState->savedCallback);
             CleanSupSlotMachineState();
+            DBGTRACE("nettoyé");
         }
         else
         {
@@ -1955,13 +1956,17 @@ static bool32 CreateSlotMachine(void)
 
 static void DestroySlotMachine(void)
 {
+    DBGTRACE("destroy 0");
     if (FuncIsActiveTask(Task_SlotMachine))
     {
         Free(GetSlotMachineSetupTaskDataPtr());
+        DBGTRACE("destroy 1");
         DestroyTask(FindTaskIdByFunc(Task_SlotMachine));
     }
     DestroyGfxManager();
+    DBGTRACE("destroy 2");
     FreeAllWindowBuffers();
+    DBGTRACE("destroy 3");
 }
 
 static void Task_SlotMachine(u8 taskId)
