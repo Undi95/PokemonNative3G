@@ -1257,8 +1257,12 @@ static void MainTask_ExitSlots(u8 taskId)
     case 1:
         if (!IsSlotMachineSetupTaskActive(0))
         {
+            // PokemonNative3G : RF laisse tourner ses tâches après avoir libéré l'état (elles lisent alors l'adresse 0,
+            // sans effet sur GBA ; plantage sur PC) : on les arrête
+            DestroyTask(sSlotMachineState->spinReelsTaskId);
             SetMainCallback2(sSlotMachineState->savedCallback);
             CleanSupSlotMachineState();
+            DestroyTask(taskId);
         }
         break;
     }
@@ -1275,11 +1279,6 @@ static void Task_SpinReels(u8 taskId)
     // taskId is never used
 
     s32 i;
-
-    // PokemonNative3G : à la sortie, cette tâche tourne encore une fois après la libération de l'état (RF lit
-    // alors l'adresse 0, sans effet sur GBA ; plantage sur PC)
-    if (sSlotMachineState == NULL)
-        return;
 
     for (i = 0; i < NUM_REELS; i++)
     {
