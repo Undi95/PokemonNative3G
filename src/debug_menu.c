@@ -170,7 +170,7 @@ static const u8 sText_NoClipOff[] = _("Murs : normaux");
 static const u8 sText_EncOn[] = _("Rencontres : OUI");
 static const u8 sText_EncOff[] = _("Rencontres : NON");
 static const u8 sText_Heal[] = _("Soigner l'équipe");
-static const u8 sText_GiveMon[] = _("Recevoir MEWTWO");
+static const u8 sText_GiveMon[] = _("MEWTWO + KADABRA");
 static const u8 sText_GiveItems[] = _("Ajout objets");
 static const u8 sText_UnlockDexes[] = _("Débloquer les 2 POKéDEX");
 static const u8 sText_FlyMap[] = _("Carte VOL (2 régions)");
@@ -340,6 +340,7 @@ static void Task_DebugMenu(u8 taskId)
             SetMonData(mon, MON_DATA_MOVE4, &move1);
             SetMonData(mon, MON_DATA_PP4, &pp1);
         }
+        ScriptGiveMon(SPECIES_KADABRA, 30, ITEM_NONE, 0, 0, 0); // CÂBLE LINK : évolution par échange
         FlagSet(FLAG_SYS_POKEMON_GET);
         PlaySE(SE_USE_ITEM);
         break;
