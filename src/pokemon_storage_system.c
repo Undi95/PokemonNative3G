@@ -4881,7 +4881,11 @@ static void CreatePartyMonsSprites(bool8 visible)
     u16 species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG);
     u32 personality = GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY);
 
-    sStorage->partySprites[0] = CreateMonIconSprite(species, personality, 104, 64, 1, 12);
+    // PokemonNative3G : l'équipe peut être vide (arrivée à Kanto) : pas d'icône fantôme en case 0
+    if (species != SPECIES_NONE)
+        sStorage->partySprites[0] = CreateMonIconSprite(species, personality, 104, 64, 1, 12);
+    else
+        sStorage->partySprites[0] = NULL;
     count = 1;
     for (i = 1; i < PARTY_SIZE; i++)
     {
@@ -4902,6 +4906,8 @@ static void CreatePartyMonsSprites(bool8 visible)
     {
         for (i = 0; i < count; i++)
         {
+            if (sStorage->partySprites[i] == NULL) // PokemonNative3G : équipe vide
+                continue;
             sStorage->partySprites[i]->y -= DISPLAY_HEIGHT;
             sStorage->partySprites[i]->invisible = TRUE;
         }
