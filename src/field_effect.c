@@ -4113,3 +4113,20 @@ static void UseVsSeekerEffect_4(struct Task *task)
     }
 }
 
+// Rouge Feu (field_effect.c) : flash de l'appareil photo (photo de la carte dresseur de Kanto)
+static void Task_PhotoFlash(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        FieldEffectActiveListRemove(FLDEFF_PHOTO_FLASH);
+        DestroyTask(taskId);
+    }
+}
+
+u32 FldEff_PhotoFlash(void) // RF : void (« Bug: Return value should be u32 »)
+{
+    BlendPalettes(PALETTES_ALL, 0x10, RGB_WHITE);
+    BeginNormalPaletteFade(PALETTES_ALL, -1, 0x0F, 0x00, RGB_WHITE);
+    CreateTask(Task_PhotoFlash, 90);
+    return 0;
+}

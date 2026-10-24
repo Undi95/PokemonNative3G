@@ -68,8 +68,8 @@
 #define FLDEFF_RAYQUAZA_SPOTLIGHT        64
 #define FLDEFF_DESTROY_DEOXYS_ROCK       65
 #define FLDEFF_MOVE_DEOXYS_ROCK          66
-#define FLDEFF_PHOTO_FLASH               67 // Rouge Feu (pas encore porté)
-#define FLDEFF_SMILEY_FACE_ICON          68 // Rouge Feu (pas encore porté)
+#define FLDEFF_PHOTO_FLASH               67 // Rouge Feu
+#define FLDEFF_SMILEY_FACE_ICON          68 // Rouge Feu
 #define FLDEFF_X_ICON                    69 // Rouge Feu
 #define FLDEFF_DOUBLE_EXCL_MARK_ICON     70 // Rouge Feu
 #define FLDEFF_USE_VS_SEEKER             71 // Rouge Feu

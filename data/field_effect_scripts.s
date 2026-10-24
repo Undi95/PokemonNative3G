@@ -72,8 +72,8 @@ gFieldEffectScriptPointers::
 	ptrvalue gFieldEffectScript_RayquazaSpotlight         /* FLDEFF_RAYQUAZA_SPOTLIGHT*/
 	ptrvalue gFieldEffectScript_DestroyDeoxysRock         /* FLDEFF_DESTROY_DEOXYS_ROCK*/
 	ptrvalue gFieldEffectScript_MoveDeoxysRock            /* FLDEFF_MOVE_DEOXYS_ROCK*/
-	ptrvalue gFieldEffectScript_KantoNoop                 /* FLDEFF_PHOTO_FLASH (RF, TODO Kanto) */
-	ptrvalue gFieldEffectScript_KantoNoop                 /* FLDEFF_SMILEY_FACE_ICON (RF, TODO Kanto) */
+	ptrvalue gFieldEffectScript_PhotoFlash                /* FLDEFF_PHOTO_FLASH (RF) */
+	ptrvalue gFieldEffectScript_SmileyFaceIcon            /* FLDEFF_SMILEY_FACE_ICON (RF) */
 	ptrvalue gFieldEffectScript_XIcon                     /* FLDEFF_X_ICON (RF) */
 	ptrvalue gFieldEffectScript_DoubleExclMarkIcon        /* FLDEFF_DOUBLE_EXCL_MARK_ICON (RF) */
 	ptrvalue gFieldEffectScript_UseVsSeeker               /* FLDEFF_USE_VS_SEEKER (RF) */
@@ -350,6 +350,14 @@ gFieldEffectScript_MoveDeoxysRock::
 	field_eff_end
 
 gFieldEffectScript_KantoNoop::
+	field_eff_end
+
+gFieldEffectScript_PhotoFlash::
+	field_eff_callnative FldEff_PhotoFlash
+	field_eff_end
+
+gFieldEffectScript_SmileyFaceIcon::
+	field_eff_callnative FldEff_SmileyFaceIcon
 	field_eff_end
 
 gFieldEffectScript_XIcon::

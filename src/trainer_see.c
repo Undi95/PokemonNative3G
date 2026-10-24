@@ -65,6 +65,7 @@ static const u8 sEmotion_HeartGfx[] = INCGFX_U8("graphics/field_effects/pics/emo
 // Rouge Feu (graphics/misc/emoticons.png) : X et !! (Cherche VS)
 static const u8 sEmotion_XGfx[] = INCGFX_U8("graphics/kanto/field_effects/pics/emotion_x.png", ".4bpp");
 static const u8 sEmotion_DoubleExclMarkGfx[] = INCGFX_U8("graphics/kanto/field_effects/pics/emotion_double_exclamation.png", ".4bpp");
+static const u8 sEmotion_SmileyFaceGfx[] = INCGFX_U8("graphics/kanto/field_effects/pics/emotion_smiley.png", ".4bpp"); // RF : graphics/misc/emoticons.png, ligne du sourire
 
 static u8 (*const sDirectionalApproachDistanceFuncs[])(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y) =
 {
@@ -188,6 +189,9 @@ static const struct SpriteFrameImage sSpriteImageTable_KantoEmoticons[] =
     overworld_frame(sEmotion_XGfx, 2, 2, 0),
     overworld_frame(sEmotion_XGfx, 2, 2, 1),
     overworld_frame(sEmotion_XGfx, 2, 2, 2),
+    overworld_frame(sEmotion_SmileyFaceGfx, 2, 2, 0),
+    overworld_frame(sEmotion_SmileyFaceGfx, 2, 2, 1),
+    overworld_frame(sEmotion_SmileyFaceGfx, 2, 2, 2),
 };
 
 static const union AnimCmd sAnimCmd_DoubleExclMark[] = {
@@ -204,10 +208,18 @@ static const union AnimCmd sAnimCmd_X[] = {
     ANIMCMD_END
 };
 
+static const union AnimCmd sAnimCmd_SmileyFace[] = {
+    ANIMCMD_FRAME(6,  4),
+    ANIMCMD_FRAME(7,  4),
+    ANIMCMD_FRAME(8, 52),
+    ANIMCMD_END
+};
+
 static const union AnimCmd *const sSpriteAnimTable_KantoEmoticons[] =
 {
     sAnimCmd_DoubleExclMark,
     sAnimCmd_X,
+    sAnimCmd_SmileyFace,
 };
 
 // Rouge Feu : bulles bleues et blanches, avec la palette de leur image, quel que soit le personnage joué
@@ -790,6 +802,19 @@ u8 FldEff_XIcon(void)
     spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoEmoticons, 0, 0, 0x52);
     if (spriteId != MAX_SPRITES)
         SetIconSpriteData(&gSprites[spriteId], FLDEFF_X_ICON, 1);
+
+    return 0;
+}
+
+// Rouge Feu (trainer_see.c) : sourire au-dessus du joueur (machine à sous du Casino de Céladopole)
+u8 FldEff_SmileyFaceIcon(void)
+{
+    u8 spriteId;
+
+    LoadSpritePalette(&sSpritePalette_KantoEmoticons);
+    spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoEmoticons, 0, 0, 0x52);
+    if (spriteId != MAX_SPRITES)
+        SetIconSpriteData(&gSprites[spriteId], FLDEFF_SMILEY_FACE_ICON, 2);
 
     return 0;
 }
