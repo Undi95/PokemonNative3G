@@ -1,4 +1,4 @@
-# Écran titre laissé sans toucher : à la fin de sa musique, retour au copyright puis à l'intro.
+# Écran titre laissé sans toucher : à la fin de sa musique, retour au copyright puis à l'intro, puis à l'écran titre.
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
