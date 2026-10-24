@@ -85,7 +85,18 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 6. ~~Combats sauvages scriptés de RF~~ : faits le 2026-10-24 (`gBattleWildScriptedFrlg`, posé par `dowildbattle` à Kanto). NB : dans RF comme dans Émeraude, le contrôleur adverse ne consulte l'IA que pour les dresseurs, le Safari, les errants et le premier combat ; les réglages d'IA des sauvages scriptés et des légendaires de RF n'ont donc aucun effet en jeu (portés pour être complets).
 7. ~~Aperçus des donjons~~ : faits le 2026-10-24 (`src/kanto_map_preview_screen.c` ; grottes dans fldeff_flash.c, forêts au chargement de la carte, attente des fondus `FieldFadeTransitionBackgroundEffectIsFinished`).
 8. ~~PNJ en stub~~ : faits le 2026-10-24 (`kanto_field_specials.c` : `ShowEasyChatMessage` = `ShowEasyChatProfile` d'Émeraude ; `BufferRandomHobbyOrLifestyleString` n'est appelé par aucun script de RF).
-9. Journal « Précédemment dans votre quête » (quest_log*.c, ~230 fonctions), option désactivée par défaut.
+9. Journal « Précédemment dans votre quête » (quest_log*.c, ~230 fonctions), option désactivée par défaut. Bilan du
+   2026-10-24 : 4 500 lignes de RF, 238 points d'accroche dans 39 fichiers du moteur (terrain, déplacements des objets,
+   entrées du joueur, combats, sac, boutique, PC, sauvegarde) et 84 gardes `goto_if_questlog` dans les scripts. Le rejeu
+   repasse les touches enregistrées dans le moteur du terrain et restaure équipe, PC, drapeaux et variables de chaque
+   scène (4 scènes). Plan par étapes :
+   a. Bloc de sauvegarde annexe (Platform_WriteExtraSave, comme le Panthéon) : 4 scènes avec drapeaux/variables
+      d'Émeraude ET de Kanto (≈ 2 Ko par scène), option JOURNAL (page 2, NON par défaut).
+   b. Enregistrement : quest_log.c (scènes, actions), quest_log_player.c / quest_log_objects.c, accroches dans
+      field_control_avatar.c (QL_RecordFieldInput), event_object_movement.c, field_player_avatar.c, overworld.c.
+   c. Rejeu : écran « Précédemment… », restauration de l'état, fin de rejeu et retour à la partie sauvegardée.
+   d. Événements (quest_log_events.c, ~40 types : achats, combats, objets, Centres Pokémon…) avec leurs accroches.
+   Chaque étape testable seule ; risque de régression dans le moteur du terrain : tout reste derrière l'option.
 
 **B. Présentation (choix HOENN/KANTO ou règle par région)**
 - ~~Animation d'objet sur un Pokémon avec le sac KANTO~~ : faite le 2026-10-24 (`kanto_pokemon_special_anim*.c`, préambules de RF dans party_menu.c, `PokemonItemUseNoEffect` de RF dans pokemon.c).
