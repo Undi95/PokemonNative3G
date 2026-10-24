@@ -864,7 +864,7 @@ static void Task_UseRepel(u8 taskId)
     if (!IsSEPlaying())
     {
         VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(gSpecialVar_ItemId));
-        gAutoRepelLastItem = gSpecialVar_ItemId; // PokemonNative3G : AUTO-REPOUSSE
+        VarSet(VAR_AUTO_REPEL_LAST, gSpecialVar_ItemId); // PokemonNative3G : AUTO-REPOUSSE
         RemoveUsedItem();
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);

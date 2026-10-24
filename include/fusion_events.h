@@ -13,7 +13,6 @@ u16 PokeMonture_HelperSpecies(void);
 void PokeMonture_StartFlash(void); // fldeff_flash.c
 
 // chaîne de pêche (cannes améliorées)
-extern u16 gAutoRepelLastItem;
 void FishingChain_Start(u8 rod);
 void FishingChain_Break(void);
 void FishingChain_Hooked(void);
