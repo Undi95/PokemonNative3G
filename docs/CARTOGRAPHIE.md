@@ -107,7 +107,7 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 **C. À décider (écartés jusqu'ici)**
 - Aide L/R de RF (help_system*.c) : aujourd'hui sans effet.
 - Teachy TV et combats du Pokédude (teachy_tv.c, battle_controller_pokedude.c) : retirés du sac.
-- Conseils de Chen pendant le combat du labo (battle_controller_oak_old_man.c).
+- Conseils de Chen pendant le combat du labo (battle_controller_oak_old_man.c) : NON (décision de l'utilisateur, 2026-10-30).
 - Discours de Chen de nouvelle partie (oak_speech.c) : la partie commence à Hoenn.
 
 **D. Hors solo (link)** : Colisée, échanges câble, Union Room, Tour de Combat de RF, E-Reader, records de combat.

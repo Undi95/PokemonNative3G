@@ -2207,6 +2207,12 @@ void UpdateHealthboxAttribute(u8 healthboxSpriteId, struct Pokemon *mon, u8 elem
             exp = GetMonData(mon, MON_DATA_EXP);
             currLevelExp = gExperienceTables[gSpeciesInfo[species].growthRate][level];
             currExpBarValue = exp - currLevelExp;
+#ifdef UBFIX
+            // Au niveau 100, la cartouche lit le 1er élément de la table suivante (0) : même valeur, sans sortir du tableau
+            if (level >= MAX_LEVEL)
+                maxExpBarValue = 0 - currLevelExp;
+            else
+#endif
             maxExpBarValue = gExperienceTables[gSpeciesInfo[species].growthRate][level + 1] - currLevelExp;
             SetBattleBarStruct(battler, healthboxSpriteId, maxExpBarValue, currExpBarValue, isDoubles);
             MoveBattleBar(battler, healthboxSpriteId, EXP_BAR, 0);
