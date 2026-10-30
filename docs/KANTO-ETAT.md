@@ -39,7 +39,7 @@ Warps RF : escaliers latéraux (`MB_*_STAIR_WARP`, scénario `kanto_stairs`), t�
 - Combat : conseils de Chen pendant le combat du labo : NON (décision de l'utilisateur, 2026-10-30).
 - Système d'aide RF, `walk_slower_*` → walk_slow. (Panneaux, textcolor/signmsg, couleurs homme/femme : faits le 2026-10-30.)
 - Objets « clone » RF, comportements de tuiles décoratifs/énigmes (BEHAVIOR_ALIASES), anims de tilesets (callback NULL), effets de terrain RF.
-- Graphismes présents dans les deux jeux (boîtes, interface de combat, transitions, sprites du joueur, de Red…) : choix dans les options plus tard (décision utilisateur).
+- Graphismes présents dans les deux jeux : en option (PERSO, DIALOGUE, BOITES COMBAT avec la barre de l'équipe, MENUS, SAC, POKéDEX, POKéMON, TITRE, INTRO, CADRE : docs/FUSION-OPTIONS.md) ; transitions et musiques de combat = celles de la région (décision utilisateur).
 - Std msgbox RF (Kanto_Std_*), scénario (mamans, Rocket…) ; le choix du nom du rival (oak_speech) : plus tard avec l'utilisateur.
 - {RIVAL} à Kanto = `gSaveBlockKanto.rivalName`, « BLUE » par défaut. Fame Checker (drapeaux) dans `gSaveBlockKanto`.
 - Journal (Quest Log) de RF non importé : `GetQuestLogState` = 0, `SetUsedPkmnCenterQuestLogEvent` sans effet (`src/kanto_field_specials.c`).

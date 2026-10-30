@@ -4119,6 +4119,7 @@ extern const u32 gKantoBattleTextboxPalette[];
 extern const u16 gKantoBattleInterface_Healthbox_Pal[];
 extern const u16 gKantoBattleInterface_Healthbar_Pal[];
 extern const u8 gKantoHealthboxElementsGfxTable[][32];
+extern const u32 gKantoBattleInterface_PartySummaryBar_Gfx[];
 extern const u32 gKantoHealthboxSinglesPlayerGfx[];
 extern const u32 gKantoHealthboxSinglesOpponentGfx[];
 extern const u32 gKantoHealthboxDoublesPlayerGfx[];

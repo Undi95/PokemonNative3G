@@ -657,6 +657,28 @@ static const struct SpriteSheet sStatusSummaryBallsSpriteSheet =
     &gHealthboxElementsGfxTable[HEALTHBOX_GFX_STATUS_BALL], 0x80, TAG_STATUS_SUMMARY_BALLS_TILE
 };
 
+// PokemonNative3G : option BOITES COMBAT = KANTO, barre de l'équipe de RF (battle_interface.c de RF :
+// sPartySummaryBarSpriteSheets, sPartySummaryBarSpritePals, sPartySummaryBallSpritePals, sPartySummaryBallSpriteSheets)
+static const struct CompressedSpriteSheet sKantoStatusSummaryBarSpriteSheet =
+{
+    gKantoBattleInterface_PartySummaryBar_Gfx, 0x200, TAG_STATUS_SUMMARY_BAR_TILE
+};
+
+static const struct SpritePalette sKantoStatusSummaryBarSpritePal =
+{
+    gKantoBattleInterface_Healthbox_Pal, TAG_STATUS_SUMMARY_BAR_PAL
+};
+
+static const struct SpritePalette sKantoStatusSummaryBallsSpritePal =
+{
+    gKantoBattleInterface_Healthbar_Pal, TAG_STATUS_SUMMARY_BALLS_PAL
+};
+
+static const struct SpriteSheet sKantoStatusSummaryBallsSpriteSheet =
+{
+    &gKantoHealthboxElementsGfxTable[HEALTHBOX_GFX_STATUS_BALL], 0x80, TAG_STATUS_SUMMARY_BALLS_TILE
+};
+
 // unused oam data
 static const struct OamData sOamData_Unused64x32 =
 {
@@ -1488,10 +1510,20 @@ u8 CreatePartyStatusSummarySprites(u8 battler, struct HpAndStatus *partyInfo, bo
         bar_data0 = 5;
     }
 
-    LoadCompressedSpriteSheetUsingHeap(&sStatusSummaryBarSpriteSheet);
-    LoadSpriteSheet(&sStatusSummaryBallsSpriteSheet);
-    LoadSpritePalette(&sStatusSummaryBarSpritePal);
-    LoadSpritePalette(&sStatusSummaryBallsSpritePal);
+    if (gSaveBlock2Ptr->optionsBattleUI) // PokemonNative3G : barre de l'équipe de RF
+    {
+        LoadCompressedSpriteSheetUsingHeap(&sKantoStatusSummaryBarSpriteSheet);
+        LoadSpriteSheet(&sKantoStatusSummaryBallsSpriteSheet);
+        LoadSpritePalette(&sKantoStatusSummaryBarSpritePal);
+        LoadSpritePalette(&sKantoStatusSummaryBallsSpritePal);
+    }
+    else
+    {
+        LoadCompressedSpriteSheetUsingHeap(&sStatusSummaryBarSpriteSheet);
+        LoadSpriteSheet(&sStatusSummaryBallsSpriteSheet);
+        LoadSpritePalette(&sStatusSummaryBarSpritePal);
+        LoadSpritePalette(&sStatusSummaryBallsSpritePal);
+    }
 
     summaryBarSpriteId = CreateSprite(&sStatusSummaryBarSpriteTemplates[isOpponent], bar_X, bar_Y, 10);
     SetSubspriteTables(&gSprites[summaryBarSpriteId], sStatusSummaryBar_SubspriteTable_Enter);

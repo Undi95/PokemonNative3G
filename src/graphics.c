@@ -634,6 +634,7 @@ const u32 gKantoBattleTextboxTiles[] = INCGFX_U32("graphics/kanto/battle_interfa
 const u32 gKantoBattleTextboxPalette[] = INCGFX_U32("graphics/kanto/battle_interface/textbox.pal", ".gbapal.lz");
 const u16 gKantoBattleInterface_Healthbox_Pal[] = INCGFX_U16("graphics/kanto/battle_interface/healthbox.pal", ".gbapal");
 const u16 gKantoBattleInterface_Healthbar_Pal[] = INCGFX_U16("graphics/kanto/battle_interface/healthbar.pal", ".gbapal");
+const u32 gKantoBattleInterface_PartySummaryBar_Gfx[] = INCGFX_U32("graphics/kanto/battle_interface/party_summary_bar.png", ".4bpp.lz");
 const u8 gKantoHealthboxElementsGfxTable[] = INCGFX_U8("graphics/kanto/battle_interface/healthbox_elements_fr.png", ".4bpp");
 const u32 gKantoHealthboxSinglesPlayerGfx[] = INCGFX_U32("graphics/kanto/battle_interface/healthbox_singles_player.png", ".4bpp.lz");
 const u32 gKantoHealthboxSinglesOpponentGfx[] = INCGFX_U32("graphics/kanto/battle_interface/healthbox_singles_opponent.png", ".4bpp.lz");
