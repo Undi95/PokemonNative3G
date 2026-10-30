@@ -25,7 +25,7 @@
 #include "constants/songs.h"
 #include "constants/sound.h"
 
-#define RAND_MULT 1103515245 // Rouge Feu (random.h)
+#define RAND_MULT 1103515245u // Rouge Feu (random.h) ; non signé : sur PC, un produit en int qui déborde est indéfini
 
 // Rouge Feu (menu2.c) : fondu des calques
 #define tEvA data[0]

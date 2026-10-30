@@ -72,9 +72,18 @@ static const struct FlashStruct sTransitionTypes[] =
 static const u16 sCaveTransitionPalette_White[] = INCGFX_U16("graphics/cave_transition/white.pal", ".gbapal");
 static const u16 sCaveTransitionPalette_Black[] = INCGFX_U16("graphics/cave_transition/black.pal", ".gbapal");
 
-static const u16 sCaveTransitionPalette_Enter[] = INCGFX_U16("graphics/cave_transition/enter.pal", ".gbapal");
+// PokemonNative3G : Task_EnterCaveTransition3 lit sCaveTransitionPalette_Enter[8..15], la palette de sortie
+// qui la suit en ROM ; sur PC, rien ne garantit que les deux tableaux se suivent : une structure les colle.
+static const struct {
+    u16 enter[8];
+    u16 exit[8];
+} sCaveTransitionPalettes = {
+    INCGFX_U16("graphics/cave_transition/enter.pal", ".gbapal"),
 //!< French Difference
-static const u16 sCaveTransitionPalette_Exit[] = INCGFX_U16("graphics/cave_transition/exit.pal", ".gbapal");
+    INCGFX_U16("graphics/cave_transition/exit.pal", ".gbapal"),
+};
+#define sCaveTransitionPalette_Enter ((const u16 *)&sCaveTransitionPalettes)
+#define sCaveTransitionPalette_Exit (sCaveTransitionPalettes.exit)
 static const u32 sCaveTransitionTilemap[] = INCGFX_U32("graphics/cave_transition/tilemap.bin", ".lz");
 static const u32 sCaveTransitionTiles[] = INCGFX_U32("graphics/cave_transition/tiles.png", ".4bpp.lz");
 

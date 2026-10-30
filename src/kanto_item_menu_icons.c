@@ -390,6 +390,9 @@ u8 AddItemIconObject(u16 tilesTag, u16 paletteTag, u16 itemId)
     template.tileTag = tilesTag;
     template.paletteTag = paletteTag;
     spriteId = CreateSprite(&template, 0, 0, 0);
+#ifdef UBFIX
+    KeepSpriteTemplateCopy(spriteId); // le modèle est sur la pile
+#endif
 
     Free(sItemIconTilesBuffer);
     Free(sItemIconTilesBufferPadded);
@@ -421,6 +424,9 @@ u8 AddItemIconObjectWithCustomObjectTemplate(const struct SpriteTemplate * origT
     template.tileTag = tilesTag;
     template.paletteTag = paletteTag;
     spriteId = CreateSprite(&template, 0, 0, 0);
+#ifdef UBFIX
+    KeepSpriteTemplateCopy(spriteId); // le modèle est sur la pile
+#endif
 
     Free(sItemIconTilesBuffer);
     Free(sItemIconTilesBufferPadded);

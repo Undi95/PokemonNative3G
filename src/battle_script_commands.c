@@ -10090,6 +10090,13 @@ static void Cmd_handleballthrow(void)
                 break;
             }
         }
+#ifdef UBFIX
+        // MASTER BALL : sBallCatchBonuses[-1] (sur GBA, l'octet d'avant : TYPE_NORMAL, 0) ; la capture est sûre plus bas
+        else if (gLastUsedItem == ITEM_MASTER_BALL)
+        {
+            ballMultiplier = 0;
+        }
+#endif
         else
         {
             ballMultiplier = sBallCatchBonuses[gLastUsedItem - ITEM_ULTRA_BALL];

@@ -91,7 +91,8 @@ static const u8 *const sCompatibilityMessages[] =
     gDaycareText_PlayOther
 };
 
-static const u8 sJapaneseEggNickname[] = _("タマゴ"); // "tamago" ("egg" in Japanese)
+// PokemonNative3G : taille d'un surnom, SetMonData(MON_DATA_NICKNAME) en lit POKEMON_NAME_LENGTH octets
+static const u8 sJapaneseEggNickname[POKEMON_NAME_LENGTH + 1] = _("タマゴ"); // "tamago" ("egg" in Japanese)
 
 u8 *GetMonNickname2(struct Pokemon *mon, u8 *dest)
 {

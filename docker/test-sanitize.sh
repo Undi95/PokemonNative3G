@@ -8,4 +8,4 @@ JOBS=${JOBS:-6} MAKEFLAGS_EXTRA="KANTO_DEBUG=1 DINFO=1 SANITIZE=address,undefine
 export SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy PYTHONDONTWRITEBYTECODE=1 HEADLESS_OUT=/out/asan-suite
 export ASAN_OPTIONS=detect_leaks=0:halt_on_error=0:detect_stack_use_after_return=1 UBSAN_OPTIONS=print_stacktrace=1
 cd /repo/test/headless
-python3 suite.py /out/asan/pokeemeraude64 --jobs ${SUITE_JOBS:-6} "$@"
+python3 suite.py /out/asan/pokeemeraude64 "$@" --jobs ${SUITE_JOBS:-6}

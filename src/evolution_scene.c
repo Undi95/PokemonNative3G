@@ -77,7 +77,8 @@ static const u16 sUnusedPal3[]  = INCGFX_U16("graphics/evolution_scene/unused_3.
 static const u16 sUnusedPal4[] = INCGFX_U16("graphics/evolution_scene/unused_4.pal", ".gbapal");
 static const u16 sBgAnim_Pal[] = INCGFX_U16("graphics/evolution_scene/bg_anim.pal", ".gbapal");
 
-static const u8 sText_ShedinjaJapaneseName[] = _("ヌケニン");
+// PokemonNative3G : taille d'un surnom, SetMonData(MON_DATA_NICKNAME) en lit POKEMON_NAME_LENGTH octets
+static const u8 sText_ShedinjaJapaneseName[POKEMON_NAME_LENGTH + 1] = _("ヌケニン");
 
 // The below table is used by Task_UpdateBgPalette to control the speed at which the bg color updates.
 // The first two values are indexes into sBgAnim_PalIndexes (indirectly, via sBgAnimPal), and are
@@ -1508,6 +1509,10 @@ static void Task_UpdateBgPalette(u8 taskId)
                 tNumCycles = 0;
                 tControlStage++;
             }
+#ifdef UBFIX
+            // Après la dernière étape, sBgAnim_PaletteControl[4] n'existe pas (la tâche s'arrête juste après)
+            if (tControlStage < ARRAY_COUNT(sBgAnim_PaletteControl))
+#endif
             tPalStage = START_PAL;
         }
         else

@@ -112,6 +112,9 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, u16 itemId)
         spriteTemplate->tileTag = tilesTag;
         spriteTemplate->paletteTag = paletteTag;
         spriteId = CreateSprite(spriteTemplate, 0, 0, 0);
+#ifdef UBFIX
+        KeepSpriteTemplateCopy(spriteId); // le modèle est libéré juste après
+#endif
 
         FreeItemIconTemporaryBuffers();
         Free(spriteTemplate);
@@ -149,6 +152,9 @@ u8 AddCustomItemIconSprite(const struct SpriteTemplate *customSpriteTemplate, u1
         spriteTemplate->tileTag = tilesTag;
         spriteTemplate->paletteTag = paletteTag;
         spriteId = CreateSprite(spriteTemplate, 0, 0, 0);
+#ifdef UBFIX
+        KeepSpriteTemplateCopy(spriteId); // le modèle est libéré juste après
+#endif
 
         FreeItemIconTemporaryBuffers();
         Free(spriteTemplate);

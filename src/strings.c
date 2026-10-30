@@ -1875,4 +1875,5 @@ const u8 gText_Berries[] = _("BAIES");
 const u8 gText_Eleve[] = _("ELEVE");
 const u8 gText_Dresseur[] = _("DRESSEUR");
 const u8 gText_Champion[] = _("CHAMPION");
-const u8 gText_Ghost[] = _("SPECTRE"); // Rouge Feu
+// Rouge Feu ; PokemonNative3G : taille d'un surnom, SetMonData(MON_DATA_NICKNAME) en lit POKEMON_NAME_LENGTH octets
+const u8 gText_Ghost[POKEMON_NAME_LENGTH + 1] = _("SPECTRE");

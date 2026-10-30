@@ -603,6 +603,9 @@ static struct Sprite *CreateMarkingComboSprite(u16 tileTag, u16 paletteTag, cons
     LoadSpritePalette(&sprPalette);
 
     spriteId = CreateSprite(&template, 0, 0, 0);
+#ifdef UBFIX
+    KeepSpriteTemplateCopy(spriteId); // le modèle est sur la pile (le résumé de RF libère ses ressources)
+#endif
     if (spriteId != MAX_SPRITES)
         return &gSprites[spriteId];
     else

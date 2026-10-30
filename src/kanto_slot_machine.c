@@ -1364,6 +1364,11 @@ static void StopReel1(u16 whichReel)
             {
                 if (destPos >= REEL_LENGTH)
                     destPos = 0;
+#ifdef UBFIX
+                // nextPos 0 : destPos vaut -1 (RF lit l'octet d'avant le tableau) ; le tour du rouleau
+                if (destPos < 0)
+                    destPos += REEL_LENGTH;
+#endif
                 if (TestReelIconAttribute(1, sReelIconAnimByReelAndPos[whichReel][destPos]))
                     break;
             }

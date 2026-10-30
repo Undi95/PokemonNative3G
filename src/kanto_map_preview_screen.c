@@ -413,7 +413,12 @@ void MapPreview_LoadGfx(u8 mapsec)
     if (idx != MPS_COUNT)
     {
        ResetTempTileDataBuffers();
+#ifdef UBFIX
+       // Les palettes des aperçus ont 32 couleurs : la 3e palette lue par RF est ce qui les suit en ROM
+       LoadPalette(sMapPreviewScreenData[idx].palptr, BG_PLTT_ID(13), 2 * PLTT_SIZE_4BPP);
+#else
        LoadPalette(sMapPreviewScreenData[idx].palptr, BG_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
+#endif
        DecompressAndCopyTileDataToVram(0, sMapPreviewScreenData[idx].tilesptr, 0, 0, 0);
        if (GetBgTilemapBuffer(0) == NULL)
        {

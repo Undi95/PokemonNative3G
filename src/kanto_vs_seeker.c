@@ -889,8 +889,19 @@ static void GatherNearbyTrainerInfo(void)
             sVsSeeker->trainerInfo[vsSeekerObjectIdx].localId = templates[objectEventIdx].localId;
             TryGetObjectEventIdByLocalIdAndMap(templates[objectEventIdx].localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objectEventId);
             sVsSeeker->trainerInfo[vsSeekerObjectIdx].objectEventId = objectEventId;
+#ifdef UBFIX
+            // Dresseur pas chargé (loin de l'écran) : objectEventId vaut OBJECT_EVENTS_COUNT, RF lisait après gObjectEvents
+            if (objectEventId >= OBJECT_EVENTS_COUNT)
+            {
+                sVsSeeker->trainerInfo[vsSeekerObjectIdx].xCoord = -1000;
+                sVsSeeker->trainerInfo[vsSeekerObjectIdx].yCoord = -1000;
+            }
+            else
+#endif
+            {
             sVsSeeker->trainerInfo[vsSeekerObjectIdx].xCoord = gObjectEvents[objectEventId].currentCoords.x - 7;
             sVsSeeker->trainerInfo[vsSeekerObjectIdx].yCoord = gObjectEvents[objectEventId].currentCoords.y - 7;
+            }
             sVsSeeker->trainerInfo[vsSeekerObjectIdx].graphicsId = templates[objectEventIdx].graphicsId;
             vsSeekerObjectIdx++;
         }

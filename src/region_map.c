@@ -570,7 +570,12 @@ bool8 LoadRegionMapGfx(void)
         break;
     case 2:
         if (!FreeTempTileDataBuffersIfPossible())
+#ifdef UBFIX
+            // map.pal a 32 couleurs : la 3e palette lue par Émeraude est le début de l'image qui suit en ROM
+            LoadPalette(sRegionMapBg_Pal, BG_PLTT_ID(7), sizeof(sRegionMapBg_Pal));
+#else
             LoadPalette(sRegionMapBg_Pal, BG_PLTT_ID(7), 3 * PLTT_SIZE_4BPP);
+#endif
         break;
     case 3:
         LZ77UnCompWram(sRegionMapCursorSmallGfxLZ, sRegionMap->cursorSmallImage);

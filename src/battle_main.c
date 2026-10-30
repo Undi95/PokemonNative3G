@@ -140,7 +140,8 @@ EWRAM_DATA u16 gBattle_WIN0H = 0;
 EWRAM_DATA u16 gBattle_WIN0V = 0;
 EWRAM_DATA u16 gBattle_WIN1H = 0;
 EWRAM_DATA u16 gBattle_WIN1V = 0;
-EWRAM_DATA u8 gDisplayedStringBattle[300] = {0};
+// PokemonNative3G : 400 (300 dans les deux jeux) : le texte de défaite de PIERRE en français dépasse 300 octets
+EWRAM_DATA u8 gDisplayedStringBattle[400] = {0};
 EWRAM_DATA u8 gBattleTextBuff1[TEXT_BUFF_ARRAY_COUNT] = {0};
 EWRAM_DATA u8 gBattleTextBuff2[TEXT_BUFF_ARRAY_COUNT] = {0};
 EWRAM_DATA u8 gBattleTextBuff3[TEXT_BUFF_ARRAY_COUNT] = {0};

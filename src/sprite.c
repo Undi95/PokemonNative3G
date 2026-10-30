@@ -499,6 +499,20 @@ void AddSpritesToOamBuffer(void)
     }
 }
 
+#ifdef UBFIX
+// PokemonNative3G : pour un sprite créé depuis un modèle temporaire (sur la pile, ou libéré aussitôt), une
+// copie du modèle qui dure autant que lui : DestroySpriteAndFreeResources relit son tileTag et son paletteTag
+static struct SpriteTemplate sSpriteTemplateCopies[MAX_SPRITES];
+
+void KeepSpriteTemplateCopy(u8 spriteId)
+{
+    if (spriteId >= MAX_SPRITES)
+        return;
+    sSpriteTemplateCopies[spriteId] = *gSprites[spriteId].template;
+    gSprites[spriteId].template = &sSpriteTemplateCopies[spriteId];
+}
+#endif
+
 u8 CreateSprite(const struct SpriteTemplate *template, s16 x, s16 y, u8 subpriority)
 {
     u8 i;

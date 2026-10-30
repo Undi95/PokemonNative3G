@@ -4377,6 +4377,9 @@ static void CreateMoveSelectionCursorObjs(u16 tileTag, u16 palTag)
         LoadSpritePalette(&palette);
 
         spriteId = CreateSprite(&template, 64 * (i % 2) + 152, sMoveSelectionCursorPos * 28 + 34, i % 2);
+#ifdef UBFIX
+        KeepSpriteTemplateCopy(spriteId); // le modèle est sur la pile
+#endif
         sMoveSelectionCursorObjs[i]->sprite = &gSprites[spriteId];
         sMoveSelectionCursorObjs[i]->whichSprite = i;
         sMoveSelectionCursorObjs[i]->tileTag = tileTag + i;
@@ -4489,6 +4492,9 @@ static void CreateMonStatusIconObj(u16 tileTag, u16 palTag)
         LoadSpritePalette(&palette);
 
         spriteId = CreateSprite(&template, 0, 0, 0);
+#ifdef UBFIX
+        KeepSpriteTemplateCopy(spriteId); // le modèle est sur la pile
+#endif
         sStatusIcon->sprite = &gSprites[spriteId];
         sStatusIcon->tileTag = tileTag;
         sStatusIcon->palTag = palTag;
@@ -4598,6 +4604,9 @@ static void CreateHpBarObjs(u16 tileTag, u16 palTag)
 
         sHpBarObjs->xpos[i] = i * 8 + 172;
         spriteId = CreateSprite(&template, sHpBarObjs->xpos[i], 36, 0);
+#ifdef UBFIX
+        KeepSpriteTemplateCopy(spriteId); // le modèle est sur la pile
+#endif
         sHpBarObjs->sprites[i] = &gSprites[spriteId];
         sHpBarObjs->sprites[i]->invisible = FALSE;
         sHpBarObjs->sprites[i]->oam.priority = 2;
@@ -4742,6 +4751,9 @@ static void CreateExpBarObjs(u16 tileTag, u16 palTag)
 
         sExpBarObjs->xpos[i] = i * 8 + 156;
         spriteId = CreateSprite(&template, sExpBarObjs->xpos[i], 132, 0);
+#ifdef UBFIX
+        KeepSpriteTemplateCopy(spriteId); // le modèle est sur la pile
+#endif
         sExpBarObjs->sprites[i] = &gSprites[spriteId];
         sExpBarObjs->sprites[i]->oam.priority = 2;
         sExpBarObjs->tileTag = tileTag;
@@ -4870,6 +4882,9 @@ static void CreatePokerusIconObj(u16 tileTag, u16 palTag)
         LoadSpritePalette(&palette);
 
         spriteId = CreateSprite(&template, 114, 92, 0);
+#ifdef UBFIX
+        KeepSpriteTemplateCopy(spriteId); // le modèle est sur la pile
+#endif
         sPokerusIconObj->sprite = &gSprites[spriteId];
         sPokerusIconObj->tileTag = tileTag;
         sPokerusIconObj->palTag = palTag;
@@ -4954,6 +4969,9 @@ static void CreateShinyStarObj(u16 tileTag, u16 palTag)
         LoadSpriteSheet(&sheet);
         LoadSpritePalette(&palette);
         spriteId = CreateSprite(&template, 106, 40, 0);
+#ifdef UBFIX
+        KeepSpriteTemplateCopy(spriteId); // le modèle est sur la pile
+#endif
         sShinyStarObjData->sprite = &gSprites[spriteId];
         sShinyStarObjData->tileTag = tileTag;
         sShinyStarObjData->palTag = palTag;
