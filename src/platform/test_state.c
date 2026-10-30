@@ -225,9 +225,10 @@ static void WriteParty(FILE *file, const char *name, struct Pokemon *party, int 
 
         if (species == SPECIES_NONE)
             break;
-        fprintf(file, "%s[%d, %d, %d, %d, %d, %d]", i == 0 ? "" : ", ", species, GetMonData(&party[i], MON_DATA_LEVEL),
+        fprintf(file, "%s[%d, %d, %d, %d, %d, %d, %u]", i == 0 ? "" : ", ", species, GetMonData(&party[i], MON_DATA_LEVEL),
                 GetMonData(&party[i], MON_DATA_HP), GetMonData(&party[i], MON_DATA_MAX_HP),
-                GetMonData(&party[i], MON_DATA_STATUS), GetMonData(&party[i], MON_DATA_IS_EGG));
+                GetMonData(&party[i], MON_DATA_STATUS), GetMonData(&party[i], MON_DATA_IS_EGG),
+                GetMonData(&party[i], MON_DATA_PERSONALITY));
     }
     fprintf(file, "]");
 }

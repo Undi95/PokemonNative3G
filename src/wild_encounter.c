@@ -66,6 +66,50 @@ EWRAM_DATA static u32 sFeebasRngValue = 0;
 
 #include "data/wild_encounters.h"
 
+// PokemonNative3G : Rouge Feu (wild_encounter.c) — lettre des ZARBI selon la chambre des Ruines de Tanoby et la case
+static const u8 sUnownLetterSlots[][NUM_LAND_MONS_ENCOUNTER_SLOTS] = {
+  //  A   A   A   A   A   A   A   A   A   A   A   ?
+    { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 27},
+  //  C   C   C   D   D   D   H   H   H   U   U   O
+    { 2,  2,  2,  3,  3,  3,  7,  7,  7, 20, 20, 14},
+  //  N   N   N   N   S   S   S   S   I   I   E   E
+    {13, 13, 13, 13, 18, 18, 18, 18,  8,  8,  4,  4},
+  //  P   P   L   L   J   J   R   R   R   Q   Q   Q
+    {15, 15, 11, 11,  9,  9, 17, 17, 17, 16, 16, 16},
+  //  Y   Y   T   T   G   G   G   F   F   F   K   K
+    {24, 24, 19, 19,  6,  6,  6,  5,  5,  5, 10, 10},
+  //  V   V   V   W   W   W   X   X   M   M   B   B
+    {21, 21, 21, 22, 22, 22, 23, 23, 12, 12,  1,  1},
+  //  Z   Z   Z   Z   Z   Z   Z   Z   Z   Z   Z   !
+    {25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 26},
+};
+
+// Les 7 chambres se suivent dans le groupe de cartes (comme dans RF)
+static bool8 IsInTanobyChamber(void)
+{
+    return gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER)
+        && gSaveBlock1Ptr->location.mapNum >= MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER)
+        && gSaveBlock1Ptr->location.mapNum <= MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS_VIAPOIS_CHAMBER);
+}
+
+// UnlockedTanobyOrAreNotInTanoby de RF : pas de ZARBI dans les chambres avant l'ouverture des ruines
+static bool8 UnlockedTanobyOrAreNotInTanoby(void)
+{
+    if (FlagGet(FLAG_KANTO_SYS_UNLOCKED_TANOBY_RUINS))
+        return TRUE;
+    return !IsInTanobyChamber();
+}
+
+static u32 GenerateUnownPersonalityByLetter(u8 letter)
+{
+    u32 personality;
+    do
+    {
+        personality = (Random() << 16) | Random();
+    } while (GET_UNOWN_LETTER(personality) != letter);
+    return personality;
+}
+
 static const struct WildPokemon sWildFeebas = {20, 25, SPECIES_FEEBAS};
 
 static const u16 sRoute119WaterTileData[] =
@@ -327,6 +371,8 @@ static u16 GetCurrentMapWildMonHeaderId(void)
                 i += alteringCaveId;
             }
 
+            if (!UnlockedTanobyOrAreNotInTanoby()) // PokemonNative3G : RF
+                break;
             return i;
         }
     }
@@ -461,6 +507,18 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, u8 ar
         return FALSE;
     if (gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && flags & WILD_CHECK_KEEN_EYE && !IsAbilityAllowingEncounter(level))
         return FALSE;
+
+    // PokemonNative3G : GenerateWildMon de RF, ZARBI des Ruines de Tanoby (lettre selon la chambre et la case)
+    if (wildMonInfo->wildPokemon[wildMonIndex].species == SPECIES_UNOWN && IsInTanobyChamber())
+    {
+        s8 chamber = gSaveBlock1Ptr->location.mapNum - MAP_NUM(MAP_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER);
+        u32 personality = GenerateUnownPersonalityByLetter(sUnownLetterSlots[chamber][wildMonIndex]);
+
+        ZeroEnemyPartyMons();
+        CreateMon(&gEnemyParty[0], SPECIES_UNOWN, level, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
+        FishingChain_TryShiny(&gEnemyParty[0]);
+        return TRUE;
+    }
 
     CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
     return TRUE;
