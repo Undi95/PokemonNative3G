@@ -157,5 +157,10 @@ bool8 MetatileBehavior_IsQuestionnaire(u8 metatileBehavior);
 bool8 MetatileBehavior_IsLongGrass_Duplicate(u8 metatileBehavior);
 bool8 MetatileBehavior_IsLongGrassSouthEdge(u8 metatileBehavior);
 bool8 MetatileBehavior_IsTrainerHillTimer(u8 metatileBehavior);
+bool8 MetatileBehavior_IsPlayerFacingPokemonCenterSign(u8 metatileBehavior, u8 playerDirection);
+bool8 MetatileBehavior_IsPlayerFacingPokeMartSign(u8 metatileBehavior, u8 playerDirection);
+bool8 MetatileBehavior_IsSignpost(u8 metatileBehavior);
+bool8 MetatileBehavior_IsIndigoPlateauSign1(u8 metatileBehavior);
+bool8 MetatileBehavior_IsIndigoPlateauSign2(u8 metatileBehavior);
 
 #endif // GUARD_METATILE_BEHAVIOR_H

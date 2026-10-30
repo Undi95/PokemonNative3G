@@ -28,14 +28,15 @@ bool8 ScrCmd_unloadhelp(struct ScriptContext *ctx)
     return FALSE;
 }
 
-// TODO Kanto : style « panneau » de la boîte de message de RF (MsgSetSignpost) pas encore porté.
 bool8 ScrCmd_signmsg(struct ScriptContext *ctx)
 {
+    MsgSetSignpost();
     return FALSE;
 }
 
 bool8 ScrCmd_normalmsg(struct ScriptContext *ctx)
 {
+    MsgSetNotSignpost();
     return FALSE;
 }
 

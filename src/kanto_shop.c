@@ -498,7 +498,7 @@ static u8 CreateShopMenu(u8 martType)
 {
     sShopData.martType = GetMartTypeFromItemList(martType);
     sShopData.selectedRow = 0;
-    sShopData.fontId = FONT_KANTO; // RF : FONT_MALE / FONT_FEMALE selon le vendeur (polices de RF pas encore importées)
+    sShopData.fontId = FONT_KANTO; // RF : FONT_MALE / FONT_FEMALE selon le vendeur, mêmes glyphes et couleurs que FONT_KANTO
 
     sShopMenuWindowId = AddWindow(&sShopMenuWindowTemplate);
     SetStandardWindowBorderStyle(sShopMenuWindowId, 0);

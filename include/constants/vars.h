@@ -305,6 +305,11 @@
 // Couleur du texte des boîtes de message de Rouge Feu (commande textcolor, scripts de Kanto)
 #define VAR_TEXT_COLOR                0x8016
 #define VAR_PREV_TEXT_COLOR           0x8017
+#define NPC_TEXT_COLOR_MALE      0 // RF : bleu, PNJ masculins
+#define NPC_TEXT_COLOR_FEMALE    1 // RF : rouge, PNJ féminins
+#define NPC_TEXT_COLOR_MON       2 // RF : gris, Pokémon
+#define NPC_TEXT_COLOR_NEUTRAL   3 // RF : gris, objets et messages du jeu
+#define NPC_TEXT_COLOR_DEFAULT 255 // RF : PNJ sélectionné -> couleur de son sprite (GetColorFromTextColorTable), sinon neutre
 
 #define SPECIAL_VARS_END              0x8017
 

@@ -39,9 +39,7 @@ BATTLE_SCENE_ALIASES = {f'MAP_BATTLE_SCENE_{s}': f'MAP_BATTLE_SCENE_KANTO_{s}'
 
 # Comportements RF sans homonyme dans Émeraude -> équivalent le plus proche.
 BEHAVIOR_ALIASES = {
-    'MB_SIGNPOST': 'MB_NORMAL',              # Émeraude : panneaux = bg_events
-    'MB_POKEMART_SIGN': 'MB_NORMAL',
-    'MB_POKEMON_CENTER_SIGN': 'MB_NORMAL',
+    # MB_SIGNPOST, MB_POKEMART_SIGN, MB_POKEMON_CENTER_SIGN, MB_INDIGO_PLATEAU_SIGN_* existent tels quels (tools/kanto_signposts.py)
     'MB_WARP_DOOR': 'MB_ANIMATED_DOOR',      # animations : src/kanto_field_door.c
     'MB_CAVE_DOOR': 'MB_NON_ANIMATED_DOOR',
     'MB_FAST_WATER': 'MB_OCEAN_WATER',

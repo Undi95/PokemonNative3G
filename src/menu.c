@@ -7,6 +7,8 @@
 #include "graphics.h"
 #include "main.h"
 #include "menu.h"
+#include "script.h"
+#include "constants/vars.h"
 #include "menu_helpers.h"
 #include "palette.h"
 #include "pokedex.h"
@@ -214,8 +216,19 @@ u8 GetDialogueFontId(const u8 *str)
 void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
 {
     TextPrinterCallback callback = NULL;
+    u8 fgColor = TEXT_COLOR_DARK_GRAY;
+
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, GetDialogueFontId(gStringVar4), gStringVar4, GetPlayerTextSpeedDelay(), callback, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    // PokemonNative3G : AddTextPrinterDiffStyle de RF avec l'option DIALOGUE = KANTO (bleu = homme, rouge = femme)
+    if (gSaveBlock2Ptr->optionsDialogStyle)
+    {
+        u8 color = ContextNpcGetTextColor();
+        if (color == NPC_TEXT_COLOR_MALE)
+            fgColor = TEXT_COLOR_BLUE;
+        else if (color == NPC_TEXT_COLOR_FEMALE)
+            fgColor = TEXT_COLOR_RED;
+    }
+    AddTextPrinterParameterized2(0, GetDialogueFontId(gStringVar4), gStringVar4, GetPlayerTextSpeedDelay(), callback, fgColor, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 void AddTextPrinterForMessage_2(bool8 allowSkippingDelayWithButtonPress)
@@ -233,6 +246,13 @@ void AddTextPrinterWithCustomSpeedForMessage(bool8 allowSkippingDelayWithButtonP
 void LoadMessageBoxAndBorderGfx(void)
 {
     LoadMessageBoxGfx(0, DLG_WINDOW_BASE_TILE_NUM, BG_PLTT_ID(DLG_WINDOW_PALETTE_NUM));
+    LoadUserWindowBorderGfx(0, STD_WINDOW_BASE_TILE_NUM, BG_PLTT_ID(STD_WINDOW_PALETTE_NUM));
+}
+
+// PokemonNative3G : LoadSignpostWindowFrameGfx de RF (cadre des panneaux, option DIALOGUE = KANTO)
+void LoadSignpostWindowFrameGfx(void)
+{
+    LoadSignpostWindowGfx(0, DLG_WINDOW_BASE_TILE_NUM, BG_PLTT_ID(DLG_WINDOW_PALETTE_NUM));
     LoadUserWindowBorderGfx(0, STD_WINDOW_BASE_TILE_NUM, BG_PLTT_ID(STD_WINDOW_PALETTE_NUM));
 }
 

@@ -47,7 +47,7 @@ reconnaît les corps identiques (187 fonctions) mais pas les corps voisins.
 | Résumé du Pokémon | pokemon_summary_screen | ✓ option MENUS (`kanto_summary_screen.c`) |
 | Écran titre, intro, crédits, Panthéon | title_screen, intro, credits, hall_of_fame | ✓ (`kanto_title_screen.c`, `kanto_intro.c`, `kanto_credits.c`, `kanto_hall_of_fame.c`) |
 | Carte de Kanto, Vol, objet Carte | region_map | ✓ (`kanto_region_map.c`) |
-| Cherche VS | vs_seeker | ✓ à Kanto (`kanto_vs_seeker.c`) ; Hoenn à faire |
+| Cherche VS | vs_seeker | ✓ à Kanto et à Hoenn (`kanto_vs_seeker.c` ; Hoenn = revanches du PokéNav) |
 | Cherch'Objet | itemfinder | ✓ à Kanto (`kanto_itemfinder.c`) |
 | Fan Club de Safrania, portes | trainer_fan_club, field_door | ✓ (`kanto_trainer_fan_club.c`, `kanto_field_door.c`) |
 | Specials de terrain | field_specials (118 fonctions) | ◐ 47 dans `kanto_field_specials.c` / `kanto_specials.c` / `kanto_list_menu.c` ; 43 stubs |
@@ -102,7 +102,7 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 - ~~Animation d'objet sur un Pokémon avec le sac KANTO~~ : faite le 2026-10-24 (`kanto_pokemon_special_anim*.c`, préambules de RF dans party_menu.c, `PokemonItemUseNoEffect` de RF dans pokemon.c).
 - Interfaces de RF en option (MENUS = KANTO) : ~~PC objets + boîte aux lettres~~ (2026-10-24), ~~boutique~~ (2026-10-24, `kanto_shop.c`), ~~menu Start~~ (déjà fait par MENUS : police, espacement, descriptions), ~~Maître des capacités~~ (2026-10-24, `kanto_learn_move.c`, descriptions de RF dans `kanto_move_descriptions.c`).
 - ~~Machine à sous de RF au Casino de Céladopole~~ (2026-10-24, `kanto_slot_machine.c` ; effets de terrain de RF FLDEFF_SMILEY_FACE_ICON et FLDEFF_PHOTO_FLASH portés, ils bloquaient les scripts).
-- Panneaux de RF (signpost), polices homme/femme et couleurs de texte de RF.
+- ~~Panneaux de RF, polices homme/femme et couleurs de texte~~ : faits le 2026-10-30. Tuiles MB_SIGNPOST / enseignes Centre, Boutique, Plateau Indigo rétablies (`tools/kanto_signposts.py`, 0xC8-0xCC) ; on ouvre un panneau en marchant vers lui et on le ferme en s'éloignant (field_control_avatar.c, script.c) ; avec DIALOGUE = KANTO, cadre « panneau » de RF et texte bleu/rouge des PNJ de Kanto (`ContextNpcGetTextColor`, kanto_field_specials.c). Les polices FONT_MALE/FEMALE de RF ont les glyphes et couleurs de sa police normale (= FONT_KANTO). Scénario `kanto_signposts`.
 
 **C. À décider (écartés jusqu'ici)**
 - Aide L/R de RF (help_system*.c) : aujourd'hui sans effet.

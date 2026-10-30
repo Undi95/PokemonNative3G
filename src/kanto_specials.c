@@ -623,16 +623,6 @@ void RegisteredItemHandleBikeSwap(void)
     }
 }
 
-// script.c de RF : un message de panneau se ferme quand le joueur s'éloigne. Le moteur de
-// script d'Émeraude n'a pas ce mécanisme : sans effet (le message se ferme avec A/B).
-void DisableMsgBoxWalkaway(void)
-{
-}
-
-void SetWalkingIntoSignVars(void)
-{
-}
-
 // save_location.c
 void SetPostgameFlags(void)
 {

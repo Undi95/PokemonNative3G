@@ -5,6 +5,7 @@
 #include "text.h"
 #include "match_call.h"
 #include "field_message_box.h"
+#include "script.h"
 
 static EWRAM_DATA u8 sFieldMessageBoxMode = 0;
 
@@ -29,7 +30,10 @@ static void Task_DrawFieldMessage(u8 taskId)
     switch (task->tState)
     {
         case 0:
-            LoadMessageBoxAndBorderGfx();
+            if (gSaveBlock2Ptr->optionsDialogStyle && IsMsgSignpost()) // PokemonNative3G : panneaux de RF
+                LoadSignpostWindowFrameGfx();
+            else
+                LoadMessageBoxAndBorderGfx();
             task->tState++;
             break;
         case 1:

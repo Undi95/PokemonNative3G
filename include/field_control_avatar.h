@@ -25,6 +25,7 @@ struct FieldInput
 void FieldClearPlayerInput(struct FieldInput *input);
 void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys);
 int ProcessPlayerFieldInput(struct FieldInput *input);
+void FieldInput_HandleCancelSignpost(struct FieldInput *input);
 void RestartWildEncounterImmunitySteps(void);
 const u8 *GetObjectEventScriptPointerPlayerFacing(void);
 bool8 TryDoDiveWarp(struct MapPosition *position, u16 metatileBehavior);

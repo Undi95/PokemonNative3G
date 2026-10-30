@@ -887,6 +887,39 @@ bool8 (*ScriptMenu_HidePokemonPic(void))(void)
     return IsPicboxClosed;
 }
 
+// PokemonNative3G : PicboxCancel de RF (script_menu.c), sur la tâche d'image d'Émeraude
+void PicboxCancel(void)
+{
+    u8 taskId = FindTaskIdByFunc(Task_PokemonPicWindow);
+    struct Task *task;
+    if (taskId != TASK_NONE)
+    {
+        task = &gTasks[taskId];
+        switch (task->tState)
+        {
+        case 0:
+        case 1:
+        case 2:
+            FreeResourcesAndDestroySprite(&gSprites[task->tMonSpriteId], task->tMonSpriteId);
+            ClearToTransparentAndRemoveWindow(task->tWindowId);
+            DestroyTask(taskId);
+            break;
+        case 3:
+            ClearToTransparentAndRemoveWindow(task->tWindowId);
+            DestroyTask(taskId);
+            break;
+        }
+    }
+}
+
+// PokemonNative3G : DoPicboxCancel de RF (field_specials.c), message de panneau fermé en s'éloignant
+void DoPicboxCancel(void)
+{
+    u8 t = EOS;
+    AddTextPrinterParameterized(0, FONT_NORMAL, &t, 0, 1, 0, NULL);
+    PicboxCancel();
+}
+
 static bool8 IsPicboxClosed(void)
 {
     if (FindTaskIdByFunc(Task_PokemonPicWindow) == TASK_NONE)

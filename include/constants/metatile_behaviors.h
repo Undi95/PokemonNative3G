@@ -202,11 +202,11 @@ enum {
     MB_PLAYER_ROOM_PC_ON,
     MB_SECRET_BASE_DECORATION_BASE,
     MB_SECRET_BASE_POSTER,
-    MB_UNUSED_C8,
-    MB_UNUSED_C9,
-    MB_UNUSED_CA,
-    MB_UNUSED_CB,
-    MB_UNUSED_CC,
+    MB_SIGNPOST,              // PokemonNative3G : RF (panneaux, tools/kanto_signposts.py)
+    MB_POKEMART_SIGN,         // PokemonNative3G : RF
+    MB_POKEMON_CENTER_SIGN,   // PokemonNative3G : RF
+    MB_INDIGO_PLATEAU_SIGN_1, // PokemonNative3G : RF
+    MB_INDIGO_PLATEAU_SIGN_2, // PokemonNative3G : RF
     MB_UNUSED_CD,
     MB_UNUSED_CE,
     MB_UNUSED_CF,

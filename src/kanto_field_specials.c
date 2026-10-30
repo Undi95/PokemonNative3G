@@ -1,5 +1,7 @@
 // Specials de Rouge Feu portés depuis le décomp RF (field_specials.c, fame_checker.c, quest_log.c).
 #include "global.h"
+#include "constants/event_objects.h"
+#include "constants/kanto_event_objects.h"
 #include "constants/easy_chat.h"
 #include "random.h"
 #include "easy_chat.h"
@@ -432,4 +434,136 @@ void BufferRandomHobbyOrLifestyleString(void)
     int groupId = Random() & 1 ? EC_GROUP_HOBBIES : EC_GROUP_LIFESTYLE;
     u16 easyChatWord = GetRandomEasyChatWordFromUnlockedGroup(groupId);
     CopyEasyChatWord(gStringVar2, easyChatWord);
+}
+
+// ---- PokemonNative3G : couleur du texte des PNJ de Rouge Feu (field_specials.c, dynamic_placeholder_text_util.c de RF) ----
+// Avec l'option DIALOGUE = KANTO : texte bleu (homme), rouge (femme) ou gris (Pokémon, objets, panneaux). Seuls les sprites
+// de Rouge Feu ont une couleur dans la table ; ceux d'Émeraude restent neutres.
+// Indices = sprites de RF (OBJ_EVENT_GFX_KANTO_x - KANTO_OBJ_EVENT_GFX_START) ; certains ne sont pas importés.
+#define COLORS(a, b)((a) | (b << 4))
+
+static const u8 sTextColorTable[] =
+{
+ // [LOW_NYBBLE / 2]                            = 0xXY, // HIGH_NYBBLE
+    [0 / 2] /* RED_NORMAL */              = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // RED_BIKE
+    [2 / 2] /* RED_SURF */                = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // RED_FIELD_MOVE
+    [4 / 2] /* RED_FISH */                = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // RED_VS_SEEKER
+    [6 / 2] /* RED_VS_SEEKER_BIKE */      = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_FEMALE), // GREEN_NORMAL
+    [8 / 2] /* GREEN_BIKE */              = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_FEMALE), // GREEN_SURF
+    [10 / 2] /* GREEN_FIELD_MOVE */        = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_FEMALE), // GREEN_FISH
+    [12 / 2] /* GREEN_VS_SEEKER */         = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_FEMALE), // GREEN_VS_SEEKER_BIKE
+    [14 / 2] /* RS_BRENDAN */              = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_FEMALE), // RS_MAY
+    [16 / 2] /* LITTLE_BOY */              = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_FEMALE), // LITTLE_GIRL
+    [18 / 2] /* YOUNGSTER */               = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // BOY
+    [20 / 2] /* BUG_CATCHER */             = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // SITTING_BOY
+    [22 / 2] /* LASS */                    = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_FEMALE), // WOMAN_1
+    [24 / 2] /* CRUSH_GIRL */             = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_MALE), // MAN
+    [26 / 2] /* ROCKER */                  = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // FAT_MAN
+    [28 / 2] /* WOMAN_2 */                 = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_FEMALE), // BEAUTY
+    [30 / 2] /* BALDING_MAN */             = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_FEMALE), // WOMAN_3
+    [32 / 2] /* OLD_MAN_1 */               = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // OLD_MAN_2
+    [34 / 2] /* OLD_MAN_LYING_DOWN */      = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_FEMALE), // OLD_WOMAN
+    [36 / 2] /* TUBER_M_WATER */           = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_FEMALE), // TUBER_F
+    [38 / 2] /* TUBER_M_LAND */            = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // CAMPER
+    [40 / 2] /* PICNICKER */               = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_MALE), // COOLTRAINER_M
+    [42 / 2] /* COOLTRAINER_F */           = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_MALE), // SWIMMER_M_WATER
+    [44 / 2] /* SWIMMER_F_WATER */         = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_MALE), // SWIMMER_M_LAND
+    [46 / 2] /* SWIMMER_F_LAND */          = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_MALE), // WORKER_M
+    [48 / 2] /* WORKER_F */                = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_MALE), // ROCKET_M
+    [50 / 2] /* ROCKET_F */                = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_MALE), // GBA_KID
+    [52 / 2] /* POKE_MANIAC */              = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // BIKER
+    [54 / 2] /* BLACK_BELT */               = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // SCIENTIST
+    [56 / 2] /* HIKER */                   = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // FISHER
+    [58 / 2] /* CHANNELER */               = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_MALE), // CHEF
+    [60 / 2] /* POLICEMAN */               = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // GENTLEMAN
+    [62 / 2] /* SAILOR */                  = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // CAPTAIN
+    [64 / 2] /* NURSE */                   = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_FEMALE), // CABLE_CLUB_RECEPTIONIST
+    [66 / 2] /* UNION_ROOM_RECEPTIONIST */ = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_MALE), // UNUSED_MALE_RECEPTIONIST
+    [68 / 2] /* CLERK */                   = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // MG_DELIVERYMAN
+    [70 / 2] /* TRAINER_TOWER_DUDE */      = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // PROF_OAK
+    [72 / 2] /* BLUE */                    = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // BILL
+    [74 / 2] /* LANCE */                   = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_FEMALE), // AGATHA
+    [76 / 2] /* DAISY */                   = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_FEMALE), // LORELEI
+    [78 / 2] /* MR_FUJI */                 = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // BRUNO
+    [80 / 2] /* BROCK */                   = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_FEMALE), // MISTY
+    [82 / 2] /* LT_SURGE */                = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_FEMALE), // ERIKA
+    [84 / 2] /* KOGA */                    = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_FEMALE), // SABRINA
+    [86 / 2] /* BLAINE */                  = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // GIOVANNI
+    [88 / 2] /* MOM */                     = COLORS(NPC_TEXT_COLOR_FEMALE, NPC_TEXT_COLOR_MALE), // CELIO
+    [90 / 2] /* TEACHY_TV_HOST */          = COLORS(NPC_TEXT_COLOR_MALE, NPC_TEXT_COLOR_MALE), // GYM_GUY
+    [92 / 2] /* ITEM_BALL */               = COLORS(NPC_TEXT_COLOR_NEUTRAL, NPC_TEXT_COLOR_NEUTRAL), // TOWN_MAP
+    [94 / 2] /* POKEDEX */                 = COLORS(NPC_TEXT_COLOR_NEUTRAL, NPC_TEXT_COLOR_NEUTRAL), // CUT_TREE
+    [96 / 2] /* ROCK_SMASH_ROCK */         = COLORS(NPC_TEXT_COLOR_NEUTRAL, NPC_TEXT_COLOR_NEUTRAL), // PUSHABLE_BOULDER
+    [98 / 2] /* FOSSIL */                  = COLORS(NPC_TEXT_COLOR_NEUTRAL, NPC_TEXT_COLOR_NEUTRAL), // RUBY
+    [100 / 2] /* SAPPHIRE */                = COLORS(NPC_TEXT_COLOR_NEUTRAL, NPC_TEXT_COLOR_NEUTRAL), // OLD_AMBER
+    [102 / 2] /* GYM_SIGN */                = COLORS(NPC_TEXT_COLOR_NEUTRAL, NPC_TEXT_COLOR_NEUTRAL), // SIGN
+    [104 / 2] /* TRAINER_TIPS */            = COLORS(NPC_TEXT_COLOR_NEUTRAL, NPC_TEXT_COLOR_NEUTRAL), // CLIPBOARD
+    [106 / 2] /* METEORITE */               = COLORS(NPC_TEXT_COLOR_NEUTRAL, NPC_TEXT_COLOR_NEUTRAL), // LAPRAS_DOLL
+    [108 / 2] /* SEAGALLOP */               = COLORS(NPC_TEXT_COLOR_NEUTRAL, NPC_TEXT_COLOR_MON), // SNORLAX
+    [110 / 2] /* SPEAROW */                 = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // CUBONE
+    [112 / 2] /* POLIWRATH */               = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // CLEFAIRY
+    [114 / 2] /* PIDGEOT */                 = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // JIGGLYPUFF
+    [116 / 2] /* PIDGEY */                  = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // CHANSEY
+    [118 / 2] /* OMANYTE */                 = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // KANGASKHAN
+    [120 / 2] /* PIKACHU */                 = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // PSYDUCK
+    [122 / 2] /* NIDORAN_F */               = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // NIDORAN_M
+    [124 / 2] /* NIDORINO */                = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // MEOWTH
+    [126 / 2] /* SEEL */                    = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // VOLTORB
+    [128 / 2] /* SLOWPOKE */                = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // SLOWBRO
+    [130 / 2] /* MACHOP */                  = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // WIGGLYTUFF
+    [132 / 2] /* DODUO */                   = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // FEAROW
+    [134 / 2] /* MACHOKE */                 = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // LAPRAS
+    [136 / 2] /* ZAPDOS */                  = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // MOLTRES
+    [138 / 2] /* ARTICUNO */                = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // MEWTWO
+    [140 / 2] /* MEW */                     = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // ENTEI
+    [142 / 2] /* SUICUNE */                 = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // RAIKOU
+    [144 / 2] /* LUGIA */                   = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // HO_OH
+    [146 / 2] /* CELEBI */                  = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // KABUTO
+    [148 / 2] /* DEOXYS_D */                = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_MON), // DEOXYS_A
+    [150 / 2] /* DEOXYS_N */                = COLORS(NPC_TEXT_COLOR_MON, NPC_TEXT_COLOR_NEUTRAL), // SS_ANNE
+};
+
+#undef COLORS
+
+static u8 GetColorFromTextColorTable(u16 graphicId)
+{
+    u32 test = graphicId >> 1;
+    u32 shift = (graphicId & 1) << 2;
+
+    if (test >= ARRAY_COUNT(sTextColorTable))
+        return NPC_TEXT_COLOR_NEUTRAL;
+    else
+        return (sTextColorTable[graphicId >> 1] >> shift) & 0xF;
+}
+
+void ResetContextNpcTextColor(void)
+{
+    gSelectedObjectEvent = 0;
+    gSpecialVar_TextColor = NPC_TEXT_COLOR_DEFAULT;
+}
+
+u8 ContextNpcGetTextColor(void)
+{
+    u16 gfxId;
+    if (gSpecialVar_TextColor != NPC_TEXT_COLOR_DEFAULT)
+    {
+        // A text color has been specified, use that
+        return gSpecialVar_TextColor;
+    }
+    else if (gSelectedObjectEvent == 0)
+    {
+        // No text color specified and no object selected, use neutral
+        return NPC_TEXT_COLOR_NEUTRAL;
+    }
+    else
+    {
+        // An object is selected and no color has been specified.
+        // Use the text color normally associated with this object's sprite.
+        gfxId = gObjectEvents[gSelectedObjectEvent].graphicsId;
+        if (gfxId >= OBJ_EVENT_GFX_VARS && gfxId <= OBJ_EVENT_GFX_VARS + 0xF)
+            gfxId = VarGetObjectEventGraphicsId(gfxId - OBJ_EVENT_GFX_VARS);
+        if (gfxId < KANTO_OBJ_EVENT_GFX_START)
+            return NPC_TEXT_COLOR_NEUTRAL; // PokemonNative3G : sprite d'Émeraude
+        return GetColorFromTextColorTable(gfxId - KANTO_OBJ_EVENT_GFX_START);
+    }
 }

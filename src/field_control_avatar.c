@@ -2,6 +2,18 @@
 #include "kanto_renewable_hidden_items.h"
 #include "kanto_vs_seeker.h"
 extern const u8 EventScript_VsSeekerChargingDone[];
+// PokemonNative3G : panneaux de Rouge Feu (field_control_avatar.c de RF)
+extern const u8 EventScript_PokecenterSign[];
+extern const u8 EventScript_PokemartSign[];
+extern const u8 EventScript_Indigo_UltimateGoal[];
+extern const u8 EventScript_Indigo_HighestAuthority[];
+extern const u8 EventScript_CancelMessageBox[];
+#define SIGNPOST_POKECENTER 0
+#define SIGNPOST_POKEMART 1
+#define SIGNPOST_INDIGO_1 2
+#define SIGNPOST_INDIGO_2 3
+#define SIGNPOST_SCRIPTED 240
+#define SIGNPOST_NA 255
 #include "battle_setup.h"
 #include "bike.h"
 #include "coord_event_weather.h"
@@ -53,6 +65,11 @@ static const u8 *GetInteractionScript(struct MapPosition *, u8, u8);
 static const u8 *GetInteractedObjectEventScript(struct MapPosition *, u8, u8);
 static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *, u8, u8);
 static const u8 *GetInteractedMetatileScript(struct MapPosition *, u8, u8);
+static bool8 TrySetUpWalkIntoSignpostScript(struct MapPosition *position, u16 metatileBehavior, u8 playerDirection);
+static u8 GetFacingSignpostType(u16 metatileBehavior, u8 playerDirection);
+static void SetUpWalkIntoSignScript(const u8 *script, u8 playerDirection);
+static const u8 *GetSignpostScriptAtMapPosition(struct MapPosition *position);
+static void Task_OpenStartMenuAfterSignpost(u8 taskId);
 static const u8 *GetInteractedWaterScript(struct MapPosition *, u8, u8);
 static bool32 TrySetupDiveDownScript(void);
 static bool32 TrySetupDiveEmergeScript(void);
@@ -143,7 +160,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     u16 metatileBehavior;
 
     gSpecialVar_LastTalked = LOCALID_NONE;
-    gSelectedObjectEvent = 0;
+    ResetFacingNpcOrSignpostVars(); // PokemonNative3G : RF (gSelectedObjectEvent = 0, couleur du texte, cadre panneau)
 
     playerDirection = GetPlayerFacingDirection();
     GetPlayerPosition(&position);
@@ -167,6 +184,19 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
             return TRUE;
     }
+    // PokemonNative3G : RF, panneau devant soi en marchant vers lui (ProcessPlayerFieldInput de RF)
+    if (input->checkStandardWildEncounter)
+    {
+        if (input->dpadDirection == 0 || input->dpadDirection == playerDirection)
+        {
+            GetInFrontOfPlayerPosition(&position);
+            metatileBehavior = MapGridGetMetatileBehaviorAt(position.x, position.y);
+            if (TrySetUpWalkIntoSignpostScript(&position, metatileBehavior, playerDirection) == TRUE)
+                return TRUE;
+            GetPlayerPosition(&position);
+            metatileBehavior = MapGridGetMetatileBehaviorAt(position.x, position.y);
+        }
+    }
     if (input->checkStandardWildEncounter && CheckStandardWildEncounter(metatileBehavior) == TRUE)
         return TRUE;
     if (input->heldDirection && input->dpadDirection == playerDirection)
@@ -177,6 +207,11 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
 
     GetInFrontOfPlayerPosition(&position);
     metatileBehavior = MapGridGetMetatileBehaviorAt(position.x, position.y);
+    if (input->heldDirection && input->dpadDirection == playerDirection) // PokemonNative3G : RF
+    {
+        if (TrySetUpWalkIntoSignpostScript(&position, metatileBehavior, playerDirection) == TRUE)
+            return TRUE;
+    }
     if (input->pressedAButton && TryStartInteractionScript(&position, metatileBehavior, playerDirection) == TRUE)
         return TRUE;
 
@@ -323,6 +358,7 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
 
 static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position, u8 metatileBehavior, u8 direction)
 {
+    u8 signpostType;
     const struct BgEvent *bgEvent = GetBackgroundEventAtPosition(&gMapHeader, position->x - MAP_OFFSET, position->y - MAP_OFFSET, position->elevation);
 
     if (bgEvent == NULL)
@@ -330,11 +366,13 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
     if (bgEvent->bgUnion.script == NULL)
         return EventScript_TestSignpostMsg;
 
+    signpostType = GetFacingSignpostType(metatileBehavior, direction); // PokemonNative3G : RF
+
     switch (bgEvent->kind)
     {
     case BG_EVENT_PLAYER_FACING_ANY:
     default:
-        return bgEvent->bgUnion.script;
+        break;
     case BG_EVENT_PLAYER_FACING_NORTH:
         if (direction != DIR_NORTH)
             return NULL;
@@ -369,6 +407,8 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
         return NULL;
     }
 
+    if (signpostType != SIGNPOST_NA) // PokemonNative3G : RF
+        MsgSetSignpost();
     return bgEvent->bgUnion.script;
 }
 
@@ -450,7 +490,147 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         return NULL;
     }
 
+    // PokemonNative3G : enseignes de Rouge Feu (GetInteractedMetatileScript de RF)
+    if (MetatileBehavior_IsIndigoPlateauSign1(metatileBehavior) == TRUE)
+    {
+        MsgSetSignpost();
+        return EventScript_Indigo_UltimateGoal;
+    }
+    if (MetatileBehavior_IsIndigoPlateauSign2(metatileBehavior) == TRUE)
+    {
+        MsgSetSignpost();
+        return EventScript_Indigo_HighestAuthority;
+    }
+    if (MetatileBehavior_IsPlayerFacingPokeMartSign(metatileBehavior, direction) == TRUE)
+    {
+        MsgSetSignpost();
+        return EventScript_PokemartSign;
+    }
+    if (MetatileBehavior_IsPlayerFacingPokemonCenterSign(metatileBehavior, direction) == TRUE)
+    {
+        MsgSetSignpost();
+        return EventScript_PokecenterSign;
+    }
     return NULL;
+}
+
+// PokemonNative3G : field_control_avatar.c de RF. Un panneau s'ouvre quand on marche vers lui (haut ou bas) et
+// son message se ferme quand on s'éloigne (appelé par DoCB1_Overworld).
+void FieldInput_HandleCancelSignpost(struct FieldInput *input)
+{
+    if (ScriptContext_IsEnabled() == TRUE)
+    {
+        if (gWalkAwayFromSignInhibitTimer != 0)
+            gWalkAwayFromSignInhibitTimer--;
+        else if (CanWalkAwayToCancelMsgBox() == TRUE)
+        {
+            if (input->dpadDirection != 0 && GetPlayerFacingDirection() != input->dpadDirection)
+            {
+                if (IsMsgBoxWalkawayDisabled() == TRUE)
+                    return;
+                ScriptContext_SetupScript(EventScript_CancelMessageBox);
+                LockPlayerFieldControls();
+            }
+            else if (input->pressedStartButton)
+            {
+                ScriptContext_SetupScript(EventScript_CancelMessageBox);
+                LockPlayerFieldControls();
+                if (!FuncIsActiveTask(Task_OpenStartMenuAfterSignpost))
+                    CreateTask(Task_OpenStartMenuAfterSignpost, 8);
+            }
+        }
+    }
+}
+
+// Task_QuestLogPlayback_OpenStartMenu de RF (son nom vient du journal, mais il sert aussi hors journal)
+static void Task_OpenStartMenuAfterSignpost(u8 taskId)
+{
+    if (!ArePlayerFieldControlsLocked())
+    {
+        PlaySE(SE_WIN_OPEN);
+        ShowStartMenu();
+        DestroyTask(taskId);
+    }
+}
+
+static bool8 TrySetUpWalkIntoSignpostScript(struct MapPosition *position, u16 metatileBehavior, u8 playerDirection)
+{
+    u8 signpostType;
+    const u8 *script;
+    if (JOY_HELD(DPAD_LEFT | DPAD_RIGHT))
+        return FALSE;
+    if (playerDirection == DIR_EAST || playerDirection == DIR_WEST)
+        return FALSE;
+
+    signpostType = GetFacingSignpostType(metatileBehavior, playerDirection);
+    if (signpostType == SIGNPOST_POKECENTER)
+    {
+        SetUpWalkIntoSignScript(EventScript_PokecenterSign, playerDirection);
+        return TRUE;
+    }
+    else if (signpostType == SIGNPOST_POKEMART)
+    {
+        SetUpWalkIntoSignScript(EventScript_PokemartSign, playerDirection);
+        return TRUE;
+    }
+    else if (signpostType == SIGNPOST_INDIGO_1)
+    {
+        SetUpWalkIntoSignScript(EventScript_Indigo_UltimateGoal, playerDirection);
+        return TRUE;
+    }
+    else if (signpostType == SIGNPOST_INDIGO_2)
+    {
+        SetUpWalkIntoSignScript(EventScript_Indigo_HighestAuthority, playerDirection);
+        return TRUE;
+    }
+    else
+    {
+        script = GetSignpostScriptAtMapPosition(position);
+        if (script == NULL)
+            return FALSE;
+        if (signpostType != SIGNPOST_SCRIPTED)
+            return FALSE;
+        SetUpWalkIntoSignScript(script, playerDirection);
+        return TRUE;
+    }
+}
+
+static u8 GetFacingSignpostType(u16 metatileBehavior, u8 playerDirection)
+{
+    if (MetatileBehavior_IsPlayerFacingPokemonCenterSign(metatileBehavior, playerDirection) == TRUE)
+        return SIGNPOST_POKECENTER;
+
+    if (MetatileBehavior_IsPlayerFacingPokeMartSign(metatileBehavior, playerDirection) == TRUE)
+        return SIGNPOST_POKEMART;
+
+    if (MetatileBehavior_IsIndigoPlateauSign1(metatileBehavior) == TRUE)
+        return SIGNPOST_INDIGO_1;
+
+    if (MetatileBehavior_IsIndigoPlateauSign2(metatileBehavior) == TRUE)
+        return SIGNPOST_INDIGO_2;
+
+    if (MetatileBehavior_IsSignpost(metatileBehavior) == TRUE)
+        return SIGNPOST_SCRIPTED;
+
+    return SIGNPOST_NA;
+}
+
+static void SetUpWalkIntoSignScript(const u8 *script, u8 playerDirection)
+{
+    gSpecialVar_Facing = playerDirection;
+    ScriptContext_SetupScript(script);
+    SetWalkingIntoSignVars();
+    MsgSetSignpost();
+}
+
+static const u8 *GetSignpostScriptAtMapPosition(struct MapPosition *position)
+{
+    const struct BgEvent *event = GetBackgroundEventAtPosition(&gMapHeader, position->x - MAP_OFFSET, position->y - MAP_OFFSET, position->elevation);
+    if (event == NULL)
+        return NULL;
+    if (event->bgUnion.script != NULL)
+        return event->bgUnion.script;
+    return EventScript_TestSignpostMsg;
 }
 
 static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metatileBehavior, u8 direction)

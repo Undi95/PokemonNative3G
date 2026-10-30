@@ -31,7 +31,6 @@ u16 AwardBattleTowerRibbons(void) { KantoSpecialStub("AwardBattleTowerRibbons");
 u16 ChooseBattleTowerPlayerParty(void) { KantoSpecialStub("ChooseBattleTowerPlayerParty"); return 0; }
 u16 ReducePlayerPartyToThree(void) { KantoSpecialStub("ReducePlayerPartyToThree"); return 0; }
 u16 Dummy_TryEnableBravoTrainerBattleTower(void) { KantoSpecialStub("Dummy_TryEnableBravoTrainerBattleTower"); return 0; }
-u16 DoPicboxCancel(void) { KantoSpecialStub("DoPicboxCancel"); return 0; }
 
 u16 DoDeoxysTriangleInteraction(void) { KantoSpecialStub("DoDeoxysTriangleInteraction"); return 0; }
 u16 SetDeoxysTrianglePalette(void) { KantoSpecialStub("SetDeoxysTrianglePalette"); return 0; }

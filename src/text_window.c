@@ -122,6 +122,15 @@ const struct TilesPal *GetWindowFrameTilesPal(u8 id)
 // Rouge Feu (new_menu_helpers.c / text_window.c) : boîte de dialogue (option DIALOGUE = KANTO)
 static const u16 sKantoMenuMessageWindow_Gfx[] = INCGFX_U16("graphics/kanto/text_window/menu_message.png", ".4bpp");
 static const u16 sKantoStdPal0[] = INCGFX_U16("graphics/kanto/text_window/stdpal_0.pal", ".gbapal");
+static const u16 sKantoSignpostWindow_Gfx[] = INCGFX_U16("graphics/kanto/text_window/signpost.png", ".4bpp");
+static const u16 sKantoStdPal1[] = INCGFX_U16("graphics/kanto/text_window/stdpal_1.pal", ".gbapal");
+
+// LoadSignpostWindowGfx de RF : cadre des panneaux (option DIALOGUE = KANTO)
+void LoadSignpostWindowGfx(u8 windowId, u16 destOffset, u8 palOffset)
+{
+    LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), sKantoSignpostWindow_Gfx, 0x260, destOffset);
+    LoadPalette(sKantoStdPal1, palOffset, PLTT_SIZE_4BPP);
+}
 
 void LoadMessageBoxGfx(u8 windowId, u16 destOffset, u8 palOffset)
 {

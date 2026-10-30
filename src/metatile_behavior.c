@@ -1411,6 +1411,51 @@ bool8 MetatileBehavior_IsTrainerHillTimer(u8 metatileBehavior)
         return FALSE;
 }
 
+// Rouge Feu : panneaux (metatile_behavior.c de RF)
+bool8 MetatileBehavior_IsPlayerFacingPokemonCenterSign(u8 metatileBehavior, u8 playerDirection)
+{
+    if (playerDirection != DIR_NORTH)
+        return FALSE;
+    else if (metatileBehavior == MB_POKEMON_CENTER_SIGN)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsPlayerFacingPokeMartSign(u8 metatileBehavior, u8 playerDirection)
+{
+    if (playerDirection != DIR_NORTH)
+        return FALSE;
+    else if (metatileBehavior == MB_POKEMART_SIGN)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsSignpost(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_SIGNPOST)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsIndigoPlateauSign1(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_INDIGO_PLATEAU_SIGN_1)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsIndigoPlateauSign2(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_INDIGO_PLATEAU_SIGN_2)
+        return TRUE;
+    else
+        return FALSE;
+}
+
 // Rouge Feu : escaliers latéraux (metatile_behavior.c de RF)
 bool8 MetatileBehavior_IsDirectionalUpRightStairWarp(u8 metatileBehavior)
 {

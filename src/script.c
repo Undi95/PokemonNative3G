@@ -26,6 +26,11 @@ static u8 sGlobalScriptContextStatus;
 static struct ScriptContext sGlobalScriptContext;
 static struct ScriptContext sImmediateScriptContext;
 static bool8 sLockFieldControls;
+// PokemonNative3G : messages des panneaux de Rouge Feu (script.c de RF)
+static u8 sMsgBoxWalkawayDisabled;
+static u8 sMsgBoxIsCancelable;
+static u8 sMsgIsSignpost;
+EWRAM_DATA u8 gWalkAwayFromSignInhibitTimer = 0;
 
 extern ScrCmdFunc gScriptCmdTable[];
 extern ScrCmdFunc gScriptCmdTableEnd[];
@@ -260,8 +265,69 @@ bool8 ScriptContext_RunScript(void)
 }
 
 // Sets up a new script in the global context and enables the context
+// PokemonNative3G : script.c de RF (panneaux : cadre, marche vers un panneau, s'éloigner pour fermer)
+void DisableMsgBoxWalkaway(void)
+{
+    sMsgBoxWalkawayDisabled = TRUE;
+}
+
+void EnableMsgBoxWalkaway(void)
+{
+    sMsgBoxWalkawayDisabled = FALSE;
+}
+
+bool8 IsMsgBoxWalkawayDisabled(void)
+{
+    return sMsgBoxWalkawayDisabled;
+}
+
+void SetWalkingIntoSignVars(void)
+{
+    gWalkAwayFromSignInhibitTimer = 6;
+    sMsgBoxIsCancelable = TRUE;
+}
+
+void ClearMsgBoxCancelableState(void)
+{
+    sMsgBoxIsCancelable = FALSE;
+}
+
+bool8 CanWalkAwayToCancelMsgBox(void)
+{
+    if (sMsgBoxIsCancelable == TRUE)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+void MsgSetSignpost(void)
+{
+    sMsgIsSignpost = TRUE;
+}
+
+void MsgSetNotSignpost(void)
+{
+    sMsgIsSignpost = FALSE;
+}
+
+bool8 IsMsgSignpost(void)
+{
+    if (sMsgIsSignpost == TRUE)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+void ResetFacingNpcOrSignpostVars(void)
+{
+    ResetContextNpcTextColor();
+    MsgSetNotSignpost();
+}
+
 void ScriptContext_SetupScript(const u8 *ptr)
 {
+    ClearMsgBoxCancelableState(); // PokemonNative3G : RF
+    EnableMsgBoxWalkaway();
     InitScriptContext(&sGlobalScriptContext, gScriptCmdTable, gScriptCmdTableEnd);
     SetupBytecodeScript(&sGlobalScriptContext, ptr);
     LockPlayerFieldControls();
