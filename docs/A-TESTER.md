@@ -106,6 +106,7 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 ## Fusion (options et contenus)
 - [ ] Options > FENETRE : cadres 21 à 29 = cadres de Rouge Feu (boîtes de dialogue, menus)
 - [ ] PC > boîte > FONDS > KANTO > KANTO 1-4 : les 16 fonds de Rouge Feu, titre de boîte lisible, sauvegardés
+- [ ] Objets cachés de RF (2026-10-30) : jetons cachés du Casino de Céladopole (12 endroits, 10 à 100 jetons ; sans BOITE JETONS : « rien pour les ranger ») ; objets « sous les pieds » (Restes sous les deux Ronflex, Grelot Zen Tour Pokémon 7e, PP MAX Cap Falaise, Bracelet Macho arène de Jadielle) : rien avec A, trouvés avec le CHERCH'OBJET en se tenant dessus. Vérifié en headless (`kanto_hidden_items`) : 10 jetons, PP MAX
 - [ ] Panneaux de Kanto (2026-10-30) : marcher vers un panneau l'ouvre (haut/bas), s'éloigner le ferme ; enseignes Centre Pokémon / Boutique (de face) et Plateau Indigo parlent. Vérifié en headless (`kanto_signposts`). Non testés : panneaux du Plateau Indigo, START pendant un panneau (ferme puis ouvre le menu)
 - [ ] DIALOGUE = KANTO (2026-10-30) : panneaux dans le cadre gris de RF, PNJ de Kanto en bleu (hommes) / rouge (femmes), Pokémon et objets en gris ; PNJ de Hoenn en gris
 - [ ] Options > DIALOGUE = KANTO : boîte de dialogue de Rouge Feu partout (PNJ, panneaux, combats ? non concernés) ; texte lisible, pas de reste de cadre à la fermeture

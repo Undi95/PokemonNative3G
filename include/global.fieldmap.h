@@ -136,6 +136,8 @@ struct BgEvent
         struct {
             u16 item;
             u16 hiddenItemId;
+            u8 quantity;  // PokemonNative3G : Rouge Feu (jetons cachés du Casino : nombre de jetons)
+            u8 underfoot; // PokemonNative3G : Rouge Feu (sous les pieds : trouvé seulement avec le CHERCH'OBJET)
         } hiddenItem;
         u32 secretBaseId;
     } bgUnion;

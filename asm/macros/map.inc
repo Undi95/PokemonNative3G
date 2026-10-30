@@ -89,17 +89,21 @@
 	/* Defines a generic background event for map data. Mirrors the struct layout of BgEvent in include/global.fieldmap.h*/
 	/* 'kind' is any BG_EVENT_* constant (see include/constants/event_bg.h).*/
 	/* 'arg6' and 'arg7' are used differently depending on the bg event type. See macros below*/
-	.macro bg_event x:req, y:req, elevation:req, kind:req, arg6:req, arg7
+	.macro bg_event x:req, y:req, elevation:req, kind:req, arg6:req, arg7, arg8=1, arg9=0
 	.short \x, \y
 	.byte \elevation
 	.byte \kind
 	.space 2  /* Padding*/
 	.if \kind != BG_EVENT_HIDDEN_ITEM
 		ptrvalue \arg6
+		.if VER_64BIT == 0
+			.space 4 /* PokemonNative3G : l'union fait 8 octets (objet caché de 6 octets)*/
+		.endif
 	.else
 		.short \arg6
 		.short \arg7
-        space64 4
+		.byte \arg8, \arg9 /* PokemonNative3G : quantité, sous les pieds (Rouge Feu)*/
+		.space 2
 	.endif
 	inc _num_signs
 	.endm
@@ -110,11 +114,11 @@
 	.endm
 
 	/* Defines a background hidden item event for map data*/
-	.macro bg_hidden_item_event x:req, y:req, elevation:req, item:req, flag:req
+	.macro bg_hidden_item_event x:req, y:req, elevation:req, item:req, flag:req, quantity=1, underfoot=0
 	.if \flag < FLAG_HIDDEN_ITEMS_START
 	.error "Hidden Item flag \flag is too small. Must be >= FLAG_HIDDEN_ITEMS_START."
 	.endif
-	bg_event \x, \y, \elevation, BG_EVENT_HIDDEN_ITEM, \item, ((\flag) - FLAG_HIDDEN_ITEMS_START)
+	bg_event \x, \y, \elevation, BG_EVENT_HIDDEN_ITEM, \item, ((\flag) - FLAG_HIDDEN_ITEMS_START), \quantity, \underfoot
 	.endm
 
 	/* Defines a background secret base event for map data*/

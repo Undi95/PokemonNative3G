@@ -373,10 +373,9 @@ class Importer:
             bgs = []
             for b in j.get('bg_events', []):
                 if b['type'] == 'hidden_item':
-                    if b.get('quantity', 1) != 1 or b.get('underfoot'):
-                        self.warn('objets cachés RF : quantité/« sous les pieds » ignorés', em_name)
-                    b = {k: v for k, v in b.items() if k not in ('quantity', 'underfoot')}
-                    b['flag'] = tok(b['flag'])
+                    if b.get('quantity', 1) == 1 and not b.get('underfoot'):  # quantité / sous les pieds : mapjson
+                        b = {k: v for k, v in b.items() if k not in ('quantity', 'underfoot')}
+                    b = dict(b, flag=tok(b['flag']))
                 else:
                     b = dict(b, script=tok(b['script']))
                 bgs.append(b)

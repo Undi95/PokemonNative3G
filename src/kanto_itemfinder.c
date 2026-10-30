@@ -21,22 +21,24 @@
 extern const u8 EventScript_ItemfinderDigUpUnderfootItem[];
 void KantoItemUseOnFieldCB_Itemfinder(u8 taskId);
 
-// Rouge Feu (event.h) : attributs d'un objet caché ; ici au format d'Émeraude
+// Rouge Feu (event.h) : attributs d'un objet caché ; ici au format d'Émeraude (struct BgEvent, global.fieldmap.h)
 #define HIDDEN_ITEM_ITEM      0
 #define HIDDEN_ITEM_FLAG      1
 #define HIDDEN_ITEM_QUANTITY  2
 #define HIDDEN_ITEM_UNDERFOOT 3
 static u32 GetHiddenItemAttr(const void *hiddenItem, u8 attr)
 {
-    const u16 *h = hiddenItem; // {item, hiddenItemId}
+    const __typeof__(((struct BgEvent *)0)->bgUnion.hiddenItem) *h = hiddenItem;
     switch (attr)
     {
     case HIDDEN_ITEM_ITEM:
-        return h[0];
+        return h->item;
     case HIDDEN_ITEM_FLAG:
-        return FLAG_HIDDEN_ITEMS_START + h[1];
+        return FLAG_HIDDEN_ITEMS_START + h->hiddenItemId;
     case HIDDEN_ITEM_QUANTITY:
-        return 1;
+        return h->quantity;
+    case HIDDEN_ITEM_UNDERFOOT:
+        return h->underfoot;
     default:
         return FALSE;
     }

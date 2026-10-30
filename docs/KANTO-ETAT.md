@@ -38,12 +38,11 @@ Warps RF : escaliers latéraux (`MB_*_STAIR_WARP`, scénario `kanto_stairs`), t�
 - **Tour des Dresseurs (Île 7, `CallTrainerTowerFunc`)** — à faire en effort Élevé. Différente des installations d'Émeraude (proche de l'Arbre de Dresseurs). À importer : `trainer_tower.c` de RF (~1 100 lignes), ses données de dresseurs, un type de combat dédié (BATTLE_TYPE_TRAINER_TOWER de RF = bit de BATTLE_TYPE_FACTORY dans Émeraude : plus aucun bit libre, il faudra un autre moyen, ex. variable globale), le chronomètre affiché sur le terrain, les records sauvegardés (`trainerTower[]` de SaveBlock1 RF → gSaveBlockKanto), ses textes et portraits en combat, les combats doubles.
 - Combat : conseils de Chen pendant le combat du labo NON importés (décision utilisateur : Kanto vient après Hoenn) ; rematchs RF (Cherche VS) ; Tour Dresseurs.
 - Système d'aide RF, `walk_slower_*` → walk_slow. (Panneaux, textcolor/signmsg, couleurs homme/femme : faits le 2026-10-30.)
-- Objets « clone » RF, objets cachés quantité/underfoot, comportements de tuiles décoratifs/énigmes (BEHAVIOR_ALIASES), anims de tilesets (callback NULL), effets de terrain RF.
+- Objets « clone » RF, comportements de tuiles décoratifs/énigmes (BEHAVIOR_ALIASES), anims de tilesets (callback NULL), effets de terrain RF.
 - Graphismes présents dans les deux jeux (boîtes, interface de combat, transitions, sprites du joueur, de Red…) : choix dans les options plus tard (décision utilisateur). Combat : lettres des ZARBI de Tanoby (choix par chambre de RF) non importées.
 - Std msgbox RF (Kanto_Std_*), scénario (mamans, Rocket…) ; le choix du nom du rival (oak_speech) : plus tard avec l'utilisateur.
 - Bateau Nénucrique → Kanto ; son pas fluide.
 - {RIVAL} à Kanto = `gSaveBlockKanto.rivalName`, « BLUE » par défaut. Fame Checker (drapeaux) dans `gSaveBlockKanto`.
-- Objets cachés renouvelables de RF (`renewable_hidden_items.c`, `SetAllRenewableItemFlags` à la nouvelle partie) non importés.
 - Journal (Quest Log) de RF non importé : `GetQuestLogState` = 0, `SetUsedPkmnCenterQuestLogEvent` sans effet (`src/kanto_field_specials.c`).
 - Normal, pas un bug : pas de musique au départ debug à Bourg Palette (on y arrive normalement par le camion), scène du rival à l'Île 4 (on y arrive en bateau).
 

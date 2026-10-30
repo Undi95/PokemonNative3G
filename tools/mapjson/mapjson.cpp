@@ -327,7 +327,7 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(bg_event, "elevation") << ", "
                      << json_to_string(bg_event, "item") << ", "
                      << json_to_string(bg_event, "flag");
-                if (version == "firered") {
+                if (version == "firered" || bg_event["quantity"].type() != Json::Type::NUL) { // PokemonNative3G : objets cachés de RF
                     text << ", "
                          << json_to_string(bg_event, "quantity") << ", "
                          << json_to_string(bg_event, "underfoot");

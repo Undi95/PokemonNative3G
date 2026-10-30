@@ -1,6 +1,7 @@
 #include "global.h"
 #include "kanto_renewable_hidden_items.h"
 #include "kanto_vs_seeker.h"
+#include "kanto_field_door.h"
 extern const u8 EventScript_VsSeekerChargingDone[];
 // PokemonNative3G : panneaux de Rouge Feu (field_control_avatar.c de RF)
 extern const u8 EventScript_PokecenterSign[];
@@ -8,6 +9,7 @@ extern const u8 EventScript_PokemartSign[];
 extern const u8 EventScript_Indigo_UltimateGoal[];
 extern const u8 EventScript_Indigo_HighestAuthority[];
 extern const u8 EventScript_CancelMessageBox[];
+extern const u8 Kanto_EventScript_HiddenItemScript[];
 #define SIGNPOST_POKECENTER 0
 #define SIGNPOST_POKEMART 1
 #define SIGNPOST_INDIGO_1 2
@@ -392,10 +394,17 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
     case 5:
     case 6:
     case BG_EVENT_HIDDEN_ITEM:
+        if (bgEvent->bgUnion.hiddenItem.underfoot == TRUE) // PokemonNative3G : RF, trouvé avec le CHERCH'OBJET
+            return NULL;
         gSpecialVar_0x8004 = bgEvent->bgUnion.hiddenItem.hiddenItemId + FLAG_HIDDEN_ITEMS_START;
         gSpecialVar_0x8005 = bgEvent->bgUnion.hiddenItem.item;
         if (FlagGet(gSpecialVar_0x8004) == TRUE)
             return NULL;
+        if (IsKantoTilesetMap()) // PokemonNative3G : script de RF (jetons cachés du Casino, quantité)
+        {
+            gSpecialVar_0x8006 = bgEvent->bgUnion.hiddenItem.quantity;
+            return Kanto_EventScript_HiddenItemScript;
+        }
         return EventScript_HiddenItemScript;
     case BG_EVENT_SECRET_BASE:
         if (direction == DIR_NORTH)

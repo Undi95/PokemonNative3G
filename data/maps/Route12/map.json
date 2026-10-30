@@ -275,7 +275,9 @@
       "y": 70,
       "elevation": 3,
       "item": "ITEM_LEFTOVERS",
-      "flag": "FLAG_KANTO_HIDDEN_ITEM_ROUTE12_LEFTOVERS"
+      "flag": "FLAG_KANTO_HIDDEN_ITEM_ROUTE12_LEFTOVERS",
+      "quantity": 1,
+      "underfoot": true
     },
     {
       "type": "hidden_item",
