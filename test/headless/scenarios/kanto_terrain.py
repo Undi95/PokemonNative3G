@@ -18,8 +18,8 @@ def warp(game, map_name, x, y):
 
 
 def renewable_flags():
-    import os, re
-    root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..')
+    import os, re, driver
+    root = os.path.join(os.path.dirname(os.path.abspath(driver.__file__)), '..', '..')
     text = open(os.path.join(root, 'include', 'constants', 'kanto_flags_vars.h'), encoding='utf-8').read()
     return re.findall(r'#define (FLAG_KANTO_HIDDEN_ITEM_\w+)', text)
 
