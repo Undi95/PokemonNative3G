@@ -6,7 +6,9 @@ directement : `out/winwsl/pokeemeraude64.exe --kanto-start 1` (build KANTO_DEBUG
 Déjà vérifiés (pour mémoire) : escaliers latéraux de RF, défilement du menu Options, sprite RED sur la
 carte et la carte dresseur, intro du camion / `--kanto-start`, palette du dos de RED en combat, nom du
 rival dans son texte de victoire, téléporteur de l'arène de Safrania, marche lente sur les escaliers de
-roche (Plateau Indigo), dresseurs d'Argenta.
+roche (Plateau Indigo), dresseurs d'Argenta. Vérifiés par les tests headless (retirés de la liste) : panneaux de
+Kanto, trous des Îles Écume, glace de la Grotte de Glace (neuve en revenant, comme RF), objets cachés qui
+réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, cartes murales et POKéNAV.
 
 - [ ] F5 = reset du jeu (retour à l'écran titre) ; touche modifiable via `key_reset` dans pokeemerald.ini (ligne ajoutée automatiquement aux .ini existants)
 
@@ -33,7 +35,6 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] POKé MONTURE (2026-10-24) : vérifié en headless (`poke_monture.py` : DEBUG « MEWTWO + KADABRA » sans CS + « POKé MONTURE + badges », JADIELLE : COUPE avec INSECATEUR, SURF avec LOKHLASS, VOL depuis le sac → carte de vol de Kanto, annulation → terrain). Non testés : les 7 dons à Kanto (capitaine du S.S. Anne, Route 16, Parc Safari, gardien de Parmanie, assistant Route 2, Source Braise, puce de la Grotte de Glace), FORCE, ÉCLATE-ROC, CASCADE, FLASH depuis le sac dans une grotte, VOL jusqu'au bout, tout à Hoenn (POKéMON de Hoenn), messages quand le badge manque
 - [ ] Chaîne de pêche (2026-10-24) : vérifié en headless avec une build de test à touche sûre (`fishing_chain.py` : le GOUROU de Carmin améliore la CANNE ; 1re prise normale, 2e prise au même endroit chromatique quand les tirages en plus gagnent toujours, après un pas : série brisée). Non testés en vrai : les chances réelles (une série longue au même endroit), SUPER CANNE (Parmanie) et MEGA CANNE (Route 12), pêcheur sans canne dans le sac (il la donne, améliorée), Feebas, série brisée par « rien ne mord »
 ## Plateformes (docs/PLATEFORMES.md)
-- [x] Android : le jeu démarre et s'affiche (2026-10-24, vérifié sur un vrai téléphone par adb : écran Game Freak + touches tactiles). Écran noir corrigé : -fsigned-char (char non signé sur ARM = boucle infinie du rendu) + bandes noires effacées à chaque image
 - [ ] Vallée Ruine (Île 6, 2026-10-24) : textes braille de Kanto enfin affichés (en-tête attendu par le moteur d'Émeraude ; vérifié en headless, `kanto_dotted_hole.py`) ; porte du Trou Pointé : COUPE depuis le menu de l'équipe, face à la porte (24,25 regard nord), ouvre la porte (code de RF dans fldeff_cut.c ; vérifié en headless : KADABRA du debug connaît COUPE, on entre dans le Trou Pointé). Aussi : énigmes braille des chambres de Tanoby
 - [ ] Pension de l'Île 4 (2026-10-24) : le vieil homme se déplace quand un œuf attend (le script lisait un flag de Kanto jamais posé)
 - [ ] Android : touches tactiles (croix 8 directions, A/B, L/R, SELECT / RESET / START ; RESET maintenu 1 s = retour à l'écran titre), plusieurs doigts à la fois
@@ -53,12 +54,10 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Îles du Sud (Latios/Latias via ticket) : combat lancé
 
 ## Warps et terrain de RF
-- [ ] Trous (MB_FALL_WARP) : Îles Écume, Caverne Azurée… on tombe à l'étage du dessous
 - [ ] Rocher de Force poussé dans un trou (Îles Écume) : il disparaît et réapparaît en dessous
 - [ ] Interrupteurs de la Route Victoire : un rocher dessus déclenche l'ouverture
 - [ ] Courir (Chaussures de Course) sur les escaliers de roche : course ralentie
 - [ ] Vélo Course sur les escaliers de roche : bridé à la 2e vitesse ; Vélo Cross normal
-- [ ] Glace de la grotte Gelée (Îles Sevii) : se fissure puis casse ; état gardé en ressortant
 - [ ] Courant des Îles Écume B4F : dépose le joueur sur la terre
 
 ## Specials de RF (scripts de Kanto)
@@ -107,8 +106,7 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Options > FENETRE : cadres 21 à 29 = cadres de Rouge Feu (boîtes de dialogue, menus)
 - [ ] PC > boîte > FONDS > KANTO > KANTO 1-4 : les 16 fonds de Rouge Feu, titre de boîte lisible, sauvegardés
 - [ ] ZARBI des Ruines de Tanoby (2026-10-30) : aucun avant l'ouverture des ruines ; ensuite la lettre dépend de la chambre (MONEAN A/?, LIPTOO C D H U O, … VIAPOIS Z/!). Vérifié en headless (`kanto_unown` : A à Monean, Z à Viapois). À voir : le sprite en combat et dans le Pokédex correspond à la lettre
-- [ ] Objets cachés de RF (2026-10-30) : jetons cachés du Casino de Céladopole (12 endroits, 10 à 100 jetons ; sans BOITE JETONS : « rien pour les ranger ») ; objets « sous les pieds » (Restes sous les deux Ronflex, Grelot Zen Tour Pokémon 7e, PP MAX Cap Falaise, Bracelet Macho arène de Jadielle) : rien avec A, trouvés avec le CHERCH'OBJET en se tenant dessus. Vérifié en headless (`kanto_hidden_items`) : 10 jetons, PP MAX
-- [ ] Panneaux de Kanto (2026-10-30) : marcher vers un panneau l'ouvre (haut/bas), s'éloigner le ferme ; enseignes Centre Pokémon / Boutique (de face) et Plateau Indigo parlent. Vérifié en headless (`kanto_signposts`). Non testés : panneaux du Plateau Indigo, START pendant un panneau (ferme puis ouvre le menu)
+- [ ] Objets cachés de RF (2026-10-30) : jetons cachés du Casino de Céladopole (12 endroits, 10 à 100 jetons ; sans BOITE JETONS : « rien pour les ranger ») ; objets « sous les pieds » (Restes sous les deux Ronflex, Grelot Zen Tour Pokémon 7e, PP MAX Cap Falaise, Bracelet Macho arène de Jadielle) : rien avec A, trouvés avec le CHERCH'OBJET en se tenant dessus. Vérifié en headless (`kanto_hidden_items`) : 10 jetons, PP MAX. Non testés : jetons sans BOITE JETONS, BOITE JETONS pleine
 - [ ] DIALOGUE = KANTO (2026-10-30) : panneaux dans le cadre gris de RF, PNJ de Kanto en bleu (hommes) / rouge (femmes), Pokémon et objets en gris ; PNJ de Hoenn en gris
 - [ ] Options > DIALOGUE = KANTO : boîte de dialogue de Rouge Feu partout (PNJ, panneaux, combats ? non concernés) ; texte lisible, pas de reste de cadre à la fermeture
 - [ ] DIALOGUE = KANTO : fenêtre de RF (26 colonnes, 4 coins) + police de RF. Les textes d'Émeraude trop larges pour la police de RF (~4 % des lignes) gardent la police d'Émeraude automatiquement ; une soixantaine de lignes d'Émeraude dépassent même 26 colonnes : signaler si un texte est coupé à droite
@@ -140,7 +138,6 @@ roche (Plateau Indigo), dresseurs d'Argenta.
   Non vérifié : Ossatueur SANS Scope Sylph (fuite, le joueur est repoussé dans l'escalier) ; Ball lancée sur un SPECTRE (« Il a évité la BALL ! », la Ball rebondit) ; Pokédex : un SPECTRE non révélé ne doit pas être marqué « vu »
 - [ ] Cherche VS avec Red/Leaf : le sprite levant le Cherche VS était faux (numéro de sprite tronqué à 8 bits, corrigé)
 - [ ] Menu Options en 2 pages (L/R, vérifié en headless `options_pages.py`) : page 1 = réglages d'Émeraude, page 2 = choix HOENN/KANTO ; RETOUR sur chaque page. En mode boutons L=A, L sert aussi de A (R change toujours de page)
-- [ ] Objets cachés qui réapparaissent (Kanto, non testé) : Route 20, 21 Nord, souterrains, etc. (15 cartes de RF). Cachés en début de partie ; après 1 500 pas, en entrant sur une de ces cartes, un tirage en fait réapparaître (rares 10 %, peu communs 30 %, communs 60 %). Avec le Cherch'Objet de Kanto
 - [ ] Chen dans la salle du champion de Kanto : rappelle maintenant le starter choisi à Kanto (il lisait celui de Hoenn). Même correctif pour le special IsStarterFirstStageInParty
 - [ ] Note du Pokédex par Chen (vérifié en headless `kanto_oak_pc.py`) : à Kanto, menu PC = PC de ???, PC de <joueur>, PC du PROF. CHEN, (PANTHEON), DECONNEXION ; note selon le nombre de Pokémon de Kanto attrapés. Non vérifiés : Chen en personne au labo (Bourg Palette) et ses aides sur les routes, qui utilisent la même fonction (avant, elle ne faisait rien)
 - [ ] Légendaires de Kanto (Mewtwo, Électhor, Sulfura, Artikodin…) : IA de RF (évite les attaques inutiles, cherche le K.O.) ; non visible en headless
@@ -158,7 +155,5 @@ roche (Plateau Indigo), dresseurs d'Argenta.
 - [ ] Pêcheurs de Kanto sans canne (2026-10-24, compilé) : ils disent où la trouver à Hoenn (Myokara / Route 118 / Algatia) et ne donnent plus rien
 - [ ] Vélo (2026-10-24, compilé, non testé) : vendeur d'Azuria (sans vélo : direction Lavandia ; avec : donne l'autre modèle), changer de vélo depuis le SAC en roulant, portiques de la Piste Cyclable (vélo de Hoenn), pentes (descente seule sans B, B freine, Course et Cross), herbes de la pente (rencontres)
 - [ ] OVO-CHRONO (président du Fan Club, Carmin), CHARME CHROMA (concepteur de Nénucrique) et CHARME OVALE (concepteur de Céladopole) avec le POKéDEX NATIONAL complet (2026-10-24, compilé, non testé) ; icônes dessinées (AUTO-REPOUSSE, OVO-CHRONO, charmes : tools/fusion_icons.py)
-- [x] Passage Hoenn <-> Kanto (2026-10-24, vérifié en headless) : `kanto_travel.py` (offre KANTO au port de Poivressel, aller simple, arrivée à Bourg Palette, pancarte en bois + argent, porte fermée, menu START sans POKéMON), `kanto_travel_house.py` (achat : fondu au noir, boîte aux lettres sur 2 cases revenue, on entre, pas de maman), `kanto_travel_pc.py` (avec un POKéMON de Kanto dans l'équipe, comme le starter ; PC de Jadielle : MEWTWO et le starter grisés, RETIRER refusé « Aucun lien avec HOENN! », on ressort sans gel), `kanto_travel_back.py` (débloqué : Carmin sur Mer -> Poivressel puis Poivressel -> Carmin sur Mer), `kanto_travel_lilycove.py` (départ de Nénucrique), PC « PC de LÉO connecté. » à Kanto (Léo rencontré), « PC d'ANNETTE » à Hoenn avec LÉO aussi rencontré (`hoenn_pc_lanette.py`, Nénucrique)
 - [ ] Reste du passage (à la main ; les menus du PC sont trop lents pour le headless) : K.O. avant un Centre (retour devant la maison), DÉPLACER POKéMON : poser/échanger un POKéMON de Hoenn dans l'équipe (refus), message de transfert après une capture équipe pleine (LÉO / ANNETTE)
-- [x] Cartes (2026-10-24, vérifié en headless) : carte murale d'un Centre de Kanto = carte de Kanto de RF (`kanto_wall_map.py`) ; POKéNAV à Kanto, onglet CARTE = carte de Kanto plein écran puis retour au POKéNAV, sans plantage, libellé « CARTE DE KANTO » et aide « Carte de la région KANTO. » à Kanto (`kanto_pokenav_map.py`)
 - [ ] Objet CARTE (2026-10-24, compilé) : carte de Kanto à Kanto (îles Sevii comprises), carte de Hoenn à Hoenn, depuis le SAC et enregistré sur SELECT
