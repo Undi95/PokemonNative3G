@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : téléport DEBUG au Panthéon de Kanto, enregistrement (moniteur RF),
 # Panthéon puis crédits de Kanto (musique continue : --audio).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -16,3 +17,10 @@ def play(game):
     for _ in range(300):
         game.tap("A", gap=60)
     log(game, "fin")
+
+    # Vérifications
+    expect_text(game, "Bienvenue au PANTHEON")
+    expect_flag(game, "FLAG_KANTO_SYS_GAME_CLEAR")
+    expect_song(game, "MUS_HALL_OF_FAME")
+    expect_song(game, "MUS_RG_CREDITS")
+    expect_map(game, "PalletTown")

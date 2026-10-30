@@ -1,13 +1,14 @@
 # Build KANTO_DEBUG=1 : objets du debug, MEWTWO, DEBUG > Revanches PokéNav, téléport Route 102 (à côté de
 # Calvin), CHERCHE VS : Calvin (revanche du PokéNav) répond « !! » et saute, Rick (pas de revanche, jamais
 # combattu) « ! ». Puis on parle à Calvin : combat de revanche, et il cesse de sauter après.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
 from kanto_tour import log, debug_warp, give_mewtwo
 from kanto_vs_seeker import use_vs_seeker
 from redleaf_acro import close_menus
-from driver import wait_until
+from driver import finish_dialog, wait_until
 
 
 def play(game):
@@ -25,8 +26,8 @@ def play(game):
     game.wait(120); log(game, "réponses")
     game.tap("RIGHT", hold=16); game.wait(30); game.tap("RIGHT"); game.wait(20)
     game.tap("A"); game.wait(400); log(game, "Calvin")
-    for _ in range(300):
-        if game.state.free:
-            break
-        game.tap("A"); game.wait(60)
+    finish_dialog(game)
     wait_until(game, lambda s: s.free); game.wait(200); log(game, "après le combat")
+
+    # Vérifications
+    expect_battle(game, trainer="TRAINER_CALVIN_2", outcome="WON")

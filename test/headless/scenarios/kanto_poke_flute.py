@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : objets du debug, POKéFLUTE depuis le sac (Objets rares) : aucun Pokémon endormi,
 # « Vous jouez de la POKéFLUTE. Super!!! Ça c'est du refrain! » (Rouge Feu).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -22,3 +23,7 @@ def play(game):
     for _ in range(6):
         game.tap("A"); game.wait(80)
     log(game, "fin")
+
+    # Vérifications
+    expect_text(game, "Vous jouez de la POKéFLUTE")
+    expect_text(game, "Ça c’est du refrain")

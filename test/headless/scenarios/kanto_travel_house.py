@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : comme kanto_travel (DEBUG « Deux Ligues finies » donne aussi 999999¥), puis achat de la maison
 # de Bourg Palette : fondu au noir, porte ouverte, boîte aux lettres revenue ; on entre (pas de maman).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -23,3 +24,8 @@ def play(game):
     talk_to(game, "UP"); log(game, "achat")
     walk_to(game, 6, 8)
     game.press("UP", 1); game.wait(20); game.press("UP", 8); game.wait(120); log(game, "entrée (doit être dans la maison)")
+
+    # Vérifications
+    expect_flag(game, "FLAG_PALLET_HOUSE_BOUGHT")
+    expect_text(game, "achète la maison")
+    expect_map(game, "PalletTown_PlayersHouse_1F")

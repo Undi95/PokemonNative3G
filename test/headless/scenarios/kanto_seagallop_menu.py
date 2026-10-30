@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : DEBUG > Pass îles Sevii, téléport PORT ÎLE 1 : menu des destinations de RF
 # (CARMIN SUR MER, ÎLE 2, 3, 4, AUTRES, RETOUR), AUTRES (ÎLE 5, 6, 7, AUTRES, RETOUR), ÎLE 7, traversée.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -22,3 +24,7 @@ def play(game):
         game.tap("A"); game.wait(120)
     game.wait(600)
     wait_until(game, lambda s: s.free); log(game, "arrivée")
+
+    # Vérifications
+    expect_map(game, "SevenIsland_Harbor")
+    expect_text(game, "La FLECHE DES MERS 6 va partir")

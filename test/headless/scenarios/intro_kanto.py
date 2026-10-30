@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : Options > INTRO = KANTO, sauvegarde, reset (A+B+START+SELECT) :
 # après le copyright d'Émeraude, l'intro de Rouge Feu (Game Freak, Nidorino contre Ectoplasma).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -22,3 +23,8 @@ def play(game):
     close_menus(game); log(game, "sauvé")
     game.press("A+B+START+SELECT", 1)
     game.wait(3000); log(game, "intro")
+
+    # Vérifications
+    expect_song(game, "MUS_RG_GAME_FREAK", 8802)
+    expect_song(game, "MUS_RG_INTRO_FIGHT", 8802)
+    expect_song(game, "MUS_TITLE", 8802)

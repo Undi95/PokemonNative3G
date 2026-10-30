@@ -1,6 +1,7 @@
 # Build KANTO_DEBUG=1 : MEWTWO, sans Scope Sylph, téléport TOUR POKéMON 3 : rencontre d'un SPECTRE
 # (« Le SPECTRE apparaît ! Mince ! Le SPECTRE ne peut être identifié ! »), MEWTWO a peur de bouger,
 # « SPECTRE : Va t'en… Dehors… », puis FUITE (toujours réussie).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -29,3 +30,9 @@ def play(game):
         game.tap("DOWN"); game.wait(20); game.tap("RIGHT"); game.wait(20); game.tap("A"); game.wait(300)
     log(game, "fuite")
     wait_until(game, lambda s: s.free); log(game, "fini")
+
+    # Vérifications
+    expect_battle(game, foe="SPECIES_GASTLY", outcome="RAN")
+    expect_text(game, "Le SPECTRE ne peut être identifié")
+    expect_text(game, "MEWTWO a peur de bouger")
+    expect_text(game, "SPECTRE: Va t’en")

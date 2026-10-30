@@ -1,4 +1,6 @@
 # Comme kanto_dotted_hole, avec Options > DIALOGUE = KANTO : le braille s'écrit dans la boîte de dialogue de RF.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -16,3 +18,7 @@ def set_dialog_kanto(game):
 
 def play(game):
     kanto_dotted_hole.play(game, at_start=set_dialog_kanto)
+
+    # Vérifications
+    expect_flag(game, "FLAG_KANTO_USED_CUT_ON_RUIN_VALLEY_BRAILLE")
+    expect_map(game, "SixIsland_DottedHole_1F")

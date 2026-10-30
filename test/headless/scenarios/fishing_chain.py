@@ -3,6 +3,7 @@
 # Build KANTO_DEBUG=1 : objets du debug (CANNE), Carmin sur Mer : le GOUROU améliore la CANNE,
 # puis pêches au même endroit (avec une build de test où la touche est sûre : la 2e prise doit être chromatique),
 # puis un pas : la série est brisée.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -48,3 +49,7 @@ def play(game):
     fish(game, "prise 2 (chromatique)")
     walk_to(game, 9, 9); walk_to(game, 8, 9); game.press("LEFT", 1); game.wait(20)
     fish(game, "après un pas")
+
+    # Vérifications
+    expect_text(game, "est améliorée")
+    expect_flag(game, "FLAG_OLD_ROD_UPGRADED")

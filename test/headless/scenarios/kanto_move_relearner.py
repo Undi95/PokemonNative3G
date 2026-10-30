@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : MEWTWO, option MENUS = KANTO, objets du debug (champignons), Île 2, Maître des capacités :
 # écran du Maître des capacités de RF (learn_move.c).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -28,3 +30,7 @@ def play(game):
         game.tap("A"); game.wait(90); log(game, "A %d" % k)
     game.wait(120); log(game, "écran rf")
     game.tap("DOWN"); game.wait(40); log(game, "bas")
+
+    # Vérifications
+    expect_text(game, "Je suis le DINGUE DES CAPACITES")
+    expect_text(game, "Quelle attaque dois-je enseigner")

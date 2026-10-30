@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : nouvelle partie à Bourg Palette, scène de CHEN, choix de CARAPUCE au labo
 # (sans surnom), puis le premier combat contre le rival (TRAINER_BATTLE_EARLY_RIVAL).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -25,3 +26,9 @@ def play(game):
     log(game, "starter choisi")
     walk_to(game, 6, 8, on_battle=fight_battle); log(game, "déclencheur")
     finish_dialog(game); log(game, "après le combat")
+
+    # Vérifications
+    expect_party(game, "SPECIES_SQUIRTLE", 6)
+    expect_battle(game, trainer="TRAINER_KANTO_RIVAL_OAKS_LAB_BULBASAUR", outcome="WON")
+    expect_flag(game, "FLAG_KANTO_BEAT_RIVAL_IN_OAKS_LAB")
+    expect_text(game, "BLUE obtient BULBIZARRE")

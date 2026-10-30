@@ -1,6 +1,7 @@
 # Build KANTO_DEBUG=1 : DEBUG « Carte de vol » (RUBIS et SAPHIR rendus à CÉLIO), sauvegarde, reset : le menu
 # principal propose CADEAU MYST. ; les trois CARTES MYSTÈRE (TICKET AURORA, TICKET MYSTIK, VIEILLE CARTE), les objets
 # reçus, la sauvegarde, retour à l'écran titre ; au menu principal suivant, l'option a disparu.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -37,3 +38,10 @@ def play(game):
         game.tap("A"); game.wait(150); log(game, "sauvegarde %d" % k)
     game.wait(300)
     to_main_menu(game, 400); log(game, "menu principal après")
+
+    # Vérifications
+    expect_item(game, "ITEM_AURORA_TICKET", 1)
+    expect_item(game, "ITEM_MYSTIC_TICKET", 1)
+    expect_item(game, "ITEM_OLD_SEA_MAP", 1)
+    expect_flag(game, "FLAG_ENABLE_SHIP_FARAWAY_ISLAND")
+    expect_text(game, "Tous les CADEAUX MYSTÈRE ont été reçus")

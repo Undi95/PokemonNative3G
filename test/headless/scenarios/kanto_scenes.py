@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : MUSÉE ARGENTA (image du fossile d'Ptéra dans un cadre, avec le texte), puis LIGUE : OLGA
 # (éclairage de la salle : les couleurs du sol changent en boucle).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -18,3 +20,7 @@ def play(game):
     wait_until(game, lambda s: s.free); log(game, "fermé")
     debug_warp(game, 31); log(game, "Olga")
     game.wait(400); log(game, "éclairage")
+
+    # Vérifications
+    expect_text(game, "Fossile de PTERA")
+    expect_map(game, "PokemonLeague_LoreleisRoom")

@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : objets du debug, téléport Route 10, CHERCH'OBJET depuis le sac :
 # Cherch'Objet de Rouge Feu (flèches vers l'objet caché, Super Potion en 10,19).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -26,3 +28,7 @@ def play(game):
             break
         game.tap("A"); game.wait(60)
     wait_until(game, lambda s: s.free); log(game, "fini")
+
+    # Vérifications
+    expect_text(game, "CHERCH’OBJET est sélectionné")
+    expect_text(game, "L’appareil réagit")

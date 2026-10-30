@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : téléport PORT ÎLE 1 (devant le marin), destination ÎLE 2 : traversée du Seagallop
 # (mer qui défile, ferry et sillage) puis arrivée au port de l'Île 2.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -27,3 +29,7 @@ def play(game):
             break
         game.tap("A"); game.wait(120)
     wait_until(game, lambda s: s.free); log(game, "arrivée")
+
+    # Vérifications
+    expect_map(game, "OneIsland_Harbor")
+    expect_text(game, "La FLECHE DES MERS 2 va partir")

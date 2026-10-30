@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : comme kanto_travel, puis PC du Centre de Jadielle : MEWTWO (parti au PC au départ) est grisé et
 # RETIRER est refusé (« Aucune connexion avec HOENN… »). Vérifier l'image de fin.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -33,3 +35,7 @@ def play(game):
     for k in range(8):
         game.press("B", 4); game.wait(90)
     wait_until(game, lambda s: s.free, limit=1500); log(game, "sorti du PC (pas de gel)")
+
+    # Vérifications
+    expect_text(game, "Gestion de Stocks de POKéMON en ligne")
+    expect_map(game, "ViridianCity_PokemonCenter_1F")

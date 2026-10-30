@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : MEWTWO, téléport à Argenta, arène : le campeur (dresseur qui repère
 # le joueur) puis PIERRE (champion).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -17,3 +18,8 @@ def play(game):
     walk_to(game, 15, 17); leave_map(game, "UP"); log(game, "arène")
     walk_to(game, 6, 8); log(game, "après le campeur")
     walk_to(game, 6, 6); talk_to(game, "UP"); log(game, "après PIERRE")
+
+    # Vérifications
+    expect_battle(game, trainer="TRAINER_KANTO_CAMPER_LIAM", outcome="WON")
+    expect_battle(game, trainer="TRAINER_KANTO_LEADER_BROCK", outcome="WON")
+    expect_text(game, "Tu es encore loin de pouvoir te battre contre PIERRE")

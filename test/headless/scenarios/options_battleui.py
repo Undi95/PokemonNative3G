@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : MEWTWO, téléport à Jadielle, Options > BOITES COMBAT = KANTO,
 # puis combat sauvage sur la Route 1 (comme kanto_wild).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -40,3 +42,7 @@ def play(game):
     game.wait(500)
     fight_battle(game)
     log(game, "après le combat")
+
+    # Vérifications
+    expect_text(game, "PAGE 2/2 : HOENN/KANTO")
+    expect_battle(game, foe="SPECIES_PIDGEY", outcome="WON")

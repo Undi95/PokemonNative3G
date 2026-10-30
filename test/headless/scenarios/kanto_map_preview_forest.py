@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : DEBUG ARGENTA, Route 2, poste nord, entrée de la FORÊT DE JADE : aperçu « forêt » de RF
 # (image + nom en fondu sur la carte, joueur bloqué pendant l'aperçu)
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -19,3 +21,6 @@ def play(game):
     walk_to(game, 7, 9); game.press("DOWN", 30); game.wait(30); log(game, "forêt")
     game.wait(60); log(game, "aperçu")
     wait_until(game, lambda s: s.free); log(game, "libre")
+
+    # Vérifications
+    expect_map(game, "ViridianForest")

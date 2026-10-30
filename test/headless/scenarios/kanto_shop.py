@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : option MENUS = KANTO, boutique d'Argenta : menu ACHETER/VENDRE/SORTIR et écran d'achat de RF
 # (shop.c de RF), achat d'une POKé BALL, sortie.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -28,3 +30,6 @@ def play(game):
     game.tap("A"); game.wait(120); log(game, "acheté")
     game.tap("A"); game.wait(60); game.tap("B"); game.wait(200); log(game, "retour menu")
     game.tap("B"); game.wait(120); log(game, "fin")
+
+    # Vérifications
+    expect_text(game, "POKé BALL? Vous en voulez 1? Ça fera 200¥")

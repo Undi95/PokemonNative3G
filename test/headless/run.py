@@ -12,7 +12,7 @@ import argparse
 import os
 import sys
 
-from headless import REPO_DIR, contact_sheet, run_scenario
+from headless import BUILD_DIR, REPO_DIR, contact_sheet, run_scenario
 
 
 def parse_param(text):
@@ -37,7 +37,7 @@ def main():
     args = parser.parse_args()
 
     name = os.path.splitext(os.path.basename(args.scenario))[0]
-    out = args.out or os.path.join(REPO_DIR, "build", "headless", name)
+    out = args.out or os.path.join(BUILD_DIR, name)
     run = run_scenario(args.binary, args.scenario, out, save=args.save, shot_every=args.shots,
                        params=dict(args.param), audio=args.audio)
     ran = len(run.hashes())

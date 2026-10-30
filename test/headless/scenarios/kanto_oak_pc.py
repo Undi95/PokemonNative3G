@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : DEBUG > Débloquer les 2 POKéDEX (151 vus, 76 attrapés), téléport JADIELLE, Centre Pokémon,
 # PC : « PC du PROF. CHEN » entre le PC du joueur et DECONNEXION, note du Pokédex de Kanto par Chen.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -28,3 +29,8 @@ def play(game):
             break
         game.tap("B"); game.wait(60)
     log(game, "fini")
+
+    # Vérifications
+    expect_text(game, "Connexion au PC du PROF. CHEN")
+    expect_text(game, "151 POKéMON vus et 76 POKéMON pris")
+    expect_text(game, "tu devrais aller pêcher plus")

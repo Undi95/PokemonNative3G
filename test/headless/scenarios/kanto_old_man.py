@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : DEBUG « VIEIL HOMME JADIELLE » (colis remis), téléport à Jadielle,
 # le vieil homme montre comment attraper un POKéMON (combat de démonstration de RF).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -27,3 +28,10 @@ def play(game):
         else:
             game.tap("A"); game.wait(20)
     log(game, "après la démonstration")
+
+    # Vérifications
+    expect_battle(game, foe="SPECIES_WEEDLE", outcome="CAUGHT")
+    expect_text(game, "ASPICOT est attrapé")
+    expect_item(game, "ITEM_TEACHY_TV", 1)
+    expect_item(game, "ITEM_POKE_BALL", 0)
+    expect(game, [m[0] for m in game.state.party] == [names.value("SPECIES_MEWTWO"), names.value("SPECIES_KADABRA")], "l'ASPICOT du vieil homme n'est pas dans l'équipe")

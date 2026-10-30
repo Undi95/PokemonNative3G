@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : option SAC = KANTO, objets du debug, puis le sac de Rouge Feu : poches,
 # menu d'un objet, Vélo depuis le sac (passe par item_use.c d'Émeraude), retour au sac.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -39,3 +40,7 @@ def play(game):
     log(game, "seau")
     game.tap("A", 2, gap=60); game.wait(60); log(game, "retour liste")
     close_menus(game); log(game, "fin")
+
+    # Vérifications
+    expect_text(game, "VELO COURSE est sélectionné")
+    expect_song(game, "MUS_CYCLING")

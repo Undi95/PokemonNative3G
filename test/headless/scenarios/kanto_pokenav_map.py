@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : DEBUG « Deux Ligues finies » (POKéNAV), passage à Kanto, POKéMON de Kanto ; POKéNAV, onglet
 # CARTE : carte de Kanto de RF (pas de plantage), B : retour au POKéNAV.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -24,3 +26,6 @@ def play(game):
     game.tap("START"); game.wait(40); game.tap("DOWN", 3, gap=15); game.tap("A"); game.wait(200); log(game, "POKéNAV")
     game.tap("A"); game.wait(300); log(game, "CARTE")
     game.tap("B"); game.wait(300); log(game, "retour")
+
+    # Vérifications
+    expect_party(game, "SPECIES_MEWTWO")

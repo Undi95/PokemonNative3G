@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : option SAC = KANTO, objets du debug, combat sauvage sur la Route 1 :
 # le sac de Rouge Feu en combat (poche Balls, MASTER BALL lancée, capture).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -43,3 +44,9 @@ def play(game):
             break
         game.tap("B"); game.wait(60)
     wait_until(game, lambda s: s.free); log(game, "après le combat")
+
+    # Vérifications
+    expect_battle(game, foe="SPECIES_RATTATA", outcome="CAUGHT")
+    expect_party(game, "SPECIES_RATTATA")
+    expect_text(game, "RATTATA est attrapé")
+    expect_item(game, "ITEM_MASTER_BALL", 98)

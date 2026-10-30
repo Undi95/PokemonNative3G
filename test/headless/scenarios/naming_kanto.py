@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : option SAC = KANTO, objets du debug, combat sauvage sur la Route 1 :
 # capture, surnom : écran de nom de Rouge Feu (option MENUS = KANTO).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -45,3 +47,8 @@ def play(game):
             break
         game.tap("B"); game.wait(60)
     wait_until(game, lambda s: s.free); log(game, "fin")
+
+    # Vérifications
+    expect_battle(game, foe="SPECIES_PIDGEY", outcome="CAUGHT")
+    expect_party(game, "SPECIES_PIDGEY", 2)
+    expect_text(game, "Donner un surnom au ROUCOOL capturé")

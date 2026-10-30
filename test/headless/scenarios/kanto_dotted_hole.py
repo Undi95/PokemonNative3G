@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : DEBUG « MEWTWO + KADABRA », « POKé MONTURE + badges » et « Deux Ligues finies » (scientifique parti), téléport VALLÉE RUINE (37) :
 # porte du Trou Pointé, braille, puis COUPE depuis le menu de l'équipe (KADABRA, COUPE en debug) -> porte ouverte, on entre.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -33,3 +35,7 @@ def play(game, before_warp=None, at_start=None):
     game.tap("DOWN"); game.wait(20); game.tap("A"); game.wait(40); game.tap("DOWN"); game.wait(20); game.tap("A"); game.wait(200)
     log(game, "coupe utilisée")
     game.press("UP", 16); game.wait(200); log(game, "entré")
+
+    # Vérifications
+    expect_flag(game, "FLAG_KANTO_USED_CUT_ON_RUIN_VALLEY_BRAILLE")
+    expect_map(game, "SixIsland_DottedHole_1F")

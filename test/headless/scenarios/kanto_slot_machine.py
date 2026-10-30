@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : objets du debug (étui à jetons, 500 jetons), Casino de Céladopole, machine à sous de RF :
 # mise (BAS), arrêt des rouleaux (A), sortie (B).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -25,3 +27,6 @@ def play(game):
     game.tap("A", 3, gap=60); game.wait(60)
     game.tap("B"); game.wait(90); log(game, "quitter ?")
     game.tap("A"); game.wait(300); log(game, "fin")
+
+    # Vérifications
+    expect_text(game, "Une machine à sous! On joue?")

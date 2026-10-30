@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : option SAC = KANTO, objets du debug, Boîte à CT de Rouge Feu depuis le sac
 # (poche CT/CS d'Émeraude) : liste, menu d'une CT, apprendre une CT à MEWTWO, retour.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -33,3 +35,7 @@ def play(game):
     game.tap("B"); game.wait(240); log(game, "sac ?")
     game.tap("B"); game.wait(240)
     close_menus(game); log(game, "fin")
+
+    # Vérifications
+    expect_text(game, "BOITE CT est sélectionné")
+    expect_text(game, "MEWTWO apprend FORCE")

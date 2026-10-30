@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : DEBUG > POKéDEX Kanto complet, téléport GAME FREAK (Céladopole), le designer remet
 # le diplôme de RF. Avant, le jeu se bloquait (stub + waitstate).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -21,3 +23,7 @@ def play(game):
     game.wait(600); log(game, "diplôme")
     game.tap("A"); game.wait(200)
     wait_until(game, lambda s: s.free); log(game, "fin")
+
+    # Vérifications
+    expect_text(game, "Tu as complété ton POKéDEX")
+    expect_text(game, "Ce document certifie")

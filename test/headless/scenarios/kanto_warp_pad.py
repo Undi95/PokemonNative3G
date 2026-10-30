@@ -1,4 +1,6 @@
 # Build KANTO_DEBUG=1 : téléport dans l'arène de Safrania, premier téléporteur (MB_REGULAR_WARP de RF).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -17,3 +19,6 @@ def play(game):
     game.press("UP", 16)
     game.wait(20); log(game, "départ")
     wait_until(game, lambda s: s.free); game.wait(30); log(game, "arrivée")
+
+    # Vérifications
+    expect_map(game, "SaffronCity_Gym")

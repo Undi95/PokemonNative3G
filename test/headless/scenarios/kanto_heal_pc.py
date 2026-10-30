@@ -1,4 +1,6 @@
 # Build KANTO_DEBUG=1 : MEWTWO, Jadielle, Centre Pokémon : soin (moniteur de RF) puis PC (écran de RF).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -17,3 +19,8 @@ def play(game):
     walk_to(game, 7, 4); talk_to(game, "UP"); log(game, "soin")
     walk_to(game, 11, 2); game.tap("UP"); game.wait(20); game.tap("A"); game.wait(240); log(game, "PC")
     game.tap("B", 4, gap=60); game.wait(120)
+
+    # Vérifications
+    expect_text(game, "Vos POKéMON sont en super forme")
+    expect_text(game, "allume le PC")
+    expect(game, all(m[2] == m[3] for m in game.state.party), "équipe soignée (PV au max)")

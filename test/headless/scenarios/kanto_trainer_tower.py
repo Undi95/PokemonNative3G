@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : MEWTWO, DEBUG « TOUR DRESSEURS » (hall), défi SIMPLES (accueil), 1er étage,
 # début du combat contre le dresseur (type Colline + aiguillage Tour : nom, classe, image, répliques).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -21,6 +22,11 @@ def play(game):
         run(game)
     except BattleStarted:
         pass
+    # Vérifications
+    expect_text(game, "Bienvenue à la TOUR DRESSEURS")
+    expect_text(game, "Un combat est lancé par MARIN RONAN")
+    expect_battle(game, trainer=None, outcome=None)
+    expect_map(game, "TrainerTower_1F")
 
 
 def run(game):

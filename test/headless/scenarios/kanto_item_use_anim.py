@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : MEWTWO, option SAC = KANTO, objets du debug, SUPER BONBON depuis le sac de RF :
 # scène de RF (pokemon_special_anim : Pokémon, objet, « Le niveau de MEWTWO augmente ! »), puis le menu d'équipe.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -30,3 +32,8 @@ def play(game):
     for _ in range(8):
         game.tap("A"); game.wait(60)
     log(game, "fin")
+
+    # Vérifications
+    expect_party(game, "SPECIES_MEWTWO", 71)
+    expect_item(game, "ITEM_RARE_CANDY", 98)
+    expect_text(game, "SUPER BONBON est utilisé sur MEWTWO")

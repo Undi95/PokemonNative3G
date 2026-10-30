@@ -1,6 +1,7 @@
 # Build KANTO_DEBUG=1 : nouvelle partie, MEWTWO, téléport à Jadielle, Route 1 au sud,
 # puis allers-retours dans les hautes herbes jusqu'à un combat sauvage, gagné avec la 1re attaque
 # (PSYKO : le MEWTWO du menu DEBUG l'a en premier).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -38,3 +39,6 @@ def play(game):
     log(game, "combat")
     fight_battle(game)
     log(game, "après le combat")
+
+    # Vérifications
+    expect_battle(game, foe="SPECIES_RATTATA", outcome="WON")

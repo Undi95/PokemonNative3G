@@ -33,7 +33,7 @@ import subprocess
 import sys
 
 import savecheck
-from headless import REPO_DIR, TEST_DIR, run_scenario, scenario_variables
+from headless import BUILD_DIR, REPO_DIR, TEST_DIR, run_scenario, scenario_variables
 
 EXPECTED_FRAMES_PATH = os.path.join(TEST_DIR, "expected_frames.txt")
 EXPECTED_FRAMES_HEADER = """\
@@ -98,7 +98,7 @@ def check_save(name, path, **expected):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("binary")
-    parser.add_argument("--out", default=os.path.join(REPO_DIR, "build", "headless"))
+    parser.add_argument("--out", default=BUILD_DIR)
     parser.add_argument("--random-frames", type=int, default=DEFAULT_RANDOM_FRAMES)
     parser.add_argument("--audit", action="store_true", help="also run audit_data.py")
     parser.add_argument("--update-expected", action="store_true",

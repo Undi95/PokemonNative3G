@@ -1,0 +1,29 @@
+# Défauts déjà connus, trouvés par AddressSanitizer / UBSan (docker/test-sanitize.sh) : ils ne font pas
+# échouer la suite, qui les liste à la fin de son rapport. Un défaut qui n'est pas ici la fait échouer.
+# Une ligne par endroit (fichier:ligne du jeu, comme dans le rapport), puis # ce que c'est. Corriger un
+# défaut = retirer sa ligne. Trouvés le 2026-10-30.
+
+src/battle_message.c:2885         # gDisplayedStringBattle débordé en développant un texte de combat (PIERRE, kanto_trainer)
+src/battle_message.c:2892         # idem (même texte)
+src/battle_message.c:2894         # idem
+src/battle_message.c:2906         # idem
+src/text.c:996                    # idem : le texte affiché lit après la fin de gDisplayedStringBattle
+src/text.c:1009                   # idem
+src/platform/test_state.c:85      # idem : le journal des tests relit ce texte sans fin
+src/platform/test_state.c:86      # idem
+src/battle_script_commands.c:10095 # Cmd_handleballthrow : index -1 dans un u8[4] (lancer de Ball, Kanto)
+src/evolution_scene.c:1511        # Task_UpdateBgPalette lit sBgAnim_PaletteControl[4] (tableau de 4) : aussi dans Émeraude
+src/fldeff_flash.c:354            # index 15 dans un u16[8] (palette de transition de grotte)
+src/kanto_intro.c:2508            # débordement d'int signé dans le générateur aléatoire de l'intro RF (sans effet visible)
+src/kanto_intro.c:2561            # idem
+src/kanto_map_preview_screen.c:416 # palettes des aperçus de lieux chargées plus grandes que leurs tableaux
+src/kanto_pokedex_area.c:570      # IsSpeciesInEncounterTable lit après gRoute102_FishingMons (nombre de Pokémon de pêche faux)
+src/kanto_slot_machine.c:1367     # StopReel1 : index -1 dans sReelBiasChances
+src/kanto_vs_seeker.c:892         # GatherNearbyTrainerInfo : gObjectEvents[16] (un après la fin)
+src/kanto_vs_seeker.c:893         # idem
+src/main.c:400                    # tuiles de sKantoMenuMessageWindow_Gfx copiées au-delà du tableau (boîte de dialogue RF)
+src/pokemon.c:4232                # SetMonData(MON_DATA_NICKNAME) depuis un nom plus court que 10 octets (gText_Ghost, sJapaneseEggNickname)
+src/region_map.c:573              # sRegionMapBg_Pal (64 octets) chargée avec une taille plus grande
+src/sprite.c:869                  # le template du sprite d'icône du sac RF est sur la pile (KBag_AddItemIconObject), relu après
+src/sprite.c:870                  # idem
+src/sprite.c:881                  # idem

@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : DEBUG « MEWTWO + KADABRA », objets du debug, CÂBLE LINK (sac d'Émeraude) sur KADABRA :
 # évolution en ALAKAZAM comme après un échange.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -23,3 +24,8 @@ def play(game):
     for k in range(14):
         game.tap("A"); game.wait(90)
     log(game, "fin")
+
+    # Vérifications
+    expect_party(game, "SPECIES_ALAKAZAM", 30)
+    expect_item(game, "ITEM_LINK_CABLE", 98)
+    expect_text(game, "Votre KADABRA évolue en ALAKAZAM")

@@ -40,6 +40,45 @@ the game, e.g. by comparing a build of your branch against one of `vanilla`.
 `savecheck.py SAVE` checks a save file against the GBA format, independently of the
 game code, and prints what's in it.
 
+## Test bench (PokemonNative3G)
+
+`suite.py BINARY [SCENARIO ...]` plays every scenario that defines `play(game)` (or the
+ones given) in parallel and writes a short report, `build/headless/suite/report.txt`: a
+line per scenario, and for the ones that failed, why and the end of their journal. The
+whole suite takes about 45 seconds. A scenario fails when one of its checks does, or when
+the game crashes, freezes (no answer for 60 s), stops going anywhere (a `wait_until` that
+never ends), or prints a sanitizer report.
+
+Before a release, `bash test-release.sh` (at the top of the repository, after
+`build-all.sh`) runs it on the release's Windows build, then on a Linux build with
+AddressSanitizer and UBSan (`docker/test-sanitize.sh`), which also catches reads and
+writes out of bounds that don't show.
+
+What a scenario did can be read in its `journal.txt`, without screenshots: the text the
+game printed (decoded with `charmap.txt`), flags, variables and items that changed,
+maps, screens (the main callback, by name, from the build's symbols), music, battles with
+their Pokémon and outcome, and the party, each with the frame and where the player was.
+The game writes these with its state (see `src/platform/test_state.c`); `cb1`, `cb2` and
+`tasks` in the state name what it's running, which tells a menu and a freeze apart.
+
+Between frames, a scenario can also run test commands (lines starting with `!` in the
+input, so a run can still be replayed from `input.txt`), to set a scenario up quickly or
+check what it did: `game.flag(name, value)`, `game.var`, `game.item(name, add)`,
+`game.money`, `game.give_mon(species, level)`, `game.heal()`, `game.warp(map, x, y)`,
+`save(game)` and `game.shot(name)`. Names are the constants of `include/constants`.
+
+Checks fail the scenario and go to the journal: `expect(game, condition, message)`,
+`expect_text` (words of a text the game printed, since a `mark`), `expect_map`,
+`expect_flag`, `expect_var`, `expect_item`, `expect_party`, `expect_battle` (a battle
+against a trainer or a species, and how it ended) and `expect_song`. What can only be
+seen is checked with `check_screen(game, name)`, against `refs/NAME.png`: a scenario that
+sets `SCREENS = True` checks the screen at each of its `log` steps. A missing reference
+is made from the screen, to look at once: `refs_sheet.py` puts the new ones (or `--all`)
+on one image. `suite.py --update-refs` replaces them, when the screens change on purpose.
+
+A scenario that sets `FIXTURE = "kanto"` starts from the save that
+`scenarios/fixture_kanto.py` ends with (a new game in Pallet Town), made once per build.
+
 ## Scenarios
 
 Scenarios are in `scenarios/`, in one of two kinds.

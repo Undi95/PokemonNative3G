@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : DEBUG « Deux Ligues finies », téléport FORÊT BAIES, autel : CELEBI apparaît, combat
 # légendaire (Mewtwo du debug), CELEBI vaincu s'enfuit ; l'autel redevient silencieux.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -29,3 +30,9 @@ def play(game):
             break
     finish_dialog(game); log(game, "après combat")
     talk_to(game, "UP"); log(game, "autel silencieux")
+
+    # Vérifications
+    expect_battle(game, foe="SPECIES_CELEBI", outcome="WON")
+    expect_flag(game, "FLAG_DEFEATED_CELEBI")
+    expect_text(game, "CELEBI s’est enfui")
+    expect_text(game, "C’est un petit autel en bois")

@@ -4,6 +4,11 @@
 #include <stdio.h>
 #include "gba/types.h"
 
+extern bool8 gTestStateEnabled;
+
 void WriteTestState(FILE *file, u32 frame);
+void RunTestCommand(FILE *file, const char *line);
+void TestState_OnText(u8 windowId, const u8 *text);
+void TestState_OnFrame(u32 frame);
 
 #endif // GUARD_PLATFORM_TEST_STATE_H

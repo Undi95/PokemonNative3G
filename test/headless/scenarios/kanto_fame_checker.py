@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : DEBUG « MEMORYDEX complet », puis MEMORYDEX depuis le sac (Objets rares) :
 # liste des 16 personnes, portrait, fiches (PNJ), lecture d'une fiche, retour au sac.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -26,3 +28,7 @@ def play(game):
     game.tap("A"); game.wait(120); log(game, "lecture")
     game.tap("A", 4, gap=60); game.wait(60)
     game.tap("B"); game.wait(60); game.tap("B"); game.wait(180); log(game, "retour sac")
+
+    # Vérifications
+    expect_text(game, "MEMORYDEX est sélectionné")
+    expect_text(game, "CHAMPION d’ARENE d’ARGENTA: PIERRE")

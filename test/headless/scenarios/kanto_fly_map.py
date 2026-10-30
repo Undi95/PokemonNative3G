@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : menu DEBUG > Carte VOL (2 régions) à Bourg Palette : carte de Kanto (RF),
 # SELECT -> carte de Hoenn (Émeraude), SELECT -> Kanto ; puis la même chose depuis Bourg-en-Vol.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -25,3 +27,7 @@ def play(game):
     fly_map(game, "Kanto")
     debug_warp(game, 20); log(game, "Bourg-en-Vol")
     fly_map(game, "Hoenn")
+
+    # Vérifications
+    expect_map(game, "LittlerootTown")
+    expect_flag(game, "FLAG_VISITED_LITTLEROOT_TOWN")

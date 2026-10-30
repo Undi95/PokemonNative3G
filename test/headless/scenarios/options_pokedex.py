@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : MEWTWO, debug « Débloquer les 2 POKéDEX » (151 vus), Options > POKéDEX = KANTO, puis ouvre le Pokédex de Rouge Feu
 # depuis le menu Start et parcourt : sommaire, liste numérique, fiche, zone, retour.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -20,7 +22,7 @@ def play(game):
     game.tap("R"); game.wait(30); game.tap("DOWN", 6, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120); game.tap("B")
     wait_until(game, lambda s: s.free); game.wait(30)
     game.tap("START"); game.wait(30); game.tap("UP", 5, gap=10); game.wait(10); game.tap("A"); game.wait(240)
-    game.tap("A"); game.wait(200)        # 1re entrée du sommaire : liste numérique
-    game.tap("A"); game.wait(200)        # fiche du 1er Pokémon
-    game.tap("A"); game.wait(200)        # page suivante (zone)
+    game.tap("A"); game.wait(200); check_screen(game, "options_pokedex-1re entrée du sommaire")   # 1re entrée du sommaire : liste numérique
+    game.tap("A"); game.wait(200); check_screen(game, "options_pokedex-fiche du 1er Pokémon")   # fiche du 1er Pokémon
+    game.tap("A"); game.wait(200); check_screen(game, "options_pokedex-page suivante (zone)")   # page suivante (zone)
     game.tap("B"); game.wait(150); game.tap("B"); game.wait(150); game.tap("B"); game.wait(150); game.tap("B"); game.wait(200)

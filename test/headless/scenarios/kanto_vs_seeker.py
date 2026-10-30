@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : objets du debug, puis CHERCHE VS depuis le sac (Objets rares) à Bourg Palette :
 # message de la batterie à recharger (ou pas de dresseur), sans plantage ; 100 pas puis nouvel essai.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -34,3 +35,7 @@ def play(game):
     for _ in range(25):
         game.tap("LEFT", hold=16, gap=2); game.tap("RIGHT", hold=16, gap=2)
     use_vs_seeker(game, "2", 0)
+
+    # Vérifications
+    expect_text(game, "Il faut faire 100 pas pour la recharger")
+    expect_text(game, "Il faut faire 50 pas pour la recharger")

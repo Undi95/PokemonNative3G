@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef PORTABLE
+#include "platform/test_state.h"
+#endif
 #include "battle.h"
 #include "main.h"
 #include "m4a.h"
@@ -300,6 +303,9 @@ bool16 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, Tex
     for (i = 0; i < (int)ARRAY_COUNT(sTempTextPrinter.subStructFields); i++)
         sTempTextPrinter.subStructFields[i] = 0;
 
+#ifdef PORTABLE
+    TestState_OnText(printerTemplate->windowId, printerTemplate->currentChar);
+#endif
     sTempTextPrinter.printerTemplate = *printerTemplate;
     sTempTextPrinter.callback = callback;
     sTempTextPrinter.minLetterSpacing = 0;

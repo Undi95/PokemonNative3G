@@ -1,6 +1,7 @@
 # Build KANTO_DEBUG=1 : objets du debug (dont le Scope Sylph), MEWTWO, téléport TOUR POKéMON 6, trois pas vers
 # le bas : Ossatueur. Le Scope Sylph révèle le SPECTRE (« Le SPECTRE était OSSATUEUR ! »), combat, puis le
 # script continue (« Le SPECTRE était la mère d'OSSELAIT… »).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -29,3 +30,8 @@ def play(game):
             break
         game.tap("A"); game.wait(40)
     wait_until(game, lambda s: s.free); log(game, "fini")
+
+    # Vérifications
+    expect_battle(game, foe="SPECIES_MAROWAK", outcome="WON")
+    expect_text(game, "Le SCOPE SYLPHE révèle l’identité du SPECTRE")
+    expect_text(game, "Le SPECTRE était OSSATUEUR")

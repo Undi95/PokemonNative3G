@@ -74,6 +74,8 @@ static u32 sTestFrame;
 static u64 sTestAudioHash;
 static FILE *sTestAudio;
 static FILE *sTestState;
+static uint16_t sTestImage[DISPLAY_WIDTH * DISPLAY_HEIGHT];
+static void WriteTestScreenshot(const uint16_t *image, const char *name);
 
 extern void AgbMain(void);
 
@@ -738,6 +740,7 @@ static bool ParseArgs(int argc, char **argv)
         else if (strcmp(arg, "--test-state") == 0)
         {
             sTestState = (strcmp(value, "-") == 0) ? stdout : fopen(value, "w");
+            gTestStateEnabled = TRUE;
             if (sTestState == NULL)
             {
                 fprintf(stderr, "Could not open state output %s\n", value);
@@ -827,6 +830,24 @@ static bool ReadTestInput(u16 *outKeys)
         }
         if (fgets(line, sizeof(line), sTestInput) == NULL)
             return false;
+        // A command for the tests (see RunTestCommand), answered right away
+        if (line[0] == '!')
+        {
+            FILE *out = sTestState != NULL ? sTestState : stderr;
+            char shotName[128];
+
+            if (sscanf(line, "!shot %127s", shotName) == 1)
+            {
+                WriteTestScreenshot(sTestImage, shotName);
+                fprintf(out, "{\"reply\": 1}\n");
+                fflush(out);
+            }
+            else
+            {
+                RunTestCommand(out, line);
+            }
+            continue;
+        }
         if (line[0] == '#' || sscanf(line, "%u %199s", &sHoldFrames, buttons) != 2)
         {
             sHoldFrames = 0;
@@ -878,12 +899,17 @@ static void WriteWavHeader(FILE *file, u32 dataSize)
     fwrite(header, 1, sizeof(header), file);
 }
 
-static void WriteTestScreenshot(const uint16_t *image)
+// Writes the frame to the screenshot directory, as frame_NNNNNN.ppm, or
+// NAME.ppm for a screenshot a test asked for
+static void WriteTestScreenshot(const uint16_t *image, const char *name)
 {
     char path[512];
     FILE *file;
 
-    snprintf(path, sizeof(path), "%s/frame_%06u.ppm", sTestShotDir, sTestFrame);
+    if (name != NULL)
+        snprintf(path, sizeof(path), "%s/%s.ppm", sTestShotDir != NULL ? sTestShotDir : ".", name);
+    else
+        snprintf(path, sizeof(path), "%s/frame_%06u.ppm", sTestShotDir, sTestFrame);
     file = fopen(path, "wb");
     if (file == NULL)
     {
@@ -911,7 +937,7 @@ static void WriteTestScreenshot(const uint16_t *image)
 // hash>" per frame, which lets two builds be compared frame by frame.
 static int RunTestMode(void)
 {
-    static uint16_t image[DISPLAY_WIDTH * DISPLAY_HEIGHT];
+    uint16_t *image = sTestImage;
 
     cgb_audio_init(AUDIO_SAMPLE_RATE);
     AgbMain();
@@ -922,6 +948,7 @@ static int RunTestMode(void)
 
         ENTER_VBLANK();
         ranFrame = RunMainLoop();
+        TestState_OnFrame(sTestFrame);
         memset(image, 0, sizeof(image));
         DrawFrame(image);
         REG_VCOUNT = 161;
@@ -938,11 +965,11 @@ static int RunTestMode(void)
                     (unsigned long long)HashBytes(0xCBF29CE484222325ull, image, sizeof(image)),
                     (unsigned long long)sTestAudioHash);
         if (sTestShotDir != NULL && sTestShotEvery != 0 && sTestFrame % sTestShotEvery == 0)
-            WriteTestScreenshot(image);
+            WriteTestScreenshot(image, NULL);
     }
 
     if (sTestShotDir != NULL)
-        WriteTestScreenshot(image);
+        WriteTestScreenshot(image, NULL);
     if (sTestHashes != NULL)
         fclose(sTestHashes);
     if (sTestAudio != NULL)

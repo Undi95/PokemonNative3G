@@ -1,10 +1,15 @@
 # Build KANTO_DEBUG=1 : nouvelle partie à Bourg Palette, porte de la maison (fermée, à vendre), le labo,
 # parle aux PNJ, puis téléport à Jadielle et soin au Centre Pokémon.
-from driver import finish_dialog, leave_map, talk_to, walk_to, wait_until
+from driver import *  # les vérifications (expect...)
+from driver import check_screen, finish_dialog, leave_map, talk_to, walk_to, wait_until
 
 
 def log(game, what):
-    print(f"{what}: {game.state}", flush=True)
+    """Une étape du scénario, dans le journal. Dans un scénario qui met SCREENS = True,
+    l'écran doit aussi être celui de la référence refs/SCÉNARIO-ÉTAPE.png."""
+    game.note(f"ÉTAPE {what}")
+    if game.screens:
+        check_screen(game, f"{game.name}-{what}")
 
 
 def debug_warp(game, index):
@@ -37,3 +42,8 @@ def play(game):
     walk_to(game, 26, 27); leave_map(game, "UP"); log(game, "Centre Pokémon")
     walk_to(game, 7, 4); talk_to(game, "UP"); log(game, "infirmière")
     walk_to(game, 7, 7); leave_map(game, "DOWN"); log(game, "dehors")
+
+    # Vérifications
+    expect_flag(game, "FLAG_KANTO_VISITED_OAKS_LAB")
+    expect_text(game, "Je suis donc son… ASSISTANT")
+    expect_map(game, "ViridianCity")

@@ -338,7 +338,9 @@ void InitIntrHandlers(void)
     for (i = 0; i < INTR_COUNT; i++)
         gIntrTable[i] = gIntrTableTemplate[i];
 
+#ifndef PORTABLE // PokemonNative3G : le gestionnaire d'interruptions est en C sur PC, rien à copier en IWRAM
     DmaCopy32(3, IntrMain, IntrMain_Buffer, sizeof(IntrMain_Buffer));
+#endif
 
     INTR_VECTOR = IntrMain_Buffer;
 

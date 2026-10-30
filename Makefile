@@ -364,7 +364,7 @@ else ifeq ($(PORTABLE),1)
   # e.g. SANITIZE=address,undefined (Linux only). GCC defines shifting into the
   # sign bit (it's everywhere in GBA code), so that isn't reported.
   ifneq ($(SANITIZE),)
-    override CFLAGS += -fsanitize=$(SANITIZE) -fno-sanitize=shift-base -fno-omit-frame-pointer
+    override CFLAGS += -fsanitize=$(SANITIZE) -fno-sanitize=shift-base -fno-omit-frame-pointer $(if $(findstring address,$(SANITIZE)),-fsanitize-recover=address)
   endif
   LIB := $(LIBPATH) -lgcc -lc
 else

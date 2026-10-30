@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : option SAC = KANTO, objets du debug, Sac à Baies de Rouge Feu depuis le sac
 # (poche Baies d'Émeraude) : liste, menu d'une baie, l'utiliser sur MEWTWO (message d'item_use.c), retour.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -32,3 +33,8 @@ def play(game):
     game.tap("A", 4, gap=70); game.wait(200); log(game, "après")
     game.tap("B", 2, gap=120); game.wait(200); log(game, "retour")
     close_menus(game); log(game, "fin")
+
+    # Vérifications
+    expect_text(game, "SAC A BAIES est sélectionné")
+    expect_text(game, "BAIE ORAN est sélectionné")
+    expect_text(game, "aura aucun effet")

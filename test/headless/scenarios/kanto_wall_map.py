@@ -1,4 +1,6 @@
 # Build KANTO_DEBUG=1 : MEWTWO, Jadielle, Centre Pokémon : la carte murale (à droite du PC) montre Kanto (RF).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -18,3 +20,6 @@ def play(game):
     game.tap("A"); game.wait(300); log(game, "carte murale")
     game.tap("B"); game.wait(200)
     wait_until(game, lambda s: s.free); log(game, "retour")
+
+    # Vérifications
+    expect_map(game, "ViridianCity_PokemonCenter_1F")

@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : DEBUG « Carte de vol » (Ligue de Kanto finie), téléport ÎLE 4, pension : l'assistant du
 # PROF. CHEN donne les trois œufs des starters de Kanto (aucun attrapé), un par visite, puis plus rien.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -30,3 +31,9 @@ def play(game):
     for k in range(2, 5):
         talk_to(game, "RIGHT"); game.wait(30); log(game, "visite %d" % k)
     game.tap("START"); game.wait(30); game.tap("DOWN", 1, gap=10); game.tap("A"); game.wait(120); log(game, "équipe")
+
+    # Vérifications
+    expect_party(game, "SPECIES_BULBASAUR")
+    expect_party(game, "SPECIES_CHARMANDER")
+    expect_party(game, "SPECIES_SQUIRTLE")
+    expect_text(game, "C’était le dernier OEUF")

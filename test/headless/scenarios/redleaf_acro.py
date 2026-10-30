@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : option PERSO = Red, objets du debug, Vélo Cross depuis le sac,
 # roue arrière (B maintenu) sur place puis en roulant : sprites de Red faits pour le Vélo Cross.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -38,3 +40,6 @@ def play(game):
     game.press("B", 120); log(game, "roue arrière")
     game.press("B+RIGHT", 60); game.press("B+DOWN", 60); game.press("B+LEFT", 60); game.press("B+UP", 60)
     game.press("B", 60); game.wait(60); log(game, "fin")
+
+    # Vérifications
+    expect_text(game, "VELO CROSS est sélectionné")

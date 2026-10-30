@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : DEBUG « Deux Ligues finies » (ANNETTE et LÉO rencontrés), Centre Pokémon de Nénucrique :
 # le PC affiche « PC d'ANNETTE » à Hoenn (et pas LÉO).
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -20,3 +21,7 @@ def play(game):
     walk_to(game, 24, 15); leave_map(game, "UP"); log(game, "Centre")
     walk_to(game, 10, 2); game.tap("UP"); game.wait(20); game.tap("A"); game.wait(150)
     game.tap("A"); game.wait(150); log(game, "PC")
+
+    # Vérifications
+    expect_text(game, "PC d’ANNETTE")
+    expect_no_text(game, "PC de LÉO")

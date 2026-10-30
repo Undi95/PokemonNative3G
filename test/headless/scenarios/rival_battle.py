@@ -1,4 +1,5 @@
 # Continues the save made by first_battle and follows the story: heals at
+SUITE = False   # suite de smoke.py (part de la sauvegarde de first_battle)
 # Oldale's Pokémon Center, battles the rival on Route 103, gets the Pokédex in
 # Birch's lab and the Running Shoes from Mom, and saves. Wild Pokémon in the
 # grass on the way get fought too.

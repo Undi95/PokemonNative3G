@@ -9,10 +9,13 @@ import glob
 import os
 import shutil
 import subprocess
+import threading
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 SCENARIO_DIR = os.path.join(TEST_DIR, "scenarios")
 REPO_DIR = os.path.dirname(os.path.dirname(TEST_DIR))
+# Where the runs go (HEADLESS_OUT, e.g. when the repository is read-only)
+BUILD_DIR = os.environ.get("HEADLESS_OUT", os.path.join(REPO_DIR, "build", "headless"))
 
 
 def tap(button, times=1, hold=2, gap=20):
@@ -42,8 +45,9 @@ def scenario_variables(scenario, **params):
     """Returns all of the variables a scenario sets, like load_scenario. A
     scenario can set CONFIG to a settings file in this directory to play with."""
     path = scenario if scenario.endswith(".py") else os.path.join(SCENARIO_DIR, scenario + ".py")
-    namespace = {"tap": tap, "wait": wait, "walk": walk, "load_scenario": load_scenario, "CONFIG": None, **params}
-    with open(path) as f:
+    namespace = {"tap": tap, "wait": wait, "walk": walk, "load_scenario": load_scenario, "CONFIG": None,
+                 "KANTO_START": None, "FIXTURE": None, **params}
+    with open(path, encoding="utf-8") as f:
         exec(compile(f.read(), path, "exec"), namespace)
     return namespace
 
@@ -78,18 +82,26 @@ def run_scenario(binary, scenario, out_dir, save=None, shot_every=0, params=None
     driver (see driver.py), and one that defines steps is played from those."""
     variables = scenario_variables(scenario, **(params or {}))
     config = os.path.join(TEST_DIR, variables["CONFIG"]) if variables["CONFIG"] else None
+    # A scenario that sets FIXTURE starts from the save its fixture scenario makes
+    if variables["FIXTURE"] and not save:
+        save = fixture(binary, variables["FIXTURE"])
     os.makedirs(out_dir, exist_ok=True)
     for old in glob.glob(os.path.join(out_dir, "frame_*.ppm")):
         os.remove(old)
 
     if "play" in variables:
         import driver
-        game = driver.Game(binary, out_dir, save=save, config=config, shot_every=shot_every, audio=audio)
+        game = driver.Game(binary, out_dir, save=save, config=config, shot_every=shot_every, audio=audio,
+                           kanto_start=variables["KANTO_START"])
+        game.name = os.path.splitext(os.path.basename(scenario))[0]
+        game.screens = bool(variables.get("SCREENS"))
         error = ""
         try:
             variables["play"](game)
-        except driver.GameError as e:
+        except Exception as e:  # a GameError, or a mistake in the scenario
             error = f"{scenario} went wrong: {e}\n"
+            if not isinstance(e, driver.CheckFailed):   # expect already noted it
+                game.note(f"ERREUR : {e}")
         returncode = game.finish()
         with open(os.path.join(out_dir, "stderr.txt")) as f:
             stderr = error + f.read()
@@ -120,6 +132,30 @@ def run_scenario(binary, scenario, out_dir, save=None, shot_every=0, params=None
     run.returncode = proc.returncode
     run.stderr = proc.stderr
     return run
+
+
+_fixture_locks = {}
+_fixture_locks_lock = threading.Lock()
+
+
+def fixture(binary, name):
+    """The save that scenarios/fixture_NAME.py ends with, made the first time
+    it's needed by a build (they're kept in build/headless/fixtures)."""
+    info = os.stat(binary)
+    folder = os.path.join(BUILD_DIR, "fixtures")
+    path = os.path.join(folder, f"{name}-{int(info.st_mtime)}-{info.st_size}.sav")
+    with _fixture_locks_lock:
+        lock = _fixture_locks.setdefault(name, threading.Lock())
+    with lock:
+        if not os.path.exists(path):
+            out = os.path.join(folder, name)
+            run = run_scenario(binary, "fixture_" + name, out)
+            if not run.ok:
+                raise RuntimeError(f"fixture {name} failed, see {out}/journal.txt: {run.stderr.strip()[-500:]}")
+            for old in glob.glob(os.path.join(folder, f"{name}-*.sav")):
+                os.remove(old)
+            shutil.copyfile(run.save_path, path)
+    return path
 
 
 def contact_sheet(out_dir, first_frame=0, columns=6, max_shots=48):

@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : DEBUG objets (POKé FLÛTE), « Deux Ligues finies », téléport CHUTES MÉTÉORE : météorite,
 # POKé FLÛTE, JIRACHI se réveille, combat légendaire (Mewtwo du debug), vaincu : la météorite ne brille plus.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -31,3 +32,9 @@ def play(game):
         game.tap("A")
     finish_dialog(game); log(game, "après combat")
     talk_to(game, "UP"); log(game, "météorite éteinte")
+
+    # Vérifications
+    expect_battle(game, foe="SPECIES_JIRACHI", outcome="WON")
+    expect_flag(game, "FLAG_DEFEATED_JIRACHI")
+    expect_text(game, "La météorite ne brille plus")
+    expect_text(game, "Elle ne brille plus")

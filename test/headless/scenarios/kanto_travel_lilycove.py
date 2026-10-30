@@ -1,6 +1,7 @@
 # Build KANTO_DEBUG=1 : comme kanto_travel, depuis le port de Nénucrique (PORT NENUCRIQUE).
 # port propose KANTO (aller simple) : l'équipe part au PC, arrivée à Bourg Palette ; pancarte de la maison à vendre
 # (pas assez d'argent), porte fermée à clé.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -24,3 +25,7 @@ def play(game):
     walk_to(game, 4, 8)
     talk_to(game, "UP"); log(game, "pancarte")
     walk_to(game, 6, 8)
+
+    # Vérifications
+    expect_flag(game, "FLAG_FUSION_KANTO_VISITED")
+    expect_text(game, "Le navire te déposera à BOURG PALETTE")

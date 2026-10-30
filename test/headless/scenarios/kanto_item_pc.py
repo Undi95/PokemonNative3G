@@ -1,5 +1,7 @@
 # Build KANTO_DEBUG=1 : option MENUS = KANTO, Centre Pokémon de Jadielle, PC du joueur > objets > RETIRER :
 # PC objets plein écran de RF (item_pc.c), POTION de départ retirée, retour au sous-menu du PC.
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -29,3 +31,7 @@ def play(game):
     game.tap("A"); game.wait(60); log(game, "quantité")
     game.tap("A"); game.wait(120); log(game, "retiré")
     game.tap("A", 2, gap=60); game.tap("B"); game.wait(240); log(game, "retour")
+
+    # Vérifications
+    expect_text(game, "PC personnel connecté")
+    expect_text(game, "POTION: retiré 1")

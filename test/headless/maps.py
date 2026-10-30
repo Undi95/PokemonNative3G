@@ -142,3 +142,15 @@ def load(name):
     if name not in _maps:
         _maps[name] = Map(name)
     return _maps[name]
+
+
+def find_map(name):
+    """The group and number of a map, from its name ("PalletTown" or
+    "MAP_PALLET_TOWN", the way the map's constant is written)."""
+    wanted = name[4:] if name.startswith("MAP_") else name
+    wanted = wanted.replace("_", "").lower()
+    for group, group_name in enumerate(_GROUPS["group_order"]):
+        for num, map_name_ in enumerate(_GROUPS[group_name]):
+            if map_name_.replace("_", "").lower() == wanted:
+                return group, num
+    raise KeyError(f"unknown map {name}")

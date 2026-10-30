@@ -1,5 +1,6 @@
 # Build KANTO_DEBUG=1 : MEWTWO (sans les objets du debug), téléport REPAIRE ROCKET (sous Giovanni), combat contre
 # Giovanni, Scope Sylph ramassé à sa place, puis TOUR POKéMON 6 : Ossatueur doit être révélé par ce Scope Sylph.
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -34,3 +35,9 @@ def play(game):
         game.tap("A"); game.wait(30)
     game.wait(300); log(game, "Ossatueur")
     press_until_free(game); log(game, "fini")
+
+    # Vérifications
+    expect_battle(game, trainer="TRAINER_KANTO_BOSS_GIOVANNI", outcome="WON")
+    expect_item(game, "ITEM_SILPH_SCOPE", 1)
+    expect_battle(game, foe="SPECIES_MAROWAK", outcome="WON")
+    expect_map(game, "PokemonTower_6F")

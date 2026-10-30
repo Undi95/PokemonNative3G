@@ -1,6 +1,8 @@
 # Build KANTO_DEBUG=1 : Plateau Indigo, descente des escaliers de roche (MB_ROCK_STAIRS de RF) en
 # marchant puis en courant. Hors escalier : 16 frames par case (marche), 8 (course) ;
 # sur l'escalier : 24 (marche lente de RF) et ~11 (course lente).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -14,7 +16,7 @@ def trace(game, buttons, frames):
         game.press(buttons, 1)
         pos = game.state.pos
         if pos != last:
-            print(f"  frame {game.state.frame}: {pos}", flush=True)
+            game.note(f"position {pos}")
             last = pos
 
 
@@ -29,3 +31,6 @@ def play(game):
     trace(game, "DOWN", 200); log(game, "en bas (marche)")
     walk_to(game, 11, 11); log(game, "en haut")
     trace(game, "DOWN+B", 120); log(game, "en bas (course)")
+
+    # Vérifications
+    expect_map(game, "Route23")

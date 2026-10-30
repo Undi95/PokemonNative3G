@@ -1,6 +1,8 @@
 # Build KANTO_DEBUG=1 : DEBUG « MEWTWO + KADABRA » (aucune CS) et « POKé MONTURE + badges », téléport JADIELLE :
 # COUPE sur l'arbre (INSECATEUR appelé), SURF sur l'étang (LOKHLASS appelé), puis VOL depuis le sac (carte de vol,
 # annulée : retour au terrain).
+SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
+from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
@@ -35,3 +37,8 @@ def play(game):
     game.tap("RIGHT", 4, gap=30); game.wait(30); log(game, "objets rares")
     game.tap("A"); game.wait(40); game.tap("A"); game.wait(240); log(game, "carte de vol")
     game.tap("B"); game.wait(240); log(game, "annulé")
+
+    # Vérifications
+    expect_text(game, "KADABRA utilise COUPE")
+    expect_text(game, "Voulez-vous utiliser SURF")
+    expect_text(game, "POKé MONTURE")
