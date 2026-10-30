@@ -4,7 +4,6 @@
 FIXTURE = "kanto"
 from driver import *  # les vérifications (expect...)
 from driver import continue_game, finish_dialog, mark, wait_text, wait_until
-import names
 
 
 def step(game, direction, frames=40):
@@ -19,8 +18,9 @@ def warp(game, map_name, x, y):
 
 
 def renewable_flags():
-    import re
-    text = open('include/constants/kanto_flags_vars.h', encoding='utf-8').read()
+    import os, re
+    root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..')
+    text = open(os.path.join(root, 'include', 'constants', 'kanto_flags_vars.h'), encoding='utf-8').read()
     return re.findall(r'#define (FLAG_KANTO_HIDDEN_ITEM_\w+)', text)
 
 
