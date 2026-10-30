@@ -41,7 +41,6 @@ Warps RF : escaliers latéraux (`MB_*_STAIR_WARP`, scénario `kanto_stairs`), t�
 - Objets « clone » RF, comportements de tuiles décoratifs/énigmes (BEHAVIOR_ALIASES), anims de tilesets (callback NULL), effets de terrain RF.
 - Graphismes présents dans les deux jeux (boîtes, interface de combat, transitions, sprites du joueur, de Red…) : choix dans les options plus tard (décision utilisateur).
 - Std msgbox RF (Kanto_Std_*), scénario (mamans, Rocket…) ; le choix du nom du rival (oak_speech) : plus tard avec l'utilisateur.
-- Bateau Nénucrique → Kanto ; son pas fluide.
 - {RIVAL} à Kanto = `gSaveBlockKanto.rivalName`, « BLUE » par défaut. Fame Checker (drapeaux) dans `gSaveBlockKanto`.
 - Journal (Quest Log) de RF non importé : `GetQuestLogState` = 0, `SetUsedPkmnCenterQuestLogEvent` sans effet (`src/kanto_field_specials.c`).
 - Normal, pas un bug : pas de musique au départ debug à Bourg Palette (on y arrive normalement par le camion), scène du rival à l'Île 4 (on y arrive en bateau).
