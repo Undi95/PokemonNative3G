@@ -35,6 +35,7 @@ struct DayNightLights
 {
     const struct Tileset *tileset;
     u16 colors[NUM_PALS_TOTAL]; // masque des couleurs de vitre, par palette
+    const u8 *unlitTiles;       // tiles du tileset qui ne s'allument pas (bits), ou NULL
 };
 
 #include "data/day_night_lights.h"
@@ -42,7 +43,7 @@ struct DayNightLights
 static u16 sTintR = 256, sTintG = 256, sTintB = 256, sLight = 0;
 static u32 sLastUpdate = 0xFFFFFFFF;
 static const struct MapLayout *sLightsLayout;
-static u16 sLightMasks[NUM_PALS_TOTAL];
+struct DayNightRender gDayNightRender;
 static bool8 sMarkLights; // banc de test : vitres en magenta
 
 bool8 IsDayNightHourNight(u8 hours)
@@ -85,13 +86,26 @@ static void UpdateLightMasks(void)
     if (layout == sLightsLayout)
         return;
     sLightsLayout = layout;
-    memset(sLightMasks, 0, sizeof(sLightMasks));
+    memset(gDayNightRender.masks, 0, sizeof(gDayNightRender.masks));
+    memset(gDayNightRender.tiles, 0xFF, sizeof(gDayNightRender.tiles));
     for (i = 0; i < ARRAY_COUNT(sDayNightLights); i++)
     {
-        if (sDayNightLights[i].tileset != layout->primaryTileset && sDayNightLights[i].tileset != layout->secondaryTileset)
+        const struct DayNightLights *lights = &sDayNightLights[i];
+        u32 base;
+
+        if (lights->tileset == layout->primaryTileset)
+            base = 0;
+        else if (lights->tileset == layout->secondaryTileset)
+            base = NUM_TILES_IN_PRIMARY / 8;
+        else
             continue;
         for (j = 0; j < NUM_PALS_TOTAL; j++)
-            sLightMasks[j] |= sDayNightLights[i].colors[j];
+            gDayNightRender.masks[j] |= lights->colors[j];
+        if (lights->unlitTiles != NULL)
+        {
+            for (j = 0; j < NUM_TILES_IN_PRIMARY / 8; j++)
+                gDayNightRender.tiles[base + j] &= ~lights->unlitTiles[j];
+        }
     }
 }
 
@@ -137,6 +151,7 @@ void DayNight_TintPltt(void)
     u16 *pltt = (u16 *)PLTT;
     u32 pal, i;
 
+    gDayNightRender.active = FALSE;
     if (!gSaveBlock2Ptr->optionsDayNight || gMain.callback2 != CB2_Overworld || !IsMapTypeOutdoors(gMapHeader.mapType))
         return;
     // L'heure n'est relue qu'une fois par seconde
@@ -148,14 +163,14 @@ void DayNight_TintPltt(void)
     if (sTintR == 256 && sTintG == 256 && sTintB == 256 && sLight == 0 && !sMarkLights)
         return;
     UpdateLightMasks();
+    gDayNightRender.active = sLight != 0 || sMarkLights;
     for (pal = 0; pal < NUM_PALS_TOTAL; pal++)
     {
         for (i = 0; i < 16; i++, pltt++)
         {
-            if ((sLightMasks[pal] >> i) & 1)
-                *pltt = LightColor(*pltt);
-            else
-                *pltt = TintColor(*pltt);
+            if (gDayNightRender.active && ((gDayNightRender.masks[pal] >> i) & 1))
+                gDayNightRender.colors[pal * 16 + i] = LightColor(*pltt);
+            *pltt = TintColor(*pltt);
         }
     }
     TintColors((u16 *)OBJ_PLTT, PLTT_SIZE / 2 / 2);

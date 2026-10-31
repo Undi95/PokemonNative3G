@@ -2,6 +2,7 @@
 #include "global.h"
 #include <stdbool.h>
 #include "platform/dma.h"
+#include "day_night.h"
 
 #define mosaicBGEffectX (REG_MOSAIC & 0xF)
 #define mosaicBGEffectY ((REG_MOSAIC >> 4) & 0xF)
@@ -128,7 +129,14 @@ static void RenderBGScanline(int bgNum, uint16_t control, uint16_t hoffs, uint16
                 pixel &= 0xF;
 
             if (pixel != 0)
-                line[x] = pal[16 * paletteNum + pixel] | 0x8000;
+            {
+                // Cycle jour/nuit : fenêtres allumées (day_night.c)
+                if (gDayNightRender.active && charBaseBlock == 0 && paletteNum < 13
+                 && ((gDayNightRender.masks[paletteNum] >> pixel) & 1) && ((gDayNightRender.tiles[tileNum / 8] >> (tileNum % 8)) & 1))
+                    line[x] = gDayNightRender.colors[16 * paletteNum + pixel] | 0x8000;
+                else
+                    line[x] = pal[16 * paletteNum + pixel] | 0x8000;
+            }
         }
         else {
             if (pixel != 0) // couleur 0 transparente aussi en 8bpp (écran titre de Rouge Feu)

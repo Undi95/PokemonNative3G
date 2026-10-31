@@ -14,17 +14,23 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTDOOR = {'MAP_TYPE_ROUTE', 'MAP_TYPE_TOWN', 'MAP_TYPE_CITY', 'MAP_TYPE_OCEAN_ROUTE'}
 NUM_PALS_IN_PRIMARY, NUM_PALS_TOTAL = 6, 13
 NUM_TILES_IN_PRIMARY = 512
-WATER = ('WATER', 'POND', 'OCEAN', 'CURRENT', 'PUDDLE', 'SEAWEED')
+WATER = ('WATER', 'POND', 'OCEAN', 'CURRENT', 'PUDDLE', 'SEAWEED', 'HOT_SPRINGS')
 
 # (tileset, palette, couleur) : pas des vitres / vitres non repérées ; None = toute la palette / tout le tileset
 EXCLUDE = {
     ('gTileset_General', 4, 7),          # toit de la Boutique de Hoenn
-    ('gTileset_KantoGeneral', 4, 2),     # toit de la Boutique de Kanto
     ('gTileset_Pacifidlog', 10, None),   # eau autour des rondins
-    ('gTileset_Fallarbor', 7, None),     # décor
     ('gTileset_Cave', None, None),       # pas de bâtiments
 }
 INCLUDE = set()
+# Métatiles dont les tiles ne s'allument jamais, même avec une couleur de vitre (le rendu teste le tile de chaque
+# pixel, voir gDayNightRender) : pour les couleurs partagées entre fenêtres et autre chose
+UNLIT_METATILES = {
+    'gTileset_KantoGeneral': [40, 41, 42, 43, 48, 49, 50, 51, 56, 57, 58, 59],   # verrière des Boutiques
+    # Tentes de Combat (numéros dans le tileset secondaire : métatile de la carte - 512)
+    'gTileset_Fallarbor': [r + c for r in (330, 338, 346, 354, 362) for c in range(5)],
+    'gTileset_Mauville': [r + c for r in (434, 442, 450, 458, 466) for c in range(5)],
+}
 
 
 def excluded(key):
@@ -109,6 +115,27 @@ def outdoor_tilesets():
     return pairs
 
 
+def unlit_tiles(pals, tileset):
+    """Tiles du tileset (0-511) posés par UNLIT_METATILES."""
+    meta = open(os.path.join(ROOT, tileset_dir(pals, tileset), 'metatiles.bin'), 'rb').read()
+    base = NUM_TILES_IN_PRIMARY if is_secondary(tileset) else 0
+    tiles = set()
+    for m in UNLIT_METATILES.get(tileset, []):
+        for k in range(8):
+            t = struct.unpack_from('<H', meta, (m * 8 + k) * 2)[0] & 0x3FF
+            if base <= t < base + NUM_TILES_IN_PRIMARY:
+                tiles.add(t - base)
+    return tiles
+
+
+def is_secondary(tileset):
+    for h in glob.glob(os.path.join(ROOT, 'src/data/tilesets/*headers.h')):
+        m = re.search(r'struct Tileset ' + tileset + r' =\s*\{.*?isSecondary = (\w+)', open(h, encoding='utf-8').read(), re.S)
+        if m:
+            return m.group(1) == 'TRUE'
+    raise KeyError(tileset)
+
+
 def main():
     pals = palette_files()
     pairs = outdoor_tilesets()
@@ -126,13 +153,22 @@ def main():
                     mask |= 1 << i
             masks.append((slot, mask))
         if any(m for _, m in masks):
-            entries.append((tileset, masks))
+            entries.append((tileset, masks, unlit_tiles(pals, tileset)))
     out = ['// Généré par tools/day_night_lights.py : couleurs de vitre (masque par palette) éclairées la nuit']
-    out += [f'extern const struct Tileset {t};' for t, _ in entries]
+    out += [f'extern const struct Tileset {t};' for t, _, _ in entries]
+    for tileset, _, unlit in entries:
+        if unlit:
+            bits = [0] * (NUM_TILES_IN_PRIMARY // 8)
+            for t in unlit:
+                bits[t // 8] |= 1 << (t % 8)
+            out += ['', f'static const u8 sUnlitTiles_{tileset[9:]}[NUM_TILES_IN_PRIMARY / 8] =', '{']
+            out += ['    ' + ', '.join(f'0x{b:02X}' for b in bits[i:i + 16]) + ',' for i in range(0, len(bits), 16)]
+            out += ['};']
     out += ['', 'static const struct DayNightLights sDayNightLights[] =', '{']
-    for tileset, masks in entries:
+    for tileset, masks, unlit in entries:
         body = ', '.join(f'[{s}] = 0x{m:04X}' for s, m in masks if m)
-        out.append(f'    {{ &{tileset}, {{ {body} }} }},')
+        tiles = f', sUnlitTiles_{tileset[9:]}' if unlit else ''
+        out.append(f'    {{ &{tileset}, {{ {body} }}{tiles} }},')
     out += ['};', '']
     open(os.path.join(ROOT, 'src/data/day_night_lights.h'), 'w', encoding='utf-8', newline='\n').write('\n'.join(out))
     print(f'src/data/day_night_lights.h : {len(entries)} tilesets')
