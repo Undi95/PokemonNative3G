@@ -229,12 +229,12 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_ReceivedMonPC::
 	waitfanfare
 	msgbox Text_GiveNicknameToThisMon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, CeladonCity_GameCorner_PrizeRoom_EventScript_TransferredToPC
-	call EventScript_NameReceivedBoxMon
+	call Common_EventScript_NameReceivedBoxMon
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_TransferredToPC
 	end
 
 CeladonCity_GameCorner_PrizeRoom_EventScript_TransferredToPC::
-	call EventScript_TransferredToPC
+	call Common_EventScript_TransferredToPC
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_EndPrizeExchange
 	end
 

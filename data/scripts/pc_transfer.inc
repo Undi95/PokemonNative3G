@@ -15,9 +15,10 @@ Common_EventScript_NameReceivedBoxMon::
 Common_EventScript_TransferredToPC::
 	bufferboxname STR_VAR_1, VAR_PC_BOX_TO_SEND_MON
 	bufferspeciesname STR_VAR_2, VAR_TEMP_TRANSFERRED_SPECIES
-	call_if_unset FLAG_SYS_PC_LANETTE, EventScript_TransferredSomeonesPC
-	call_if_set FLAG_SYS_PC_LANETTE, EventScript_TransferredLanettesPC
-	return
+	specialvar VAR_RESULT, Fusion_GetPCOwner @ PokemonNative3G : LÉO à Kanto, ANNETTE à Hoenn
+	goto_if_eq VAR_RESULT, 1, EventScript_TransferredLanettesPC
+	goto_if_eq VAR_RESULT, 2, EventScript_TransferredBillsPC
+	goto EventScript_TransferredSomeonesPC
 
 EventScript_TransferredSomeonesPC::
 	specialvar VAR_RESULT, ShouldShowBoxWasFullMessage
@@ -41,6 +42,19 @@ EventScript_LanettesPCBoxFull::
 	specialvar VAR_RESULT, GetPCBoxToSendMon
 	bufferboxname STR_VAR_3, VAR_RESULT
 	msgbox gText_PkmnTransferredLanettesPCBoxFull, MSGBOX_DEFAULT
+	return
+
+@ Rouge Feu : PC de LÉO
+EventScript_TransferredBillsPC::
+	specialvar VAR_RESULT, ShouldShowBoxWasFullMessage
+	goto_if_eq VAR_RESULT, TRUE, EventScript_TransferredBillsPCBoxFull
+	msgbox Text_MonSentToBoxInBillsPC
+	return
+
+EventScript_TransferredBillsPCBoxFull::
+	specialvar VAR_RESULT, GetPCBoxToSendMon
+	bufferboxname STR_VAR_3, VAR_RESULT
+	msgbox Text_MonSentToBoxBillsBoxFull
 	return
 
 Common_EventScript_NoMoreRoomForPokemon::

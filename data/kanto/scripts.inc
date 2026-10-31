@@ -693,7 +693,6 @@
 	.include "data/kanto/data/scripts/std_msgbox.inc"
 	.include "data/kanto/data/scripts/trainer_battle.inc"
 	.include "data/kanto/data/text/mix_record.inc"
-	.include "data/kanto/data/text/pc.inc"
 	.include "data/kanto/data/text/cable_club.inc"
 	.include "data/kanto/data/text/obtain_item.inc"
 	.include "data/kanto/data/text/pokemon_center.inc"
@@ -767,7 +766,6 @@ Kanto_EventScript_ResetAllMapFlags::
 
 	.include "data/kanto/data/scripts/hall_of_fame.inc"
 	.include "data/kanto/data/scripts/obtain_item.inc"
-	.include "data/kanto/data/scripts/pc.inc"
 
 Kanto_Common_ShowEasyChatScreen::
 	fadescreen FADE_TO_BLACK
@@ -854,7 +852,6 @@ EventScript_ReleaseEnd::
 	.include "data/kanto/data/scripts/pokemon_mansion.inc"
 
 	.include "data/kanto/data/scripts/silphco_doors.inc"
-	.include "data/kanto/data/scripts/pc_transfer.inc"
 
 EventScript_GetInGameTradeSpeciesInfo::
 	copyvar VAR_0x8004, VAR_0x8008

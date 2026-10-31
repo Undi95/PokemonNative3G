@@ -1,10 +1,17 @@
 EventScript_PC::
 	lockall
+	goto_if_set FLAG_KANTO_SYS_PC_STORAGE_DISABLED, EventScript_PCDisabled @ Rouge Feu : première arrivée sur l'ÎLE 1
 	setvar VAR_0x8004, PC_LOCATION_OTHER
 	special DoPCTurnOnEffect
 	playse SE_PC_ON
 	msgbox Text_BootUpPC, MSGBOX_DEFAULT
 	goto EventScript_PCMainMenu
+	end
+
+@ Rouge Feu : à la première arrivée sur l'ÎLE 1, le réseau des PC est coupé (rétabli au port de l'ÎLE 3)
+EventScript_PCDisabled::
+	msgbox OneIsland_PokemonCenter_1F_Text_UsualPCServicesUnavailable
+	releaseall
 	end
 
 EventScript_PCMainMenu::

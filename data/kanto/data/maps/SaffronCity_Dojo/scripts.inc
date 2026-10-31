@@ -73,7 +73,7 @@ SaffronCity_Dojo_EventScript_ReceivedHitmonParty::
 	setflag FLAG_KANTO_GOT_HITMON_FROM_DOJO
 	msgbox Text_GiveNicknameToThisMon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, SaffronCity_Dojo_EventScript_EndGiveMon
-	call EventScript_GetGiftMonPartySlot
+	call Common_EventScript_GetGiftMonPartySlot
 	call EventScript_ChangePokemonNickname
 	goto SaffronCity_Dojo_EventScript_EndGiveMon
 	end
@@ -88,12 +88,12 @@ SaffronCity_Dojo_EventScript_ReceivedHitmonPC::
 	setflag FLAG_KANTO_GOT_HITMON_FROM_DOJO
 	msgbox Text_GiveNicknameToThisMon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, SaffronCity_Dojo_EventScript_TransferredHitmonToPC
-	call EventScript_NameReceivedBoxMon
+	call Common_EventScript_NameReceivedBoxMon
 	goto SaffronCity_Dojo_EventScript_TransferredHitmonToPC
 	end
 
 SaffronCity_Dojo_EventScript_TransferredHitmonToPC::
-	call EventScript_TransferredToPC
+	call Common_EventScript_TransferredToPC
 	goto SaffronCity_Dojo_EventScript_EndGiveMon
 	end
 

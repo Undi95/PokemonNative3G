@@ -56,7 +56,7 @@ Route4_PokemonCenter_1F_EventScript_BuyMagikarpParty::
 	call Route4_PokemonCenter_1F_EventScript_PayForMagikarp
 	msgbox Text_GiveNicknameToThisMon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, Route4_PokemonCenter_1F_EventScript_EndPurchaseMagikarp
-	call EventScript_GetGiftMonPartySlot
+	call Common_EventScript_GetGiftMonPartySlot
 	fadescreen FADE_TO_BLACK
 	hidemoneybox
 	special ChangePokemonNickname
@@ -78,12 +78,12 @@ Route4_PokemonCenter_1F_EventScript_BuyMagikarpPC::
 	end
 
 Route4_PokemonCenter_1F_EventScript_TransferMagikarpCloseMoneyBox::
-	call EventScript_TransferredToPC
+	call Common_EventScript_TransferredToPC
 	goto Route4_PokemonCenter_1F_EventScript_EndPurchaseMagikarp
 	end
 
 Route4_PokemonCenter_1F_EventScript_TransferMagikarp::
-	call EventScript_TransferredToPC
+	call Common_EventScript_TransferredToPC
 	goto Route4_PokemonCenter_1F_EventScript_BoughtMagikarp
 	end
 
