@@ -27,6 +27,7 @@
 #include "string_util.h"
 #include "strings.h"
 #include "task.h"
+#include "text.h"
 
 // Journal (Quest Log) de RF : le système n'est pas encore importé, il n'enregistre ni ne rejoue
 // rien, donc son état reste 0 (ni enregistrement ni lecture).
@@ -56,6 +57,27 @@ bool8 IsPlayerNotInTrainerTowerLobby(void)
         return FALSE;
     else
         return TRUE;
+}
+
+// field_specials.c (RF)
+static EWRAM_DATA u8 sBrailleTextCursorSpriteID = 0;
+
+void BrailleCursorToggle(void)
+{
+    // 8004 = x - 27
+    // 8005 = y
+    // 8006 = action (0 = create, 1 = delete)
+    u16 x;
+    // PokemonNative3G : la position est celle de la boîte de dialogue de RF (option DIALOGUE = KANTO) ;
+    // dans la fenêtre d'Émeraude, pas de flèche, comme dans Émeraude
+    if (IsBrailleInDialogueBox())
+    {
+        x = gSpecialVar_0x8004 + 27;
+        if (gSpecialVar_0x8006 == 0)
+            sBrailleTextCursorSpriteID = CreateTextCursorSprite(0, x, gSpecialVar_0x8005, 0, 0);
+        else
+            DestroyTextCursorSprite(sBrailleTextCursorSpriteID);
+    }
 }
 
 u16 GetKantoPokedexCount(u8 caseID);

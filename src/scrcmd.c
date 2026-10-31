@@ -1515,8 +1515,15 @@ bool8 ScrCmd_braillemessage(struct ScriptContext *ctx)
     // in Emerald they are unused and position is calculated below instead
     StringExpandPlaceholders(gStringVar4, ptr + 6);
 
-    // PokemonNative3G : option DIALOGUE = KANTO : comme RF, le braille s'écrit dans la boîte de dialogue
-    if (gSaveBlock2Ptr->optionsDialogStyle)
+    for (i = 0, height = 4; gStringVar4[i] != EOS;)
+    {
+        if (gStringVar4[i++] == CHAR_NEWLINE)
+            height += 3;
+    }
+
+    // PokemonNative3G : option DIALOGUE = KANTO : comme RF, le braille s'écrit dans la boîte de dialogue,
+    // quand il y tient (deux lignes) ; les textes plus longs de Hoenn gardent la fenêtre d'Émeraude
+    if (gSaveBlock2Ptr->optionsDialogStyle && height <= 7)
     {
         sBrailleInDialogueBox = TRUE;
         DrawDialogueFrame(0, TRUE);
@@ -1531,12 +1538,6 @@ bool8 ScrCmd_braillemessage(struct ScriptContext *ctx)
 
     if (width > 28)
         width = 28;
-
-    for (i = 0, height = 4; gStringVar4[i] != EOS;)
-    {
-        if (gStringVar4[i++] == CHAR_NEWLINE)
-            height += 3;
-    }
 
     if (height > 18)
         height = 18;
@@ -2313,6 +2314,12 @@ bool8 ScrCmd_setmonmetlocation(struct ScriptContext *ctx)
     if (partyIndex < PARTY_SIZE)
         SetMonData(&gPlayerParty[partyIndex], MON_DATA_MET_LOCATION, &location);
     return FALSE;
+}
+
+// PokemonNative3G : braille affiché dans la boîte de dialogue de RF (flèche d'attente de RF)
+bool8 IsBrailleInDialogueBox(void)
+{
+    return sBrailleInDialogueBox;
 }
 
 static void CloseBrailleWindow(void)

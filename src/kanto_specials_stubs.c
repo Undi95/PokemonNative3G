@@ -34,4 +34,3 @@ u16 Dummy_TryEnableBravoTrainerBattleTower(void) { KantoSpecialStub("Dummy_TryEn
 
 u16 DoDeoxysTriangleInteraction(void) { KantoSpecialStub("DoDeoxysTriangleInteraction"); return 0; }
 u16 SetDeoxysTrianglePalette(void) { KantoSpecialStub("SetDeoxysTrianglePalette"); return 0; }
-u16 BrailleCursorToggle(void) { KantoSpecialStub("BrailleCursorToggle"); return 0; }
