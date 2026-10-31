@@ -39,8 +39,17 @@ for g in w['wild_encounter_groups']:
 scr = ''
 for p in glob.glob('data/**/*.inc', recursive=True) + glob.glob('data/**/*.s', recursive=True):
     scr += open(p, encoding='utf-8', errors='ignore').read()
-for m in re.finditer(r'\b(givemon|giveegg|setwildbattle|givecustommon|setvar\s+VAR_0x8004,|seteventmon)\s+(SPECIES_\w+)', scr):
+for m in re.finditer(r'\b(givemon|giveegg|setwildbattle|givecustommon|seteventmon)\s+(SPECIES_\w+)', scr):
     add(m.group(2), 'script (%s)' % m.group(1).split()[0])
+# Dons et choix passés par une variable (Dojo de Safrania, lots du Casino, starters de RF) : setvar VAR_TEMP_1/2
+for m in re.finditer(r'\bsetvar\s+VAR_TEMP_[12],\s*(SPECIES_\w+)', scr):
+    add(m.group(1), 'script (don par variable)')
+# Ce que les scripts ne disent pas : chiens errants de Kanto (roamer.c, les trois), starters de Hoenn (Birch,
+# starter_choose.c) et leurs œufs (assistant des pensions, fusion_events.c)
+for sp in ('SPECIES_RAIKOU', 'SPECIES_ENTEI', 'SPECIES_SUICUNE'):
+    add(sp, 'errant à Kanto')
+for sp in ('SPECIES_TREECKO', 'SPECIES_TORCHIC', 'SPECIES_MUDKIP'):
+    add(sp, 'starter de Hoenn / œuf des pensions')
 
 # échanges en jeu (le Pokémon reçu)
 for p in ('src/data/trade.h', 'src/data/kanto_ingame_trades_entries.h'):

@@ -1629,7 +1629,8 @@ static void LoadMysteryGiftTextboxBorder(u8 bgId)
 // SAPHIR rendus à CÉLIO (son réseau relie Kanto et Hoenn) et tant qu'un des cadeaux n'est pas reçu. Chaque cadeau
 // est présenté sur une CARTE MYSTÈRE d'Émeraude, puis donné directement, avec les effets des scripts de distribution
 // (data/scripts/gift_*.inc) : TICKET AURORA (ILE AURORE) et TICKET MYSTIK (ROC NOMBRI), au départ de Nénucrique ou
-// de Carmin sur Mer (ferry de RF) ; VIEILLE CARTE (ILE LOINTAINE, Mew), au départ de Nénucrique seulement.
+// de Carmin sur Mer (ferry de RF) ; VIEILLE CARTE (ILE LOINTAINE, Mew) et PASSE EON (ILE DU SUD, l'autre Lati),
+// au départ de Nénucrique seulement.
 #include "item.h"
 #include "constants/items.h"
 #include "constants/kanto_flags_vars.h"
@@ -1652,6 +1653,7 @@ static const u8 sFusionGiftText_Subtitle[] = _("RÉSEAU DE CÉLIO");
 static const u8 sFusionGiftText_AuroraTitle[] = _("TICKET AURORA");
 static const u8 sFusionGiftText_MysticTitle[] = _("TICKET MYSTIK");
 static const u8 sFusionGiftText_MapTitle[] = _("VIEILLE CARTE");
+static const u8 sFusionGiftText_EonTitle[] = _("PASSE EON");
 static const u8 sFusionGiftText_AuroraBody1[] = _("Ce ticket permet d'embarquer");
 static const u8 sFusionGiftText_AuroraBody2[] = _("pour l'ÎLE AURORE, une île");
 static const u8 sFusionGiftText_AuroraBody3[] = _("lointaine où un POKéMON venu");
@@ -1664,6 +1666,10 @@ static const u8 sFusionGiftText_MapBody1[] = _("Une carte marine très ancienne.
 static const u8 sFusionGiftText_MapBody2[] = _("Elle indique une île inconnue,");
 static const u8 sFusionGiftText_MapBody3[] = _("l'ÎLE LOINTAINE, au large de");
 static const u8 sFusionGiftText_MapBody4[] = _("HOENN…");
+static const u8 sFusionGiftText_EonBody1[] = _("Ce passe permet d'embarquer");
+static const u8 sFusionGiftText_EonBody2[] = _("pour l'ÎLE DU SUD, une île");
+static const u8 sFusionGiftText_EonBody3[] = _("où vivrait le second POKéMON");
+static const u8 sFusionGiftText_EonBody4[] = _("du duo ÉON…");
 static const u8 sFusionGiftText_BothPorts[] = _("Port de NÉNUCRIQUE ou de CARMIN SUR MER");
 static const u8 sFusionGiftText_HoennPort[] = _("Port de NÉNUCRIQUE (HOENN) seulement");
 static const u8 sFusionGiftText_ShowSailor[] = _("Montrez-le au marin du port.");
@@ -1682,6 +1688,12 @@ static const struct FusionGift sFusionGifts[] = {
      SPECIES_MEW, 7, sFusionGiftText_MapTitle,
      {sFusionGiftText_MapBody1, sFusionGiftText_MapBody2, sFusionGiftText_MapBody3, sFusionGiftText_MapBody4},
      sFusionGiftText_HoennPort, sFusionGiftText_ShowSailorMap},
+    // 2026-10-31 : seul accès en solo à l'ÎLE DU SUD (Émeraude ne le donne que par le Club Câble) ; pas de flag « reçu »
+    // propre, comme dans Émeraude (CableClub_EventScript_DistributeEonTicket)
+    {ITEM_EON_TICKET, FLAG_ENABLE_SHIP_SOUTHERN_ISLAND, FLAG_ENABLE_SHIP_SOUTHERN_ISLAND, 0,
+     SPECIES_LATIAS, 2, sFusionGiftText_EonTitle,
+     {sFusionGiftText_EonBody1, sFusionGiftText_EonBody2, sFusionGiftText_EonBody3, sFusionGiftText_EonBody4},
+     sFusionGiftText_HoennPort, sFusionGiftText_ShowSailor},
 };
 
 static const u8 sFusionGiftText_Connecting[] = _("Connexion au réseau de CÉLIO…\nDes CADEAUX MYSTÈRE sont arrivés!");

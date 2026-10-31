@@ -6,20 +6,21 @@ sur téléphone (`docs/A-TESTER.md` sert de liste de points à surveiller).
 
 ## Pokémon (Pokédex national 386)
 
-`python tools/obtenables.py [--trade]` : 357 obtenables sans échange, 368 avec le CÂBLE LINK. Les « manquants »
-restants sont des **faux positifs de l'outil**, qui ne lit pas les dons passés par une variable :
+**386/386 obtenables en solo** (`python tools/obtenables.py --trade`, avec le CÂBLE LINK pour les évolutions par
+échange ; 374 sans). Guide pour les joueurs, lieu par lieu : `docs/OU-TROUVER-LES-POKEMON.md`, généré par
+`tools/doc_pokemon_lieux.py` (rencontres avec méthode, niveaux et %, cadeaux expliqués, échanges avec leur lieu,
+légendaires avec leurs conditions, reproduction, évolutions). Pas besoin de Johto pour le Pokédex.
 
-| Espèce | Où on l'obtient |
-|---|---|
-| Kicklee / Tygnon | Dojo de Safrania (choix), script avec `VAR_TEMP_1` |
-| Porygon (→ Porygon2 au CÂBLE LINK) | Lots du Casino de Céladopole |
-| Debugant / Kapoera | Œuf d'un Kicklee ou Tygnon à la pension (Debugant n'existe qu'ainsi, comme dans Émeraude) |
-| Raikou, Entei, Suicune | Les trois errent à Kanto (`roamer.c`, `gSaveBlockKanto.roamers`), pas un seul selon le starter comme dans RF |
-| Starters de Hoenn | Un par Birch, les autres en œuf (assistant de la pension, Route 117) |
-| Rameteur / Serpang, Kicklee… évolutions par échange | CÂBLE LINK (`--trade`) |
+Deux vrais oublis trouvés et corrigés (2026-10-31) :
+- **Ramoloss / Flagadoss / Roigada** : exclusivité de Vert Feuille, absente d'Émeraude, oubliée par
+  `tools/exclusifs.py` ; ajoutés aux endroits de Vert Feuille (Zone Safari, Caverne Azurée, Îles Écume, Bois Baies,
+  Cap Falaise…), en alternance avec Psykokwak / Akwakwak qui restent. L'outil de comptage les croyait obtenables à
+  cause d'un motif trop large (`setvar VAR_0x8004`), retiré.
+- **Second Lati de l'Île du Sud** : le PASSE EON n'était donné que par le Club Câble (link). Ajouté au CADEAU
+  MYSTÈRE de la fusion (4e carte, port de Nénucrique) ; scénario `fusion_mystery_gift` à quatre cadeaux.
 
-À faire (petit) : apprendre à `tools/obtenables.py` les dons par variable (`setvar VAR_TEMP_1, SPECIES_X` +
-givemon), pour que l'outil dise 386/386 tout seul.
+L'outil de comptage lit aussi les dons par variable (Dojo, Casino, starters de RF) et connaît les chiens errants et
+les starters de Hoenn.
 
 ## Objets
 
@@ -53,7 +54,7 @@ givemon), pour que l'outil dise 386/386 tout seul.
 
 1. Vérifications visuelles listées dans A-TESTER que le headless ne peut pas montrer (clones de RF vus de loin,
    braille, menus défilants avec tous les billets…) : au playthrough.
-2. `tools/obtenables.py` : dons par variable (voir plus haut).
+2. Carte du PASSE EON au CADEAU MYSTÈRE : vue en headless sans capture, à regarder au playthrough.
 3. Ancien point ouvert : la flèche d'attente du braille n'existe qu'avec DIALOGUE = KANTO (comme chaque jeu).
 
 ## Hors périmètre pour l'instant

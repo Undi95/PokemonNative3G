@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Exclusivités de version ajoutées aux tables sauvages (PokemonNative3G, décision du 2026-10-24 : ajout permanent).
 
-Kanto / Sevii : les espèces de Vert Feuille absentes du jeu (Chétiflor…, Magmar, Farfuret, Feuforêve, Démanta) sont
+Kanto / Sevii : les espèces de Vert Feuille absentes du jeu (Chétiflor…, Ramoloss, Flagadoss (2026-10-31), Magmar, Farfuret, Feuforêve, Démanta) sont
 prises dans les tables Vert Feuille du décomp de RF. Hoenn : celles de Rubis/Saphir absentes d'Émeraude (Arakdo,
 Rosélia, Mangriff, Séléroc, Méditikka, Charmina), aux créneaux de Rubis/Saphir (pret/pokeruby).
 Règle : sur les créneaux où les deux versions diffèrent, on alterne nouvelle espèce / espèce d'origine, pour que
@@ -13,7 +13,8 @@ import json, sys
 RF = '../decomps/pokerougefeu/'
 EM_JSON = 'src/data/wild_encounters.json'
 KINDS = ('land_mons', 'water_mons', 'rock_smash_mons', 'fishing_mons')
-LG_NEW = {'SPECIES_BELLSPROUT', 'SPECIES_WEEPINBELL', 'SPECIES_VICTREEBEL', 'SPECIES_MAGMAR', 'SPECIES_SNEASEL',
+LG_NEW = {'SPECIES_BELLSPROUT', 'SPECIES_WEEPINBELL', 'SPECIES_VICTREEBEL', 'SPECIES_SLOWPOKE', 'SPECIES_SLOWBRO',
+          'SPECIES_MAGMAR', 'SPECIES_SNEASEL',
           'SPECIES_MISDREAVUS', 'SPECIES_MANTINE'}
 
 # Hoenn : (carte, table, créneaux de Rubis/Saphir dans l'ordre, espèce) ; niveaux d'Émeraude conservés
