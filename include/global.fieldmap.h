@@ -37,9 +37,18 @@ enum
 // Metatile attributes consist of an 8 bit behavior value, 4 unused bits, and a 4 bit layer type value
 // This is the data stored in each data/tilesets/*/*/metatile_attributes.bin file
 #define METATILE_ATTR_BEHAVIOR_MASK 0x00FF // Bits 0-7
+#define METATILE_ATTR_ENCOUNTER_MASK 0x0700 // Bits 8-10 : PokemonNative3G, type de rencontre de RF (tilesets de Kanto)
 #define METATILE_ATTR_LAYER_MASK    0xF000 // Bits 12-15
 #define METATILE_ATTR_BEHAVIOR_SHIFT 0
+#define METATILE_ATTR_ENCOUNTER_SHIFT 8
 #define METATILE_ATTR_LAYER_SHIFT   12
+
+// PokemonNative3G : types de rencontre de RF (global.fieldmap.h de RF)
+enum {
+    TILE_ENCOUNTER_NONE,
+    TILE_ENCOUNTER_LAND,
+    TILE_ENCOUNTER_WATER,
+};
 
 #define PACK_BEHAVIOR(behavior) PACK(behavior, METATILE_ATTR_BEHAVIOR_SHIFT, METATILE_ATTR_BEHAVIOR_MASK)
 #define PACK_LAYER_TYPE(layerType) PACK(layerType, METATILE_ATTR_LAYER_SHIFT, METATILE_ATTR_LAYER_MASK)
@@ -360,6 +369,7 @@ struct PlayerAvatar
     // these two are timer history arrays which [0] is the active timer for acro bike. every element is backed up to the next element upon update.
     /*0x14*/ u8 dirTimerHistory[8];
     /*0x1C*/ u8 abStartSelectTimerHistory[8];
+    u16 lastSpinTile; // PokemonNative3G : RF, dernière dalle tournante (field_player_avatar.c)
 };
 
 struct Camera

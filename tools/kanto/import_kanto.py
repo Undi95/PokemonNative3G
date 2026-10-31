@@ -39,7 +39,7 @@ BATTLE_SCENE_ALIASES = {f'MAP_BATTLE_SCENE_{s}': f'MAP_BATTLE_SCENE_KANTO_{s}'
 
 # Comportements RF sans homonyme dans Émeraude -> équivalent le plus proche.
 BEHAVIOR_ALIASES = {
-    # MB_SIGNPOST, MB_POKEMART_SIGN, MB_POKEMON_CENTER_SIGN, MB_INDIGO_PLATEAU_SIGN_* existent tels quels (tools/kanto_signposts.py)
+    # Panneaux, dalles tournantes, objets d'intérieur… existent tels quels (tools/kanto_tile_attributes.py)
     'MB_WARP_DOOR': 'MB_ANIMATED_DOOR',      # animations : src/kanto_field_door.c
     'MB_CAVE_DOOR': 'MB_NON_ANIMATED_DOOR',
     'MB_FAST_WATER': 'MB_OCEAN_WATER',
@@ -128,7 +128,8 @@ class Importer:
     def convert_attrs(self, data):
         out = bytearray()
         for (a,) in struct.iter_unpack('<I', data):
-            out += struct.pack('<H', self.behavior(a & 0x1FF) | (((a >> 29) & 0x3) << 12))
+            # type de rencontre de RF (bits 24-26) dans les bits 8-10, inutilisés par Émeraude (wild_encounter.c)
+            out += struct.pack('<H', self.behavior(a & 0x1FF) | (((a >> 24) & 0x7) << 8) | (((a >> 29) & 0x3) << 12))
         return bytes(out)
 
     @staticmethod

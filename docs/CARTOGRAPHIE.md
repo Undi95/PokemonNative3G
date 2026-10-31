@@ -111,7 +111,7 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 
 **D. Hors solo (link)** : Colisée, échanges câble, Union Room, Tour de Combat de RF, E-Reader, records de combat.
 
-**E. Données perdues à l'import** : ~~objets « sous les pieds »~~ rétablis le 2026-10-30 (`underfoot` des objets cachés, `tools/kanto_hidden_items.py`).
+**E. Données perdues à l'import** : ~~objets « sous les pieds »~~ rétablis le 2026-10-30 (`underfoot` des objets cachés, `tools/kanto_hidden_items.py`) ; ~~comportements de tuiles de RF absents d'Émeraude et type de rencontre de chaque métatuile~~ rétablis le 2026-10-31 (`tools/kanto_tile_attributes.py`, scénario `kanto_tiles`) : dalles tournantes (Arène de Jadielle, Repaire Rocket), objets d'intérieur à examiner, eau de la Piste Cyclable, sable des grottes ; à Kanto, les rencontres d'une case suivent le type de rencontre de RF (bits 8-10 de l'attribut ; 1 164 cases praticables sur 68 cartes en avaient perdu, surtout le sable du Mt. Moon, du Mt. Ember et de la Route Victoire). Restent MB_NORMAL, comme dans RF sans effet ou hors solo : fenêtres et hublots, moniteur sans fil, records, porte de l'Union Room.
 
 **Déjà conformes, contrairement à ce que suggère la carte** : animations de tilesets de Kanto (tileset_anims.c), musiques RF (`MUS_RG_*`, sauf `MUS_RS_VS_*` = musiques d'Émeraude), déplacements `walk_slower` (convertis en `walk_slow`) ; les autres actions de déplacement propres à RF (rotation, glissade…) ne servent qu'aux cinématiques du point A3.
 

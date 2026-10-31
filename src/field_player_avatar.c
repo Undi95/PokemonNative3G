@@ -34,7 +34,7 @@
 #include "constants/songs.h"
 #include "constants/trainer_types.h"
 
-#define NUM_FORCED_MOVEMENTS 18
+#define NUM_FORCED_MOVEMENTS 22
 #define NUM_ACRO_BIKE_COLLISIONS 5
 
 static EWRAM_DATA u8 sSpinStartFacingDir = 0;
@@ -60,6 +60,14 @@ static bool8 ForcedMovement_PushedSouthByCurrent(void);
 static bool8 ForcedMovement_PushedNorthByCurrent(void);
 static bool8 ForcedMovement_PushedWestByCurrent(void);
 static bool8 ForcedMovement_PushedEastByCurrent(void);
+static bool8 TryUpdatePlayerSpinDirection(void); // PokemonNative3G : dalles tournantes de RF
+static bool8 ForcedMovement_SpinRight(void);
+static bool8 ForcedMovement_SpinLeft(void);
+static bool8 ForcedMovement_SpinUp(void);
+static bool8 ForcedMovement_SpinDown(void);
+static void PlaySpinSound(void);
+static void PlayerGoSpin(u8 direction);
+static void PlayerApplyTileForcedMovement(u8 metatileBehavior);
 static bool8 ForcedMovement_SlideSouth(void);
 static bool8 ForcedMovement_SlideNorth(void);
 static bool8 ForcedMovement_SlideWest(void);
@@ -157,6 +165,10 @@ static bool8 (*const sForcedMovementTestFuncs[NUM_FORCED_MOVEMENTS])(u8) =
     MetatileBehavior_IsNorthwardCurrent,
     MetatileBehavior_IsWestwardCurrent,
     MetatileBehavior_IsEastwardCurrent,
+    MetatileBehavior_IsSpinRight, // PokemonNative3G : RF
+    MetatileBehavior_IsSpinLeft,
+    MetatileBehavior_IsSpinUp,
+    MetatileBehavior_IsSpinDown,
     MetatileBehavior_IsSlideSouth,
     MetatileBehavior_IsSlideNorth,
     MetatileBehavior_IsSlideWest,
@@ -181,6 +193,10 @@ static bool8 (*const sForcedMovementFuncs[NUM_FORCED_MOVEMENTS + 1])(void) =
     ForcedMovement_PushedNorthByCurrent,
     ForcedMovement_PushedWestByCurrent,
     ForcedMovement_PushedEastByCurrent,
+    ForcedMovement_SpinRight, // PokemonNative3G : RF
+    ForcedMovement_SpinLeft,
+    ForcedMovement_SpinUp,
+    ForcedMovement_SpinDown,
     ForcedMovement_SlideSouth,
     ForcedMovement_SlideNorth,
     ForcedMovement_SlideWest,
@@ -338,7 +354,7 @@ void PlayerStep(u8 direction, u16 newKeys, u16 heldKeys)
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     HideShowWarpArrow(playerObjEvent);
-    if (gPlayerAvatar.preventStep == FALSE)
+    if (gPlayerAvatar.preventStep == FALSE && !TryUpdatePlayerSpinDirection()) // PokemonNative3G : RF
     {
         Bike_TryAcroBikeHistoryUpdate(newKeys, heldKeys);
         if (TryInterruptObjectEventSpecialAnim(playerObjEvent, direction) == 0)
@@ -408,9 +424,52 @@ static void PlayerAllowForcedMovementIfMovingSameDirection(void)
         gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_CONTROLLABLE;
 }
 
+// PokemonNative3G : RF retient la dalle de chaque mouvement forcé (gPlayerAvatar.lastSpinTile)
 static bool8 TryDoMetatileBehaviorForcedMovement(void)
 {
-    return sForcedMovementFuncs[GetForcedMovementByMetatileBehavior()]();
+    u8 forcedMovement = GetForcedMovementByMetatileBehavior();
+
+    if (forcedMovement != 0)
+        gPlayerAvatar.lastSpinTile = gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior;
+    return sForcedMovementFuncs[forcedMovement]();
+}
+
+// PokemonNative3G : field_player_avatar.c de RF. Sur une dalle tournante, le joueur continue de tourner de dalle en
+// dalle (la dernière décide de la direction) jusqu'à une dalle d'arrêt ou un obstacle.
+static bool8 TryUpdatePlayerSpinDirection(void)
+{
+    struct ObjectEvent *playerObjEvent;
+
+    if ((gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_FORCED_MOVE) && MetatileBehavior_IsSpinTile(gPlayerAvatar.lastSpinTile))
+    {
+        playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+        if (playerObjEvent->heldMovementFinished)
+        {
+            if (MetatileBehavior_IsStopSpinning(playerObjEvent->currentMetatileBehavior))
+            {
+                return FALSE;
+            }
+            if (MetatileBehavior_IsSpinTile(playerObjEvent->currentMetatileBehavior))
+            {
+                gPlayerAvatar.lastSpinTile = playerObjEvent->currentMetatileBehavior;
+            }
+            ObjectEventClearHeldMovement(playerObjEvent);
+            PlayerApplyTileForcedMovement(gPlayerAvatar.lastSpinTile);
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static void PlayerApplyTileForcedMovement(u8 metatileBehavior)
+{
+    int i;
+
+    for (i = 0; i < NUM_FORCED_MOVEMENTS; i++)
+    {
+        if (sForcedMovementTestFuncs[i](metatileBehavior))
+            sForcedMovementFuncs[i + 1]();
+    }
 }
 
 static u8 GetForcedMovementByMetatileBehavior(void)
@@ -525,6 +584,41 @@ static bool8 ForcedMovement_PushedWestByCurrent(void)
 static bool8 ForcedMovement_PushedEastByCurrent(void)
 {
     return DoForcedMovement(DIR_EAST, PlayerRideWaterCurrent);
+}
+
+// PokemonNative3G : dalles tournantes (RF)
+static bool8 ForcedMovement_SpinRight(void)
+{
+    PlaySpinSound();
+    return DoForcedMovement(DIR_EAST, PlayerGoSpin);
+}
+
+static bool8 ForcedMovement_SpinLeft(void)
+{
+    PlaySpinSound();
+    return DoForcedMovement(DIR_WEST, PlayerGoSpin);
+}
+
+static bool8 ForcedMovement_SpinUp(void)
+{
+    PlaySpinSound();
+    return DoForcedMovement(DIR_NORTH, PlayerGoSpin);
+}
+
+static bool8 ForcedMovement_SpinDown(void)
+{
+    PlaySpinSound();
+    return DoForcedMovement(DIR_SOUTH, PlayerGoSpin);
+}
+
+static void PlaySpinSound(void)
+{
+    PlaySE(SE_M_RAZOR_WIND2);
+}
+
+static void PlayerGoSpin(u8 direction)
+{
+    PlayerSetAnimId(GetSpinMovementAction(direction), 3);
 }
 
 static bool8 ForcedMovement_Slide(u8 direction, void (*moveFunc)(u8))

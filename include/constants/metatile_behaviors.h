@@ -75,20 +75,20 @@ enum {
     MB_SLIDE_NORTH,
     MB_SLIDE_SOUTH,
     MB_TRICK_HOUSE_PUZZLE_8_FLOOR,
-    MB_UNUSED_49,
-    MB_UNUSED_4A,
-    MB_UNUSED_4B,
-    MB_UNUSED_4C,
-    MB_UNUSED_4D,
-    MB_UNUSED_4E,
-    MB_UNUSED_4F,
+    MB_BURGLARY, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_POKEMART_SHELF, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_SPIN_RIGHT, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_SPIN_LEFT, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_SPIN_UP, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_SPIN_DOWN, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_STOP_SPINNING, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
     MB_EASTWARD_CURRENT,
     MB_WESTWARD_CURRENT,
     MB_NORTHWARD_CURRENT,
     MB_SOUTHWARD_CURRENT,
-    MB_UNUSED_54,
-    MB_UNUSED_55,
-    MB_UNUSED_56,
+    MB_TRAINER_TOWER_MONITOR, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_CYCLING_ROAD_WATER, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_SAND_CAVE, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
     MB_STRENGTH_BUTTON, // Rouge Feu (interrupteurs de la Route Victoire)
     MB_ROCK_STAIRS,     // Rouge Feu (escaliers de roche, marche lente)
     MB_FALL_WARP,       // Rouge Feu (trous)
@@ -163,21 +163,21 @@ enum {
     MB_UNUSED_9E,
     MB_UNUSED_9F,
     MB_BERRY_TREE_SOIL,
-    MB_UNUSED_A1,
-    MB_UNUSED_A2,
-    MB_UNUSED_A3,
-    MB_UNUSED_A4,
-    MB_UNUSED_A5,
-    MB_UNUSED_A6,
-    MB_UNUSED_A7,
-    MB_UNUSED_A8,
-    MB_UNUSED_A9,
-    MB_UNUSED_AA,
-    MB_UNUSED_AB,
-    MB_UNUSED_AC,
-    MB_UNUSED_AD,
-    MB_UNUSED_AE,
-    MB_UNUSED_AF,
+    MB_CABINET, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_KITCHEN, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_DRESSER, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_FOOD, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_BLUEPRINTS, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_PAINTING, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_POWER_PLANT_MACHINE, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_TELEPHONE, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_COMPUTER, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_ADVERTISING_POSTER, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_FOOD_SMELLS_TASTY, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_TRASH_BIN, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_CUP, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_BLINKING_LIGHTS, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
+    MB_NEATLY_LINED_UP_TOOLS, // PokemonNative3G : RF (tools/kanto_tile_attributes.py)
     MB_SECRET_BASE_PC,
     MB_SECRET_BASE_REGISTER_PC,
     MB_SECRET_BASE_SCENERY,
@@ -202,7 +202,7 @@ enum {
     MB_PLAYER_ROOM_PC_ON,
     MB_SECRET_BASE_DECORATION_BASE,
     MB_SECRET_BASE_POSTER,
-    MB_SIGNPOST,              // PokemonNative3G : RF (panneaux, tools/kanto_signposts.py)
+    MB_SIGNPOST,              // PokemonNative3G : RF (panneaux, tools/kanto_tile_attributes.py)
     MB_POKEMART_SIGN,         // PokemonNative3G : RF
     MB_POKEMON_CENTER_SIGN,   // PokemonNative3G : RF
     MB_INDIGO_PLATEAU_SIGN_1, // PokemonNative3G : RF

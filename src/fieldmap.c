@@ -354,6 +354,12 @@ u8 MapGridGetMetatileLayerTypeAt(s32 x, s32 y)
     return UNPACK_LAYER_TYPE(GetMetatileAttributesById(MapGridGetMetatileIdAt(x, y)));
 }
 
+// PokemonNative3G : MapGridGetMetatileAttributeAt(x, y, METATILE_ATTRIBUTE_ENCOUNTER_TYPE) de RF
+u8 MapGridGetMetatileEncounterTypeAt(s32 x, s32 y)
+{
+    return UNPACK(GetMetatileAttributesById(MapGridGetMetatileIdAt(x, y)), METATILE_ATTR_ENCOUNTER_SHIFT, METATILE_ATTR_ENCOUNTER_MASK);
+}
+
 void MapGridSetMetatileIdAt(s32 x, s32 y, u16 metatile)
 {
     if (AreCoordsWithinMapGridBounds(x, y))

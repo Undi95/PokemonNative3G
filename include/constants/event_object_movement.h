@@ -262,6 +262,11 @@
 #define MOVEMENT_ACTION_RAISE_HAND_AND_STOP             0xA8
 #define MOVEMENT_ACTION_RAISE_HAND_AND_JUMP             0xA9
 #define MOVEMENT_ACTION_RAISE_HAND_AND_SWIM             0xAA
+// Rouge Feu : dalles tournantes (Arène de Jadielle, Repaire Rocket)
+#define MOVEMENT_ACTION_SPIN_DOWN                       0xAB
+#define MOVEMENT_ACTION_SPIN_UP                         0xAC
+#define MOVEMENT_ACTION_SPIN_LEFT                       0xAD
+#define MOVEMENT_ACTION_SPIN_RIGHT                      0xAE
 
 #define MOVEMENT_ACTION_STEP_END 0xFE
 #define MOVEMENT_ACTION_NONE     0xFF
@@ -292,6 +297,12 @@
 #define ANIM_RUN_NORTH (ANIM_STD_COUNT + 1)
 #define ANIM_RUN_WEST  (ANIM_STD_COUNT + 2)
 #define ANIM_RUN_EAST  (ANIM_STD_COUNT + 3)
+// PokemonNative3G : rotation de RF (ANIM_STD_COUNT + 4 à + 7 dans RF), aussi pour Brice/Flora ; même définition que
+// src/data/object_events/kanto_object_events.h (généré)
+#define ANIM_SPIN_SOUTH 24
+#define ANIM_SPIN_NORTH 25
+#define ANIM_SPIN_WEST 26
+#define ANIM_SPIN_EAST 27
 
 #define ANIM_BUNNY_HOP_BACK_WHEEL_SOUTH         (ANIM_STD_COUNT + 0)
 #define ANIM_BUNNY_HOP_BACK_WHEEL_NORTH         (ANIM_STD_COUNT + 1)

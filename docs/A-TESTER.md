@@ -60,6 +60,9 @@ réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, c
 - [ ] Courir (Chaussures de Course) sur les escaliers de roche : course ralentie
 - [ ] Vélo Course sur les escaliers de roche : bridé à la 2e vitesse ; Vélo Cross normal
 - [ ] Courant des Îles Écume B4F : dépose le joueur sur la terre
+- [ ] Dalles tournantes (2026-10-31) : vérifié en headless avec Brice (`kanto_tiles.py` : Arène de Jadielle, glissade jusqu'à la dalle d'arrêt). Non testés : avec Red/Leaf, chaînes de dalles qui changent de direction, Repaire Rocket, dalle qui bute sur un mur ou un dresseur
+- [ ] Rencontres de Kanto selon le type de rencontre de RF (2026-10-31) : vérifié sur le sable du Mt. Moon 1F (`kanto_tiles.py`). Non testés : Mt. Ember, Route Victoire, Îles Écume, surf (eau de Kanto), Doux Parfum
+- [ ] Objets d'intérieur de RF (2026-10-31) : vérifiés placard, télé, lampes, machine et bibliothèque de Bourg Palette (`kanto_tiles.py`). Non testés : cuisine, commode, nourriture, plans, tableau, téléphone, affiche, poubelle, tasse, outils, rayon de boutique, maison cambriolée, moniteur de la Tour des Dresseurs ; eau de la Piste Cyclable (Surf) ; traces de pas sur le sable des grottes
 
 ## Specials de RF (scripts de Kanto)
 - [ ] PC qui s'allume / s'éteint (Centres Pokémon, chambre du joueur)

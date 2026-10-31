@@ -269,6 +269,10 @@ u8 (*const gMovementActionFuncs_EmoteDoubleExclMark[])(struct ObjectEvent *, str
 u8 (*const gMovementActionFuncs_RaiseHandAndStop[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_RaiseHandAndJump[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_RaiseHandAndSwim[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_SpinDown[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_SpinUp[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_SpinLeft[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_SpinRight[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_KantoWalkSlowUp[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_KantoWalkSlowLeft[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_KantoWalkSlowRight[])(struct ObjectEvent *, struct Sprite *);
@@ -607,6 +611,10 @@ u8 (*const *const gMovementActionFuncs[])(struct ObjectEvent *, struct Sprite *)
     [MOVEMENT_ACTION_RAISE_HAND_AND_STOP] = gMovementActionFuncs_RaiseHandAndStop,
     [MOVEMENT_ACTION_RAISE_HAND_AND_JUMP] = gMovementActionFuncs_RaiseHandAndJump,
     [MOVEMENT_ACTION_RAISE_HAND_AND_SWIM] = gMovementActionFuncs_RaiseHandAndSwim,
+    [MOVEMENT_ACTION_SPIN_DOWN] = gMovementActionFuncs_SpinDown,
+    [MOVEMENT_ACTION_SPIN_UP] = gMovementActionFuncs_SpinUp,
+    [MOVEMENT_ACTION_SPIN_LEFT] = gMovementActionFuncs_SpinLeft,
+    [MOVEMENT_ACTION_SPIN_RIGHT] = gMovementActionFuncs_SpinRight,
 };
 
 u8 (*const gMovementActionFuncs_FaceDown[])(struct ObjectEvent *, struct Sprite *) = {

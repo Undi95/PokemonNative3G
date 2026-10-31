@@ -170,6 +170,7 @@ u8 GetRideWaterCurrentMovementAction(u32);
 u8 GetWalkFasterMovementAction(u32);
 u8 GetPlayerRunMovementAction(u32);
 u8 GetKantoWalkSlowMovementAction(u32);   // Rouge Feu
+u8 GetSpinMovementAction(u32);           // Rouge Feu
 u8 GetPlayerRunSlowMovementAction(u32);   // Rouge Feu
 u8 GetJumpInPlaceMovementAction(u32);
 u8 GetAcroWheelieFaceDirectionMovementAction(u32);

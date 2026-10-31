@@ -10,6 +10,27 @@ extern const u8 EventScript_Indigo_UltimateGoal[];
 extern const u8 EventScript_Indigo_HighestAuthority[];
 extern const u8 EventScript_CancelMessageBox[];
 extern const u8 Kanto_EventScript_HiddenItemScript[];
+// PokemonNative3G : objets d'intérieur de Rouge Feu (flavor_text.inc de RF)
+extern const u8 EventScript_Bookshelf[];
+extern const u8 EventScript_PokeMartShelf[];
+extern const u8 EventScript_Food[];
+extern const u8 EventScript_Blueprints[];
+extern const u8 EventScript_Burglary[];
+extern const u8 EventScript_Computer[];
+extern const u8 EventScript_PlayerFacingTVScreen[];
+extern const u8 EventScript_Cabinet[];
+extern const u8 EventScript_Kitchen[];
+extern const u8 EventScript_Dresser[];
+extern const u8 EventScript_Painting[];
+extern const u8 EventScript_PowerPlantMachine[];
+extern const u8 EventScript_Telephone[];
+extern const u8 EventScript_AdvertisingPoster[];
+extern const u8 EventScript_TastyFood[];
+extern const u8 EventScript_TrashBin[];
+extern const u8 EventScript_Cup[];
+extern const u8 EventScript_BlinkingLights[];
+extern const u8 EventScript_NeatlyLinedUpTools[];
+extern const u8 TrainerTower_EventScript_ShowTime[];
 #define SIGNPOST_POKECENTER 0
 #define SIGNPOST_POKEMART 1
 #define SIGNPOST_INDIGO_1 2
@@ -425,6 +446,13 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
 {
     s8 elevation;
 
+    if (IsKantoTilesetMap()) // PokemonNative3G : télés et bibliothèques de Kanto, textes de RF
+    {
+        if (MetatileBehavior_IsPlayerFacingTVScreen(metatileBehavior, direction) == TRUE)
+            return EventScript_PlayerFacingTVScreen;
+        if (MetatileBehavior_IsBookShelf(metatileBehavior) == TRUE)
+            return EventScript_Bookshelf;
+    }
     if (MetatileBehavior_IsPlayerFacingTVScreen(metatileBehavior, direction) == TRUE)
         return EventScript_TV;
     if (MetatileBehavior_IsPC(metatileBehavior) == TRUE)
@@ -465,6 +493,43 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         return EventScript_Questionnaire;
     if (MetatileBehavior_IsTrainerHillTimer(metatileBehavior) == TRUE)
         return EventScript_TrainerHillTimer;
+    // PokemonNative3G : objets d'intérieur de RF (GetInteractedMetatileScript de RF ; tools/kanto_tile_attributes.py)
+    if (MetatileBehavior_IsPokeMartShelf(metatileBehavior) == TRUE)
+        return EventScript_PokeMartShelf;
+    if (MetatileBehavior_IsFood(metatileBehavior) == TRUE)
+        return EventScript_Food;
+    if (MetatileBehavior_IsBlueprints(metatileBehavior) == TRUE)
+        return EventScript_Blueprints;
+    if (MetatileBehavior_IsBurglary(metatileBehavior) == TRUE)
+        return EventScript_Burglary;
+    if (MetatileBehavior_IsComputer(metatileBehavior) == TRUE)
+        return EventScript_Computer;
+    if (MetatileBehavior_IsTrainerTowerMonitor(metatileBehavior) == TRUE)
+        return TrainerTower_EventScript_ShowTime;
+    if (MetatileBehavior_IsCabinet(metatileBehavior) == TRUE)
+        return EventScript_Cabinet;
+    if (MetatileBehavior_IsKitchen(metatileBehavior) == TRUE)
+        return EventScript_Kitchen;
+    if (MetatileBehavior_IsDresser(metatileBehavior) == TRUE)
+        return EventScript_Dresser;
+    if (MetatileBehavior_IsPainting(metatileBehavior) == TRUE)
+        return EventScript_Painting;
+    if (MetatileBehavior_IsPowerPlantMachine(metatileBehavior) == TRUE)
+        return EventScript_PowerPlantMachine;
+    if (MetatileBehavior_IsTelephone(metatileBehavior) == TRUE)
+        return EventScript_Telephone;
+    if (MetatileBehavior_IsAdvertisingPoster(metatileBehavior) == TRUE)
+        return EventScript_AdvertisingPoster;
+    if (MetatileBehavior_IsTastyFood(metatileBehavior) == TRUE)
+        return EventScript_TastyFood;
+    if (MetatileBehavior_IsTrashBin(metatileBehavior) == TRUE)
+        return EventScript_TrashBin;
+    if (MetatileBehavior_IsCup(metatileBehavior) == TRUE)
+        return EventScript_Cup;
+    if (MetatileBehavior_IsBlinkingLights(metatileBehavior) == TRUE)
+        return EventScript_BlinkingLights;
+    if (MetatileBehavior_IsNeatlyLinedUpTools(metatileBehavior) == TRUE)
+        return EventScript_NeatlyLinedUpTools;
 
     elevation = position->elevation;
     if (elevation == MapGridGetElevationAt(position->x, position->y))
