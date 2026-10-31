@@ -1329,19 +1329,78 @@ static u8 GetObjectEventIdByLocalId(u8 localId)
     return OBJECT_EVENTS_COUNT;
 }
 
+// PokemonNative3G : objets « clone » de Rouge Feu (event_object_movement.c de RF) : sur certaines cartes de Kanto,
+// l'obstacle de la carte voisine (arbre à Couper, garde…) est affiché à sa place au bord de la carte, au lieu
+// d'apparaître seulement quand on la franchit. Le clone ne paraît pas s'il est déjà dans le champ de vision.
+static bool8 IsObstacleGraphicsId(u16 graphicsId)
+{
+    return graphicsId == OBJ_EVENT_GFX_CUTTABLE_TREE || graphicsId == OBJ_EVENT_GFX_BREAKABLE_ROCK
+        || graphicsId == OBJ_EVENT_GFX_KANTO_CUT_TREE || graphicsId == OBJ_EVENT_GFX_KANTO_ROCK_SMASH_ROCK;
+}
+
+static bool8 TemplateIsObstacleAndWithinView(const struct ObjectEventTemplate *template, s16 x, s16 y)
+{
+    if (IsObstacleGraphicsId(template->graphicsId))
+    {
+        if (gSaveBlock1Ptr->pos.x < x)
+        {
+            if (gSaveBlock1Ptr->pos.x + (MAP_OFFSET + 1) < x)
+                return TRUE;
+            if (gSaveBlock1Ptr->pos.y - (MAP_OFFSET - 1) <= y && gSaveBlock1Ptr->pos.y + (MAP_OFFSET - 1) >= y)
+                return FALSE;
+        }
+        else
+        {
+            if (gSaveBlock1Ptr->pos.x - (MAP_OFFSET + 1) > x)
+                return TRUE;
+
+            if (gSaveBlock1Ptr->pos.y - (MAP_OFFSET - 1) <= y && gSaveBlock1Ptr->pos.y + (MAP_OFFSET - 1) >= y)
+                return FALSE;
+        }
+    }
+    return TRUE;
+}
+
 static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *template, u8 mapNum, u8 mapGroup)
 {
     struct ObjectEvent *objectEvent;
     u8 objectEventId;
     s16 x;
     s16 y;
+    bool8 isClone = FALSE;
+    s16 cloneX = 0;
+    s16 cloneY = 0;
+
+    if (template->kind == OBJ_KIND_CLONE) // PokemonNative3G : clone de RF, l'objet de la carte voisine
+    {
+        const struct MapHeader *mapHeader;
+        u8 localId = CLONE_TARGET_LOCAL_ID(template);
+
+        isClone = TRUE;
+        mapNum = CLONE_TARGET_MAP_NUM(template);
+        mapGroup = CLONE_TARGET_MAP_GROUP(template);
+        cloneX = template->x;
+        cloneY = template->y;
+        mapHeader = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
+        template = &mapHeader->events->objectEvents[localId - 1];
+    }
 
     if (GetAvailableObjectEventId(template->localId, mapNum, mapGroup, &objectEventId))
         return OBJECT_EVENTS_COUNT;
+    if (isClone && !TemplateIsObstacleAndWithinView(template, cloneX, cloneY))
+        return OBJECT_EVENTS_COUNT;
     objectEvent = &gObjectEvents[objectEventId];
     ClearObjectEvent(objectEvent);
-    x = template->x + MAP_OFFSET;
-    y = template->y + MAP_OFFSET;
+    if (isClone)
+    {
+        x = cloneX + MAP_OFFSET;
+        y = cloneY + MAP_OFFSET;
+    }
+    else
+    {
+        x = template->x + MAP_OFFSET;
+        y = template->y + MAP_OFFSET;
+    }
     objectEvent->active = TRUE;
     objectEvent->triggerGroundEffectsOnMove = TRUE;
     objectEvent->graphicsId = template->graphicsId;

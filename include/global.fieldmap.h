@@ -117,6 +117,13 @@ struct ObjectEventTemplate
     /*0x16*/ //u8 padding3[2];
 };
 
+// PokemonNative3G : objet « clone » de Rouge Feu (kind OBJ_KIND_CLONE, macro clone_event) : l'objet targetLocalId de
+// la carte voisine, affiché au bord de celle-ci. Ses champs occupent ceux d'elevation, trainerType et
+// trainerRange_berryTreeId (union objUnion.clone de RF).
+#define CLONE_TARGET_LOCAL_ID(template)  ((template)->elevation)
+#define CLONE_TARGET_MAP_NUM(template)   ((template)->trainerType)
+#define CLONE_TARGET_MAP_GROUP(template) ((template)->trainerRange_berryTreeId)
+
 struct WarpEvent
 {
     s16 x, y;

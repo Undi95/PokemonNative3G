@@ -353,17 +353,21 @@ class Importer:
                 out['region_map_section'] = 'MAPSEC_NONE'
             conns = [dict(c, map=self.em_map_id(c['map'])) for c in (j.get('connections') or [])]
             out['connections'] = [c for c in conns if c['map'] in imported_ids] or None
-            objs = []
+            objs, clones = [], []
             for o in j.get('object_events', []):
-                if o.get('type', 'object') != 'object':
-                    self.warn('objets « clone » RF (non gérés par Émeraude)', em_name)
+                if o.get('type', 'object') == 'clone':
+                    # Objet de la carte voisine affiché au bord (moteur : comme RF, tools/kanto_clones.py) ; à la fin
+                    # de la liste, pour ne pas décaler les numéros des autres objets
+                    clones.append({'type': 'clone', 'graphics_id': tok(o['graphics_id']), 'x': o['x'], 'y': o['y'],
+                                   'target_local_id': tok(o['target_local_id']),
+                                   'target_map': self.em_map_id(o['target_map'])})
                     continue
                 o = {k: v for k, v in o.items() if k != 'type'}
                 for k in ('local_id', 'graphics_id', 'flag', 'script', 'movement_type', 'trainer_type'):
                     if k in o:
                         o[k] = tok(o[k]).replace('MOVEMENT_TYPE_WANDER_AROUND_SLOWER', 'MOVEMENT_TYPE_WANDER_AROUND')
                 objs.append(o)
-            out['object_events'] = objs
+            out['object_events'] = objs + clones
             warps = []
             for w in j.get('warp_events', []):
                 w = dict(w, dest_map=self.em_map_id(w['dest_map']))

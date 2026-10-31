@@ -209,6 +209,14 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CeladonCity_EventScript_SilphCoScientist",
       "flag": "FLAG_KANTO_HIDE_CELADON_ROCKETS"
+    },
+    {
+      "type": "clone",
+      "graphics_id": "OBJ_EVENT_GFX_KANTO_CUT_TREE",
+      "x": -7,
+      "y": 21,
+      "target_local_id": "LOCALID_KANTO_ROUTE16_CUT_TREE",
+      "target_map": "MAP_ROUTE16"
     }
   ],
   "warp_events": [

@@ -67,6 +67,7 @@
 #include "wild_encounter.h"
 #include "frontier_util.h"
 #include "constants/abilities.h"
+#include "constants/event_objects.h"
 #include "constants/layouts.h"
 #include "constants/map_types.h"
 #include "constants/region_map_sections.h"
@@ -547,13 +548,37 @@ void ApplyNewEncryptionKeyToGameStats(u32 newKey)
 
 void LoadObjEventTemplatesFromHeader(void)
 {
+    u8 i;
+
     // Clear map object templates
     CpuFill32(0, gSaveBlock1Ptr->objectEventTemplates, sizeof(gSaveBlock1Ptr->objectEventTemplates));
 
     // Copy map header events to save block
-    CpuCopy32(gMapHeader.events->objectEvents,
-              gSaveBlock1Ptr->objectEventTemplates,
-              gMapHeader.events->objectEventCount * sizeof(struct ObjectEventTemplate));
+    // PokemonNative3G : comme Rouge Feu, un clone prend le modèle de l'objet de la carte voisine (graphismes, flag,
+    // script), à sa place et avec son numéro, et garde de quoi retrouver l'original
+    for (i = 0; i < gMapHeader.events->objectEventCount; i++)
+    {
+        const struct ObjectEventTemplate *src = &gMapHeader.events->objectEvents[i];
+        struct ObjectEventTemplate *dest = &gSaveBlock1Ptr->objectEventTemplates[i];
+
+        if (src->kind == OBJ_KIND_CLONE)
+        {
+            const struct MapHeader *connectionMap = Overworld_GetMapHeaderByGroupAndId(CLONE_TARGET_MAP_GROUP(src), CLONE_TARGET_MAP_NUM(src));
+
+            *dest = connectionMap->events->objectEvents[CLONE_TARGET_LOCAL_ID(src) - 1];
+            dest->localId = src->localId;
+            dest->x = src->x;
+            dest->y = src->y;
+            CLONE_TARGET_LOCAL_ID(dest) = CLONE_TARGET_LOCAL_ID(src);
+            CLONE_TARGET_MAP_NUM(dest) = CLONE_TARGET_MAP_NUM(src);
+            CLONE_TARGET_MAP_GROUP(dest) = CLONE_TARGET_MAP_GROUP(src);
+            dest->kind = OBJ_KIND_CLONE;
+        }
+        else
+        {
+            *dest = *src;
+        }
+    }
 }
 
 void LoadSaveblockObjEventScripts(void)
