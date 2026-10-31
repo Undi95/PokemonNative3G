@@ -3,6 +3,8 @@
 
 // Noms de Rouge Feu -> équivalents d'Émeraude, pour le sac de RF (option SAC = KANTO)
 
+struct BagPocket;
+
 #define ItemId_GetName           GetItemName
 #define ItemId_GetImportance     GetItemImportance
 #define ItemId_GetDescription    GetItemDescription

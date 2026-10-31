@@ -649,7 +649,6 @@ static void CreateArrowSprite(u8 animNum, u8 direction)
 
 static void SpriteCallback_Arrow(struct Sprite *sprite)
 {
-    s16 x, y;
     sprite->spCurX += sprite->spDeltaX;
     sprite->spCurY += sprite->spDeltaY;
     sprite->x = sprite->spCenterX + (sprite->spCurX >> 8);
@@ -686,7 +685,6 @@ static u8 CreateStarSprite(void)
 
 static void SpriteCallback_Star(struct Sprite *sprite)
 {
-    s16 x, y;
     sprite->spCurX += sprite->spDeltaX;
     sprite->spCurY += sprite->spDeltaY;
     sprite->x = sprite->spCenterX + (sprite->spCurX >> 8);

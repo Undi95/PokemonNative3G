@@ -48,9 +48,6 @@
 #define FONT_NORMAL FONT_KANTO
 #define FONT_NORMAL_COPY_1 FONT_KANTO
 #define JOY_REPT(button) (gMain.newAndRepeatedKeys & (button))
-#ifndef FREE_IF_NOT_NULL
-#define FREE_IF_NOT_NULL(ptr) do { if (ptr != NULL) { Free(ptr); ptr = NULL; } } while (0)
-#endif
 #ifndef BG_TILE_H_V_FLIP
 #define BG_TILE_H_V_FLIP(n) (n + 0xC00)
 #endif
@@ -58,7 +55,7 @@
 #define BGMVolumeMax_EnableHelpSystemReduction()
 #define SetBGMVolume_SuppressHelpSystemReduction(x)
 
-u8 ListMenuAddCursorObjectInternal(struct CursorStruct *cursor, u32 cursorObjId);
+u8 ListMenuAddCursorObjectInternal(const struct CursorStruct *cursor, u32 cursorObjId);
 void ListMenuUpdateCursorObject(u8 taskId, u16 x, u16 y, u32 cursorObjId);
 void ListMenuRemoveCursorObject(u8 taskId, u32 cursorObjId);
 u16 CreateTrainerCardMonIconSprite(u16 species, u32 otId, u32 personality, bool8 isFrontPic, u16 destX, u16 destY, u8 paletteSlot, u8 windowId);
@@ -1086,6 +1083,7 @@ void CB2_OpenPokedexFromStartMenu(void)
     SetHelpContext(HELPCONTEXT_POKEDEX);
 }
 
+// RF : accepte une expression (GetBgTilemapBuffer), sans remettre le pointeur à NULL
 #define FREE_IF_NOT_NULL(ptr0) ({ void *ptr = (ptr0); if (ptr) Free(ptr); })
 
 bool8 DoClosePokedex(void)
@@ -1693,7 +1691,6 @@ struct PokedexListItem
 static void ItemPrintFunc_OrderedListMenu(u8 windowId, u32 itemId, u8 y)
 {
     u16 species = itemId;
-    bool8 seen = (itemId >> 16) & 1;  // not used but required to match
     bool8 caught = (itemId >> 17) & 1;
     u8 type1;
     DexScreen_PrintMonDexNo(sPokedexScreenData->numericalOrderWindowId, FONT_SMALL, species, 12, y);
@@ -1710,7 +1707,6 @@ static void ItemPrintFunc_OrderedListMenu(u8 windowId, u32 itemId, u8 y)
 static void Task_DexScreen_CategorySubmenu(u8 taskId)
 {
     int pageFlipCmd;
-    u8 *ptr;
     switch (sPokedexScreenData->state)
     {
     case 0:
@@ -2980,7 +2976,7 @@ void DexScreen_PrintMonFlavorText(u8 windowId, u16 species, u8 x, u8 y)
 
 void DexScreen_DrawMonFootprint(u8 windowId, u16 species, u8 x, u8 y)
 {
-    u16 i, j, unused, tileIdx;
+    u16 i, j, tileIdx;
     u8 footprintPixel, footprintTile;
     u8 * buffer;
     u8 * footprint;
@@ -2989,7 +2985,6 @@ void DexScreen_DrawMonFootprint(u8 windowId, u16 species, u8 x, u8 y)
         return;
     footprint = (u8 *)(gMonFootprintTable[species]);
     buffer = gDecompressionBuffer;
-    unused = 0;
     tileIdx = 0;
 
     // Expand 1bpp to 4bpp

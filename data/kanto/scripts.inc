@@ -795,7 +795,6 @@ EventScript_WallTownMap::
 EventScript_ChangePokemonNickname::
 	fadescreen FADE_TO_BLACK
 	special ChangePokemonNickname
-	waitstate
 	return
 
 	.include "data/kanto/data/scripts/pokemon_league.inc"
@@ -855,7 +854,6 @@ EventScript_GetInGameTradeSpeciesInfo::
 
 EventScript_ChooseMonForInGameTrade::
 	special ChoosePartyMon
-	waitstate
 	lock
 	faceplayer
 	copyvar VAR_0x800A, VAR_0x8004
@@ -872,7 +870,6 @@ EventScript_DoInGameTrade::
 	copyvar VAR_0x8005, VAR_0x800A
 	special CreateInGameTradePokemon
 	special DoInGameTradeScene
-	waitstate
 	lock
 	faceplayer
 	return

@@ -105,7 +105,7 @@ static void TopBarWindowPrintString(const u8 *string, u8 unused, bool8 copyToVra
 static void TopBarWindowPrintTwoStrings(const u8 *string, const u8 *string2, bool8 fgColorChooser, u8 unused, bool8 copyToVram)
 {
     u8 color[3];
-    s32 fgColor, width;
+    s32 width;
 
     if ( sTopBarWindowId != 0xFF )
     {
@@ -1251,8 +1251,6 @@ static void Task_HofPC_HandleInput(u8 taskId)
 }
 static void Task_HofPC_HandlePaletteOnExit(u8 taskId)
 {
-    struct HallofFameTeam* fameTeam;
-
     CpuCopy16(gPlttBufferFaded, gPlttBufferUnfaded, PLTT_SIZE);
     BeginPCScreenEffect_TurnOff(0, 0, 0);
     gTasks[taskId].func = Task_HofPC_HandleExit;
@@ -1437,9 +1435,6 @@ static void HallOfFame_PrintPlayerInfo(u8 unused1, u8 unused2)
 
 static void ClearVramOamPltt_LoadHofPal(void)
 {
-    u32 vramOffset, oamOffset, plttOffset;
-    u32 vramSize, oamSize, plttSize;
-
     DmaFill16(3, 0, VRAM, VRAM_SIZE);
     DmaFill32(3, 0, OAM, OAM_SIZE);
     DmaFill16(3, 0, PLTT, PLTT_SIZE);

@@ -4,6 +4,8 @@
 // Rouge Feu : sac (item_menu.c, bag.c, item_menu_icons.c) porté pour l'option SAC = KANTO.
 // Les noms globaux de RF prennent le préfixe KBag_ (Émeraude a les mêmes).
 
+struct YesNoFuncTable;
+
 #define AddItemIconObject KBag_AddItemIconObject
 #define AddItemIconObjectWithCustomObjectTemplate KBag_AddItemIconObjectWithCustomObjectTemplate
 #define BagCreateYesNoMenuBottomRight KBag_BagCreateYesNoMenuBottomRight

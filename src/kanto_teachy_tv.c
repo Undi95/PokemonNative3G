@@ -490,7 +490,6 @@ void SetTeachyTvControllerModeToResume(void)
 static void TeachyTvMainCallback(void)
 {
     u8 taskId;
-    struct Task *taskAddr;
 
     switch (gMain.state)
     {
@@ -1215,7 +1214,6 @@ static void TeachyTvGrassAnimationObjCallback(struct Sprite *sprite)
 static u8 TeachyTvGrassAnimationCheckIfNeedsToGenerateGrassObj(s16 x, s16 y)
 {
     const u8 * arr;
-    struct TeachyTvBuf *ptr;
     int high, low;
     if ((x < 0) || (y < 0))
         return 0;
@@ -1440,7 +1438,6 @@ static u16 TeachyTvComputePalIndexArrayEntryByMetaTile(u8 *palIndexArrayBuf, u16
 static void TeachyTvLoadMapPalette(const struct MapLayout * mStruct, const u8 * palIndexArray)
 {
     u8 i;
-    const struct Tileset * ts;
     const u16 * dest;
 
     for (i = 0; i < 16; i++)

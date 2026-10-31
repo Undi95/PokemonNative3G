@@ -911,7 +911,6 @@ void PSA_PrintMessage(u8 messageId)
     u8 textSpeed = GetTextSpeedSetting();
     struct Pokemon * pokemon = PSA_GetPokemon();
     u16 level;
-    u8 *str;
 
     switch (messageId)
     {
@@ -1430,7 +1429,6 @@ void CreateItemIconSpriteAtMaxCloseness(u16 itemId)
 static struct Sprite *PSA_CreateItemIconObject(u16 itemId)
 {
     u8 spriteId;
-    struct Sprite *sprite;
     spriteId = AddItemIconObject(1, 1, itemId);
     if (spriteId == MAX_SPRITES)
         return NULL;

@@ -50,20 +50,20 @@ struct RedArrowCursor
 };
 
 // this file's functions
-static u8 ListMenuInitInternal(struct ListMenuTemplate *listMenuTemplate, u16 scrollOffset, u16 selectedRow);
+static u8 ListMenuInitInternal(const struct ListMenuTemplate *listMenuTemplate, u16 scrollOffset, u16 selectedRow);
 static bool8 ListMenuChangeSelection(struct ListMenu *list, bool8 updateCursorAndCallCallback, u8 count, bool8 movingDown);
 static void ListMenuPrintEntries(struct ListMenu *list, u16 startIndex, u16 yOffset, u16 count);
 static void ListMenuDrawCursor(struct ListMenu *list);
 static void ListMenuCallSelectionChangedCallback(struct ListMenu *list, u8 onInit);
 static u8 ListMenuAddCursorObject(struct ListMenu *list, u32 cursorObjId);
 static void Task_ScrollIndicatorArrowPair(u8 taskId);
-static u8 ListMenuAddRedOutlineCursorObject(struct CursorStruct *cursor);
-static u8 ListMenuAddRedArrowCursorObject(struct CursorStruct *cursor);
+static u8 ListMenuAddRedOutlineCursorObject(const struct CursorStruct *cursor);
+static u8 ListMenuAddRedArrowCursorObject(const struct CursorStruct *cursor);
 static void ListMenuUpdateRedOutlineCursorObject(u8 taskId, u16 x, u16 y);
 static void ListMenuUpdateRedArrowCursorObject(u8 taskId, u16 x, u16 y);
 static void ListMenuRemoveRedOutlineCursorObject(u8 taskId);
 static void ListMenuRemoveRedArrowCursorObject(u8 taskId);
-u8 ListMenuAddCursorObjectInternal(struct CursorStruct *cursor, u32 cursorObjId);
+u8 ListMenuAddCursorObjectInternal(const struct CursorStruct *cursor, u32 cursorObjId);
 void ListMenuUpdateCursorObject(u8 taskId, u16 x, u16 y, u32 cursorObjId);
 void ListMenuRemoveCursorObject(u8 taskId, u32 cursorObjId);
 static void SpriteCallback_ScrollIndicatorArrow(struct Sprite *sprite);
@@ -372,7 +372,7 @@ u8 ListMenuInit(struct ListMenuTemplate *listMenuTemplate, u16 scrollOffset, u16
 }
 
 // unused
-u8 ListMenuInitInRect(struct ListMenuTemplate *listMenuTemplate, struct ListMenuWindowRect *rect, u16 scrollOffset, u16 selectedRow)
+u8 ListMenuInitInRect(const struct ListMenuTemplate *listMenuTemplate, const struct ListMenuWindowRect *rect, u16 scrollOffset, u16 selectedRow)
 {
     s32 i;
 
@@ -546,7 +546,7 @@ u16 ListMenuGetYCoordForPrintingArrowCursor(u8 listTaskId)
     return list->selectedRow * yMultiplier + list->template.upText_Y;
 }
 
-static u8 ListMenuInitInternal(struct ListMenuTemplate *listMenuTemplate, u16 scrollOffset, u16 selectedRow)
+static u8 ListMenuInitInternal(const struct ListMenuTemplate *listMenuTemplate, u16 scrollOffset, u16 selectedRow)
 {
     u8 listTaskId = CreateTask(ListMenuDummyTask, 0);
     struct ListMenu *list = (void *) gTasks[listTaskId].data;
@@ -1181,7 +1181,7 @@ void RemoveScrollIndicatorArrowPair(u8 taskId)
     DestroyTask(taskId);
 }
 
-u8 ListMenuAddCursorObjectInternal(struct CursorStruct *cursor, u32 cursorObjId)
+u8 ListMenuAddCursorObjectInternal(const struct CursorStruct *cursor, u32 cursorObjId)
 {
     switch (cursorObjId)
     {
@@ -1300,7 +1300,7 @@ void ListMenuSetUpRedOutlineCursorSpriteOamTable(u16 rowWidth, u16 rowHeight, st
     }
 }
 
-static u8 ListMenuAddRedOutlineCursorObject(struct CursorStruct *cursor)
+static u8 ListMenuAddRedOutlineCursorObject(const struct CursorStruct *cursor)
 {
     struct CompressedSpriteSheet spriteSheet;
     struct SpritePalette spritePal;
@@ -1385,7 +1385,7 @@ static void Task_RedArrowCursor(u8 taskId)
 
 }
 
-static u8 ListMenuAddRedArrowCursorObject(struct CursorStruct *cursor)
+static u8 ListMenuAddRedArrowCursorObject(const struct CursorStruct *cursor)
 {
     struct CompressedSpriteSheet spriteSheet;
     struct SpritePalette spritePal;

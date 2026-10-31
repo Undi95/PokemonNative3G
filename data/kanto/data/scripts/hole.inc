@@ -8,5 +8,4 @@ EventScript_DoFallWarp::
 	playse SE_FALL
 	delay 60
 	special DoFallWarp
-	waitstate
 	end

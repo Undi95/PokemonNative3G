@@ -429,6 +429,9 @@ static void StoreSaveFile()
     {
         fseek(sSaveFile, 0, SEEK_SET);
         fwrite(FLASH_BASE, 1, sizeof(FLASH_BASE), sSaveFile);
+        // PokemonNative3G : écrit tout de suite, comme les blocs annexes ; sinon la fin pouvait attendre la fermeture
+        // du fichier, à la sortie du jeu (perdue si le jeu est tué : Android, plantage)
+        fflush(sSaveFile);
     }
 }
 

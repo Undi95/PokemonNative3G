@@ -5393,25 +5393,11 @@ bool8 PokemonItemUseNoEffect(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mo
     u8 idx = ITEM_EFFECT_ARG_START;
     u32 i;
     s32 sp18 = 0;
-    u8 holdEffect;
     u8 battlerId = MAX_BATTLERS_COUNT;
-    u16 heldItem;
     u8 curEffect;
     u32 curMoveId;
 
-    // Get item hold effect
-    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
-    if (heldItem == ITEM_ENIGMA_BERRY)
-    {
-        if (gMain.inBattle)
-            holdEffect = gEnigmaBerries[gBattlerInMenuId].holdEffect;
-        else
-            holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-    }
-    else
-    {
-        holdEffect = GetItemHoldEffect(heldItem);
-    }
+    // PokemonNative3G : l'effet de l'objet tenu y était calculé sans servir (Émeraude), retiré (avertissement)
 
     // Get battler id (if relevant)
     gPotentialItemEffectBattler = gBattlerInMenuId;

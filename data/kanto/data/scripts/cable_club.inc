@@ -274,7 +274,6 @@ Kanto_CableClub_EventScript_TryEnterColosseum::
 	special HelpSystem_Disable
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special TryBattleLinkup
-	waitstate
 	call EventScript_RestorePrevTextColor
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, Kanto_CableClub_EventScript_EnterColosseum
 	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, Kanto_CableClub_EventScript_AbortLinkSomeoneNotReady
@@ -312,7 +311,6 @@ Kanto_CableClub_EventScript_EnterColosseum::
 	special SetCableClubWarp
 	warp MAP_BATTLE_COLOSSEUM_2P, 6, 8
 	special DoCableClubWarp
-	waitstate
 	end
 
 /* Unused */
@@ -325,7 +323,6 @@ Kanto_CableClub_EventScript_WarpTo4PColosseum::
 	special SetCableClubWarp
 	warp MAP_BATTLE_COLOSSEUM_4P, 5, 8
 	special DoCableClubWarp
-	waitstate
 	end
 
 Kanto_CableClub_EventScript_AbortLinkIncorrectNumberOfBattlers::
@@ -372,7 +369,6 @@ Kanto_CableClub_EventScript_TradeCenter::
 	special HelpSystem_Disable
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special TryTradeLinkup
-	waitstate
 	call EventScript_RestorePrevTextColor
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, Kanto_CableClub_EventScript_EnterTradeCenter
 	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, Kanto_CableClub_EventScript_AbortLinkSomeoneNotReady
@@ -409,7 +405,6 @@ Kanto_CableClub_EventScript_EnterTradeCenter::
 	special SetCableClubWarp
 	setwarp MAP_TRADE_CENTER, 5, 8
 	special DoCableClubWarp
-	waitstate
 	end
 
 Kanto_CableClub_EventScript_CheckPartyTradeRequirements::
@@ -487,7 +482,6 @@ CableClub_EventScript_AbortMinigame::
 Kanto_CableClub_EventScript_CableClubWarp::
 	special SetCableClubWarp
 	special DoCableClubWarp
-	waitstate
 	end
 
 Kanto_CableClub_EventScript_AbortLinkIncorrectNumberOfParticipants::
@@ -591,7 +585,6 @@ BattleColosseum_2P_EventScript_PlayerSpot1::
 BattleColosseum_4P_EventScript_PlayerSpot0::
 	fadescreen FADE_TO_BLACK
 	special ChooseHalfPartyForBattle
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger
 	setvar VAR_0x8005, 0
 	textcolor NPC_TEXT_COLOR_NEUTRAL
@@ -602,7 +595,6 @@ BattleColosseum_4P_EventScript_PlayerSpot0::
 BattleColosseum_4P_EventScript_PlayerSpot1::
 	fadescreen FADE_TO_BLACK
 	special ChooseHalfPartyForBattle
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger
 	setvar VAR_0x8005, 1
 	textcolor NPC_TEXT_COLOR_NEUTRAL
@@ -613,7 +605,6 @@ BattleColosseum_4P_EventScript_PlayerSpot1::
 BattleColosseum_4P_EventScript_PlayerSpot2::
 	fadescreen FADE_TO_BLACK
 	special ChooseHalfPartyForBattle
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger
 	setvar VAR_0x8005, 2
 	textcolor NPC_TEXT_COLOR_NEUTRAL
@@ -624,7 +615,6 @@ BattleColosseum_4P_EventScript_PlayerSpot2::
 BattleColosseum_4P_EventScript_PlayerSpot3::
 	fadescreen FADE_TO_BLACK
 	special ChooseHalfPartyForBattle
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger
 	setvar VAR_0x8005, 3
 	textcolor NPC_TEXT_COLOR_NEUTRAL
@@ -678,7 +668,6 @@ Kanto_CableClub_EventScript_ReadTrainerCard::
 	msgbox Text_LookedAtPlayersTrainerCard
 	fadescreen FADE_TO_BLACK
 	special Script_ShowLinkTrainerCard
-	waitstate
 	end
 
 Kanto_CableClub_EventScript_ReadTrainerCardColored::
@@ -686,7 +675,6 @@ Kanto_CableClub_EventScript_ReadTrainerCardColored::
 	msgbox Text_LookedAtPlayersTrainerCardColored
 	fadescreen FADE_TO_BLACK
 	special Script_ShowLinkTrainerCard
-	waitstate
 	end
 
 Kanto_CableClub_EventScript_TooBusyToNotice::
@@ -733,7 +721,6 @@ TradeCenter_TerminateLink::
 CableClub_EventScript_DoLinkRoomExit::
 	special CleanupLinkRoomState
 	special ReturnFromLinkRoom
-	waitstate
 	end
 
 Kanto_CableClub_EventScript_UnionRoomAttendant::
@@ -1039,13 +1026,11 @@ Kanto_CableClub_EventScript_TryJoinGroupXPlayers::
 Kanto_CableClub_EventScript_TryBecomeLinkLeader::
 	special HelpSystem_Disable
 	special TryBecomeLinkLeader
-	waitstate
 	return
 
 Kanto_CableClub_EventScript_TryJoinLinkGroup::
 	special HelpSystem_Disable
 	special TryJoinLinkGroup
-	waitstate
 	return
 
 Kanto_CableClub_EventScript_EnterWirelessLinkRoom::
@@ -1083,7 +1068,6 @@ CableClub_EventScript_ShowWirelessCommunicationScreen::
 	special HelpSystem_Disable
 	fadescreen FADE_TO_BLACK
 	special ShowWirelessCommunicationScreen
-	waitstate
 	msgbox Kanto_CableClub_Text_ParticipantsStepUpToCounter
 	special HelpSystem_Enable
 	releaseall
@@ -1180,7 +1164,6 @@ CableClub_EventScript_PlayPokemonJump::
 	msgbox Text_EnterWhichPokemon
 	setvar VAR_0x8005, 0
 	special ChooseMonForWirelessMinigame
-	waitstate
 	goto_if_ge VAR_0x8004, PARTY_SIZE, CableClub_EventScript_AbortMinigame
 	call EventScript_AskSaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortMinigame
@@ -1195,7 +1178,6 @@ CableClub_EventScript_PlayDodrioBerryPicking::
 	msgbox Text_EnterWhichPokemon
 	setvar VAR_0x8005, 1
 	special ChooseMonForWirelessMinigame
-	waitstate
 	goto_if_ge VAR_0x8004, PARTY_SIZE, CableClub_EventScript_AbortMinigame
 	call EventScript_AskSaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortMinigame
@@ -1277,7 +1259,6 @@ TwoIsland_JoyfulGameCorner_EventScript_ShowPokemonJumpRecords::
 	goto_if_questlog EventScript_ReleaseEnd
 	lockall
 	special ShowPokemonJumpRecords
-	waitstate
 	releaseall
 	end
 
@@ -1285,7 +1266,6 @@ TwoIsland_JoyfulGameCorner_EventScript_ShowDodrioBerryPickingRecords::
 	goto_if_questlog EventScript_ReleaseEnd
 	lockall
 	special ShowDodrioBerryPickingRecords
-	waitstate
 	releaseall
 	end
 

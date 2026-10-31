@@ -22,7 +22,7 @@ contenu dans un seul jeu.
 
 ## À faire — contenu à réunir (listes)
 - Décision : musiques, animations et transitions de combat = celles de la région, comme dans les jeux officiels (pas d'option).
-- Options : menu ergonomique (sous-menus / pages) si la liste devient trop longue.
+- [x] Options : deux pages (L/R) : réglages d'Émeraude, puis choix HOENN / KANTO.
 
 ## À faire — choix HOENN / KANTO dans les Options
 - [x] Menus (option MENUS) : menu Start, équipe et résumé
@@ -71,7 +71,7 @@ contenu dans un seul jeu.
 - [-] « Précédemment dans votre quête » (journal de RF) : abandonné (décision de l'utilisateur, 2026-10-24)
 - [x] Courir partout (intérieurs compris ; bike.c, IsRunningDisallowed)
 - [x] Cherch'Objet de RF dans tout le jeu (2026-10-31, choix de l'utilisateur ; avant : celui d'Émeraude à Hoenn, retiré) ; objets « sous les pieds » de RF perdus à l'import des cartes (traités comme des objets cachés normaux)
-- [ ] Objets donnés deux fois : voir docs/OBJETS-EN-DOUBLE.md ; CS réglées (2026-10-24) : POKé MONTURE à Kanto
+- [x] Objets donnés deux fois : voir docs/OBJETS-EN-DOUBLE.md ; CS réglées (2026-10-24) : POKé MONTURE à Kanto ; plus aucun objet clé ni CS donné dans les deux régions (`tools/item_doubles.py`, 2026-10-31)
 - [x] CS (2026-10-24) : les CS restent à Hoenn ; à Kanto, les 7 dons de CS de RF donnent la POKé MONTURE (objet rare, icône dessinée pour la fusion) puis lui ajoutent chaque capacité (flags de RF FLAG_KANTO_GOT_HM01..06 et ramassage de la CS07). Sans POKéMON de l'équipe qui connaît la capacité, un POKéMON des environs vient l'utiliser, partout : Kanto INSECATEUR, ROUCARNAGE, LOKHLASS, MACKOGNEUR, PIKACHU, GROLEM, POISSOROY ; Hoenn ABSOL, ALTARIA, WAILORD, HARIYAMA, ÉLECSPRINT, GALEGON, MILOBELLUS (Coupe, Vol, Surf, Force, Flash, Éclate-Roc, Cascade). Badges toujours exigés ; Vol et Flash depuis le sac. `tools/poke_monture.py`, `data/scripts/fusion_poke_monture.inc`, `src/fusion_events.c`
 - [x] Cannes (2026-10-24) : les 3 pêcheurs de Kanto (CANNE à Carmin, SUPER CANNE à Parmanie, MEGA CANNE Route 12) améliorent la canne au lieu d'en donner une 2e (s'il ne l'a pas encore, ils la donnent, déjà améliorée) ; chacun a son texte. Canne améliorée : chaîne de pêche, chaque POKéMON remonté au même endroit donne un tirage chromatique de plus à la prise suivante (max 40) ; la série se brise si rien ne mord / s'échappe, si le joueur fait un pas, change de carte ou de canne (`FishingChain_*`, src/fusion_events.c ; data/scripts/fusion_fishing.inc ; FLAG_OLD/GOOD/SUPER_ROD_UPGRADED)
 - [x] Cannes sans canne de Hoenn (2026-10-24) : les pêcheurs de Kanto ne la donnent plus, ils disent où la trouver (Myokara, Route 118, Algatia)

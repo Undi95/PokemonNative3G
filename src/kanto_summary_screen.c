@@ -2547,7 +2547,6 @@ static void PokeSum_PrintPageName(const u8 * str)
 
 static void PokeSum_PrintControlsString(const u8 * str)
 {
-    u8 v0;
     s32 width;
     u8 r1;
 
@@ -3382,7 +3381,6 @@ static void PokeSum_SetHelpContext(void)
 
 static u8 PokeSum_BufferOtName_IsEqualToCurrentOwner(struct Pokemon * mon)
 {
-    u8 i;
     u8 multiplayerId;
     u32 trainerId = 0;
 

@@ -87,7 +87,7 @@ int Intl_GetListMenuWidth(const struct ListMenuTemplate *listMenu)
 
 void CopyMonCategoryText(int dexNum, u8 *dest)
 {
-    u8 *str = StringCopy(dest, gPokedexEntries[dexNum].categoryName);
+    StringCopy(dest, gPokedexEntries[dexNum].categoryName);
     //!< French Difference
     // *str = CHAR_SPACE;
     // StringCopy(str + 1, gText_Pokemon);

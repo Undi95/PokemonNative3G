@@ -764,11 +764,9 @@ static void BerryPouchMoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMen
 
 static void BerryPouchItemPrintFunc(u8 windowId, u32 itemId, u8 y)
 {
-    u16 unused;
     u16 itemQuantity;
     if (itemId != -2 && sResources->listMenuNumItems != itemId)
     {
-        unused = BagGetItemIdByPocketPosition(POCKET_BERRIES, itemId);
         itemQuantity = BagGetQuantityByPocketPosition(POCKET_BERRIES, itemId);
         ConvertIntToDecimalStringN(gStringVar1, itemQuantity, STR_CONV_MODE_RIGHT_ALIGN, 3);
         StringExpandPlaceholders(gStringVar4, sKText_Text_TimesStrVar1);
