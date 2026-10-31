@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Passage Hoenn <-> Kanto (PokemonNative3G, 2026-10-24), scripts : data/scripts/fusion_kanto_travel.inc
-- Port de Poivressel / Nénucrique, Ligue de Hoenn finie : bateau pour KANTO. 1er voyage = aller simple vers Bourg
+- Port de Poivressel / Nénucrique, Ligue de Hoenn finie : KANTO dans le menu du ferry. 1er voyage = aller simple vers Bourg
   Palette ; l'équipe part au PC ; les POKéMON de Hoenn y sont grisés et ne peuvent pas rejoindre l'équipe tant que la
   Ligue de Kanto n'est pas finie et le Rubis/Saphir rendu (CanFlyBetweenRegions, comme le vol ; tools/kanto_travel_pc.py) ;
 - ensuite (débloqué) : Poivressel/Nénucrique -> Carmin sur Mer et Carmin sur Mer (marin du port) -> Poivressel ;
@@ -40,15 +40,8 @@ exec(open('tools/kanto_travel_pc.py', encoding='utf-8').read())
 once('data/specials.inc', '\tdef_special HasAllMons @ PokemonNative3G\n',
      '\tdef_special HasAllMons @ PokemonNative3G\n\tdef_special Fusion_StorePartyInPC @ PokemonNative3G\n\tdef_special CanFlyBetweenRegions @ PokemonNative3G\n')
 
-# --- ports
-once('data/maps/SlateportCity_Harbor/scripts.inc', '''SlateportCity_Harbor_EventScript_AskForTicket::
-''', '''SlateportCity_Harbor_EventScript_AskForTicket::
-	call Fusion_EventScript_HoennHarborKanto @ PokemonNative3G : data/scripts/fusion_kanto_travel.inc
-''')
-once('data/maps/LilycoveCity_Harbor/scripts.inc', '''	goto_if_unset FLAG_SYS_GAME_CLEAR, LilycoveCity_Harbor_EventScript_FerryUnavailable
-''', '''	goto_if_unset FLAG_SYS_GAME_CLEAR, LilycoveCity_Harbor_EventScript_FerryUnavailable
-	call Fusion_EventScript_HoennHarborKanto @ PokemonNative3G : data/scripts/fusion_kanto_travel.inc
-''')
+# --- ports de Poivressel / Nénucrique : destination KANTO du menu du ferry, ajoutée à la main le 2026-10-31
+# (Fusion_CanTakeFerryToKanto, Fusion_EventScript_KantoFerryConfirm / KantoFerryWarp)
 once(K + 'VermilionCity/scripts.inc', '''VermilionCity_EventScript_FerrySailor::
 	lock
 	faceplayer

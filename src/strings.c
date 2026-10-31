@@ -758,6 +758,7 @@ const u8 gText_BlueTent[] = _("TENTE BLEUE");
 const u8 gText_SouthernIsland[] = _("ILE DU SUD");
 const u8 gText_BirthIsland[] = _("ILE AURORE");
 const u8 gText_FarawayIsland[] = _("ILE LOINTAINE");
+const u8 gText_Kanto[] = _("KANTO"); // PokemonNative3G
 const u8 gText_NavelRock[] = _("ROC NOMBRI");
 const u8 gText_ClawFossil[] = _("FOSS. GRIFFE");
 const u8 gText_RootFossil[] = _("FOSS. RACINE");

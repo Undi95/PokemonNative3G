@@ -163,7 +163,6 @@ SlateportCity_Harbor_EventScript_FerryAttendant::
 	end
 
 SlateportCity_Harbor_EventScript_AskForTicket::
-	call Fusion_EventScript_HoennHarborKanto @ PokemonNative3G : data/scripts/fusion_kanto_travel.inc
 	msgbox SlateportCity_Harbor_Text_MayISeeYourTicket, MSGBOX_DEFAULT
 	message SlateportCity_Harbor_Text_FlashedTicketWhereTo
 	waitmessage
@@ -171,6 +170,8 @@ SlateportCity_Harbor_EventScript_AskForTicket::
 	end
 
 SlateportCity_Harbor_EventScript_ChooseDestination::
+	specialvar VAR_RESULT, Fusion_CanTakeFerryToKanto @ PokemonNative3G : destination KANTO
+	goto_if_eq VAR_RESULT, TRUE, SlateportCity_Harbor_EventScript_ChooseDestinationKanto
 	goto_if_set FLAG_MET_SCOTT_ON_SS_TIDAL, SlateportCity_Harbor_EventScript_ChooseDestinationWithBattleFrontier
 	multichoicedefault 18, 8, MULTI_SSTIDAL_SLATEPORT_NO_BF, 2, FALSE
 	switch VAR_RESULT
@@ -186,6 +187,34 @@ SlateportCity_Harbor_EventScript_ChooseDestinationWithBattleFrontier::
 	case 1, SlateportCity_Harbor_EventScript_BattleFrontier
 	case 2, SlateportCity_Harbor_EventScript_CancelDestinationSelect
 	case MULTI_B_PRESSED, SlateportCity_Harbor_EventScript_CancelDestinationSelect
+	end
+
+@ PokemonNative3G : menus avec la destination KANTO
+SlateportCity_Harbor_EventScript_ChooseDestinationKanto::
+	goto_if_set FLAG_MET_SCOTT_ON_SS_TIDAL, SlateportCity_Harbor_EventScript_ChooseDestinationWithBattleFrontierKanto
+	multichoicedefault 18, 6, MULTI_SSTIDAL_SLATEPORT_NO_BF_KANTO, 2, FALSE
+	switch VAR_RESULT
+	case 0, SlateportCity_Harbor_EventScript_Lilycove
+	case 1, SlateportCity_Harbor_EventScript_Kanto
+	case 2, SlateportCity_Harbor_EventScript_CancelDestinationSelect
+	case MULTI_B_PRESSED, SlateportCity_Harbor_EventScript_CancelDestinationSelect
+	end
+
+SlateportCity_Harbor_EventScript_ChooseDestinationWithBattleFrontierKanto::
+	multichoicedefault 17, 4, MULTI_SSTIDAL_SLATEPORT_WITH_BF_KANTO, 3, FALSE
+	switch VAR_RESULT
+	case 0, SlateportCity_Harbor_EventScript_Lilycove
+	case 1, SlateportCity_Harbor_EventScript_BattleFrontier
+	case 2, SlateportCity_Harbor_EventScript_Kanto
+	case 3, SlateportCity_Harbor_EventScript_CancelDestinationSelect
+	case MULTI_B_PRESSED, SlateportCity_Harbor_EventScript_CancelDestinationSelect
+	end
+
+SlateportCity_Harbor_EventScript_Kanto::
+	call Fusion_EventScript_KantoFerryConfirm
+	goto_if_eq VAR_RESULT, NO, SlateportCity_Harbor_EventScript_ChooseNewDestination
+	call SlateportCity_Harbor_EventScript_BoardFerry
+	goto Fusion_EventScript_KantoFerryWarp
 	end
 
 /* Unused. Should be impossible for player to reach Ferry without having received SS Tidal ticket*/

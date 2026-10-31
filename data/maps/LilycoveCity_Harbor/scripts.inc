@@ -10,7 +10,6 @@ LilycoveCity_Harbor_EventScript_FerryAttendant::
 	lock
 	faceplayer
 	goto_if_unset FLAG_SYS_GAME_CLEAR, LilycoveCity_Harbor_EventScript_FerryUnavailable
-	call Fusion_EventScript_HoennHarborKanto @ PokemonNative3G : data/scripts/fusion_kanto_travel.inc
 	call LilycoveCity_Harbor_EventScript_GetEonTicketState
 	call LilycoveCity_Harbor_EventScript_GetAuroraTicketState
 	call LilycoveCity_Harbor_EventScript_GetOldSeaMapState
@@ -47,7 +46,16 @@ LilycoveCity_Harbor_EventScript_FerryRegularLocationSelect::
 	case 4, LilycoveCity_Harbor_EventScript_GoToBirthIsland
 	case 5, LilycoveCity_Harbor_EventScript_GoToFarawayIsland
 	case 6, LilycoveCity_Harbor_EventScript_ExitSailSelect
+	case 7, LilycoveCity_Harbor_EventScript_GoToKanto @ PokemonNative3G : SSTIDAL_SELECTION_KANTO
 	case MULTI_B_PRESSED, LilycoveCity_Harbor_EventScript_ExitSailSelect
+	end
+
+@ PokemonNative3G : destination KANTO (data/scripts/fusion_kanto_travel.inc)
+LilycoveCity_Harbor_EventScript_GoToKanto::
+	call Fusion_EventScript_KantoFerryConfirm
+	goto_if_eq VAR_RESULT, NO, LilycoveCity_Harbor_EventScript_FerryDestinationChangeMind
+	call LilycoveCity_Harbor_EventScript_BoardFerry
+	goto Fusion_EventScript_KantoFerryWarp
 	end
 
 LilycoveCity_Harbor_EventScript_GoToSouthernIsland::

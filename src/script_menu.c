@@ -702,6 +702,12 @@ static void CreateLilycoveSSTidalMultichoice(void)
             sLilycoveSSTidalSelections[selectionCount] = SSTIDAL_SELECTION_BATTLE_FRONTIER;
             selectionCount++;
         }
+
+        if (Fusion_CanTakeFerryToKanto()) // PokemonNative3G
+        {
+            sLilycoveSSTidalSelections[selectionCount] = SSTIDAL_SELECTION_KANTO;
+            selectionCount++;
+        }
     }
 
     if (CheckBagHasItem(ITEM_EON_TICKET, 1) == TRUE && FlagGet(FLAG_ENABLE_SHIP_SOUTHERN_ISLAND) == TRUE)
@@ -777,7 +783,9 @@ static void CreateLilycoveSSTidalMultichoice(void)
     }
 
     count = selectionCount;
-    if (count == SSTIDAL_SELECTION_COUNT)
+    // PokemonNative3G : menu défilant dès que la fenêtre ne tient plus (avec KANTO, toutes les destinations ne
+    // sont plus forcément ouvertes ensemble)
+    if (count > 6)
     {
         gSpecialVar_0x8004 = SCROLL_MULTI_SS_TIDAL_DESTINATION;
         ShowScrollableMultichoice();
@@ -812,6 +820,21 @@ static void CreateLilycoveSSTidalMultichoice(void)
         CopyWindowToVram(windowId, COPYWIN_FULL);
         InitMultichoiceCheckWrap(FALSE, count, windowId, MULTI_SSTIDAL_LILYCOVE);
     }
+}
+
+// PokemonNative3G : destinations du menu défilant (ShowScrollableMultichoice), dans l'ordre du menu
+u8 GetLilycoveSSTidalSelectionCount(void)
+{
+    u8 count;
+
+    for (count = 0; count < SSTIDAL_SELECTION_COUNT && sLilycoveSSTidalSelections[count] != 0xFF; count++)
+        ;
+    return count;
+}
+
+const u8 *GetLilycoveSSTidalSelectionText(u8 index)
+{
+    return sLilycoveSSTidalDestinations[sLilycoveSSTidalSelections[index]];
 }
 
 void GetLilycoveSSTidalSelection(void)

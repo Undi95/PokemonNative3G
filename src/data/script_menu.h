@@ -314,6 +314,22 @@ static const struct MenuAction MultichoiceList_SSTidalSlateportNoBF[] =
     {gText_Exit},
 };
 
+// PokemonNative3G : port de Poivressel avec la destination KANTO
+static const struct MenuAction MultichoiceList_SSTidalSlateportNoBFKanto[] =
+{
+    {gText_LilycoveCity},
+    {gText_Kanto},
+    {gText_Exit},
+};
+
+static const struct MenuAction MultichoiceList_SSTidalSlateportWithBFKanto[] =
+{
+    {gText_LilycoveCity},
+    {gText_BattleFrontier},
+    {gText_Kanto},
+    {gText_Exit},
+};
+
 static const struct MenuAction MultichoiceList_Floors[] =
 {
     {gText_5F},
@@ -900,6 +916,8 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_SLATEPORT_TENT_RULES]       = MULTICHOICE(MultichoiceList_SlateportTentRules),
     [MULTI_FALLARBOR_TENT_RULES]       = MULTICHOICE(MultichoiceList_FallarborTentRules),
     [MULTI_TAG_MATCH_TYPE]             = MULTICHOICE(MultichoiceList_TagMatchType),
+    [MULTI_SSTIDAL_SLATEPORT_NO_BF_KANTO]   = MULTICHOICE(MultichoiceList_SSTidalSlateportNoBFKanto),
+    [MULTI_SSTIDAL_SLATEPORT_WITH_BF_KANTO] = MULTICHOICE(MultichoiceList_SSTidalSlateportWithBFKanto),
 #include "kanto_script_menu_entries.h"
 };
 
@@ -965,6 +983,7 @@ static const u8 *const sLilycoveSSTidalDestinations[SSTIDAL_SELECTION_COUNT] =
     [SSTIDAL_SELECTION_BIRTH_ISLAND]    = gText_BirthIsland,
     [SSTIDAL_SELECTION_FARAWAY_ISLAND]  = gText_FarawayIsland,
     [SSTIDAL_SELECTION_EXIT]            = gText_Exit,
+    [SSTIDAL_SELECTION_KANTO]           = gText_Kanto,
 };
 
 static const u8 *const sCableClubOptions_WithRecordMix[] =

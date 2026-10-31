@@ -1,7 +1,7 @@
 # Build KANTO_DEBUG=1 : nouvelle partie à Bourg Palette, porte de la maison (fermée, à vendre), le labo,
 # parle aux PNJ, puis téléport à Jadielle et soin au Centre Pokémon.
 from driver import *  # les vérifications (expect...)
-from driver import check_screen, finish_dialog, leave_map, talk_to, walk_to, wait_until
+from driver import check_screen, finish_dialog, leave_map, mark, talk_to, walk_to, wait_until
 
 
 def log(game, what):
@@ -17,6 +17,27 @@ def debug_warp(game, index):
     game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("A"); game.wait(30)
     game.tap("DOWN", index); game.tap("A")
     wait_until(game, lambda s: s.free)
+
+
+def ferry_to_kanto(game):
+    """Port de Poivressel / Nénucrique, face à l'employé : choisit KANTO dans le menu du ferry, puis OUI."""
+    since = mark(game)
+    talk_to(game, "UP", finish=False)
+    for _ in range(40):
+        printed = [(w, t.strip()) for _, w, t in game.texts[since:] if w != 0]
+        if any(t == "KANTO" for _, t in printed):
+            break
+        game.tap("A", hold=2, gap=10)
+    game.wait(20)
+    printed = [(w, t.strip()) for _, w, t in game.texts[since:] if w != 0 and t.strip() != "▶"]   # sans le curseur
+    # les choix du menu : les textes de la fenêtre de KANTO, imprimés à la suite ; le curseur part du dernier
+    # (ANNULER / QUITTER), comme dans Émeraude
+    k = max(i for i, (_, t) in enumerate(printed) if t == "KANTO")
+    window, last = printed[k][0], k
+    while last + 1 < len(printed) and printed[last + 1][0] == window:
+        last += 1
+    game.tap("UP", last - k, gap=10); game.wait(10); game.tap("A"); game.wait(30)
+    finish_dialog(game)
 
 
 def give_mewtwo(game):

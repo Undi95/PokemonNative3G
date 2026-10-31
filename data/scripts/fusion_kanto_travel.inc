@@ -1,37 +1,33 @@
 @ PokemonNative3G : passage Hoenn <-> Kanto et maison de Bourg Palette (tools/kanto_travel.py)
 
-@ --- Poivressel / Nénucrique (Ligue de Hoenn finie) : appelé avant la demande de ticket ; ne revient pas si on part
-Fusion_EventScript_HoennHarborKanto::
-	goto_if_set FLAG_FUSION_KANTO_VISITED, Fusion_EventScript_HoennHarborKantoAgain
-	msgbox Fusion_Text_KantoFirstOffer, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, Fusion_EventScript_TravelReturn
-	msgbox Fusion_Text_KantoOneWay, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, Fusion_EventScript_TravelCancel
-	msgbox Fusion_Text_KantoBonVoyage, MSGBOX_DEFAULT
-	closemessage
+@ --- Poivressel / Nénucrique (Ligue de Hoenn finie) : destination KANTO du menu du ferry (Fusion_CanTakeFerryToKanto).
+@ Le port demande la confirmation (VAR_RESULT = YES / NO), fait embarquer le joueur, puis appelle le voyage.
+Fusion_EventScript_KantoFerryConfirm::
+	goto_if_set FLAG_FUSION_KANTO_VISITED, Fusion_EventScript_KantoFerryConfirmAgain
+	msgbox Fusion_Text_KantoFirstTrip, MSGBOX_YESNO
+	return
+
+Fusion_EventScript_KantoFerryConfirmAgain::
+	msgbox Fusion_Text_KantoItIs, MSGBOX_YESNO
+	return
+
+@ Premier voyage : aller simple vers Bourg Palette, l'équipe reste au PC de Hoenn ; ensuite Carmin sur Mer
+Fusion_EventScript_KantoFerryWarp::
+	goto_if_set FLAG_FUSION_KANTO_VISITED, Fusion_EventScript_KantoFerryVermilion
 	special Fusion_StorePartyInPC
 	setflag FLAG_FUSION_KANTO_VISITED
 	setrespawn HEAL_LOCATION_PALLET_TOWN
-	playse SE_SHIP
 	warp MAP_PALLET_TOWN, 6, 8
 	waitstate
 	release
 	end
 
-Fusion_EventScript_HoennHarborKantoAgain::
-	specialvar VAR_RESULT, CanFlyBetweenRegions
-	goto_if_eq VAR_RESULT, FALSE, Fusion_EventScript_TravelReturn
-	msgbox Fusion_Text_KantoAgain, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, Fusion_EventScript_TravelReturn
-	closemessage
-	playse SE_SHIP
+Fusion_EventScript_KantoFerryVermilion::
 	warp MAP_VERMILION_CITY, 24, 32
 	waitstate
 	release
 	end
 
-Fusion_EventScript_TravelCancel::
-	msgbox Fusion_Text_TravelCancel, MSGBOX_DEFAULT
 Fusion_EventScript_TravelReturn::
 	return
 
@@ -99,36 +95,27 @@ Fusion_EventScript_PalletHouseNotBought::
 	releaseall
 	end
 
-Fusion_Text_KantoFirstOffer:
-	.string "Félicitations pour la LIGUE!\p"
-	.string "Un navire spécial part pour\n"
-	.string "KANTO, une région lointaine.\p"
-	.string "Veux-tu en savoir plus?$"
+Fusion_Text_KantoFirstTrip:
+	.string "KANTO? Le voyage d'une vie!\p"
+	.string "Un conseil de vieux marin…\n"
+	.string "Là-bas, personne ne connaît\l"
+	.string "tes exploits de HOENN.\p"
+	.string "Et les PC de KANTO ne sont pas\n"
+	.string "reliés aux nôtres: tes POKéMON\l"
+	.string "t'attendront ici, au chaud.\p"
+	.string "Tu repartirais comme au premier\n"
+	.string "jour, avec ton SAC et ton\l"
+	.string "courage pour seuls bagages.\p"
+	.string "Et ce bateau-là ne fait pas\n"
+	.string "le retour… Les rares dresseurs\l"
+	.string "revenus de KANTO en sont tous\l"
+	.string "rentrés MAÎTRES.\p"
+	.string "On dit aussi qu'un certain CILEO\n"
+	.string "cherche à relier les deux régions.\p"
+	.string "Alors, on lève l'ancre?$"
 
-Fusion_Text_KantoOneWay:
-	.string "C'est un aller simple: aucun\n"
-	.string "bateau ne revient de KANTO.\p"
-	.string "Tes POKéMON restent ici, au PC.\n"
-	.string "Là-bas, aucune connexion avec\l"
-	.string "HOENN… Tu ne pourras pas les\l"
-	.string "reprendre dans ton équipe.\p"
-	.string "Il faudra devenir MAÎTRE de\n"
-	.string "KANTO, et aider un certain CILEO\l"
-	.string "à relier les deux régions.\p"
-	.string "Tu repartirais de zéro.\n"
-	.string "Tu embarques quand même?$"
-
-Fusion_Text_KantoBonVoyage:
-	.string "Très bien! Le navire te déposera\n"
-	.string "à BOURG PALETTE.\p"
-	.string "Bon voyage, {PLAYER}!$"
-
-Fusion_Text_TravelCancel:
-	.string "Reviens quand tu seras prêt!$"
-
-Fusion_Text_KantoAgain:
-	.string "Un navire part pour CARMIN SUR\n"
-	.string "MER, à KANTO. Tu embarques?$"
+Fusion_Text_KantoItIs:
+	.string "Cap sur CARMIN SUR MER, à KANTO?$"
 
 Fusion_Text_HoennOffer:
 	.string "Un navire part pour POIVRESSEL,\n"

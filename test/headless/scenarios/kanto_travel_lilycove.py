@@ -5,7 +5,7 @@ from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
-from kanto_tour import log, give_mewtwo, debug_warp
+from kanto_tour import log, give_mewtwo, debug_warp, ferry_to_kanto
 from redleaf_acro import close_menus
 from driver import wait_until, walk_to, talk_to
 
@@ -20,7 +20,7 @@ def play(game):
     game.wait(60); close_menus(game)
     debug_warp(game, 36)
     log(game, "port")
-    talk_to(game, "UP")
+    ferry_to_kanto(game)
     game.wait(60); log(game, "arrivée")
     walk_to(game, 4, 8)
     talk_to(game, "UP"); log(game, "pancarte")
@@ -28,4 +28,4 @@ def play(game):
 
     # Vérifications
     expect_flag(game, "FLAG_FUSION_KANTO_VISITED")
-    expect_text(game, "Le navire te déposera à BOURG PALETTE")
+    expect_text(game, "personne ne connaît")

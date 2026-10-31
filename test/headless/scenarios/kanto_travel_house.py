@@ -4,7 +4,7 @@ from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
-from kanto_tour import log, give_mewtwo, debug_warp
+from kanto_tour import log, give_mewtwo, debug_warp, ferry_to_kanto
 from redleaf_acro import close_menus
 from driver import wait_until, walk_to, talk_to
 
@@ -18,7 +18,7 @@ def play(game):
     game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 13, gap=10); game.tap("A")
     game.wait(60); close_menus(game)
     debug_warp(game, 35)
-    talk_to(game, "UP")
+    ferry_to_kanto(game)
     game.wait(60); log(game, "arrivée")
     walk_to(game, 4, 8)
     talk_to(game, "UP"); log(game, "achat")

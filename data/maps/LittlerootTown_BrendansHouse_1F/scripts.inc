@@ -404,7 +404,12 @@ PlayersHouse_1F_Text_PortsInSlateportLilycove:
 	.string "PAPA: C'est un PASSE pour le ferry?\p"
 	.string "Si ma mémoire est bonne, il y a des \n"
 	.string "embarcadères à POIVRESSEL et à\l"
-	.string "NENUCRIQUE pour le ferry.$"
+	.string "NENUCRIQUE pour le ferry.\p"
+	.string "On raconte même qu'un navire\n"
+	.string "part maintenant pour KANTO.\p"
+	.string "Une région lointaine où les\n"
+	.string "plus grands dresseurs vont faire\l"
+	.string "leurs preuves… Hé hé.$"
 
 PlayersHouse_1F_Text_BetterGetBackToGym:
 	.string "Je dois retourner à l'ARENE de\n"

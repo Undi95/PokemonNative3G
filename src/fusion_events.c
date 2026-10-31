@@ -353,6 +353,13 @@ void Fusion_MarkAllMonsFromHoenn(void)
     }
 }
 
+// Destination KANTO des ports de Poivressel et Nénucrique (Ligue de Hoenn finie) : le premier voyage (aller simple),
+// puis à nouveau une fois les deux régions reliées (comme le vol entre régions)
+bool8 Fusion_CanTakeFerryToKanto(void)
+{
+    return !FlagGet(FLAG_FUSION_KANTO_VISITED) || CanFlyBetweenRegions();
+}
+
 // Propriétaire du PC selon la région : LÉO à Kanto (une fois rencontré), ANNETTE à Hoenn (idem), sinon « ??? »
 u8 Fusion_GetPCOwner(void)
 {

@@ -2380,7 +2380,7 @@ void ShowScrollableMultichoice(void)
         break;
     case SCROLL_MULTI_SS_TIDAL_DESTINATION:
         task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
-        task->tNumItems = 7;
+        task->tNumItems = GetLilycoveSSTidalSelectionCount(); // PokemonNative3G : selon les destinations ouvertes
         task->tLeft = 19;
         task->tTop = 1;
         task->tWidth = 10;
@@ -2539,16 +2539,6 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
         gText_FirePunch48BP,
         gText_Exit
     },
-    [SCROLL_MULTI_SS_TIDAL_DESTINATION] =
-    {
-        gText_SlateportCity,
-        gText_BattleFrontier,
-        gText_SouthernIsland,
-        gText_NavelRock,
-        gText_BirthIsland,
-        gText_FarawayIsland,
-        gText_Exit
-    },
     [SCROLL_MULTI_BATTLE_TENT_RULES] =
     {
         gText_BattleTrainers,
@@ -2560,6 +2550,14 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
         gText_Exit
     }
 };
+
+// PokemonNative3G : les destinations du ferry de Nénucrique dépendent de ce qui est ouvert (KANTO compris)
+static const u8 *GetScrollableMultichoiceOption(u16 scrollMultiId, u8 index)
+{
+    if (scrollMultiId == SCROLL_MULTI_SS_TIDAL_DESTINATION)
+        return GetLilycoveSSTidalSelectionText(index);
+    return sScrollableMultichoiceOptions[scrollMultiId][index];
+}
 
 static void Task_ShowScrollableMultichoice(u8 taskId)
 {
@@ -2579,7 +2577,7 @@ static void Task_ShowScrollableMultichoice(u8 taskId)
 
     for (width = 0, i = 0; i < task->tNumItems; i++)
     {
-        const u8 *text = sScrollableMultichoiceOptions[gSpecialVar_0x8004][i];
+        const u8 *text = GetScrollableMultichoiceOption(gSpecialVar_0x8004, i);
         sScrollableMultichoice_ListMenuItem[i].name = text;
         sScrollableMultichoice_ListMenuItem[i].id = i;
         width = DisplayTextAndGetWidth(text, width);
@@ -3195,7 +3193,7 @@ void ScrollableMultichoice_RedrawPersistentMenu(void)
         SetStandardWindowBorderStyle(task->tWindowId, FALSE);
 
         for (i = 0; i < MAX_SCROLL_MULTI_ON_SCREEN; i++)
-            AddTextPrinterParameterized5(task->tWindowId, FONT_NORMAL, sScrollableMultichoiceOptions[gSpecialVar_0x8004][scrollOffset + i], 10, i * 16, TEXT_SKIP_DRAW, NULL, 0, 0);
+            AddTextPrinterParameterized5(task->tWindowId, FONT_NORMAL, GetScrollableMultichoiceOption(gSpecialVar_0x8004, scrollOffset + i), 10, i * 16, TEXT_SKIP_DRAW, NULL, 0, 0);
 
         AddTextPrinterParameterized(task->tWindowId, FONT_NORMAL, gText_SelectorArrow, 0, selectedRow * 16, TEXT_SKIP_DRAW, NULL);
         PutWindowTilemap(task->tWindowId);

@@ -122,6 +122,9 @@
 #define MULTI_SLATEPORT_TENT_RULES         111
 #define MULTI_FALLARBOR_TENT_RULES         112
 #define MULTI_TAG_MATCH_TYPE               113
+// PokemonNative3G : destination KANTO au port de Poivressel (data/scripts/fusion_kanto_travel.inc)
+#define MULTI_SSTIDAL_SLATEPORT_NO_BF_KANTO   114
+#define MULTI_SSTIDAL_SLATEPORT_WITH_BF_KANTO 115
 
 // Lilycove SS Tidal Multichoice Selections
 #define SSTIDAL_SELECTION_SLATEPORT        0
@@ -131,7 +134,8 @@
 #define SSTIDAL_SELECTION_BIRTH_ISLAND     4
 #define SSTIDAL_SELECTION_FARAWAY_ISLAND   5
 #define SSTIDAL_SELECTION_EXIT             6
-#define SSTIDAL_SELECTION_COUNT            7
+#define SSTIDAL_SELECTION_KANTO            7 // PokemonNative3G
+#define SSTIDAL_SELECTION_COUNT            8
 
 // Std String Ids
 #define STDSTRING_COOL             0
