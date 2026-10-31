@@ -145,6 +145,7 @@ EventScript_NoRoomToPickUpItem::
 EventScript_HiddenItemScript::
 	lockall
 	waitse
+	goto_if_eq VAR_0x8005, ITEM_NONE, EventScript_TryPickUpHiddenCoins @ Rouge Feu : jetons cachés (VAR_0x8006 jetons)
 	additem VAR_0x8005
 	copyvar VAR_0x8007, VAR_RESULT
 	bufferitemnameplural STR_VAR_2, VAR_0x8005, 1

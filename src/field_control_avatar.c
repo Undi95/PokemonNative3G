@@ -9,7 +9,6 @@ extern const u8 EventScript_PokemartSign[];
 extern const u8 EventScript_Indigo_UltimateGoal[];
 extern const u8 EventScript_Indigo_HighestAuthority[];
 extern const u8 EventScript_CancelMessageBox[];
-extern const u8 Kanto_EventScript_HiddenItemScript[];
 // PokemonNative3G : objets d'intérieur de Rouge Feu (flavor_text.inc de RF)
 extern const u8 EventScript_Bookshelf[];
 extern const u8 EventScript_PokeMartShelf[];
@@ -421,11 +420,7 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
         gSpecialVar_0x8005 = bgEvent->bgUnion.hiddenItem.item;
         if (FlagGet(gSpecialVar_0x8004) == TRUE)
             return NULL;
-        if (Fusion_IsInKanto()) // PokemonNative3G : script de RF (jetons cachés du Casino, quantité)
-        {
-            gSpecialVar_0x8006 = bgEvent->bgUnion.hiddenItem.quantity;
-            return Kanto_EventScript_HiddenItemScript;
-        }
+        gSpecialVar_0x8006 = bgEvent->bgUnion.hiddenItem.quantity; // Rouge Feu : nombre de jetons cachés (objet ITEM_NONE)
         return EventScript_HiddenItemScript;
     case BG_EVENT_SECRET_BASE:
         if (direction == DIR_NORTH)

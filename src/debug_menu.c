@@ -394,7 +394,6 @@ static void Task_DebugMenu(u8 taskId)
         break;
     case DEBUG_GIVE_ITEMS:
         DebugMenu_GiveAllItems();
-        FlagSet(FLAG_KANTO_GOT_COIN_CASE); // étui à jetons de Kanto (Casino de Céladopole)
         if (GetCoins() < 500)
             SetCoins(500);
         PlaySE(SE_USE_ITEM);

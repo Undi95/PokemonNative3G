@@ -13,7 +13,6 @@ CeladonCity_Restaurant_EventScript_Woman::
 CeladonCity_Restaurant_EventScript_CoinCaseMan::
 	lock
 	faceplayer
-	setflag FLAG_KANTO_GOT_COIN_CASE
 	checkitem ITEM_COIN_CASE
 	goto_if_eq VAR_RESULT, FALSE, CeladonCity_Restaurant_EventScript_CoinCaseManSad
 	checkcoins VAR_0x8004
