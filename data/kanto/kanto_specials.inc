@@ -73,7 +73,7 @@
 	def_special SetUpTrainerMovement
 	def_special StartSouthernIslandBattle
 	def_special GetPartyMonSpecies
-	def_special HasAllKantoMons
+	def_special HasAllKantoMons, ret=SPECIAL_RET_U8
 	def_special IsMonOTNameNotPlayers
 	def_special Dummy_TryEnableBravoTrainerBattleTower
 	def_special SetPostgameFlags
@@ -138,7 +138,7 @@
 	def_special IsPlayerLeftOfVermilionSailor
 	def_special ReadTrainerTowerAndValidate
 	def_special HasAllMons
-	def_special IsPlayerNotInTrainerTowerLobby
+	def_special IsPlayerNotInTrainerTowerLobby, ret=SPECIAL_RET_U8
 	def_special BrailleCursorToggle
 	def_special PlayerPartyContainsSpeciesWithPlayerID
 	def_special AnimateTeleporterHousing
@@ -146,7 +146,7 @@
 	def_special InitElevatorFloorSelectMenuPos
 	def_special UpdateLoreleiDollCollection
 	def_special LoopWingFlapSound
-	def_special HasHallOfFameInThisRegion
+	def_special HasHallOfFameInThisRegion, ret=SPECIAL_RET_U8
 	def_special PCMultichoice_GetAction
 
 	@ PokemonNative3G (src/fusion_events.c)

@@ -158,6 +158,9 @@ Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.
   (`KANTO_MAPSEC_START`…) ne servent qu'à classer un lieu (lieu de capture, nom affiché), jamais la position du joueur.
 - Code propre à RF : `src/kanto_*.c` (noms de RF, comparable à la décompilation) ; retouches du code d'Émeraude
   marquées `// Rouge Feu` ou `// PokemonNative3G`.
+- Specials lus par `specialvar` qui rendent un `u8`, `bool8` ou `s8` : marqués `ret=SPECIAL_RET_U8` / `_S8` dans
+  `data/specials.inc` (sur PC, l'octet haut du retour n'est pas défini). Après un ajout :
+  `python tools/special_returns.py` (`--check` pour vérifier).
 
 ## Fichiers propres à la fusion
 

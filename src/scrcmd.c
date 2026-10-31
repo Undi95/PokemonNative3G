@@ -52,8 +52,17 @@
 #include "window.h"
 #include "constants/event_objects.h"
 #include "constants/comparison_operators.h"
+#include "constants/field_specials.h"
 
 typedef u16 (*SpecialFunc)(void);
+
+// PokemonNative3G : gSpecials (data/specials.inc) donne aussi la largeur du retour (SPECIAL_RET_*). Sur PC, un special
+// qui rend un u8, un bool8 ou un s8 ne remplit que l'octet bas du registre (sur GBA, il étendait lui-même la valeur).
+struct SpecialEntry
+{
+    SpecialFunc func;
+    uintptr_t ret;
+};
 typedef void (*NativeFunc)(void);
 
 EWRAM_DATA const u8 *gRamScriptRetAddr = NULL;
@@ -66,7 +75,7 @@ static EWRAM_DATA u16 sFieldEffectScriptId = 0;
 
 static u8 sBrailleWindowId;
 
-extern const SpecialFunc gSpecials[];
+extern const struct SpecialEntry gSpecials[];
 extern const u8 *gStdScripts[];
 extern const u8 *gStdScripts_End[];
 
@@ -123,15 +132,21 @@ bool8 ScrCmd_special(struct ScriptContext *ctx)
 {
     u16 index = ScriptReadHalfword(ctx);
 
-    gSpecials[index]();
+    gSpecials[index].func();
     return FALSE;
 }
 
 bool8 ScrCmd_specialvar(struct ScriptContext *ctx)
 {
     u16 *var = GetVarPointer(ScriptReadHalfword(ctx));
+    const struct SpecialEntry *special = &gSpecials[ScriptReadHalfword(ctx)];
+    u16 result = special->func();
 
-    *var = gSpecials[ScriptReadHalfword(ctx)]();
+    if (special->ret == SPECIAL_RET_U8)
+        result = (u8)result;
+    else if (special->ret == SPECIAL_RET_S8)
+        result = (s8)result;
+    *var = result;
     return FALSE;
 }
 

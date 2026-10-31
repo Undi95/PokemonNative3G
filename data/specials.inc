@@ -1,8 +1,10 @@
-	.macro def_special ptr:req, waitstate=0
+	@ PokemonNative3G : ret = largeur du retour lu par specialvar (SPECIAL_RET_*, tools/special_returns.py)
+	.macro def_special ptr:req, waitstate=0, ret=SPECIAL_RET_16
 	.if ALLOCATE_SPECIAL_TABLE
 	.global SPECIAL_\ptr
 	.set SPECIAL_\ptr, __special__
 	ptrvalue \ptr
+	ptrvalue \ret
 	.else
 	/* Define the id locally too, so scripts outside event_scripts.s don't need a
 	   16-bit relocation against it (not allowed in position-independent builds). */
@@ -55,7 +57,7 @@ gSpecials::
 	def_special Script_StartWiredTrade
 	def_special CableClubSaveGame
 	def_special TryBerryBlenderLinkup, waitstate=1
-	def_special GetLinkPartnerNames
+	def_special GetLinkPartnerNames, ret=SPECIAL_RET_U8
 	def_special SpawnLinkPartnerObjectEvent
 	def_special SavePlayerParty
 	def_special LoadPlayerParty
@@ -69,31 +71,31 @@ gSpecials::
 	def_special ObjectEventInteractionPickBerryTree
 	def_special ObjectEventInteractionRemoveBerryTree
 	def_special ObjectEventInteractionWaterBerryTree
-	def_special PlayerHasBerries
+	def_special PlayerHasBerries, ret=SPECIAL_RET_U8
 	def_special IsEnigmaBerryValid
-	def_special GetTrainerBattleMode
+	def_special GetTrainerBattleMode, ret=SPECIAL_RET_U8
 	def_special ShowTrainerIntroSpeech
 	def_special ShowTrainerCantBattleSpeech
-	def_special GetTrainerFlag
+	def_special GetTrainerFlag, ret=SPECIAL_RET_U8
 	def_special DoTrainerApproach, waitstate=1
 	def_special PlayTrainerEncounterMusic
-	def_special ShouldTryRematchBattle
-	def_special IsTrainerReadyForRematch
+	def_special ShouldTryRematchBattle, ret=SPECIAL_RET_U8
+	def_special IsTrainerReadyForRematch, ret=SPECIAL_RET_U8
 	def_special BattleSetup_StartRematchBattle, waitstate=1
 	def_special ShowPokemonStorageSystemPC, waitstate=1
 	def_special HasEnoughMonsForDoubleBattle
 	def_special TurnOffTVScreen
 	def_special DoTVShow
 	def_special DoPokeNews
-	def_special GetRandomActiveShowIdx
-	def_special GetSelectedTVShow
+	def_special GetRandomActiveShowIdx, ret=SPECIAL_RET_U8
+	def_special GetSelectedTVShow, ret=SPECIAL_RET_U8
 	def_special InterviewBefore
 	def_special InterviewAfter
-	def_special IsLeadMonNicknamedOrNotEnglish
+	def_special IsLeadMonNicknamedOrNotEnglish, ret=SPECIAL_RET_U8
 	def_special SetContestCategoryStringVarForInterview
-	def_special GetNextActiveShowIfMassOutbreak
+	def_special GetNextActiveShowIfMassOutbreak, ret=SPECIAL_RET_U8
 	def_special IsTVShowAlreadyInQueue
-	def_special CheckForPlayersHouseNews
+	def_special CheckForPlayersHouseNews, ret=SPECIAL_RET_U8
 	def_special GetMomOrDadStringForTVMessage
 	def_special ResetTVShowState
 	def_special GetContestWinnerId
@@ -110,8 +112,8 @@ gSpecials::
 	def_special GetContestMonCondition
 	def_special HasMonWonThisContestBefore
 	def_special GiveMonContestRibbon
-	def_special IsContestDebugActive
-	def_special GiveMonArtistRibbon
+	def_special IsContestDebugActive, ret=SPECIAL_RET_U8
+	def_special GiveMonArtistRibbon, ret=SPECIAL_RET_U8
 	def_special TryContestGModeLinkup, waitstate=1
 	def_special SaveGame, waitstate=1
 	def_special DoWateringBerryTreeAnim, waitstate=1
@@ -127,12 +129,12 @@ gSpecials::
 	def_special SetMauvilleOldManObjEventGfx
 	def_special GenerateGiddyLine
 	def_special GiddyShouldTellAnotherTale
-	def_special StorytellerGetFreeStorySlot
+	def_special StorytellerGetFreeStorySlot, ret=SPECIAL_RET_U8
 	def_special Script_StorytellerDisplayStory
 	def_special StorytellerStoryListMenu, waitstate=1
-	def_special StorytellerUpdateStat
-	def_special Script_StorytellerInitializeRandomStat
-	def_special HasStorytellerAlreadyRecorded
+	def_special StorytellerUpdateStat, ret=SPECIAL_RET_U8
+	def_special Script_StorytellerInitializeRandomStat, ret=SPECIAL_RET_U8
+	def_special HasStorytellerAlreadyRecorded, ret=SPECIAL_RET_U8
 	def_special TraderMenuGetDecoration, waitstate=1
 	def_special GetTraderTradedFlag
 	def_special DoesPlayerHaveNoDecorations
@@ -143,7 +145,7 @@ gSpecials::
 	def_special CompareSeedotSize
 	def_special GetLotadSizeRecordInfo
 	def_special CompareLotadSize
-	def_special TryPutNameRaterShowOnTheAir
+	def_special TryPutNameRaterShowOnTheAir, ret=SPECIAL_RET_U8
 	def_special BufferMonNickname
 	def_special IsMonOTIDNotPlayers
 	def_special BufferTrendyPhraseString
@@ -151,13 +153,13 @@ gSpecials::
 	def_special BufferDeepLinkPhrase
 	def_special GetDewfordHallPaintingNameIndex
 	def_special SwapRegisteredBike
-	def_special CalculatePlayerPartyCount
-	def_special CountPartyNonEggMons
+	def_special CalculatePlayerPartyCount, ret=SPECIAL_RET_U8
+	def_special CountPartyNonEggMons, ret=SPECIAL_RET_U8
 	def_special CountPartyAliveNonEggMons_IgnoreVar0x8004Slot
 	def_special ShouldReadyContestArtist
 	def_special SaveMuseumContestPainting
 	def_special DoesContestCategoryHaveMuseumPainting
-	def_special CountPlayerMuseumPaintings
+	def_special CountPlayerMuseumPaintings, ret=SPECIAL_RET_U8
 	def_special ShowContestPainting  @ Unused, redundant with showcontestpainting command
 	def_special MauvilleGymSetDefaultBarriers
 	def_special MauvilleGymPressSwitch
@@ -167,7 +169,7 @@ gSpecials::
 	def_special MauvilleGymDeactivatePuzzle
 	def_special PetalburgGymSlideOpenRoomDoors, waitstate=1
 	def_special PetalburgGymUnlockRoomDoors
-	def_special GetPlayerTrainerIdOnesDigit
+	def_special GetPlayerTrainerIdOnesDigit, ret=SPECIAL_RET_U8
 	def_special GetPlayerBigGuyGirlString
 	def_special GetRivalSonDaughterString
 	def_special SetHiddenItemFlag
@@ -180,10 +182,10 @@ gSpecials::
 	def_special StartWallyTutorialBattle, waitstate=1
 	def_special ChangePokemonNickname, waitstate=1
 	def_special ChoosePartyMon, waitstate=1
-	def_special GetFirstFreePokeblockSlot
+	def_special GetFirstFreePokeblockSlot, ret=SPECIAL_RET_S8
 	def_special DoBerryBlending, waitstate=1
 	def_special PlayRoulette, waitstate=1
-	def_special IsFanClubMemberFanOfPlayer
+	def_special IsFanClubMemberFanOfPlayer, ret=SPECIAL_RET_U8
 	def_special GetNumFansOfPlayerInTrainerFanClub
 	def_special BufferFanClubTrainerName
 	def_special TryLoseFansFromPlayTimeAfterLinkBattle
@@ -192,17 +194,17 @@ gSpecials::
 	def_special UpdateTrainerFanClubGameClear
 	def_special Script_TryGainNewFanFromCounter
 	def_special RockSmashWildEncounter
-	def_special GabbyAndTyGetBattleNum
+	def_special GabbyAndTyGetBattleNum, ret=SPECIAL_RET_U8
 	def_special GabbyAndTyAfterInterview
 	def_special GabbyAndTyBeforeInterview
 	def_special DoTVShowInSearchOfTrainers
-	def_special IsGabbyAndTyShowOnTheAir
-	def_special GabbyAndTyGetLastQuote
-	def_special GabbyAndTyGetLastBattleTrivia
+	def_special IsGabbyAndTyShowOnTheAir, ret=SPECIAL_RET_U8
+	def_special GabbyAndTyGetLastQuote, ret=SPECIAL_RET_U8
+	def_special GabbyAndTyGetLastBattleTrivia, ret=SPECIAL_RET_U8
 	def_special GetGabbyAndTyLocalIds
-	def_special GetBattleOutcome
+	def_special GetBattleOutcome, ret=SPECIAL_RET_U8
 	def_special GetDaycareMonNicknames
-	def_special GetDaycareState
+	def_special GetDaycareState, ret=SPECIAL_RET_U8
 	def_special RejectEggFromDayCare
 	def_special GiveEggFromDaycare
 	def_special SetDaycareCompatibilityString
@@ -210,14 +212,14 @@ gSpecials::
 	def_special StoreSelectedPokemonInDaycare
 	def_special ChooseSendDaycareMon, waitstate=1
 	def_special ShowDaycareLevelMenu, waitstate=1
-	def_special GetNumLevelsGainedFromDaycare
+	def_special GetNumLevelsGainedFromDaycare, ret=SPECIAL_RET_U8
 	def_special GetDaycareCostAndPrepareString
 	def_special TakePokemonFromDaycare
 	def_special ScriptHatchMon
 	def_special EggHatch, waitstate=1
-	def_special CheckDaycareMonReceivedMail
+	def_special CheckDaycareMonReceivedMail, ret=SPECIAL_RET_U8
 	def_special ShowLinkBattleRecords
-	def_special IsEnoughForCostInVar0x8005
+	def_special IsEnoughForCostInVar0x8005, ret=SPECIAL_RET_U8
 	def_special SubtractMoneyFromVar0x8005
 	def_special TryFieldPoisonWhiteOut, waitstate=1
 	def_special SetCB2WhiteOut, waitstate=1
@@ -229,7 +231,7 @@ gSpecials::
 	def_special ExitSafariMode
 	def_special GetPokeblockFeederInFront
 	def_special OpenPokeblockCaseOnFeeder, waitstate=1
-	def_special IsMirageIslandPresent
+	def_special IsMirageIslandPresent, ret=SPECIAL_RET_U8
 	def_special UpdateShoalTideFlag
 	def_special InitBirchState
 	def_special ScriptGetPokedexInfo
@@ -250,7 +252,7 @@ gSpecials::
 	def_special GetPlayerAvatarBike
 	def_special FinishCyclingRoadChallenge
 	def_special UpdateCyclingRoadState
-	def_special GetLeadMonFriendshipScore
+	def_special GetLeadMonFriendshipScore, ret=SPECIAL_RET_U8
 	def_special CallFrontierUtilFunc
 	def_special CallBattleTowerFunc
 	def_special CallBattleDomeFunction
@@ -285,11 +287,11 @@ gSpecials::
 	def_special ScriptMenu_CreatePCMultichoice, waitstate=1
 	def_special AccessHallOfFamePC, waitstate=1
 	def_special Special_ShowDiploma, waitstate=1
-	def_special CheckLeadMonCool
-	def_special CheckLeadMonBeauty
-	def_special CheckLeadMonCute
-	def_special CheckLeadMonSmart
-	def_special CheckLeadMonTough
+	def_special CheckLeadMonCool, ret=SPECIAL_RET_U8
+	def_special CheckLeadMonBeauty, ret=SPECIAL_RET_U8
+	def_special CheckLeadMonCute, ret=SPECIAL_RET_U8
+	def_special CheckLeadMonSmart, ret=SPECIAL_RET_U8
+	def_special CheckLeadMonTough, ret=SPECIAL_RET_U8
 	def_special LookThroughPorthole, waitstate=1
 /*	def_special DoSoftReset*/
 	def_special GameClear, waitstate=1
@@ -297,37 +299,37 @@ gSpecials::
 	def_special ShowGlassWorkshopMenu
 	def_special SpawnCameraObject
 	def_special RemoveCameraObject
-	def_special GetPokeblockNameByMonNature
+	def_special GetPokeblockNameByMonNature, ret=SPECIAL_RET_U8
 	def_special GetSecretBaseNearbyMapName
-	def_special CheckRelicanthWailord
+	def_special CheckRelicanthWailord, ret=SPECIAL_RET_U8
 	def_special ShouldDoBrailleRegirockEffectOld
 	def_special DoOrbEffect
 	def_special FadeOutOrbEffect, waitstate=1
 	def_special WaitWeather, waitstate=1
 	def_special BufferEReaderTrainerName
 	def_special GetSlotMachineId
-	def_special GetPlayerFacingDirection
-	def_special FoundAbandonedShipRoom1Key
-	def_special FoundAbandonedShipRoom2Key
-	def_special FoundAbandonedShipRoom4Key
-	def_special FoundAbandonedShipRoom6Key
-	def_special LeadMonHasEffortRibbon
+	def_special GetPlayerFacingDirection, ret=SPECIAL_RET_U8
+	def_special FoundAbandonedShipRoom1Key, ret=SPECIAL_RET_U8
+	def_special FoundAbandonedShipRoom2Key, ret=SPECIAL_RET_U8
+	def_special FoundAbandonedShipRoom4Key, ret=SPECIAL_RET_U8
+	def_special FoundAbandonedShipRoom6Key, ret=SPECIAL_RET_U8
+	def_special LeadMonHasEffortRibbon, ret=SPECIAL_RET_U8
 	def_special GiveLeadMonEffortRibbon
-	def_special Special_AreLeadMonEVsMaxedOut
+	def_special Special_AreLeadMonEVsMaxedOut, ret=SPECIAL_RET_U8
 	def_special Script_FacePlayer
 	def_special Script_ClearHeldMovement
 	def_special InitRoamer
-	def_special TryUpdateRusturfTunnelState
+	def_special TryUpdateRusturfTunnelState, ret=SPECIAL_RET_U8
 	def_special IsGrassTypeInParty
 	def_special DoContestHallWarp, waitstate=1
 	def_special LoadWallyZigzagoon
-	def_special IsStarterInParty
+	def_special IsStarterInParty, ret=SPECIAL_RET_U8
 	def_special CopyCurSecretBaseOwnerName_StrVar1
-	def_special ScriptCheckFreePokemonStorageSpace
+	def_special ScriptCheckFreePokemonStorageSpace, ret=SPECIAL_RET_U8
 	def_special DoSealedChamberShakingEffect_Long, waitstate=1
 	def_special ShowDeptStoreElevatorFloorSelect
 	def_special InteractWithShieldOrTVDecoration
-	def_special IsPokerusInParty
+	def_special IsPokerusInParty, ret=SPECIAL_RET_U8
 	def_special SetSootopolisGymCrackedIceMetatiles
 	def_special ShakeCamera
 	def_special StartGroudonKyogreBattle
@@ -335,7 +337,7 @@ gSpecials::
 	def_special StartRegiBattle, waitstate=1
 	def_special SetTrainerFacingDirection
 	def_special DoSealedChamberShakingEffect_Short, waitstate=1
-	def_special FoundBlackGlasses
+	def_special FoundBlackGlasses, ret=SPECIAL_RET_U8
 	def_special StartDroughtWeatherBlend
 	def_special DoDiveWarp
 	def_special DoFallWarp, waitstate=1
@@ -357,19 +359,19 @@ gSpecials::
 	def_special HasAllHoennMons
 	def_special HasAllMons @ PokemonNative3G
 	def_special Fusion_StorePartyInPC @ PokemonNative3G
-	def_special CanFlyBetweenRegions @ PokemonNative3G
-	def_special Fusion_GetPCOwner @ PokemonNative3G
-	def_special Fusion_IsInKanto @ PokemonNative3G
-	def_special MonOTNameNotPlayer
+	def_special CanFlyBetweenRegions, ret=SPECIAL_RET_U8 @ PokemonNative3G
+	def_special Fusion_GetPCOwner, ret=SPECIAL_RET_U8 @ PokemonNative3G
+	def_special Fusion_IsInKanto, ret=SPECIAL_RET_U8 @ PokemonNative3G
+	def_special MonOTNameNotPlayer, ret=SPECIAL_RET_U8
 	def_special BufferLottoTicketNumber
 	def_special TryHideBattleTowerReporter
-	def_special DoesPartyHaveEnigmaBerry
+	def_special DoesPartyHaveEnigmaBerry, ret=SPECIAL_RET_U8
 	def_special GenerateContestRand
 	def_special SetChampionSaveWarp
 	def_special TryPutTreasureInvestigatorsOnAir
 	def_special TryPutLotteryWinnerReportOnAir
 	def_special TryPutTrainerFanClubOnAir
-	def_special ShouldHideFanClubInterviewer
+	def_special ShouldHideFanClubInterviewer, ret=SPECIAL_RET_U8
 	def_special ShowGlassWorkshopMenu
 	def_special PutFanClubSpecialOnTheAir
 	def_special IncrementDailyPlantedBerries
@@ -388,26 +390,26 @@ gSpecials::
 	def_special CheckInteractedWithFriendsPosterDecor
 	def_special SetLilycoveLadyGfx
 	def_special Script_GetLilycoveLadyId
-	def_special GetFavorLadyState
+	def_special GetFavorLadyState, ret=SPECIAL_RET_U8
 	def_special BufferFavorLadyRequest
-	def_special HasAnotherPlayerGivenFavorLadyItem
+	def_special HasAnotherPlayerGivenFavorLadyItem, ret=SPECIAL_RET_U8
 	def_special BufferFavorLadyItemName
 	def_special BufferFavorLadyPlayerName
-	def_special DidFavorLadyLikeItem
+	def_special DidFavorLadyLikeItem, ret=SPECIAL_RET_U8
 	def_special Script_FavorLadyOpenBagMenu, waitstate=1
-	def_special Script_DoesFavorLadyLikeItem
-	def_special IsFavorLadyThresholdMet
+	def_special Script_DoesFavorLadyLikeItem, ret=SPECIAL_RET_U8
+	def_special IsFavorLadyThresholdMet, ret=SPECIAL_RET_U8
 	def_special FavorLadyGetPrize
 	def_special SetFavorLadyState_Complete
-	def_special GetQuizLadyState
-	def_special GetQuizAuthor
-	def_special IsQuizLadyWaitingForChallenger
+	def_special GetQuizLadyState, ret=SPECIAL_RET_U8
+	def_special GetQuizAuthor, ret=SPECIAL_RET_U8
+	def_special IsQuizLadyWaitingForChallenger, ret=SPECIAL_RET_U8
 	def_special QuizLadyShowQuizQuestion, waitstate=1
 	def_special QuizLadyGetPlayerAnswer, waitstate=1
-	def_special IsQuizAnswerCorrect
+	def_special IsQuizAnswerCorrect, ret=SPECIAL_RET_U8
 	def_special BufferQuizPrizeItem
 	def_special SetQuizLadyState_Complete
-	def_special BufferQuizAuthorNameAndCheckIfLady
+	def_special BufferQuizAuthorNameAndCheckIfLady, ret=SPECIAL_RET_U8
 	def_special SetQuizLadyState_GivePrize
 	def_special ClearQuizLadyPlayerAnswer
 	def_special Script_QuizLadyOpenBagMenu, waitstate=1
@@ -420,13 +422,13 @@ gSpecials::
 	def_special BufferQuizCorrectAnswer
 	def_special BufferQuizPrizeName
 	def_special QuizLadyPickNewQuestion
-	def_special ShouldContestLadyShowGoOnAir
-	def_special HasPlayerGivenContestLadyPokeblock
+	def_special ShouldContestLadyShowGoOnAir, ret=SPECIAL_RET_U8
+	def_special HasPlayerGivenContestLadyPokeblock, ret=SPECIAL_RET_U8
 	def_special Script_BufferContestLadyCategoryAndMonName
 	def_special OpenPokeblockCaseForContestLady, waitstate=1
 	def_special SetContestLadyGivenPokeblock
 	def_special GetContestLadyMonSpecies
-	def_special GetContestLadyCategory
+	def_special GetContestLadyCategory, ret=SPECIAL_RET_U8
 	def_special PutLilycoveContestLadyShowOnTheAir
 	def_special CloseBattlePikeCurtain, waitstate=1
 	def_special CallApprenticeFunction
@@ -436,8 +438,8 @@ gSpecials::
 	def_special DoMirageTowerCeilingCrumble, waitstate=1
 	def_special SetMirageTowerVisibility
 	def_special StartPlayerDescendMirageTower, waitstate=1
-	def_special BufferTMHMMoveName
-	def_special IsWirelessAdapterConnected
+	def_special BufferTMHMMoveName, ret=SPECIAL_RET_U8
+	def_special IsWirelessAdapterConnected, ret=SPECIAL_RET_U8
 	def_special TryBecomeLinkLeader, waitstate=1
 	def_special TryJoinLinkGroup, waitstate=1
 	def_special RunUnionRoom
@@ -447,7 +449,7 @@ gSpecials::
 	def_special WonderNews_GetRewardInfo
 	def_special ChooseMonForWirelessMinigame, waitstate=1
 	def_special Script_ResetUnionRoomTrade
-	def_special IsBadEggInParty
+	def_special IsBadEggInParty, ret=SPECIAL_RET_U8
 	def_special ValidateSavedWonderCard
 	def_special HasAtLeastOneBerry
 	def_special IsPokemonJumpSpeciesInParty
@@ -461,11 +463,11 @@ gSpecials::
 	def_special GetWirelessCommType
 	def_special LinkContestTryShowWirelessIndicator
 	def_special LinkContestTryHideWirelessIndicator
-	def_special IsWirelessContest
+	def_special IsWirelessContest, ret=SPECIAL_RET_U8
 	def_special ShowRankingHallRecordsWindow
 	def_special ScrollRankingHallRecordsWindow
 	def_special ShowFrontierManiacMessage
-	def_special IsContestWithRSPlayer
+	def_special IsContestWithRSPlayer, ret=SPECIAL_RET_U8
 	def_special ClearLinkContestFlags
 	def_special TryContestEModeLinkup, waitstate=1
 	def_special ShowScrollableMultichoice, waitstate=1
@@ -487,7 +489,7 @@ gSpecials::
 	def_special CloseFrontierExchangeCornerItemIconWindow
 	def_special DisplayBerryPowderVendorMenu
 	def_special RemoveBerryPowderVendorMenu
-	def_special HasEnoughBerryPowder
+	def_special HasEnoughBerryPowder, ret=SPECIAL_RET_U8
 	def_special TakeBerryPowder
 	def_special PrintPlayerBerryPowderAmount
 	def_special ShowFrontierGamblerLookingMessage
@@ -510,7 +512,7 @@ gSpecials::
 	def_special StartMirageTowerFossilFallAndSink, waitstate=1
 	def_special ChangeBoxPokemonNickname, waitstate=1
 	def_special GetPCBoxToSendMon
-	def_special ShouldShowBoxWasFullMessage
+	def_special ShouldShowBoxWasFullMessage, ret=SPECIAL_RET_U8
 	def_special SetMatchCallRegisteredFlag
 	def_special DoDomeConfetti
 	def_special CreateAbnormalWeatherEvent

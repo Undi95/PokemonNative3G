@@ -1,6 +1,11 @@
 #ifndef GUARD_CONSTANTS_FIELD_SPECIALS_H
 #define GUARD_CONSTANTS_FIELD_SPECIALS_H
 
+// PokemonNative3G : largeur du retour d'un special lu par specialvar (def_special … ret=, tools/special_returns.py)
+#define SPECIAL_RET_16 0 // u16, bool16 ou plus large
+#define SPECIAL_RET_U8 1 // u8, bool8
+#define SPECIAL_RET_S8 2 // s8
+
 // PC Locations
 #define PC_LOCATION_OTHER           0
 #define PC_LOCATION_BRENDANS_HOUSE  1
