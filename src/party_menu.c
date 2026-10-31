@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_help_message.h"
 #include "kanto_teachy_tv.h"
 #include "load_save.h"
 #include "battle_main.h"
@@ -334,6 +335,7 @@ static u8 GetPartyMenuActionsTypeInBattle(struct Pokemon *);
 static u8 GetPartySlotEntryStatus(s8);
 static void Task_UpdateHeldItemSprite(u8);
 static void Task_HandleSelectionMenuInput(u8);
+static void ToggleFieldMoveDescriptionWindow(u8 action);
 static void CB2_ShowPokemonSummaryScreen(void);
 static void UpdatePartyToBattleOrder(void);
 static void CB2_ReturnToPartyMenuFromSummaryScreen(void);
@@ -2785,6 +2787,9 @@ static void Task_HandleSelectionMenuInput(u8 taskId)
         else
             input = ProcessMenuInput_other();
 
+        if (data[0] != Menu_GetCursorPos()) // Rouge Feu
+            ToggleFieldMoveDescriptionWindow(sPartyMenuInternal->actions[Menu_GetCursorPos()]);
+
         data[0] = Menu_GetCursorPos();
         switch (input)
         {
@@ -2800,6 +2805,38 @@ static void Task_HandleSelectionMenuInput(u8 taskId)
             sCursorOptions[sPartyMenuInternal->actions[input]].func(taskId);
             break;
         }
+    }
+}
+
+// Rouge Feu (party_menu.c) : description de la capacité de terrain sous le curseur. PokemonNative3G : avec
+// MENUS = KANTO (bande de la fenêtre d'aide de RF, src/kanto_help_message.c)
+static void ToggleFieldMoveDescriptionWindow(u8 action)
+{
+    u8 letterSpacing;
+    struct PartyMenuInternal *ptr = sPartyMenuInternal;
+
+    if (action < MENU_FIELD_MOVES || !gSaveBlock2Ptr->optionsMenuStyle)
+    {
+        if (ptr->windowId[2] != WINDOW_NONE)
+        {
+            ClearWindowTilemap(ptr->windowId[2]);
+            RemoveWindow(ptr->windowId[2]);
+            ptr->windowId[2] = WINDOW_NONE;
+            ScheduleBgCopyTilemapToVram(2);
+        }
+    }
+    else
+    {
+        if (ptr->windowId[2] == WINDOW_NONE)
+        {
+            ptr->windowId[2] = AddWindow(&sFieldMoveDescriptionWindowTemplate);
+            LoadPalette(gHelpMessageWindow_Pal, BG_PLTT_ID(sFieldMoveDescriptionWindowTemplate.paletteNum), PLTT_SIZE_4BPP);
+        }
+        DrawHelpMessageWindowTilesById(ptr->windowId[2]);
+        letterSpacing = GetFontAttribute(FONT_KANTO, FONTATTR_LETTER_SPACING);
+        AddTextPrinterParameterized4(ptr->windowId[2], FONT_KANTO, 3, 6, letterSpacing, 0, sFontColorTable[5], 0, sFieldMoveDescriptionTable[action - MENU_FIELD_MOVES]);
+        PutWindowTilemap(ptr->windowId[2]);
+        ScheduleBgCopyTilemapToVram(2);
     }
 }
 

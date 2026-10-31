@@ -354,10 +354,9 @@ StartTeleportWarpOutPlayerAnim, WaitTeleportWarpOutPlayerAnim, SavePlayerFacingD
 GetTeleportSavedFacingDirection, Task_TeleportWarpOutPlayerAnim, StartTeleportInPlayerAnim,
 WaitTeleportInPlayerAnim, Task_TeleportWarpInPlayerAnim, TeleportAnim_RotatePlayer
 
-### field_screen_effect.c (commun, 9/9)
+### field_screen_effect.c (commun, 6/9)
 DoInwardBarnDoorFade, DoOutwardBarnDoorWipe, BarnDoorWipeSaveGpuRegs, BarnDoorWipeLoadGpuRegs,
-Task_BarnDoorWipe, Task_BarnDoorWipeChild, PrintWhiteOutRecoveryMessage, Task_RushInjuredPokemonToCenter,
-FieldCB_RushInjuredPokemonToCenter
+Task_BarnDoorWipe, Task_BarnDoorWipeChild
 
 ### field_special_scene.c (commun, 4/4)
 FieldSpecialScene_Dummy0, FieldSpecialScene_Dummy1, FieldSpecialScene_Dummy2, FieldSpecialScene_Dummy3
@@ -401,9 +400,9 @@ FieldCB_UseStrength
 ### fldeff_sweetscent.c (commun, 1/1)
 Unused_StartSweetscentFldeff
 
-### heal_location.c (commun, 4/4)
+### heal_location.c (commun, 3/4)
 GetHealLocationIndexFromMapGroupAndNum, GetHealLocationPointerFromMapGroupAndNum,
-SetWhiteoutRespawnWarpAndHealerNpc, SetWhiteoutRespawnHealerNpcAsLastTalked
+SetWhiteoutRespawnHealerNpcAsLastTalked
 
 ### help_message.c (RF seul, 1/7)
 MapNamePopupWindowIdSetDummy
@@ -567,10 +566,11 @@ Task_OptionMenu, OptionMenu_ProcessInput, BufferOptionMenuString, Localize_Buffe
 CloseAndSaveOptionMenu, PrintOptionMenuHeader, DrawOptionMenuBg, LoadOptionMenuItemNames,
 UpdateSettingSelectionDisplay
 
-### overworld.c (commun, 29/44)
-Overworld_ResetStateAfterWhitingOut, Overworld_ResetStateOnContinue, Overworld_SetWhiteoutRespawnPoint,
-QL_LoadMapNormal, SetInitialPlayerAvatarStateWithDirection, MetatileBehavior_IsSurfableInSeafoamIslands,
-Overworld_GetFlashLevel, Overworld_SetWarpDestinationFromWarp, Overworld_TryMapConnectionMusicTransition,
+### overworld.c (commun, 30/44)
+CountBadgesForOverworldWhiteOutLossCalculation, Overworld_ResetStateAfterWhitingOut,
+Overworld_ResetStateOnContinue, Overworld_SetWhiteoutRespawnPoint, QL_LoadMapNormal,
+SetInitialPlayerAvatarStateWithDirection, MetatileBehavior_IsSurfableInSeafoamIslands, Overworld_GetFlashLevel,
+Overworld_SetWarpDestinationFromWarp, Overworld_TryMapConnectionMusicTransition,
 Overworld_MusicCanOverrideMapMusic, InitOverworldBgs_NoResetHeap, IsUpdateLinkStateCBActive,
 DoCB1_Overworld_QuestLogPlayback, ClearFieldCallback, FieldCB_ShowMapNameOnContinue, MoveSaveBlocks_ResetHeap_,
 ReloadObjectsAndRunReturnToFieldMapScript, CB2_SetUpOverworldForQLPlaybackWithWarpExit,

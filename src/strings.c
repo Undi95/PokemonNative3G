@@ -708,6 +708,21 @@ const u8 gText_PlayersPC[] = _("PC de {PLAYER}");
 const u8 gText_HallOfFame[] = _("PANTHEON");
 const u8 gText_LogOff[] = _("DECONNEXION");
 const u8 gText_ProfOakSPc[] = _("PC du PROF. CHEN"); // Rouge Feu
+// Rouge Feu (strings_1_fr.h) : descriptions des capacités de terrain du menu d'équipe ; PokemonNative3G : Plongée et
+// Force Cachée, absentes de RF
+const u8 gText_CutATreeOrGrass[] = _("Couper arbre/herbe.");
+const u8 gText_FlyToAKnownTown[] = _("Vol vers une cité connue.");
+const u8 gText_TravelOnWater[] = _("Voyager sur l'eau.");
+const u8 gText_MoveHeavyBoulders[] = _("Bouger de gros rochers.");
+const u8 gText_LightUpDarkness[] = _("Eclairer les ténèbres.");
+const u8 gText_ShatterACrackedRock[] = _("Eclater rochers fissurés.");
+const u8 gText_ClimbAWaterfall[] = _("Franchir chutes d'eau.");
+const u8 gText_EscapeFromAPlace[] = _("Fuir d'un endroit."); // RF : gText_EscapeFromHere, nom pris par Émeraude
+const u8 gText_LureWildPokemon[] = _("Attirer PKMN sauvages.");
+const u8 gText_ShareHp[] = _("Partager les PV.");
+const u8 gText_ReturnToAHealingSpot[] = _("Retour lieu de soins.");
+const u8 gText_DiveIntoDeepWater[] = _("Plonger en eau profonde.");
+const u8 gText_OpenASecretBase[] = _("Ouvrir une base secrète.");
 const u8 gText_PlayerScurriedToCenter[] = _("{PLAYER} se hâte vers un CENTRE\nPOKéMON pour éviter que ses pauvres\nPOKéMON ne souffrent davantage.\p"); // Rouge Feu
 const u8 gText_Opponent[] = _("ADVERSAIRE");
 const u8 gText_Tourney_Tree[] = _("TABLEAU");

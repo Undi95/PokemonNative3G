@@ -1055,6 +1055,19 @@ extern const u8 gText_ItGotAway[];
 extern const u8 gText_HallOfFame[];
 extern const u8 gText_LogOff[];
 extern const u8 gText_ProfOakSPc[]; // Rouge Feu
+extern const u8 gText_CutATreeOrGrass[];
+extern const u8 gText_FlyToAKnownTown[];
+extern const u8 gText_TravelOnWater[];
+extern const u8 gText_MoveHeavyBoulders[];
+extern const u8 gText_LightUpDarkness[];
+extern const u8 gText_ShatterACrackedRock[];
+extern const u8 gText_ClimbAWaterfall[];
+extern const u8 gText_EscapeFromAPlace[];
+extern const u8 gText_LureWildPokemon[];
+extern const u8 gText_ShareHp[];
+extern const u8 gText_ReturnToAHealingSpot[];
+extern const u8 gText_DiveIntoDeepWater[];
+extern const u8 gText_OpenASecretBase[];
 extern const u8 gText_PlayerScurriedToCenter[]; // Rouge Feu
 extern const u8 gText_LanettesPC[];
 extern const u8 gText_BillsPC[];

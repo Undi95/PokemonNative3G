@@ -117,7 +117,7 @@ static const u8 sFontColorTable[][3] =
     {TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_2,  TEXT_DYNAMIC_COLOR_3},  // Gender symbol
     {TEXT_COLOR_WHITE,       TEXT_COLOR_DARK_GRAY,  TEXT_COLOR_LIGHT_GRAY}, // Selection actions
     {TEXT_COLOR_WHITE,       TEXT_COLOR_BLUE,       TEXT_COLOR_LIGHT_BLUE}, // Field moves
-    {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE,      TEXT_COLOR_DARK_GRAY},  // Unused
+    {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE,      TEXT_COLOR_DARK_GRAY},  // Field move description (Rouge Feu)
 };
 
 static const struct WindowTemplate sSinglePartyMenuWindowTemplate[] =
@@ -548,7 +548,8 @@ static const struct WindowTemplate sUnusedWindowTemplate1 =
     .baseBlock = 0x1DF,
 };
 
-static const struct WindowTemplate sUnusedWindowTemplate2 =
+// Rouge Feu : description de la capacité de terrain sous le curseur (ToggleFieldMoveDescriptionWindow)
+static const struct WindowTemplate sFieldMoveDescriptionWindowTemplate =
 {
     .bg = 2,
     .tilemapLeft = 0,
@@ -557,6 +558,25 @@ static const struct WindowTemplate sUnusedWindowTemplate2 =
     .height = 3,
     .paletteNum = 12,
     .baseBlock = 0x39D,
+};
+
+// Rouge Feu ; PokemonNative3G : Plongée et Force Cachée, absentes de RF, dans le même style
+static const u8 *const sFieldMoveDescriptionTable[] =
+{
+    [FIELD_MOVE_CUT]          = gText_CutATreeOrGrass,
+    [FIELD_MOVE_FLASH]        = gText_LightUpDarkness,
+    [FIELD_MOVE_ROCK_SMASH]   = gText_ShatterACrackedRock,
+    [FIELD_MOVE_STRENGTH]     = gText_MoveHeavyBoulders,
+    [FIELD_MOVE_SURF]         = gText_TravelOnWater,
+    [FIELD_MOVE_FLY]          = gText_FlyToAKnownTown,
+    [FIELD_MOVE_DIVE]         = gText_DiveIntoDeepWater,
+    [FIELD_MOVE_WATERFALL]    = gText_ClimbAWaterfall,
+    [FIELD_MOVE_TELEPORT]     = gText_ReturnToAHealingSpot,
+    [FIELD_MOVE_DIG]          = gText_EscapeFromAPlace,
+    [FIELD_MOVE_SECRET_POWER] = gText_OpenASecretBase,
+    [FIELD_MOVE_MILK_DRINK]   = gText_ShareHp,
+    [FIELD_MOVE_SOFT_BOILED]  = gText_ShareHp,
+    [FIELD_MOVE_SWEET_SCENT]  = gText_LureWildPokemon,
 };
 
 // Plain tilemaps for party menu slots.

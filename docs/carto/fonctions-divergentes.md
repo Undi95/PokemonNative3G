@@ -962,7 +962,7 @@ ItemUseOutOfBattle_EscapeRope, ItemUseOnFieldCB_EscapeRope, ItemUseOutOfBattle_E
 ItemUseInBattle_EnigmaBerry
 
 ### itemfinder.c
-ItemUseOnFieldCB_Itemfinder ✓, CreateStarSprite
+ItemUseOnFieldCB_Itemfinder, CreateStarSprite
 
 ### learn_move.c
 TeachMoveRelearnerMove ✓, PrintTextOnWindow

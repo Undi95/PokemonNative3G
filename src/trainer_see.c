@@ -3,6 +3,7 @@
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "field_effect.h"
+#include "fieldmap.h"
 #include "field_player_avatar.h"
 #include "pokemon.h"
 #include "script.h"
@@ -45,6 +46,9 @@ static bool8 RevealBuriedTrainer(u8 taskId, struct Task *task, struct ObjectEven
 static bool8 PopOutOfAshBuriedTrainer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 JumpInPlaceBuriedTrainer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 WaitRevealBuriedTrainer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool8 OffscreenAboveTrainerCreateCameraObj(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool8 OffscreenAboveTrainerCameraObjMoveUp(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool8 OffscreenAboveTrainerCameraObjMoveDown(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 
 static void SpriteCB_TrainerIcons(struct Sprite *sprite);
 
@@ -88,6 +92,9 @@ enum {
     TRSEE_BURIED_POP_OUT,
     TRSEE_BURIED_JUMP,
     TRSEE_REVEAL_BURIED_WAIT,
+    TRSEE_OFFSCREEN_CAMERA_CREATE, // Rouge Feu : dresseur qui voit le joueur de loin, au-dessus
+    TRSEE_OFFSCREEN_CAMERA_UP,
+    TRSEE_OFFSCREEN_CAMERA_DOWN,
 };
 
 static bool8 (*const sTrainerSeeFuncList[])(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj) =
@@ -104,6 +111,9 @@ static bool8 (*const sTrainerSeeFuncList[])(u8 taskId, struct Task *task, struct
     [TRSEE_BURIED_POP_OUT]       = PopOutOfAshBuriedTrainer,
     [TRSEE_BURIED_JUMP]          = JumpInPlaceBuriedTrainer,
     [TRSEE_REVEAL_BURIED_WAIT]   = WaitRevealBuriedTrainer,
+    [TRSEE_OFFSCREEN_CAMERA_CREATE] = OffscreenAboveTrainerCreateCameraObj,
+    [TRSEE_OFFSCREEN_CAMERA_UP]     = OffscreenAboveTrainerCameraObjMoveUp,
+    [TRSEE_OFFSCREEN_CAMERA_DOWN]   = OffscreenAboveTrainerCameraObjMoveDown,
 };
 
 static bool8 (*const sTrainerSeeFuncList2[])(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj) =
@@ -469,6 +479,7 @@ static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 ap
 #define tFuncId             data[0]
 #define tTrainerRange       data[3]
 #define tOutOfAshSpriteId   data[4]
+#define tCameraSteps        data[5]
 #define tTrainerObjectEventId data[7]
 
 static void InitTrainerApproachTask(struct ObjectEvent *trainerObj, u8 range)
@@ -522,6 +533,13 @@ static bool8 TrainerExclamationMark(u8 taskId, struct Task *task, struct ObjectE
 {
     u8 direction;
 
+    // Rouge Feu (TrainerSeeFunc_StartExclMark) : un dresseur qui voit le joueur de loin, au-dessus, est montré par la
+    // caméra, qui monte jusqu'à lui puis redescend. PokemonNative3G : dans tout le jeu.
+    if (trainerObj->facingDirection == DIR_SOUTH && task->tTrainerRange > 2)
+    {
+        task->tFuncId = TRSEE_OFFSCREEN_CAMERA_CREATE;
+        return TRUE;
+    }
     ObjectEventGetLocalIdAndMap(trainerObj, &gFieldEffectArguments[0], &gFieldEffectArguments[1], &gFieldEffectArguments[2]);
     FieldEffectStart(FLDEFF_EXCLAMATION_MARK_ICON);
     direction = GetFaceDirectionMovementAction(trainerObj->facingDirection);
@@ -546,6 +564,70 @@ static bool8 WaitTrainerExclamationMark(u8 taskId, struct Task *task, struct Obj
             task->tFuncId = TRSEE_REVEAL_BURIED;
         return TRUE;
     }
+}
+
+// Rouge Feu : TRSEE_OFFSCREEN_CAMERA_CREATE, un objet caméra invisible à la place du joueur
+static bool8 OffscreenAboveTrainerCreateCameraObj(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
+{
+    u8 specialObjectId;
+
+    task->tCameraSteps = 0;
+    specialObjectId = SpawnSpecialObjectEventParameterized(OBJ_EVENT_GFX_YOUNGSTER, MOVEMENT_TYPE_FACE_UP, LOCALID_CAMERA,
+                                                           gSaveBlock1Ptr->pos.x + MAP_OFFSET, gSaveBlock1Ptr->pos.y + MAP_OFFSET, 3);
+    gObjectEvents[specialObjectId].invisible = TRUE;
+    CameraObjectSetFollowedSpriteId(gObjectEvents[specialObjectId].spriteId);
+    task->tFuncId++; // TRSEE_OFFSCREEN_CAMERA_UP
+    return FALSE;
+}
+
+// Rouge Feu : TRSEE_OFFSCREEN_CAMERA_UP, la caméra monte jusqu'au dresseur, qui montre le « ! »
+static bool8 OffscreenAboveTrainerCameraObjMoveUp(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
+{
+    u8 specialObjectId;
+
+    TryGetObjectEventIdByLocalIdAndMap(LOCALID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &specialObjectId);
+    if (ObjectEventIsMovementOverridden(&gObjectEvents[specialObjectId]) && !ObjectEventClearHeldMovementIfFinished(&gObjectEvents[specialObjectId]))
+        return FALSE;
+
+    if (task->tCameraSteps != task->tTrainerRange - 1)
+    {
+        ObjectEventSetHeldMovement(&gObjectEvents[specialObjectId], GetWalkFastMovementAction(DIR_NORTH));
+        task->tCameraSteps++;
+    }
+    else
+    {
+        ObjectEventGetLocalIdAndMap(trainerObj, &gFieldEffectArguments[0], &gFieldEffectArguments[1], &gFieldEffectArguments[2]);
+        FieldEffectStart(FLDEFF_EXCLAMATION_MARK_ICON);
+        task->tCameraSteps = 0;
+        task->tFuncId++; // TRSEE_OFFSCREEN_CAMERA_DOWN
+    }
+    return FALSE;
+}
+
+// Rouge Feu : TRSEE_OFFSCREEN_CAMERA_DOWN, la caméra redescend sur le joueur, puis le dresseur s'approche
+static bool8 OffscreenAboveTrainerCameraObjMoveDown(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
+{
+    u8 specialObjectId;
+
+    TryGetObjectEventIdByLocalIdAndMap(LOCALID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &specialObjectId);
+    if (FieldEffectActiveListContains(FLDEFF_EXCLAMATION_MARK_ICON))
+        return FALSE;
+    if (ObjectEventIsMovementOverridden(&gObjectEvents[specialObjectId]) && !ObjectEventClearHeldMovementIfFinished(&gObjectEvents[specialObjectId]))
+        return FALSE;
+
+    if (task->tCameraSteps != task->tTrainerRange - 1)
+    {
+        ObjectEventSetHeldMovement(&gObjectEvents[specialObjectId], GetWalkFastMovementAction(DIR_SOUTH));
+        task->tCameraSteps++;
+    }
+    else
+    {
+        CameraObjectSetFollowedSpriteId(gPlayerAvatar.spriteId);
+        RemoveObjectEventByLocalIdAndMap(LOCALID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+        task->tCameraSteps = 0;
+        task->tFuncId = TRSEE_EXCLAMATION_WAIT;
+    }
+    return FALSE;
 }
 
 // TRSEE_MOVE_TO_PLAYER
@@ -680,6 +762,7 @@ static bool8 WaitRevealBuriedTrainer(u8 taskId, struct Task *task, struct Object
 
 #undef tTrainerRange
 #undef tOutOfAshSpriteId
+#undef tCameraSteps
 #undef tTrainerObjectEventId
 
 #define tObjEvent ptr.genericPtr[0]

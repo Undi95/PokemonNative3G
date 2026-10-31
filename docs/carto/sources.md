@@ -92,7 +92,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | event_object_movement.c | commun | 759 | 129 | 3 | 36 | 30 | 252 | 378 | event_object_movement.c (34), kanto_fame_checker.c (1), kanto_vs_seeker.c (1) |
 | party_menu.c | commun | 357 | 70 | 10 | 19 | 41 | 142 | 145 | party_menu.c (19) |
 | field_effect.c | commun | 239 | 109 | 13 | 8 | 19 | 36 | 94 | field_effect.c (8) |
-| overworld.c | commun | 242 | 44 | 4 | 11 | 34 | 106 | 92 | overworld.c (8), kanto_specials.c (3) |
+| overworld.c | commun | 242 | 44 | 4 | 10 | 31 | 106 | 92 | overworld.c (10) |
 | battle_script_commands.c | commun | 284 | 3 | 0 | 0 | 0 | 165 | 116 |  |
 | field_player_avatar.c | commun | 176 | 61 | 4 | 13 | 27 | 51 | 64 | field_player_avatar.c (13) |
 | battle_ai_script_commands.c | commun | 105 | 14 | 0 | 0 | 0 | 3 | 88 |  |
@@ -100,7 +100,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_anim_effects_1.c | commun | 154 | 1 | 1 | 0 | 100 | 76 | 77 |  |
 | battle_anim_mons.c | commun | 128 | 12 | 5 | 1 | 50 | 47 | 69 | battle_anim_mons.c (1) |
 | battle_controller_player.c | commun | 123 | 15 | 7 | 2 | 60 | 39 | 69 | kanto_battle_controller_pokedude.c (2) |
-| pokemon.c | commun | 143 | 13 | 1 | 4 | 38 | 68 | 62 | pokemon.c (3), kanto_specials.c (1) |
+| pokemon.c | commun | 143 | 13 | 1 | 4 | 38 | 68 | 62 | pokemon.c (3), overworld.c (1) |
 | scrcmd.c | commun | 224 | 12 | 2 | 8 | 83 | 144 | 68 | copie kanto_scrcmd.c : 8/224 fonctions |
 | battle_main.c | commun | 106 | 18 | 4 | 1 | 27 | 32 | 56 | battle_main.c (1) |
 | link_rfu_2.c | commun | 149 | 4 | 1 | 0 | 25 | 79 | 66 |  |
@@ -188,13 +188,13 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_ai_switch_items.c | commun | 13 | 0 | 0 | 0 | 100 | 0 | 13 |  |
 | battle_anim_rock.c | commun | 22 | 0 | 0 | 0 | 100 | 9 | 13 |  |
 | battle_bg.c | commun | 17 | 7 | 0 | 4 | 57 | 0 | 10 | copie kanto_battle_bg.c : 7/17 fonctions |
-| field_screen_effect.c | commun | 19 | 9 | 0 | 0 | 0 | 6 | 4 |  |
 | battle_message.c | commun | 14 | 5 | 0 | 0 | 0 | 2 | 7 |  |
 | battle_records.c | commun | 31 | 21 | 0 | 16 | 76 | 3 | 7 | kanto_trainer_tower.c (15), kanto_seagallop.c (1) |
 | main.c | commun | 28 | 2 | 0 | 0 | 0 | 16 | 10 |  |
 | battle_anim_ground.c | commun | 25 | 2 | 2 | 0 | 100 | 12 | 11 |  |
 | fldeff_cut.c | commun | 13 | 7 | 1 | 0 | 14 | 1 | 5 |  |
 | pokeball.c | commun | 37 | 0 | 0 | 0 | 100 | 26 | 11 |  |
+| field_screen_effect.c | commun | 19 | 9 | 0 | 3 | 33 | 6 | 4 | field_screen_effect.c (3) |
 | menu_helpers.c | commun | 17 | 3 | 1 | 1 | 66 | 5 | 9 | kanto_bag.c (1) |
 | region_map.c | commun | 140 | 130 | 0 | 130 | 100 | 0 | 10 | copie kanto_region_map.c : 140/140 fonctions |
 | battle_anim_bug.c | commun | 13 | 0 | 0 | 0 | 100 | 4 | 9 |  |
@@ -234,7 +234,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | dma3_manager.c | commun | 5 | 1 | 0 | 0 | 0 | 0 | 4 |  |
 | field_poison.c | commun | 7 | 0 | 0 | 0 | 100 | 2 | 5 |  |
 | fldeff_sweetscent.c | commun | 7 | 1 | 0 | 0 | 0 | 2 | 4 |  |
-| heal_location.c | commun | 5 | 4 | 0 | 0 | 0 | 0 | 1 |  |
 | math_util.c | commun | 9 | 9 | 4 | 0 | 44 | 0 | 0 |  |
 | mon_markings.c | commun | 15 | 0 | 0 | 0 | 100 | 10 | 5 |  |
 | money.c | commun | 13 | 0 | 0 | 0 | 100 | 8 | 5 |  |
@@ -243,6 +242,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_anim_status_effects.c | commun | 12 | 0 | 0 | 0 | 100 | 8 | 4 |  |
 | berry_fix_program.c | commun | 7 | 1 | 0 | 0 | 0 | 3 | 3 |  |
 | fldeff_softboiled.c | commun | 8 | 0 | 0 | 0 | 100 | 4 | 4 |  |
+| heal_location.c | commun | 5 | 4 | 0 | 1 | 25 | 0 | 1 | heal_location.c (1) |
 | malloc.c | commun | 12 | 0 | 0 | 0 | 100 | 8 | 4 |  |
 | palette_util.c | commun | 17 | 0 | 0 | 0 | 100 | 13 | 4 |  |
 | pokemon_size_record.c | commun | 13 | 6 | 0 | 6 | 100 | 3 | 4 | pokemon_size_record.c (6) |

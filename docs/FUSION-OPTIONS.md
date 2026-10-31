@@ -83,6 +83,8 @@ contenu dans un seul jeu.
 
 ## Trouvé par la cartographie — décisions de l'utilisateur (2026-10-23)
 Contenu de RF à importer :
+- [x] Approche des dresseurs, la même dans tout le jeu (2026-10-31, choix de l'utilisateur ; scénario `trainer_camera`) : caméra de RF quand un dresseur tourné vers le bas repère le joueur de loin (elle monte jusqu'à lui, « ! », puis redescend) ; comme dans Émeraude, le joueur se tourne vers le dresseur (RF ne le faisait pas)
+- [x] Description des capacités de terrain dans le menu d'équipe (2026-10-31, RF ; avec MENUS = KANTO ; scénario `options_fieldmove_desc`) : bande de RF au-dessus du message ; Plongée et Force Cachée, absentes de RF, ont deux descriptions dans le même style (« Plonger en eau profonde. », « Ouvrir une base secrète. »)
 - [x] K.O. de RF dans tout le jeu (2026-10-31, demandé par l'utilisateur ; scénario `kanto_whiteout`) : perte d'argent de RF (niveau de l'équipe × badges de la région où l'on est ; Émeraude : la moitié de l'argent) annoncée en combat (« panique et perd X¥ », « paye X¥ comme récompense ») et après un K.O. par le poison ; reprise devant l'infirmière du dernier Centre, Kanto comme Hoenn (respawn_* de `heal_locations.json`), message sur fond noir puis soins. Sans infirmière (maisons de Bourg-en-Vol et de Bourg Palette, Île du Sud) : reprise d'Émeraude
 - [x] Combat FANTÔME de la Tour Pokémon (SPECTRES sans Scope Sylph, Ossatueur révélé avec le Scope Sylph de Giovanni ; `gBattleGhostType`, plus de bit libre dans gBattleTypeFlags)
 - [x] Objets cachés qui réapparaissent (`src/kanto_renewable_hidden_items.c`, 2026-10-23)
