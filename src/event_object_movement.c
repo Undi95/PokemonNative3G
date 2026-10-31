@@ -6,7 +6,7 @@
 #include "decoration.h"
 #include "event_data.h"
 #include "event_object_movement.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "event_scripts.h"
 #include "faraway_island.h"
 #include "field_camera.h"
@@ -734,7 +734,7 @@ static const u16 sKantoNpcPaletteTags[] = {
 
 static u16 GetObjectPaletteTagForSlot(u8 palSlot)
 {
-    if (palSlot >= PALSLOT_NPC_1 && palSlot <= PALSLOT_NPC_4_REFLECTION && IsKantoTilesetMap())
+    if (palSlot >= PALSLOT_NPC_1 && palSlot <= PALSLOT_NPC_4_REFLECTION && Fusion_IsInKanto())
         return sKantoNpcPaletteTags[palSlot];
     return sObjectPaletteTagSets[sCurrentReflectionType][palSlot];
 }

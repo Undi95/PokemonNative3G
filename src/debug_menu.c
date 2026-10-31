@@ -32,8 +32,6 @@
 #include "item.h"
 #include "constants/characters.h"
 #include "field_weather.h"
-#include "kanto_field_door.h"
-#include "kanto_region_map.h"
 #include "palette.h"
 #include "region_map.h"
 #include "battle_setup.h"
@@ -300,7 +298,7 @@ static void Task_DebugOpenFlyMap(u8 taskId)
     if (!gPaletteFade.active)
     {
         CleanupOverworldWindowsAndTilemaps();
-        SetMainCallback2(IsKantoTilesetMap() ? KantoCB2_OpenFlyMap : CB2_OpenFlyMap);
+        SetMainCallback2(CB2_OpenFlyMapOfRegion);
         DestroyTask(taskId);
     }
 }

@@ -9,7 +9,7 @@
 #include "fusion_events.h"
 #include "item.h"
 #include "kanto_region_map.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "pokemon_storage_system.h"
 #include "constants/region_map_sections.h"
 #include "pokedex.h"
@@ -132,7 +132,7 @@ u16 PokeMonture_HelperSpecies(void)
 
     if (i < 0)
         i = 0;
-    return IsKantoTilesetMap() ? sPokeMontureMoves[i].kantoHelper : sPokeMontureMoves[i].hoennHelper;
+    return Fusion_IsInKanto() ? sPokeMontureMoves[i].kantoHelper : sPokeMontureMoves[i].hoennHelper;
 }
 
 
@@ -356,13 +356,60 @@ void Fusion_MarkAllMonsFromHoenn(void)
 // Propriétaire du PC selon la région : LÉO à Kanto (une fois rencontré), ANNETTE à Hoenn (idem), sinon « ??? »
 u8 Fusion_GetPCOwner(void)
 {
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
         return FlagGet(FLAG_KANTO_SYS_NOT_SOMEONES_PC) ? PC_OWNER_BILL : PC_OWNER_UNKNOWN;
     return FlagGet(FLAG_SYS_PC_LANETTE) ? PC_OWNER_LANETTE : PC_OWNER_UNKNOWN;
 }
 
-// Kanto ou Hoenn (cartes de RF) : carte murale, objet CARTE
+extern const struct Tileset gTileset_KantoGeneral, gTileset_KantoBuilding;
+
 bool8 Fusion_IsInKanto(void)
 {
-    return IsKantoTilesetMap();
+    const struct Tileset *primary;
+
+    if (gMapHeader.mapLayout == NULL)
+        return FALSE;
+    primary = gMapHeader.mapLayout->primaryTileset;
+    return primary == &gTileset_KantoGeneral || primary == &gTileset_KantoBuilding;
+}
+
+static const u16 sRegionBadgeFlags[][NUM_BADGES] = {
+    {
+        FLAG_BADGE01_GET,
+        FLAG_BADGE02_GET,
+        FLAG_BADGE03_GET,
+        FLAG_BADGE04_GET,
+        FLAG_BADGE05_GET,
+        FLAG_BADGE06_GET,
+        FLAG_BADGE07_GET,
+        FLAG_BADGE08_GET,
+    },
+    {
+        FLAG_KANTO_BADGE01_GET,
+        FLAG_KANTO_BADGE02_GET,
+        FLAG_KANTO_BADGE03_GET,
+        FLAG_KANTO_BADGE04_GET,
+        FLAG_KANTO_BADGE05_GET,
+        FLAG_KANTO_BADGE06_GET,
+        FLAG_KANTO_BADGE07_GET,
+        FLAG_KANTO_BADGE08_GET,
+    },
+};
+
+u16 Fusion_GetRegionBadgeFlag(u32 badge)
+{
+    return sRegionBadgeFlags[Fusion_IsInKanto()][badge];
+}
+
+u16 CountRegionBadges(void)
+{
+    u16 nbadges = 0;
+    u32 i;
+
+    for (i = 0; i < NUM_BADGES; i++)
+    {
+        if (FlagGet(Fusion_GetRegionBadgeFlag(i)))
+            nbadges++;
+    }
+    return nbadges;
 }

@@ -1,7 +1,7 @@
 #include "global.h"
 #include "kanto_renewable_hidden_items.h"
 #include "kanto_vs_seeker.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 extern const u8 EventScript_VsSeekerChargingDone[];
 // PokemonNative3G : panneaux de Rouge Feu (field_control_avatar.c de RF)
 extern const u8 EventScript_PokecenterSign[];
@@ -421,7 +421,7 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
         gSpecialVar_0x8005 = bgEvent->bgUnion.hiddenItem.item;
         if (FlagGet(gSpecialVar_0x8004) == TRUE)
             return NULL;
-        if (IsKantoTilesetMap()) // PokemonNative3G : script de RF (jetons cachés du Casino, quantité)
+        if (Fusion_IsInKanto()) // PokemonNative3G : script de RF (jetons cachés du Casino, quantité)
         {
             gSpecialVar_0x8006 = bgEvent->bgUnion.hiddenItem.quantity;
             return Kanto_EventScript_HiddenItemScript;
@@ -446,7 +446,7 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
 {
     s8 elevation;
 
-    if (IsKantoTilesetMap()) // PokemonNative3G : télés et bibliothèques de Kanto, textes de RF
+    if (Fusion_IsInKanto()) // PokemonNative3G : télés et bibliothèques de Kanto, textes de RF
     {
         if (MetatileBehavior_IsPlayerFacingTVScreen(metatileBehavior, direction) == TRUE)
             return EventScript_PlayerFacingTVScreen;

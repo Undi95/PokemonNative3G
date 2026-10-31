@@ -1,5 +1,5 @@
 #include "global.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "bike.h"
 #include "clock.h"
 #include "event_data.h"
@@ -785,7 +785,7 @@ static void SootopolisGymIcePerStepCallback(u8 taskId)
     u16 *iceStepCount;
     s16 *data = gTasks[taskId].data;
     // Kanto : STEP_CB_ICE = glace de la grotte Gelée de RF
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
     {
         IcefallCaveIcePerStepCallback(taskId);
         return;

@@ -1,11 +1,10 @@
 #include "global.h"
 #include "fusion_events.h" // PokemonNative3G : POKé MONTURE
-#include "kanto_region_map.h"
 #include "region_map.h"
 #include "overworld.h"
 #include "constants/moves.h"
 #include "kanto_vs_seeker.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 void KantoItemUseOnFieldCB_Itemfinder(u8 taskId); // kanto_itemfinder.c
 #include "constants/map_types.h"
 #include "item_use.h"
@@ -294,7 +293,7 @@ void ItemUseOutOfBattle_Itemfinder(u8 var)
 {
     IncrementGameStat(GAME_STAT_USED_ITEMFINDER);
     // PokemonNative3G : à Kanto, le Cherch'Objet de Rouge Feu (flèches vers l'objet)
-    sItemUseOnFieldCB = IsKantoTilesetMap() ? KantoItemUseOnFieldCB_Itemfinder : ItemUseOnFieldCB_Itemfinder;
+    sItemUseOnFieldCB = Fusion_IsInKanto() ? KantoItemUseOnFieldCB_Itemfinder : ItemUseOnFieldCB_Itemfinder;
     SetUpItemUseOnFieldCallback(var);
 }
 
@@ -963,7 +962,7 @@ void ItemUseOutOfBattle_PokeMonture(u8 taskId)
     {
         PokeMonture_SetMove(MOVE_FLY);
         gPartyMenu.slotId = FIELD_MOVE_HELPER_SLOT;
-        SetBagMenuNewScreenCallback(IsKantoTilesetMap() ? KantoCB2_OpenFlyMap : CB2_OpenFlyMap);
+        SetBagMenuNewScreenCallback(CB2_OpenFlyMapOfRegion);
         Task_FadeAndCloseBagMenu(taskId);
     }
     else

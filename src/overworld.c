@@ -4,7 +4,7 @@
 #include "overworld.h"
 #include "kanto_map_preview_screen.h"
 #include "kanto_credits.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "constants/rgb.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
@@ -382,43 +382,6 @@ static const u8 sWhiteOutMoneyLossMultipliers[] = {
     25,
     30
 };
-
-static const u16 sHoennBadgeFlags[] = {
-    FLAG_BADGE01_GET,
-    FLAG_BADGE02_GET,
-    FLAG_BADGE03_GET,
-    FLAG_BADGE04_GET,
-    FLAG_BADGE05_GET,
-    FLAG_BADGE06_GET,
-    FLAG_BADGE07_GET,
-    FLAG_BADGE08_GET
-};
-
-static const u16 sKantoBadgeFlags[] = {
-    FLAG_KANTO_BADGE01_GET,
-    FLAG_KANTO_BADGE02_GET,
-    FLAG_KANTO_BADGE03_GET,
-    FLAG_KANTO_BADGE04_GET,
-    FLAG_KANTO_BADGE05_GET,
-    FLAG_KANTO_BADGE06_GET,
-    FLAG_KANTO_BADGE07_GET,
-    FLAG_KANTO_BADGE08_GET
-};
-
-// PokemonNative3G : badges de la région où se trouve le joueur (aussi special, conseils de l'infirmière après un K.O.)
-u16 CountRegionBadges(void)
-{
-    const u16 *badgeFlags = IsKantoTilesetMap() ? sKantoBadgeFlags : sHoennBadgeFlags;
-    u16 nbadges = 0;
-    u32 i;
-
-    for (i = 0; i < ARRAY_COUNT(sHoennBadgeFlags); i++)
-    {
-        if (FlagGet(badgeFlags[i]))
-            nbadges++;
-    }
-    return nbadges;
-}
 
 // pokemon.c de RF
 static u8 GetPlayerPartyHighestLevel(void)

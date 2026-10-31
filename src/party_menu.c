@@ -79,8 +79,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/kanto_flags_vars.h"
-#include "kanto_field_door.h"
-#include "kanto_region_map.h"
+#include "fusion_region.h"
 
 enum {
     MENU_SUMMARY,
@@ -513,7 +512,7 @@ bool8 HasBadgeForFieldMove(u8 fieldMove)
 {
     if (fieldMove > FIELD_MOVE_WATERFALL)
         return TRUE;
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
         return FlagGet(sKantoFieldMoveBadges[fieldMove]);
     return FlagGet(FLAG_BADGE01_GET + fieldMove);
 }
@@ -3815,7 +3814,7 @@ static void CursorCb_FieldMove(u8 taskId)
                 sPartyMenuInternal->data[0] = fieldMove;
                 break;
             case FIELD_MOVE_FLY:
-                gPartyMenu.exitCallback = IsKantoTilesetMap() ? KantoCB2_OpenFlyMap : CB2_OpenFlyMap; // PokemonNative3G
+                gPartyMenu.exitCallback = CB2_OpenFlyMapOfRegion; // PokemonNative3G
                 Task_ClosePartyMenu(taskId);
                 break;
             default:

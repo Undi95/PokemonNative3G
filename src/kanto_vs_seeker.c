@@ -14,7 +14,7 @@
 #include "item.h"
 #include "item_menu.h"
 #include "item_use.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "kanto_save.h"
 #include "kanto_vs_seeker.h"
 #include "menu.h"
@@ -821,7 +821,7 @@ void Task_VsSeeker_0(u8 taskId)
         gTasks[taskId].data[i] = 0;
 
     sVsSeeker = AllocZeroed(sizeof(struct VsSeekerStruct));
-    sVsSeekerHoenn = !IsKantoTilesetMap(); // PokemonNative3G
+    sVsSeekerHoenn = !Fusion_IsInKanto(); // PokemonNative3G
     GatherNearbyTrainerInfo();
     respval = CanUseVsSeeker();
     if (respval == VSSEEKER_NOT_CHARGED)

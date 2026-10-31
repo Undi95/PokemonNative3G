@@ -1,6 +1,6 @@
 #include "global.h"
 #include "fusion_events.h" // PokemonNative3G : POKé MONTURE
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "frontier_util.h"
 #include "battle_setup.h"
 #include "berry.h"
@@ -1949,7 +1949,7 @@ bool8 ScrCmd_playslotmachine(struct ScriptContext *ctx)
 {
     u8 machineId = VarGet(ScriptReadHalfword(ctx));
 
-    if (IsKantoTilesetMap()) // PokemonNative3G : machine à sous de RF au Casino de Céladopole
+    if (Fusion_IsInKanto()) // PokemonNative3G : machine à sous de RF au Casino de Céladopole
         KantoPlaySlotMachine(machineId, CB2_ReturnToFieldContinueScriptPlayMapMusic);
     else
     PlaySlotMachine(machineId, CB2_ReturnToFieldContinueScriptPlayMapMusic);

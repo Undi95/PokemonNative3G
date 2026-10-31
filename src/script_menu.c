@@ -3,7 +3,7 @@
 #include "constants/kanto/seagallop.h"
 #include "constants/kanto/menu.h"
 #include "constants/kanto.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "main.h"
 #include "event_data.h"
 #include "field_effect.h"
@@ -358,7 +358,7 @@ static void CreatePCMultichoice(void)
     u8 numChoices = 0;
     u8 windowId;
     int i;
-    bool8 profOak = IsKantoTilesetMap() && FlagGet(FLAG_KANTO_SYS_POKEDEX_GET);
+    bool8 profOak = Fusion_IsInKanto() && FlagGet(FLAG_KANTO_SYS_POKEDEX_GET);
 
     for (i = 0; i < ARRAY_COUNT(sPCNameStrings); i++)
     {

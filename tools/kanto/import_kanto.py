@@ -345,6 +345,9 @@ class Importer:
                       'allow_running', 'show_map_name', 'battle_scene'):
                 out[k] = j[k]
             out['battle_scene'] = BATTLE_SCENE_ALIASES.get(out['battle_scene'], out['battle_scene'])
+            # Sections de même nom dans les deux jeux (Caverne Altérée) : celle de Kanto est suffixée _FRLG dans Émeraude
+            if out['region_map_section'] + '_FRLG' in em_mapsecs:
+                out['region_map_section'] += '_FRLG'
             if out['region_map_section'] not in em_mapsecs:
                 self.warn('MAPSEC inconnu -> MAPSEC_NONE', out['region_map_section'])
                 out['region_map_section'] = 'MAPSEC_NONE'

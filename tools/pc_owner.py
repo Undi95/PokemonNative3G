@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Nom du PC (PokemonNative3G, 2026-10-24) : « PC de ??? » devient « PC de LÉO » à Kanto (après lui avoir parlé,
 FLAG_KANTO_SYS_NOT_SOMEONES_PC) et « PC d'ANNETTE » à Hoenn (FLAG_SYS_PC_LANETTE) : menu du PC, connexion, transfert
-d'un POKéMON attrapé (combat) ou reçu (écran de nom). Kanto = carte avec les tilesets de RF (IsKantoTilesetMap).
+d'un POKéMON attrapé (combat) ou reçu (écran de nom). Kanto = carte avec les tilesets de RF (Fusion_IsInKanto, include/fusion_region.h).
 Aussi : menu START sans « POKéMON » quand l'équipe est vide (arrivée à Kanto, avant le starter).
 Relancer ne fait rien de plus.
 Usage : python tools/pc_owner.py   (depuis la racine du projet)
@@ -29,7 +29,7 @@ def once(p, a, b, cnt=1):
 once('include/fusion_events.h', 'bool8 Fusion_IsBoxMonLockedInHoenn(struct BoxPokemon *mon);\n',
      'bool8 Fusion_IsBoxMonLockedInHoenn(struct BoxPokemon *mon);\nu8 Fusion_GetPCOwner(void);\n'
      '#define PC_OWNER_UNKNOWN 0\n#define PC_OWNER_LANETTE 1\n#define PC_OWNER_BILL    2\n')
-once('src/fusion_events.c', '#include "kanto_region_map.h"\n', '#include "kanto_region_map.h"\n#include "kanto_field_door.h"\n')
+once('src/fusion_events.c', '#include "kanto_region_map.h"\n', '#include "kanto_region_map.h"\n#include "fusion_region.h"\n')
 t = rd('src/fusion_events.c')
 if 'Fusion_GetPCOwner' not in t:
     t = t.rstrip('\n') + '''
@@ -37,7 +37,7 @@ if 'Fusion_GetPCOwner' not in t:
 // Propriétaire du PC selon la région : LÉO à Kanto (une fois rencontré), ANNETTE à Hoenn (idem), sinon « ??? »
 u8 Fusion_GetPCOwner(void)
 {
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
         return FlagGet(FLAG_KANTO_SYS_NOT_SOMEONES_PC) ? PC_OWNER_BILL : PC_OWNER_UNKNOWN;
     return FlagGet(FLAG_SYS_PC_LANETTE) ? PC_OWNER_LANETTE : PC_OWNER_UNKNOWN;
 }

@@ -144,9 +144,24 @@ Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.
   roamers et les revanches du Cherche VS.
 - Champs propres à Émeraude : décorations, bases secrètes, TV, concours, Zone de Combat, apprentis, dame de Nénucrique : inchangés.
 
+## Règles de code de la fusion (homogénéité, 2026-10-31)
+
+- **Une mécanique commune aux deux jeux = un seul code**, pour tout le jeu (ex. K.O. de RF à Hoenn comme à Kanto). Ce
+  qui varie selon le lieu passe par les données (ex. `respawn_*` de `src/data/heal_locations.json`) ; ce qui est une
+  question de présentation passe par les options HOENN/KANTO (page 2, [FUSION-OPTIONS.md](FUSION-OPTIONS.md)).
+- **Région : une seule question**, `Fusion_IsInKanto()` (`include/fusion_region.h` : carte aux tilesets de RF, Hoenn
+  sans carte chargée), avec `Fusion_GetRegionBadgeFlag` / `CountRegionBadges` pour les badges et
+  `CB2_OpenFlyMapOfRegion` pour la carte de Vol. Elle ne sert qu'à ce qui est vraiment régional : décors de combat,
+  portes, palettes, PC et moniteurs, musique sauvage, rencontres par case, textes des télés et bibliothèques, rival,
+  vagabonds, badges (obéissance, CS, perte d'argent), carte de la région, Panthéon, Fan Club, Cherche VS, PC de LÉO /
+  d'ANNETTE, POKé MONTURE, vieil homme, machine à sous, Cherch'Objet, carte de dresseur. Les tests de section de carte
+  (`KANTO_MAPSEC_START`…) ne servent qu'à classer un lieu (lieu de capture, nom affiché), jamais la position du joueur.
+- Code propre à RF : `src/kanto_*.c` (noms de RF, comparable à la décompilation) ; retouches du code d'Émeraude
+  marquées `// Rouge Feu` ou `// PokemonNative3G`.
+
 ## Fichiers propres à la fusion
 
-`src/kanto_*.c` (25 fichiers : copies de RF, cf. colonne « copie » de `carto/sources.md`), `battle_controller_old_man.c`,
+`src/kanto_*.c` (43 fichiers : copies de RF, cf. colonne « copie » de `carto/sources.md`), `battle_controller_old_man.c`,
 `debug_menu.c`, `kanto_save.c`, `kanto_specials_stubs.c`, `fusion_events.c` (événements propres à la fusion : œufs de
 starters…, scripts dans `data/scripts/fusion_*.inc`). Outils d'import : `tools/kanto/*.py`, `tools/import_rf_mon_pics.py`,
 `tools/redleaf_sprites.py`, `tools/item_doubles.py`, `tools/cartographie.py`, `tools/link_cable.py` (CÂBLE LINK), `tools/poke_monture.py` (POKé MONTURE), `tools/exclusifs.py`

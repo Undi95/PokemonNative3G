@@ -83,6 +83,8 @@ réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, c
 - [ ] Poudre de baies (échange contre objets)
 - [ ] Effaceur de capacités, menu du PC, sauvegarde demandée par un script, PC du Panthéon (version Émeraude)
 - [ ] K.O. de RF à Hoenn et à Kanto (2026-10-31) : vérifié en headless (`kanto_whiteout.py` : défaites contre un sauvage sur la Route 102 et au Mt. Moon, « panique et perd X¥ » = argent réellement retiré, reprise devant l'infirmière de Clémenti-Ville et de Jadielle, message sur fond noir puis soins, Ligue et Piste Cyclable remises à zéro ; cases de reprise de la Ligue de Hoenn et du Plateau Indigo face à l'infirmière). Non testés : défaite contre un dresseur (« paye X¥ comme récompense »), sans argent, K.O. par le poison hors combat (montant affiché = montant retiré), avec des badges (montant plus élevé, conseils courts de l'infirmière), Centre de l'Île 1, K.O. avant tout Centre (maison de Bourg-en-Vol), K.O. au Mt. Cheminée (retour à Vermilava), K.O. pendant un défi de la Tour des Dresseurs (reprise dans le hall)
+- [ ] Caverne Altérée de l'Île 6 (2026-10-31, section de carte corrigée : elle avait celle de la Caverne Altérée de Hoenn) : nom affiché à l'entrée, aperçu de la carte de RF, lieu de capture dans le résumé (« CAVERNE ALTEREE » de Kanto), joueur visible sur la carte de Kanto (objet CARTE, Vol)
+- [ ] Régions après homogénéisation (2026-10-31, `Fusion_IsInKanto`) : carte de Vol depuis l'équipe, le sac et le DEBUG dans chaque région, vagabonds, carte de dresseur, obéissance et CS selon les badges de la région
 - [ ] Piste Cyclable (Route 16-18) : impossible de descendre du vélo ; après Vol / Téléport / K.O., plus considéré comme sur la Piste
 - [ ] Battements d'ailes (son), drapeaux d'après-Ligue
 

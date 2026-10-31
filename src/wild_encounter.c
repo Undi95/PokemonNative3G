@@ -24,7 +24,7 @@
 #include "constants/layouts.h"
 #include "constants/weather.h"
 #include "fieldmap.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 
 extern const u8 EventScript_RepelWoreOff[];
 
@@ -614,14 +614,14 @@ static bool8 AllowWildCheckOnNewMetatile(void)
 // comportement. Le reste (taux, Repousse, talents…) est celui d'Émeraude dans les deux régions.
 static bool8 IsLandWildEncounterAt(s16 x, s16 y, u16 metatileBehavior)
 {
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
         return MapGridGetMetatileEncounterTypeAt(x, y) == TILE_ENCOUNTER_LAND;
     return MetatileBehavior_IsLandWildEncounter(metatileBehavior);
 }
 
 static bool8 IsWaterWildEncounterAt(s16 x, s16 y, u16 metatileBehavior)
 {
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
         return MapGridGetMetatileEncounterTypeAt(x, y) == TILE_ENCOUNTER_WATER;
     return MetatileBehavior_IsWaterWildEncounter(metatileBehavior);
 }

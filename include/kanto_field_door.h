@@ -9,7 +9,4 @@ s8 Kanto_FieldAnimateDoorOpen(int x, int y);
 bool8 Kanto_FieldIsDoorAnimationRunning(void);
 u16 Kanto_GetDoorSoundEffect(int x, int y);
 
-// Vrai si la carte courante utilise un tileset importé de Kanto.
-bool32 IsKantoTilesetMap(void);
-
 #endif // GUARD_KANTO_FIELD_DOOR_H

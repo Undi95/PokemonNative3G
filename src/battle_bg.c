@@ -26,7 +26,7 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "kanto_battle_bg.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 
 struct BattleBackground
 {
@@ -778,7 +778,7 @@ void LoadBattleMenuWindowGfx(void)
 
 void DrawMainBattleBackground(void)
 {
-    if (IsKantoTilesetMap() || gBattlePokedudeFrlg) // PokemonNative3G : Pokédude = décor de RF (herbe)
+    if (Fusion_IsInKanto() || gBattlePokedudeFrlg) // PokemonNative3G : Pokédude = décor de RF (herbe)
     {
         Kanto_DrawMainBattleBackground();
         return;
@@ -1164,7 +1164,7 @@ void DrawBattleEntryBackground(void)
         gBattle_BG2_Y = 0xFF5C;
         LoadCompressedSpriteSheetUsingHeap(&sVsLettersSpriteSheet);
     }
-    else if (IsKantoTilesetMap() || gBattlePokedudeFrlg)
+    else if (Fusion_IsInKanto() || gBattlePokedudeFrlg)
     {
         Kanto_DrawBattleEntryBackground();
     }
@@ -1239,7 +1239,7 @@ bool8 LoadChosenBattleElement(u8 caseId)
     bool8 ret = FALSE;
 
     // Décor de RF sur les cartes de Kanto
-    if (caseId >= 3 && caseId <= 5 && (IsKantoTilesetMap() || gBattlePokedudeFrlg))
+    if (caseId >= 3 && caseId <= 5 && (Fusion_IsInKanto() || gBattlePokedudeFrlg))
         return Kanto_LoadChosenBattleElement(caseId);
 
     switch (caseId)

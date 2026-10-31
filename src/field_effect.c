@@ -1,6 +1,6 @@
 #include "global.h"
 #include "fusion_events.h" // PokemonNative3G : POKé MONTURE
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "decompress.h"
 #include "event_object_movement.h"
 #include "field_camera.h"
@@ -1139,7 +1139,7 @@ bool8 FldEff_HallOfFameRecord(void)
     task->tNumMons = nPokemon;
     task->tFirstBallX = 117;
     task->tFirstBallY = 52;
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
     {
         task->tIsKanto = TRUE;
         task->tFirstBallY = 60;
@@ -1372,7 +1372,7 @@ static u8 CreatePokecenterMonitorSprite(s16 x, s16 y)
     u8 spriteId;
     struct Sprite *sprite;
 
-    if (IsKantoTilesetMap()) // Rouge Feu : CreatePokecenterMonitorSprite(128, 24)
+    if (Fusion_IsInKanto()) // Rouge Feu : CreatePokecenterMonitorSprite(128, 24)
     {
         spriteId = CreateSpriteAtEnd(&sSpriteTemplate_KantoPokecenterMonitor, 128, y, 0);
         gSprites[spriteId].oam.priority = 2;

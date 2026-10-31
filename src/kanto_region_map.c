@@ -1,6 +1,7 @@
 // Rouge Feu : region_map.c (carte de Kanto et des Îles Sevii : objet CARTE, carte murale, Vol).
 // Utilisée à Kanto ; à Hoenn, la carte d'Émeraude (region_map.c).
 #include "global.h"
+#include "fusion_region.h"
 #include "bg.h"
 #include "decompress.h"
 #include "event_data.h"
@@ -40,7 +41,6 @@
 #define FONT_NORMAL FONT_KANTO
 #define MAP(map) MAP_GROUP(map), MAP_NUM(map) // Rouge Feu (constants/maps.h)
 #define SEVII_MAPSEC_START MAPSEC_ONE_ISLAND // Rouge Feu (constants/region_map_sections.h)
-static bool8 IsPlayerInKanto(void); // PokemonNative3G (en fin de fichier)
 static void CB2_OpenHoennFlyMap(void);
 
 // Rouge Feu (strings_*_fr.h)
@@ -3836,7 +3836,7 @@ static void GetPlayerPositionOnRegionMap(void)
         break;
     }
 
-    if (!IsPlayerInKanto()) // PokemonNative3G : ouverte depuis Hoenn : curseur sur Bourg Palette
+    if (!Fusion_IsInKanto()) // PokemonNative3G : ouverte depuis Hoenn : curseur sur Bourg Palette
     {
         sMapCursor->selectedMapsec = MAPSEC_PALLET_TOWN - KANTO_MAPSEC_START;
         sMapCursor->x = sMapSectionTopLeftCorners[sMapCursor->selectedMapsec][0];
@@ -4109,7 +4109,7 @@ static void CreatePlayerIconSprite(void)
 
 static void SetPlayerIconInvisibility(bool8 invisible)
 {
-    sPlayerIcon->sprite->invisible = invisible || !IsPlayerInKanto(); // PokemonNative3G : joueur à Hoenn
+    sPlayerIcon->sprite->invisible = invisible || !Fusion_IsInKanto(); // PokemonNative3G : joueur à Hoenn
 }
 
 static void FreePlayerIcon(void)
@@ -4761,12 +4761,6 @@ static void CB2_OpenHoennFlyMap(void)
     CB2_OpenFlyMap();
 }
 
-static bool8 IsPlayerInKanto(void)
-{
-    u8 mapsec = GetPlayerCurrentMapSectionId();
-    return mapsec >= KANTO_MAPSEC_START && mapsec <= KANTO_MAPSEC_END;
-}
-
 // ---- Rouge Feu (field_specials.c) : special ShowTownMap, carte murale de Kanto ----
 u16 ShowTownMap(void)
 {
@@ -4780,7 +4774,7 @@ u16 ShowTownMap(void)
 // PokemonNative3G : à Hoenn, la carte de Hoenn (Émeraude, field_region_map.c)
 static void UseTownMapFromBag(void)
 {
-    if (IsPlayerInKanto())
+    if (Fusion_IsInKanto())
         KantoInitRegionMapWithExitCB(REGIONMAP_TYPE_NORMAL, CB2_ReturnToBagMenuPocket);
     else
         FieldInitRegionMap(CB2_ReturnToBagMenuPocket);
@@ -4791,7 +4785,7 @@ static void Task_UseTownMapFromField(u8 taskId)
     if (!gPaletteFade.active)
     {
         CleanupOverworldWindowsAndTilemaps();
-        if (IsPlayerInKanto()) // PokemonNative3G : à Hoenn, la carte de Hoenn
+        if (Fusion_IsInKanto()) // PokemonNative3G : à Hoenn, la carte de Hoenn
             KantoInitRegionMapWithExitCB(REGIONMAP_TYPE_NORMAL, CB2_ReturnToField);
         else
             FieldInitRegionMap(CB2_ReturnToField);

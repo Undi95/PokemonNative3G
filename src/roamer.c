@@ -3,7 +3,7 @@
 #include "pokemon.h"
 #include "random.h"
 #include "roamer.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "kanto_save.h"
 #include "overworld.h"
 #include "constants/region_map_sections.h"
@@ -124,21 +124,15 @@ struct Roamer *GetCurrentRoamer(void)
     return &gSaveBlockKanto.roamers[sCurRoamer - 1];
 }
 
-// Région de la carte courante (aucune carte chargée, ex. nouvelle partie : Hoenn)
-static bool8 InKanto(void)
-{
-    return gMapHeader.mapLayout != NULL && IsKantoTilesetMap();
-}
-
 // Premier / dernier vagabond de la région de la carte courante
 static u8 FirstRoamerOfRegion(void)
 {
-    return InKanto() ? 1 : 0;
+    return Fusion_IsInKanto() ? 1 : 0;
 }
 
 static u8 LastRoamerOfRegion(void)
 {
-    return InKanto() ? NUM_KANTO_ROAMERS : 0;
+    return Fusion_IsInKanto() ? NUM_KANTO_ROAMERS : 0;
 }
 
 #define FOR_EACH_REGION_ROAMER for (sCurRoamer = FirstRoamerOfRegion(); sCurRoamer <= LastRoamerOfRegion(); sCurRoamer++)

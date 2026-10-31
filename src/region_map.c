@@ -21,6 +21,7 @@
 #include "fldeff.h"
 #include "region_map.h"
 #include "kanto_region_map.h"
+#include "fusion_region.h"
 #include "constants/region_map_sections.h"
 #include "heal_location.h"
 #include "constants/field_specials.h"
@@ -1130,7 +1131,7 @@ static void InitMapBasedOnPlayerLocation(void)
     sRegionMap->cursorPosX = gRegionMapEntries[sRegionMap->mapSecId].x + x + MAPCURSOR_X_MIN;
     sRegionMap->cursorPosY = gRegionMapEntries[sRegionMap->mapSecId].y + y + MAPCURSOR_Y_MIN;
     // PokemonNative3G : ouverte depuis Kanto (Vol entre régions) : curseur sur Bourg-en-Vol
-    if (sRegionMap->mapSecId >= KANTO_MAPSEC_START && sRegionMap->mapSecId <= KANTO_MAPSEC_END)
+    if (Fusion_IsInKanto())
     {
         sRegionMap->mapSecId = MAPSEC_LITTLEROOT_TOWN;
         sRegionMap->cursorPosX = gRegionMapEntries[MAPSEC_LITTLEROOT_TOWN].x + MAPCURSOR_X_MIN;
@@ -1470,7 +1471,7 @@ void CreateRegionMapPlayerIcon(u16 tileTag, u16 paletteTag)
     struct SpriteTemplate template = {tileTag, paletteTag, &sRegionMapPlayerIconOam, sRegionMapPlayerIconAnimTable, NULL, gDummySpriteAffineAnimTable, SpriteCallbackDummy};
 
     if (IsEventIslandMapSecId(gMapHeader.regionMapSectionId)
-     || (gMapHeader.regionMapSectionId >= KANTO_MAPSEC_START && gMapHeader.regionMapSectionId <= KANTO_MAPSEC_END)) // PokemonNative3G : joueur à Kanto
+     || Fusion_IsInKanto()) // PokemonNative3G : joueur à Kanto
     {
         sRegionMap->playerIconSprite = NULL;
         return;
@@ -1666,6 +1667,13 @@ bool32 IsEventIslandMapSecId(mapsec_u8_t mapSecId)
             return TRUE;
     }
     return FALSE;
+}
+
+// PokemonNative3G : carte de Vol de la région où l'on est (CB2_OpenFlyMap reste celle de Hoenn : la carte de Kanto
+// y passe avec SELECT)
+void CB2_OpenFlyMapOfRegion(void)
+{
+    SetMainCallback2(Fusion_IsInKanto() ? KantoCB2_OpenFlyMap : CB2_OpenFlyMap);
 }
 
 void CB2_OpenFlyMap(void)

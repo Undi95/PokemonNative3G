@@ -35,10 +35,10 @@
 #include "constants/moves.h"
 #include "constants/songs.h"
 #include "constants/kanto_flags_vars.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 
-// PokemonNative3G : à Kanto, l'obéissance dépend des badges de Kanto (mêmes paliers dans Rouge Feu)
-#define OBEDIENCE_BADGE(n) (IsKantoTilesetMap() ? FLAG_KANTO_BADGE0##n##_GET : FLAG_BADGE0##n##_GET)
+// PokemonNative3G : l'obéissance dépend des badges de la région (mêmes paliers dans Rouge Feu)
+#define OBEDIENCE_BADGE(n) Fusion_GetRegionBadgeFlag((n) - 1)
 #include "constants/species.h"
 #include "constants/weather.h"
 

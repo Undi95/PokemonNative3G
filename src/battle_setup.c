@@ -51,7 +51,7 @@
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
 #include "kanto_battle_bg.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 
 enum {
     TRANSITION_TYPE_NORMAL,
@@ -602,7 +602,7 @@ void BattleSetup_StartScriptedWildBattle(void)
     LockPlayerFieldControls();
     gMain.savedCallback = CB2_EndScriptedWildBattle;
     gBattleTypeFlags = 0;
-    gBattleWildScriptedFrlg = IsKantoTilesetMap(); // Rouge Feu (StartScriptedWildBattle) : BATTLE_TYPE_WILD_SCRIPTED à Kanto
+    gBattleWildScriptedFrlg = TRUE; // Rouge Feu (StartScriptedWildBattle) : BATTLE_TYPE_WILD_SCRIPTED
     CreateBattleStartTask(GetWildBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
@@ -757,7 +757,7 @@ u8 BattleSetup_GetEnvironmentId(void)
     u16 tileBehavior;
     s16 x, y;
 
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
         return Kanto_BattleSetup_GetTerrainId();
 
     PlayerGetDestCoords(&x, &y);

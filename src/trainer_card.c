@@ -1,5 +1,5 @@
 #include "global.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "scanline_effect.h"
 #include "palette.h"
 #include "task.h"
@@ -1809,7 +1809,7 @@ static bool8 Task_EndCardFlip(struct Task *task)
 
 void ShowPlayerTrainerCard(void (*callback)(void))
 {
-    sOwnCardKanto = (gMapHeader.mapLayout != NULL && IsKantoTilesetMap());
+    sOwnCardKanto = Fusion_IsInKanto();
     sReopenOwnCard = FALSE;
     ShowPlayerTrainerCard_(callback);
 }

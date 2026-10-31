@@ -16,7 +16,7 @@
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "field_specials.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "field_weather.h"
 #include "graphics.h"
 #include "international_string_util.h"
@@ -1051,7 +1051,7 @@ static void PCTurnOnEffect_SetMetatile(s16 isScreenOn, s8 dx, s8 dy)
     if (isScreenOn)
     {
         // Screen is on, set it off
-        if (IsKantoTilesetMap()) // Rouge Feu (AnimatePcTurnOn)
+        if (Fusion_IsInKanto()) // Rouge Feu (AnimatePcTurnOn)
             metatileId = gSpecialVar_0x8004 == PC_LOCATION_OTHER ? METATILE_Building_PCOff : METATILE_GenericBuilding1_PlayersPCOff;
         else if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
             metatileId = METATILE_Building_PC_Off;
@@ -1063,7 +1063,7 @@ static void PCTurnOnEffect_SetMetatile(s16 isScreenOn, s8 dx, s8 dy)
     else
     {
         // Screen is off, set it on
-        if (IsKantoTilesetMap())
+        if (Fusion_IsInKanto())
             metatileId = gSpecialVar_0x8004 == PC_LOCATION_OTHER ? METATILE_Building_PCOn : METATILE_GenericBuilding1_PlayersPCOn;
         else if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
             metatileId = METATILE_Building_PC_On;
@@ -1105,7 +1105,7 @@ static void PCTurnOffEffect(void)
         break;
     }
 
-    if (IsKantoTilesetMap()) // Rouge Feu (AnimatePcTurnOff)
+    if (Fusion_IsInKanto()) // Rouge Feu (AnimatePcTurnOff)
         metatileId = gSpecialVar_0x8004 == PC_LOCATION_OTHER ? METATILE_Building_PCOff : METATILE_GenericBuilding1_PlayersPCOff;
     else if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
         metatileId = METATILE_Building_PC_Off;
@@ -4286,7 +4286,7 @@ u8 Script_TryGainNewFanFromCounter(void)
 {
     // Kanto : Fan Club de Safrania (kanto_trainer_fan_club.c, Rouge Feu)
     extern u8 Kanto_Script_TryGainNewFanFromCounter(void);
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
         return Kanto_Script_TryGainNewFanFromCounter();
     return TryGainNewFanFromCounter(gSpecialVar_0x8004);
 }

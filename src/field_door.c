@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_region.h"
 #include "kanto_field_door.h"
 #include "event_data.h"
 #include "field_door.h"
@@ -510,17 +511,10 @@ static void UNUSED Debug_FieldAnimateDoorOpen(u32 x, u32 y)
 }
 
 // Les cartes importées de Kanto utilisent les portes de Rouge Feu (src/kanto_field_door.c).
-extern const struct Tileset gTileset_KantoGeneral, gTileset_KantoBuilding;
-
-bool32 IsKantoTilesetMap(void)
-{
-    const struct Tileset *primary = gMapHeader.mapLayout->primaryTileset;
-    return primary == &gTileset_KantoGeneral || primary == &gTileset_KantoBuilding;
-}
 
 void FieldSetDoorOpened(u32 x, u32 y)
 {
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
     {
         Kanto_FieldSetDoorOpened(x, y);
         return;
@@ -531,7 +525,7 @@ void FieldSetDoorOpened(u32 x, u32 y)
 
 void FieldSetDoorClosed(u32 x, u32 y)
 {
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
     {
         Kanto_FieldSetDoorClosed(x, y);
         return;
@@ -542,7 +536,7 @@ void FieldSetDoorClosed(u32 x, u32 y)
 
 s8 FieldAnimateDoorClose(u32 x, u32 y)
 {
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
         return Kanto_FieldAnimateDoorClose(x, y);
     if (!MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))
         return -1;
@@ -552,7 +546,7 @@ s8 FieldAnimateDoorClose(u32 x, u32 y)
 
 s8 FieldAnimateDoorOpen(u32 x, u32 y)
 {
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
         return Kanto_FieldAnimateDoorOpen(x, y);
     if (!MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))
         return -1;
@@ -569,7 +563,7 @@ bool8 FieldIsDoorAnimationRunning(void)
 
 u32 GetDoorSoundEffect(u32 x, u32 y)
 {
-    if (IsKantoTilesetMap())
+    if (Fusion_IsInKanto())
         return Kanto_GetDoorSoundEffect(x, y);
     int sound = GetDoorSoundType(sDoorAnimGraphicsTable, x, y);
 

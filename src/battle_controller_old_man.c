@@ -5,7 +5,7 @@
 // Les compteurs simulatedInputState[0..3] de RF sont wallyBattleState, wallyMovesState,
 // wallyWaitFrames et wallyMoveFrames.
 #include "global.h"
-#include "kanto_field_door.h"
+#include "fusion_region.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
@@ -1419,5 +1419,5 @@ static void OldManCmdEnd(void)
 // Vrai pendant la démonstration de capture du vieil homme (Kanto) plutôt que celle de Wally
 bool32 IsOldManTutorialBattle(void)
 {
-    return (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL) && IsKantoTilesetMap();
+    return (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL) && Fusion_IsInKanto();
 }

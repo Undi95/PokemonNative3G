@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fusion_region.h"
 #include "kanto_region_map.h"
 #include "fusion_events.h"
 #include "malloc.h"
