@@ -1,11 +1,3 @@
-/* Same as Hoenn's day-care text, used by the Four Island Day-Care. Unused text translated in Emerald */
-
-DayCare_Text_ImDaycareManSpeakToMyWife::
-	.string "Je suis l'HOTE DE LA PENSION.\p"
-	.string "Je m'occupe des précieux POKéMON\n"
-	.string "des DRESSEURS.\p"
-	.string "Si tu veux que je m'occupe d'un de\n"
-	.string "tes POKéMON, va parler à ma femme.$"
 
 DayCare_Text_DoYouWantEgg::
 	.string "Ah, c'est toi!\p"
@@ -37,10 +29,6 @@ DayCare_Text_ReceivedEgg::
 DayCare_Text_TakeGoodCareOfIt::
 	.string "Prends-en bien soin.$"
 
-DayCare_Text_SeeWifeIfYouWantToPickUpMon::
-	.string "ポケモンを　ひきとりたい　ときは\n"
-	.string "ばさんに　いって　おくれ$"
-
 DayCare_Text_YourMonsAreDoingFine::
 	.string "Ah, c'est toi! Ton {STR_VAR_1} et\n"
 	.string "ton {STR_VAR_2} se portent très\l"
@@ -49,12 +37,6 @@ DayCare_Text_YourMonsAreDoingFine::
 DayCare_Text_IWillKeepDoYouWantIt::
 	.string "Je vais vraiment le garder.\n"
 	.string "Tu le veux, ou pas?$"
-
-DayCare_Text_WouldYouLikeUsToRaiseMon::
-	.string "Je suis l'HOTESSE DE LA PENSION.\p"
-	.string "Nous pouvons élever des POKéMON\n"
-	.string "pour toi.\p"
-	.string "Tu veux qu'on en élève un?$"
 
 DayCare_Text_WhichMonShouldWeRaise::
 	.string "Quel POKéMON veux-tu que l'on\n"
@@ -103,9 +85,6 @@ DayCare_Text_YourPartyIsFull::
 	.string "complet. Fais de la place et\l"
 	.string "reviens me voir.$"
 
-DayCare_Text_TakeBackWhichMon::
-	.string "どっちの　ポケモンを　ひきとるかい？$"
-
 DayCare_Text_ItWillCostX::
 	.string "Si tu veux récupérer ton\n"
 	.string "{STR_VAR_1}, tu dois payer\l"
@@ -132,6 +111,3 @@ DayCare_Text_WhatWillYouBattleWith::
 	.string "comment vas-tu faire pour te\l"
 	.string "battre?\p"
 	.string "Reviens me voir une autre fois.$"
-
-DayCare_Text_Huh::
-	.string "Hein?$"

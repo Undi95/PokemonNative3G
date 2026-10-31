@@ -15,7 +15,7 @@ SaffronCity_PokemonTrainerFanClub_EventScript_MeetFirstFans::
 	playse SE_PIN
 	applymovement LOCALID_KANTO_TRAINER_FAN_CLUB_BATTLE_GIRL, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_TRAINER_FAN_CLUB_BATTLE_GIRL, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_TRAINER_FAN_CLUB_BATTLE_GIRL, Common_Movement_Delay48
 	waitmovement 0
 	msgbox SaffronCity_PokemonTrainerFanClub_Text_HuhYou
 	closemessage

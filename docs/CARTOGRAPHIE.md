@@ -158,6 +158,7 @@ Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.
   (`KANTO_MAPSEC_START`…) ne servent qu'à classer un lieu (lieu de capture, nom affiché), jamais la position du joueur.
 - Code propre à RF : `src/kanto_*.c` (noms de RF, comparable à la décompilation) ; retouches du code d'Émeraude
   marquées `// Rouge Feu` ou `// PokemonNative3G`.
+- Scripts communs (2026-10-31) : les deux régions utilisent les mêmes scripts partagés (infirmière, PC, objets cachés et reçus, Pokémon offerts envoyés au PC, arbres / rochers / blocs de Force, chute dans un trou) ; les copies de RF importées sous le préfixe `Kanto_` ont été retirées (restent celles du link, hors solo, et `Kanto_EventScript_ResetAllMapFlags`, les flags des cartes de Kanto). Avant d'ajouter un script de RF : chercher son équivalent dans `data/scripts/`.
 - Specials lus par `specialvar` qui rendent un `u8`, `bool8` ou `s8` : marqués `ret=SPECIAL_RET_U8` / `_S8` dans
   `data/specials.inc` (sur PC, l'octet haut du retour n'est pas défini). Après un ajout :
   `python tools/special_returns.py` (`--check` pour vérifier).

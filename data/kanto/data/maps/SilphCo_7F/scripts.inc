@@ -35,7 +35,7 @@ SilphCo_7F_EventScript_RivalScene::
 	applymovement LOCALID_KANTO_SILPH_CO_RIVAL, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
 	applymovement LOCALID_PLAYER, Kanto_Common_Movement_WalkInPlaceFasterDown
-	applymovement LOCALID_KANTO_SILPH_CO_RIVAL, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_SILPH_CO_RIVAL, Common_Movement_Delay48
 	waitmovement 0
 	msgbox SilphCo_7F_Text_RivalWhatKeptYou
 	call_if_eq VAR_TEMP_1, 0, SilphCo_7F_EventScript_RivalApproachTop
@@ -121,7 +121,7 @@ SilphCo_7F_EventScript_LaprasGuy::
 	givemon SPECIES_LAPRAS, 25
 	goto_if_eq VAR_RESULT, 0, SilphCo_7F_EventScript_ReceiveLaprasParty
 	goto_if_eq VAR_RESULT, 1, SilphCo_7F_EventScript_ReceiveLaprasPC
-	goto_if_eq VAR_RESULT, 2, EventScript_NoMoreRoomForPokemon
+	goto_if_eq VAR_RESULT, 2, Common_EventScript_NoMoreRoomForPokemon
 	release
 	end
 

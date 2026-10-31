@@ -105,7 +105,7 @@ TrainerTower_EventScript_DoSingleBattle:
 	ttower_encountermusic
 	applymovement LOCALID_KANTO_TOWER_TRAINER_SINGLES, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_TOWER_TRAINER_SINGLES, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_TOWER_TRAINER_SINGLES, Common_Movement_Delay48
 	waitmovement 0
 	setvar DISABLE_SINGLES_TRIGGER, TRUE
 	applymovement LOCALID_KANTO_TOWER_TRAINER_SINGLES, TrainerTower_Movement_SingleTrainerApproach
@@ -140,7 +140,7 @@ TrainerTower_EventScript_DoKnockoutBattle1:
 	ttower_encountermusic
 	applymovement LOCALID_KANTO_TOWER_TRAINER_KNOCKOUT, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_TOWER_TRAINER_KNOCKOUT, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_TOWER_TRAINER_KNOCKOUT, Common_Movement_Delay48
 	waitmovement 0
 	applymovement LOCALID_KANTO_TOWER_TRAINER_KNOCKOUT, TrainerTower_Movement_BottomKnockoutTrainerApproach
 	waitmovement 0
@@ -150,7 +150,7 @@ TrainerTower_EventScript_DoKnockoutBattle2::
 	ttower_encountermusic
 	applymovement LOCALID_KANTO_TOWER_TRAINER_DOUBLES1, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_TOWER_TRAINER_DOUBLES1, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_TOWER_TRAINER_DOUBLES1, Common_Movement_Delay48
 	waitmovement 0
 	applymovement LOCALID_KANTO_TOWER_TRAINER_DOUBLES1, TrainerTower_Movement_TopKnockoutTrainerApproach
 	waitmovement 0
@@ -160,7 +160,7 @@ TrainerTower_EventScript_DoKnockoutBattle3::
 	ttower_encountermusic
 	applymovement LOCALID_KANTO_TOWER_TRAINER_SINGLES, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_TOWER_TRAINER_SINGLES, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_TOWER_TRAINER_SINGLES, Common_Movement_Delay48
 	waitmovement 0
 	applymovement LOCALID_KANTO_TOWER_TRAINER_SINGLES, TrainerTower_Movement_RightKnockoutTrainerApproach
 	waitmovement 0
@@ -335,7 +335,7 @@ TrainerTower_EventScript_DoubleBattleTriggerTop::
 	ttower_encountermusic
 	applymovement LOCALID_KANTO_TOWER_TRAINER_DOUBLES1, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_TOWER_TRAINER_DOUBLES1, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_TOWER_TRAINER_DOUBLES1, Common_Movement_Delay48
 	goto TrainerTower_EventScript_TriggerDoubleBattle
 
 TrainerTower_EventScript_DoubleBattleTriggerBottom::
@@ -345,7 +345,7 @@ TrainerTower_EventScript_DoubleBattleTriggerBottom::
 	ttower_encountermusic
 	applymovement LOCALID_KANTO_TOWER_TRAINER_DOUBLES2, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_TOWER_TRAINER_DOUBLES2, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_TOWER_TRAINER_DOUBLES2, Common_Movement_Delay48
 TrainerTower_EventScript_TriggerDoubleBattle:
 	waitmovement 0
 	setvar DISABLE_DOUBLES_TRIGGER, TRUE

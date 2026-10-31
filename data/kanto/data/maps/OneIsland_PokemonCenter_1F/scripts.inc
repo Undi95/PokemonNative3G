@@ -67,7 +67,7 @@ OneIsland_PokemonCenter_1F_EventScript_MeetCelioScene::
 	waitmovement 0
 	applymovement LOCALID_KANTO_CELIO, Kanto_Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
-	applymovement LOCALID_KANTO_CELIO, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_CELIO, Common_Movement_Delay48
 	waitmovement 0
 	msgbox OneIsland_PokemonCenter_1F_Text_CelioCantBelieveYouCameOut
 	msgbox OneIsland_PokemonCenter_1F_Text_BillHowsYourResearchComing

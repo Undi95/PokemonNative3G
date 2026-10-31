@@ -6,12 +6,6 @@ Kanto_Common_Movement_ExclamationMark::
 	emote_exclamation_mark
 	step_end
 
-Kanto_Common_Movement_Delay48::
-	delay_16
-	delay_16
-	delay_16
-	step_end
-
 Kanto_Common_Movement_FacePlayer::
 	face_player
 	step_end

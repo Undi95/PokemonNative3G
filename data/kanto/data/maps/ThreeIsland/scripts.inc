@@ -199,7 +199,7 @@ ThreeIsland_EventScript_BattleBikersScene::
 	playse SE_PIN
 	applymovement LOCALID_KANTO_THREE_ISLAND_BIKER1, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_THREE_ISLAND_BIKER1, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_THREE_ISLAND_BIKER1, Common_Movement_Delay48
 	waitmovement 0
 	applymovement LOCALID_KANTO_THREE_ISLAND_BIKER1, ThreeIsland_Movement_BikerApproach
 	waitmovement 0

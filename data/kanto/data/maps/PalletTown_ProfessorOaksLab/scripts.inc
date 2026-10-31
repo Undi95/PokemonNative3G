@@ -619,7 +619,7 @@ PalletTown_ProfessorOaksLab_EventScript_ReceiveDexScene::
 	playse SE_PIN
 	applymovement LOCALID_KANTO_OAKS_LAB_PROF_OAK, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_OAKS_LAB_PROF_OAK, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_OAKS_LAB_PROF_OAK, Common_Movement_Delay48
 	waitmovement 0
 	call_if_eq VAR_FACING, DIR_SOUTH, PalletTown_ProfessorOaksLab_EventScript_DexSceneOakFacePlayerAndRivalSouth
 	call_if_eq VAR_FACING, DIR_EAST, PalletTown_ProfessorOaksLab_EventScript_DexSceneOakFacePlayerAndRivalEast

@@ -25,7 +25,7 @@ SixIsland_PokemonCenter_1F_EventScript_RivalScene::
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
 	applymovement LOCALID_KANTO_SIX_ISLAND_RIVAL, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_SIX_ISLAND_RIVAL, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_SIX_ISLAND_RIVAL, Common_Movement_Delay48
 	waitmovement 0
 	delay 25
 	applymovement LOCALID_KANTO_SIX_ISLAND_RIVAL, SixIsland_PokemonCenter_1F_Movement_RivalApproach

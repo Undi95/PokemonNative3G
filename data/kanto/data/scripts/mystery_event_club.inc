@@ -100,7 +100,7 @@ EventScript_GaveSpecialProfile:
 
 EventScript_GiveProfile:
 	setvar VAR_0x8004, EASY_CHAT_TYPE_PROFILE
-	call Kanto_Common_ShowEasyChatScreen
+	call Common_ShowEasyChatScreen
 	lock
 	faceplayer
 	goto_if_eq VAR_0x8004, 0, EventScript_GaveSpecialProfile

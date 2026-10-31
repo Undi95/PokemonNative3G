@@ -77,7 +77,7 @@ FourIsland_House2_EventScript_MeetStickerMan::
 	playse SE_PIN
 	applymovement LOCALID_KANTO_STICKER_MAN, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_STICKER_MAN, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_STICKER_MAN, Common_Movement_Delay48
 	waitmovement 0
 	goto_if_eq VAR_0x8008, 0, FourIsland_House2_EventScript_StickerManNothingToBrag
 	message FourIsland_House2_Text_GiveYouStickerIfYouBrag

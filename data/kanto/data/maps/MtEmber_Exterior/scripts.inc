@@ -97,7 +97,7 @@ MtEmber_Exterior_EventScript_RocketPasswordScene::
 	playse SE_PIN
 	applymovement LOCALID_KANTO_MT_EMBER_GRUNT1, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_MT_EMBER_GRUNT1, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_MT_EMBER_GRUNT1, Common_Movement_Delay48
 	waitmovement 0
 	applymovement LOCALID_KANTO_MT_EMBER_GRUNT2, Kanto_Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0

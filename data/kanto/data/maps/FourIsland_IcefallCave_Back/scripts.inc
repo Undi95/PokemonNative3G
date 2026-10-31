@@ -24,7 +24,7 @@ FourIsland_IcefallCave_Back_EventScript_LoreleiRocketsScene::
 	waitmovement 0
 	applymovement LOCALID_KANTO_ICEFALL_LORELEI, Kanto_Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
-	applymovement LOCALID_KANTO_ICEFALL_LORELEI, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_ICEFALL_LORELEI, Common_Movement_Delay48
 	waitmovement 0
 	textcolor NPC_TEXT_COLOR_FEMALE
 	msgbox FourIsland_IcefallCave_Back_Text_LoreleiPlayerHelpMeKickPoachersOut

@@ -93,7 +93,7 @@ CinnabarIsland_EventScript_BillScene::
 	playse SE_PIN
 	applymovement LOCALID_KANTO_CINNABAR_BILL, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_CINNABAR_BILL, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_CINNABAR_BILL, Common_Movement_Delay48
 	waitmovement 0
 	call_if_unset FLAG_TEMP_2, CinnabarIsland_EventScript_BillApproachPlayer1
 	call_if_set FLAG_TEMP_2, CinnabarIsland_EventScript_BillApproachPlayer2

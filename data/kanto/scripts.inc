@@ -767,12 +767,6 @@ Kanto_EventScript_ResetAllMapFlags::
 	.include "data/kanto/data/scripts/hall_of_fame.inc"
 	.include "data/kanto/data/scripts/obtain_item.inc"
 
-Kanto_Common_ShowEasyChatScreen::
-	fadescreen FADE_TO_BLACK
-	special ShowEasyChatScreen
-	fadescreen FADE_FROM_BLACK
-	return
-
 	.include "data/kanto/data/scripts/surf.inc"
 	.include "data/kanto/data/scripts/set_gym_trainers.inc"
 	.include "data/kanto/data/scripts/bag_full.inc"
@@ -974,12 +968,6 @@ EventScript_BrailleCursorWaitButton::
 	setvar VAR_0x8006, 1
 	special BrailleCursorToggle
 	return
-
-EventScript_NoMoreRoomForPokemon::
-	textcolor NPC_TEXT_COLOR_NEUTRAL
-	msgbox Text_NoMoreRoomForPokemon
-	release
-	end
 
 	.include "data/kanto/data/text/braille.inc"
 	.include "data/kanto/data/scripts/trainers.inc"

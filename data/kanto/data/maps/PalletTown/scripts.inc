@@ -335,7 +335,7 @@ PalletTown_EventScript_SignLady::
 	playse SE_PIN
 	applymovement LOCALID_KANTO_PALLET_SIGN_LADY, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_PALLET_SIGN_LADY, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_PALLET_SIGN_LADY, Common_Movement_Delay48
 	waitmovement 0
 	msgbox PalletTown_Text_OhLookLook
 	closemessage

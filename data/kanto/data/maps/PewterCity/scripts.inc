@@ -689,7 +689,7 @@ PewterCity_EventScript_AideGiveRunningShoes::
 	playse SE_PIN
 	applymovement LOCALID_KANTO_PEWTER_AIDE, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_PEWTER_AIDE, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_PEWTER_AIDE, Common_Movement_Delay48
 	waitmovement 0
 	msgbox PewterCity_Text_OhPlayer
 	call_if_eq VAR_TEMP_1, 0, PewterCity_EventScript_AideApproachPlayer0

@@ -31,7 +31,7 @@ FourIsland_EventScript_RivalScene::
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
 	applymovement LOCALID_KANTO_FOUR_ISLAND_RIVAL, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_FOUR_ISLAND_RIVAL, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_FOUR_ISLAND_RIVAL, Common_Movement_Delay48
 	waitmovement 0
 	delay 25
 	applymovement LOCALID_KANTO_FOUR_ISLAND_RIVAL, FourIsland_Movement_RivalApproach
@@ -77,7 +77,7 @@ FourIsland_EventScript_DaycareMan::
 	goto_if_eq VAR_RESULT, DAYCARE_EGG_WAITING, FourIsland_EventScript_DaycareEggWaiting
 	goto_if_eq VAR_RESULT, DAYCARE_ONE_MON, FourIsland_EventScript_CheckOnOneMon
 	goto_if_eq VAR_RESULT, DAYCARE_TWO_MONS, FourIsland_EventScript_CheckOnTwoMons
-	msgbox DayCare_Text_ImDaycareManSpeakToMyWife
+	msgbox Route117_Text_SeeWifeIfYoudLikeMeToRaiseMon
 	release
 	end
 

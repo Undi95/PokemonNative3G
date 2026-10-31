@@ -12,7 +12,7 @@ CeladonCity_Condominiums_RoofRoom_EventScript_EeveeBall::
 	givemon SPECIES_EEVEE, 25
 	goto_if_eq VAR_RESULT, 0, CeladonCity_Condominiums_RoofRoom_EventScript_GetEeveeParty
 	goto_if_eq VAR_RESULT, 1, CeladonCity_Condominiums_RoofRoom_EventScript_GetEeveePC
-	goto_if_eq VAR_RESULT, 2, EventScript_NoMoreRoomForPokemon
+	goto_if_eq VAR_RESULT, 2, Common_EventScript_NoMoreRoomForPokemon
 	release
 	end
 

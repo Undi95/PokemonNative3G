@@ -24,7 +24,7 @@ PokemonTower_2F_EventScript_Rival::
 	call_if_eq VAR_TEMP_1, 1, PokemonTower_2F_EventScript_RivalFacePlayerDown
 	applymovement LOCALID_KANTO_POKEMON_TOWER_RIVAL, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_POKEMON_TOWER_RIVAL, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_POKEMON_TOWER_RIVAL, Common_Movement_Delay48
 	waitmovement 0
 	msgbox PokemonTower_2F_Text_RivalIntro
 	setvar VAR_LAST_TALKED, LOCALID_KANTO_POKEMON_TOWER_RIVAL

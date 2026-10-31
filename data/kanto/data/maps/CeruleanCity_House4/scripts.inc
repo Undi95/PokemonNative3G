@@ -83,7 +83,7 @@ CeruleanCity_House4_EventScript_MovementReactionToNews::
 	waitmovement 0
 	applymovement LOCALID_KANTO_WONDER_NEWS_BERRY_MAN, Kanto_Common_Movement_FacePlayer
 	waitmovement 0
-	applymovement LOCALID_KANTO_WONDER_NEWS_BERRY_MAN, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_WONDER_NEWS_BERRY_MAN, Common_Movement_Delay48
 	waitmovement 0
 	return
 

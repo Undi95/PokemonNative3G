@@ -57,7 +57,7 @@ TwoIsland_JoyfulGameCorner_EventScript_HelpFindLostelleScene::
 	playse SE_PIN
 	applymovement LOCALID_KANTO_JOYFUL_GAME_CORNER_DADDY, Kanto_Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_KANTO_JOYFUL_GAME_CORNER_DADDY, Kanto_Common_Movement_Delay48
+	applymovement LOCALID_KANTO_JOYFUL_GAME_CORNER_DADDY, Common_Movement_Delay48
 	waitmovement 0
 	applymovement LOCALID_KANTO_JOYFUL_GAME_CORNER_DADDY, TwoIsland_JoyfulGameCorner_Movement_DaddyApproachPlayer
 	waitmovement 0
