@@ -4,6 +4,7 @@
 #include "overworld.h"
 #include "kanto_map_preview_screen.h"
 #include "kanto_credits.h"
+#include "kanto_field_door.h"
 #include "constants/rgb.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
@@ -101,6 +102,7 @@ extern const struct MapLayout *const gMapLayouts[];
 extern const struct MapHeader *const *const gMapGroups[];
 
 static void Overworld_ResetStateAfterWhiteOut(void);
+static void Overworld_ResetKantoStateAfterWarp(void);
 static void CB2_ReturnToFieldLocal(void);
 static void CB2_ReturnToFieldLink(void);
 static void CB2_LoadMapOnReturnToFieldCableClub(void);
@@ -362,13 +364,21 @@ static void (*const sMovementStatusHandler[])(struct LinkPlayerObjectEvent *, st
 };
 
 // code
+// PokemonNative3G : TRUE si la reprise après le dernier K.O. est celle de Rouge Feu, devant l'infirmière (CB2_WhiteOut)
+static EWRAM_DATA bool8 sWhiteOutKantoRespawn = FALSE;
+
 void DoWhiteOut(void)
 {
     RunScriptImmediately(EventScript_WhiteOut);
-    SetMoney(&gSaveBlock1Ptr->money, GetMoney(&gSaveBlock1Ptr->money) / 2);
+    if (IsKantoTilesetMap()) // Rouge Feu : perte selon les badges de Kanto et le niveau de l'équipe, celle qu'affichent ses textes
+        RemoveMoney(&gSaveBlock1Ptr->money, ComputeWhiteOutMoneyLoss());
+    else
+        SetMoney(&gSaveBlock1Ptr->money, GetMoney(&gSaveBlock1Ptr->money) / 2);
     HealPlayerParty();
     Overworld_ResetStateAfterWhiteOut();
-    SetWarpDestinationToLastHealLocation();
+    sWhiteOutKantoRespawn = SetWhiteoutRespawnWarpAndHealerNpc(&sWarpDestination);
+    if (!sWhiteOutKantoRespawn)
+        SetWarpDestinationToLastHealLocation();
     WarpIntoMap();
 }
 
@@ -376,6 +386,7 @@ void Overworld_ResetStateAfterFly(void)
 {
     ResetInitialPlayerAvatarState();
     FlagClear(FLAG_SYS_CYCLING_ROAD);
+    Overworld_ResetKantoStateAfterWarp();
     FlagClear(FLAG_SYS_CRUISE_MODE);
     FlagClear(FLAG_SYS_SAFARI_MODE);
     FlagClear(FLAG_SYS_USE_STRENGTH);
@@ -386,6 +397,7 @@ void Overworld_ResetStateAfterTeleport(void)
 {
     ResetInitialPlayerAvatarState();
     FlagClear(FLAG_SYS_CYCLING_ROAD);
+    Overworld_ResetKantoStateAfterWarp();
     FlagClear(FLAG_SYS_CRUISE_MODE);
     FlagClear(FLAG_SYS_SAFARI_MODE);
     FlagClear(FLAG_SYS_USE_STRENGTH);
@@ -397,6 +409,7 @@ void Overworld_ResetStateAfterDigEscRope(void)
 {
     ResetInitialPlayerAvatarState();
     FlagClear(FLAG_SYS_CYCLING_ROAD);
+    Overworld_ResetKantoStateAfterWarp();
     FlagClear(FLAG_SYS_CRUISE_MODE);
     FlagClear(FLAG_SYS_SAFARI_MODE);
     FlagClear(FLAG_SYS_USE_STRENGTH);
@@ -407,6 +420,7 @@ static void Overworld_ResetStateAfterWhiteOut(void)
 {
     ResetInitialPlayerAvatarState();
     FlagClear(FLAG_SYS_CYCLING_ROAD);
+    Overworld_ResetKantoStateAfterWarp();
     FlagClear(FLAG_SYS_CRUISE_MODE);
     FlagClear(FLAG_SYS_SAFARI_MODE);
     FlagClear(FLAG_SYS_USE_STRENGTH);
@@ -420,9 +434,18 @@ static void Overworld_ResetStateAfterWhiteOut(void)
     }
 }
 
+// Rouge Feu (Overworld_ResetStateAfterFly…) : Piste Cyclable et retour du Parc Safari de Kanto
+static void Overworld_ResetKantoStateAfterWarp(void)
+{
+    FlagClear(FLAG_KANTO_SYS_ON_CYCLING_ROAD);
+    VarSet(VAR_KANTO_MAP_SCENE_ROUTE16, 0);
+    VarSet(VAR_KANTO_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
+}
+
 static void UpdateMiscOverworldStates(void)
 {
     FlagClear(FLAG_SYS_SAFARI_MODE);
+    VarSet(VAR_KANTO_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0); // Rouge Feu (Overworld_ResetStateOnContinue)
     ChooseAmbientCrySpecies();
     ResetCyclingRoadChallengeData();
     UpdateLocationHistoryForRoamer();
@@ -1607,7 +1630,10 @@ void CB2_WhiteOut(void)
         ResetInitialPlayerAvatarState();
         ScriptContext_Init();
         UnlockPlayerFieldControls();
-        gFieldCallback = FieldCB_WarpExitFadeFromBlack;
+        if (sWhiteOutKantoRespawn) // Rouge Feu : message sur fond noir, puis l'infirmière soigne l'équipe
+            gFieldCallback = FieldCB_RushInjuredPokemonToCenter;
+        else
+            gFieldCallback = FieldCB_WarpExitFadeFromBlack;
         state = 0;
         DoMapLoadLoop(&state);
         SetFieldVBlankCallback();

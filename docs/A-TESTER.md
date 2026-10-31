@@ -82,7 +82,8 @@ réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, c
 - [ ] Fan Club de Safrania : fans gagnés / perdus, noms
 - [ ] Poudre de baies (échange contre objets)
 - [ ] Effaceur de capacités, menu du PC, sauvegarde demandée par un script, PC du Panthéon (version Émeraude)
-- [ ] Perte d'argent affichée après un K.O. hors combat (poison) à Kanto
+- [ ] K.O. à Kanto (2026-10-31) : vérifié en headless (`kanto_whiteout.py` : défaite contre un sauvage au Mt. Moon, « panique et perd X¥ » = argent réellement retiré, reprise devant l'infirmière de Jadielle, message sur fond noir puis soins, Ligue et Piste Cyclable remises à zéro). Non testés : défaite contre un dresseur de Kanto (« paye X¥ comme récompense »), sans argent, K.O. par le poison hors combat (le montant affiché doit être celui retiré), Centre du Plateau Indigo et de l'Île 1 (cases de reprise différentes), K.O. pendant un défi de la Tour des Dresseurs (reprise dans le hall)
+- [ ] Piste Cyclable (Route 16-18) : impossible de descendre du vélo ; après Vol / Téléport / K.O., plus considéré comme sur la Piste
 - [ ] Battements d'ailes (son), drapeaux d'après-Ligue
 
 ## Démarrage

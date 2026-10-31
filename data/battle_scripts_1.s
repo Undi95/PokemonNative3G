@@ -2950,11 +2950,36 @@ BattleScript_LocalBattleLost::
 	jumpifhalfword CMP_EQUAL, gTrainerBattleOpponent_A, TRAINER_SECRET_BASE, BattleScript_LocalBattleLostEnd
 	jumpifbyte CMP_NOT_EQUAL, cMULTISTRING_CHOOSER, 0, BattleScript_RivalBattleLost
 BattleScript_LocalBattleLostPrintWhiteOut::
+	various BS_ATTACKER, VARIOUS_GET_KANTO_WHITEOUT_MONEY
+	jumpifbyte CMP_NOT_EQUAL, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_HOENN, BattleScript_KantoBattleLost
 	printstring STRINGID_PLAYERWHITEOUT
 	waitmessage B_WAIT_TIME_LONG
 	printstring STRINGID_PLAYERWHITEOUT2
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_LocalBattleLostEnd::
+	end2
+
+@ Rouge Feu (BattleScript_LocalBattleLost) : à Kanto, la perte d'argent est annoncée
+BattleScript_KantoBattleLost::
+	jumpifbyte CMP_GREATER_THAN, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_KANTO_WILD_NO_MONEY, BattleScript_KantoBattleLostToTrainer
+	printstring STRINGID_PLAYERWHITEOUT
+	waitmessage B_WAIT_TIME_LONG
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_KANTO_WILD_NO_MONEY, BattleScript_KantoBattleLostNoMoney
+	printstring STRINGID_PLAYERPANICKED
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
+BattleScript_KantoBattleLostToTrainer::
+	printstring STRINGID_PLAYERLOSTAGAINSTENEMYTRAINER
+	waitmessage B_WAIT_TIME_LONG
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_KANTO_TRAINER_NO_MONEY, BattleScript_KantoBattleLostNoMoney
+	printstring STRINGID_PLAYERPAIDPRIZEMONEY
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
+BattleScript_KantoBattleLostNoMoney::
+	printstring STRINGID_PLAYERWHITEOUT2
+	waitmessage B_WAIT_TIME_LONG
 	end2
 
 @ Rouge Feu : défaite contre le rival (TRAINER_BATTLE_EARLY_RIVAL)

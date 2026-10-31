@@ -613,6 +613,7 @@ gStdScripts_End::
 
 EventScript_WhiteOut::
 	call EverGrandeCity_HallOfFame_EventScript_ResetEliteFour
+	call EventScript_ResetEliteFour  @ Rouge Feu (DoWhiteOut : EventScript_ResetEliteFourEnd), Ligue de Kanto
 	goto EventScript_ResetMrBriney
 	end
 

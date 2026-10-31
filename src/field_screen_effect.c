@@ -1,6 +1,7 @@
 #include "global.h"
 #include "cable_club.h"
 #include "event_data.h"
+#include "event_scripts.h"
 #include "fieldmap.h"
 #include "field_camera.h"
 #include "field_door.h"
@@ -27,6 +28,8 @@
 #include "script.h"
 #include "sound.h"
 #include "start_menu.h"
+#include "string_util.h"
+#include "strings.h"
 #include "task.h"
 #include "text.h"
 #include "constants/event_object_movement.h"
@@ -328,6 +331,106 @@ void FieldCB_WarpExitFadeFromBlack(void)
     FadeInFromBlack();
     SetUpWarpExitTask();
     LockPlayerFieldControls();
+}
+
+// Rouge Feu (field_screen_effect.c) : reprise après un K.O. dans un Centre POKéMON de Kanto (CB2_WhiteOut), message sur
+// fond noir puis l'infirmière soigne l'équipe. La branche de RF « retour à la maison » (maman de Bourg Palette) n'a pas
+// lieu d'être : la maison n'a plus de maman, la reprise s'y fait devant (SetWhiteoutRespawnWarpAndHealerNpc).
+static const struct WindowTemplate sWindowTemplate_WhiteoutText =
+{
+    .bg = 0,
+    .tilemapLeft = 0,
+    .tilemapTop = 5,
+    .width = 30,
+    .height = 11,
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
+static const u8 sWhiteoutTextColors[] = { TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY };
+
+#define tWindowId   data[1]
+#define tPrintState data[2]
+
+static bool8 PrintWhiteOutRecoveryMessage(u8 taskId, const u8 *text, u8 x, u8 y)
+{
+    u8 windowId = gTasks[taskId].tWindowId;
+
+    switch (gTasks[taskId].tPrintState)
+    {
+    case 0:
+        FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+        StringExpandPlaceholders(gStringVar4, text);
+        // PokemonNative3G : police de RF selon l'option DIALOGUE
+        AddTextPrinterParameterized4(windowId, gSaveBlock2Ptr->optionsDialogStyle ? FONT_KANTO : FONT_NORMAL,
+                                     x, y, 1, 0, sWhiteoutTextColors, 1, gStringVar4);
+        gTextFlags.canABSpeedUpPrint = FALSE;
+        gTasks[taskId].tPrintState = 1;
+        break;
+    case 1:
+        RunTextPrinters();
+        if (!IsTextPrinterActive(windowId))
+        {
+            gTasks[taskId].tPrintState = 0;
+            return TRUE;
+        }
+        break;
+    }
+    return FALSE;
+}
+
+static void Task_RushInjuredPokemonToCenter(u8 taskId)
+{
+    u8 windowId;
+
+    switch (gTasks[taskId].tState)
+    {
+    case 0:
+        windowId = AddWindow(&sWindowTemplate_WhiteoutText);
+        gTasks[taskId].tWindowId = windowId;
+        Menu_LoadStdPalAt(BG_PLTT_ID(15));
+        FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+        PutWindowTilemap(windowId);
+        CopyWindowToVram(windowId, COPYWIN_FULL);
+        gTasks[taskId].tState = 1;
+        break;
+    case 1:
+        if (PrintWhiteOutRecoveryMessage(taskId, gText_PlayerScurriedToCenter, 2, 8))
+        {
+            ObjectEventTurn(&gObjectEvents[gPlayerAvatar.objectEventId], DIR_NORTH);
+            gTasks[taskId].tState++;
+        }
+        break;
+    case 2:
+        windowId = gTasks[taskId].tWindowId;
+        ClearWindowTilemap(windowId);
+        CopyWindowToVram(windowId, COPYWIN_MAP);
+        RemoveWindow(windowId);
+        FillPalBufferBlack();
+        FadeInFromBlack();
+        gTasks[taskId].tState++;
+        break;
+    case 3:
+        if (FieldFadeTransitionBackgroundEffectIsFinished() == TRUE)
+        {
+            DestroyTask(taskId);
+            ScriptContext_SetupScript(EventScript_AfterWhiteOutHeal);
+        }
+        break;
+    }
+}
+
+#undef tWindowId
+#undef tPrintState
+
+void FieldCB_RushInjuredPokemonToCenter(void)
+{
+    u8 taskId;
+
+    LockPlayerFieldControls();
+    FillPalBufferBlack();
+    taskId = CreateTask(Task_RushInjuredPokemonToCenter, 10);
+    gTasks[taskId].tState = 0;
 }
 
 static void FieldCB_SpinEnterWarp(void)

@@ -688,7 +688,7 @@ static u8 GetPlayerPartyHighestLevel(void)
     return level;
 }
 
-static u32 ComputeWhiteOutMoneyLoss(void)
+u32 ComputeWhiteOutMoneyLoss(void)
 {
     u8 nbadges = CountBadgesForOverworldWhiteOutLossCalculation();
     u8 toplevel = GetPlayerPartyHighestLevel();

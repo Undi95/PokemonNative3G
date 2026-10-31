@@ -12,5 +12,6 @@ struct HealLocation
 u32 GetHealLocationIndexByMap(u16 mapGroup, u16 mapNum);
 const struct HealLocation *GetHealLocationByMap(u16 mapGroup, u16 mapNum);
 const struct HealLocation *GetHealLocation(u32 index);
+bool8 SetWhiteoutRespawnWarpAndHealerNpc(struct WarpData *warp); // Rouge Feu
 
 #endif // GUARD_HEAL_LOCATION_H

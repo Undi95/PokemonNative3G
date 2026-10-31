@@ -388,8 +388,11 @@
 #define STRINGID_POKEFLUTECATCHY            388 // Rouge Feu (Poké Flûte)
 #define STRINGID_POKEFLUTE                  389 // Rouge Feu
 #define STRINGID_MONHEARINGFLUTEAWOKE       390 // Rouge Feu
+#define STRINGID_PLAYERPANICKED             391 // Rouge Feu (défaite à Kanto)
+#define STRINGID_PLAYERLOSTAGAINSTENEMYTRAINER 392 // Rouge Feu
+#define STRINGID_PLAYERPAIDPRIZEMONEY       393 // Rouge Feu
 
-#define BATTLESTRINGS_COUNT                 391
+#define BATTLESTRINGS_COUNT                 394
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,
@@ -608,6 +611,13 @@
 #define B_MSG_REF_OPPONENT_WON       6
 #define B_MSG_REF_DRAW               7
 #define B_MSG_REF_COMMENCE_BATTLE    8
+
+// Rouge Feu : défaite (VARIOUS_GET_KANTO_WHITEOUT_MONEY, BattleScript_LocalBattleLostPrintWhiteOut)
+#define B_MSG_WHITEOUT_HOENN                  0
+#define B_MSG_WHITEOUT_KANTO_WILD             1
+#define B_MSG_WHITEOUT_KANTO_WILD_NO_MONEY    2
+#define B_MSG_WHITEOUT_KANTO_TRAINER          3
+#define B_MSG_WHITEOUT_KANTO_TRAINER_NO_MONEY 4
 
 #define NUM_TRAPPING_MOVES 6
 

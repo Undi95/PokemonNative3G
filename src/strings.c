@@ -711,6 +711,7 @@ const u8 gText_PlayersPC[] = _("PC de {PLAYER}");
 const u8 gText_HallOfFame[] = _("PANTHEON");
 const u8 gText_LogOff[] = _("DECONNEXION");
 const u8 gText_ProfOakSPc[] = _("PC du PROF. CHEN"); // Rouge Feu
+const u8 gText_PlayerScurriedToCenter[] = _("{PLAYER} se hâte vers un CENTRE\nPOKéMON pour éviter que ses pauvres\nPOKéMON ne souffrent davantage.\p"); // Rouge Feu
 const u8 gText_Opponent[] = _("ADVERSAIRE");
 const u8 gText_Tourney_Tree[] = _("TABLEAU");
 const u8 gText_ReadyToStart[] = _("COMBATTRE");

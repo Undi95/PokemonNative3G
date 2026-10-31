@@ -89,12 +89,12 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 
 | Fichier RF | Où | Fonctions | Propres à RF | dont même code dans Ém. | dont portées | % couvert | Identiques à Ém. | Différentes d'Ém. | Fichier(s) de la fusion |
 |---|---|---|---|---|---|---|---|---|---|
-| event_object_movement.c | commun | 759 | 129 | 3 | 26 | 22 | 252 | 378 | event_object_movement.c (24), kanto_fame_checker.c (1), kanto_vs_seeker.c (1) |
+| event_object_movement.c | commun | 759 | 129 | 3 | 36 | 30 | 252 | 378 | event_object_movement.c (34), kanto_fame_checker.c (1), kanto_vs_seeker.c (1) |
 | party_menu.c | commun | 357 | 70 | 10 | 19 | 41 | 142 | 145 | party_menu.c (19) |
 | field_effect.c | commun | 239 | 109 | 13 | 8 | 19 | 36 | 94 | field_effect.c (8) |
 | overworld.c | commun | 242 | 44 | 4 | 11 | 34 | 106 | 92 | overworld.c (8), kanto_specials.c (3) |
 | battle_script_commands.c | commun | 284 | 3 | 0 | 0 | 0 | 165 | 116 |  |
-| field_player_avatar.c | commun | 176 | 61 | 4 | 5 | 14 | 51 | 64 | field_player_avatar.c (5) |
+| field_player_avatar.c | commun | 176 | 61 | 4 | 13 | 27 | 51 | 64 | field_player_avatar.c (13) |
 | battle_ai_script_commands.c | commun | 105 | 14 | 0 | 0 | 0 | 3 | 88 |  |
 | battle_transition.c | commun | 134 | 10 | 0 | 0 | 0 | 47 | 77 |  |
 | battle_anim_effects_1.c | commun | 154 | 1 | 1 | 0 | 100 | 76 | 77 |  |
@@ -107,7 +107,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | union_room.c | commun | 110 | 2 | 0 | 0 | 0 | 43 | 65 |  |
 | field_effect_helpers.c | commun | 76 | 7 | 1 | 0 | 14 | 9 | 60 |  |
 | trainer_card.c | commun | 73 | 15 | 1 | 0 | 6 | 6 | 52 |  |
-| metatile_behavior.c | commun | 115 | 58 | 2 | 14 | 27 | 34 | 23 | metatile_behavior.c (14) |
 | start_menu.c | commun | 65 | 55 | 1 | 1 | 3 | 0 | 10 | kanto_specials.c (1) |
 | berry_crush.c | commun | 73 | 4 | 0 | 0 | 0 | 11 | 58 |  |
 | link.c | commun | 114 | 2 | 1 | 0 | 50 | 56 | 56 |  |
@@ -121,6 +120,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | bg.c | commun | 50 | 1 | 0 | 0 | 0 | 7 | 42 |  |
 | player_pc.c | commun | 47 | 43 | 0 | 4 | 9 | 0 | 4 | player_pc.c (3), kanto_fame_checker.c (1) |
 | shop.c | commun | 60 | 17 | 0 | 13 | 76 | 4 | 39 | copie kanto_shop.c : 53/60 fonctions |
+| metatile_behavior.c | commun | 115 | 58 | 2 | 39 | 70 | 34 | 23 | metatile_behavior.c (39) |
 | naming_screen.c | commun | 109 | 3 | 0 | 0 | 0 | 69 | 37 |  |
 | battle_controller_opponent.c | commun | 87 | 10 | 4 | 1 | 50 | 43 | 34 | kanto_battle_controller_pokedude.c (1) |
 | fieldmap.c | commun | 54 | 3 | 0 | 0 | 0 | 17 | 34 |  |

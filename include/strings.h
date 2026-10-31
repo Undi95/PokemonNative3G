@@ -1058,6 +1058,7 @@ extern const u8 gText_ItGotAway[];
 extern const u8 gText_HallOfFame[];
 extern const u8 gText_LogOff[];
 extern const u8 gText_ProfOakSPc[]; // Rouge Feu
+extern const u8 gText_PlayerScurriedToCenter[]; // Rouge Feu
 extern const u8 gText_LanettesPC[];
 extern const u8 gText_BillsPC[];
 extern const u8 gText_PkmnTransferredBillsPC[];

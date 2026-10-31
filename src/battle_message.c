@@ -529,6 +529,9 @@ static const u8 sText_TheGhostWas[];
 static const u8 sText_PlayedFluteCatchyTune[];
 static const u8 sText_PlayedThe[];
 static const u8 sText_PkmnHearingFluteAwoke[];
+static const u8 sText_PlayerPanicked[];
+static const u8 sText_PlayerWhiteoutAgainstTrainer[];
+static const u8 sText_PlayerPaidAsPrizeMoney[];
 static const u8 sText_GhostAppearedCantId[];
 static const u8 sText_TheGhostAppeared[];
 static const u8 sText_TwoInGameTrainersDefeated[];
@@ -915,6 +918,9 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT - BATTLESTRINGS_TABLE_ST
     [STRINGID_POKEFLUTECATCHY - BATTLESTRINGS_TABLE_START] = sText_PlayedFluteCatchyTune,
     [STRINGID_POKEFLUTE - BATTLESTRINGS_TABLE_START] = sText_PlayedThe,
     [STRINGID_MONHEARINGFLUTEAWOKE - BATTLESTRINGS_TABLE_START] = sText_PkmnHearingFluteAwoke,
+    [STRINGID_PLAYERPANICKED - BATTLESTRINGS_TABLE_START] = sText_PlayerPanicked,
+    [STRINGID_PLAYERLOSTAGAINSTENEMYTRAINER - BATTLESTRINGS_TABLE_START] = sText_PlayerWhiteoutAgainstTrainer,
+    [STRINGID_PLAYERPAIDPRIZEMONEY - BATTLESTRINGS_TABLE_START] = sText_PlayerPaidAsPrizeMoney,
 };
 
 const u16 gMissStringIds[] =
@@ -1461,6 +1467,10 @@ static const u8 sText_OldManUsedItem[] = _("Le vieil homme utilise\n{B_LAST_ITEM
 static const u8 sText_PlayedFluteCatchyTune[] = _("{B_PLAYER_NAME} joue de la {B_LAST_ITEM}.\pSuper!!! Ça c'est de la musique!");
 static const u8 sText_PlayedThe[] = _("{B_PLAYER_NAME} joue de la {B_LAST_ITEM}.");
 static const u8 sText_PkmnHearingFluteAwoke[] = _("La FLUTE réveille\nle POKéMON!");
+// Rouge Feu : défaite à Kanto, avec la perte d'argent (VARIOUS_GET_KANTO_WHITEOUT_MONEY)
+static const u8 sText_PlayerPanicked[] = _("{B_PLAYER_NAME} panique et perd {B_BUFF1}¥…\p… … … …\p{B_PLAYER_NAME} est hors-jeu!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PlayerWhiteoutAgainstTrainer[] = _("{B_PLAYER_NAME} n'a plus de\nPOKéMON en forme!\p{B_TRAINER1_CLASS} {B_TRAINER1_NAME} a gagné!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PlayerPaidAsPrizeMoney[] = _("{B_PLAYER_NAME} paye {B_BUFF1}¥ comme\nrécompense…\p… … … …\p{B_PLAYER_NAME} est hors-jeu!{PAUSE_UNTIL_PRESS}");
 // Rouge Feu : combats FANTÔME de la Tour Pokémon
 static const u8 sText_GhostAppearedCantId[] = _("Le SPECTRE apparaît!\pMince!\nLe SPECTRE ne peut être identifié!\p");
 static const u8 sText_TheGhostAppeared[] = _("Le SPECTRE apparaît!\p");
