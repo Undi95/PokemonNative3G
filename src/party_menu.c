@@ -510,6 +510,20 @@ static const u16 sKantoFieldMoveBadges[] = {
     [FIELD_MOVE_WATERFALL]  = FLAG_KANTO_BADGE07_GET,
 };
 
+// PokemonNative3G : special, badge de la région pour la capacité de terrain VAR_0x8004 (MOVE_…) : arbres, rochers et
+// blocs de Force des deux régions (data/scripts/field_move_scripts.inc)
+bool8 ScriptHasBadgeForFieldMove(void)
+{
+    u32 i;
+
+    for (i = 0; i < FIELD_MOVES_COUNT; i++)
+    {
+        if (sFieldMoves[i] == gSpecialVar_0x8004)
+            return HasBadgeForFieldMove(i);
+    }
+    return FALSE;
+}
+
 bool8 HasBadgeForFieldMove(u8 fieldMove)
 {
     if (fieldMove > FIELD_MOVE_WATERFALL)

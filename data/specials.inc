@@ -554,5 +554,6 @@ gSpecials::
 
 	def_special OverworldWhiteOutGetMoneyLoss  @ Rouge Feu
 	def_special CountRegionBadges
+	def_special ScriptHasBadgeForFieldMove, ret=SPECIAL_RET_U8
 
 	.include "data/kanto/kanto_specials.inc"

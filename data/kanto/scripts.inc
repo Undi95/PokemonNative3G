@@ -995,7 +995,6 @@ EventScript_NoMoreRoomForPokemon::
 	.include "data/kanto/data/scripts/trainer_card.inc"
 	.include "data/kanto/data/text/help_system.inc"
 	.include "data/kanto/data/scripts/cable_club.inc"
-	.include "data/kanto/data/scripts/field_moves.inc"
 	.include "data/kanto/data/scripts/item_ball_scripts.inc"
 	.include "data/kanto/data/scripts/mystery_event_club.inc"
 	.include "data/kanto/data/scripts/day_care.inc"
