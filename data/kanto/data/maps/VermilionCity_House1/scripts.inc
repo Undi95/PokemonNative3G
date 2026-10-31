@@ -22,12 +22,7 @@ VermilionCity_House1_EventScript_GiveOldRod::
 	msgbox Fusion_Text_OldRodWhere @ PokemonNative3G : pas de CANNE -> il dit où la trouver (Hoenn)
 	release
 	end
-	checkitemspace ITEM_OLD_ROD
-	goto_if_eq VAR_RESULT, FALSE, VermilionCity_House1_EventScript_NoRoomForOldRod
-	additem ITEM_OLD_ROD
-	msgbox VermilionCity_House1_Text_TakeThisAndFish
-	msgreceiveditem VermilionCity_House1_Text_ReceivedOldRodFromFishingGuru, ITEM_OLD_ROD
-	goto VermilionCity_House1_EventScript_DoUpgradeOldRod
+
 VermilionCity_House1_EventScript_UpgradeOldRod::
 	msgbox VermilionCity_House1_Text_ShowMeYourRod
 VermilionCity_House1_EventScript_DoUpgradeOldRod::
@@ -37,10 +32,5 @@ VermilionCity_House1_EventScript_DoUpgradeOldRod::
 	msgbox VermilionCity_House1_Text_ExplainRodChain
 	setflag FLAG_KANTO_GOT_OLD_ROD
 	msgbox VermilionCity_House1_Text_FishingIsAWayOfLife
-	release
-	end
-
-VermilionCity_House1_EventScript_NoRoomForOldRod::
-	msgbox VermilionCity_House1_Text_NoRoomForNiceGift
 	release
 	end

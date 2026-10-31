@@ -5,15 +5,6 @@ Route12_FishingHouse_Text_DoYouLikeToFish::
 	.string "J'adore ça!\p"
 	.string "T'aimes la pêche, toi?$"
 
-Route12_FishingHouse_Text_TakeThisAndFish::
-	.string "Cool! T'as l'air de quelqu'un\n"
-	.string "de bien!\p"
-	.string "Prends ça! Et bonne pêche!$"
-
-Route12_FishingHouse_Text_ReceivedSuperRod::
-	.string "{PLAYER} obtient la\n"
-	.string "MEGA CANNE!$"
-
 Route12_FishingHouse_Text_IfYouCatchBigMagikarpShowMe::
 	.string "La pêche, c'est comme la vie!\p"
 	.string "Quand ça mord, ça va! \n"

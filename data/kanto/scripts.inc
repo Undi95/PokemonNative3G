@@ -780,12 +780,6 @@ Kanto_Common_ShowEasyChatScreen::
 	.include "data/kanto/data/scripts/set_gym_trainers.inc"
 	.include "data/kanto/data/scripts/bag_full.inc"
 
-/* Unused */
-EventScript_GymBadgeFanfare::
-	playfanfare MUS_OBTAIN_BADGE
-	waitfanfare
-	return
-
 EventScript_OutOfCenterPartyHeal::
 	fadescreen FADE_TO_BLACK
 	playfanfare MUS_RG_HEAL
@@ -806,7 +800,6 @@ EventScript_WallTownMap::
 
 	.include "data/kanto/data/text/pokedex_rating.inc"
 	.include "data/kanto/data/scripts/pokedex_rating.inc"
-	.include "data/kanto/data/scripts/cave_of_origin.inc"
 
 EventScript_ChangePokemonNickname::
 	fadescreen FADE_TO_BLACK
@@ -814,24 +807,9 @@ EventScript_ChangePokemonNickname::
 	waitstate
 	return
 
-/* Unused */
-EventScript_HandOverItem::
-	bufferitemname STR_VAR_1, VAR_0x8004
-	playfanfare MUS_OBTAIN_TMHM
-	message Text_HandedOverItem
-	waitmessage
-	waitfanfare
-	removeitem VAR_0x8004
-	return
-
 	.include "data/kanto/data/scripts/pokemon_league.inc"
 	.include "data/kanto/data/scripts/movement.inc"
 	.include "data/kanto/data/scripts/flavor_text.inc"
-	.include "data/kanto/data/scripts/questionnaire.inc"
-
-EventScript_BagItemCanBeRegistered::
-	msgbox Text_BagItemCanBeRegistered, MSGBOX_SIGN
-	end
 
 EventScript_Return::
 	return
@@ -875,24 +853,6 @@ EventScript_ReleaseEnd::
 	end
 
 	.include "data/kanto/data/scripts/pokemon_mansion.inc"
-
-/* Unused */
-EventScript_DelayedLookAround::
-	lockall
-	applymovement VAR_0x8004, Kanto_Common_Movement_WalkInPlaceFasterLeft
-	waitmovement 0
-	delay 20
-	applymovement VAR_0x8004, Kanto_Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	delay 20
-	applymovement VAR_0x8004, Kanto_Common_Movement_WalkInPlaceFasterRight
-	waitmovement 0
-	delay 20
-	applymovement VAR_0x8004, Kanto_Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	delay 20
-	releaseall
-	end
 
 	.include "data/kanto/data/scripts/silphco_doors.inc"
 	.include "data/kanto/data/scripts/pc_transfer.inc"
@@ -1028,12 +988,6 @@ EventScript_NoMoreRoomForPokemon::
 	.include "data/kanto/data/text/braille.inc"
 	.include "data/kanto/data/scripts/trainers.inc"
 
-/* Test message! */
-/* Welcome to the world of Pokémon! */
-Text_TestMsg::
-	.string "テストよう　メッセージです！\n"
-	.string "ポケモンの　せかいへ　ようこそ！$"
-
 	.include "data/kanto/data/scripts/fame_checker.inc"
 	.include "data/kanto/data/text/fame_checker.inc"
 	.include "data/kanto/data/text/sign_lady.inc"
@@ -1058,7 +1012,6 @@ Text_TestMsg::
 	.include "data/kanto/data/text/trainers.inc"
 	.include "data/kanto/data/scripts/move_tutors.inc"
 	.include "data/kanto/data/scripts/trainer_tower.inc"
-	.include "data/kanto/data/scripts/test.inc"
 	.include "data/kanto/data/text/save.inc"
 	.include "data/kanto/data/text/new_game_intro.inc"
 	.include "data/kanto/data/text/pokedude.inc"

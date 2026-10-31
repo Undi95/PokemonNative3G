@@ -17,12 +17,7 @@ Route12_FishingHouse_EventScript_GiveSuperRod::
 	msgbox Fusion_Text_SuperRodWhere @ PokemonNative3G : pas de MEGA CANNE -> il dit où la trouver (Hoenn)
 	release
 	end
-	checkitemspace ITEM_SUPER_ROD
-	goto_if_eq VAR_RESULT, FALSE, Route12_FishingHouse_EventScript_NoRoomForSuperRod
-	additem ITEM_SUPER_ROD
-	msgbox Route12_FishingHouse_Text_TakeThisAndFish
-	msgreceiveditem Route12_FishingHouse_Text_ReceivedSuperRod, ITEM_SUPER_ROD
-	goto Route12_FishingHouse_EventScript_DoUpgradeSuperRod
+
 Route12_FishingHouse_EventScript_UpgradeSuperRod::
 	msgbox Route12_FishingHouse_Text_ShowMeYourRod
 Route12_FishingHouse_EventScript_DoUpgradeSuperRod::
@@ -32,11 +27,6 @@ Route12_FishingHouse_EventScript_DoUpgradeSuperRod::
 	msgbox Route12_FishingHouse_Text_ExplainRodChain
 	setflag FLAG_KANTO_GOT_SUPER_ROD
 	msgbox Route12_FishingHouse_Text_IfYouCatchBigMagikarpShowMe
-	release
-	end
-
-Route12_FishingHouse_EventScript_NoRoomForSuperRod::
-	msgbox Route12_FishingHouse_Text_NoRoomForGift
 	release
 	end
 

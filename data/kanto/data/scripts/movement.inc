@@ -16,11 +16,6 @@ Kanto_Common_Movement_FacePlayer::
 	face_player
 	step_end
 
-/* Unused */
-Kanto_Common_Movement_FaceAwayPlayer::
-	face_away_player
-	step_end
-
 Kanto_Common_Movement_FaceOriginalDirection::
 	face_original_direction
 	step_end
@@ -57,26 +52,7 @@ Common_Movement_WalkUp5::
 	walk_up
 	step_end
 
-/* Unused */
-Kanto_Common_Movement_WalkUp4::
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	step_end
-
 Kanto_Common_Movement_Delay32::
 	delay_16
 	delay_16
-	step_end
-
-/* Unused */
-Kanto_Common_Movement_WalkUp::
-	walk_up
-	step_end
-
-/* Unused */
-Kanto_Common_Movement_WalkUp2::
-	walk_up
-	walk_up
 	step_end

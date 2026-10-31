@@ -1,27 +1,6 @@
-/* Unused, handled by textcolor script cmd */
-EventScript_SaveTextColor::
-	copyvar VAR_PREV_TEXT_COLOR, VAR_TEXT_COLOR
-	return
 
 EventScript_RestorePrevTextColor::
 	copyvar VAR_TEXT_COLOR, VAR_PREV_TEXT_COLOR
-	return
-
-Kanto_Std_ObtainItem::
-	copyvar VAR_PREV_TEXT_COLOR, VAR_TEXT_COLOR
-	textcolor NPC_TEXT_COLOR_NEUTRAL
-	additem VAR_0x8000, VAR_0x8001
-	copyvar VAR_0x8007, VAR_RESULT
-	call Kanto_EventScript_ObtainItemMessage
-	copyvar VAR_TEXT_COLOR, VAR_PREV_TEXT_COLOR
-	return
-
-Kanto_EventScript_ObtainItemMessage::
-	bufferitemnameplural STR_VAR_2, VAR_0x8000, VAR_0x8001
-	checkitemtype VAR_0x8000
-	call EventScript_BufferPocketNameTryFanfare
-	call_if_eq VAR_0x8007, TRUE, Kanto_EventScript_ObtainedItem
-	call_if_eq VAR_0x8007, FALSE, Kanto_EventScript_NoRoomForItem
 	return
 
 EventScript_BufferPocketNameTryFanfare::
@@ -58,91 +37,12 @@ EventScript_BufferBerryPouch::
 	call_if_eq VAR_0x8007, TRUE, Kanto_EventScript_PlayFanfareObtainedItem
 	return
 
-Kanto_EventScript_ObtainedItem::
-	message Text_ObtainedTheX
-	waitfanfare
-	waitmessage
-	msgbox Text_PutItemAway
-	setvar VAR_RESULT, 1
-	return
-
-Kanto_EventScript_NoRoomForItem::
-	setvar VAR_RESULT, FALSE
-	return
-
 Kanto_EventScript_PlayFanfareObtainedItem::
 	playfanfare MUS_LEVEL_UP
 	return
 
 Kanto_EventScript_PlayFanfareObtainedTMHM::
 	playfanfare MUS_LEVEL_UP
-	return
-
-Kanto_Std_ObtainDecoration::
-	adddecoration VAR_0x8000
-	copyvar VAR_0x8007, VAR_RESULT
-	call EventScript_ObtainDecorMessage
-	return
-
-EventScript_ObtainDecorMessage::
-	bufferdecorationname STR_VAR_2, VAR_0x8000
-	call_if_eq VAR_0x8007, TRUE, Kanto_EventScript_ObtainedDecor
-	call_if_eq VAR_0x8007, FALSE, Kanto_EventScript_NoRoomForDecor
-	return
-
-Kanto_EventScript_ObtainedDecor::
-	playfanfare MUS_OBTAIN_ITEM
-	message Text_ObtainedTheDecor
-	waitfanfare
-	waitmessage
-	msgbox Text_DecorTransferredToPC
-	setvar VAR_RESULT, TRUE
-	return
-
-Kanto_EventScript_NoRoomForDecor::
-	setvar VAR_RESULT, FALSE
-	return
-
-Kanto_Std_FindItem::
-	lock
-	faceplayer
-	waitse
-	copyvar VAR_0x8004, VAR_0x8000
-	copyvar VAR_0x8005, VAR_0x8001
-	checkitemspace VAR_0x8000, VAR_0x8001
-	copyvar VAR_0x8007, VAR_RESULT
-	bufferitemname STR_VAR_2, VAR_0x8000
-	checkitemtype VAR_0x8000
-	call EventScript_BufferPocketNameTryFanfare
-	call_if_eq VAR_0x8007, TRUE, Kanto_EventScript_PickUpItem
-	call_if_eq VAR_0x8007, FALSE, Kanto_EventScript_NoRoomToPickUpItem
-	release
-	return
-
-Kanto_EventScript_PickUpItem::
-	removeobject VAR_LAST_TALKED
-	additem VAR_0x8004, VAR_0x8005
-	specialvar VAR_RESULT, BufferTMHMMoveName
-	copyvar VAR_0x8008, VAR_RESULT
-	call_if_eq VAR_0x8008, TRUE, Kanto_EventScript_FoundTMHM
-	call_if_eq VAR_0x8008, FALSE, Kanto_EventScript_FoundItem
-	waitfanfare
-	waitmessage
-	msgbox Text_PutItemAway
-	return
-
-Kanto_EventScript_FoundTMHM::
-	message Text_FoundTMHMContainsMove
-	return
-
-Kanto_EventScript_FoundItem::
-	message Text_FoundOneItem
-	return
-
-Kanto_EventScript_NoRoomToPickUpItem::
-	msgbox Text_ObtainedTheX
-	msgbox Text_TooBadBagFull
-	setvar VAR_RESULT, FALSE
 	return
 
 Kanto_EventScript_HiddenItemScript::
