@@ -43,6 +43,8 @@ double lastGameTime = 0;
 double curGameTime = 0;
 double fixedTimestep = 1.0 / 60.0; // 16.666667ms
 double timeScale = 1.0;
+#define MAX_FRAME_DELTA 0.1 // PokemonNative3G : au-delà, le temps est perdu (boucle principale)
+#define SNAP_TOLERANCE 0.25 // PokemonNative3G : vsync snapping, en rafraîchissements (SnapFrameDelta)
 struct SiiRtcInfo internalClock;
 
 static FILE *sSaveFile = NULL;
@@ -110,6 +112,48 @@ void GetGameRect(SDL_Renderer *renderer, SDL_Rect *rect)
     rect->h = DISPLAY_HEIGHT * scale;
     rect->x = (w - rect->w) / 2;
     rect->y = (h - rect->h) / 2;
+}
+
+// PokemonNative3G : vsync snapping. Avec la vsync, le temps entre deux images vaut un nombre entier de
+// rafraîchissements de l'écran (0 quand la présentation n'a pas attendu, 1, 2 si une image est ratée), au jitter
+// près : compté exact, chaque image avance du même nombre de frames de jeu (sinon le jitter en fait passer 0 ou 2,
+// des à-coups). Seulement sur un écran à 60 ou 120 Hz, dont le rafraîchissement tombe juste sur les frames de jeu
+// (ailleurs, 144 Hz par exemple, le rythme irrégulier est naturel). L'écart est gardé et rendu quand il fait une
+// frame : le jeu garde le temps réel (et le son son rythme) sur un écran à 59,94 Hz.
+static double sVsyncInterval; // 0 : pas de snapping
+
+static void UpdateVsyncInterval(void)
+{
+    SDL_DisplayMode mode;
+    int display = SDL_GetWindowDisplayIndex(sdlWindow);
+
+    sVsyncInterval = 0;
+    if (display < 0 || SDL_GetCurrentDisplayMode(display, &mode) != 0)
+        return;
+    if (mode.refresh_rate >= 59 && mode.refresh_rate <= 61) // 59,94 Hz est annoncé 59 ou 60
+        sVsyncInterval = fixedTimestep;
+    else if (mode.refresh_rate >= 119 && mode.refresh_rate <= 121)
+        sVsyncInterval = fixedTimestep / 2;
+}
+
+static double SnapFrameDelta(double delta, double *debt)
+{
+    double refreshes;
+
+    if (sVsyncInterval == 0)
+        return delta;
+    refreshes = SDL_floor(delta / sVsyncInterval + 0.5);
+    if (refreshes <= 2 && SDL_fabs(delta - refreshes * sVsyncInterval) < SNAP_TOLERANCE * sVsyncInterval)
+    {
+        *debt += delta - refreshes * sVsyncInterval;
+        delta = refreshes * sVsyncInterval;
+    }
+    if (*debt >= fixedTimestep || *debt <= -fixedTimestep)
+    {
+        delta += *debt;
+        *debt = 0;
+    }
+    return delta;
 }
 
 int main(int argc, char **argv)
@@ -229,16 +273,35 @@ int main(int argc, char **argv)
     AgbMain();
 
     double accumulator = 0.0;
+    double snapDebt = 0.0;
+    Uint32 vsyncCheckTime = 0;
+    lastGameTime = SDL_GetPerformanceCounter();
+
+    // PokemonNative3G : PN3G_FPS=1 écrit toutes les 5 s les frames de jeu par seconde et la part du temps passée à
+    // les calculer et les dessiner, et les à-coups (images où passent plusieurs frames de jeu d'un coup)
+    bool showFps = SDL_getenv("PN3G_FPS") != NULL;
+    Uint64 fpsStart = SDL_GetPerformanceCounter(), fpsBusy = 0;
+    int fpsFrames = 0, fpsHitches = 0;
 
     bool isGameStepDrawn = false;
     while (isRunning)
     {
         double deltaTime;
+        int steps = 0;
 
         ProcessEvents();
 
         curGameTime = SDL_GetPerformanceCounter();
         deltaTime = (double)((curGameTime - lastGameTime) / (double)SDL_GetPerformanceFrequency());
+        // PokemonNative3G : un blocage (fenêtre déplacée, appli en arrière-plan…) est perdu, pas rattrapé en accéléré
+        if (deltaTime > MAX_FRAME_DELTA)
+            deltaTime = fixedTimestep;
+        if (SDL_GetTicks() - vsyncCheckTime >= 2000) // la fenêtre peut changer d'écran
+        {
+            vsyncCheckTime = SDL_GetTicks();
+            UpdateVsyncInterval();
+        }
+        deltaTime = SnapFrameDelta(deltaTime, &snapDebt);
         deltaTime *= timeScale; //apply speedup
 
         if (!paused)
@@ -247,7 +310,7 @@ int main(int argc, char **argv)
 
             isGameStepDrawn = false;
 
-            while (accumulator >= fixedTimestep)
+            while (accumulator >= fixedTimestep - 1e-6) // PokemonNative3G : arrondis des temps « snappés »
             {
                 //run game logic, draw frame and process DMAs and vblank
                 ENTER_VBLANK(); //you must be in VBlank before running a game tick
@@ -270,7 +333,11 @@ int main(int argc, char **argv)
                 AudioUpdate();
 
                 accumulator -= fixedTimestep;
+                fpsFrames++;
+                steps++;
             }
+            if (steps > 1 && timeScale == 1.0)
+                fpsHitches++;
 
             if (videoScaleChanged)
             {
@@ -290,7 +357,37 @@ int main(int argc, char **argv)
             SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &dst);
         }
         Touch_Draw(sdlRenderer, sdlWindow);
+        if (showFps)
+            fpsBusy += SDL_GetPerformanceCounter() - curGameTime; // sans l'attente de la vsync
         SDL_RenderPresent(sdlRenderer);
+
+        // PokemonNative3G : un tour sans frame de jeu (vsync absente ou ignorée : fenêtre réduite, pilote ; écran plus
+        // rapide ; pause) dort jusqu'à la frame suivante au lieu de tourner à vide. Pas après une frame : avec la
+        // vsync, une image présentée sans nouvelle frame attendrait tout un rafraîchissement, et la suivante en
+        // aurait deux d'un coup (à-coup)
+        {
+            Uint64 now = SDL_GetPerformanceCounter();
+            double elapsed = (double)(now - curGameTime) / (double)SDL_GetPerformanceFrequency();
+            double wait = paused ? fixedTimestep : (fixedTimestep - accumulator) / timeScale - elapsed;
+
+            if (showFps)
+            {
+                double seconds = (double)(now - fpsStart) / (double)SDL_GetPerformanceFrequency();
+
+                if (seconds >= 5)
+                {
+                    fprintf(stderr, "%.1f frames/s, calcul et dessin %.0f %% du temps, %d a-coups\n", fpsFrames / seconds,
+                            100.0 * (double)fpsBusy / (double)(now - fpsStart), fpsHitches);
+                    fflush(stderr);
+                    fpsStart = now;
+                    fpsBusy = 0;
+                    fpsFrames = 0;
+                    fpsHitches = 0;
+                }
+            }
+            if (steps == 0 && wait > 0.002)
+                SDL_Delay((Uint32)((wait - 0.001) * 1000));
+        }
     }
 
     CloseSaveFile();

@@ -49,6 +49,23 @@ MSYS_NO_PATHCONV=1 docker run --rm -v "$P:/repo:ro" -v pn3g-work:/work -v "$P/ou
 - Sauvegarde et réglages dans le stockage interne de l'appli (`SDL_GetPrefPath`).
 - Icône : `icon.png` (comme l'exe Windows), dans `android/app/src/main/res/mipmap-xxxhdpi/`.
 
+## Cadence et performances (`src/platform/sdl2.c`, boucle principale)
+
+- 60 frames de jeu par seconde ; avec la vsync d'un écran à 60 ou 120 Hz, chaque image avance du même nombre de
+  frames (vsync snapping : le jitter de l'affichage ne crée plus d'à-coups). Autres écrans (144 Hz…) : temps réel
+  simple.
+- Sans vsync (fenêtre réduite, pilote qui l'ignore) ou en pause, la boucle dort au lieu de tourner à vide.
+- Un blocage de plus de 100 ms (fenêtre déplacée, appli en arrière-plan) est perdu, pas rattrapé en accéléré.
+- Mesure : variable d'environnement `PN3G_FPS=1` ; toutes les 5 s, sur la sortie d'erreur : frames/s, part du temps
+  passée à calculer et dessiner, à-coups (images où passent plusieurs frames d'un coup, hors avance rapide).
+  Mesuré le 2026-10-31 (RTX 5090, écran 60 Hz) : 60 frames/s, calcul et dessin 6-7 % du temps, 0 à 1 à-coup
+  par 5 s ; 10-11 % d'un cœur avec ou sans vsync (avant : 95 % sans vsync, et 0 ou ~30 à-coups par 5 s selon
+  le lancement).
+
+```powershell
+$env:PN3G_FPS = '1'; .\pokeemeraude64.exe 2> fps.txt
+```
+
 ## Touches tactiles (`src/platform/touch.c`)
 
 Toujours affichées sur Android ; sur PC, dès qu'on touche un écran tactile. Croix à gauche,
