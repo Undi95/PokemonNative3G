@@ -1,4 +1,5 @@
-// Rouge Feu : itemfinder.c (Cherch'Objet de Kanto : flèches vers l'objet). À Hoenn, celui d'Émeraude.
+// Rouge Feu : itemfinder.c (Cherch'Objet : flèches vers l'objet, déterre les objets sous les pieds). PokemonNative3G :
+// dans tout le jeu, à la place de celui d'Émeraude.
 #include "global.h"
 #include "event_data.h"
 #include "event_object_lock.h"
@@ -19,7 +20,7 @@
 #include "constants/songs.h"
 
 extern const u8 EventScript_ItemfinderDigUpUnderfootItem[];
-void KantoItemUseOnFieldCB_Itemfinder(u8 taskId);
+void ItemUseOnFieldCB_Itemfinder(u8 taskId);
 
 // Rouge Feu (event.h) : attributs d'un objet caché ; ici au format d'Émeraude (struct BgEvent, global.fieldmap.h)
 #define HIDDEN_ITEM_ITEM      0
@@ -182,7 +183,7 @@ static const struct SpriteSheet sArrowAndStarSpriteSheet = {
 #define tUnderfoot data[6]
 #define tStartSpriteId data[7]
 
-void KantoItemUseOnFieldCB_Itemfinder(u8 taskId)
+void ItemUseOnFieldCB_Itemfinder(u8 taskId)
 {
     u8 i;
     for (i = 0; i < 16; i++)

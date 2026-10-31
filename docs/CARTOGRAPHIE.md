@@ -48,7 +48,7 @@ reconnaît les corps identiques (187 fonctions) mais pas les corps voisins.
 | Écran titre, intro, crédits, Panthéon | title_screen, intro, credits, hall_of_fame | ✓ (`kanto_title_screen.c`, `kanto_intro.c`, `kanto_credits.c`, `kanto_hall_of_fame.c`) |
 | Carte de Kanto, Vol, objet Carte | region_map | ✓ (`kanto_region_map.c`) |
 | Cherche VS | vs_seeker | ✓ à Kanto et à Hoenn (`kanto_vs_seeker.c` ; Hoenn = revanches du PokéNav) |
-| Cherch'Objet | itemfinder | ✓ à Kanto (`kanto_itemfinder.c`) |
+| Cherch'Objet | itemfinder | ✓ dans tout le jeu (`kanto_itemfinder.c`) |
 | Fan Club de Safrania, portes | trainer_fan_club, field_door | ✓ (`kanto_trainer_fan_club.c`, `kanto_field_door.c`) |
 | Specials de terrain | field_specials (118 fonctions) | ✓ 68 copiés dans `kanto_field_specials.c` / `kanto_specials.c` / `kanto_list_menu.c` (+ `kanto_field_anims.c`, `kanto_itemfinder.c`, `fldeff_cut.c`), les autres = ceux d'Émeraude ; stubs restants (`kanto_specials_stubs.c`) : link et Tour de Combat (⊘), triangle de Deoxys et `BrailleCursorToggle` (sans objet) |
 | Commandes de script RF | scrcmd | ✓ opcodes RF dans `kanto_scrcmd.c` (les autres = ceux d'Émeraude) |
@@ -154,7 +154,7 @@ Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.
   `CB2_OpenFlyMapOfRegion` pour la carte de Vol. Elle ne sert qu'à ce qui est vraiment régional : décors de combat,
   portes, palettes, PC et moniteurs, musique sauvage, rencontres par case, textes des télés et bibliothèques, rival,
   vagabonds, badges (obéissance, CS, perte d'argent), carte de la région, Panthéon, Fan Club, Cherche VS, PC de LÉO /
-  d'ANNETTE, POKé MONTURE, vieil homme, machine à sous, Cherch'Objet, carte de dresseur. Les tests de section de carte
+  d'ANNETTE, POKé MONTURE, vieil homme, machine à sous, carte de dresseur. Les tests de section de carte
   (`KANTO_MAPSEC_START`…) ne servent qu'à classer un lieu (lieu de capture, nom affiché), jamais la position du joueur.
 - Code propre à RF : `src/kanto_*.c` (noms de RF, comparable à la décompilation) ; retouches du code d'Émeraude
   marquées `// Rouge Feu` ou `// PokemonNative3G`.
