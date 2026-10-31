@@ -29,6 +29,7 @@
 #include "constants/songs.h"
 #include "platform/test_state.h"
 #include "rtc.h"
+#include "day_night.h"
 
 extern void AgbMain(void);
 
@@ -386,7 +387,9 @@ void RunTestCommand(FILE *file, const char *line)
     }
     else if (strcmp(name, "daynight") == 0 && count >= 1)
     {
+        // 2 : vitres éclairées la nuit marquées en magenta (tools/day_night_lights.py)
         gSaveBlock2Ptr->optionsDayNight = args[0] != 0;
+        DayNight_SetMarkLights(args[0] == 2);
         fprintf(file, "{\"reply\": 1}\n");
     }
     else if (strcmp(name, "heal") == 0)

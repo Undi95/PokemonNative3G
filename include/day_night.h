@@ -8,5 +8,6 @@
 
 bool8 IsDayNightHourNight(u8 hours);
 void DayNight_TintPltt(void);
+void DayNight_SetMarkLights(bool8 mark);
 
 #endif // GUARD_DAY_NIGHT_H

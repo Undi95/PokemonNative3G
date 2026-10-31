@@ -23,6 +23,10 @@ contenu dans un seul jeu.
   purement visuel, teinte des couleurs envoyées à l'écran selon l'heure (matin doré, coucher orangé 17-21 h,
   nuit bleutée 21-5 h), dehors sur le terrain seulement, boîtes de texte et menus intacts ; aucun effet sur les
   rencontres. Mentali / Noctali suivent les mêmes heures : nuit de 20 h à 6 h (Émeraude : 0-12 h).
+  Fenêtres allumées le soir et la nuit : couleurs de vitre des tilesets extérieurs (`tools/day_night_lights.py` ->
+  `src/data/day_night_lights.h`, bleus clairs sauf ceux de l'eau et EXCLUDE). Vérification : scénario
+  `day_night_towns` (vitres en magenta dans shots/, `DN_MARK=1` = rendu réel). Limite : la verrière des Boutiques
+  de Kanto a les mêmes couleurs que les fenêtres (palette sans couleur libre), elle s'allume aussi.
 
 ## À faire — contenu à réunir (listes)
 - Décision : musiques, animations et transitions de combat = celles de la région, comme dans les jeux officiels (pas d'option).

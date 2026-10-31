@@ -4,7 +4,8 @@
 
 ### Ajouts
 - **Cycle jour/nuit** (Options, page 1, JOUR/NUIT ; désactivé par défaut) : dehors, la lumière suit l'heure de
-  l'appareil (matin doré, coucher de soleil orangé, nuit bleutée). Purement visuel : mêmes Pokémon à toute heure.
+  l'appareil (matin doré, coucher de soleil orangé, nuit bleutée), les fenêtres s'allument le soir. Purement
+  visuel : mêmes Pokémon à toute heure.
 - **Mentali / Noctali** : la nuit d'évolution suit le cycle, de 20 h à 6 h (avant : minuit à midi).
 
 ## Version 1.0 (31 octobre 2026) — première version complète
