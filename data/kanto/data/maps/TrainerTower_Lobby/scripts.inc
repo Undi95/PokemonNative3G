@@ -94,9 +94,10 @@ TrainerTower_Lobby_EventScript_EnterEnd::
 	end
 
 TrainerTower_Lobby_EventScript_Nurse::
-	lock
-	faceplayer
-	call EventScript_PkmnCenterNurse
+	setvar VAR_0x800B, LOCALID_KANTO_TOWER_NURSE
+	call Common_EventScript_PkmnCenterNurse
+	waitmessage
+	waitbuttonpress
 	release
 	end
 

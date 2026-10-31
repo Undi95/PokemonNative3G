@@ -766,7 +766,6 @@ Kanto_EventScript_ResetAllMapFlags::
 	end
 
 	.include "data/kanto/data/scripts/hall_of_fame.inc"
-	.include "data/kanto/data/scripts/pkmn_center_nurse.inc"
 	.include "data/kanto/data/scripts/obtain_item.inc"
 	.include "data/kanto/data/scripts/pc.inc"
 
