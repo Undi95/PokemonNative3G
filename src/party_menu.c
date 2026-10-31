@@ -1,4 +1,7 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
+#include "load_save.h"
+#include "battle_main.h"
 #include "fusion_events.h" // PokemonNative3G : POKé MONTURE
 #include "constants/hold_effects.h"
 #include "malloc.h"
@@ -6816,4 +6819,105 @@ void IsLastMonThatKnowsSurf(void)
         if (AnyStorageMonWithMove(move) != TRUE)
             gSpecialVar_Result = TRUE;
     }
+}
+
+// ---- PokemonNative3G : Télé Pokémon de Rouge Feu, menu d'équipe du Pokédude (party_menu.c de RF) ----
+static void Task_PartyMenu_PokedudeStep(u8 taskId);
+static void Task_PartyMenuFromBag_PokedudeStep(u8 taskId);
+static bool8 PartyMenuPokedudeIsCancelled(u8 taskId);
+static void PartyMenuHandlePokedudeCancel(void);
+
+// Pokedude switches Pokemon
+static void Task_PartyMenu_Pokedude(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    data[0] = 0;
+    gTasks[taskId].func = Task_PartyMenu_PokedudeStep;
+}
+
+static void Task_PartyMenu_PokedudeStep(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    if (!gPaletteFade.active && PartyMenuPokedudeIsCancelled(taskId) != TRUE)
+    {
+        switch (data[0])
+        {
+        case 80:
+            UpdateCurrentPartySelection(&gPartyMenu.slotId, MENU_DIR_RIGHT);
+            break;
+        case 160:
+            PlaySE(SE_SELECT);
+            CreateSelectionWindow(taskId);
+            break;
+        case 240:
+            PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[2]);
+            sCursorOptions[sPartyMenuInternal->actions[0]].func(taskId);
+            break;
+        }
+        ++data[0];
+    }
+}
+
+static bool8 PartyMenuPokedudeIsCancelled(u8 taskId)
+{
+    if (JOY_NEW(B_BUTTON))
+    {
+        sPartyMenuInternal->exitCallback = PartyMenuHandlePokedudeCancel;
+        Task_ClosePartyMenu(taskId);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static void PartyMenuHandlePokedudeCancel(void)
+{
+    FreeRestoreBattleData();
+    LoadPlayerParty();
+    SetTeachyTvControllerModeToResume();
+    SetMainCallback2(CB2_ReturnToTeachyTV);
+}
+
+// Pokedude uses item on his own Pokemon
+static void Task_PartyMenuFromBag_Pokedude(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    data[0] = 0;
+    gTasks[taskId].func = Task_PartyMenuFromBag_PokedudeStep;
+}
+
+static void Task_PartyMenuFromBag_PokedudeStep(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    if (!gPaletteFade.active && PartyMenuPokedudeIsCancelled(taskId) != TRUE)
+    {
+        if (data[0] != 80)
+        {
+            ++data[0];
+        }
+        else
+        {
+            sPartyMenuInternal->exitCallback = CB2_SetUpExitToBattleScreen;
+            gItemUseCB(taskId, Task_ClosePartyMenuAfterText);
+        }
+    }
+    UpdatePartyToBattleOrder();
+}
+
+void Pokedude_OpenPartyMenuInBattle(void)
+{
+    InitPartyMenu(PARTY_MENU_TYPE_IN_BATTLE, GetPartyLayoutFromBattleType(), PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_CHOOSE_MON, Task_PartyMenu_Pokedude, CB2_SetUpReshowBattleScreenAfterMenu);
+    ReshowBattleScreenDummy();
+    UpdatePartyToBattleOrder();
+}
+
+// RF : PARTY_ACTION_REUSABLE_ITEM, retour CB2_BagMenuFromBattle
+void Pokedude_ChooseMonForInBattleItem(void)
+{
+    InitPartyMenu(PARTY_MENU_TYPE_IN_BATTLE, GetPartyLayoutFromBattleType(), PARTY_ACTION_USE_ITEM, FALSE, PARTY_MSG_USE_ON_WHICH_MON, Task_PartyMenuFromBag_Pokedude, CB2_ReturnToBagMenu);
+    ReshowBattleScreenDummy();
+    UpdatePartyToBattleOrder();
 }

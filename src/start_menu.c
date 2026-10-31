@@ -515,7 +515,10 @@ static bool32 PrintStartMenuActions(s8 *pIndex, u32 count)
     {
         if (sStartMenuItems[sCurrentStartMenuActions[index]].func.u8_void == StartMenuPlayerNameCallback)
         {
-            PrintPlayerNameOnWindow(GetStartMenuWindowId(), sStartMenuItems[sCurrentStartMenuActions[index]].text, 8, START_MENU_ITEM_Y(index));
+            if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu : police de RF
+                Menu_PrintFormatIntlPlayerName(GetStartMenuWindowId(), sStartMenuItems[sCurrentStartMenuActions[index]].text, 8, START_MENU_ITEM_Y(index));
+            else
+                PrintPlayerNameOnWindow(GetStartMenuWindowId(), sStartMenuItems[sCurrentStartMenuActions[index]].text, 8, START_MENU_ITEM_Y(index));
         }
         else
         {

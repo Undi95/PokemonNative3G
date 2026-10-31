@@ -96,8 +96,6 @@ static void PlayerCmdEnd(void);
 static void PlayerBufferRunCommand(void);
 static void HandleInputChooseTarget(void);
 static void HandleInputChooseMove(void);
-static void MoveSelectionCreateCursorAt(u8, u8);
-static void MoveSelectionDestroyCursorAt(u8);
 static void MoveSelectionDisplayPPNumber(void);
 static void MoveSelectionDisplayPPString(void);
 static void MoveSelectionDisplayMoveType(void);
@@ -1507,7 +1505,7 @@ static void MoveSelectionDisplayMoveType(void)
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_TYPE);
 }
 
-static void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
+void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
 {
     u16 src[2];
     src[0] = baseTileNum + 1;
@@ -1517,7 +1515,7 @@ static void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
     CopyBgTilemapBufferToVram(0);
 }
 
-static void MoveSelectionDestroyCursorAt(u8 cursorPosition)
+void MoveSelectionDestroyCursorAt(u8 cursorPosition)
 {
     u16 src[2];
     src[0] = 0x1016;

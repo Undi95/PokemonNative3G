@@ -1,5 +1,6 @@
 // Rouge Feu : tm_case.c (Boîte à CT du sac de RF, option SAC = KANTO). Lit la poche CT/CS d'Émeraude.
 #include "global.h"
+#include "kanto_teachy_tv.h"
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
@@ -157,7 +158,7 @@ static EWRAM_DATA struct {
 // Save the player's bag state when the Pokedude's bag is being shown
 static EWRAM_DATA struct {
     struct ItemSlot bagPocket_TMHM[BAG_TMHM_COUNT];
-    struct ItemSlot bagPocket_KeyItems[BAG_KEYITEMS_COUNT];
+    struct ItemSlot bagPocket_KeyItems[BIG_BAG_KEYITEMS_COUNT]; // PokemonNative3G : poche agrandie (gSaveBlockBag)
     u16 selectedRow;
     u16 scrollOffset;
 } * sPokedudeBagBackup = NULL;
@@ -212,6 +213,10 @@ static void TMCase_Print(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 
 static void TMCase_SetWindowBorder1(u8 windowId);
 static void TMCase_SetWindowBorder2(u8 windowId);
 static void PrintMessageWithFollowupTask(u8 taskId, u8 fontId, const u8 * str, TaskFunc func);
+static void Task_Pokedude_Start(u8 taskId);
+static void Task_Pokedude_Run(u8 taskId);
+extern const u8 gPokedudeText_TMTypes[];
+extern const u8 gPokedudeText_ReadTMDescription[];
 static void PrintTitle(void);
 static void DrawMoveInfoLabels(void);
 static void PlaceHMTileInWindow(u8 windowId, u8 x, u8 y);
@@ -581,7 +586,10 @@ static bool8 DoSetUpTMCaseUI(void)
         gMain.state++;
         break;
     case 14:
-        taskId = CreateTask(Task_HandleListInput, 0);
+        if (sTMCaseStaticResources.menuType == TMCASE_POKEDUDE) // PokemonNative3G : Télé Pokémon (RF)
+            taskId = CreateTask(Task_Pokedude_Start, 0);
+        else
+            taskId = CreateTask(Task_HandleListInput, 0);
         gTasks[taskId].tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, sTMCaseStaticResources.scrollOffset, sTMCaseStaticResources.selectedRow);
         gMain.state++;
         break;
@@ -1692,5 +1700,164 @@ void ItemUseOutOfBattle_TMCase(u8 taskId)
     {
         FadeScreen(FADE_TO_BLACK, 0);
         gTasks[taskId].func = Task_InitTMCaseFromField;
+    }
+}
+
+// ---- PokemonNative3G : Télé Pokémon, démonstration du Pokédude (tm_case.c de RF) ----
+void Pokedude_InitTMCase(void)
+{
+    sPokedudeBagBackup = AllocZeroed(sizeof(*sPokedudeBagBackup));
+    memcpy(sPokedudeBagBackup->bagPocket_TMHM, gSaveBlock1Ptr->bagPocket_TMHM, sizeof(gSaveBlock1Ptr->bagPocket_TMHM));
+    memcpy(sPokedudeBagBackup->bagPocket_KeyItems, gBagPockets[KEYITEMS_POCKET].itemSlots, sizeof(sPokedudeBagBackup->bagPocket_KeyItems));
+    sPokedudeBagBackup->selectedRow = sTMCaseStaticResources.selectedRow;
+    sPokedudeBagBackup->scrollOffset = sTMCaseStaticResources.scrollOffset;
+    ClearItemSlots(gSaveBlock1Ptr->bagPocket_TMHM, ARRAY_COUNT(gSaveBlock1Ptr->bagPocket_TMHM));
+    ClearItemSlots(gBagPockets[KEYITEMS_POCKET].itemSlots, ARRAY_COUNT(sPokedudeBagBackup->bagPocket_KeyItems));
+    ResetTMCaseCursorPos();
+    AddBagItem(ITEM_TM01, 1);
+    AddBagItem(ITEM_TM03, 1);
+    AddBagItem(ITEM_TM09, 1);
+    AddBagItem(ITEM_TM35, 1);
+    InitTMCase(TMCASE_POKEDUDE, CB2_ReturnToTeachyTV, 0);
+}
+
+static void Task_Pokedude_Start(u8 taskId)
+{
+    s16 * data = gTasks[taskId].data;
+
+    if (!gPaletteFade.active)
+    {
+        tPokedudeState = 0;
+        tPokedudeTimer = 0;
+        gTasks[taskId].func = Task_Pokedude_Run;
+    }
+}
+
+#define POKEDUDE_INPUT_DELAY 101
+
+static void Task_Pokedude_Run(u8 taskId)
+{
+    s16 * data = gTasks[taskId].data;
+
+    if (JOY_NEW(B_BUTTON))
+    {
+        if (tPokedudeState < 21)
+        {
+            tPokedudeState = 21;
+            SetTeachyTvControllerModeToResume();
+        }
+    }
+
+    switch (tPokedudeState)
+    {
+    case 0:
+        BeginNormalPaletteFade(0xFFFF8405, 4, 0, 6, 0);
+        SetDescriptionWindowShade(1);
+        tPokedudeState++;
+        break;
+    case 1:
+    case 11:
+        if (!gPaletteFade.active)
+        {
+            if (++tPokedudeTimer > POKEDUDE_INPUT_DELAY)
+            {
+                tPokedudeTimer = 0;
+                tPokedudeState++;
+            }
+        }
+        break;
+    case 2:
+    case 3:
+    case 4:
+    case 12:
+    case 13:
+    case 14:
+        if (tPokedudeTimer == 0)
+        {
+            gMain.newKeys = 0;
+            gMain.newAndRepeatedKeys = DPAD_DOWN;
+            ListMenu_ProcessInput(tListTaskId);
+        }
+        if (++tPokedudeTimer > POKEDUDE_INPUT_DELAY)
+        {
+            tPokedudeTimer = 0;
+            tPokedudeState++;
+        }
+        break;
+    case 5:
+    case 6:
+    case 7:
+    case 15:
+    case 16:
+    case 17:
+        if (tPokedudeTimer == 0)
+        {
+            gMain.newKeys = 0;
+            gMain.newAndRepeatedKeys = DPAD_UP;
+            ListMenu_ProcessInput(tListTaskId);
+        }
+        if (++tPokedudeTimer > POKEDUDE_INPUT_DELAY)
+        {
+            tPokedudeTimer = 0;
+            tPokedudeState++;
+        }
+        break;
+    case 8:
+        SetDescriptionWindowShade(1);
+        PrintMessageWithFollowupTask(taskId, FONT_KANTO, gPokedudeText_TMTypes, NULL);
+        gTasks[taskId].func = Task_Pokedude_Run;
+        tPokedudeState++;
+        break;
+    case 9:
+    case 19:
+        RunTextPrinters();
+        if (!IsTextPrinterActive(WIN_MESSAGE))
+            tPokedudeState++;
+        break;
+    case 10:
+        if (JOY_NEW(A_BUTTON | B_BUTTON))
+        {
+            SetDescriptionWindowShade(0);
+            BeginNormalPaletteFade(0x00000400, 0, 6, 0, 0);
+            ClearDialogWindowAndFrameToTransparent(WIN_MESSAGE, FALSE);
+            ScheduleBgCopyTilemapToVram(1);
+            tPokedudeState++;
+        }
+        break;
+    case 18:
+        SetDescriptionWindowShade(1);
+        PrintMessageWithFollowupTask(taskId, FONT_KANTO, gPokedudeText_ReadTMDescription, NULL);
+        gTasks[taskId].func = Task_Pokedude_Run; // this function
+        tPokedudeState++;
+        break;
+    case 20:
+        if (JOY_NEW(A_BUTTON | B_BUTTON))
+            tPokedudeState++;
+        break;
+    case 21:
+        if (!gPaletteFade.active)
+        {
+            // Restore the player's bag
+            memcpy(gSaveBlock1Ptr->bagPocket_TMHM, sPokedudeBagBackup->bagPocket_TMHM, sizeof(gSaveBlock1Ptr->bagPocket_TMHM));
+            memcpy(gBagPockets[KEYITEMS_POCKET].itemSlots, sPokedudeBagBackup->bagPocket_KeyItems, sizeof(sPokedudeBagBackup->bagPocket_KeyItems));
+            DestroyListMenuTask(tListTaskId, NULL, NULL);
+            sTMCaseStaticResources.selectedRow = sPokedudeBagBackup->selectedRow;
+            sTMCaseStaticResources.scrollOffset = sPokedudeBagBackup->scrollOffset;
+            Free(sPokedudeBagBackup);
+            CpuFastCopy(gPlttBufferFaded, gPlttBufferUnfaded, PLTT_SIZE);
+            KBag_CB2_SetUpReshowBattleScreenAfterMenu(); // gBagMenuState.bagOpen = FALSE (sac de RF)
+            BeginNormalPaletteFade(PALETTES_ALL, -2, 0, 16, 0);
+            tPokedudeState++;
+        }
+        break;
+    default:
+        if (!gPaletteFade.active)
+        {
+            SetMainCallback2(sTMCaseStaticResources.exitCallback);
+            RemoveScrollArrows();
+            DestroyTMCaseBuffers();
+            DestroyTask(taskId);
+        }
+        break;
     }
 }

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
@@ -21,6 +22,13 @@ void AllocateBattleResources(void)
 
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         InitTrainerHillBattleStruct();
+    if (gBattlePokedudeFrlg) // PokemonNative3G : RF (BATTLE_TYPE_POKEDUDE)
+    {
+        s32 i;
+
+        for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+            gPokedudeBattlerStates[i] = AllocZeroed(sizeof(struct PokedudeBattlerState));
+    }
 
     gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
 
@@ -51,7 +59,13 @@ void FreeBattleResources(void)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         FreeTrainerHillBattleStruct();
+    if (gBattlePokedudeFrlg) // PokemonNative3G : RF (BATTLE_TYPE_POKEDUDE)
+    {
+        s32 i;
 
+        for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+            FREE_AND_SET_NULL(gPokedudeBattlerStates[i]);
+    }
     if (gBattleResources != NULL)
     {
         FREE_AND_SET_NULL(gBattleStruct);

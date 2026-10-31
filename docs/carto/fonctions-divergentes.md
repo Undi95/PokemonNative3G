@@ -965,7 +965,7 @@ ItemUseInBattle_EnigmaBerry
 ItemUseOnFieldCB_Itemfinder ✓, CreateStarSprite
 
 ### learn_move.c
-TeachMoveRelearnerMove, PrintTextOnWindow
+TeachMoveRelearnerMove ✓, PrintTextOnWindow
 
 ### librfu_intr.c
 sio32intr_clock_slave, STWI_set_timer_in_RAM
@@ -1227,21 +1227,21 @@ CB2_ReturnToPartyMenuFromWritingMail, Task_DisplayGaveMailFromPartyMessage, Task
 CB2_ReadHeldMail, Task_HandleSendMailToPCYesNoInput, MoveCursorToConfirm,
 Task_HandleFieldMoveExitAreaYesNoInput, Task_CancelAfterAorBPress, DisplayCantUseFlashMessage,
 SetUpFieldMove_Surf, DisplayCantUseSurfMessage, CB2_ShowPartyMenuForItemUse, CB2_ReturnToBagMenu,
-GetMedicineItemEffectMessage, ItemUseCB_Medicine, ShowMoveSelectWindow, SetSelectedMoveForPPItem,
-ItemUseCB_PPUp, ItemIdToBattleMoveId, IsMoveHm, MonKnowsMove, ItemUseCB_TMHM, Task_LearnedMove,
+GetMedicineItemEffectMessage, ItemUseCB_Medicine ✓, ShowMoveSelectWindow, SetSelectedMoveForPPItem,
+ItemUseCB_PPUp, ItemIdToBattleMoveId, IsMoveHm, MonKnowsMove, ItemUseCB_TMHM ✓, Task_LearnedMove,
 Task_LearnNextMoveOrClosePartyMenu, CB2_ShowSummaryScreenToForgetMove, CB2_ReturnToPartyMenuWhileLearningMove,
-Task_PartyMenuReplaceMove, StopLearningMovePrompt, Task_HandleStopLearningMoveYesNoInput, ItemUseCB_RareCandy,
-UpdateMonDisplayInfoAfterRareCandy, Task_DisplayLevelUpStatsPg1, Task_DisplayLevelUpStatsPg2,
-Task_TryLearnNewMoves, Task_TryLearningNextMove, PartyMenuTryEvolution, DisplayMonNeedsToReplaceMove,
-DisplayMonLearnedMove, UseSacredAsh, Task_SacredAshLoop, ItemUseCB_EvolutionStone, GetItemEffectType,
-TryTutorSelectedMon, CB2_ChooseMonToGiveItem, GiveItemToSelectedMon, CB2_WriteMailToGiveMonFromBag,
-Task_DisplayGaveMailFromBagMessage, TryGiveMailToSelectedMon, GetPartySlotEntryStatus,
-GetBattleEntryEligibility, CheckBattleEntriesAndGetMessage, HasPartySlotAlreadyBeenSelected,
-ChooseMonForMoveTutor, GetPartyMenuActionsTypeInBattle, TrySwitchInPokemon, BufferBattlePartyOrder,
-BufferBattlePartyCurrentOrderBySide, BufferBattlePartyOrderBySide, SwitchPartyOrderLinkMulti,
-GetPartyIdFromBattlePartyId, UpdatePartyToBattleOrder, UpdatePartyToFieldOrder, SwitchAliveMonIntoLeadSlot,
-CB2_SetUpExitToBattleScreen, Task_InitMultiPartnerPartySlideIn, Task_MultiPartnerPartySlideIn,
-SlideMultiPartyMenuBoxSpritesOneStep, ChooseMonForDaycare
+Task_PartyMenuReplaceMove, StopLearningMovePrompt, Task_HandleStopLearningMoveYesNoInput,
+ItemUseCB_RareCandy ✓, UpdateMonDisplayInfoAfterRareCandy, Task_DisplayLevelUpStatsPg1,
+Task_DisplayLevelUpStatsPg2, Task_TryLearnNewMoves, Task_TryLearningNextMove, PartyMenuTryEvolution,
+DisplayMonNeedsToReplaceMove, DisplayMonLearnedMove, UseSacredAsh, Task_SacredAshLoop,
+ItemUseCB_EvolutionStone ✓, GetItemEffectType, TryTutorSelectedMon, CB2_ChooseMonToGiveItem,
+GiveItemToSelectedMon, CB2_WriteMailToGiveMonFromBag, Task_DisplayGaveMailFromBagMessage,
+TryGiveMailToSelectedMon, GetPartySlotEntryStatus, GetBattleEntryEligibility, CheckBattleEntriesAndGetMessage,
+HasPartySlotAlreadyBeenSelected, ChooseMonForMoveTutor, GetPartyMenuActionsTypeInBattle, TrySwitchInPokemon,
+BufferBattlePartyOrder, BufferBattlePartyCurrentOrderBySide, BufferBattlePartyOrderBySide,
+SwitchPartyOrderLinkMulti, GetPartyIdFromBattlePartyId, UpdatePartyToBattleOrder, UpdatePartyToFieldOrder,
+SwitchAliveMonIntoLeadSlot, CB2_SetUpExitToBattleScreen, Task_InitMultiPartnerPartySlideIn,
+Task_MultiPartnerPartySlideIn, SlideMultiPartyMenuBoxSpritesOneStep, ChooseMonForDaycare
 
 ### party_menu_specials.c
 ChoosePartyMon, ChooseMonForMoveRelearner, Task_ChoosePartyMon, GetNumMovesSelectedMonHas,
@@ -1443,11 +1443,11 @@ BuyMenuPrintItemDescriptionAndShowItemIcon, BuyMenuPrintPriceInList, BuyMenuPrin
 BuyMenuAddScrollIndicatorArrows, BuyMenuRemoveScrollIndicatorArrows, BuyMenuDrawMapBg, BuyMenuDrawMapMetatile,
 BuyMenuCollectObjectEventData, BuyMenuDrawObjectEvents, BuyMenuPrintItemQuantityAndPrice, Task_BuyMenu,
 Task_BuyHowManyDialogueInit, Task_BuyHowManyDialogueHandleInput, BuyMenuTryMakePurchase, BuyMenuSubtractMoney,
-Task_ReturnToItemListAfterItemPurchase, BuyMenuReturnToItemList, Task_ExitBuyMenu, CreatePokemartMenu,
+Task_ReturnToItemListAfterItemPurchase, BuyMenuReturnToItemList, Task_ExitBuyMenu, CreatePokemartMenu ✓,
 CreateDecorationShop1Menu, CreateDecorationShop2Menu
 
 ### slot_machine.c
-PlaySlotMachine, Task_SlotMachine
+PlaySlotMachine ✓, Task_SlotMachine
 
 ### sound.c
 PlayFanfareByFanfareNum, PlayCry_Script, PlayCryInternal, PlaySE

@@ -50,25 +50,25 @@ reconnaît les corps identiques (187 fonctions) mais pas les corps voisins.
 | Cherche VS | vs_seeker | ✓ à Kanto et à Hoenn (`kanto_vs_seeker.c` ; Hoenn = revanches du PokéNav) |
 | Cherch'Objet | itemfinder | ✓ à Kanto (`kanto_itemfinder.c`) |
 | Fan Club de Safrania, portes | trainer_fan_club, field_door | ✓ (`kanto_trainer_fan_club.c`, `kanto_field_door.c`) |
-| Specials de terrain | field_specials (118 fonctions) | ◐ 47 dans `kanto_field_specials.c` / `kanto_specials.c` / `kanto_list_menu.c` ; 43 stubs |
+| Specials de terrain | field_specials (118 fonctions) | ✓ 68 copiés dans `kanto_field_specials.c` / `kanto_specials.c` / `kanto_list_menu.c` (+ `kanto_field_anims.c`, `kanto_itemfinder.c`, `fldeff_cut.c`), les autres = ceux d'Émeraude ; stubs restants (`kanto_specials_stubs.c`) : link et Tour de Combat (⊘), triangle de Deoxys et `BrailleCursorToggle` (sans objet) |
 | Commandes de script RF | scrcmd | ✓ opcodes RF dans `kanto_scrcmd.c` (les autres = ceux d'Émeraude) |
 | Décors de combat | battle_bg | ✓ (`kanto_battle_bg.c`, généré) |
-| Warps et transitions | field_fadetransition | ◐ 43 % (escaliers, téléporteurs, trous portés) |
+| Warps et transitions | field_fadetransition | ◐ 46 % (escaliers, téléporteurs, trous portés) |
 | Vieil homme de Jadielle | battle_controller_oak_old_man | ◐ vieil homme (`battle_controller_old_man.c`) ; conseils de Chen — écartés |
-| Aperçus de donjons | map_preview_screen | ◐ données dans `kanto_region_map.c`, écran à faire |
-| Aide (touche L/R) | help_system, help_system_util, help_message | ◐ messages (`kanto_help_message.c`) ; système sans effet |
-| Journal « Précédemment dans votre quête » | quest_log, quest_log_* (5 fichiers) | ✗ à faire (option, désactivé par défaut) |
-| Tour des Dresseurs (Île 7) | trainer_tower | ✗ dette (cf. KANTO-ETAT.md) |
-| Objets cachés qui réapparaissent | renewable_hidden_items | ✗ |
-| Fame Checker (objet rare) | fame_checker | ✗ (sauvegarde déjà réservée dans `gSaveBlockKanto`) |
-| Discours de Chen (nouvelle partie) | oak_speech | ✗ (la partie commence à Hoenn) |
-| Note du Pokédex par Chen (PC) | prof_pc | ✗ stub `GetProfOaksRatingMessage` |
-| Animation d'objet sur un Pokémon (CT, Super Bonbon…) | pokemon_special_anim, pokemon_special_anim_scene | ✗ |
-| Ferry Seagallop, départ du S.S. Anne | seagallop, ss_anne | ◐ menus / ✗ cinématiques (stubs) |
-| Combat FANTÔME (Tour Pokémon), IA des légendaires RF | battle_main, battle_ai… (`BATTLE_TYPE_GHOST`, `_LEGENDARY_FRLG`) | ✗ stub `StartMarowakBattle` |
-| Teachy TV, combats du Pokédude | teachy_tv, battle_controller_pokedude | — retirés du sac |
+| Aperçus de donjons | map_preview_screen | ✓ (`kanto_map_preview_screen.c`) |
+| Aide (touche L/R) | help_system, help_system_util, help_message | — messages seuls (`kanto_help_message.c`) ; système abandonné (décision 2026-10-30) |
+| Journal « Précédemment dans votre quête » | quest_log, quest_log_* (5 fichiers) | — abandonné (décision 2026-10-24, bilan plus bas) |
+| Tour des Dresseurs (Île 7) | trainer_tower | ✓ (`kanto_trainer_tower.c`, `gBattleTrainerTowerFrlg`) |
+| Objets cachés qui réapparaissent | renewable_hidden_items | ✓ (`kanto_renewable_hidden_items.c`) |
+| Fame Checker (objet rare) | fame_checker | ✓ (`kanto_fame_checker.c`) |
+| Discours de Chen (nouvelle partie) | oak_speech | — (la partie commence à Hoenn) |
+| Note du Pokédex par Chen (PC) | prof_pc | ✓ (`GetProfOaksRatingMessage`, `kanto_field_specials.c`) |
+| Animation d'objet sur un Pokémon (CT, Super Bonbon…) | pokemon_special_anim, pokemon_special_anim_scene | ✓ option SAC (`kanto_pokemon_special_anim*.c`) |
+| Ferry Seagallop, départ du S.S. Anne | seagallop, ss_anne | ✓ (`kanto_seagallop.c`, `kanto_ss_anne.c`) |
+| Combat FANTÔME (Tour Pokémon), IA des légendaires RF | battle_main, battle_ai… (`BATTLE_TYPE_GHOST`, `_LEGENDARY_FRLG`) | ✓ (`StartMarowakBattle`, `IS_BATTLE_TYPE_GHOST`, `gBattleLegendaryFrlg`) |
+| Teachy TV, combats du Pokédude | teachy_tv, battle_controller_pokedude | ✓ 2026-10-31 (`kanto_teachy_tv.c`, `kanto_battle_controller_pokedude.c`, `gBattlePokedudeFrlg`) |
 | PC (stockage), Easy Chat | pokemon_storage_system_*, easy_chat_2/3 | — Émeraude gardé (décisions 2026-10-23) |
-| PC objets / boîte aux lettres, Maître des capacités, boutique, machine à sous, menu Start de RF | item_pc, mailbox_pc, learn_move, buy_menu_helpers, slot_machine, start_menu | ✗ version d'Émeraude partout (candidats à HOENN/KANTO) |
+| PC objets / boîte aux lettres, Maître des capacités, boutique, machine à sous, menu Start de RF | item_pc, mailbox_pc, learn_move, buy_menu_helpers, slot_machine, start_menu | ✓ option MENUS (`kanto_item_pc.c`, `kanto_learn_move.c`, `kanto_shop.c`, `kanto_slot_machine.c`, `start_menu.c`) |
 | Link : E-Reader, Union Room, Tour de Combat RF, Colisée | cereader_tool, union_room_chat_*, battle_tower | ⊘ stubs |
 
 
@@ -105,14 +105,13 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 - ~~Panneaux de RF, polices homme/femme et couleurs de texte~~ : faits le 2026-10-30. Tuiles MB_SIGNPOST / enseignes Centre, Boutique, Plateau Indigo rétablies (`tools/kanto_signposts.py`, 0xC8-0xCC) ; on ouvre un panneau en marchant vers lui et on le ferme en s'éloignant (field_control_avatar.c, script.c) ; avec DIALOGUE = KANTO, cadre « panneau » de RF et texte bleu/rouge des PNJ de Kanto (`ContextNpcGetTextColor`, kanto_field_specials.c). Les polices FONT_MALE/FEMALE de RF ont les glyphes et couleurs de sa police normale (= FONT_KANTO). Scénario `kanto_signposts`.
 
 **C. À décider (écartés jusqu'ici)**
-- Aide L/R de RF (help_system*.c) : aujourd'hui sans effet.
-- Teachy TV et combats du Pokédude (teachy_tv.c, battle_controller_pokedude.c) : retirés du sac.
+- Aide L/R de RF (help_system*.c) : NON (décision de l'utilisateur, 2026-10-30).
 - Conseils de Chen pendant le combat du labo (battle_controller_oak_old_man.c) : NON (décision de l'utilisateur, 2026-10-30).
 - Discours de Chen de nouvelle partie (oak_speech.c) : la partie commence à Hoenn.
 
 **D. Hors solo (link)** : Colisée, échanges câble, Union Room, Tour de Combat de RF, E-Reader, records de combat.
 
-**E. Données perdues à l'import** : objets « sous les pieds » (traités comme des objets cachés normaux).
+**E. Données perdues à l'import** : ~~objets « sous les pieds »~~ rétablis le 2026-10-30 (`underfoot` des objets cachés, `tools/kanto_hidden_items.py`).
 
 **Déjà conformes, contrairement à ce que suggère la carte** : animations de tilesets de Kanto (tileset_anims.c), musiques RF (`MUS_RG_*`, sauf `MUS_RS_VS_*` = musiques d'Émeraude), déplacements `walk_slower` (convertis en `walk_slow`) ; les autres actions de déplacement propres à RF (rotation, glissade…) ne servent qu'aux cinématiques du point A3.
 

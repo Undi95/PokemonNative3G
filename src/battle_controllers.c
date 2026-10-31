@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
 #include "battle.h"
 #include "battle_ai_script_commands.h"
 #include "battle_anim.h"
@@ -165,6 +166,8 @@ static void InitSinglePlayerBtlControllers(void)
 
         if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
             gBattlerControllerFuncs[B_BATTLER_0] = SetControllerToSafari;
+        else if (gBattlePokedudeFrlg) // PokemonNative3G : RF, le Pokédude joue les deux camps
+            gBattlerControllerFuncs[B_BATTLER_0] = SetControllerToPokedude;
         else if (IsOldManTutorialBattle())
             gBattlerControllerFuncs[B_BATTLER_0] = SetControllerToOldMan; // Rouge Feu
         else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
@@ -174,7 +177,10 @@ static void InitSinglePlayerBtlControllers(void)
 
         gBattlerPositions[B_BATTLER_0] = B_POSITION_PLAYER_LEFT;
 
-        gBattlerControllerFuncs[B_BATTLER_1] = SetControllerToOpponent;
+        if (gBattlePokedudeFrlg)
+            gBattlerControllerFuncs[B_BATTLER_1] = SetControllerToPokedude;
+        else
+            gBattlerControllerFuncs[B_BATTLER_1] = SetControllerToOpponent;
         gBattlerPositions[B_BATTLER_1] = B_POSITION_OPPONENT_LEFT;
 
         gBattlersCount = 2;

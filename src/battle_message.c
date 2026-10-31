@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
 #include "fusion_events.h"
 #include "kanto_save.h"
 #include "malloc.h"
@@ -1762,6 +1763,18 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .bgColor = TEXT_COLOR_TRANSPARENT,
         .shadowColor = TEXT_COLOR_GREEN,
     },
+    [B_WIN_OAK_OLD_MAN] = { // PokemonNative3G : voix off du Pokédude (RF ; FONT_MALE de RF = FONT_KANTO)
+        .fillValue = PIXEL_FILL(0x1),
+        .fontId = FONT_KANTO,
+        .x = 0,
+        .y = 1,
+        .letterSpacing = 0,
+        .lineSpacing = 1,
+        .speed = 1,
+        .fgColor = TEXT_COLOR_DARK_GRAY,
+        .bgColor = TEXT_COLOR_WHITE,
+        .shadowColor = TEXT_COLOR_LIGHT_GRAY,
+    },
 };
 
 static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
@@ -3139,17 +3152,18 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
         printerTemplate.x = printerTemplate.currentX = alignX;
     }
 
-    if (windowId == ARENA_WIN_JUDGMENT_TEXT)
+    if (windowId == ARENA_WIN_JUDGMENT_TEXT || (gBattlePokedudeFrlg && windowId == B_WIN_OAK_OLD_MAN))
         gTextFlags.useAlternateDownArrow = FALSE;
     else
         gTextFlags.useAlternateDownArrow = TRUE;
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED))
+    // PokemonNative3G : RF, les combats du Pokédude défilent seuls (sauf la voix off)
+    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED) || (gBattlePokedudeFrlg && windowId != B_WIN_OAK_OLD_MAN))
         gTextFlags.autoScroll = TRUE;
     else
         gTextFlags.autoScroll = FALSE;
 
-    if (windowId == B_WIN_MSG || windowId == ARENA_WIN_JUDGMENT_TEXT)
+    if (windowId == B_WIN_MSG || windowId == ARENA_WIN_JUDGMENT_TEXT || (gBattlePokedudeFrlg && windowId == B_WIN_OAK_OLD_MAN))
     {
         if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
             speed = 1;

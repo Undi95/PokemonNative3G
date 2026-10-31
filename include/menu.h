@@ -108,6 +108,7 @@ void BufferSaveMenuText(u8 textId, u8 *dest, u8 color);
 void RemoveMapNamePopUpWindow(void);
 u8 GetMapNamePopUpWindowId(void);
 u8 AddMapNamePopUpWindow(void);
+void Menu_PrintFormatIntlPlayerName(u8 windowId, const u8 *src, u16 x, u16 y);
 void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top, u8 speed, TextPrinterCallback callback, u8 letterSpacing, u8 lineSpacing);
 void SetBgTilemapPalette(u8 bgId, u8 left, u8 top, u8 width, u8 height, u8 palette);
 void AddValToTilemapBuffer(void *ptr, int delta, int width, int height, bool32 isAffine);

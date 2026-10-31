@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
 #include "battle.h"
 #include "battle_bg.h"
 #include "battle_main.h"
@@ -380,6 +381,15 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
         .paletteNum = 0,
         .baseBlock = 0x00b0,
     },
+    [B_WIN_OAK_OLD_MAN] = { // PokemonNative3G : voix off du Pokédude (RF)
+        .bg = 0,
+        .tilemapLeft = 2,
+        .tilemapTop = 15,
+        .width = 26,
+        .height = 4,
+        .paletteNum = 7,
+        .baseBlock = 0x090
+    },
     DUMMY_WIN_TEMPLATE
 };
 
@@ -757,11 +767,18 @@ void LoadBattleMenuWindowGfx(void)
         gPlttBufferUnfaded[BG_PLTT_ID(7) + 6] = 0;
         CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(7) + 6], &gPlttBufferFaded[BG_PLTT_ID(7) + 6], PLTT_SIZEOF(1));
     }
+    else if (gBattlePokedudeFrlg) // PokemonNative3G : LoadBattleMenuWindowGfx de RF (cadre de la voix off du Pokédude)
+    {
+        Menu_LoadStdPalAt(BG_PLTT_ID(7));
+        LoadKantoMenuMessageWindowGfx(0, 0x030, BG_PLTT_ID(7));
+        gPlttBufferUnfaded[BG_PLTT_ID(7) + 6] = RGB(0, 0, 0);
+        CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(7) + 6], &gPlttBufferFaded[BG_PLTT_ID(7) + 6], PLTT_SIZEOF(1));
+    }
 }
 
 void DrawMainBattleBackground(void)
 {
-    if (IsKantoTilesetMap())
+    if (IsKantoTilesetMap() || gBattlePokedudeFrlg) // PokemonNative3G : Pokédude = décor de RF (herbe)
     {
         Kanto_DrawMainBattleBackground();
         return;
@@ -865,10 +882,10 @@ void DrawMainBattleBackground(void)
 
 void LoadBattleTextboxAndBackground(void)
 {
-    LZDecompressVram(gSaveBlock2Ptr->optionsBattleUI ? gKantoBattleTextboxTiles : gBattleTextboxTiles, (void *)(BG_CHAR_ADDR(0)));
+    LZDecompressVram(KANTO_BATTLE_UI ? gKantoBattleTextboxTiles : gBattleTextboxTiles, (void *)(BG_CHAR_ADDR(0)));
     CopyToBgTilemapBuffer(0, gBattleTextboxTilemap, 0, 0);
     CopyBgTilemapBufferToVram(0);
-    LoadCompressedPalette(gSaveBlock2Ptr->optionsBattleUI ? gKantoBattleTextboxPalette : gBattleTextboxPalette, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
+    LoadCompressedPalette(KANTO_BATTLE_UI ? gKantoBattleTextboxPalette : gBattleTextboxPalette, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
     LoadBattleMenuWindowGfx();
     DrawMainBattleBackground();
 }
@@ -1147,7 +1164,7 @@ void DrawBattleEntryBackground(void)
         gBattle_BG2_Y = 0xFF5C;
         LoadCompressedSpriteSheetUsingHeap(&sVsLettersSpriteSheet);
     }
-    else if (IsKantoTilesetMap())
+    else if (IsKantoTilesetMap() || gBattlePokedudeFrlg)
     {
         Kanto_DrawBattleEntryBackground();
     }
@@ -1222,20 +1239,20 @@ bool8 LoadChosenBattleElement(u8 caseId)
     bool8 ret = FALSE;
 
     // Décor de RF sur les cartes de Kanto
-    if (caseId >= 3 && caseId <= 5 && IsKantoTilesetMap())
+    if (caseId >= 3 && caseId <= 5 && (IsKantoTilesetMap() || gBattlePokedudeFrlg))
         return Kanto_LoadChosenBattleElement(caseId);
 
     switch (caseId)
     {
     case 0:
-        LZDecompressVram(gSaveBlock2Ptr->optionsBattleUI ? gKantoBattleTextboxTiles : gBattleTextboxTiles, (void *)(BG_CHAR_ADDR(0)));
+        LZDecompressVram(KANTO_BATTLE_UI ? gKantoBattleTextboxTiles : gBattleTextboxTiles, (void *)(BG_CHAR_ADDR(0)));
         break;
     case 1:
         CopyToBgTilemapBuffer(0, gBattleTextboxTilemap, 0, 0);
         CopyBgTilemapBufferToVram(0);
         break;
     case 2:
-        LoadCompressedPalette(gSaveBlock2Ptr->optionsBattleUI ? gKantoBattleTextboxPalette : gBattleTextboxPalette, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
+        LoadCompressedPalette(KANTO_BATTLE_UI ? gKantoBattleTextboxPalette : gBattleTextboxPalette, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
         break;
     case 3:
         if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_EREADER_TRAINER))

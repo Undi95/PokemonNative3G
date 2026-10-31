@@ -19,12 +19,9 @@
 #define GetDialogBoxFontId()     FONT_KANTO
 #define FONT_NORMAL_COPY_1       FONT_KANTO
 
-// Endroits d'où RF ouvre le sac et qu'Émeraude n'a pas (tutoriels) : jamais utilisés ici
+// Le Vieil Homme de RF ouvre le sac de démonstration, mais ici il garde celui d'Émeraude : jamais utilisé.
+// Les emplacements de la Télé Pokémon (ITEMMENULOCATION_TTVSCR_*) sont dans item_menu.h.
 #define ITEMMENULOCATION_OLD_MAN          0xF0
-#define ITEMMENULOCATION_TTVSCR_STATUS    0xF1
-#define ITEMMENULOCATION_TTVSCR_CATCHING  0xF2
-#define ITEMMENULOCATION_TTVSCR_REGISTER  0xF3
-#define ITEMMENULOCATION_TTVSCR_TMS       0xF4
 
 // tm_case.h / berry_pouch.h de RF
 enum {

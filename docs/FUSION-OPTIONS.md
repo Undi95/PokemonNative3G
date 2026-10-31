@@ -33,7 +33,15 @@ contenu dans un seul jeu.
   CloseItemMessage, Task_FadeAndCloseBagMenu et SetBagMenuNewScreenCallback (ex-gBagMenu->newScreenCallback)
   suivent le sac ouvert, ou le Sac à Baies pour une baie (comme item_use.c de RF). Boîte à CT et Sac à Baies
   ajoutés en tête des Objets rares à l'ouverture du sac de RF, retirés à celle du sac d'Émeraude.
-  Retirés de RF : tutoriels (Vieil Homme, Télé Pokémon), journal des quêtes.
+  SELECT ne déplace pas la Boîte à CT ni le Sac à Baies, et un objet posé au-dessus d'eux va juste après
+  (2026-10-31, `kanto_bag_cases.py`).
+  Retirés de RF : tutoriel du Vieil Homme (il garde le sac d'Émeraude), journal des quêtes.
+- [x] Télé Pokémon / TV ABC (2026-10-31, `kanto_teachy_tv.c`, `kanto_battle_controller_pokedude.c`) : les six émissions
+  du Pokédude de RF, depuis le sac (des deux styles) ou SELECT. Combats de démonstration avec l'interface de combat de RF
+  quelle que soit l'option (cadre de voix off, fenêtre 24), décor d'herbe ; sac, équipe et Boîte à CT de démonstration
+  (le sac du joueur est sauvegardé puis rendu, poches agrandies comprises). RF n'affiche les émissions CT et objet
+  qu'avec la Boîte à CT : ici, dès la première CT ou CS (avec le sac de RF, la Boîte à CT de la fusion est toujours là).
+  BATTLE_TYPE_POKEDUDE n'a pas de bit libre : `gBattlePokedudeFrlg`.
 - [-] Interface du PC (stockage) : abandonné (choix utilisateur 2026-10-23) — on garde celle d'Émeraude, qui a déjà les fonds des deux versions
 - [x] Écran de nom (MENUS : police + icône PC de RF ; sprite selon PERSO ; Easy Chat gardé d'Émeraude) (option, décision 2026-10-23) : clavier de RF, avec le sprite du perso choisi (Brice/Flora ou Red/Leaf) ;
   aussi l'écran de sélection de mots (Easy Chat)
@@ -89,7 +97,8 @@ Choix HOENN / KANTO :
 - Donneurs de capacités : chacun reste exclusif à sa région (pas de changement)
 - [x] Boutique (2026-10-24) : interface de RF avec MENUS = KANTO (`kanto_shop.c` ; boutiques de décorations d'Émeraude inchangées)
 - [x] Machine à sous (2026-10-24) : PAS d'option, chacune dans sa région (celle de RF au Casino de Céladopole, `kanto_slot_machine.c` ; celle d'Émeraude à Lavandia)
-- [x] Menu Start de RF : déjà par MENUS = KANTO (police, espacement, curseur, descriptions de RF)
+- [x] Menu Start de RF : déjà par MENUS = KANTO (police, espacement, curseur, descriptions de RF) ; nom du joueur
+  en police de RF aussi (`Menu_PrintFormatIntlPlayerName` de RF, 2026-10-31)
 - [x] Menu Options en pages (2026-10-23, L/R ; titre « {L}{R} PAGE 1/2 : JEU » / « PAGE 2/2 : HOENN/KANTO » ; page 2 : PERSO, POKéMON, DIALOGUE, BOITES COMBAT, MENUS, SAC, POKéDEX, TITRE, INTRO) : page 1 = réglages d'Émeraude, page 2 (et suivantes) = choix HOENN/KANTO ; indiquer clairement qu'il y a d'autres pages (ex. « PAGE 1/2 » et flèches L/R dans le titre)
 
 ## Notes

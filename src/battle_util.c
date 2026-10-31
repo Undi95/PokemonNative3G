@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_arena.h"
@@ -3934,7 +3935,7 @@ u8 IsMonDisobedient(void)
     s32 calc;
     u8 obedienceLevel = 0;
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK) || gBattlePokedudeFrlg) // PokemonNative3G : RF
         return DISOBEDIENCE_OBEDIENT;
     if (GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT)
         return DISOBEDIENCE_OBEDIENT;

@@ -2080,6 +2080,25 @@ void PrintPlayerNameOnWindow(u8 windowId, const u8 *src, u16 x, u16 y)
     AddTextPrinterParameterized(windowId, 1, gStringVar4, x, y, TEXT_SKIP_DRAW, 0);
 }
 
+// PokemonNative3G : Rouge Feu (menu2.c), le nom du joueur au menu Start de RF (option MENUS = KANTO)
+void Menu_PrintFormatIntlPlayerName(u8 windowId, const u8 *src, u16 x, u16 y)
+{
+    s32 i;
+
+    for (i = 0; gSaveBlock2Ptr->playerName[i] != EOS; i++)
+        ;
+
+    StringExpandPlaceholders(gStringVar4, src);
+    if (i != 5)
+    {
+        AddTextPrinterParameterized(windowId, FONT_KANTO, gStringVar4, x, y, TEXT_SKIP_DRAW, NULL);
+    }
+    else
+    {
+        AddTextPrinterParameterized5(windowId, FONT_KANTO, gStringVar4, x, y, TEXT_SKIP_DRAW, NULL, 0, 0);
+    }
+}
+
 static void UNUSED UnusedBlitBitmapRect(const struct Bitmap *src, struct Bitmap *dst, u16 srcX, u16 srcY, u16 dstX, u16 dstY, u16 width, u16 height)
 {
     int loopSrcY, loopDstY, loopSrcX, loopDstX, xEnd, yEnd, multiplierSrcY, multiplierDstY;

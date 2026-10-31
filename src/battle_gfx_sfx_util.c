@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
 #include "battle.h"
 #include "battle_controllers.h"
 #include "battle_ai_script_commands.h"
@@ -102,7 +103,7 @@ static const struct SpritePalette sKantoSpritePalettes_HealthBoxHealthBar[2] =
     {gKantoBattleInterface_Healthbox_Pal, TAG_HEALTHBOX_PAL},
     {gKantoBattleInterface_Healthbar_Pal, TAG_HEALTHBAR_PAL}
 };
-#define KANTO_UI(hoenn) (*(gSaveBlock2Ptr->optionsBattleUI ? &sKanto##hoenn : &s##hoenn))
+#define KANTO_UI(hoenn) (*(KANTO_BATTLE_UI ? &sKanto##hoenn : &s##hoenn))
 
 // code
 void AllocateBattleSpritesData(void)

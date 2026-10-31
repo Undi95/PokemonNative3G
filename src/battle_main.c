@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
 #include "kanto_vs_seeker.h"
 #include "constants/kanto_trainers.h"
 #include "battle.h"
@@ -78,6 +79,7 @@ static void TryCorrectShedinjaLanguage(struct Pokemon *mon);
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer);
 static void BattleMainCB1(void);
 static void CB2_EndLinkBattle(void);
+static void CB2_QuitPokedudeBattle(void);
 static void EndLinkBattleInSteps(void);
 static void CB2_InitAskRecordBattle(void);
 static void CB2_AskRecordBattle(void);
@@ -1885,9 +1887,30 @@ void BattleMainCB2(void)
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
         SetMainCallback2(CB2_QuitRecordedBattle);
     }
+
+    // PokemonNative3G : RF, B maintenu interrompt la démonstration du Pokédude
+    if (JOY_HELD(B_BUTTON) && gBattlePokedudeFrlg)
+    {
+        gSpecialVar_Result = gBattleOutcome = B_OUTCOME_DREW;
+        ResetPaletteFadeControl();
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        SetMainCallback2(CB2_QuitPokedudeBattle);
+    }
 }
 
-static void FreeRestoreBattleData(void)
+// CB2_QuitPokedudeBattle de RF
+static void CB2_QuitPokedudeBattle(void)
+{
+    UpdatePaletteFade();
+    if (!gPaletteFade.active)
+    {
+        FreeRestoreBattleData();
+        FreeAllWindowBuffers();
+        SetMainCallback2(gMain.savedCallback);
+    }
+}
+
+void FreeRestoreBattleData(void)
 {
     gMain.callback1 = gPreBattleCallback1;
     gScanlineEffect.state = 3;
@@ -2238,7 +2261,7 @@ void CB2_InitEndLinkBattle(void)
         gBattle_BG3_Y = 0;
 
         InitBattleBgsVideo();
-        LoadCompressedPalette(gSaveBlock2Ptr->optionsBattleUI ? gKantoBattleTextboxPalette : gBattleTextboxPalette, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
+        LoadCompressedPalette(KANTO_BATTLE_UI ? gKantoBattleTextboxPalette : gBattleTextboxPalette, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
         LoadBattleMenuWindowGfx();
         ResetSpriteData();
         ResetTasks();
@@ -3090,7 +3113,7 @@ static void BattleStartClearSetData(void)
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
     {
-        if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && gSaveBlock2Ptr->optionsBattleSceneOff == TRUE)
+        if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && !gBattlePokedudeFrlg && gSaveBlock2Ptr->optionsBattleSceneOff == TRUE)
             gHitMarker |= HITMARKER_NO_ANIMATIONS;
     }
     else if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)) && GetBattleSceneInRecordedBattle())
@@ -3447,7 +3470,7 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
                 MarkBattlerForControllerExec(gActiveBattler);
             }
             if (GetBattlerSide(gActiveBattler) == B_SIDE_OPPONENT
-             && !IsOldManTutorialBattle() && !IS_BATTLE_TYPE_GHOST(gBattleTypeFlags) && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
+             && !IsOldManTutorialBattle() && !gBattlePokedudeFrlg && !IS_BATTLE_TYPE_GHOST(gBattleTypeFlags) && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
                                       | BATTLE_TYPE_FRONTIER
                                       | BATTLE_TYPE_LINK
                                       | BATTLE_TYPE_RECORDED_LINK
@@ -3465,7 +3488,7 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
                     if (!IS_BATTLE_TYPE_GHOST_WITHOUT_SCOPE(gBattleTypeFlags))
                         HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[gActiveBattler].species), FLAG_SET_SEEN, gBattleMons[gActiveBattler].personality);
                 }
-                else if (!IsOldManTutorialBattle() && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
+                else if (!IsOldManTutorialBattle() && !gBattlePokedudeFrlg && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
                                       | BATTLE_TYPE_FRONTIER
                                       | BATTLE_TYPE_LINK
                                       | BATTLE_TYPE_RECORDED_LINK
@@ -3707,7 +3730,7 @@ static void BattleIntroRecordMonsToDex(void)
         for (gActiveBattler = 0; gActiveBattler < gBattlersCount; gActiveBattler++)
         {
             if (GetBattlerSide(gActiveBattler) == B_SIDE_OPPONENT
-             && !IsOldManTutorialBattle() && !IS_BATTLE_TYPE_GHOST(gBattleTypeFlags) && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
+             && !IsOldManTutorialBattle() && !gBattlePokedudeFrlg && !IS_BATTLE_TYPE_GHOST(gBattleTypeFlags) && !(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
                                       | BATTLE_TYPE_FRONTIER
                                       | BATTLE_TYPE_LINK
                                       | BATTLE_TYPE_RECORDED_LINK

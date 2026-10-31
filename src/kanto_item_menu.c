@@ -1,5 +1,8 @@
 // Rouge Feu : item_menu.c (option SAC = KANTO)
 #include "global.h"
+#include "kanto_teachy_tv.h"
+#include "load_save.h"
+#include "battle_main.h"
 #include "battle.h"
 #include "battle_controllers.h"
 #include "bg.h"
@@ -102,15 +105,18 @@ struct BagMenuAlloc
     u8 data[4];
 };
 
+// PokemonNative3G : les poches OBJETS et OBJ. RARES de la fusion sont agrandies (gSaveBlockBag)
 struct BagSlots
 {
-    struct ItemSlot bagPocket_Items[BAG_ITEMS_COUNT];
-    struct ItemSlot bagPocket_KeyItems[BAG_KEYITEMS_COUNT];
+    struct ItemSlot bagPocket_Items[BIG_BAG_ITEMS_COUNT];
+    struct ItemSlot bagPocket_KeyItems[BIG_BAG_KEYITEMS_COUNT];
     struct ItemSlot bagPocket_PokeBalls[BAG_POKEBALLS_COUNT];
     u16 itemsAbove[NUM_BAG_POCKETS_NO_CASES];
     u16 cursorPos[NUM_BAG_POCKETS_NO_CASES];
     u16 registeredItem;
     u16 pocket;
+    u8 location;         // PokemonNative3G : le sac du joueur se rouvre après la Télé Pokémon (ITEMMENULOCATION_LAST)
+    bool8 kantoBagActive;
 };
 
 EWRAM_DATA struct BagStruct gBagMenuState = {};
@@ -150,6 +156,7 @@ static void Task_AnimateWin0v(u8 taskId);
 static void ShowBagOrBeginWin0OpenTask(void);
 static void All_CalculateNItemsAndMaxShowed(void);
 static void Task_BagMenu_HandleInput(u8 taskId);
+static u16 CountCasesAtTopOfPocket(void);
 static void Task_ItemContextMenuByLocation(u8 taskId);
 static void Bag_FillMessageBoxWithPalette(u32 a0);
 static u8 ProcessPocketSwitchInput(u8 taskId, u8 pocketId);
@@ -201,6 +208,13 @@ static void Task_ItemContext_Deposit(u8 taskId);
 static void Task_SelectQuantityToDeposit(u8 taskId);
 static void Task_TryDoItemDeposit(u8 taskId);
 static bool8 BagIsTutorial(void);
+static bool8 sKantoBagActive;
+static void Task_Pokedude_FadeFromBag(u8 taskId);
+static void Task_Pokedude_WaitFadeAndExitBag(u8 taskId);
+static void Task_Bag_TeachyTvRegister(u8 taskId);
+static void Task_Bag_TeachyTvCatching(u8 taskId);
+static void Task_Bag_TeachyTvStatus(u8 taskId);
+static void Task_Bag_TeachyTvTMs(u8 taskId);
 
 static const struct BgTemplate sBgTemplates[2] = {
     {
@@ -635,6 +649,14 @@ static u8 CreateBagInputHandlerTask(u8 location)
 {
     switch (location)
     {
+    case ITEMMENULOCATION_TTVSCR_REGISTER: // PokemonNative3G : Télé Pokémon (RF)
+        return CreateTask(Task_Bag_TeachyTvRegister, 0);
+    case ITEMMENULOCATION_TTVSCR_TMS:
+        return CreateTask(Task_Bag_TeachyTvTMs, 0);
+    case ITEMMENULOCATION_TTVSCR_STATUS:
+        return CreateTask(Task_Bag_TeachyTvStatus, 0);
+    case ITEMMENULOCATION_TTVSCR_CATCHING:
+        return CreateTask(Task_Bag_TeachyTvCatching, 0);
     default:
         return CreateTask(Task_BagMenu_HandleInput, 0);
     }
@@ -1080,7 +1102,9 @@ static void Task_BagMenu_HandleInput(u8 taskId)
         if (JOY_NEW(SELECT_BUTTON) && gBagMenuState.location == ITEMMENULOCATION_FIELD)
         {
             ListMenuGetScrollAndRow(data[0], &cursorPos, &itemsAbove);
-            if (cursorPos + itemsAbove != sBagMenuDisplay->nItems[gBagMenuState.pocket])
+            // PokemonNative3G : la Boîte à CT et le Sac à Baies restent en tête (EnsureCases) : pas déplaçables
+            if (cursorPos + itemsAbove != sBagMenuDisplay->nItems[gBagMenuState.pocket]
+             && cursorPos + itemsAbove >= CountCasesAtTopOfPocket())
             {
                 PlaySE(SE_SELECT);
                 BeginMovingItemInPocket(taskId, cursorPos + itemsAbove);
@@ -1235,6 +1259,22 @@ static void Task_AnimateSwitchPockets(u8 taskId)
     }
 }
 
+// PokemonNative3G : nombre d'objets en tête de la poche qui sont la Boîte à CT ou le Sac à Baies
+static u16 CountCasesAtTopOfPocket(void)
+{
+    u16 n = 0;
+    u16 itemId;
+
+    while (n < sBagMenuDisplay->nItems[gBagMenuState.pocket])
+    {
+        itemId = BagGetItemIdByPocketPosition(KPOCKET(gBagMenuState.pocket) + 1, n);
+        if (itemId != ITEM_TM_CASE && itemId != ITEM_BERRY_POUCH)
+            break;
+        n++;
+    }
+    return n;
+}
+
 static void BeginMovingItemInPocket(u8 taskId, s16 itemIndex)
 {
     u16 itemsAbove;
@@ -1290,6 +1330,9 @@ static void Task_MoveItemInPocket_HandleInput(u8 taskId)
 static void ExecuteMoveItemInPocket(u8 taskId, u32 itemIndex)
 {
     s16 *data = gTasks[taskId].data;
+    // PokemonNative3G : un objet posé au-dessus de la Boîte à CT ou du Sac à Baies va juste après eux
+    if (itemIndex < CountCasesAtTopOfPocket())
+        itemIndex = CountCasesAtTopOfPocket();
     if (data[1] == itemIndex || data[1] == itemIndex - 1)
     {
         AbortMovingItemInPocket(taskId, itemIndex);
@@ -2036,9 +2079,314 @@ static void Task_TryDoItemDeposit(u8 taskId)
 
 static bool8 BagIsTutorial(void)
 {
-    return FALSE; // PokemonNative3G : pas de tutoriels (Vieil Homme, Télé Pokémon)
+    // PokemonNative3G : Télé Pokémon (démonstrations du Pokédude) ; le Vieil Homme garde le sac d'Émeraude
+    if (gBagMenuState.location == ITEMMENULOCATION_TTVSCR_CATCHING
+     || gBagMenuState.location == ITEMMENULOCATION_TTVSCR_STATUS
+     || gBagMenuState.location == ITEMMENULOCATION_TTVSCR_REGISTER
+     || gBagMenuState.location == ITEMMENULOCATION_TTVSCR_TMS)
+        return TRUE;
+    return FALSE;
 }
 
+// ---- PokemonNative3G : Télé Pokémon, sac du Pokédude (item_menu.c de RF) ----
+static void BackUpPlayerBag(void)
+{
+    u32 i;
+    sBackupPlayerBag = AllocZeroed(sizeof(struct BagSlots));
+    memcpy(sBackupPlayerBag->bagPocket_Items, gBagPockets[ITEMS_POCKET].itemSlots, BIG_BAG_ITEMS_COUNT * sizeof(struct ItemSlot));
+    memcpy(sBackupPlayerBag->bagPocket_KeyItems, gBagPockets[KEYITEMS_POCKET].itemSlots, BIG_BAG_KEYITEMS_COUNT * sizeof(struct ItemSlot));
+    memcpy(sBackupPlayerBag->bagPocket_PokeBalls, gBagPockets[BALLS_POCKET].itemSlots, BAG_POKEBALLS_COUNT * sizeof(struct ItemSlot));
+    sBackupPlayerBag->registeredItem = gSaveBlock1Ptr->registeredItem;
+    sBackupPlayerBag->pocket = gBagMenuState.pocket;
+    sBackupPlayerBag->location = gBagMenuState.location;
+    sBackupPlayerBag->kantoBagActive = sKantoBagActive;
+    for (i = 0; i < NUM_BAG_POCKETS_NO_CASES; i++)
+    {
+        sBackupPlayerBag->itemsAbove[i] = gBagMenuState.itemsAbove[i];
+        sBackupPlayerBag->cursorPos[i] = gBagMenuState.cursorPos[i];
+    }
+    ClearItemSlots(gBagPockets[ITEMS_POCKET].itemSlots, BIG_BAG_ITEMS_COUNT);
+    ClearItemSlots(gBagPockets[KEYITEMS_POCKET].itemSlots, BIG_BAG_KEYITEMS_COUNT);
+    ClearItemSlots(gBagPockets[BALLS_POCKET].itemSlots, BAG_POKEBALLS_COUNT);
+    gSaveBlock1Ptr->registeredItem = ITEM_NONE;
+    ResetBagCursorPositions();
+}
+
+static void RestorePlayerBag(void)
+{
+    u32 i;
+    memcpy(gBagPockets[ITEMS_POCKET].itemSlots, sBackupPlayerBag->bagPocket_Items, BIG_BAG_ITEMS_COUNT * sizeof(struct ItemSlot));
+    memcpy(gBagPockets[KEYITEMS_POCKET].itemSlots, sBackupPlayerBag->bagPocket_KeyItems, BIG_BAG_KEYITEMS_COUNT * sizeof(struct ItemSlot));
+    memcpy(gBagPockets[BALLS_POCKET].itemSlots, sBackupPlayerBag->bagPocket_PokeBalls, BAG_POKEBALLS_COUNT * sizeof(struct ItemSlot));
+    gSaveBlock1Ptr->registeredItem = sBackupPlayerBag->registeredItem;
+    gBagMenuState.pocket = sBackupPlayerBag->pocket;
+    gBagMenuState.location = sBackupPlayerBag->location;
+    sKantoBagActive = sBackupPlayerBag->kantoBagActive;
+    for (i = 0; i < NUM_BAG_POCKETS_NO_CASES; i++)
+    {
+        gBagMenuState.itemsAbove[i] = sBackupPlayerBag->itemsAbove[i];
+        gBagMenuState.cursorPos[i] = sBackupPlayerBag->cursorPos[i];
+    }
+    Free(sBackupPlayerBag);
+}
+
+static void Task_Pokedude_FadeFromBag(u8 taskId)
+{
+    BeginNormalPaletteFade(PALETTES_ALL, -2, 0, 16, RGB_BLACK);
+    gTasks[taskId].func = Task_Pokedude_WaitFadeAndExitBag;
+}
+
+static void Task_Pokedude_WaitFadeAndExitBag(u8 taskId)
+{
+    if (!gPaletteFade.active && FuncIsActiveTask(Task_AnimateWin0v) != TRUE)
+    {
+        if (sBagMenuDisplay->exitCB != NULL)
+            SetMainCallback2(sBagMenuDisplay->exitCB);
+        else
+            SetMainCallback2(gBagMenuState.bagCallback);
+        BagDestroyPocketScrollArrowPair();
+        DestroyBagMenuResources();
+        DestroyTask(taskId);
+    }
+}
+
+void InitPokedudeBag(u8 a0)
+{
+    MainCallback cb2;
+    u8 location;
+    BackUpPlayerBag();
+    sKantoBagActive = TRUE; // PokemonNative3G : sac de RF
+    AddBagItem(ITEM_POTION, 1);
+    AddBagItem(ITEM_ANTIDOTE, 1);
+    AddBagItem(ITEM_TEACHY_TV, 1);
+    AddBagItem(ITEM_TM_CASE, 1);
+    AddBagItem(ITEM_POKE_BALL, 5);
+    AddBagItem(ITEM_GREAT_BALL, 1);
+    AddBagItem(ITEM_NEST_BALL, 1);
+    switch (a0)
+    {
+    default:
+        cb2 = CB2_ReturnToTeachyTV;
+        location = a0;
+        break;
+    case ITEMMENULOCATION_TTVSCR_STATUS:
+        cb2 = CB2_SetUpReshowBattleScreenAfterMenu2;
+        location = ITEMMENULOCATION_TTVSCR_STATUS;
+        break;
+    case ITEMMENULOCATION_TTVSCR_CATCHING:
+        cb2 = CB2_SetUpReshowBattleScreenAfterMenu2;
+        location = ITEMMENULOCATION_TTVSCR_CATCHING;
+        break;
+    }
+    GoToBagMenu(location, OPEN_BAG_ITEMS, cb2);
+}
+
+static bool8 Task_BButtonInterruptTeachyTv(u8 taskId)
+{
+    if (JOY_NEW(B_BUTTON))
+    {
+        RestorePlayerBag();
+        SetTeachyTvControllerModeToResume();
+        sBagMenuDisplay->exitCB = CB2_ReturnToTeachyTV;
+        gTasks[taskId].func = Task_Pokedude_FadeFromBag;
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
+static void Task_Bag_TeachyTvRegister(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    if (!gPaletteFade.active && Task_BButtonInterruptTeachyTv(taskId) != TRUE)
+    {
+        switch (data[8])
+        {
+        case 102:
+            PlaySE(SE_BAG_POCKET);
+            SwitchPockets(taskId, 1, FALSE);
+            break;
+        case 204:
+            PlaySE(SE_SELECT);
+            bag_menu_print_cursor_(data[0], 2);
+            Bag_FillMessageBoxWithPalette(1);
+            gSpecialVar_ItemId = ITEM_TEACHY_TV;
+            OpenContextMenu(taskId);
+            break;
+        case 306:
+            PlaySE(SE_SELECT);
+            Menu_MoveCursorNoWrapAround(1);
+            break;
+        case 408:
+            PlaySE(SE_SELECT);
+            gSaveBlock1Ptr->registeredItem = gSpecialVar_ItemId;
+            HideBagWindow(10);
+            HideBagWindow(6);
+            PutWindowTilemap(0);
+            PutWindowTilemap(1);
+            DestroyListMenuTask(data[0], &gBagMenuState.cursorPos[gBagMenuState.pocket], &gBagMenuState.itemsAbove[gBagMenuState.pocket]);
+            Bag_BuildListMenuTemplate(gBagMenuState.pocket);
+            data[0] = ListMenuInit(&gMultiuseListMenuTemplate, gBagMenuState.cursorPos[gBagMenuState.pocket], gBagMenuState.itemsAbove[gBagMenuState.pocket]);
+            Bag_FillMessageBoxWithPalette(0);
+            bag_menu_print_cursor_(data[0], 1);
+            CopyWindowToVram(0, COPYWIN_MAP);
+            break;
+        case 510:
+        case 612:
+            gMain.newKeys = 0;
+            gMain.newAndRepeatedKeys = DPAD_DOWN;
+            ListMenu_ProcessInput(data[0]);
+            break;
+        case 714:
+            PlaySE(SE_SELECT);
+            DestroyListMenuTask(data[0], NULL, NULL);
+            RestorePlayerBag();
+            Bag_BeginCloseWin0Animation();
+            gTasks[taskId].func = Task_Pokedude_FadeFromBag;
+            return;
+        }
+        data[8]++;
+    }
+}
+
+static void Task_Bag_TeachyTvCatching(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    if (!gPaletteFade.active)
+    {
+        if (Task_BButtonInterruptTeachyTv(taskId) == TRUE)
+        {
+            FreeRestoreBattleData();
+            LoadPlayerParty();
+            return;
+        }
+        switch (data[8])
+        {
+        case 102:
+        case 204:
+            PlaySE(SE_BAG_POCKET);
+            SwitchPockets(taskId, 1, FALSE);
+            break;
+        case 306:
+        case 408:
+            gMain.newKeys = 0;
+            gMain.newAndRepeatedKeys = DPAD_DOWN;
+            ListMenu_ProcessInput(data[0]);
+            break;
+        case 510:
+        case 612:
+            gMain.newKeys = 0;
+            gMain.newAndRepeatedKeys = DPAD_UP;
+            ListMenu_ProcessInput(data[0]);
+            break;
+        case 714:
+            PlaySE(SE_SELECT);
+            bag_menu_print_cursor_(data[0], 2);
+            Bag_FillMessageBoxWithPalette(1);
+            gSpecialVar_ItemId = ITEM_POKE_BALL;
+            OpenContextMenu(taskId);
+            break;
+        case 816:
+            PlaySE(SE_SELECT);
+            HideBagWindow(10);
+            HideBagWindow(6);
+            PutWindowTilemap(0);
+            PutWindowTilemap(1);
+            CopyWindowToVram(0, COPYWIN_MAP);
+            DestroyListMenuTask(data[0], NULL, NULL);
+            RestorePlayerBag();
+            Bag_BeginCloseWin0Animation();
+            gTasks[taskId].func = Task_Pokedude_FadeFromBag;
+            return;
+        }
+        data[8]++;
+    }
+}
+
+static void Task_Bag_TeachyTvStatus(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    if (!gPaletteFade.active)
+    {
+        if (Task_BButtonInterruptTeachyTv(taskId) == TRUE)
+        {
+            FreeRestoreBattleData();
+            LoadPlayerParty();
+            return;
+        }
+        switch (data[8])
+        {
+        case 102:
+            gMain.newKeys = 0;
+            gMain.newAndRepeatedKeys = DPAD_DOWN;
+            ListMenu_ProcessInput(data[0]);
+            break;
+        case 204:
+            PlaySE(SE_SELECT);
+            bag_menu_print_cursor_(data[0], 2);
+            Bag_FillMessageBoxWithPalette(1);
+            gSpecialVar_ItemId = ITEM_ANTIDOTE;
+            OpenContextMenu(taskId);
+            break;
+        case 306:
+            PlaySE(SE_SELECT);
+            HideBagWindow(10);
+            HideBagWindow(6);
+            PutWindowTilemap(0);
+            PutWindowTilemap(1);
+            CopyWindowToVram(0, COPYWIN_MAP);
+            DestroyListMenuTask(data[0], NULL, NULL);
+            RestorePlayerBag();
+            gItemUseCB = ItemUseCB_Medicine;
+            ItemMenu_SetExitCallback(Pokedude_ChooseMonForInBattleItem);
+            gTasks[taskId].func = Task_Pokedude_FadeFromBag;
+            return;
+        }
+        data[8]++;
+    }
+}
+
+static void Task_Bag_TeachyTvTMs(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    if (!gPaletteFade.active && Task_BButtonInterruptTeachyTv(taskId) != TRUE)
+    {
+        switch (data[8])
+        {
+        case 102:
+            PlaySE(SE_BAG_POCKET);
+            SwitchPockets(taskId, 1, 0);
+            break;
+        case 204:
+            gMain.newKeys = 0;
+            gMain.newAndRepeatedKeys = DPAD_DOWN;
+            ListMenu_ProcessInput(data[0]);
+            break;
+        case 306:
+            PlaySE(SE_SELECT);
+            bag_menu_print_cursor_(data[0], 2);
+            Bag_FillMessageBoxWithPalette(1);
+            gSpecialVar_ItemId = ITEM_TM_CASE;
+            OpenContextMenu(taskId);
+            break;
+        case 408:
+            PlaySE(SE_SELECT);
+            HideBagWindow(10);
+            HideBagWindow(6);
+            PutWindowTilemap(0);
+            PutWindowTilemap(1);
+            CopyWindowToVram(0, COPYWIN_MAP);
+            DestroyListMenuTask(data[0], NULL, NULL);
+            RestorePlayerBag();
+            sBagMenuDisplay->exitCB = Pokedude_InitTMCase;
+            gTasks[taskId].func = Task_Pokedude_FadeFromBag;
+            return;
+        }
+        data[8]++;
+    }
+}
 
 // ---- PokemonNative3G : aiguillage entre le sac d'Émeraude et celui de Rouge Feu ----
 
@@ -2052,7 +2400,7 @@ const u8 gKantoBagPocketToEmerald[NUM_BAG_POCKETS_NO_CASES] = {
 
 // Le dernier sac ouvert est celui de RF : c'est vers lui que reviennent les écrans ouverts
 // depuis le sac (équipe, lettre...) et que vont les messages d'item_use.c
-static EWRAM_DATA bool8 sKantoBagActive = FALSE;
+static EWRAM_DATA bool8 sKantoBagActive = FALSE; // (déclarée en tête)
 
 bool8 KantoBag_IsActive(void)
 {

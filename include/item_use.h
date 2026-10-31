@@ -10,6 +10,7 @@ void ItemUseOutOfBattle_TownMap(u8 taskId);
 void ItemUseOutOfBattle_LinkCable(u8 taskId);
 void ItemUseOutOfBattle_PokeMonture(u8 taskId);
 void ItemUseOutOfBattle_FameChecker(u8 taskId);
+void ItemUseOutOfBattle_TeachyTv(u8 taskId); // kanto_teachy_tv.c
 void ItemUseOutOfBattle_VsSeeker(u8 taskId);
 void ItemUseOutOfBattle_PokeFlute(u8 taskId);
 void ItemUseInBattle_PokeFlute(u8 taskId);

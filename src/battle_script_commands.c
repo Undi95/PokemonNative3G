@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
 #include "fusion_events.h"
 #include "kanto_pokedex.h"
 #include "constants/kanto.h"
@@ -1103,6 +1104,11 @@ static void Cmd_accuracycheck(void)
 {
     u16 move = T2_READ_16(gBattlescriptCurrInstr + DSIZE8BIT + DSIZEPTR);
 
+    if (gBattlePokedudeFrlg) // PokemonNative3G : RF, les attaques du Pokédude touchent toujours
+    {
+        JumpIfMoveFailed(DSIZE8BIT + DSIZEPTR + DSIZE16BIT, move);
+        return;
+    }
     if (move == NO_ACC_CALC || move == NO_ACC_CALC_CHECK_LOCK_ON)
     {
         if (gStatuses3[gBattlerTarget] & STATUS3_ALWAYS_HITS && move == NO_ACC_CALC_CHECK_LOCK_ON && gDisableStructs[gBattlerTarget].battlerWithSureHit == gBattlerAttacker)
@@ -1282,6 +1288,7 @@ static void Cmd_critcalc(void)
     if ((gBattleMons[gBattlerTarget].ability != ABILITY_BATTLE_ARMOR && gBattleMons[gBattlerTarget].ability != ABILITY_SHELL_ARMOR)
      && !(gStatuses3[gBattlerAttacker] & STATUS3_CANT_SCORE_A_CRIT)
      && !(gBattleTypeFlags & (BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_FIRST_BATTLE))
+     && !gBattlePokedudeFrlg // PokemonNative3G : RF, pas de coup critique chez le Pokédude
      && !(Random() % sCriticalHitChance[critChance]))
         gCritMultiplier = 2;
     else
@@ -2251,6 +2258,14 @@ void SetMoveEffect(bool8 primary, u8 certain)
     {
         gEffectBattler = gBattlerTarget;
         gBattleScripting.battler = gBattlerAttacker;
+    }
+
+    // PokemonNative3G : RF, chez le Pokédude, les effets secondaires ne touchent pas l'adversaire (sauf le sommeil)
+    if (gBattlePokedudeFrlg && gBattleCommunication[MOVE_EFFECT_BYTE] != 1
+        && GetBattlerSide(gEffectBattler) == B_SIDE_OPPONENT)
+    {
+        gBattlescriptCurrInstr++;
+        return;
     }
 
     if (gBattleMons[gEffectBattler].ability == ABILITY_SHIELD_DUST && !(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
@@ -3360,7 +3375,7 @@ static void Cmd_getexp(void)
             else
             {
                 // music change in wild battle after fainting a poke
-                if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && gBattleMons[0].hp != 0 && !gBattleStruct->wildVictorySong)
+                if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && !gBattlePokedudeFrlg && gBattleMons[0].hp != 0 && !gBattleStruct->wildVictorySong)
                 {
                     BattleStopLowHpSound();
                     PlayBGM(MUS_VICTORY_WILD);
@@ -3381,7 +3396,7 @@ static void Cmd_getexp(void)
                     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
                         gBattleMoveDamage = (gBattleMoveDamage * 150) / 100;
 
-                    if (IsTradedMon(&gPlayerParty[gBattleStruct->expGetterMonId]))
+                    if (IsTradedMon(&gPlayerParty[gBattleStruct->expGetterMonId]) && !gBattlePokedudeFrlg)
                     {
                         // check if the Pokémon doesn't belong to the player
                         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && gBattleStruct->expGetterMonId >= 3)
@@ -4707,6 +4722,7 @@ static void Cmd_switchinanim(void)
 
     if (GetBattlerSide(gActiveBattler) == B_SIDE_OPPONENT
         && !IsOldManTutorialBattle() // Rouge Feu : pas « vu » pendant la démonstration
+        && !gBattlePokedudeFrlg
         && !IS_BATTLE_TYPE_GHOST(gBattleTypeFlags) // Rouge Feu
         && !(gBattleTypeFlags & (BATTLE_TYPE_LINK
                                  | BATTLE_TYPE_EREADER_TRAINER
@@ -10022,7 +10038,7 @@ static void Cmd_handleballthrow(void)
         MarkBattlerForControllerExec(gActiveBattler);
         gBattlescriptCurrInstr = BattleScript_TrainerBallBlock;
     }
-    else if (IsOldManTutorialBattle())
+    else if (IsOldManTutorialBattle() || gBattlePokedudeFrlg)
     {
         // Rouge Feu
         BtlController_EmitBallThrowAnim(B_COMM_TO_CONTROLLER, BALL_3_SHAKES_SUCCESS);

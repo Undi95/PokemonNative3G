@@ -4501,7 +4501,7 @@ const struct Item gItems[] =
         .registrability = TRUE,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .fieldUseFunc = ItemUseOutOfBattle_TeachyTv, // PokemonNative3G : Télé Pokémon de RF
     },
 
     [ITEM_TRI_PASS] =

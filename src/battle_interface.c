@@ -1,4 +1,6 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
+#include "kanto_teachy_tv.h"
 #include "battle.h"
 #include "pokemon.h"
 #include "battle_controllers.h"
@@ -994,7 +996,7 @@ u8 CreateSafariPlayerHealthboxSprites(void)
 
 static const u8 *GetHealthboxElementGfxPtr(u8 elementId)
 {
-    if (gSaveBlock2Ptr->optionsBattleUI)
+    if (KANTO_BATTLE_UI)
         return gKantoHealthboxElementsGfxTable[elementId];
     return gHealthboxElementsGfxTable[elementId];
 }
@@ -1510,7 +1512,7 @@ u8 CreatePartyStatusSummarySprites(u8 battler, struct HpAndStatus *partyInfo, bo
         bar_data0 = 5;
     }
 
-    if (gSaveBlock2Ptr->optionsBattleUI) // PokemonNative3G : barre de l'équipe de RF
+    if (KANTO_BATTLE_UI) // PokemonNative3G : barre de l'équipe de RF
     {
         LoadCompressedSpriteSheetUsingHeap(&sKantoStatusSummaryBarSpriteSheet);
         LoadSpriteSheet(&sKantoStatusSummaryBallsSpriteSheet);
@@ -2008,7 +2010,7 @@ void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus)
 {
     u8 battler, healthBarSpriteId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
+    if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL || gBattlePokedudeFrlg) // PokemonNative3G : RF (Pokédude)
         return;
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         return;

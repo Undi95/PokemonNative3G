@@ -350,3 +350,8 @@ $(PKNAVOPTIONSGFXDIR)/options.4bpp: $(PKNAVOPTIONSGFXDIR)/hoenn_map.4bpp \
                                     $(PKNAVOPTIONSGFXDIR)/cancel.4bpp \
                                     $(PKNAVOPTIONSGFXDIR)/kanto_map.4bpp
 	@cat $^ >$@
+
+### PokemonNative3G : Télé Pokémon de Rouge Feu (233 tuiles comme RF) ###
+
+graphics/kanto/teachy_tv/tiles_fr.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -num_tiles 233 -Wnum_tiles

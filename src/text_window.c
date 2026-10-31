@@ -132,18 +132,23 @@ void LoadSignpostWindowGfx(u8 windowId, u16 destOffset, u8 palOffset)
     LoadPalette(sKantoStdPal1, palOffset, PLTT_SIZE_4BPP);
 }
 
+// LoadMenuMessageWindowGfx de RF (aussi le cadre de la voix off du Pokédude en combat)
+void LoadKantoMenuMessageWindowGfx(u8 windowId, u16 destOffset, u8 palOffset)
+{
+#ifdef UBFIX
+    // RF copie 0x280 octets d'une image de 0x240 : les 2 dernières tuiles (inutilisées) sont lues après elle
+    LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), sKantoMenuMessageWindow_Gfx, sizeof(sKantoMenuMessageWindow_Gfx), destOffset);
+#else
+    LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), sKantoMenuMessageWindow_Gfx, 0x280, destOffset);
+#endif
+    LoadPalette(sKantoStdPal0, palOffset, PLTT_SIZE_4BPP);
+}
+
 void LoadMessageBoxGfx(u8 windowId, u16 destOffset, u8 palOffset)
 {
     if (gSaveBlock2Ptr->optionsDialogStyle)
     {
-        // LoadMenuMessageWindowGfx de RF
-#ifdef UBFIX
-        // RF copie 0x280 octets d'une image de 0x240 : les 2 dernières tuiles (inutilisées) sont lues après elle
-        LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), sKantoMenuMessageWindow_Gfx, sizeof(sKantoMenuMessageWindow_Gfx), destOffset);
-#else
-        LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), sKantoMenuMessageWindow_Gfx, 0x280, destOffset);
-#endif
-        LoadPalette(sKantoStdPal0, palOffset, PLTT_SIZE_4BPP);
+        LoadKantoMenuMessageWindowGfx(windowId, destOffset, palOffset);
         return;
     }
     LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), gMessageBox_Gfx, 0x1C0, destOffset);

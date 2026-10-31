@@ -1,4 +1,5 @@
 #include "global.h"
+#include "kanto_teachy_tv.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "decompress.h"
@@ -382,8 +383,16 @@ static void Task_DoPokeballSendOutAnim(u8 taskId)
     {
     case POKEBALL_PLAYER_SENDOUT:
         gBattlerTarget = battler;
-        gSprites[ballSpriteId].x = 24;
-        gSprites[ballSpriteId].y = 68;
+        if (gBattlePokedudeFrlg) // PokemonNative3G : RF (Pokédude)
+        {
+            gSprites[ballSpriteId].x = 32;
+            gSprites[ballSpriteId].y = 64;
+        }
+        else
+        {
+            gSprites[ballSpriteId].x = 24;
+            gSprites[ballSpriteId].y = 68;
+        }
         gSprites[ballSpriteId].callback = SpriteCB_PlayerMonSendOut_1;
         break;
     case POKEBALL_OPPONENT_SENDOUT:

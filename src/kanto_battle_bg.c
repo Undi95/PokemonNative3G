@@ -1,6 +1,6 @@
 // Décors de combat de Rouge Feu (src/battle_bg.c de RF), utilisés sur les cartes de Kanto.
-// Les types de combat propres à RF (Pokédude, Tour d'Entraînement, Tour de Combat) ne sont pas
-// encore importés ; leurs branches sont omises.
+// Combats du Pokédude (Télé Pokémon) : décor d'herbe de RF partout. Tour d'Entraînement et Tour de Combat
+// de RF : leurs branches sont omises (pas importées).
 #include "global.h"
 #include "battle.h"
 #include "battle_setup.h"
@@ -9,6 +9,7 @@
 #include "field_player_avatar.h"
 #include "fieldmap.h"
 #include "kanto_battle_bg.h"
+#include "kanto_teachy_tv.h"
 #include "metatile_behavior.h"
 #include "constants/metatile_behaviors.h"
 #include "overworld.h"
@@ -65,6 +66,11 @@ static u8 GetBattleTerrainOverride(void)
     {
         return KANTO_BATTLE_TERRAIN_LINK;
     }
+    else if (gBattlePokedudeFrlg) // RF : BATTLE_TYPE_POKEDUDE
+    {
+        gBattleEnvironment = KANTO_BATTLE_TERRAIN_GRASS;
+        return KANTO_BATTLE_TERRAIN_GRASS;
+    }
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_KANTO_LEADER)
@@ -91,6 +97,10 @@ void Kanto_DrawBattleEntryBackground(void)
     if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER))
     {
         LoadBattleTerrainEntryGfx(KANTO_BATTLE_TERRAIN_BUILDING);
+    }
+    else if (gBattlePokedudeFrlg) // RF : BATTLE_TYPE_POKEDUDE
+    {
+        LoadBattleTerrainEntryGfx(KANTO_BATTLE_TERRAIN_GRASS);
     }
     else
     {
