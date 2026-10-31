@@ -6,8 +6,17 @@ EventScript_FieldPoison::
 	releaseall
 	end
 
+@ Rouge Feu : la perte d'argent est annoncée
 EventScript_FieldWhiteOut::
+	checkmoney 1
+	goto_if_eq VAR_RESULT, FALSE, EventScript_FieldWhiteOutNoMoney
+	special OverworldWhiteOutGetMoneyLoss
+	message Text_WhitedOutLostMoney
+	goto EventScript_FieldWhiteOutFade
+
+EventScript_FieldWhiteOutNoMoney::
 	message gText_PlayerWhitedOut
+EventScript_FieldWhiteOutFade::
 	waitmessage
 	waitbuttonpress
 	special Script_FadeOutMapMusic

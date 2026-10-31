@@ -333,9 +333,10 @@ void FieldCB_WarpExitFadeFromBlack(void)
     LockPlayerFieldControls();
 }
 
-// Rouge Feu (field_screen_effect.c) : reprise après un K.O. dans un Centre POKéMON de Kanto (CB2_WhiteOut), message sur
-// fond noir puis l'infirmière soigne l'équipe. La branche de RF « retour à la maison » (maman de Bourg Palette) n'a pas
-// lieu d'être : la maison n'a plus de maman, la reprise s'y fait devant (SetWhiteoutRespawnWarpAndHealerNpc).
+// Rouge Feu (field_screen_effect.c) : reprise après un K.O. dans un Centre POKéMON, de Kanto comme de Hoenn
+// (CB2_WhiteOut), message sur fond noir puis l'infirmière soigne l'équipe. La branche de RF « retour à la maison »
+// (maman de Bourg Palette) n'a pas lieu d'être : la maison n'a plus de maman, la reprise s'y fait devant
+// (SetWhiteoutRespawnWarpAndHealerNpc).
 static const struct WindowTemplate sWindowTemplate_WhiteoutText =
 {
     .bg = 0,

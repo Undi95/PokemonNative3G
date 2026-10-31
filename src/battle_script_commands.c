@@ -34,7 +34,6 @@
 #include "naming_screen.h"
 #include "battle_setup.h"
 #include "overworld.h"
-#include "kanto_field_door.h"
 #include "party_menu.h"
 #include "battle_arena.h"
 #include "battle_pike.h"
@@ -6602,21 +6601,15 @@ static void Cmd_various(void)
         if (!IsFanfareTaskInactive())
             return;
         break;
-    case VARIOUS_GET_KANTO_WHITEOUT_MONEY: // Rouge Feu (getmoneyreward en cas de défaite) : la perte qu'ôtera DoWhiteOut
+    case VARIOUS_GET_WHITEOUT_MONEY: // Rouge Feu (getmoneyreward en cas de défaite) : la perte qu'ôtera DoWhiteOut
     {
-        u32 losings;
+        u32 losings = ComputeWhiteOutMoneyLoss();
 
-        if (!IsKantoTilesetMap())
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WHITEOUT_HOENN;
-            break;
-        }
-        losings = ComputeWhiteOutMoneyLoss();
         PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 5, losings);
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-            gBattleCommunication[MULTISTRING_CHOOSER] = losings ? B_MSG_WHITEOUT_KANTO_TRAINER : B_MSG_WHITEOUT_KANTO_TRAINER_NO_MONEY;
+            gBattleCommunication[MULTISTRING_CHOOSER] = losings ? B_MSG_WHITEOUT_TRAINER : B_MSG_WHITEOUT_TRAINER_NO_MONEY;
         else
-            gBattleCommunication[MULTISTRING_CHOOSER] = losings ? B_MSG_WHITEOUT_KANTO_WILD : B_MSG_WHITEOUT_KANTO_WILD_NO_MONEY;
+            gBattleCommunication[MULTISTRING_CHOOSER] = losings ? B_MSG_WHITEOUT_WILD : B_MSG_WHITEOUT_WILD_NO_MONEY;
         break;
     }
     }

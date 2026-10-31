@@ -1467,7 +1467,7 @@ static const u8 sText_OldManUsedItem[] = _("Le vieil homme utilise\n{B_LAST_ITEM
 static const u8 sText_PlayedFluteCatchyTune[] = _("{B_PLAYER_NAME} joue de la {B_LAST_ITEM}.\pSuper!!! Ça c'est de la musique!");
 static const u8 sText_PlayedThe[] = _("{B_PLAYER_NAME} joue de la {B_LAST_ITEM}.");
 static const u8 sText_PkmnHearingFluteAwoke[] = _("La FLUTE réveille\nle POKéMON!");
-// Rouge Feu : défaite à Kanto, avec la perte d'argent (VARIOUS_GET_KANTO_WHITEOUT_MONEY)
+// Rouge Feu : défaite, avec la perte d'argent (VARIOUS_GET_WHITEOUT_MONEY)
 static const u8 sText_PlayerPanicked[] = _("{B_PLAYER_NAME} panique et perd {B_BUFF1}¥…\p… … … …\p{B_PLAYER_NAME} est hors-jeu!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_PlayerWhiteoutAgainstTrainer[] = _("{B_PLAYER_NAME} n'a plus de\nPOKéMON en forme!\p{B_TRAINER1_CLASS} {B_TRAINER1_NAME} a gagné!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_PlayerPaidAsPrizeMoney[] = _("{B_PLAYER_NAME} paye {B_BUFF1}¥ comme\nrécompense…\p… … … …\p{B_PLAYER_NAME} est hors-jeu!{PAUSE_UNTIL_PRESS}");

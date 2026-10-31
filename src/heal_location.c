@@ -40,12 +40,12 @@ const struct HealLocation *GetHealLocation(u32 index)
         return &sHealLocations[index - 1];
 }
 
-// PokemonNative3G : Rouge Feu (heal_location.c). Après un K.O., RF fait reprendre le joueur dans le Centre POKéMON, devant
-// l'infirmière qui soignera l'équipe (respawn_map / respawn_npc de heal_locations.json), ou dans le hall de la Tour des
-// Dresseurs pendant un défi. FALSE pour les lieux de soin sans infirmière : Hoenn, et Bourg Palette, dont la maison n'a
-// plus de maman (reprise d'Émeraude devant la maison).
+// Rouge Feu (heal_location.c) : après un K.O., reprise dans le Centre POKéMON, devant l'infirmière qui soignera l'équipe
+// (respawn_* de heal_locations.json, Kanto et Hoenn), ou dans le hall de la Tour des Dresseurs pendant un défi. FALSE
+// pour les lieux de soin sans infirmière (maisons de Bourg-en-Vol et de Bourg Palette, Île du Sud) : reprise d'Émeraude.
 bool8 SetWhiteoutRespawnWarpAndHealerNpc(struct WarpData *warp)
 {
+    const struct WhiteoutRespawn *respawn;
     u32 healLocationIdx;
 
     if (VarGet(VAR_KANTO_MAP_SCENE_TRAINER_TOWER) == 1)
@@ -62,28 +62,17 @@ bool8 SetWhiteoutRespawnWarpAndHealerNpc(struct WarpData *warp)
     }
 
     healLocationIdx = GetHealLocationIndexByMap(gSaveBlock1Ptr->lastHealLocation.mapGroup, gSaveBlock1Ptr->lastHealLocation.mapNum);
-    if (healLocationIdx == HEAL_LOCATION_NONE || healLocationIdx > ARRAY_COUNT(sWhiteoutRespawnHealerNpcIds)
-     || sWhiteoutRespawnHealerNpcIds[healLocationIdx - 1] == 0)
+    if (healLocationIdx == HEAL_LOCATION_NONE)
+        return FALSE;
+    respawn = &sWhiteoutRespawns[healLocationIdx - 1];
+    if (respawn->healerNpcId == 0)
         return FALSE;
 
-    warp->mapGroup = sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][0];
-    warp->mapNum = sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][1];
+    warp->mapGroup = respawn->mapGroup;
+    warp->mapNum = respawn->mapNum;
     warp->warpId = WARP_ID_NONE;
-    if (warp->mapGroup == MAP_GROUP(MAP_INDIGO_PLATEAU_POKEMON_CENTER_1F) && warp->mapNum == MAP_NUM(MAP_INDIGO_PLATEAU_POKEMON_CENTER_1F))
-    {
-        warp->x = 13;
-        warp->y = 12;
-    }
-    else if (warp->mapGroup == MAP_GROUP(MAP_ONE_ISLAND_POKEMON_CENTER_1F) && warp->mapNum == MAP_NUM(MAP_ONE_ISLAND_POKEMON_CENTER_1F))
-    {
-        warp->x = 5;
-        warp->y = 4;
-    }
-    else
-    {
-        warp->x = 7;
-        warp->y = 4;
-    }
-    gSpecialVar_LastTalked = sWhiteoutRespawnHealerNpcIds[healLocationIdx - 1];
+    warp->x = respawn->x;
+    warp->y = respawn->y;
+    gSpecialVar_LastTalked = respawn->healerNpcId;
     return TRUE;
 }

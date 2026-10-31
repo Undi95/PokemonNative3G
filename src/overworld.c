@@ -56,6 +56,7 @@
 #include "secret_base.h"
 #include "sound.h"
 #include "start_menu.h"
+#include "string_util.h"
 #include "task.h"
 #include "tileset_anims.h"
 #include "time_events.h"
@@ -364,20 +365,105 @@ static void (*const sMovementStatusHandler[])(struct LinkPlayerObjectEvent *, st
 };
 
 // code
-// PokemonNative3G : TRUE si la reprise après le dernier K.O. est celle de Rouge Feu, devant l'infirmière (CB2_WhiteOut)
-static EWRAM_DATA bool8 sWhiteOutKantoRespawn = FALSE;
+// PokemonNative3G : TRUE si la reprise après le dernier K.O. se fait devant une infirmière (CB2_WhiteOut)
+static EWRAM_DATA bool8 sWhiteOutHealerRespawn = FALSE;
+
+// Rouge Feu : la perte d'argent après un K.O. dépend des badges et du niveau de l'équipe (Émeraude : la moitié de
+// l'argent). Elle est annoncée en combat (VARIOUS_GET_WHITEOUT_MONEY) et après un K.O. par le poison
+// (EventScript_FieldWhiteOut). PokemonNative3G : ce sont les badges de la région où l'on est.
+static const u8 sWhiteOutMoneyLossMultipliers[] = {
+     2,
+     4,
+     6,
+     9,
+    12,
+    16,
+    20,
+    25,
+    30
+};
+
+static const u16 sHoennBadgeFlags[] = {
+    FLAG_BADGE01_GET,
+    FLAG_BADGE02_GET,
+    FLAG_BADGE03_GET,
+    FLAG_BADGE04_GET,
+    FLAG_BADGE05_GET,
+    FLAG_BADGE06_GET,
+    FLAG_BADGE07_GET,
+    FLAG_BADGE08_GET
+};
+
+static const u16 sKantoBadgeFlags[] = {
+    FLAG_KANTO_BADGE01_GET,
+    FLAG_KANTO_BADGE02_GET,
+    FLAG_KANTO_BADGE03_GET,
+    FLAG_KANTO_BADGE04_GET,
+    FLAG_KANTO_BADGE05_GET,
+    FLAG_KANTO_BADGE06_GET,
+    FLAG_KANTO_BADGE07_GET,
+    FLAG_KANTO_BADGE08_GET
+};
+
+// PokemonNative3G : badges de la région où se trouve le joueur (aussi special, conseils de l'infirmière après un K.O.)
+u16 CountRegionBadges(void)
+{
+    const u16 *badgeFlags = IsKantoTilesetMap() ? sKantoBadgeFlags : sHoennBadgeFlags;
+    u16 nbadges = 0;
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sHoennBadgeFlags); i++)
+    {
+        if (FlagGet(badgeFlags[i]))
+            nbadges++;
+    }
+    return nbadges;
+}
+
+// pokemon.c de RF
+static u8 GetPlayerPartyHighestLevel(void)
+{
+    s32 slot;
+    u8 level, monLevel;
+
+    level = 1;
+    for (slot = 0; slot < PARTY_SIZE; ++slot)
+    {
+        if (GetMonData(&gPlayerParty[slot], MON_DATA_SANITY_HAS_SPECIES, NULL) == 1 && !GetMonData(&gPlayerParty[slot], MON_DATA_SANITY_IS_EGG, NULL))
+        {
+            monLevel = GetMonData(&gPlayerParty[slot], MON_DATA_LEVEL, NULL);
+            if (monLevel > level)
+                level = monLevel;
+        }
+    }
+    return level;
+}
+
+u32 ComputeWhiteOutMoneyLoss(void)
+{
+    u8 nbadges = CountRegionBadges();
+    u8 toplevel = GetPlayerPartyHighestLevel();
+    u32 losings = toplevel * 4 * sWhiteOutMoneyLossMultipliers[nbadges];
+    u32 money = GetMoney(&gSaveBlock1Ptr->money);
+    if (losings > money)
+        losings = money;
+    return losings;
+}
+
+void OverworldWhiteOutGetMoneyLoss(void)
+{
+    u32 losings = ComputeWhiteOutMoneyLoss();
+    ConvertIntToDecimalStringN(gStringVar1, losings, STR_CONV_MODE_LEFT_ALIGN, CountDigits(losings));
+}
 
 void DoWhiteOut(void)
 {
     RunScriptImmediately(EventScript_WhiteOut);
-    if (IsKantoTilesetMap()) // Rouge Feu : perte selon les badges de Kanto et le niveau de l'équipe, celle qu'affichent ses textes
-        RemoveMoney(&gSaveBlock1Ptr->money, ComputeWhiteOutMoneyLoss());
-    else
-        SetMoney(&gSaveBlock1Ptr->money, GetMoney(&gSaveBlock1Ptr->money) / 2);
+    RemoveMoney(&gSaveBlock1Ptr->money, ComputeWhiteOutMoneyLoss()); // Rouge Feu
     HealPlayerParty();
     Overworld_ResetStateAfterWhiteOut();
-    sWhiteOutKantoRespawn = SetWhiteoutRespawnWarpAndHealerNpc(&sWarpDestination);
-    if (!sWhiteOutKantoRespawn)
+    sWhiteOutHealerRespawn = SetWhiteoutRespawnWarpAndHealerNpc(&sWarpDestination);
+    if (!sWhiteOutHealerRespawn)
         SetWarpDestinationToLastHealLocation();
     WarpIntoMap();
 }
@@ -1630,7 +1716,7 @@ void CB2_WhiteOut(void)
         ResetInitialPlayerAvatarState();
         ScriptContext_Init();
         UnlockPlayerFieldControls();
-        if (sWhiteOutKantoRespawn) // Rouge Feu : message sur fond noir, puis l'infirmière soigne l'équipe
+        if (sWhiteOutHealerRespawn) // Rouge Feu : message sur fond noir, puis l'infirmière soigne l'équipe
             gFieldCallback = FieldCB_RushInjuredPokemonToCenter;
         else
             gFieldCallback = FieldCB_WarpExitFadeFromBlack;

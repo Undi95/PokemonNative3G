@@ -133,7 +133,7 @@ event_object_movement 101, field_effect 90, slot_machine 73, party_menu 60, star
 item_use 48, metatile_behavior 48, player_pc 43, overworld 30, easy_chat 27, evolution_graphics 26, main_menu 25,
 script_menu 20, menu 19, field_specials 18, wild_encounter 18, option_menu 17, tileset_anims 17, trainer_see 17.
 Une bonne part est du renommage ; à vérifier fichier par fichier avant de porter.
-Tri en cours (2026-10-31) : ~~specials en stub~~ (25 restants, tous hors solo), ~~K.O. et remises à zéro d'overworld~~ (reprise devant l'infirmière, perte d'argent, Ligue, Piste Cyclable, Parc Safari ; scénario `kanto_whiteout`), ~~tuiles~~ (`kanto_tiles`). Renommages constatés sans écart de jeu : chute dans un trou, escalators, téléporteurs (DoTeleportWarp), Cascade, Pêche, rocher de Force, animations de Vol / Surf / capacité de terrain. Reste à trier : trainer_see, item_use, party_menu, start_menu, script_menu, field_effect (détail).
+Tri en cours (2026-10-31) : ~~specials en stub~~ (25 restants, tous hors solo), ~~K.O. et remises à zéro d'overworld~~ (K.O. de RF dans tout le jeu : reprise devant l'infirmière, perte d'argent ; Ligue, Piste Cyclable, Parc Safari ; scénario `kanto_whiteout`), ~~tuiles~~ (`kanto_tiles`). Renommages constatés sans écart de jeu : chute dans un trou, escalators, téléporteurs (DoTeleportWarp), Cascade, Pêche, rocher de Force, animations de Vol / Surf / capacité de terrain. Reste à trier : trainer_see, item_use, party_menu, start_menu, script_menu, field_effect (détail).
 
 Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.md).
 

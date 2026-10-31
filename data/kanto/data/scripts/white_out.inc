@@ -3,8 +3,9 @@ EventScript_AfterWhiteOutHeal::
 	textcolor NPC_TEXT_COLOR_FEMALE
 	msgbox Text_FirstShouldRestoreMonsHealth
 	call Kanto_EventScript_PkmnCenterNurse_TakeAndHealPkmn
-	call_if_unset FLAG_KANTO_DEFEATED_BROCK, EventScript_AfterWhiteOutHealMsgPreBrock
-	call_if_set FLAG_KANTO_DEFEATED_BROCK, EventScript_AfterWhiteOutHealMsg
+	specialvar VAR_RESULT, CountRegionBadges  @ RF : FLAG_DEFEATED_BROCK
+	call_if_eq VAR_RESULT, 0, EventScript_AfterWhiteOutHealMsgPreBrock
+	call_if_ne VAR_RESULT, 0, EventScript_AfterWhiteOutHealMsg
 	applymovement VAR_LAST_TALKED, Movement_Bow
 	waitmovement 0
 	fadedefaultbgm
@@ -19,48 +20,5 @@ EventScript_AfterWhiteOutHealMsg::
 	msgbox Text_MonsHealed
 	return
 
-EventScript_AfterWhiteOutMomHeal::
-	lockall
-	textcolor NPC_TEXT_COLOR_FEMALE
-	applymovement LOCALID_KANTO_MOM, Kanto_Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	msgbox Text_HadQuiteAnExperienceTakeRest
-	call EventScript_OutOfCenterPartyHeal
-	msgbox Text_MomExplainHPGetPotions
-	fadedefaultbgm
-	releaseall
-	end
-
-Kanto_EventScript_FieldPoison::
-	lockall
-	textcolor NPC_TEXT_COLOR_NEUTRAL
-	special TryFieldPoisonWhiteOut
-	waitstate
-	goto_if_eq VAR_RESULT, TRUE, Kanto_EventScript_FieldWhiteOut
-	releaseall
-	end
-
-Kanto_EventScript_FieldWhiteOut::
-	checkmoney 1
-	goto_if_eq VAR_RESULT, FALSE, EventScript_FieldWhiteOutNoMoney
-	goto_if_eq VAR_RESULT, TRUE, EventScript_FieldWhiteOutHasMoney
-	end
-
-EventScript_FieldWhiteOutNoMoney::
-	msgbox Text_WhitedOut
-	goto EventScript_FieldWhiteOutFade
-	end
-
-EventScript_FieldWhiteOutHasMoney::
-	special OverworldWhiteOutGetMoneyLoss
-	msgbox Text_WhitedOutLostMoney
-	goto EventScript_FieldWhiteOutFade
-	end
-
-EventScript_FieldWhiteOutFade::
-	special Script_FadeOutMapMusic
-	waitstate
-	fadescreen FADE_TO_BLACK
-	special SetCB2WhiteOut
-	waitstate
-	end
+@ PokemonNative3G : le K.O. par le poison de RF (Kanto_EventScript_FieldPoison) est EventScript_FieldPoison
+@ (data/scripts/field_poison.inc), avec le texte de RF annonçant la perte d'argent.

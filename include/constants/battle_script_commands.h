@@ -360,7 +360,7 @@ enum BattleScriptOpcode
 #define VARIOUS_PLAY_TRAINER_DEFEATED_MUSIC     26
 #define VARIOUS_CHECK_POKEFLUTE                 27 // Rouge Feu
 #define VARIOUS_WAIT_FANFARE                    28 // Rouge Feu
-#define VARIOUS_GET_KANTO_WHITEOUT_MONEY        29 // Rouge Feu
+#define VARIOUS_GET_WHITEOUT_MONEY              29 // Rouge Feu
 
 // Cmd_manipulatedmg
 #define DMG_CHANGE_SIGN            0

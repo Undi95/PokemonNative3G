@@ -550,4 +550,7 @@ gSpecials::
 	def_special CloseDeptStoreElevatorWindow
 	def_special TrySetBattleTowerLinkType
 
+	def_special OverworldWhiteOutGetMoneyLoss  @ Rouge Feu
+	def_special CountRegionBadges
+
 	.include "data/kanto/kanto_specials.inc"

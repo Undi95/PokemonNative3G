@@ -2949,35 +2949,27 @@ BattleScript_LocalBattleLost::
 	jumpifbattletype BATTLE_TYPE_EREADER_TRAINER, BattleScript_LocalBattleLostEnd
 	jumpifhalfword CMP_EQUAL, gTrainerBattleOpponent_A, TRAINER_SECRET_BASE, BattleScript_LocalBattleLostEnd
 	jumpifbyte CMP_NOT_EQUAL, cMULTISTRING_CHOOSER, 0, BattleScript_RivalBattleLost
+@ Rouge Feu : la perte d'argent est annoncée
 BattleScript_LocalBattleLostPrintWhiteOut::
-	various BS_ATTACKER, VARIOUS_GET_KANTO_WHITEOUT_MONEY
-	jumpifbyte CMP_NOT_EQUAL, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_HOENN, BattleScript_KantoBattleLost
+	various BS_ATTACKER, VARIOUS_GET_WHITEOUT_MONEY
+	jumpifbyte CMP_GREATER_THAN, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_WILD_NO_MONEY, BattleScript_LocalBattleLostToTrainer
 	printstring STRINGID_PLAYERWHITEOUT
 	waitmessage B_WAIT_TIME_LONG
-	printstring STRINGID_PLAYERWHITEOUT2
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_WILD_NO_MONEY, BattleScript_LocalBattleLostNoMoney
+	printstring STRINGID_PLAYERPANICKED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_LocalBattleLostEnd::
 	end2
 
-@ Rouge Feu (BattleScript_LocalBattleLost) : à Kanto, la perte d'argent est annoncée
-BattleScript_KantoBattleLost::
-	jumpifbyte CMP_GREATER_THAN, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_KANTO_WILD_NO_MONEY, BattleScript_KantoBattleLostToTrainer
-	printstring STRINGID_PLAYERWHITEOUT
-	waitmessage B_WAIT_TIME_LONG
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_KANTO_WILD_NO_MONEY, BattleScript_KantoBattleLostNoMoney
-	printstring STRINGID_PLAYERPANICKED
-	waitmessage B_WAIT_TIME_LONG
-	end2
-
-BattleScript_KantoBattleLostToTrainer::
+BattleScript_LocalBattleLostToTrainer::
 	printstring STRINGID_PLAYERLOSTAGAINSTENEMYTRAINER
 	waitmessage B_WAIT_TIME_LONG
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_KANTO_TRAINER_NO_MONEY, BattleScript_KantoBattleLostNoMoney
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_WHITEOUT_TRAINER_NO_MONEY, BattleScript_LocalBattleLostNoMoney
 	printstring STRINGID_PLAYERPAIDPRIZEMONEY
 	waitmessage B_WAIT_TIME_LONG
 	end2
 
-BattleScript_KantoBattleLostNoMoney::
+BattleScript_LocalBattleLostNoMoney::
 	printstring STRINGID_PLAYERWHITEOUT2
 	waitmessage B_WAIT_TIME_LONG
 	end2

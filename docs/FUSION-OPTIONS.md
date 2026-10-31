@@ -83,6 +83,7 @@ contenu dans un seul jeu.
 
 ## Trouvé par la cartographie — décisions de l'utilisateur (2026-10-23)
 Contenu de RF à importer :
+- [x] K.O. de RF dans tout le jeu (2026-10-31, demandé par l'utilisateur ; scénario `kanto_whiteout`) : perte d'argent de RF (niveau de l'équipe × badges de la région où l'on est ; Émeraude : la moitié de l'argent) annoncée en combat (« panique et perd X¥ », « paye X¥ comme récompense ») et après un K.O. par le poison ; reprise devant l'infirmière du dernier Centre, Kanto comme Hoenn (respawn_* de `heal_locations.json`), message sur fond noir puis soins. Sans infirmière (maisons de Bourg-en-Vol et de Bourg Palette, Île du Sud) : reprise d'Émeraude
 - [x] Combat FANTÔME de la Tour Pokémon (SPECTRES sans Scope Sylph, Ossatueur révélé avec le Scope Sylph de Giovanni ; `gBattleGhostType`, plus de bit libre dans gBattleTypeFlags)
 - [x] Objets cachés qui réapparaissent (`src/kanto_renewable_hidden_items.c`, 2026-10-23)
 - [x] Fame Checker = MEMORYDEX (2026-10-23, `src/kanto_fame_checker.c` ; même écran avec les deux sacs, police de RF)
