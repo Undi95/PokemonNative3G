@@ -5,6 +5,7 @@
 #include "gpu_regs.h"
 #include "task.h"
 #include "constants/rgb.h"
+#include "day_night.h"
 
 enum
 {
@@ -105,6 +106,7 @@ void TransferPlttBuffer(void)
     if (!gPaletteFade.bufferTransferDisabled)
     {
         DmaCopy16Defvars(3, gPlttBufferFaded, (void *)PLTT, PLTT_SIZE);
+        DayNight_TintPltt();
         sPlttBufferTransferPending = FALSE;
         if (gPaletteFade.mode == HARDWARE_FADE && gPaletteFade.active)
             UpdateBlendRegisters();

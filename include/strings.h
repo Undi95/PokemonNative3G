@@ -335,6 +335,7 @@ extern const u8 gText_PokedexStyle[];
 extern const u8 gText_MenuStyle[];
 extern const u8 gText_BagStyle[];
 extern const u8 gText_Intro[];
+extern const u8 gText_DayNight[];
 extern const u8 gText_RegionHoenn[];
 extern const u8 gText_RegionKanto[];
 extern const u8 gText_TitleScreenEmerald[];

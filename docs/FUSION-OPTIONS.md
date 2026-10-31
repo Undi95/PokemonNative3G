@@ -19,6 +19,10 @@ contenu dans un seul jeu.
 
 - [x] Interface de combat : boîtes de PV/EXP et boîte de texte de combat HOENN / KANTO (option BOITES COMBAT), barre de l'équipe (Poké Balls) de RF comprise (2026-10-30, `options_partybar`)
 - [x] Pokédex HOENN / KANTO (option POKéDEX) : écran complet de RF (pokedex_screen.c porté, textes/descriptions de RF, zones de Kanto)
+- [x] Cycle jour/nuit (option JOUR/NUIT, page 1, NON par défaut, 2026-10-31, `day_night.c`, scénario `day_night`) :
+  purement visuel, teinte des couleurs envoyées à l'écran selon l'heure (matin doré, coucher orangé 17-21 h,
+  nuit bleutée 21-5 h), dehors sur le terrain seulement, boîtes de texte et menus intacts ; aucun effet sur les
+  rencontres. Mentali / Noctali suivent les mêmes heures : nuit de 20 h à 6 h (Émeraude : 0-12 h).
 
 ## À faire — contenu à réunir (listes)
 - Décision : musiques, animations et transitions de combat = celles de la région, comme dans les jeux officiels (pas d'option).

@@ -45,6 +45,7 @@ enum
     MENUITEM_SOUND,
     MENUITEM_BUTTONMODE,
     MENUITEM_FRAMETYPE,
+    MENUITEM_DAYNIGHT,
     // page 2 : choix HOENN / KANTO, par ordre d'importance
     MENUITEM_CHARACTER,
     MENUITEM_MONSPRITES,
@@ -111,6 +112,7 @@ static u8 OptionRow(u8 item)
 #define YPOS_SOUND        OPTION_YPOS(MENUITEM_SOUND)
 #define YPOS_BUTTONMODE   OPTION_YPOS(MENUITEM_BUTTONMODE)
 #define YPOS_FRAMETYPE    OPTION_YPOS(MENUITEM_FRAMETYPE)
+#define YPOS_DAYNIGHT     OPTION_YPOS(MENUITEM_DAYNIGHT)
 #define YPOS_CHARACTER    OPTION_YPOS(MENUITEM_CHARACTER)
 #define YPOS_TITLESCREEN  OPTION_YPOS(MENUITEM_TITLESCREEN)
 #define YPOS_DIALOGSTYLE  OPTION_YPOS(MENUITEM_DIALOGSTYLE)
@@ -142,6 +144,7 @@ static u8 Character_ProcessInput(u8 selection);
 static void Character_DrawChoices(u8 selection);
 static void TitleScreen_DrawChoices(u8 selection);
 static void Region_DrawChoices(u8 selection, u8 y);
+static void DayNight_DrawChoices(u8 selection);
 static void DrawOptionMenuChoices(u8 taskId);
 static void ScrollOptionMenu(u8 taskId);
 static void ChangeOptionMenuPage(u8 taskId);
@@ -151,6 +154,7 @@ static void DrawBgWindowFrames(void);
 
 EWRAM_DATA static bool8 sArrowPressed = FALSE;
 EWRAM_DATA static u8 sScrollOffset = 0;
+EWRAM_DATA static u8 sDayNight = 0; // option JOUR/NUIT (les 16 données de la tâche sont prises)
 
 static const u16 sOptionMenuText_Pal[] = INCGFX_U16("graphics/interface/option_menu_text.pal", ".gbapal");
 // note: this is only used in the Japanese release
@@ -164,6 +168,7 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
     [MENUITEM_SOUND]       = gText_Sound,
     [MENUITEM_BUTTONMODE]  = gText_ButtonMode,
     [MENUITEM_FRAMETYPE]   = gText_Frame,
+    [MENUITEM_DAYNIGHT]    = gText_DayNight,
     [MENUITEM_CHARACTER]   = gText_Character,
     [MENUITEM_TITLESCREEN] = gText_TitleScreen,
     [MENUITEM_DIALOGSTYLE] = gText_DialogStyle,
@@ -332,6 +337,7 @@ void CB2_InitOptionMenu(void)
         gTasks[taskId].tMenuStyle = gSaveBlock2Ptr->optionsMenuStyle;
         gTasks[taskId].tBagStyle = gSaveBlock2Ptr->optionsBagStyle;
         gTasks[taskId].tIntro = !gSaveBlock2Ptr->optionsIntroHoenn; // 1 = KANTO dans le menu
+        sDayNight = gSaveBlock2Ptr->optionsDayNight;
 
         DrawOptionMenuChoices(taskId);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
@@ -490,6 +496,13 @@ static void Task_OptionMenuProcessInput(u8 taskId)
             if (previousOption != gTasks[taskId].tMenuStyle)
                 Region_DrawChoices(gTasks[taskId].tMenuStyle, YPOS_MENUSTYLE);
             break;
+        case MENUITEM_DAYNIGHT:
+            previousOption = sDayNight;
+            sDayNight = BattleScene_ProcessInput(sDayNight);
+
+            if (previousOption != sDayNight)
+                DayNight_DrawChoices(sDayNight);
+            break;
         case MENUITEM_INTRO:
             previousOption = gTasks[taskId].tIntro;
             gTasks[taskId].tIntro = Character_ProcessInput(gTasks[taskId].tIntro);
@@ -533,6 +546,7 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsMenuStyle = gTasks[taskId].tMenuStyle;
     gSaveBlock2Ptr->optionsBagStyle = gTasks[taskId].tBagStyle;
     gSaveBlock2Ptr->optionsIntroHoenn = !gTasks[taskId].tIntro;
+    gSaveBlock2Ptr->optionsDayNight = sDayNight;
     sScrollOffset = 0;
     sOptionPage = 0;
 
@@ -897,6 +911,19 @@ static void TitleScreen_DrawChoices(u8 selection)
     DrawOptionMenuChoice(gText_TitleScreenFireRed, GetStringRightAlignXOffset(FONT_NORMAL, gText_TitleScreenFireRed, 198), YPOS_TITLESCREEN, styles[1]);
 }
 
+// PokemonNative3G : cycle jour/nuit (day_night.c) : NON / OUI
+static void DayNight_DrawChoices(u8 selection)
+{
+    u8 styles[2];
+
+    styles[0] = 0;
+    styles[1] = 0;
+    styles[selection] = 1;
+
+    DrawOptionMenuChoice(gText_BattleSceneOff, 104, YPOS_DAYNIGHT, styles[0]);
+    DrawOptionMenuChoice(gText_BattleSceneOn, GetStringRightAlignXOffset(FONT_NORMAL, gText_BattleSceneOn, 198), YPOS_DAYNIGHT, styles[1]);
+}
+
 // PokemonNative3G : choix HOENN (Émeraude) / KANTO (Rouge Feu)
 static void Region_DrawChoices(u8 selection, u8 y)
 {
@@ -965,6 +992,9 @@ static void DrawOptionMenuChoices(u8 taskId)
             break;
         case MENUITEM_INTRO:
             Region_DrawChoices(gTasks[taskId].tIntro, YPOS_INTRO);
+            break;
+        case MENUITEM_DAYNIGHT:
+            DayNight_DrawChoices(sDayNight);
             break;
         }
     }

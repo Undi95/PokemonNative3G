@@ -1855,10 +1855,10 @@ Guide généré depuis les données du jeu (`tools/doc_pokemon_lieux.py`). Pour 
 - évolution de AXOLOTO (niveau 20)
 
 ## 196 MENTALI
-- évolution de EVOLI (bonheur, le jour)
+- évolution de EVOLI (bonheur, le jour (6 h - 20 h))
 
 ## 197 NOCTALI
-- évolution de EVOLI (bonheur, la nuit)
+- évolution de EVOLI (bonheur, la nuit (20 h - 6 h))
 
 ## 198 CORNEBRE
 - Kanto · GROTTE PERDUE : herbes / grotte, N.20-22, 6 %

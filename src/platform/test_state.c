@@ -28,6 +28,7 @@
 #include "constants/items.h"
 #include "constants/songs.h"
 #include "platform/test_state.h"
+#include "rtc.h"
 
 extern void AgbMain(void);
 
@@ -376,6 +377,17 @@ void RunTestCommand(FILE *file, const char *line)
     else if (strcmp(name, "givemon") == 0 && count >= 2)
     {
         fprintf(file, "{\"reply\": %d}\n", ScriptGiveMon(args[0], args[1], count >= 3 ? args[2] : ITEM_NONE, 0, 0, 0));
+    }
+    else if (strcmp(name, "clock") == 0 && count >= 2)
+    {
+        // Heure locale du jeu (heures, minutes), comme le réglage de l'horloge
+        RtcInitLocalTimeOffset(args[0], args[1]);
+        fprintf(file, "{\"reply\": 1}\n");
+    }
+    else if (strcmp(name, "daynight") == 0 && count >= 1)
+    {
+        gSaveBlock2Ptr->optionsDayNight = args[0] != 0;
+        fprintf(file, "{\"reply\": 1}\n");
     }
     else if (strcmp(name, "heal") == 0)
     {

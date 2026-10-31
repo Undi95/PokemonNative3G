@@ -589,8 +589,9 @@ struct SaveBlock2
              u16 optionsBattleUI:1;        // PokemonNative3G : boîtes de combat 0 = Hoenn (Émeraude), 1 = Kanto (Rouge Feu)
              u16 optionsBagStyle:1;        // PokemonNative3G : sac 0 = Hoenn (Émeraude), 1 = Kanto (Rouge Feu)
              u16 optionsMonSprites:1;      // PokemonNative3G : sprites des Pokémon 0 = Hoenn (Émeraude, animés), 1 = Kanto (Rouge Feu)
-             u16 optionsIntroHoenn:1;
-             u16 deoxysForm:2;             // PokemonNative3G : forme de Deoxys (DEOXYS_FORM_*), choisie dans le menu de l'équipe      // PokemonNative3G : intro 0 = Kanto (Rouge Feu, par défaut), 1 = Hoenn (Émeraude)
+             u16 optionsIntroHoenn:1;      // PokemonNative3G : intro 0 = Kanto (Rouge Feu, par défaut), 1 = Hoenn (Émeraude)
+             u16 deoxysForm:2;             // PokemonNative3G : forme de Deoxys (DEOXYS_FORM_*), choisie dans le menu de l'équipe
+             u16 optionsDayNight:1;        // PokemonNative3G : cycle jour/nuit visuel (day_night.c), 0 = non
     /*0x18*/ struct Pokedex pokedex;
     /*0x90*/ u8 filler_90[0x8];
     /*0x98*/ struct Time localTimeOffset;

@@ -189,8 +189,8 @@ for p in ('src/data/trade.h', 'src/data/kanto_ingame_trades_entries.h'):
 # --- évolutions et œufs -----------------------------------------------------------------------------------------
 EVO_TEXT = {
     'EVO_LEVEL': lambda p: f'niveau {p}', 'EVO_ITEM': lambda p: ITEM_NAMES.get(p, p),
-    'EVO_FRIENDSHIP': lambda p: 'bonheur', 'EVO_FRIENDSHIP_DAY': lambda p: 'bonheur, le jour',
-    'EVO_FRIENDSHIP_NIGHT': lambda p: 'bonheur, la nuit', 'EVO_TRADE': lambda p: 'CÂBLE LINK',
+    'EVO_FRIENDSHIP': lambda p: 'bonheur', 'EVO_FRIENDSHIP_DAY': lambda p: 'bonheur, le jour (6 h - 20 h)',
+    'EVO_FRIENDSHIP_NIGHT': lambda p: 'bonheur, la nuit (20 h - 6 h)', 'EVO_TRADE': lambda p: 'CÂBLE LINK',
     'EVO_TRADE_ITEM': lambda p: f'CÂBLE LINK en tenant {ITEM_NAMES.get(p, p)}', 'EVO_BEAUTY': lambda p: f'beauté {p}',
     'EVO_LEVEL_ATK_GT_DEF': lambda p: f'niveau {p}, Attaque > Défense',
     'EVO_LEVEL_ATK_LT_DEF': lambda p: f'niveau {p}, Attaque < Défense',
