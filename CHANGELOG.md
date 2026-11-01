@@ -1,15 +1,30 @@
 # PokemonNative3G — Changelog
 
-## Prochaine version
+## Version 1.1 (1er novembre 2026)
 
 ### Ajouts
 - **Cycle jour/nuit** (Options, page 1, JOUR/NUIT ; désactivé par défaut) : dehors, la lumière suit l'heure de
-  l'appareil (matin doré, coucher de soleil orangé, nuit bleutée), les fenêtres s'allument le soir. Purement
-  visuel : mêmes Pokémon à toute heure.
+  l'appareil (matin doré, coucher de soleil orangé de 17 h à 21 h, nuit bleutée de 21 h à 5 h). Purement visuel :
+  mêmes Pokémon à toute heure, boîtes de texte et menus intacts.
+  - Le soir et la nuit, les fenêtres des maisons et des bâtiments s'allument, vitre par vitre, avec leurs reflets et
+    leurs meneaux ; les lampes du Casino de Lavandia et du Bâtiment des Jeux de l'Île 2, les lampadaires de
+    Mérouville et l'emblème des Tentes de Combat aussi.
+  - La nuit désature un peu les couleurs (les fleurs ne brillent plus comme des lampes).
+  - Les portes gardent leur vitre allumée pendant qu'elles s'ouvrent et se ferment.
 - **Mentali / Noctali** : la nuit d'évolution suit le cycle, de 20 h à 6 h (avant : minuit à midi).
-- **Police** (Options, page 2, POLICE HOENN / KANTO) : la police choisie sert à tous les textes du jeu (dialogues
-  des deux régions, combat, menus, sauvegarde…). La police de Rouge Feu étant un peu plus large, les lignes qui ne
-  tiennent plus passent à la ligne. La boîte de dialogue (DIALOGUE) ne change plus la police.
+- **Police** (Options, page 2, POLICE HOENN / KANTO) : la police choisie sert à tous les textes du jeu, dans les deux
+  régions (dialogues, combat, menus, sauvegarde, sac, équipe, résumé, écrans de Rouge Feu…). La police de Rouge Feu
+  étant un peu plus large, une ligne qui ne tient plus resserre ses espaces ou passe à la ligne. L'option DIALOGUE ne
+  change plus que la boîte (cadre, largeur, interligne). Par défaut : HOENN ; avec les réglages par défaut, les
+  écrans de Rouge Feu sont donc maintenant écrits avec la police d'Émeraude.
+
+### Corrections
+- Tour des Dresseurs (Île 7) : la troisième ligne de la phrase des dresseurs était coupée ; elle défile comme dans
+  Rouge Feu.
+- Sac à Baies (sac de Kanto) : la troisième ligne de la description des baies était coupée.
+- Argent : un montant à 6 chiffres dépassait de sa case avec la police de Rouge Feu.
+- Description de la POKé MONTURE : elle dépassait de la fenêtre du sac.
+- Dôme de Combat : une lecture hors limites du code d'origine d'Émeraude en calculant les résultats d'un tournoi.
 
 ## Version 1.0 (31 octobre 2026) — première version complète
 
