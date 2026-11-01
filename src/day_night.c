@@ -47,8 +47,8 @@ static const struct MapLayout *sLightsLayout;
 struct DayNightRender gDayNightRender;
 static bool8 sMarkLights; // banc de test : vitres en magenta
 // Animation des portes (field_door.c) : ses images sont copiées dans les 16 derniers tiles, à la place de ceux de
-// la carte ; pendant ce temps chacun reprend les pixels allumés du métatile fermé à la même place (la vitre qui
-// glisse reste allumée, l'ouverture sombre et le logo au-dessus non)
+// la carte ; pendant ce temps leurs pixels allumés viennent de DayNight_DoorAnimMetatile (la vitre qui glisse reste
+// allumée, l'ouverture sombre et le logo au-dessus non)
 #define DOOR_ANIM_TILES (NUM_TILES_TOTAL - 16)
 static bool8 sDoorAnimTiles;
 static u8 sMapDoorTiles[16][8];
@@ -87,42 +87,96 @@ static u32 MetatilePixel(const u16 *entries, u32 q, u32 px, u32 py, bool32 *lit)
         color = TilePixel(tile, sx, sy);
         if (color != 0)
         {
-            *lit = tile < DOOR_ANIM_TILES && ((gDayNightRender.tiles[tile][sy] >> sx) & 1);
+            // Les tiles réservés aux portes peuvent servir à la carte (Dôme de Combat) : leurs pixels allumés à elle
+            *lit = (((tile < DOOR_ANIM_TILES ? gDayNightRender.tiles[tile] : sMapDoorTiles[tile - DOOR_ANIM_TILES])[sy] >> sx) & 1);
             break;
         }
     }
     return color;
 }
 
-// Une image de porte est dessinée à (x, y) avec les tiles tileNum à tileNum + 3 (couche du bas du métatile) : un
-// pixel s'allume s'il l'est dans le métatile fermé à la même place et qu'il en a gardé la couleur (la vitre qui
-// glisse, pas l'intérieur qui apparaît)
+// Une image de porte est dessinée à (x, y) avec les tiles tileNum à tileNum + 3 (couche du bas du métatile). Ses
+// pixels aux couleurs allumées du métatile fermé forment des zones d'un seul tenant et d'une seule couleur. Une zone
+// que l'animation laisse telle quelle reste comme dans le métatile fermé (un emblème allumé en partie) ; sinon elle
+// s'allume si elle ne passe par aucune place où le métatile fermé a cette couleur éteinte (le sol qui apparaît dans
+// l'ouverture, le cadre, le logo) et qu'elle recouvre une place où il l'a allumée ou que cette couleur y est surtout
+// allumée (la vitre, qu'elle glisse ou pivote ; pas une poignée)
 void DayNight_DoorAnimMetatile(u32 tileNum, s32 x, s32 y)
 {
     const struct MapLayout *layout = gMapHeader.mapLayout;
-    u32 id = MapGridGetMetatileIdAt(x, y), q, px, py;
+    u32 id = MapGridGetMetatileIdAt(x, y), p, i, n, litColors = 0;
     const u16 *entries;
+    u8 closed[256], unlit[256], anim[256], zone[256], seen[256];
+    s16 balance[16] = {0}; // par couleur : pixels allumés moins éteints du métatile fermé
     bool32 lit;
 
     if (id < NUM_METATILES_IN_PRIMARY)
         entries = layout->primaryTileset->metatiles + id * NUM_TILES_PER_METATILE;
     else
         entries = layout->secondaryTileset->metatiles + (id - NUM_METATILES_IN_PRIMARY) * NUM_TILES_PER_METATILE;
-    for (q = 0; q < 4; q++)
+    // Pixels (x, y) du métatile 16x16 : p = y * 16 + x, quart (y / 8) * 2 + x / 8
+    for (p = 0; p < 256; p++)
     {
-        u8 *mask = sDoorAnimMasks[tileNum + q - DOOR_ANIM_TILES];
+        u32 q = (p / 128) * 2 + (p % 16) / 8;
 
-        for (py = 0; py < 8; py++)
+        closed[p] = MetatilePixel(entries, q, p % 8, (p / 16) % 8, &lit);
+        unlit[p] = !lit;
+        anim[p] = TilePixel(tileNum + q, p % 8, (p / 16) % 8);
+        if (lit)
+            litColors |= 1 << closed[p];
+        balance[closed[p]] += lit ? 1 : -1;
+        seen[p] = FALSE;
+    }
+    // Les tiles réservés que l'animation ne dessine pas gardent ceux de la carte
+    if (!sDoorAnimTiles)
+        memcpy(sDoorAnimMasks, sMapDoorTiles, sizeof(sDoorAnimMasks));
+    memset(sDoorAnimMasks[tileNum - DOOR_ANIM_TILES], 0, 4 * sizeof(sDoorAnimMasks[0]));
+    for (p = 0; p < 256; p++)
+    {
+        bool32 dark = FALSE, moved = FALSE, glass = FALSE;
+
+        if (seen[p] || !((litColors >> anim[p]) & 1))
+            continue;
+        // Remplissage : zone[0..n) reçoit la zone, parcourue au fur et à mesure
+        seen[p] = TRUE;
+        zone[0] = p;
+        for (i = 0, n = 1; i < n; i++)
         {
-            mask[py] = 0;
-            for (px = 0; px < 8; px++)
+            u32 c = zone[i], next[4], k;
+
+            next[0] = c % 16 != 0 ? c - 1 : c;
+            next[1] = c % 16 != 15 ? c + 1 : c;
+            next[2] = c >= 16 ? c - 16 : c;
+            next[3] = c < 240 ? c + 16 : c;
+            if (closed[c] != anim[c])
+                moved = TRUE;
+            else if (unlit[c])
+                dark = TRUE;
+            else
+                glass = TRUE;
+            for (k = 0; k < 4; k++)
             {
-                if (MetatilePixel(entries, q, px, py, &lit) == TilePixel(tileNum + q, px, py) && lit)
-                    mask[py] |= 1 << px;
+                if (!seen[next[k]] && anim[next[k]] == anim[c])
+                {
+                    seen[next[k]] = TRUE;
+                    zone[n++] = next[k];
+                }
             }
+        }
+        if (moved && (dark || (!glass && balance[anim[p]] < 0)))
+            continue;
+        for (i = 0; i < n; i++)
+        {
+            u32 c = zone[i];
+
+            if (!moved && unlit[c])
+                continue;
+            sDoorAnimMasks[tileNum + (c / 128) * 2 + (c % 16) / 8 - DOOR_ANIM_TILES][(c / 16) % 8] |= 1 << (c % 8);
         }
     }
     sDoorAnimTiles = TRUE;
+    // Tout de suite : les images de la porte sont copiées en VRAM sans attendre la VBlank
+    memcpy(gDayNightRender.tiles[DOOR_ANIM_TILES], sDoorAnimMasks, sizeof(sDoorAnimMasks));
 }
 
 void DayNight_DoorClosed(void)

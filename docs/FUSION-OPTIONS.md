@@ -41,10 +41,13 @@ contenu dans un seul jeu.
   lampes du Casino de Lavandia et du Bâtiment des Jeux de l'Île 2, lampadaires de Mérouville, emblème des Tentes
   de Combat), qui passe avant `UNLIT_METATILES`. Les couleurs sombres allumées sont éclaircies, jusqu'au double
   (fenêtres bleu nuit ; un écran noir pendant un fondu reste noir). Animation des portes (`field_door.c`,
-  `kanto_field_door.c`) : ses images remplacent les 16 derniers tiles, qui reprennent les pixels allumés du
-  métatile fermé à la même place (`DayNight_DoorAnimMetatile`). Vérification : scénario `day_night_towns` (vitres
-  en magenta dans shots/, `DN_MARK=1` = rendu réel, `DN_SPOTS=fichier` = une capture par point « CARTE x y ») et
-  `day_night_doors` (entrée et sortie de quatre bâtiments, une capture toutes les 3 images).
+  `kanto_field_door.c`) : ses images remplacent 4 à 8 des 16 derniers tiles (les autres gardent ceux de la carte,
+  qui peut s'en servir), éclairés tout de suite par `DayNight_DoorAnimMetatile` : zones d'une couleur allumée du
+  métatile fermé ; une zone immobile reste comme fermée, une zone qui bouge s'allume sauf si elle passe par cette
+  couleur éteinte (sol de l'ouverture, cadre, logo) ou si elle ne recouvre aucune vitre de sa couleur alors que
+  cette couleur est surtout éteinte (poignées). Vérification : scénario `day_night_towns` (vitres en magenta dans
+  shots/, `DN_MARK=1` = rendu réel, `DN_SPOTS=fichier` = une capture par point « CARTE x y ») et `day_night_doors`
+  (entrée et sortie par une porte de chaque animation des villes, une capture toutes les 3 images).
 
 ## À faire — contenu à réunir (listes)
 - Décision : musiques, animations et transitions de combat = celles de la région, comme dans les jeux officiels (pas d'option).
