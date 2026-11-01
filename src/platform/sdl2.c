@@ -861,6 +861,10 @@ static bool ParseArgs(int argc, char **argv)
         {
             sTestShotEvery = strtoul(value, NULL, 10);
         }
+        else if (strcmp(arg, "--test-font") == 0)
+        {
+            gTestFont = strtol(value, NULL, 10);
+        }
         else if (strcmp(arg, "--test-time") == 0)
         {
             sTestClockBase = strtoll(value, NULL, 10);

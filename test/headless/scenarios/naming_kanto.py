@@ -18,7 +18,7 @@ def play(game):
     wait_until(game, lambda s: s.free); game.wait(30)
     give_mewtwo(game)
     game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
-    game.tap("R"); game.wait(30); game.tap("DOWN", 4, gap=10); game.wait(30); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
+    game.tap("R"); game.wait(30); game.tap("DOWN", 5, gap=10); game.wait(30); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
     close_menus(game)
     game.tap("START"); game.wait(30); game.tap("UP", 5, gap=10); game.tap("A"); game.wait(30); game.tap("DOWN", 5, gap=10); game.tap("A"); game.wait(60)
     close_menus(game)
@@ -49,6 +49,8 @@ def play(game):
     wait_until(game, lambda s: s.free); log(game, "fin")
 
     # Vérifications
-    expect_battle(game, foe="SPECIES_PIDGEY", outcome="CAUGHT")
-    expect_party(game, "SPECIES_PIDGEY", 2)
-    expect_text(game, "Donner un surnom au ROUCOOL capturé")
+    # Le Pokémon de la Route 1 (ROUCOOL ou RATTATA, son niveau) dépend du tirage, donc des images jouées avant
+    expect_battle(game, outcome="CAUGHT")
+    if game.battles:
+        expect_party(game, game.battles[-1]["foes"][0])
+    expect_text(game, "Donner un surnom au")

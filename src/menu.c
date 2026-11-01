@@ -195,22 +195,11 @@ bool16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 sp
     return AddTextPrinter(&printer, speed, callback);
 }
 
-// PokemonNative3G : option DIALOGUE = KANTO -> police de Rouge Feu, sauf si le texte (écrit pour la police
-// d'Émeraude, plus étroite) dépasse la fenêtre.
-u8 GetDialogueFontId(const u8 *str)
+// PokemonNative3G : option DIALOGUE = KANTO -> interligne de Rouge Feu (les lettres sont celles de l'option POLICE ;
+// AddTextPrinter recoupe les lignes trop larges pour la fenêtre)
+u8 GetDialogueFontId(void)
 {
-    static u8 sLines[1000];
-    u32 i;
-
-    if (!gSaveBlock2Ptr->optionsDialogStyle)
-        return FONT_NORMAL;
-    // GetStringWidth ne coupe les lignes que sur CHAR_NEWLINE : \l et \p deviennent des retours à la ligne
-    for (i = 0; i < sizeof(sLines) - 1 && str[i] != EOS; i++)
-        sLines[i] = (str[i] == CHAR_PROMPT_SCROLL || str[i] == CHAR_PROMPT_CLEAR) ? CHAR_NEWLINE : str[i];
-    sLines[i] = EOS;
-    if (GetStringWidth(FONT_KANTO, sLines, 0) <= GetWindowAttribute(0, WINDOW_WIDTH) * 8)
-        return FONT_KANTO;
-    return FONT_NORMAL;
+    return gSaveBlock2Ptr->optionsDialogStyle ? FONT_KANTO : FONT_NORMAL;
 }
 
 void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
@@ -228,13 +217,13 @@ void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
         else if (color == NPC_TEXT_COLOR_FEMALE)
             fgColor = TEXT_COLOR_RED;
     }
-    AddTextPrinterParameterized2(0, GetDialogueFontId(gStringVar4), gStringVar4, GetPlayerTextSpeedDelay(), callback, fgColor, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, GetDialogueFontId(), gStringVar4, GetPlayerTextSpeedDelay(), callback, fgColor, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 void AddTextPrinterForMessage_2(bool8 allowSkippingDelayWithButtonPress)
 {
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, GetDialogueFontId(gStringVar4), gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, GetDialogueFontId(), gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 void AddTextPrinterWithCustomSpeedForMessage(bool8 allowSkippingDelayWithButtonPress, u8 speed)

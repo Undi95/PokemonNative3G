@@ -323,6 +323,7 @@ extern const u8 gText_CharacterRed[];
 extern const u8 gText_CharacterLeaf[];
 extern const u8 gText_TitleScreen[];
 extern const u8 gText_DialogStyle[];
+extern const u8 gText_Font[];
 extern const u8 gText_BattleUI[];
 extern const u8 gText_MonSprites[];
 extern const u8 gText_DeoxysForm[];

@@ -28,7 +28,7 @@ def once(p, a, b):
 once('include/constants/items.h', '#define ITEM_LINK_CABLE 377\n\n#define ITEMS_COUNT 378\n',
      '#define ITEM_LINK_CABLE 377\n#define ITEM_POKE_MONTURE 378\n\n#define ITEMS_COUNT 379\n')
 once('src/data/text/item_descriptions.h', 'static const u8 sFireStoneDesc[] = _(',
-     'static const u8 sPokeMontureDesc[] = _(\n    "Appelle un POKéMON\\n"\n    "des environs pour une\\n"\n    "capacité de terrain.");\n\nstatic const u8 sFireStoneDesc[] = _(')
+     'static const u8 sPokeMontureDesc[] = _(\n    "Appelle un POKéMON\\n"\n    "des environs qui\\n"\n    "utilise une CS.");\n\nstatic const u8 sFireStoneDesc[] = _(')
 once('src/data/items.h', '    [ITEM_FIRE_STONE] =\n', '''    [ITEM_POKE_MONTURE] = // PokemonNative3G : remplace les CS données à Kanto
     {
         .name = _("POKé MONTURE"),

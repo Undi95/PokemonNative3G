@@ -143,7 +143,9 @@ def fixture(binary, name):
     it's needed by a build (they're kept in build/headless/fixtures)."""
     info = os.stat(binary)
     folder = os.path.join(BUILD_DIR, "fixtures")
-    path = os.path.join(folder, f"{name}-{int(info.st_mtime)}-{info.st_size}.sav")
+    # TEST_FONT (driver.py) changes the options in the save: a fixture of its own
+    variant = f"-font{os.environ['TEST_FONT']}" if os.environ.get("TEST_FONT") else ""
+    path = os.path.join(folder, f"{name}{variant}-{int(info.st_mtime)}-{info.st_size}.sav")
     with _fixture_locks_lock:
         lock = _fixture_locks.setdefault(name, threading.Lock())
     with lock:
@@ -152,7 +154,7 @@ def fixture(binary, name):
             run = run_scenario(binary, "fixture_" + name, out)
             if not run.ok:
                 raise RuntimeError(f"fixture {name} failed, see {out}/journal.txt: {run.stderr.strip()[-500:]}")
-            for old in glob.glob(os.path.join(folder, f"{name}-*.sav")):
+            for old in glob.glob(os.path.join(folder, f"{name}{variant}-[0-9]*.sav")):
                 os.remove(old)
             shutil.copyfile(run.save_path, path)
     return path

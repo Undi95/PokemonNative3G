@@ -366,8 +366,8 @@ static const u8 sLinkCableDesc[] = _(
 
 static const u8 sPokeMontureDesc[] = _(
     "Appelle un POKéMON\n"
-    "des environs pour une\n"
-    "capacité de terrain.");
+    "des environs qui\n"
+    "utilise une CS.");
 
 static const u8 sFireStoneDesc[] = _(
     "Fait évoluer\n"

@@ -7,6 +7,9 @@
   l'appareil (matin doré, coucher de soleil orangé, nuit bleutée), les fenêtres s'allument le soir. Purement
   visuel : mêmes Pokémon à toute heure.
 - **Mentali / Noctali** : la nuit d'évolution suit le cycle, de 20 h à 6 h (avant : minuit à midi).
+- **Police** (Options, page 2, POLICE HOENN / KANTO) : la police choisie sert à tous les textes du jeu (dialogues
+  des deux régions, combat, menus, sauvegarde…). La police de Rouge Feu étant un peu plus large, les lignes qui ne
+  tiennent plus passent à la ligne. La boîte de dialogue (DIALOGUE) ne change plus la police.
 
 ## Version 1.0 (31 octobre 2026) — première version complète
 

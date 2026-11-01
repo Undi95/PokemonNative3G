@@ -15,7 +15,20 @@ contenu dans un seul jeu.
 - [x] Cadres de menus : 20 d'Émeraude + 9 de Rouge Feu (type 2 de RF = cadre 2 d'Émeraude) = 29 (option CADRE)
 - [x] Sac : poches agrandies pour contenir les objets des deux jeux
 - [x] Fonds des boîtes du PC : 16 d'Émeraude + 16 de Rouge Feu (tous différents), catégorie KANTO (non testé en jeu)
-- [x] Boîte de dialogue : HOENN / KANTO (option DIALOGUE : cadre, fenêtre et police de RF ; panneaux de RF et texte bleu/rouge des PNJ de Kanto depuis le 2026-10-30)
+- [x] Boîte de dialogue : HOENN / KANTO (option DIALOGUE : cadre, fenêtre et interligne de RF ; panneaux de RF et texte bleu/rouge des PNJ de Kanto depuis le 2026-10-30)
+- [x] Police : HOENN / KANTO (option POLICE, page 2, 2026-11-01) : les lettres de tous les textes (dialogues, combat,
+  menus, sauvegarde, sac, équipe, résumé, écrans de RF…) sont celles de la police choisie. Les polices normales des deux
+  jeux (FONT_NORMAL, FONT_SHORT*, FONT_KANTO) gardent leurs mesures (interligne, couleurs) mais dessinent les lettres
+  de l'option (`text.c`, DecompressGlyph_Kanto) ; en HOENN, les écrans de RF (FONT_KANTO, lignes de 14 pixels) prennent
+  la police courte d'Émeraude (même dessin, même hauteur que celle de RF). La police de RF est un peu plus large (espace
+  de 6 pixels contre 3) : `AddTextPrinter` recale toute ligne trop large pour sa fenêtre (WrapTextToWindow). Texte écrit
+  d'un coup (menus, descriptions) : espaces resserrés jusqu'à 3 pixels, la mise en page est gardée ; plus de lignes que
+  la fenêtre (descriptions d'Émeraude dans le Sac à Baies de RF) : remis en un paragraphe, recoupé. Sinon, les derniers
+  mots passent à la ligne suivante du paragraphe (un mot coupé par un tiret s'y recolle), ou sur une nouvelle ligne (\n
+  s'il reste de la place, \l si le texte s'écrit lettre par lettre) ; dernier recours, espaces de 2 pixels. Petite police
+  (FONT_SMALL) et police étroite (FONT_NARROW) : celles d'Émeraude dans les deux cas. Vérification : scénario `fonts`
+  (début d'Hoenn en POLICE = KANTO) ; le banc signale toute lettre coupée par le bord de sa fenêtre (`TEXTE COUPÉ`,
+  `TEST_FONT=1` pour toute la suite en KANTO) : aucune dans les deux polices.
 
 - [x] Interface de combat : boîtes de PV/EXP et boîte de texte de combat HOENN / KANTO (option BOITES COMBAT), barre de l'équipe (Poké Balls) de RF comprise (2026-10-30, `options_partybar`)
 - [x] Pokédex HOENN / KANTO (option POKéDEX) : écran complet de RF (pokedex_screen.c porté, textes/descriptions de RF, zones de Kanto)

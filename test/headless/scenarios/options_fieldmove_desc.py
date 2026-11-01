@@ -38,7 +38,7 @@ def play(game):
     hoenn = cursor_on_teleport(game, "MENUS HOENN")
     # Options > page 2 > MENUS = KANTO
     game.tap("START"); game.wait(30); game.tap("DOWN", 4, gap=10); game.tap("A"); game.wait(120)
-    game.tap("R"); game.wait(30); game.tap("DOWN", 4, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60)
+    game.tap("R"); game.wait(30); game.tap("DOWN", 5, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60)
     game.tap("B"); game.wait(120)
     close_menus(game)
     game.tap("START"); game.wait(30); game.tap("UP", 4, gap=10); game.wait(10)

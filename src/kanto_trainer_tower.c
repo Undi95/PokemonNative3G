@@ -1032,7 +1032,8 @@ static void SetTrainerTowerNPCGraphics(void)
 
 static void TT_ConvertEasyChatMessageToString(u16 *ecWords, u8 *dest)
 {
-    ConvertEasyChatWordsToString(dest, ecWords, 2, 3);
+    // Localize_ConvertEasyChatMessageToString de RF = OtherConvertEasyChatWordsToString d'Émeraude (3e ligne : \l)
+    OtherConvertEasyChatWordsToString(dest, ecWords, 2, 3);
 }
 
 static void BufferTowerOpponentSpeech(void)

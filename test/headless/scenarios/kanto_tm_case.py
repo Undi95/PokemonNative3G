@@ -18,7 +18,7 @@ def play(game):
     give_mewtwo(game)
     # Options > SAC = KANTO (menu Start : DEBUG, POKéMON, SAC... ; Options 2 crans au-dessus du bas)
     game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
-    game.tap("R"); game.wait(30); game.tap("DOWN", 5, gap=10); game.wait(30); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
+    game.tap("R"); game.wait(30); game.tap("DOWN", 6, gap=10); game.wait(30); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120)
     close_menus(game)
     # DEBUG > objets
     game.tap("START"); game.wait(30); game.tap("UP", 5, gap=10); game.tap("A"); game.wait(30); game.tap("DOWN", 5, gap=10); game.tap("A"); game.wait(60)

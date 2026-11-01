@@ -251,7 +251,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
     }
     shown = count > 6 ? 6 : count;
 
-    win = CreateWindowTemplate(0, 1, 1, 14, shown * 2, 0xF, 0x64);
+    win = CreateWindowTemplate(0, 1, 1, 18, shown * 2, 0xF, 0x64); // 18 colonnes : « Débloquer les 2 POKéDEX »
     task->tWindowId = AddWindow(&win);
     SetStandardWindowBorderStyle(task->tWindowId, FALSE);
 

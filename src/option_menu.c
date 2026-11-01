@@ -50,6 +50,7 @@ enum
     MENUITEM_CHARACTER,
     MENUITEM_MONSPRITES,
     MENUITEM_DIALOGSTYLE,
+    MENUITEM_FONT,
     MENUITEM_BATTLEUI,
     MENUITEM_MENUSTYLE,
     MENUITEM_BAGSTYLE,
@@ -116,6 +117,7 @@ static u8 OptionRow(u8 item)
 #define YPOS_CHARACTER    OPTION_YPOS(MENUITEM_CHARACTER)
 #define YPOS_TITLESCREEN  OPTION_YPOS(MENUITEM_TITLESCREEN)
 #define YPOS_DIALOGSTYLE  OPTION_YPOS(MENUITEM_DIALOGSTYLE)
+#define YPOS_FONT         OPTION_YPOS(MENUITEM_FONT)
 #define YPOS_BATTLEUI     OPTION_YPOS(MENUITEM_BATTLEUI)
 #define YPOS_MONSPRITES   OPTION_YPOS(MENUITEM_MONSPRITES)
 #define YPOS_POKEDEXSTYLE OPTION_YPOS(MENUITEM_POKEDEXSTYLE)
@@ -155,6 +157,7 @@ static void DrawBgWindowFrames(void);
 EWRAM_DATA static bool8 sArrowPressed = FALSE;
 EWRAM_DATA static u8 sScrollOffset = 0;
 EWRAM_DATA static u8 sDayNight = 0; // option JOUR/NUIT (les 16 données de la tâche sont prises)
+EWRAM_DATA static u8 sFont = 0;     // option POLICE
 
 static const u16 sOptionMenuText_Pal[] = INCGFX_U16("graphics/interface/option_menu_text.pal", ".gbapal");
 // note: this is only used in the Japanese release
@@ -172,6 +175,7 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
     [MENUITEM_CHARACTER]   = gText_Character,
     [MENUITEM_TITLESCREEN] = gText_TitleScreen,
     [MENUITEM_DIALOGSTYLE] = gText_DialogStyle,
+    [MENUITEM_FONT]        = gText_Font,
     [MENUITEM_BATTLEUI] = gText_BattleUI,
     [MENUITEM_MONSPRITES] = gText_MonSprites,
     [MENUITEM_POKEDEXSTYLE] = gText_PokedexStyle,
@@ -338,6 +342,7 @@ void CB2_InitOptionMenu(void)
         gTasks[taskId].tBagStyle = gSaveBlock2Ptr->optionsBagStyle;
         gTasks[taskId].tIntro = !gSaveBlock2Ptr->optionsIntroHoenn; // 1 = KANTO dans le menu
         sDayNight = gSaveBlock2Ptr->optionsDayNight;
+        sFont = gSaveBlock2Ptr->optionsFont;
 
         DrawOptionMenuChoices(taskId);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
@@ -468,6 +473,13 @@ static void Task_OptionMenuProcessInput(u8 taskId)
             if (previousOption != gTasks[taskId].tDialogStyle)
                 Region_DrawChoices(gTasks[taskId].tDialogStyle, YPOS_DIALOGSTYLE);
             break;
+        case MENUITEM_FONT:
+            previousOption = sFont;
+            sFont = Character_ProcessInput(sFont);
+
+            if (previousOption != sFont)
+                Region_DrawChoices(sFont, YPOS_FONT);
+            break;
         case MENUITEM_BATTLEUI:
             previousOption = gTasks[taskId].tBattleUI;
             gTasks[taskId].tBattleUI = Character_ProcessInput(gTasks[taskId].tBattleUI);
@@ -547,6 +559,7 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsBagStyle = gTasks[taskId].tBagStyle;
     gSaveBlock2Ptr->optionsIntroHoenn = !gTasks[taskId].tIntro;
     gSaveBlock2Ptr->optionsDayNight = sDayNight;
+    gSaveBlock2Ptr->optionsFont = sFont;
     sScrollOffset = 0;
     sOptionPage = 0;
 
@@ -974,6 +987,9 @@ static void DrawOptionMenuChoices(u8 taskId)
             break;
         case MENUITEM_DIALOGSTYLE:
             Region_DrawChoices(gTasks[taskId].tDialogStyle, YPOS_DIALOGSTYLE);
+            break;
+        case MENUITEM_FONT:
+            Region_DrawChoices(sFont, YPOS_FONT);
             break;
         case MENUITEM_BATTLEUI:
             Region_DrawChoices(gTasks[taskId].tBattleUI, YPOS_BATTLEUI);

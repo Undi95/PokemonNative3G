@@ -50,6 +50,7 @@ static bool8 sHaveLast;
 
 // Set by the test mode when it writes the state: the events cost nothing otherwise
 bool8 gTestStateEnabled;
+s8 gTestFont = -1; // --test-font : l'option POLICE imposée à chaque image (0 = Hoenn, 1 = Kanto)
 
 static void AddEvent(const char *format, ...) __attribute__((format(printf, 1, 2)));
 
@@ -88,6 +89,13 @@ void TestState_OnText(u8 windowId, const u8 *text)
         sprintf(hex + 2 * i, "%02x", text[i]);
     hex[2 * i] = '\0';
     AddEvent("{\"t\": \"text\", \"win\": %d, \"hex\": \"%s\"}", windowId, hex);
+}
+
+// Une lettre du dernier texte de la fenêtre est coupée par son bord (text.c)
+void TestState_OnTextClipped(u8 windowId)
+{
+    if (gTestStateEnabled)
+        AddEvent("{\"t\": \"clipped\", \"win\": %d}", windowId);
 }
 
 static void ReadItems(u16 *items)
@@ -205,6 +213,8 @@ void TestState_OnFrame(u32 frame)
 
     if (!gTestStateEnabled)
         return;
+    if (gTestFont >= 0)
+        gSaveBlock2Ptr->optionsFont = gTestFont;
     bgm = GetBgmSong();
     if (bgm != sLastBgm)
     {
@@ -391,6 +401,13 @@ void RunTestCommand(FILE *file, const char *line)
         gSaveBlock2Ptr->optionsDayNight = args[0] != 0;
         DayNight_SetMarkLights(args[0] == 2);
         fprintf(file, "{\"reply\": 1}\n");
+    }
+    else if (strcmp(name, "font") == 0)
+    {
+        // Option POLICE : 0 = Hoenn, 1 = Kanto
+        if (count >= 1)
+            gSaveBlock2Ptr->optionsFont = args[0] != 0;
+        fprintf(file, "{\"reply\": %d}\n", gSaveBlock2Ptr->optionsFont);
     }
     else if (strcmp(name, "heal") == 0)
     {

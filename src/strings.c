@@ -1526,6 +1526,7 @@ const u8 gText_CharacterRed[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}RED");
 const u8 gText_CharacterLeaf[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}LEAF");
 const u8 gText_TitleScreen[] = _("TITRE");
 const u8 gText_DialogStyle[] = _("DIALOGUE");
+const u8 gText_Font[] = _("POLICE");
 const u8 gText_BattleUI[] = _("BOITES COMBAT");
 const u8 gText_MonSprites[] = _("POKéMON");
 const u8 gText_DeoxysForm[] = _("FORME");

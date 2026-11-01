@@ -592,6 +592,7 @@ struct SaveBlock2
              u16 optionsIntroHoenn:1;      // PokemonNative3G : intro 0 = Kanto (Rouge Feu, par défaut), 1 = Hoenn (Émeraude)
              u16 deoxysForm:2;             // PokemonNative3G : forme de Deoxys (DEOXYS_FORM_*), choisie dans le menu de l'équipe
              u16 optionsDayNight:1;        // PokemonNative3G : cycle jour/nuit visuel (day_night.c), 0 = non
+             u16 optionsFont:1;            // PokemonNative3G : police de tous les textes 0 = Hoenn (Émeraude), 1 = Kanto (Rouge Feu)
     /*0x18*/ struct Pokedex pokedex;
     /*0x90*/ u8 filler_90[0x8];
     /*0x98*/ struct Time localTimeOffset;

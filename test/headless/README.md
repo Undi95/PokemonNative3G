@@ -62,6 +62,12 @@ The game writes these with its state (see `src/platform/test_state.c`); `cb1`, `
 `tasks` in the state name what it's running, which tells a menu and a freeze apart.
 `party` and `foe` list each Pokémon as `[species, level, hp, max hp, status, egg, personality]`
 (the personality gives, for example, an Unown's letter: see `scenarios/kanto_unown.py`).
+A letter of the normal fonts cut by the edge of its window shows as `TEXTE COUPÉ[window]`
+with that window's last text (`game.clipped`). `TEST_FONT=0` or `1` sets the POLICE option
+(Hoenn or Kanto letters) for the whole run: `TEST_FONT=1 suite.py BINARY --out DIR`, then
+look for `TEXTE COUPÉ` in the journals (the screen references are made with the default,
+Hoenn, so they don't match then). `CLIP_SHOTS=1` also takes a screenshot after each cut
+text (`shots/coupe_FRAME_WINDOW.ppm`).
 
 Between frames, a scenario can also run test commands (lines starting with `!` in the
 input, so a run can still be replayed from `input.txt`), to set a scenario up quickly or

@@ -287,6 +287,272 @@ bool16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, 
     return AddTextPrinter(&printerTemplate, speed, callback);
 }
 
+// PokemonNative3G : une ligne trop large pour sa fenêtre (texte écrit pour l'autre police, voir l'option POLICE, ou
+// pour la boîte de dialogue d'Émeraude, plus large que celle de Rouge Feu) :
+// - texte écrit d'un coup (menus, descriptions) : ses espaces se resserrent, jusqu'à 3 pixels (l'espace d'Émeraude),
+//   pour garder la mise en page ;
+// - sinon, ou si ça ne suffit pas : ses derniers mots passent au début de la ligne suivante du paragraphe (un mot
+//   coupé par un tiret en fin de ligne s'y recolle). À la fin du paragraphe, ils prennent une nouvelle ligne : \n s'il
+//   reste de la place dans la fenêtre, sinon \l si le texte s'écrit lettre par lettre ;
+// - une ligne qui ne peut pas passer à la ligne resserre ses espaces jusqu'à 2 pixels ;
+// - un texte écrit d'un coup qui a plus de lignes que sa fenêtre est remis en un paragraphe, recoupé à sa largeur.
+#define WRAP_TEXT_MAX 1000
+
+static u8 sWrappedTexts[WINDOWS_MAX][3 * WRAP_TEXT_MAX];
+static u8 sWrapLine[WRAP_TEXT_MAX + 1];
+static u8 sWrapPending[WRAP_TEXT_MAX + 1];
+static u8 sWrapFill[WRAP_TEXT_MAX + 1];
+#ifdef PORTABLE
+static bool8 sClippedTextReported[WINDOWS_MAX];
+#endif
+
+// Les polices dont les lettres sont celles de l'option POLICE (DecompressGlyph_Kanto)
+static bool32 IsOptionFont(u8 fontId)
+{
+    return fontId == FONT_NORMAL || fontId == FONT_KANTO || (fontId >= FONT_SHORT && fontId <= FONT_SHORT_COPY_3);
+}
+
+// Octets d'un caractère du texte (codes de contrôle et leurs arguments compris ; un code inconnu ou un code en fin
+// de texte ne compte que pour lui, pour ne pas passer la fin)
+static u32 TextCharLength(const u8 *str)
+{
+    switch (*str)
+    {
+    case EXT_CTRL_CODE_BEGIN:
+        if (str[1] == EOS || GetExtCtrlCodeLength(str[1]) == 0)
+            return 1;
+        return 1 + GetExtCtrlCodeLength(str[1]);
+    case PLACEHOLDER_BEGIN:
+    case CHAR_DYNAMIC:
+    case CHAR_KEYPAD_ICON:
+    case CHAR_EXTRA_SYMBOL:
+        return str[1] == EOS ? 1 : 2;
+    default:
+        return 1;
+    }
+}
+
+static bool32 IsLineEnd(u8 c)
+{
+    return c == CHAR_NEWLINE || c == CHAR_PROMPT_SCROLL || c == CHAR_PROMPT_CLEAR || c == EOS;
+}
+
+static s32 GetTextSpanWidth(u8 fontId, const u8 *str, u32 length)
+{
+    static u8 sSpan[WRAP_TEXT_MAX + 1];
+
+    memcpy(sSpan, str, length);
+    sSpan[length] = EOS;
+    return GetStringWidth(fontId, sSpan, 0);
+}
+
+static s32 GetSpaceWidth(u8 fontId)
+{
+    static const u8 sSpace[] = { CHAR_SPACE, EOS };
+
+    return GetStringWidth(fontId, sSpace, 0);
+}
+
+// Largeur des espaces pour que la ligne tienne, sans descendre sous minSpace (fits = FALSE si ça ne suffit pas)
+static s32 GetFittedSpaceWidth(u8 fontId, const u8 *line, u32 length, s32 maxWidth, s32 minSpace, bool32 *fits)
+{
+    s32 spaceWidth = GetSpaceWidth(fontId);
+    s32 overflow = GetTextSpanWidth(fontId, line, length) - maxWidth;
+    s32 width;
+    u32 i, spaces = 0;
+
+    *fits = (overflow <= 0);
+    if (*fits)
+        return spaceWidth;
+    for (i = 0; i < length; i += TextCharLength(&line[i]))
+    {
+        if (line[i] == CHAR_SPACE)
+            spaces++;
+    }
+    if (spaces == 0)
+        return spaceWidth;
+    width = spaceWidth - (s32)((overflow + spaces - 1) / spaces);
+    *fits = (width >= minSpace);
+    return min(spaceWidth, max(width, minSpace));
+}
+
+// Copie la ligne, ses espaces larges de spaceWidth pixels ({CLEAR n})
+static u32 CopyLineWithSpaces(u8 fontId, u8 *dst, const u8 *line, u32 length, s32 spaceWidth, bool32 *changed)
+{
+    u32 i, next, dstLength = 0;
+
+    if (spaceWidth == GetSpaceWidth(fontId))
+    {
+        memcpy(dst, line, length);
+        return length;
+    }
+    for (i = 0; i < length; i = next)
+    {
+        next = i + TextCharLength(&line[i]);
+        if (line[i] == CHAR_SPACE)
+        {
+            dst[dstLength++] = EXT_CTRL_CODE_BEGIN;
+            dst[dstLength++] = EXT_CTRL_CODE_CLEAR;
+            dst[dstLength++] = spaceWidth;
+        }
+        else
+        {
+            memcpy(&dst[dstLength], &line[i], next - i);
+            dstLength += next - i;
+        }
+    }
+    *changed = TRUE;
+    return dstLength;
+}
+
+// Coupure de la ligne la plus à droite qui tient (une espace, sauf devant la ponctuation qui la suit en français)
+static u32 FindLineBreak(u8 fontId, const u8 *line, u32 length, s32 maxWidth)
+{
+    u32 i, next, best = 0;
+
+    for (i = 0; i < length; i = next)
+    {
+        next = i + TextCharLength(&line[i]);
+        if (line[i] != CHAR_SPACE || i == 0 || next >= length)
+            continue;
+        if (line[next] == CHAR_EXCL_MARK || line[next] == CHAR_QUESTION_MARK || line[next] == CHAR_COLON
+         || line[next] == CHAR_SEMICOLON || line[next] == CHAR_SPACE)
+            continue;
+        if (GetTextSpanWidth(fontId, line, i) > maxWidth)
+            break;
+        best = i;
+    }
+    return best;
+}
+
+static const u8 *WrapTextToWindow(const struct TextPrinterTemplate *printer, u8 speed)
+{
+    const u8 *src = printer->currentChar;
+    u8 *dst = sWrappedTexts[printer->windowId];
+    struct Window *window = &gWindows[printer->windowId];
+    s32 maxWidth, lineHeight, windowHeight, lineY, spaceWidth;
+    u32 i, length, lineLength, pendingLength = 0, cut, dstLength = 0;
+    bool32 changed = FALSE, typed = (speed != 0 && speed != TEXT_SKIP_DRAW), hasBreaks = FALSE, newLine, fits;
+    u8 end;
+
+    if (src == NULL || window->window.bg == 0xFF || !IsOptionFont(printer->fontId))
+        return src;
+    for (length = 0; src[length] != EOS; length += TextCharLength(&src[length]))
+    {
+        if (length >= WRAP_TEXT_MAX)
+            return src;
+        if (src[length] == CHAR_NEWLINE || src[length] == CHAR_PROMPT_SCROLL || src[length] == CHAR_PROMPT_CLEAR)
+            hasBreaks = TRUE;
+    }
+
+    maxWidth = window->window.width * 8 - printer->x;
+    lineHeight = gFonts[printer->fontId].maxLetterHeight + printer->lineSpacing;
+    windowHeight = window->window.height * 8;
+    lineY = printer->currentY;
+
+    // Texte écrit d'un coup qui a plus de lignes que sa fenêtre (description d'Émeraude dans un écran de RF) :
+    // ses lignes sont remises bout à bout puis recoupées à la largeur de la fenêtre
+    if (!typed && hasBreaks)
+    {
+        u32 lines = 1;
+
+        for (i = 0; src[i] != EOS; i += TextCharLength(&src[i]))
+        {
+            if (src[i] == CHAR_PROMPT_SCROLL || src[i] == CHAR_PROMPT_CLEAR)
+                break;
+            if (src[i] == CHAR_NEWLINE)
+                lines++;
+        }
+        if (src[i] == EOS && lineY + (s32)lines * lineHeight > windowHeight + 2)
+        {
+            for (length = 0, i = 0; src[i] != EOS; i += TextCharLength(&src[i]))
+            {
+                if (src[i] != CHAR_NEWLINE)
+                {
+                    memcpy(&sWrapFill[length], &src[i], TextCharLength(&src[i]));
+                    length += TextCharLength(&src[i]);
+                }
+                else if (length != 0 && sWrapFill[length - 1] == CHAR_HYPHEN)
+                    length--;
+                else
+                    sWrapFill[length++] = CHAR_SPACE;
+            }
+            sWrapFill[length] = EOS;
+            src = sWrapFill;
+            changed = TRUE;
+        }
+    }
+    i = 0;
+    while (TRUE)
+    {
+        // La ligne : les mots repris de la ligne d'avant (sans le tiret d'un mot coupé), puis la sienne
+        lineLength = pendingLength;
+        memcpy(sWrapLine, sWrapPending, pendingLength);
+        if (lineLength != 0 && sWrapLine[lineLength - 1] == CHAR_HYPHEN && !IsLineEnd(src[i]))
+            lineLength--;
+        else if (pendingLength != 0 && !IsLineEnd(src[i]))
+            sWrapLine[lineLength++] = CHAR_SPACE;
+        for (; !IsLineEnd(src[i]); i += TextCharLength(&src[i]))
+        {
+            if (lineLength + TextCharLength(&src[i]) > WRAP_TEXT_MAX)
+                return src;
+            memcpy(&sWrapLine[lineLength], &src[i], TextCharLength(&src[i]));
+            lineLength += TextCharLength(&src[i]);
+        }
+        end = src[i];
+        pendingLength = 0;
+
+        while (TRUE)
+        {
+            if (dstLength + 3 * lineLength + 2 > sizeof(sWrappedTexts[0]))
+                return src;
+            // En fin de paragraphe, les mots en trop prennent une ligne de plus (ou font défiler le texte)
+            newLine = (typed || hasBreaks) && lineY + 2 * lineHeight <= windowHeight + 2;
+            spaceWidth = GetFittedSpaceWidth(printer->fontId, sWrapLine, lineLength, maxWidth,
+                                             typed ? GetSpaceWidth(printer->fontId) : 3, &fits);
+            cut = 0;
+            if (!fits && (end == CHAR_NEWLINE || end == CHAR_PROMPT_SCROLL || newLine || typed))
+                cut = FindLineBreak(printer->fontId, sWrapLine, lineLength, maxWidth);
+            if (cut == 0)
+            {
+                if (!fits)
+                    spaceWidth = GetFittedSpaceWidth(printer->fontId, sWrapLine, lineLength, maxWidth, 2, &fits);
+                dstLength += CopyLineWithSpaces(printer->fontId, &dst[dstLength], sWrapLine, lineLength, spaceWidth, &changed);
+                break;
+            }
+            memcpy(&dst[dstLength], sWrapLine, cut);
+            dstLength += cut;
+            changed = TRUE;
+            pendingLength = lineLength - cut - 1;
+            memcpy(sWrapPending, &sWrapLine[cut + 1], pendingLength);
+            if (end == CHAR_NEWLINE || end == CHAR_PROMPT_SCROLL)
+                break;
+            if (newLine)
+            {
+                dst[dstLength++] = CHAR_NEWLINE;
+                lineY += lineHeight;
+            }
+            else
+            {
+                dst[dstLength++] = CHAR_PROMPT_SCROLL;
+            }
+            lineLength = pendingLength;
+            memcpy(sWrapLine, sWrapPending, pendingLength);
+            pendingLength = 0;
+        }
+
+        dst[dstLength++] = end;
+        if (end == EOS)
+            break;
+        if (end == CHAR_NEWLINE)
+            lineY += lineHeight;
+        else if (end == CHAR_PROMPT_CLEAR)
+            lineY = printer->y;
+        i++;
+    }
+    return changed ? dst : src;
+}
+
 bool16 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, TextPrinterCallback callback)
 {
     int i;
@@ -306,8 +572,10 @@ bool16 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, Tex
 
 #ifdef PORTABLE
     TestState_OnText(printerTemplate->windowId, printerTemplate->currentChar);
+    sClippedTextReported[printerTemplate->windowId] = FALSE;
 #endif
     sTempTextPrinter.printerTemplate = *printerTemplate;
+    sTempTextPrinter.printerTemplate.currentChar = WrapTextToWindow(printerTemplate, speed);
     sTempTextPrinter.callback = callback;
     sTempTextPrinter.minLetterSpacing = 0;
     sTempTextPrinter.japanese = 0;
@@ -614,6 +882,31 @@ inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 j, u32 i, u3
         }
     }
 }
+
+#ifdef PORTABLE
+// Banc de test : un pixel de la lettre (ni transparent ni du fond) tombe hors de la fenêtre (pixels lus comme GLYPH_COPY)
+static bool32 IsGlyphInkOutsideWindow(struct TextPrinter *textPrinter)
+{
+    const struct WindowTemplate *template = &gWindows[textPrinter->printerTemplate.windowId].window;
+    s32 visibleWidth = template->width * 8 - textPrinter->printerTemplate.currentX;
+    s32 visibleHeight = template->height * 8 - textPrinter->printerTemplate.currentY;
+    s32 x, y;
+    u32 pixel;
+
+    for (y = 0; y < gCurGlyph.height; y++)
+    {
+        for (x = 0; x < gCurGlyph.width && x < 16; x++)
+        {
+            if (x < visibleWidth && y < visibleHeight)
+                continue;
+            pixel = ((y < 8 ? gCurGlyph.gfxBufferTop : gCurGlyph.gfxBufferBottom)[(x >= 8 ? 8 : 0) + y % 8] >> ((x % 8) * 4)) & 0xF;
+            if (pixel != 0 && pixel != textPrinter->printerTemplate.bgColor)
+                return TRUE;
+        }
+    }
+    return FALSE;
+}
+#endif
 
 void CopyGlyphToWindow(struct TextPrinter *textPrinter)
 {
@@ -1181,6 +1474,15 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             break;
         }
 
+#ifdef PORTABLE
+        // Banc de test : une lettre de la police de l'option POLICE coupée par le bord de sa fenêtre
+        if (IsOptionFont(subStruct->fontId) && !sClippedTextReported[textPrinter->printerTemplate.windowId]
+         && IsGlyphInkOutsideWindow(textPrinter))
+        {
+            sClippedTextReported[textPrinter->printerTemplate.windowId] = TRUE;
+            TestState_OnTextClipped(textPrinter->printerTemplate.windowId);
+        }
+#endif
         CopyGlyphToWindow(textPrinter);
 
         if (textPrinter->minLetterSpacing)
@@ -1946,6 +2248,10 @@ static void DecompressGlyph_Short(u16 glyphId, bool32 isJapanese)
         gCurGlyph.width = gFontShortJapaneseGlyphWidths[glyphId];
         gCurGlyph.height = 14;
     }
+    else if (gSaveBlock2Ptr->optionsFont)
+    {
+        DecompressGlyph_Kanto(glyphId);
+    }
     else
     {
         glyphs = gFontShortLatinGlyphs + (0x20 * glyphId);
@@ -1972,6 +2278,8 @@ static u32 GetGlyphWidth_Short(u16 glyphId, bool32 isJapanese)
 {
     if (isJapanese == TRUE)
         return gFontShortJapaneseGlyphWidths[glyphId];
+    else if (gSaveBlock2Ptr->optionsFont)
+        return gFontKantoLatinGlyphWidths[glyphId];
     else
         return gFontShortLatinGlyphWidths[glyphId];
 }
@@ -1987,6 +2295,10 @@ static void DecompressGlyph_Normal(u16 glyphId, bool32 isJapanese)
         DecompressGlyphTile(glyphs + 0x80, gCurGlyph.gfxBufferBottom);
         gCurGlyph.width = 8;
         gCurGlyph.height = 15;
+    }
+    else if (gSaveBlock2Ptr->optionsFont)
+    {
+        DecompressGlyph_Kanto(glyphId);
     }
     else
     {
@@ -2014,15 +2326,24 @@ static u32 GetGlyphWidth_Normal(u16 glyphId, bool32 isJapanese)
 {
     if (isJapanese == TRUE)
         return 8;
+    else if (gSaveBlock2Ptr->optionsFont)
+        return gFontKantoLatinGlyphWidths[glyphId];
     else
         return gFontNormalLatinGlyphWidths[glyphId];
 }
 
 // Rouge Feu (text.c : DecompressGlyphFont2, branche latine)
+// PokemonNative3G : option POLICE, les polices normales des deux jeux (FONT_NORMAL, FONT_SHORT* et FONT_KANTO)
+// dessinent toutes les lettres de la police choisie ; chacune garde ses mesures (hauteur de ligne, couleurs).
 static void DecompressGlyph_Kanto(u16 glyphId)
 {
     const u16 *glyphs = gFontKantoLatinGlyphs + (0x20 * glyphId);
 
+    if (!gSaveBlock2Ptr->optionsFont) // police courte d'Émeraude : même hauteur de lettres que celle de RF
+    {
+        DecompressGlyph_Short(glyphId, FALSE);
+        return;
+    }
     gCurGlyph.width = gFontKantoLatinGlyphWidths[glyphId];
     DecompressGlyphTile(glyphs, gCurGlyph.gfxBufferTop);
     DecompressGlyphTile(glyphs + 0x8, gCurGlyph.gfxBufferTop + 8);
@@ -2033,6 +2354,8 @@ static void DecompressGlyph_Kanto(u16 glyphId)
 
 static u32 GetGlyphWidth_Kanto(u16 glyphId, bool32 isJapanese)
 {
+    if (!gSaveBlock2Ptr->optionsFont)
+        return gFontShortLatinGlyphWidths[glyphId];
     return gFontKantoLatinGlyphWidths[glyphId];
 }
 

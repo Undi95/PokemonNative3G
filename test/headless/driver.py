@@ -105,6 +105,9 @@ class Game:
             cmd += ["--test-shot-every", str(shot_every)]
         if audio:
             cmd += ["--test-audio", os.path.join(out_dir, "audio.wav")]
+        # TEST_FONT=0 ou 1 : l'option POLICE imposée (textes coupés : TEXTE COUPÉ dans le journal)
+        if os.environ.get("TEST_FONT"):
+            cmd += ["--test-font", os.environ["TEST_FONT"]]
         self.stderr = open(os.path.join(out_dir, "stderr.txt"), "w")
         # Every state read, for looking into what happened
         self.states = open(os.path.join(out_dir, "states.jsonl"), "w")
@@ -117,6 +120,8 @@ class Game:
         self.steps = []
         self.frames = 0
         self.texts = []           # (frame, window, text) of every text printed
+        self.clipped = []         # (frame, window, text) of every text cut by the edge of its window
+        self._clip_shots = []     # CLIP_SHOTS=1: a screenshot after each text cut (shots/coupe_FRAME_WINDOW)
         self.events = []          # (frame, event) of every event
         self.battles = []         # every battle: {"trainer", "foes", "outcome"}
         self.songs = []           # (frame, song) of every song that started
@@ -215,6 +220,12 @@ class Game:
                 self.texts.append((self.frames, event["win"], text))
                 if text.strip() not in ("", "▶"):
                     self.note(f"TEXTE[{event['win']}] " + text.replace("\n", " / "))
+            elif kind == "clipped":
+                last = next((t for _, w, t in reversed(self.texts) if w == event["win"]), "")
+                self.clipped.append((self.frames, event["win"], last))
+                self.note(f"TEXTE COUPÉ[{event['win']}] " + last.replace("\n", " / "))
+                if os.environ.get("CLIP_SHOTS"):
+                    self._clip_shots.append(f"coupe_{self.frames}_{event['win']}")
             elif kind == "flag":
                 self.note(f"FLAG {names.name('FLAG_', event['id'])} = {event['v']}")
             elif kind == "var" and not names.name('VAR_', event['id']).endswith(NOISY_VARS):
@@ -244,7 +255,10 @@ class Game:
         self.proc.stdin.flush()
         self.steps.append((frames, buttons))
         self.frames += frames
-        return self._read_state()
+        state = self._read_state()
+        while self._clip_shots:
+            self.shot(self._clip_shots.pop(0))
+        return state
 
     def wait(self, frames):
         return self.press("-", frames)

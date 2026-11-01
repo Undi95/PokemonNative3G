@@ -149,6 +149,8 @@ void PrintMoneyAmount(u8 windowId, u8 x, u8 y, int amount, u8 speed)
         *(txtPtr++) = CHAR_SPACER;
 
     StringExpandPlaceholders(txtPtr, gText_PokedollarVar1);
+    // PokemonNative3G : avec la police de RF (option POLICE, ¥ plus large), le montant recule pour tenir dans la fenêtre
+    x = min(x, GetWindowAttribute(windowId, WINDOW_WIDTH) * 8 - GetStringWidth(FONT_NORMAL, gStringVar4, 0));
     AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, x, y, speed, NULL);
 }
 

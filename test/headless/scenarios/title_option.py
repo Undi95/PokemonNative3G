@@ -3,7 +3,7 @@ steps = wait(300) + tap("START") + wait(120) + tap("START") + wait(90) + tap("A"
 steps += tap("A", 210, hold=4, gap=26) + wait(600)
 steps += tap("START") + wait(30) + tap("UP") + wait(10) + tap("UP") + wait(10) + tap("A") + wait(120)
 steps += tap("R") + wait(30)
-for _ in range(6):
+for _ in range(7):
     steps += tap("DOWN") + wait(10)
 steps += wait(20) + tap("RIGHT") + wait(60) + tap("B") + wait(120) + tap("B") + wait(60)
 steps += tap("START") + wait(30) + tap("UP") + wait(10) + tap("A") + wait(90)

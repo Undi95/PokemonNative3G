@@ -27,7 +27,7 @@ def play(game):
     give_mewtwo(game)
     debug_warp(game, 2)
     game.wait(30); game.tap("START"); game.wait(30); game.tap("UP"); game.wait(10); game.tap("UP"); game.wait(10); game.tap("A"); game.wait(120)
-    game.tap("R"); game.wait(30); game.tap("DOWN", 3, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120); game.tap("B")
+    game.tap("R"); game.wait(30); game.tap("DOWN", 4, gap=10); game.wait(20); game.tap("RIGHT"); game.wait(60); game.tap("B"); game.wait(120); game.tap("B")
     wait_until(game, lambda s: s.free)
     walk_to(game, 15, 17); leave_map(game, "UP")
     walk_to(game, 6, 8, on_battle=show_bar)
