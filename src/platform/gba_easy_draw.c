@@ -132,7 +132,7 @@ static void RenderBGScanline(int bgNum, uint16_t control, uint16_t hoffs, uint16
             {
                 // Cycle jour/nuit : fenêtres allumées (day_night.c)
                 if (gDayNightRender.active && charBaseBlock == 0 && paletteNum < 13
-                 && ((gDayNightRender.masks[paletteNum] >> pixel) & 1) && ((gDayNightRender.tiles[tileNum / 8] >> (tileNum % 8)) & 1))
+                 && ((gDayNightRender.masks[paletteNum] >> pixel) & 1) && ((gDayNightRender.tiles[tileNum][tileY] >> tileX) & 1))
                     line[x] = gDayNightRender.colors[16 * paletteNum + pixel] | 0x8000;
                 else
                     line[x] = pal[16 * paletteNum + pixel] | 0x8000;

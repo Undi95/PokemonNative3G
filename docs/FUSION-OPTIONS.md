@@ -22,13 +22,20 @@ contenu dans un seul jeu.
 - [x] Cycle jour/nuit (option JOUR/NUIT, page 1, NON par défaut, 2026-10-31, `day_night.c`, scénario `day_night`) :
   purement visuel, teinte des couleurs envoyées à l'écran selon l'heure (matin doré, coucher orangé 17-21 h,
   nuit bleutée 21-5 h), dehors sur le terrain seulement, boîtes de texte et menus intacts ; aucun effet sur les
-  rencontres. Mentali / Noctali suivent les mêmes heures : nuit de 20 h à 6 h (Émeraude : 0-12 h).
-  Fenêtres allumées le soir et la nuit : couleurs de vitre des tilesets extérieurs (`tools/day_night_lights.py` ->
-  `src/data/day_night_lights.h`, bleus clairs sauf ceux de l'eau et EXCLUDE). Vérification : scénario
-  `day_night_towns` (vitres en magenta dans shots/, `DN_MARK=1` = rendu réel). Le rendu des BG
-  (`gba_easy_draw.c`, `gDayNightRender`) choisit la couleur allumée pixel par pixel, selon la couleur ET le tile :
-  `UNLIT_METATILES` éteint les métatiles qui partagent les couleurs des fenêtres (verrière des Boutiques de Kanto,
-  Tentes de Combat). Eau (sources chaudes comprises) exclue d'office.
+  rencontres. Mentali / Noctali suivent les mêmes heures : nuit de 20 h à 6 h (Émeraude : 0-12 h). La nuit
+  désature aussi les couleurs (les fleurs ne ressemblent pas à des lampes).
+  Fenêtres allumées le soir et la nuit, en jaune de même luminosité que la couleur d'origine (le dégradé, les
+  reflets et les meneaux restent visibles). `tools/day_night_lights.py` -> `src/data/day_night_lights.h` : les
+  pixels allumés de chaque tile (8 lignes de bits) et les couleurs par palette ; le rendu des BG
+  (`gba_easy_draw.c`, `gDayNightRender`) allume un pixel si sa place dans le tile ET sa couleur le sont.
+  Calcul sur chaque carte extérieure (une vitre continue d'un métatile à l'autre), dans les bâtiments seulement
+  (cases bloquantes, portes, haut des toits) : couleurs de vitre (bleus clairs, `glass`), puis leur dégradé
+  bleuté (`family`), les zones pâles bordées par la vitre et son cadre (reflets, bas de dégradé, meneaux), et les
+  bleus enfermés par le cadre sombre ; les taches de moins de 6 pixels ne sont pas des vitres. Eau exclue
+  d'office. Retouches à la main : `EXCLUDE` (couleur d'une palette : toits, murs, plinthes), `UNLIT_METATILES`
+  (logos, drapeaux, verrières, rambardes, tentes, sculptures… ou une couleur dans un métatile) et
+  `LIT_METATILES` (fenêtres lavande sans vitre franche). Vérification : scénario `day_night_towns` (vitres en
+  magenta dans shots/, `DN_MARK=1` = rendu réel, `DN_SPOTS=fichier` = une capture par point « CARTE x y »).
 
 ## À faire — contenu à réunir (listes)
 - Décision : musiques, animations et transitions de combat = celles de la région, comme dans les jeux officiels (pas d'option).

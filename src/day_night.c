@@ -10,37 +10,38 @@
 // PokemonNative3G : cycle jour/nuit, purement visuel. Les couleurs envoyées au matériel (PLTT) sont teintées selon
 // l'heure, après les fondus et la météo (gPlttBufferFaded n'est pas touché) : seulement sur le terrain, dehors, et
 // seulement les palettes de la carte (BG 0-12) et des objets ; boîtes de texte et menus (BG 13-15) restent intacts.
-// Les vitres des tilesets (src/data/day_night_lights.h) s'allument en jaune le soir et la nuit.
+// Les vitres des tilesets (src/data/day_night_lights.h) s'allument en jaune le soir et la nuit, dégradés compris.
 
 struct DayNightKey
 {
     u16 minute; // minute de la journée
     u16 r, g, b; // multiplicateurs sur 256
+    u16 gray;    // désaturation (vision de nuit : les fleurs ne brillent pas), sur 256
     u16 light;   // fenêtres allumées, sur 256
 };
 
 static const struct DayNightKey sDayNightKeys[] =
 {
-    {  0 * 60, 120, 130, 190, 256 }, // nuit
-    {  5 * 60, 120, 130, 190, 256 },
-    {  7 * 60, 245, 215, 200,   0 }, // matin
-    {  9 * 60, 256, 256, 256,   0 }, // jour
-    { 17 * 60, 256, 256, 256,   0 },
-    { 19 * 60, 256, 180, 130, 128 }, // coucher de soleil
-    { 21 * 60, 120, 130, 190, 256 }, // nuit
-    { 24 * 60, 120, 130, 190, 256 },
+    {  0 * 60, 120, 130, 190, 140, 256 }, // nuit
+    {  5 * 60, 120, 130, 190, 140, 256 },
+    {  7 * 60, 245, 215, 200,   0,   0 }, // matin
+    {  9 * 60, 256, 256, 256,   0,   0 }, // jour
+    { 17 * 60, 256, 256, 256,   0,   0 },
+    { 19 * 60, 256, 180, 130,  40, 128 }, // coucher de soleil
+    { 21 * 60, 120, 130, 190, 140, 256 }, // nuit
+    { 24 * 60, 120, 130, 190, 140, 256 },
 };
 
 struct DayNightLights
 {
     const struct Tileset *tileset;
-    u16 colors[NUM_PALS_TOTAL]; // masque des couleurs de vitre, par palette
-    const u8 *unlitTiles;       // tiles du tileset qui ne s'allument pas (bits), ou NULL
+    u16 colors[NUM_PALS_TOTAL]; // couleurs de vitre, par palette
+    const u8 (*tileLights)[8];  // pixels de vitre, par tile du tileset
 };
 
 #include "data/day_night_lights.h"
 
-static u16 sTintR = 256, sTintG = 256, sTintB = 256, sLight = 0;
+static u16 sTintR = 256, sTintG = 256, sTintB = 256, sGray = 0, sLight = 0;
 static u32 sLastUpdate = 0xFFFFFFFF;
 static const struct MapLayout *sLightsLayout;
 struct DayNightRender gDayNightRender;
@@ -74,6 +75,7 @@ static void UpdateTint(void)
     sTintR = Interpolate(sDayNightKeys[i - 1].r, sDayNightKeys[i].r, t, span);
     sTintG = Interpolate(sDayNightKeys[i - 1].g, sDayNightKeys[i].g, t, span);
     sTintB = Interpolate(sDayNightKeys[i - 1].b, sDayNightKeys[i].b, t, span);
+    sGray = Interpolate(sDayNightKeys[i - 1].gray, sDayNightKeys[i].gray, t, span);
     sLight = Interpolate(sDayNightKeys[i - 1].light, sDayNightKeys[i].light, t, span);
 }
 
@@ -87,7 +89,7 @@ static void UpdateLightMasks(void)
         return;
     sLightsLayout = layout;
     memset(gDayNightRender.masks, 0, sizeof(gDayNightRender.masks));
-    memset(gDayNightRender.tiles, 0xFF, sizeof(gDayNightRender.tiles));
+    memset(gDayNightRender.tiles, 0, sizeof(gDayNightRender.tiles));
     for (i = 0; i < ARRAY_COUNT(sDayNightLights); i++)
     {
         const struct DayNightLights *lights = &sDayNightLights[i];
@@ -96,24 +98,28 @@ static void UpdateLightMasks(void)
         if (lights->tileset == layout->primaryTileset)
             base = 0;
         else if (lights->tileset == layout->secondaryTileset)
-            base = NUM_TILES_IN_PRIMARY / 8;
+            base = NUM_TILES_IN_PRIMARY;
         else
             continue;
         for (j = 0; j < NUM_PALS_TOTAL; j++)
             gDayNightRender.masks[j] |= lights->colors[j];
-        if (lights->unlitTiles != NULL)
-        {
-            for (j = 0; j < NUM_TILES_IN_PRIMARY / 8; j++)
-                gDayNightRender.tiles[base + j] &= ~lights->unlitTiles[j];
-        }
+        memcpy(gDayNightRender.tiles[base], lights->tileLights, NUM_TILES_IN_PRIMARY * sizeof(gDayNightRender.tiles[0]));
     }
+}
+
+static u32 Desaturate(u32 x, u32 l)
+{
+    return (x * (256 - sGray) + l * sGray) >> 8;
 }
 
 static u32 TintColor(u32 c)
 {
-    u32 r = ((c & 0x1F) * sTintR) >> 8;
-    u32 g = (((c >> 5) & 0x1F) * sTintG) >> 8;
-    u32 b = (((c >> 10) & 0x1F) * sTintB) >> 8;
+    u32 r = c & 0x1F, g = (c >> 5) & 0x1F, b = (c >> 10) & 0x1F;
+    u32 l = (r * 77 + g * 150 + b * 29) >> 8;
+
+    r = (Desaturate(r, l) * sTintR) >> 8;
+    g = (Desaturate(g, l) * sTintG) >> 8;
+    b = (Desaturate(b, l) * sTintB) >> 8;
 
     return RGB2(min(r, 31), min(g, 31), min(b, 31));
 }

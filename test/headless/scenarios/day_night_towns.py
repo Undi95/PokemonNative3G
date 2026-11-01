@@ -1,6 +1,7 @@
 # Build KANTO_DEBUG=1 : fenêtres éclairées du cycle jour/nuit (tools/day_night_lights.py). Chaque ville la nuit,
 # vitres marquées en magenta (commande de test daynight 2), une capture par ville dans shots/ : à regarder quand
-# on change les couleurs de vitre (seules les fenêtres doivent être en magenta).
+# on change les couleurs de vitre (seules les fenêtres doivent être en magenta). DN_SPOTS=fichier : à la place des
+# villes, les points « CARTE x y » du fichier (un par ligne).
 from driver import *  # les vérifications (expect...)
 import glob, json, os
 import driver
@@ -26,10 +27,13 @@ def play(game):
     wait_until(game, lambda s: s.free); game.wait(30)
     game.command("clock", 23, 0)
     game.command("daynight", int(os.environ.get("DN_MARK", "2")))  # DN_MARK=1 : rendu réel
-    for name, x, y in towns():
+    spots = towns()
+    if os.environ.get("DN_SPOTS"):
+        spots = [(n, int(x), int(y)) for n, x, y in (l.split() for l in open(os.environ["DN_SPOTS"]) if l.strip())]
+    for name, x, y in spots:
         group, num = maps.find_map(name)
         game.command("warp", group, num, x, y); game.wait(90)
-        game.shot(name)
+        game.shot(name if not os.environ.get("DN_SPOTS") else f"{name}_{x}_{y}")
         # Une scène peut démarrer à l'arrivée : on la passe pour pouvoir repartir
         finish_dialog(game, button="B", on_battle=lambda g: fight_battle(g))
     game.command("daynight", 0)
