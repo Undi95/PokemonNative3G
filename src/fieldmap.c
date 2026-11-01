@@ -609,11 +609,15 @@ static void SetPositionFromConnection(const struct MapConnection *connection, s3
 bool8 CameraMove(s32 x, s32 y)
 {
     s32 direction;
-    const struct MapConnection *connection;
+    const struct MapConnection *connection = NULL;
     s32 old_x, old_y;
     gCamera.active = FALSE;
     direction = GetPostCameraMoveMapBorderId(x, y);
-    if (direction == CONNECTION_NONE || direction == CONNECTION_INVALID)
+    // PokemonNative3G : pas de carte voisine à cet endroit du bord (le bord est un mur, traversé avec « Murs :
+    // ignorés » du menu DEBUG) : on avance sans changer de carte, au lieu de lire une connexion NULL
+    if (direction != CONNECTION_NONE && direction != CONNECTION_INVALID)
+        connection = GetIncomingConnection(direction, gSaveBlock1Ptr->pos.x, gSaveBlock1Ptr->pos.y);
+    if (connection == NULL)
     {
         gSaveBlock1Ptr->pos.x += x;
         gSaveBlock1Ptr->pos.y += y;
@@ -624,7 +628,6 @@ bool8 CameraMove(s32 x, s32 y)
         ClearMirageTowerPulseBlendEffect();
         old_x = gSaveBlock1Ptr->pos.x;
         old_y = gSaveBlock1Ptr->pos.y;
-        connection = GetIncomingConnection(direction, gSaveBlock1Ptr->pos.x, gSaveBlock1Ptr->pos.y);
         SetPositionFromConnection(connection, direction, x, y);
         LoadMapFromCameraTransition(connection->mapGroup, connection->mapNum);
         gCamera.active = TRUE;

@@ -23,7 +23,9 @@ have to be valid GBA-format saves with the expected contents. After the reset, t
 has to give the same frames as after power on. CI runs it on Linux and Windows for every
 push and pull request.
 
-Every run also has to give exactly the frames in `expected_frames.txt`, a SHA-256 of each
+(PokemonNative3G: with a `KANTO_DEBUG=1` build, which starts in Pallet Town, the frames and
+the saves don't match what it expects, but every run, `random_play` included, still has to
+finish.) Every run also has to give exactly the frames in `expected_frames.txt`, a SHA-256 of each
 run's frame hashes. Builds agree on them across compilers and platforms, so a difference
 means the game behaves differently. If a change is meant to do that, write the new frames
 with `smoke.py BINARY --update-expected` and commit them with the change.
