@@ -28,27 +28,52 @@ EXCLUDE = {
     ('gTileset_KantoCeruleanCity', 12, None), ('gTileset_KantoCeruleanCity', 10, None),   # toits, plinthes
     *(('gTileset_Lilycove', 8, i) for i in (1, 2, 3, 4, 8, 11)),   # murs et toits bleus (vitres : 10)
     ('gTileset_KantoSeviiIslands67', 9, 8),   # façade de la Tour des Dresseurs
+    *(('gTileset_KantoLavenderTown', 10, i) for i in (1, 7, 8, 9)),   # murs latéraux de la Centrale (baies : 11)
     ('gTileset_KantoVermilionCity', 8, 13), ('gTileset_KantoVermilionCity', 10, 14),   # plinthes
     ('gTileset_KantoVermilionCity', 9, 8), ('gTileset_KantoVermilionCity', 9, 9),       # portes bleues
 }
 INCLUDE = set()
+def tent(first):
+    """Tente de Combat (5 x 5 métatiles à partir de first, 8 par rangée) : la toile, pas la porte vitrée (rangée 4,
+    milieu) ni le haut de la porte (rangée 3, milieu : seulement l'emblème au-dessus, en rectangle)."""
+    return [first + 8 * row + col for row in range(5) for col in range(5) if (row, col) not in ((3, 2), (4, 2))]
+
+
+def tent_logo(first):
+    """Emblème d'une Tente de Combat (voir tent) : son blanc, rangée 2 et haut de la rangée 3, sans les reflets
+    blancs de la toile à gauche et à droite."""
+    white = ((1, 1), (1, 2))
+    return [(first + 17, 12, 0, 15, 15, white), (first + 18, 0, 0, 15, 15, white), (first + 19, 0, 0, 3, 15, white),
+            (first + 25, 12, 0, 15, 6, white), (first + 26, 0, 0, 15, 6, white), (first + 27, 0, 0, 3, 6, white)]
+
+
 # Métatiles dont les pixels ne s'allument jamais, même avec une couleur de vitre (le rendu teste chaque pixel de
 # tile, voir gDayNightRender) : pour les couleurs partagées entre fenêtres et autre chose ; (métatile, palette,
-# couleur) : seulement cette couleur dans ce métatile
+# couleur) : seulement cette couleur dans ce métatile ; (métatile, x0, y0, x1, y1) : seulement ce rectangle de pixels
 UNLIT_METATILES = {
     'gTileset_KantoGeneral': [40, 41, 42, 43, 48, 49, 50, 51, 56, 57, 58, 59,    # verrière des Boutiques
                               44, 45, 46, 47, 52, 53, 54, 55],                   # toit bleu (portails des routes)
     # numéros dans un tileset secondaire : métatile de la carte - 512
     'gTileset_Lavaridge': [260, 341],    # machine à météorite du Mont Chimnée
-    'gTileset_Fallarbor': [296, 297],    # machine de Cosmo
+    'gTileset_Fallarbor': [296, 297,     # machine de Cosmo
+                           *tent(330), (356, 0, 0, 15, 6)],
     'gTileset_Mossdeep': [411, 412],     # anneau de la fusée
     'gTileset_Lilycove': [224, 225, 226, 227, 228],   # bandes bleues de la façade du Hall des Concours
     'gTileset_KantoCeruleanCity': [233],   # vélos devant la boutique
-    'gTileset_Mauville': [19, 21, 23],    # pétales bleus des fleurs
+    'gTileset_Mauville': [19, 21, 23,    # pétales bleus des fleurs
+                          487, 495, 507, 508,   # panneaux rayés de la façade de la Butte Combat (Route 111)
+                          # Casino de Lavandia : auvent et pied des piliers, du même bleu que les fenêtres
+                          *((m, 10, 4) for m in (209, 219, 226, 232, 233, 234, 235, 236, 288, 289)),
+                          *tent(434), (460, 0, 0, 15, 6)],
     'gTileset_Rustboro': [120, 121, 122, 123, 124],   # auvent rayé (Route 104)
     'gTileset_KantoSaffronCity': [280, 282, 284, 285, 286, 288, 290, 293, 294, 296, 297, 298, 301, 302,
-                                  324, 325, 326, 327],   # rambardes
+                                  324, 325, 326, 327,   # rambardes
+                                  197, 198, 199, 205, 206, 207, 213, 214, 215,   # Sylphe SARL : cylindre du toit
+                                  # entrée : colonnes de verre de la porte, rebord clair sous les fenêtres du bas
+                                  (187, 8, 0, 15, 15), (189, 0, 0, 7, 15),
+                                  *((m, 9, i) for m in (210, 211, 212, 217, 218, 219, 220) for i in (1, 3))],
     'gTileset_Slateport': [7, 13, 15, 37, 45, 55, 248, 250,   # tentes du marché
+                           *tent(369), (395, 0, 0, 15, 6),
                            # mur lavande du Fan Club, couleur des dégradés de vitre (hublots : 9, 10)
                            *((m, 1, i) for m in (104, 105, 173, 175, 181, 182, 183, 189, 190, 191, 197, 215)
                              for i in (2, 3, 4))],
@@ -57,13 +82,34 @@ UNLIT_METATILES = {
     'gTileset_BattleFrontierOutsideWest': [355, 356, 362, 363, 364, 414, 454, 462, 502, 30, 38,
                                            11, 12, 13, 19, 21, 22, 23, 61],
     'gTileset_KantoCeladonCity': [208, 209, 210, 211, 212, 213, 215],   # fontaine
+    'gTileset_KantoSeviiIslands67': [160, 168, 176, 184],   # face gauche de la Tour des Dresseurs
+    # Île 2 : toit du Bâtiment des Jeux, caisse de la boutique
+    'gTileset_KantoSeviiIslands123': [129, 130, 131, 132, 133, 137, 138, 139, 140, 141, 145, 146, 147, 148, 149, 160],
 }
 # Métatiles dont tous les pixels couleur de vitre (dégradé pâle compris) s'allument, même en petits bouts isolés ;
-# (métatile, x0, y0, x1, y1) : seulement dans ce rectangle de pixels
+# (métatile, x0, y0, x1, y1) : seulement dans ce rectangle de pixels ; (métatile, x0, y0, x1, y1, couleurs) : ces
+# couleurs (palette, indice) dans ce rectangle, quelles qu'elles soient (ampoules, lampes)
 LIT_METATILES = {
     'gTileset_General': [475,            # porte du Hall des Concours : vitre entre les traits de l'emblème
-                         11, 19],        # fenêtre à carreaux des maisons : dégradé lavande sans vitre franche
-    'gTileset_Mauville': [395, 396, (403, 0, 0, 15, 3), (404, 0, 0, 15, 3)],   # fenêtres de Vergazon : carreau bas
+                         11, 19],        # fenêtres pâles, sans vitre franche : carreaux lavande des maisons
+    'gTileset_Mauville': [*tent_logo(434), 395, 396, (403, 0, 0, 15, 3), (404, 0, 0, 15, 3),   # fenêtres de Vergazon : carreau bas
+                          (166, 4, 9, 11, 12, ((7, 1), (7, 2))),   # fenêtres en arc : carreaux jaunes du bas
+                          # Casino de Lavandia : ampoules (blanc et bleu clair) et lampes étoilées (orange)
+                          *((m, 0, 0, 15, 15, ((10, 1), (10, 10))) for m in (209, 210, 218, 224, 225, 226, 228,
+                                                                             232, 236, 288, 289)),
+                          (233, 8, 0, 15, 15, ((10, 9), (10, 1), (10, 10))), (234, 0, 0, 15, 15, ((10, 9), (10, 1))),
+                          (235, 0, 0, 7, 15, ((10, 9), (10, 1), (10, 10)))],
+    'gTileset_KantoSeviiIslands123': [155,   # porte vitrée du Bâtiment des Jeux (Île 2) : bleus de l'eau
+                                      # ampoules de son enseigne
+                                      *((m, 0, 0, 15, 15, ((10, 12), (10, 13), (10, 15))) for m in (146, 147, 148))],
+    # Tentes de Combat : le blanc de l'emblème, comme une enseigne lumineuse (le bleu est celui de la toile)
+    'gTileset_Fallarbor': tent_logo(330),
+    'gTileset_Slateport': tent_logo(369),
+    # Porte du Centre Spatial d'Algatia : bas des vitres (barre, gris, reflet lavande) dans le cadre de la porte
+    'gTileset_Mossdeep': [(236, 8, 10, 15, 12, ((8, 3), (8, 4), (8, 5))), (237, 0, 10, 15, 12, ((8, 3), (8, 4), (8, 5))),
+                          (238, 0, 10, 7, 12, ((8, 3), (8, 4), (8, 5)))],
+    'gTileset_KantoCinnabarIsland': [(140, 8, 0, 15, 15), 141, 142, 148, 149, 150, (151, 0, 0, 15, 4),
+                                     155, 156, (157, 0, 0, 8, 15), 163, 164, (165, 0, 0, 8, 15)],   # manoir
 }
 
 
@@ -238,14 +284,14 @@ def light_tiles(pals, layouts, seeds, report=None):
     Rend {(tileset, tile local): 8 lignes de bits} et {(tileset, palette): masque des couleurs}."""
     tiles, colors, cache = {}, {}, {}
     lit = set()     # (tileset, métatile, couche, x, y)
-    placed = set()
+    placed, placed_by_pair, forced = set(), {}, set()
 
     def is_seed(p):
         return p and seeds.get((p[2], p[3]), 0) >> p[4] & 1
 
     def enclosed(group, at, seen):
-        """Zones pâles qui touchent la vitre, bordées au moins pour moitié par la vitre ou son cadre sombre (pas un mur
-        clair, que la vitre ne fait que toucher), et pas plus de trois fois la vitre (meneaux entre les carreaux)."""
+        """Zones pâles qui touchent la vitre, bordées aux trois quarts par la vitre ou son cadre sombre (un reflet, le
+        bas d'un dégradé, un meneau ; pas l'encadrement clair qui touche le mur), et pas plus de trois fois la vitre."""
         inside, found, tried = set(group), [], set()
         def color(q):
             p, cell = at(*q)
@@ -271,7 +317,7 @@ def light_tiles(pals, layouts, seeds, report=None):
                             good += 1
                         else:
                             bad += 1
-                if good >= bad and len(zone) <= 3 * len(group):
+                if good >= 3 * bad and len(zone) <= 3 * len(group):
                     seen.update(zone)
                     found += zone
         return found
@@ -353,11 +399,13 @@ def light_tiles(pals, layouts, seeds, report=None):
         return cache[(primary, secondary)]
 
     unlit = lambda key: key[1] in UNLIT_METATILES.get(key[0], ())
-    unlit_colors = {}   # (métatile, palette, couleur) : cette couleur seulement
+    unlit_colors, unlit_rects = {}, {}   # (métatile, palette, couleur) / (métatile, x0, y0, x1, y1)
     for ts, entries in UNLIT_METATILES.items():
         for entry in entries:
-            if isinstance(entry, tuple):
+            if isinstance(entry, tuple) and len(entry) == 3:
                 unlit_colors.setdefault((ts, entry[0]), set()).add(entry[1:])
+            elif isinstance(entry, tuple):
+                unlit_rects.setdefault((ts, entry[0]), []).append(entry[1:])
     water, doors = behaviors(WATER), behaviors(('DOOR',))
     attrs = {}
     def behavior(key):
@@ -371,13 +419,20 @@ def light_tiles(pals, layouts, seeds, report=None):
         cells = {}
         width, count = l['width'], len(blocks) // 2
         block = lambda c: struct.unpack_from('<H', blocks, c * 2)[0]
+
+        def building(c):
+            m = block(c) & 0x3FF
+            key = (primary, m) if m < NUM_METATILES_IN_PRIMARY else (secondary, m - NUM_METATILES_IN_PRIMARY)
+            return block(c) & 0xC00 or behavior(key) in doors
         for c in range(count):
             m = block(c) & 0x3FF
             key = (primary, m) if m < NUM_METATILES_IN_PRIMARY else (secondary, m - NUM_METATILES_IN_PRIMARY)
             placed.add(key)
-            # Seulement les bâtiments : cases bloquantes, portes, ou praticables juste au-dessus d'un mur (haut d'un
-            # toit) ; pas l'eau (ses bleus touchent les vitres des bords de mer), ni les chemins, l'herbe…
-            wall = block(c) & 0xC00 or behavior(key) in doors or (c + width < count and block(c + width) & 0xC00)
+            placed_by_pair.setdefault((primary, secondary), set()).add(key)
+            # Seulement les bâtiments : cases bloquantes, portes, ou praticables juste au-dessus d'un mur ou d'une
+            # porte (haut d'un toit, haut d'une porte) ; pas l'eau (ses bleus touchent les vitres des bords de mer),
+            # ni les chemins, l'herbe…
+            wall = block(c) & 0xC00 or behavior(key) in doors or (c + width < count and building(c + width))
             if not unlit(key) and wall and behavior(key) not in water:
                 cells[(c % width, c // width)] = (key, pixels, cols, starts.get(key, ()))
         spread(cells, False)
@@ -388,14 +443,15 @@ def light_tiles(pals, layouts, seeds, report=None):
                 spread({(0, 0): (key, pixels, cols, start)}, True)
         for ts in pair:
             for entry in LIT_METATILES.get(ts, []):
-                m, x0, y0, x1, y1 = entry if isinstance(entry, tuple) else (entry, 0, 0, 15, 15)
+                m, x0, y0, x1, y1, only = (entry + (None,) if len(entry) == 5 else entry) if isinstance(entry, tuple)                     else (entry, 0, 0, 15, 15, None)
                 for n, layer in enumerate(pixels[(ts, m)]):
                     for (x, y), p in layer.items():
                         if not (x0 <= x <= x1 and y0 <= y <= y1):
                             continue
                         c = cols[p[3]][p[4]]
-                        if is_seed(p) or ((family(c) or pale(c)) and not excluded((p[2], p[3], p[4]))):
+                        if (p[3], p[4]) in only if only else                                 is_seed(p) or ((family(c) or pale(c)) and not excluded((p[2], p[3], p[4]))):
                             lit.add((ts, m, n, x, y))
+                            forced.add((p[0], p[1], p[5], p[6]))
     # Pixels des métatiles éteints (UNLIT_METATILES) et de l'eau : éteints même si une vitre partage leur tile
     unlit_pixels = set()
     for pixels, _, _ in cache.values():
@@ -405,12 +461,27 @@ def light_tiles(pals, layouts, seeds, report=None):
             elif key in unlit_colors:
                 unlit_pixels.update((p[0], p[1], p[5], p[6]) for layer in pixels[key] for p in layer.values()
                                     if (p[3], p[4]) in unlit_colors[key])
+            elif key in unlit_rects:
+                unlit_pixels.update((p[0], p[1], p[5], p[6]) for layer in pixels[key] for (x, y), p in layer.items()
+                                    if any(x0 <= x <= x1 and y0 <= y <= y1 for x0, y0, x1, y1 in unlit_rects[key]))
+    # Pixels pâles (reflet, meneau) : allumés seulement s'ils le sont partout où leur tile est posée (la même tile
+    # peut être un meneau entre deux vitres et le bord clair d'une fenêtre contre le mur)
+    for pair, (pixels, cols, _) in cache.items():
+        for key in placed_by_pair.get(pair, ()):
+            for n, layer in enumerate(pixels[key]):
+                for (x, y), p in layer.items():
+                    tile_pixel = (p[0], p[1], p[5], p[6])
+                    if ((key[0], key[1], n, x, y) not in lit and tile_pixel not in forced and not is_seed(p)
+                            and pale(cols[p[3]][p[4]])):
+                        unlit_pixels.add(tile_pixel)
     tile_masks, pal_masks = {}, {}
     for pixels, _, _ in cache.values():
         for key, layers in list(pixels.items()):
             for n, layer in enumerate(layers):
                 for (x, y), p in layer.items():
-                    if (key[0], key[1], n, x, y) in lit and (p[0], p[1], p[5], p[6]) not in unlit_pixels:
+                    tile_pixel = (p[0], p[1], p[5], p[6])
+                    # Forcé (LIT_METATILES, plus précis) avant éteint (UNLIT_METATILES)
+                    if (key[0], key[1], n, x, y) in lit and (tile_pixel not in unlit_pixels or tile_pixel in forced):
                         tile_masks.setdefault((p[0], p[1]), [0] * 8)[p[6]] |= 1 << p[5]
                         pal_masks[(p[2], p[3])] = pal_masks.get((p[2], p[3]), 0) | 1 << p[4]
     return tile_masks, pal_masks

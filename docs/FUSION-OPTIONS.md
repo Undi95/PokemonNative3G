@@ -31,10 +31,13 @@ contenu dans un seul jeu.
   Calcul sur chaque carte extérieure (une vitre continue d'un métatile à l'autre), dans les bâtiments seulement
   (cases bloquantes, portes, haut des toits) : couleurs de vitre (bleus clairs, `glass`), puis leur dégradé
   bleuté (`family`), les zones pâles bordées par la vitre et son cadre (reflets, bas de dégradé, meneaux), et les
-  bleus enfermés par le cadre sombre ; les taches de moins de 6 pixels ne sont pas des vitres. Eau exclue
-  d'office. Retouches à la main : `EXCLUDE` (couleur d'une palette : toits, murs, plinthes), `UNLIT_METATILES`
-  (logos, drapeaux, verrières, rambardes, tentes, sculptures… ou une couleur dans un métatile) et
-  `LIT_METATILES` (fenêtres lavande sans vitre franche). Vérification : scénario `day_night_towns` (vitres en
+  bleus enfermés par le cadre sombre ; les taches de moins de 6 pixels ne sont pas des vitres. Un pixel pâle ne
+  s'allume que s'il l'est partout où sa tile est posée (la même tile peut être un meneau entre deux vitres et le
+  bord d'une fenêtre contre le mur). Eau exclue d'office. Retouches à la main : `EXCLUDE` (couleur d'une
+  palette : toits, murs, plinthes), `UNLIT_METATILES` (logos, drapeaux, verrières, rambardes, toile des Tentes,
+  sculptures… ; ou une couleur, ou un rectangle de pixels d'un métatile) et `LIT_METATILES` (fenêtres pâles sans
+  vitre franche, bas de porte ; ampoules et lampes du Casino de Lavandia et du Bâtiment des Jeux de l'Île 2,
+  emblème des Tentes de Combat), qui passe avant `UNLIT_METATILES`. Vérification : scénario `day_night_towns` (vitres en
   magenta dans shots/, `DN_MARK=1` = rendu réel, `DN_SPOTS=fichier` = une capture par point « CARTE x y »).
 
 ## À faire — contenu à réunir (listes)
