@@ -31,8 +31,15 @@ EXCLUDE = {
     *(('gTileset_KantoLavenderTown', 10, i) for i in (1, 7, 8, 9)),   # murs latéraux de la Centrale (baies : 11)
     ('gTileset_KantoVermilionCity', 8, 13), ('gTileset_KantoVermilionCity', 10, 14),   # plinthes
     ('gTileset_KantoVermilionCity', 9, 8), ('gTileset_KantoVermilionCity', 9, 9),       # portes bleues
+    ('gTileset_KantoVermilionCity', 9, 1), ('gTileset_KantoVermilionCity', 9, 13),      # cadre blanc des fenêtres
+    ('gTileset_Fortree', 8, 11),   # contour violet du cylindre et des fenêtres de l'Institut Météo
 }
 INCLUDE = set()
+# (tileset, palette, couleur) : couleurs du dégradé d'une vitre en plus des bleutés (family), allumées quand elles
+# touchent la vitre
+GRADIENT = {
+    ('gTileset_KantoGeneral', 3, 9),     # rangée beige au pied des carreaux des fenêtres de Kanto
+}
 def tent(first):
     """Tente de Combat (5 x 5 métatiles à partir de first, 8 par rangée) : la toile, pas la porte vitrée (rangée 4,
     milieu) ni le haut de la porte (rangée 3, milieu : seulement l'emblème au-dessus, en rectangle)."""
@@ -43,8 +50,8 @@ def tent_logo(first):
     """Emblème d'une Tente de Combat (voir tent) : son blanc, rangée 2 et haut de la rangée 3, sans les reflets
     blancs de la toile à gauche et à droite."""
     white = ((1, 1), (1, 2))
-    return [(first + 17, 12, 0, 15, 15, white), (first + 18, 0, 0, 15, 15, white), (first + 19, 0, 0, 3, 15, white),
-            (first + 25, 12, 0, 15, 6, white), (first + 26, 0, 0, 15, 6, white), (first + 27, 0, 0, 3, 6, white)]
+    return [(first + 17, 11, 0, 15, 15, white), (first + 18, 0, 0, 15, 15, white), (first + 19, 0, 0, 4, 15, white),
+            (first + 25, 11, 0, 15, 7, white), (first + 26, 0, 0, 15, 7, white), (first + 27, 0, 0, 4, 7, white)]
 
 
 # Métatiles dont les pixels ne s'allument jamais, même avec une couleur de vitre (le rendu teste chaque pixel de
@@ -59,13 +66,17 @@ UNLIT_METATILES = {
                            *tent(330), (356, 0, 0, 15, 6)],
     'gTileset_Mossdeep': [411, 412],     # anneau de la fusée
     'gTileset_Lilycove': [224, 225, 226, 227, 228],   # bandes bleues de la façade du Hall des Concours
-    'gTileset_KantoCeruleanCity': [233],   # vélos devant la boutique
+    'gTileset_KantoCeruleanCity': [233,   # vélos devant la boutique
+                                   135, 138, 139, 140, 146, 147, 148, 154, 155, 156],   # toit vitré de la boutique de vélos
     'gTileset_Mauville': [19, 21, 23,    # pétales bleus des fleurs
+                          *((m, 9, 6) for m in range(16, 24)),
                           487, 495, 507, 508,   # panneaux rayés de la façade de la Butte Combat (Route 111)
+                          (403, 0, 8, 15, 13), (404, 0, 8, 15, 13),   # plinthe des maisons de Vergazon
                           # Casino de Lavandia : auvent et pied des piliers, du même bleu que les fenêtres
                           *((m, 10, 4) for m in (209, 219, 226, 232, 233, 234, 235, 236, 288, 289)),
                           *tent(434), (460, 0, 0, 15, 6)],
-    'gTileset_Rustboro': [120, 121, 122, 123, 124],   # auvent rayé (Route 104)
+    'gTileset_Rustboro': [120, 121, 122, 123, 124,   # auvent rayé (Route 104)
+                          139, 140, 141, 142, 143, 147, 149, 150, 151],   # liseré de la terrasse de Devon SA
     'gTileset_KantoSaffronCity': [280, 282, 284, 285, 286, 288, 290, 293, 294, 296, 297, 298, 301, 302,
                                   324, 325, 326, 327,   # rambardes
                                   197, 198, 199, 205, 206, 207, 213, 214, 215,   # Sylphe SARL : cylindre du toit
@@ -99,6 +110,8 @@ LIT_METATILES = {
                                                                              232, 236, 288, 289)),
                           (233, 8, 0, 15, 15, ((10, 9), (10, 1), (10, 10))), (234, 0, 0, 15, 15, ((10, 9), (10, 1))),
                           (235, 0, 0, 7, 15, ((10, 9), (10, 1), (10, 10)))],
+    'gTileset_Rustboro': [(m, 4, 7, 12, 10, ((5, 1), (5, 2), (5, 3), (5, 4))) for m in (18, 19)],   # globe des lampadaires
+    'gTileset_KantoFuchsiaCity': [(199, 5, 1, 10, 7, ((10, 1),))],   # fenêtres bleu nuit du Parc Safari
     'gTileset_KantoSeviiIslands123': [155,   # porte vitrée du Bâtiment des Jeux (Île 2) : bleus de l'eau
                                       # ampoules de son enseigne
                                       *((m, 0, 0, 15, 15, ((10, 12), (10, 13), (10, 15))) for m in (146, 147, 148))],
@@ -289,9 +302,12 @@ def light_tiles(pals, layouts, seeds, report=None):
     def is_seed(p):
         return p and seeds.get((p[2], p[3]), 0) >> p[4] & 1
 
+    def gradient(p, c):
+        return family(c) or (p[2], p[3], p[4]) in GRADIENT
+
     def enclosed(group, at, seen):
-        """Zones pâles qui touchent la vitre, bordées aux trois quarts par la vitre ou son cadre sombre (un reflet, le
-        bas d'un dégradé, un meneau ; pas l'encadrement clair qui touche le mur), et pas plus de trois fois la vitre."""
+        """Zones pâles qui touchent la vitre, bordées au moins pour moitié par la vitre ou son cadre sombre (un reflet,
+        le bas d'un dégradé, un meneau ; pas un mur clair), et pas plus de trois fois la vitre."""
         inside, found, tried = set(group), [], set()
         def color(q):
             p, cell = at(*q)
@@ -317,14 +333,14 @@ def light_tiles(pals, layouts, seeds, report=None):
                             good += 1
                         else:
                             bad += 1
-                if good >= 3 * bad and len(zone) <= 3 * len(group):
+                if good >= bad and len(zone) <= 3 * len(group):
                     seen.update(zone)
                     found += zone
         return found
 
     def framed(group, at):
-        """Si la vitre et ce qui l'entoure sont fermés par son cadre sombre (pas un mur ouvert), les pixels couleur de
-        vitre ou bleutés de cette zone, même exclus ailleurs (bleu du mur en bas d'un carreau)."""
+        """Si la vitre et ce qui l'entoure sont fermés par son cadre sombre (pas un mur ouvert), les pixels de dégradé
+        de cette zone, même exclus ailleurs (bleu du mur en bas d'un carreau)."""
         zone, inside = list(group), set(group)
         for n, X, Y in zone:
             for q in ((n, X + 1, Y), (n, X - 1, Y), (n, X, Y + 1), (n, X, Y - 1)):
@@ -342,9 +358,57 @@ def light_tiles(pals, layouts, seeds, report=None):
         found = []
         for q in zone[len(group):]:
             p, cell = at(*q)
-            c = cell[2][p[3]][p[4]]
-            if is_seed(p) or family(c):
+            if is_seed(p) or gradient(p, cell[2][p[3]][p[4]]):
                 found.append(q)
+        return found
+
+    def closed(start, at, limit):
+        """Zone non sombre autour de start, fermée par du sombre ou par ce qui n'est pas un bâtiment, d'au plus limit
+        pixels."""
+        zone, inside = [start], {start}
+        for n, X, Y in zone:
+            for q in ((n, X + 1, Y), (n, X - 1, Y), (n, X, Y + 1), (n, X, Y - 1)):
+                if q in inside:
+                    continue
+                p, cell = at(*q)
+                if not p or dark(cell[2][p[3]][p[4]]):
+                    continue
+                if len(zone) >= limit:
+                    return None
+                inside.add(q)
+                zone.append(q)
+        return zone
+
+    def panes(group, at):
+        """Carreaux voisins, de l'autre côté d'un meneau sombre d'un pixel : fermés, petits, alignés sur la vitre,
+        bleutés au moins pour un huitième (carreau du haut gris des fenêtres de Mérouville)."""
+        inside, todo, found = set(group), list(group), []
+        for n, X, Y in todo:   # les carreaux ajoutés cherchent aussi leurs voisins
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                mid, q = (n, X + dx, Y + dy), (n, X + 2 * dx, Y + 2 * dy)
+                if mid in inside or q in inside:
+                    continue
+                pm, cm = at(*mid)
+                pq, cq = at(*q)
+                if not (pm and pq and dark(cm[2][pm[3]][pm[4]]) and not dark(cq[2][pq[3]][pq[4]])):
+                    continue
+                zone = closed(q, at, 64)
+                if not zone:
+                    continue
+                # Aligné sur la vitre (même largeur au-dessus ou en dessous, même hauteur à côté) : pas une plinthe
+                xs, ys = [r[1] for r in inside], [r[2] for r in inside]
+                if dy and not all(min(xs) - 1 <= r[1] <= max(xs) + 1 for r in zone):
+                    continue
+                if dx and not all(min(ys) - 1 <= r[2] <= max(ys) + 1 for r in zone):
+                    continue
+                blue = 0
+                for r in zone:
+                    p, cell = at(*r)
+                    blue += bool(is_seed(p) or family(cell[2][p[3]][p[4]]))
+                if 8 * blue >= len(zone):
+                    inside.update(zone)
+                    todo += zone
+                    found += zone
         return found
 
     def spread(cells, keep_edges):
@@ -367,7 +431,7 @@ def light_tiles(pals, layouts, seeds, report=None):
                             if q in seen:
                                 continue
                             p, cell = at(*q)
-                            if is_seed(p) or (p and family(cell[2][p[3]][p[4]]) and not excluded((p[2], p[3], p[4]))):
+                            if is_seed(p) or (p and gradient(p, cell[2][p[3]][p[4]]) and not excluded((p[2], p[3], p[4]))):
                                 seen.add(q)
                                 group.append(q)
                     group += enclosed(group, at, seen)
@@ -376,6 +440,7 @@ def light_tiles(pals, layouts, seeds, report=None):
                         report.append((key, len(group)))
                     continue
                 group += framed(group, at)
+                group += panes(group, at)
                 done_pixels.update(group)
                 for n_, X, Y in group:
                     k = cells[(X // 16, Y // 16)][0]
@@ -464,15 +529,16 @@ def light_tiles(pals, layouts, seeds, report=None):
             elif key in unlit_rects:
                 unlit_pixels.update((p[0], p[1], p[5], p[6]) for layer in pixels[key] for (x, y), p in layer.items()
                                     if any(x0 <= x <= x1 and y0 <= y <= y1 for x0, y0, x1, y1 in unlit_rects[key]))
-    # Pixels pâles (reflet, meneau) : allumés seulement s'ils le sont partout où leur tile est posée (la même tile
-    # peut être un meneau entre deux vitres et le bord clair d'une fenêtre contre le mur)
+    # Pixels qui ne sont pas couleur de vitre (reflet, meneau, pied de carreau) : allumés seulement s'ils le sont
+    # partout où leur tile est posée (la même tile peut être un meneau entre deux vitres et le bord clair d'une
+    # fenêtre contre le mur)
     for pair, (pixels, cols, _) in cache.items():
         for key in placed_by_pair.get(pair, ()):
             for n, layer in enumerate(pixels[key]):
                 for (x, y), p in layer.items():
                     tile_pixel = (p[0], p[1], p[5], p[6])
                     if ((key[0], key[1], n, x, y) not in lit and tile_pixel not in forced and not is_seed(p)
-                            and pale(cols[p[3]][p[4]])):
+                            and not family(cols[p[3]][p[4]])):
                         unlit_pixels.add(tile_pixel)
     tile_masks, pal_masks = {}, {}
     for pixels, _, _ in cache.values():

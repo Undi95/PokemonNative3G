@@ -27,18 +27,24 @@ contenu dans un seul jeu.
   Fenêtres allumées le soir et la nuit, en jaune de même luminosité que la couleur d'origine (le dégradé, les
   reflets et les meneaux restent visibles). `tools/day_night_lights.py` -> `src/data/day_night_lights.h` : les
   pixels allumés de chaque tile (8 lignes de bits) et les couleurs par palette ; le rendu des BG
-  (`gba_easy_draw.c`, `gDayNightRender`) allume un pixel si sa place dans le tile ET sa couleur le sont.
-  Calcul sur chaque carte extérieure (une vitre continue d'un métatile à l'autre), dans les bâtiments seulement
-  (cases bloquantes, portes, haut des toits) : couleurs de vitre (bleus clairs, `glass`), puis leur dégradé
-  bleuté (`family`), les zones pâles bordées par la vitre et son cadre (reflets, bas de dégradé, meneaux), et les
-  bleus enfermés par le cadre sombre ; les taches de moins de 6 pixels ne sont pas des vitres. Un pixel pâle ne
-  s'allume que s'il l'est partout où sa tile est posée (la même tile peut être un meneau entre deux vitres et le
-  bord d'une fenêtre contre le mur). Eau exclue d'office. Retouches à la main : `EXCLUDE` (couleur d'une
-  palette : toits, murs, plinthes), `UNLIT_METATILES` (logos, drapeaux, verrières, rambardes, toile des Tentes,
-  sculptures… ; ou une couleur, ou un rectangle de pixels d'un métatile) et `LIT_METATILES` (fenêtres pâles sans
-  vitre franche, bas de porte ; ampoules et lampes du Casino de Lavandia et du Bâtiment des Jeux de l'Île 2,
-  emblème des Tentes de Combat), qui passe avant `UNLIT_METATILES`. Vérification : scénario `day_night_towns` (vitres en
-  magenta dans shots/, `DN_MARK=1` = rendu réel, `DN_SPOTS=fichier` = une capture par point « CARTE x y »).
+  (`gba_easy_draw.c`, `gDayNightRender`) allume un pixel si sa place dans le tile ET sa couleur le sont. Calcul
+  sur chaque carte extérieure (une vitre continue d'un métatile à l'autre), dans les bâtiments seulement (cases
+  bloquantes, portes, haut des toits) : couleurs de vitre (bleus clairs, `glass`), puis leur dégradé bleuté
+  (`family`), les zones pâles bordées par la vitre et son cadre (reflets, bas de dégradé, meneaux), et les pixels
+  ni sombres ni pâles enfermés avec elle par le cadre sombre (pied de carreau), les carreaux voisins de l'autre
+  côté d'un meneau sombre (fermés, petits, un peu bleutés) ; les taches de moins de 6 pixels ne sont pas des
+  vitres. Un pixel qui n'est pas couleur de vitre ne s'allume que s'il l'est partout où sa tile est posée (la
+  même tile peut être un meneau entre deux vitres et le bord d'une fenêtre contre le mur). Eau exclue d'office.
+  Retouches à la main : `EXCLUDE` (couleur d'une palette : toits, murs, plinthes), `UNLIT_METATILES` (logos,
+  drapeaux, verrières, rambardes, toile des Tentes, sculptures… ; ou une couleur, ou un rectangle de pixels d'un
+  métatile) et `LIT_METATILES` (fenêtres pâles sans vitre franche, bas de porte, fenêtres bleu nuit ; ampoules et
+  lampes du Casino de Lavandia et du Bâtiment des Jeux de l'Île 2, lampadaires de Mérouville, emblème des Tentes
+  de Combat), qui passe avant `UNLIT_METATILES`. Les couleurs sombres allumées sont éclaircies, jusqu'au double
+  (fenêtres bleu nuit ; un écran noir pendant un fondu reste noir). Animation des portes (`field_door.c`,
+  `kanto_field_door.c`) : ses images remplacent les 16 derniers tiles, qui reprennent les pixels allumés du
+  métatile fermé à la même place (`DayNight_DoorAnimMetatile`). Vérification : scénario `day_night_towns` (vitres
+  en magenta dans shots/, `DN_MARK=1` = rendu réel, `DN_SPOTS=fichier` = une capture par point « CARTE x y ») et
+  `day_night_doors` (entrée et sortie de quatre bâtiments, une capture toutes les 3 images).
 
 ## À faire — contenu à réunir (listes)
 - Décision : musiques, animations et transitions de combat = celles de la région, comme dans les jeux officiels (pas d'option).

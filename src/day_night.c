@@ -46,6 +46,13 @@ static u32 sLastUpdate = 0xFFFFFFFF;
 static const struct MapLayout *sLightsLayout;
 struct DayNightRender gDayNightRender;
 static bool8 sMarkLights; // banc de test : vitres en magenta
+// Animation des portes (field_door.c) : ses images sont copiées dans les 16 derniers tiles, à la place de ceux de
+// la carte ; pendant ce temps chacun reprend les pixels allumés du métatile fermé à la même place (la vitre qui
+// glisse reste allumée, l'ouverture sombre et le logo au-dessus non)
+#define DOOR_ANIM_TILES (NUM_TILES_TOTAL - 16)
+static bool8 sDoorAnimTiles;
+static u8 sMapDoorTiles[16][8];
+static u8 sDoorAnimMasks[16][8];
 
 bool8 IsDayNightHourNight(u8 hours)
 {
@@ -55,6 +62,72 @@ bool8 IsDayNightHourNight(u8 hours)
 void DayNight_SetMarkLights(bool8 mark)
 {
     sMarkLights = mark;
+}
+
+// Indice de couleur du pixel (x, y) d'un tile de la carte, en mémoire vidéo (BG, char base 0)
+static u32 TilePixel(u32 tile, u32 x, u32 y)
+{
+    const u8 *p = (const u8 *)VRAM + tile * TILE_SIZE_4BPP + y * 4 + x / 2;
+
+    return (x & 1) ? *p >> 4 : *p & 0xF;
+}
+
+// Pixel du métatile (couche du haut s'il n'est pas transparent, sinon celle du bas) à la place (px, py) du quart q :
+// renvoie son indice de couleur, et s'il est allumé
+static u32 MetatilePixel(const u16 *entries, u32 q, u32 px, u32 py, bool32 *lit)
+{
+    u32 layer, color = 0;
+
+    *lit = FALSE;
+    for (layer = 0; layer < 2; layer++)
+    {
+        u16 entry = entries[q + 4 * (1 - layer)];
+        u32 tile = entry & 0x3FF, sx = (entry & 0x400) ? 7 - px : px, sy = (entry & 0x800) ? 7 - py : py;
+
+        color = TilePixel(tile, sx, sy);
+        if (color != 0)
+        {
+            *lit = tile < DOOR_ANIM_TILES && ((gDayNightRender.tiles[tile][sy] >> sx) & 1);
+            break;
+        }
+    }
+    return color;
+}
+
+// Une image de porte est dessinée à (x, y) avec les tiles tileNum à tileNum + 3 (couche du bas du métatile) : un
+// pixel s'allume s'il l'est dans le métatile fermé à la même place et qu'il en a gardé la couleur (la vitre qui
+// glisse, pas l'intérieur qui apparaît)
+void DayNight_DoorAnimMetatile(u32 tileNum, s32 x, s32 y)
+{
+    const struct MapLayout *layout = gMapHeader.mapLayout;
+    u32 id = MapGridGetMetatileIdAt(x, y), q, px, py;
+    const u16 *entries;
+    bool32 lit;
+
+    if (id < NUM_METATILES_IN_PRIMARY)
+        entries = layout->primaryTileset->metatiles + id * NUM_TILES_PER_METATILE;
+    else
+        entries = layout->secondaryTileset->metatiles + (id - NUM_METATILES_IN_PRIMARY) * NUM_TILES_PER_METATILE;
+    for (q = 0; q < 4; q++)
+    {
+        u8 *mask = sDoorAnimMasks[tileNum + q - DOOR_ANIM_TILES];
+
+        for (py = 0; py < 8; py++)
+        {
+            mask[py] = 0;
+            for (px = 0; px < 8; px++)
+            {
+                if (MetatilePixel(entries, q, px, py, &lit) == TilePixel(tileNum + q, px, py) && lit)
+                    mask[py] |= 1 << px;
+            }
+        }
+    }
+    sDoorAnimTiles = TRUE;
+}
+
+void DayNight_DoorClosed(void)
+{
+    sDoorAnimTiles = FALSE;
 }
 
 static u16 Interpolate(u16 a, u16 b, u32 t, u32 span)
@@ -105,6 +178,8 @@ static void UpdateLightMasks(void)
             gDayNightRender.masks[j] |= lights->colors[j];
         memcpy(gDayNightRender.tiles[base], lights->tileLights, NUM_TILES_IN_PRIMARY * sizeof(gDayNightRender.tiles[0]));
     }
+    memcpy(sMapDoorTiles, gDayNightRender.tiles[DOOR_ANIM_TILES], sizeof(sMapDoorTiles));
+    sDoorAnimTiles = FALSE;
 }
 
 static u32 Desaturate(u32 x, u32 l)
@@ -124,7 +199,8 @@ static u32 TintColor(u32 c)
     return RGB2(min(r, 31), min(g, 31), min(b, 31));
 }
 
-// Vitre allumée : jaune chaud, aussi clair que la couleur d'origine, mélangé à la couleur teintée selon sLight
+// Vitre allumée : jaune chaud, aussi clair que la couleur d'origine (fenêtres bleu nuit éclaircies, jusqu'au
+// double : un écran noir pendant un fondu reste noir), mélangé à la couleur teintée selon sLight
 static u32 LightColor(u32 c)
 {
     u32 tinted = TintColor(c);
@@ -133,6 +209,7 @@ static u32 LightColor(u32 c)
 
     if (sMarkLights)
         return RGB2(31, 0, 31);
+    l = max(l, min(14, l * 2));
     lit[0] = min(l + 6, 31);
     lit[1] = min(l * 7 / 8 + 4, 31);
     lit[2] = l / 2;
@@ -169,6 +246,10 @@ void DayNight_TintPltt(void)
     if (sTintR == 256 && sTintG == 256 && sTintB == 256 && sLight == 0 && !sMarkLights)
         return;
     UpdateLightMasks();
+    if (sDoorAnimTiles)
+        memcpy(gDayNightRender.tiles[DOOR_ANIM_TILES], sDoorAnimMasks, sizeof(sDoorAnimMasks));
+    else
+        memcpy(gDayNightRender.tiles[DOOR_ANIM_TILES], sMapDoorTiles, sizeof(sMapDoorTiles));
     gDayNightRender.active = sLight != 0 || sMarkLights;
     for (pal = 0; pal < NUM_PALS_TOTAL; pal++)
     {

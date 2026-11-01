@@ -3,6 +3,7 @@
 #include "kanto_field_door.h"
 #include "event_data.h"
 #include "field_door.h"
+#include "day_night.h"
 #include "field_camera.h"
 #include "fieldmap.h"
 #include "metatile_behavior.h"
@@ -321,6 +322,7 @@ static void BuildDoorTiles(u16 *tiles, u16 tileNum, const u8 *paletteNums)
     }
 }
 
+// PokemonNative3G : DayNight_DoorAnimMetatile, la nuit la vitre de la porte reste allumée pendant l'animation
 static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, u32 x, u32 y, const u8 *paletteNums)
 {
     u16 tiles[24];
@@ -329,34 +331,41 @@ static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, u32 x, u32 
     {
         // Top left metatile
         BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 0, &paletteNums[0]);
+        DayNight_DoorAnimMetatile(DOOR_TILE_START_SIZE2 + 0, x, y - 1);
         DrawDoorMetatileAt(x, y - 1, &tiles[8]);
 
         // Bottom left metatile
         BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 4, &paletteNums[4]);
+        DayNight_DoorAnimMetatile(DOOR_TILE_START_SIZE2 + 4, x, y);
         DrawDoorMetatileAt(x, y, &tiles[8]);
 
         // Top right metatile
         BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 8, &paletteNums[0]);
+        DayNight_DoorAnimMetatile(DOOR_TILE_START_SIZE2 + 8, x + 1, y - 1);
         DrawDoorMetatileAt(x + 1, y - 1, &tiles[8]);
 
         // Bottom right metatile
         BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 12, &paletteNums[4]);
+        DayNight_DoorAnimMetatile(DOOR_TILE_START_SIZE2 + 12, x + 1, y);
         DrawDoorMetatileAt(x + 1, y, &tiles[8]);
     }
     else
     {
         // Top metatile
         BuildDoorTiles(&tiles[0], DOOR_TILE_START_SIZE1 + 0, &paletteNums[0]);
+        DayNight_DoorAnimMetatile(DOOR_TILE_START_SIZE1 + 0, x, y - 1);
         DrawDoorMetatileAt(x, y - 1, &tiles[0]);
 
         // Bottom metatile
         BuildDoorTiles(&tiles[0], DOOR_TILE_START_SIZE1 + 4, &paletteNums[4]);
+        DayNight_DoorAnimMetatile(DOOR_TILE_START_SIZE1 + 4, x, y);
         DrawDoorMetatileAt(x, y, &tiles[0]);
     }
 }
 
 static void DrawClosedDoorTiles(const struct DoorGraphics *gfx, u32 x, u32 y)
 {
+    DayNight_DoorClosed();
     CurrentMapDrawMetatileAt(x, y - 1);
     CurrentMapDrawMetatileAt(x, y);
 

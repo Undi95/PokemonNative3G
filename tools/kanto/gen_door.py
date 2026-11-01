@@ -22,7 +22,7 @@ for line in open(f'{fr}/include/constants/metatile_labels.h', encoding='utf-8'):
     if m:
         labels[m.group(1)] = m.group(2)
 
-src = src.replace('#include "constants/metatile_labels.h"\n', '#include "kanto_field_door.h"\n')
+src = src.replace('#include "constants/metatile_labels.h"\n', '#include "kanto_field_door.h"\n#include "day_night.h"\n')
 src = re.sub(r'\bMETATILE_\w+\b', lambda m: labels[m.group(0)], src)
 src = src.replace('MetatileBehavior_IsWarpDoor_2', 'MetatileBehavior_IsWarpDoor')  # MB_WARP_DOOR -> MB_ANIMATED_DOOR
 
@@ -46,6 +46,32 @@ for a, b in (
     ('    tFramesLo = (uintptr_t)frames;\n    tFramesHi = (uintptr_t)frames >> 16;\n'
      '    tGfxLo = (uintptr_t)gfx;\n    tGfxHi = (uintptr_t)gfx >> 16;\n',
      '    gTasks[taskId].ptr.genericPtr[0] = (void *)frames;\n    gTasks[taskId].ptr.genericPtr[1] = (void *)gfx;\n'),
+    # UBFIX : une porte 1x1 n'a que 4 tuiles par trame, en copier 8 lit après la dernière trame
+    ('static void CopyDoorTilesToVram(const u8 *tiles);', 'static void CopyDoorTilesToVram(const u8 *tiles, u8 size);'),
+    ('CopyDoorTilesToVram(&gfx->tiles[frames->tileOffset]);',
+     'CopyDoorTilesToVram(&gfx->tiles[frames->tileOffset], gfx->size);'),
+    ('static void CopyDoorTilesToVram(const u8 *tiles)\n{\n',
+     'static void CopyDoorTilesToVram(const u8 *tiles, u8 size)\n{\n'
+     '#ifdef UBFIX\n'
+     '    // A 1x1 door only has 4 tiles per frame: copying 8 reads past the last frame\n'
+     '    if (size == DOOR_SIZE_1x1)\n'
+     '    {\n'
+     '        CpuFastCopy(tiles, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START)), 4 * TILE_SIZE_4BPP);\n'
+     '        return;\n'
+     '    }\n'
+     '#endif\n'),
+    # Cycle jour/nuit : la nuit, la vitre de la porte reste allumée pendant l'animation (day_night.c)
+    ('static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, int x, int y, const u8 *paletteNums)\n{\n',
+     '// PokemonNative3G : DayNight_DoorAnimMetatile, la nuit la vitre de la porte reste allumée pendant l\'animation\n'
+     'static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, int x, int y, const u8 *paletteNums)\n{\n'),
+    ('        BuildDoorTiles(tiles, DOOR_TILE_START, paletteNums);\n        DrawDoorMetatileAt(x, y - 1, tiles);\n',
+     '        BuildDoorTiles(tiles, DOOR_TILE_START, paletteNums);\n'
+     '        DayNight_DoorAnimMetatile(DOOR_TILE_START, x, y - 1);\n        DrawDoorMetatileAt(x, y - 1, tiles);\n'),
+    ('    }\n\n    DrawDoorMetatileAt(x, y, tiles);\n',
+     '    }\n\n    DayNight_DoorAnimMetatile(tiles[0] & 0x3FF, x, y);\n    DrawDoorMetatileAt(x, y, tiles);\n'),
+    ('static void DrawClosedDoorTiles(const struct DoorGraphics *gfx, int x, int y)\n{\n',
+     'static void DrawClosedDoorTiles(const struct DoorGraphics *gfx, int x, int y)\n{\n'
+     '    DayNight_DoorClosed();\n'),
 ):
     assert a in src, a
     src = src.replace(a, b)

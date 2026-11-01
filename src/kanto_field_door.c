@@ -7,6 +7,7 @@
 #include "metatile_behavior.h"
 #include "constants/songs.h"
 #include "kanto_field_door.h"
+#include "day_night.h"
 
 enum {
     DOOR_SOUND_NORMAL,
@@ -302,6 +303,7 @@ static void DrawDoor(const struct DoorGraphics *gfx, const struct DoorAnimFrame 
 
 static void DrawClosedDoorTiles(const struct DoorGraphics *gfx, int x, int y)
 {
+    DayNight_DoorClosed();
     if (gfx->size == DOOR_SIZE_1x1)
         CurrentMapDrawMetatileAt(x, y);
     else
@@ -330,6 +332,7 @@ static void CopyDoorTilesToVram(const u8 *tiles, u8 size)
     CpuFastCopy(tiles, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START)), 8 * TILE_SIZE_4BPP);
 }
 
+// PokemonNative3G : DayNight_DoorAnimMetatile, la nuit la vitre de la porte reste allumée pendant l'animation
 static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, int x, int y, const u8 *paletteNums)
 {
     u16 tiles[8];
@@ -339,10 +342,12 @@ static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, int x, int 
     else
     {
         BuildDoorTiles(tiles, DOOR_TILE_START, paletteNums);
+        DayNight_DoorAnimMetatile(DOOR_TILE_START, x, y - 1);
         DrawDoorMetatileAt(x, y - 1, tiles);
         BuildDoorTiles(tiles, DOOR_TILE_START + 4, &paletteNums[4]);
     }
 
+    DayNight_DoorAnimMetatile(tiles[0] & 0x3FF, x, y);
     DrawDoorMetatileAt(x, y, tiles);
 }
 
