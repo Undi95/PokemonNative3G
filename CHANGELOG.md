@@ -57,6 +57,9 @@
 - Sons de Kanto : les portes, la caisse (boutique, vente, Casino, Musée, photo) et la fanfare des soins hors Centre
   sont ceux de Rouge Feu (c'étaient des sons d'Émeraude de même nom, et pour les soins un morceau que Rouge Feu ne
   joue jamais).
+- Îles Écume : en tombant par un trou dans l'eau quand les rochers n'arrêtent pas encore le courant, le joueur est de
+  nouveau emporté par le courant jusqu'à l'étage du dessous, comme dans Rouge Feu (il surfait librement et l'énigme
+  des rochers était sautée).
 - Éclosion d'un œuf, lecture d'une lettre : plus de lecture hors limites (palettes et tiles de la plateforme, fenêtre
   inexistante de la lettre d'Émeraude) ; un OUI / NON n'est plus effacé deux fois.
 - Carte Dresseur de Kanto : la photo de l'imprimante du Casino de Céladopole (les Pokémon de l'équipe, au dos) et

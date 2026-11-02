@@ -4,6 +4,7 @@ Each tile is one of:
   "#"  blocked
   "g"  tall grass, where wild Pokémon appear
   "~"  water, which needs Surf
+  "o"  a hole, which drops to the floor below (only from the live map, `carte.grille`)
   "<" ">" "^" "v"  a ledge, which can only be jumped down in that direction
   "."  anything else that can be walked on
 """
@@ -129,8 +130,8 @@ class Map:
                 if (nx, ny) in self.warps:
                     if (nx, ny) != goal:
                         continue
-                elif kind in "#~" or (nx, ny) in blocked:
-                    continue
+                elif kind in "#~" or (kind == "o" and (nx, ny) != goal) or (nx, ny) in blocked:
+                    continue   # a hole drops to the floor below: only when it's where we go
                 step = cost + 1 + (grass_cost if kind == "g" else 0) + (0 if directions[-1:] == [direction] else 1)
                 if step < best.get((nx, ny), float("inf")):
                     best[(nx, ny)] = step

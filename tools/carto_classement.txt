@@ -735,3 +735,18 @@ CreateLeafSprite écartée version Vert Feuille (la fusion est Rouge Feu)
 # option_menu.c : l'écran Options de RF (MENUS = KANTO) est dans option_menu.c ; son CB2 et sa VBlank ont le code d'Émeraude
 VBlankCB_OptionMenu équivalente VBlankCB (option_menu.c d'Émeraude), même code
 PrintOptionMenuHeader équivalente PrintOptionMenuHeader (option_menu.c de la fusion, écran de RF avec MENUS = KANTO)
+# field_effect.c (manquantes lues le 2026-11-02)
+ApplyGlobalFieldPaletteTint écartée journal de RF (teintes grise et sépia des souvenirs)
+FieldEffectScript_LoadFadedPal équivalente FieldEffectScript_LoadFadedPalette (field_effect.c d'Émeraude) : + teinte du journal de RF, écartée
+FieldEffectScript_LoadPal équivalente FieldEffectScript_LoadPalette (field_effect.c d'Émeraude) : + teinte du journal de RF, écartée
+FallWarpEffect_7 équivalente FallWarpEffect_End (field_effect.c de la fusion) : eau des Îles Écume portée le 2026-11-02 (scénario kanto_seafoam_current)
+ShowMonEffect_Indoors_3 équivalente FieldMoveShowMonIndoorsEffect_SlideBannerOn (field_effect.c d'Émeraude), mêmes fenêtres
+ShowMonEffect_Indoors_7 équivalente FieldMoveShowMonIndoorsEffect_End (field_effect.c d'Émeraude) : InitTextBoxGfxAndPrinters = Menu_LoadStdPal + fonds remis
+ShowMonEffect_Outdoors_5 équivalente FieldMoveShowMonOutdoorsEffect_ShrinkBanner (field_effect.c d'Émeraude), même code
+ShowMonEffect_Outdoors_7 équivalente FieldMoveShowMonOutdoorsEffect_End (field_effect.c d'Émeraude) : InitTextBoxGfxAndPrinters = Menu_LoadStdPal + fonds remis
+DoBirdSpriteWithPlayerAffineAnim équivalente étapes de Vol d'Émeraude (FlyOutFieldEffect_*, FlyInFieldEffect_*) ; l'arc de RF : VARIANTES-RF.md
+TryChangeBirdSprite équivalente FlyInFieldEffect_* d'Émeraude (fin de l'agrandissement de l'oiseau)
+SpinObjectEvent écartée variante RF : Émeraude gardée (Corde Sortie, VARIANTES-RF.md)
+WarpOutObjectEventUpwards écartée variante RF : Émeraude gardée (Corde Sortie, VARIANTES-RF.md)
+WarpInObjectEventDownwards écartée variante RF : Émeraude gardée (Corde Sortie, VARIANTES-RF.md)
+MetatileBehavior_IsSurfableInSeafoamIslands équivalente portée le 2026-11-02 (overworld.c) : eau des Îles Écume

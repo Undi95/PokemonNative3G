@@ -33,7 +33,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `jeu.debug [N]` | les actions du menu DEBUG ; `N` fait l'action N (celles sans écran : soins, objets, Pokédex, passes, « Deux Ligues finies », POKé MONTURE + badges…), le même code que le menu (`DebugMenu_ApplyAction`) |
 | Carte | `carte.info` | carte, section, région, disposition, météo, musique, étage (`floorNum` : panneau de RF), joueur, connexions |
 | | `carte.objets` | objets actifs : id, sprite, position, mouvement |
-| | `carte.grille` | **la carte telle qu'elle est en jeu**, avec les lettres de `test/headless/maps.py` (`#` bloqué, `g` herbe, `~` eau, `<>^v` rebord) : les étages générés (Mont Combat, Pyramide) et les cases changées par les scripts (`setmetatile`), que les fichiers de la carte ne montrent pas. Dans le banc : `live_map(game)` (un `maps.GridMap`), `walk_to(..., live=True)` |
+| | `carte.grille` | **la carte telle qu'elle est en jeu**, avec les lettres de `test/headless/maps.py` (`#` bloqué, `g` herbe, `~` eau, `o` trou où l'on tombe, `<>^v` rebord ; les chemins évitent les trous sauf s'ils sont le but) : les étages générés (Mont Combat, Pyramide) et les cases changées par les scripts (`setmetatile`), que les fichiers de la carte ne montrent pas. Dans le banc : `live_map(game)` (un `maps.GridMap`), `walk_to(..., live=True)` |
 | Scripts | `scripts.contexte` | contextes global et immédiat : script en cours (label), pile |
 | | `scripts.lancer @ADRESSE` | lance un script de carte, joueur libre (`game.script("EventScript_PC")` : le banc donne l'adresse par le nom) |
 | | `scripts.flag N [V]`, `scripts.var N [V]` | lit ou met un flag, une variable (avec son nom) |

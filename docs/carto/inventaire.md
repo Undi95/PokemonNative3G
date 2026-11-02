@@ -2,25 +2,19 @@
 
 > Généré par `tools/cartographie.py` — ne pas éditer à la main.
 
-Les 1641 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
+Les 1640 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
 
 | Catégorie | Sens | Fonctions |
 |---|---|---|
-| manquante | rien de proche dans la fusion : à porter | 187 |
+| manquante | rien de proche dans la fusion : à porter | 173 |
 | à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 0 |
-| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 616 |
+| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 625 |
 | triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 111 |
 | morte | jamais appelée ni référencée dans RF | 101 |
 | link | link / E-Reader : à porter, désactivé | 196 |
-| écartée | écartée par décision | 430 |
+| écartée | écartée par décision | 434 |
 
-## Manquante (187) : rien de proche dans la fusion : à porter
-
-### field_effect.c (13)
-ApplyGlobalFieldPaletteTint, DoBirdSpriteWithPlayerAffineAnim, FallWarpEffect_7,
-FieldEffectScript_LoadFadedPal, FieldEffectScript_LoadPal, ShowMonEffect_Indoors_3, ShowMonEffect_Indoors_7,
-ShowMonEffect_Outdoors_5, ShowMonEffect_Outdoors_7, SpinObjectEvent, TryChangeBirdSprite,
-WarpInObjectEventDownwards, WarpOutObjectEventUpwards
+## Manquante (173) : rien de proche dans la fusion : à porter
 
 ### event_object_movement.c (11)
 MovementAction_FaceDownFast_Step0, MovementAction_FaceLeftFast_Step0, MovementAction_FaceRightFast_Step0,
@@ -55,14 +49,13 @@ CopyDecompressedTileDataToVram, CreateStartMenuWindow, DecompressAndCopyTileData
 DecompressAndLoadBgGfxUsingHeap2, DisplayYesNoMenuDefaultNo, DrawHelpMessageWindowWithText,
 LoadStdWindowFrameGfx
 
-### overworld.c (7)
-CB2_EnterFieldFromQuestLog, CB2_SetUpOverworldForQLPlayback, CountBadgesForOverworldWhiteOutLossCalculation,
-DoCB1_Overworld_QuestLogPlayback, MetatileBehavior_IsSurfableInSeafoamIslands,
-Overworld_ResetStateAfterWhitingOut, QL_LoadMapNormal
-
 ### mailbox_pc.c (6)
 ItemPrintFunc, MailboxPC_AddScrollIndicatorArrows, MailboxPC_GetAddWindow, MailboxPC_InitBuffers,
 MailboxPC_InitListMenu, MailboxPC_RemoveWindow
+
+### overworld.c (6)
+CB2_EnterFieldFromQuestLog, CB2_SetUpOverworldForQLPlayback, CountBadgesForOverworldWhiteOutLossCalculation,
+DoCB1_Overworld_QuestLogPlayback, Overworld_ResetStateAfterWhitingOut, QL_LoadMapNormal
 
 ### pokemon_storage_system_data.c (6)
 AddBoxMenu, HandleInput_InBox_Normal, MonPlaceChange_MoveCursorDown, SetMenuTextsForItem, SetMenuTextsForMon,
@@ -211,14 +204,17 @@ TilemapUtil_SetTilemap
 ## À vérifier (0) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
 
 
-## Équivalente (616) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
+## Équivalente (625) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
 
-### field_effect.c (74)
+### field_effect.c (83)
+FieldEffectScript_LoadFadedPal (FieldEffectScript_LoadFadedPalette (field_effect.c d'Émeraude) : + teinte du journal de RF, écartée)
+FieldEffectScript_LoadPal (FieldEffectScript_LoadPalette (field_effect.c d'Émeraude) : + teinte du journal de RF, écartée)
 PokeballGlowEffect_FlashFirstThree (PokeballGlowEffect_Flash1 (field_effect.c), 0x1007 = FLDEFF_PAL_TAG_POKEBALL_GLOW, >= 3 = > 2)
 FallWarpEffect_1 (FallWarpEffect_Init (field_effect.c), même code)
 FallWarpEffect_2 (FallWarpEffect_WaitWeather (field_effect.c), même code)
 FallWarpEffect_4 (FallWarpEffect_Fall (field_effect.c), même code)
 FallWarpEffect_6 (FallWarpEffect_CameraShake (field_effect.c), même code)
+FallWarpEffect_7 (FallWarpEffect_End (field_effect.c de la fusion) : eau des Îles Écume portée le 2026-11-02 (scénario kanto_seafoam_current))
 Task_EscalatorWarpFieldEffect (Task_EscalatorWarpOut (field_effect.c), table appariée)
 EscalatorWarpEffect_1 (EscalatorWarpOut_Init (field_effect.c), + journal de RF)
 EscalatorWarpEffect_4 (EscalatorWarpOut_Down_End (field_effect.c), Escalator_AnimatePlayerGoingDown = RideDownEscalatorOut)
@@ -256,21 +252,27 @@ ShowMonEffect_Outdoors_1 (FieldMoveShowMonOutdoorsEffect_Init (field_effect.c), 
 ShowMonEffect_Outdoors_2 (FieldMoveShowMonOutdoorsEffect_LoadGfx (field_effect.c), même code)
 ShowMonEffect_Outdoors_3 (FieldMoveShowMonOutdoorsEffect_CreateBanner (field_effect.c), WIN_RANGE écrit à la main, mêmes bornes)
 ShowMonEffect_Outdoors_4 (FieldMoveShowMonOutdoorsEffect_WaitForMon (field_effect.c), case de tâche)
+ShowMonEffect_Outdoors_5 (FieldMoveShowMonOutdoorsEffect_ShrinkBanner (field_effect.c d'Émeraude), même code)
 ShowMonEffect_Outdoors_6 (FieldMoveShowMonOutdoorsEffect_RestoreBg (field_effect.c), WIN_RANGE(0, 241) = DISPLAY_WIDTH + 1)
+ShowMonEffect_Outdoors_7 (FieldMoveShowMonOutdoorsEffect_End (field_effect.c d'Émeraude) : InitTextBoxGfxAndPrinters = Menu_LoadStdPal + fonds remis)
 VBlankCB_ShowMonEffect_Outdoors (VBlankCB_FieldMoveShowMonOutdoors (field_effect.c), pointeur, cases de tâche)
 LoadFieldMoveStreaksTilemapToVram (LoadFieldMoveOutdoorStreaksTilemap (field_effect.c), 10 * 32 = ARRAY_COUNT(sFieldMoveStreaksOutdoors_Tilemap))
 Task_ShowMon_Indoors (Task_FieldMoveShowMonIndoors (field_effect.c), table appariée)
 ShowMonEffect_Indoors_1 (FieldMoveShowMonIndoorsEffect_Init (field_effect.c), pointeur de VBlank (port 64 bits))
 ShowMonEffect_Indoors_2 (FieldMoveShowMonIndoorsEffect_LoadGfx (field_effect.c), même code)
+ShowMonEffect_Indoors_3 (FieldMoveShowMonIndoorsEffect_SlideBannerOn (field_effect.c d'Émeraude), mêmes fenêtres)
 ShowMonEffect_Indoors_4 (FieldMoveShowMonIndoorsEffect_WaitForMon (field_effect.c), même code)
 ShowMonEffect_Indoors_5 (FieldMoveShowMonIndoorsEffect_RestoreBg (field_effect.c), RF remet aussi WININ (invisible : fenêtres coupées))
 ShowMonEffect_Indoors_6 (FieldMoveShowMonIndoorsEffect_SlideBannerOff (field_effect.c), même code)
+ShowMonEffect_Indoors_7 (FieldMoveShowMonIndoorsEffect_End (field_effect.c d'Émeraude) : InitTextBoxGfxAndPrinters = Menu_LoadStdPal + fonds remis)
 VBlankCB_ShowMonEffect_Indoors (VBlankCB_FieldMoveShowMonIndoors (field_effect.c), pointeur (port 64 bits))
 Task_FldEffUseSurf (Task_SurfFieldEffect (field_effect.c), table appariée)
 UseSurfEffect_2 (SurfFieldEffect_FieldMovePose (field_effect.c), même code)
 UseSurfEffect_3 (SurfFieldEffect_ShowMon (field_effect.c), case de tâche, 0x80000000 = 1 << 31)
 UseSurfEffect_4 (SurfFieldEffect_JumpOnSurfBlob (field_effect.c), PLAYER_AVATAR_GFX_RIDE de RF = PLAYER_AVATAR_STATE_SURFING)
 UseSurfEffect_5 (SurfFieldEffect_End (field_effect.c), + aide de RF)
+DoBirdSpriteWithPlayerAffineAnim (étapes de Vol d'Émeraude (FlyOutFieldEffect_*, FlyInFieldEffect_*) ; l'arc de RF : VARIANTES-RF.md)
+TryChangeBirdSprite (FlyInFieldEffect_* d'Émeraude (fin de l'agrandissement de l'oiseau))
 Task_MoveDeoxysRock_Step (Task_MoveDeoxysRock (field_effect.c), << 4 = * 16)
 EscalatorWarpEffect_2 → EscalatorWarpOut_WaitForPlayer (field_effect.c)
 EscalatorWarpEffect_3 → EscalatorWarpOut_Up_Ride (field_effect.c)
@@ -1390,7 +1392,7 @@ MakeGroupAssemblyAreasPassable
 ExitWirelessCommunicationStatusScreen
 
 
-## Écartée (430) : écartée par décision
+## Écartée (434) : écartée par décision
 
 ### quest_log_events.c (117)
 — « Précédemment » de RF (Kanto = post-game, décision 2026-11-02), SetQuestLogEvent,
@@ -1562,6 +1564,13 @@ OakHandleChooseMove_WaitDma3 (tutoriel du premier combat avec CHEN (Kanto = post
 BtlCtrl_OakOldMan_TestState2Flag (messages du tutoriel de CHEN (Kanto = post-game)),
 BtlCtrl_OakOldMan_SetState2Flag (messages du tutoriel de CHEN (Kanto = post-game))
 
+### field_effect.c (5)
+ApplyGlobalFieldPaletteTint (journal de RF (teintes grise et sépia des souvenirs)),
+SpinObjectEvent (variante RF : Émeraude gardée (Corde Sortie, VARIANTES-RF.md)),
+WarpOutObjectEventUpwards (variante RF : Émeraude gardée (Corde Sortie, VARIANTES-RF.md)),
+WarpInObjectEventDownwards (variante RF : Émeraude gardée (Corde Sortie, VARIANTES-RF.md)),
+SpriteCB_FlyBirdWithPlayer (variante RF : Émeraude gardée (SpriteCB_FlyBirdSwoopDown : arc 140, pas de 4 ; RF 180, pas de 2) ; docs/VARIANTES-RF.md)
+
 ### field_player_avatar.c (4)
 CreateStopSurfingTask_NoMusicChange (journal de RF (quest_log_player.c, seul appelant)),
 Fishing5 (variante RF : Émeraude gardée (Fishing_ShowDots : un point toutes les 8 images et A arrête ; RF 12 images, pas d'arrêt) ; docs/VARIANTES-RF.md),
@@ -1595,9 +1604,6 @@ Task_WaitDeoxysFieldEffect (Île Naissance de RF : celle d'Émeraude (WaitForDeo
 
 ### text_window.c (2)
 LoadHelpMessageWindowGfx (aide de RF (help_system)), LoadQuestLogWindowTiles (journal de RF)
-
-### field_effect.c (1)
-SpriteCB_FlyBirdWithPlayer (variante RF : Émeraude gardée (SpriteCB_FlyBirdSwoopDown : arc 140, pas de 4 ; RF 180, pas de 2) ; docs/VARIANTES-RF.md)
 
 ### field_effect_helpers.c (1)
 CreateBobbingEffect (variante RF : Émeraude gardée (UpdateBobbingEffect : le Pokémon du Surf monte et descend 2× plus vite que dans RF) ; docs/VARIANTES-RF.md)

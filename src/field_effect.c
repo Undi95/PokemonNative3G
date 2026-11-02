@@ -19,6 +19,7 @@
 #include "menu.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
+#include "event_data.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "pokemon.h"
@@ -1654,11 +1655,22 @@ static bool8 FallWarpEffect_CameraShake(struct Task *task)
 
 static bool8 FallWarpEffect_End(struct Task *task)
 {
+    s16 x, y;
+
     gPlayerAvatar.preventStep = FALSE;
     UnlockPlayerFieldControls();
     CameraObjectReset();
     UnfreezeObjectEvents();
     InstallCameraPanAheadCallback();
+    // PokemonNative3G : Rouge Feu (FallWarpEffect_7) : tombé dans l'eau des Îles Écume B3F / B4F, le joueur surfe et
+    // le courant l'emporte (VAR_TEMP_1 : scripts SeafoamIslands_B3F / B4F_EventScript_EnterByFalling) ; l'aide de RF
+    // (SetHelpContext) est écartée
+    PlayerGetDestCoords(&x, &y);
+    if (MetatileBehavior_IsSurfableInSeafoamIslands(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
+    {
+        VarSet(VAR_TEMP_1, 1);
+        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
+    }
     DestroyTask(FindTaskIdByFunc(Task_FallWarpFieldEffect));
     return FALSE;
 }

@@ -477,6 +477,8 @@ static char GetGridTile(s32 x, s32 y)
         return 'v';
     if (MapGridGetCollisionAt(x, y))
         return '#';
+    if (MetatileBehavior_IsFallWarp(behavior) || MetatileBehavior_IsCrackedFloorHole(behavior))
+        return 'o'; // trou : on tombe à l'étage du dessous
     if (MetatileBehavior_IsTallGrass(behavior) || MetatileBehavior_IsLongGrass(behavior))
         return 'g';
     if (MetatileBehavior_IsSurfableWaterOrUnderwater(behavior) || MetatileBehavior_IsWaterfall(behavior))
