@@ -659,10 +659,19 @@ void HandleAction_TryFinish(void)
     }
 }
 
+#ifdef UBFIX
+// Après la dernière action d'un tour à 4 combattants, gCurrentTurnActionNumber vaut 4 : la GBA lit l'octet qui suit
+// gActionsByTurnOrder en EWRAM, gBattlerByTurnOrder[0] (déclarés l'un après l'autre dans battle_main.c :
+// 0x02024076, 0x0202407A). On refait cette lecture sans sortir du tableau.
+#define ACTION_BY_TURN_ORDER(n) ((n) < MAX_BATTLERS_COUNT ? gActionsByTurnOrder[n] : gBattlerByTurnOrder[(n) - MAX_BATTLERS_COUNT])
+#else
+#define ACTION_BY_TURN_ORDER(n) (gActionsByTurnOrder[n])
+#endif
+
 void HandleAction_NothingIsFainted(void)
 {
     gCurrentTurnActionNumber++;
-    gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
+    gCurrentActionFuncId = ACTION_BY_TURN_ORDER(gCurrentTurnActionNumber);
     gHitMarker &= ~(HITMARKER_DESTINYBOND | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_ATTACKSTRING_PRINTED
                     | HITMARKER_NO_PPDEDUCT | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_IGNORE_ON_AIR
                     | HITMARKER_IGNORE_UNDERGROUND | HITMARKER_IGNORE_UNDERWATER | HITMARKER_PASSIVE_HP_UPDATE
@@ -674,7 +683,7 @@ void HandleAction_ActionFinished(void)
 {
     *(gBattleStruct->monToSwitchIntoId + gBattlerByTurnOrder[gCurrentTurnActionNumber]) = PARTY_SIZE;
     gCurrentTurnActionNumber++;
-    gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
+    gCurrentActionFuncId = ACTION_BY_TURN_ORDER(gCurrentTurnActionNumber);
     SpecialStatusesClear();
     gHitMarker &= ~(HITMARKER_DESTINYBOND | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_ATTACKSTRING_PRINTED
                     | HITMARKER_NO_PPDEDUCT | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_IGNORE_ON_AIR

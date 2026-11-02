@@ -1168,7 +1168,14 @@ void JumpToTopOfAffineAnimLoop(u8 matrixNum, struct Sprite *sprite)
     {
         sAffineAnimStates[matrixNum].animCmdIndex--;
 
+#ifdef UBFIX
+        // At the start of the animation, the check below would read the command before it (Metronome's finger: a
+        // loop with no LOOP(0) start), as in JumpToTopOfAnimLoop
+        while (sAffineAnimStates[matrixNum].animCmdIndex != 0
+            && sprite->affineAnims[sAffineAnimStates[matrixNum].animNum][sAffineAnimStates[matrixNum].animCmdIndex - 1].type != 32765)
+#else
         while (sprite->affineAnims[sAffineAnimStates[matrixNum].animNum][sAffineAnimStates[matrixNum].animCmdIndex - 1].type != 32765)
+#endif
         {
             if (sAffineAnimStates[matrixNum].animCmdIndex == 0)
                 break;

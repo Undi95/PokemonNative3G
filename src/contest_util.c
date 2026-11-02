@@ -1646,7 +1646,13 @@ static void SpriteCB_Confetti(struct Sprite *sprite)
     s16 delta;
 
     sprite->data[3] += sprite->data[0];
+#ifdef UBFIX
+    // data[3] (s16) dépasse 0x7FFF : « >> 8 » donne un indice négatif, la GBA lit alors la ROM d'avant la table des
+    // sinus (contenu qu'on ne peut pas refaire). Lu sans signe, l'indice va de 0 à 255 : l'onde continue
+    sprite->x2 = Sin((u16)sprite->data[3] >> 8, sprite->data[1]);
+#else
     sprite->x2 = Sin(sprite->data[3] >> 8, sprite->data[1]);
+#endif
     delta = sprite->data[4] + sprite->data[2];
     sprite->x += delta >> 8;
     sprite->data[4] += sprite->data[2];

@@ -1810,7 +1810,15 @@ static void Cmd_if_has_move(void)
 
 #ifdef BUGFIX
     const u16 move = T1_READ_16(gAIScriptPtr + DSIZE8BIT + DSIZE8BIT);
-    const u16 *movePtr = &move;    
+    const u16 *movePtr = &move;
+#elif defined(UBFIX)
+    // Sur GBA, un u16 lu à une adresse impaire (LDRH) est le demi-mot de l'adresse paire d'avant, tourné de 8 bits
+    // (GBATEK) : c'est le bug d'origine, que BUGFIX corrige. Sur PC, cette lecture est indéfinie et donnerait la
+    // capacité voulue : on refait celle de la cartouche (les pointeurs des scripts font 8 octets au lieu de 4, la
+    // parité des adresses ne change pas)
+    const u8 *raw = gAIScriptPtr + DSIZE8BIT + DSIZE8BIT;
+    const u32 move = ((uintptr_t)raw & 1) ? (raw[0] | ((u32)raw[-1] << 24)) : (u32)(raw[0] | (raw[1] << 8));
+    const u32 *movePtr = &move;
 #else
     const u16 *movePtr = (u16 *)(gAIScriptPtr + DSIZE8BIT + DSIZE8BIT);
 #endif
@@ -1868,7 +1876,15 @@ static void Cmd_if_doesnt_have_move(void)
 
 #ifdef BUGFIX
     const u16 move = T1_READ_16(gAIScriptPtr + DSIZE8BIT + DSIZE8BIT);
-    const u16 *movePtr = &move;    
+    const u16 *movePtr = &move;
+#elif defined(UBFIX)
+    // Sur GBA, un u16 lu à une adresse impaire (LDRH) est le demi-mot de l'adresse paire d'avant, tourné de 8 bits
+    // (GBATEK) : c'est le bug d'origine, que BUGFIX corrige. Sur PC, cette lecture est indéfinie et donnerait la
+    // capacité voulue : on refait celle de la cartouche (les pointeurs des scripts font 8 octets au lieu de 4, la
+    // parité des adresses ne change pas)
+    const u8 *raw = gAIScriptPtr + DSIZE8BIT + DSIZE8BIT;
+    const u32 move = ((uintptr_t)raw & 1) ? (raw[0] | ((u32)raw[-1] << 24)) : (u32)(raw[0] | (raw[1] << 8));
+    const u32 *movePtr = &move;
 #else
     const u16 *movePtr = (u16 *)(gAIScriptPtr + DSIZE8BIT + DSIZE8BIT);
 #endif
