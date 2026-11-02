@@ -25,6 +25,15 @@
 - Dôme de Combat : la fiche du joueur dans le tableau ne fait plus planter le jeu quand ses Pokémon n'ont aucun EV.
 - Mont Combat : les étages s'affichent de nouveau (tuiles magenta, dresseurs absents, joueur bloqué) ; ils étaient
   lus au mauvais endroit sur PC et Android.
+- Ligue de Kanto : les combats contre OLGA, ALDO, AGATHA, PETER et le maître commencent de nouveau par leur
+  transition à portrait de Rouge Feu (bandeau à leurs couleurs, portraits qui glissent) au lieu d'une transition
+  ordinaire ; avec PERSO = Red/Leaf, la moitié du joueur prend les couleurs de RF.
+- Ligue et arènes de Kanto : un combat contre un champion d'arène, le Conseil 4 ou le maître augmente de nouveau
+  l'amitié des Pokémon, comme à Hoenn.
+- Combats : l'IA des dresseurs teste de nouveau les capacités connues exactement comme la cartouche (une lecture
+  mal alignée la faisait « mieux » jouer sur PC et Android) ; plus de lecture hors limites à la fin d'un tour de
+  combat double, ni dans l'animation de Métronome ; les confettis des résultats de concours ne lisent plus en dehors
+  de la table des sinus.
 
 ## Version 1.1 (1er novembre 2026)
 

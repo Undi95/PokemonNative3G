@@ -85,6 +85,30 @@ ces valeurs passe par `IS_SECRET_BASE_OPPONENT` / `IS_FRONTIER_BRAIN_OPPONENT` (
 vérifient aussi le type de combat. Renuméroter Kanto déplacerait les drapeaux de victoire des sauvegardes. Scénario :
 `kanto_trainer_ids`.
 
+## Règle pour les classes de dresseurs de Kanto
+
+Les dresseurs de Kanto ont leurs propres classes (`TRAINER_CLASS_KANTO_LEADER`, `_ELITE_FOUR`, `_CHAMPION`…). Tout
+code d'Émeraude qui teste `TRAINER_CLASS_LEADER`, `_ELITE_FOUR` ou `_CHAMPION` doit aussi tester la classe Kanto
+quand RF fait ce test : sinon Kanto tombe dans le cas général. Trouvés ainsi (2026-11-02) : la transition à portrait
+de la Ligue de Kanto (`GetTrainerBattleTransition`) et le bonus d'amitié des combats de Ligue (`AdjustFriendship`).
+Vérifiés conformes : musique de combat et de victoire, table d'argent (`src/data/kanto/trainer_money.h`), décor de
+combat (`kanto_battle_bg.c`), nom du rival (`battle_message.c`). Pour repérer les autres :
+`grep -n "TRAINER_CLASS_[A-Z_]*" src/*.c | grep "==\|case "` et comparer avec les mêmes tests dans RF.
+
+## Comportements de la GBA que le PC doit refaire (UBFIX)
+
+Une lecture hors limites ou mal alignée ne plante pas une GBA : elle lit autre chose, toujours la même chose. Le PC
+doit refaire cette valeur quand on la connaît, sinon garder le comportement en évitant la lecture :
+- **u16 lu à une adresse impaire** (`LDRH`) : le demi-mot de l'adresse paire d'avant, tourné de 8 bits (GBATEK). Les
+  scripts d'IA (`if_has_move`) en dépendent ; la parité des adresses y est la même que sur la cartouche (pointeurs
+  de 8 octets au lieu de 4).
+- **Case après la fin d'un tableau en EWRAM** : la variable déclarée juste après dans le même fichier (ordre de
+  `sym_ewram.txt`) : `gActionsByTurnOrder[4]` = `gBattlerByTurnOrder[0]`.
+- **Division par zéro** : 0.
+- **Avant le début d'une table en ROM** (`Sin` avec un indice négatif) : contenu inconnu ; on prend la lecture que le
+  code voulait faire (indice non signé).
+Les scénarios de défis (`challenge_*`) sous ASan ont trouvé ces cas ; `docker/test-sanitize.sh` les vérifie.
+
 ## Ce que l'explorateur ne fait pas (à tester autrement)
 
 Limites connues, qui restent dans ses « interactions en erreur » sans être des bugs :
