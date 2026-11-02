@@ -995,6 +995,15 @@ void ResetInitialPlayerAvatarState(void)
 {
     sInitialPlayerAvatarState.direction = DIR_SOUTH;
     sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_ON_FOOT;
+    sInitialPlayerAvatarState.hasDirectionSet = FALSE;
+}
+
+// Rouge Feu : après un K.O., le joueur reparaît tourné vers l'infirmière (CB2_WhiteOut)
+static void SetInitialPlayerAvatarStateWithDirection(u8 dirn)
+{
+    sInitialPlayerAvatarState.direction = dirn;
+    sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_ON_FOOT;
+    sInitialPlayerAvatarState.hasDirectionSet = TRUE;
 }
 
 void StoreInitialPlayerAvatarState(void)
@@ -1011,6 +1020,7 @@ void StoreInitialPlayerAvatarState(void)
         sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_UNDERWATER;
     else
         sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_ON_FOOT;
+    sInitialPlayerAvatarState.hasDirectionSet = FALSE;
 }
 
 static struct InitialPlayerAvatarState *GetInitialPlayerAvatarState(void)
@@ -1021,6 +1031,7 @@ static struct InitialPlayerAvatarState *GetInitialPlayerAvatarState(void)
     u8 transitionFlags = GetAdjustedInitialTransitionFlags(&sInitialPlayerAvatarState, metatileBehavior, mapType);
     playerStruct.transitionFlags = transitionFlags;
     playerStruct.direction = GetAdjustedInitialDirection(&sInitialPlayerAvatarState, transitionFlags, metatileBehavior, mapType);
+    playerStruct.hasDirectionSet = FALSE;
     sInitialPlayerAvatarState = playerStruct;
     return &sInitialPlayerAvatarState;
 }
@@ -1068,6 +1079,8 @@ static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStr
           || (playerStruct->transitionFlags == PLAYER_AVATAR_FLAG_SURFING && transitionFlags == PLAYER_AVATAR_FLAG_UNDERWATER))
         return playerStruct->direction;
     else if (MetatileBehavior_IsLadder(metatileBehavior) == TRUE)
+        return playerStruct->direction;
+    else if (playerStruct->hasDirectionSet) // Rouge Feu
         return playerStruct->direction;
     else
         return DIR_SOUTH;
@@ -1727,10 +1740,14 @@ void CB2_WhiteOut(void)
         StopMapMusic();
         ResetSafariZoneFlag_();
         DoWhiteOut();
-        ResetInitialPlayerAvatarState();
+        // Rouge Feu : message sur fond noir, puis l'infirmière soigne l'équipe ; le joueur lui fait face
+        if (sWhiteOutHealerRespawn)
+            SetInitialPlayerAvatarStateWithDirection(DIR_NORTH);
+        else
+            ResetInitialPlayerAvatarState();
         ScriptContext_Init();
         UnlockPlayerFieldControls();
-        if (sWhiteOutHealerRespawn) // Rouge Feu : message sur fond noir, puis l'infirmière soigne l'équipe
+        if (sWhiteOutHealerRespawn)
             gFieldCallback = FieldCB_RushInjuredPokemonToCenter;
         else
             gFieldCallback = FieldCB_WarpExitFadeFromBlack;

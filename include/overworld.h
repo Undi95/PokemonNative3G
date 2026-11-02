@@ -30,6 +30,7 @@ struct InitialPlayerAvatarState
 {
     u8 transitionFlags;
     u8 direction;
+    bool8 hasDirectionSet; // Rouge Feu : direction imposée (K.O. : face à l'infirmière)
 };
 
 struct LinkPlayerObjectEvent

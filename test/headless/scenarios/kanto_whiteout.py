@@ -49,6 +49,7 @@ def white_out(game, map_name, x, y, shot=None):
         log(game, shot)
     finish_dialog(game)   # A : le message se termine sur une attente de touche
     seen["nurse"] = saw_text(game, "Avant toute chose", since) and saw_text(game, "ont été soignés", since)
+    seen["facing"] = game.state.facing   # RF : tourné vers l'infirmière (SetInitialPlayerAvatarStateWithDirection)
     return seen
 
 
@@ -83,6 +84,7 @@ def play(game):
                f"{region} : perte annoncée = perte réelle ({seen['lost']} / {seen['money']} -> {seen['after']})")
         expect(game, seen["respawn"] == respawn, f"{region} : reprise devant l'infirmière ({seen['respawn']})")
         expect(game, seen["nurse"], f"{region} : message sur fond noir, puis l'infirmière soigne l'équipe")
+        expect(game, seen["facing"] == driver.FACING["UP"], f"{region} : tourné vers l'infirmière ({seen['facing']})")
     expect_flag(game, "FLAG_KANTO_DEFEATED_LORELEI", 0)
     expect_flag(game, "FLAG_KANTO_SYS_ON_CYCLING_ROAD", 0)
     for map_name, _x, _y in SPECIAL_RESPAWNS:
