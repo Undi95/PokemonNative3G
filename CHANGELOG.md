@@ -62,6 +62,9 @@
   Rouge Feu (Panthéon, Pokédex de Kanto, Pokédex national, 200 baies et 200 sauts), et le Pokédex compte ceux de Kanto.
 
 ### Nouveautés
+- Options > TITRE = R.FEU : l'écran titre de Rouge Feu mène maintenant au menu principal de Rouge Feu (CONTINUER avec
+  le joueur, la durée de jeu, le Pokédex et les badges de la région où reprend la partie, NOUVELLE PARTIE, CADEAU
+  MYST.). Comme dans Rouge Feu, il n'a pas d'entrée OPTIONS (elles restent dans le menu Start).
 - Options > MENUS = KANTO : les choix proposés par les personnages (et leur grille), le choix du PC et les OUI / NON
   sont aussi ceux de Rouge Feu (police de RF, lignes plus serrées, OUI / NON plus large).
 - Combats : l'IA des dresseurs teste de nouveau les capacités connues exactement comme la cartouche (une lecture

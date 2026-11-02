@@ -6,7 +6,7 @@
 
 **RF seul** (✓ = un dossier du même nom existe dans `graphics/` ou `graphics/kanto/` de la fusion) :
 battle_records ✓, battle_terrain ✓, berry_pouch ✓, fame_checker ✓, field_specials ✓, hall_of_fame ✓,
-help_system ✓, item_menu ✓, item_pc ✓, itemfinder ✓, learn_move ✓, main_menu, map_preview ✓, oak_speech,
+help_system ✓, item_menu ✓, item_pc ✓, itemfinder ✓, learn_move ✓, main_menu ✓, map_preview ✓, oak_speech,
 pokemon_special_anim ✓, quest_log, region_map ✓, script_menu ✓, seagallop ✓, shop_menu ✓, spinda_spots,
 ss_anne ✓, teachy_tv ✓, tm_case ✓
 
@@ -28,10 +28,10 @@ wonder_news
 **Dans `graphics/kanto/` de la fusion** :
 battle_anims, battle_interface, battle_records, battle_terrain, battle_transitions, berry_pouch, credits,
 diploma, easy_chat, fame_checker, field_effects, field_specials, fonts, hall_of_fame, help_system, interface,
-intro, item_menu, item_pc, itemfinder, learn_move, map_preview, misc, naming_screen, object_events, party_menu,
-pokedex, pokemon, pokemon_ghost, pokemon_special_anim, pokemon_storage, region_map, script_menu, seagallop,
-shop, shop_menu, slot_machine, ss_anne, summary_screen, teachy_tv, text_window, title_screen, tm_case,
-trainers
+intro, item_menu, item_pc, itemfinder, learn_move, main_menu, map_preview, misc, naming_screen, object_events,
+party_menu, pokedex, pokemon, pokemon_ghost, pokemon_special_anim, pokemon_storage, region_map, script_menu,
+seagallop, shop, shop_menu, slot_machine, ss_anne, summary_screen, teachy_tv, text_window, title_screen,
+tm_case, trainers
 
 ## Sauvegarde (`include/global.h`)
 

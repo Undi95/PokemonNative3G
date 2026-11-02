@@ -434,14 +434,6 @@ MailboxPC_InitListMenu, MoveCursorFunc, MailboxPC_AddScrollIndicatorArrows, Mail
 ### main.c (commun, 2/2)
 SetVBlankCounter1Ptr, DisableVBlankCounter1
 
-### main_menu.c (commun, 25/25)
-CB2_InitMainMenu_2, MainMenuGpuInit, Task_SetWin0BldRegsAndCheckSaveFile, PrintSaveErrorStatus,
-Task_SaveErrorStatus_RunPrinterThenWaitButton, Task_SetWin0BldRegsNoSaveFileCheck,
-Task_WaitFadeAndPrintMainMenuText, Task_PrintMainMenuText, Task_WaitDma3AndFadeIn, Task_UpdateVisualSelection,
-Task_HandleMenuInput, Task_ExecuteMainMenuSelection, Task_MysteryGiftError, Task_ReturnToTileScreen,
-MoveWindowByMenuTypeAndCursorPos, PrintMessageOnWindow4, PrintContinueStats, PrintPlayerName, PrintPlayTime,
-PrintDexCount, PrintBadgeCount, LoadUserFrameToBg, SetStdFrame0OnBg, MainMenu_DrawWindow, MainMenu_EraseWindow
-
 ### map_name_popup.c (commun, 6/6)
 Task_MapNamePopup, DismissMapNamePopup, IsMapNamePopupTaskActive, MapNamePopupCreateWindow,
 MapNamePopupPrintMapNameOnWindow, MapNamePopupAppendFloorNum

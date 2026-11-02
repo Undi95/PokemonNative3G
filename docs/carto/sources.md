@@ -138,7 +138,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | text.c | commun | 37 | 15 | 0 | 3 | 20 | 5 | 17 | text.c (3) |
 | field_specials.c | commun | 118 | 89 | 0 | 82 | 92 | 9 | 20 | copie kanto_field_specials.c+kanto_list_menu.c+kanto_specials.c : 69/118 fonctions; kanto_field_anims.c (4), kanto_itemfinder.c (2), fldeff_cut.c (2) |
 | field_weather.c | commun | 50 | 13 | 1 | 0 | 7 | 22 | 15 |  |
-| main_menu.c | commun | 29 | 25 | 0 | 0 | 0 | 2 | 2 |  |
 | wild_encounter.c | commun | 36 | 18 | 0 | 3 | 16 | 6 | 12 | wild_encounter.c (2), kanto_pokemon_special_anim_scene.c (1) |
 | battle_anim.c | commun | 77 | 0 | 0 | 0 | 100 | 51 | 26 |  |
 | battle_anim_normal.c | commun | 36 | 5 | 1 | 0 | 20 | 9 | 22 |  |
@@ -264,6 +263,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | digit_obj_util.c | commun | 14 | 0 | 0 | 0 | 100 | 12 | 2 |  |
 | fldeff_teleport.c | commun | 4 | 0 | 0 | 0 | 100 | 2 | 2 |  |
 | librfu_intr.c | commun | 9 | 0 | 0 | 0 | 100 | 7 | 2 |  |
+| main_menu.c | commun | 29 | 25 | 0 | 25 | 100 | 2 | 2 | copie kanto_main_menu.c : 28/29 fonctions |
 | random.c | commun | 2 | 0 | 0 | 0 | 100 | 0 | 2 |  |
 | slot_machine.c | commun | 77 | 75 | 0 | 75 | 100 | 0 | 2 | copie kanto_slot_machine.c : 77/77 fonctions |
 | wonder_news.c | commun | 9 | 0 | 0 | 0 | 100 | 7 | 2 |  |

@@ -655,8 +655,9 @@ static void SetTitleScreenScene_Cry(s16 *data)
     case 2:
         if (!gPaletteFade.active)
         {
-            // RF recharge ici la sauvegarde ; Émeraude l'a déjà chargée au démarrage (CB2_GoToMainMenu)
-            SetMainCallback2(CB2_InitMainMenu);
+            // RF recharge ici la sauvegarde ; Émeraude l'a déjà chargée au démarrage (CB2_GoToMainMenu). Menu
+            // principal de RF (kanto_main_menu.c)
+            SetMainCallback2(CB2_InitKantoMainMenu);
             DestroyTask(FindTaskIdByFunc(Task_TitleScreenMain));
         }
         break;

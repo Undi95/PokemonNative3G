@@ -5,6 +5,8 @@
 // ce qui en dépend est propre à chaque région (décors, portes, musiques, personnages, badges, carte de la région).
 // Kanto = carte avec les tilesets importés de Rouge Feu ; sans carte chargée (nouvelle partie) : Hoenn.
 bool8 Fusion_IsInKanto(void);
+// Même question pour la carte où reprend la sauvegarde (menu principal : la carte n'est pas encore chargée)
+bool8 Fusion_IsSaveInKanto(void);
 // Badges de la région (badge 0 à 7)
 u16 Fusion_GetRegionBadgeFlag(u32 badge);
 u16 CountRegionBadges(void); // aussi special

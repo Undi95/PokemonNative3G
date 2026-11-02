@@ -565,6 +565,18 @@ void CB2_ReinitMainMenu(void)
     InitMainMenu(TRUE);
 }
 
+// PokemonNative3G : NOUVELLE PARTIE du menu principal de RF (kanto_main_menu.c, Options > TITRE = R.FEU). Le
+// StartNewGameScene de RF ouvre le discours du Prof. Chen, écarté (Kanto = post-game) : la partie commence, comme
+// depuis ce menu, par le discours du Prof. Seko, sur les fonds et les fenêtres de ce menu (InitMainMenu), sa tâche
+// prenant la place de celle du menu
+void StartNewGameBirchSpeech(void)
+{
+    InitMainMenu(TRUE);
+    gPlttBufferUnfaded[0] = RGB_BLACK;
+    gPlttBufferFaded[0] = RGB_BLACK;
+    gTasks[FindTaskIdByFunc(Task_MainMenuCheckSaveFile)].func = Task_NewGameBirchSpeech_Init;
+}
+
 static u32 InitMainMenu(bool8 returningFromOptionsMenu)
 {
     SetVBlankCallback(NULL);

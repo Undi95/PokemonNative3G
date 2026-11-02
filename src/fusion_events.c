@@ -380,6 +380,17 @@ bool8 Fusion_IsInKanto(void)
     return primary == &gTileset_KantoGeneral || primary == &gTileset_KantoBuilding;
 }
 
+bool8 Fusion_IsSaveInKanto(void)
+{
+    const struct MapHeader *header = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
+    const struct Tileset *primary;
+
+    if (header == NULL || header->mapLayout == NULL)
+        return FALSE;
+    primary = header->mapLayout->primaryTileset;
+    return primary == &gTileset_KantoGeneral || primary == &gTileset_KantoBuilding;
+}
+
 static const u16 sRegionBadgeFlags[][NUM_BADGES] = {
     {
         FLAG_BADGE01_GET,
