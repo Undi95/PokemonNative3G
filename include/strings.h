@@ -956,6 +956,7 @@ extern const u8 gText_Gabby[];
 extern const u8 gText_Anna[];
 
 extern const u8 gText_DadsAdvice[];
+extern const u8 gText_OakForbidsUseOfItemHere[];
 extern const u8 gText_CantDismountBike[];
 extern const u8 gText_CoinCase[];
 extern const u8 gText_PowderQty[];

@@ -235,6 +235,7 @@ const u8 gText_TossHowManyVar1s[] = _("En jeter combien?");
 const u8 gText_ThrewAwayVar2Var1s[] = _("{STR_VAR_1}:\njeté {STR_VAR_2}.");
 const u8 gText_ConfirmTossItems[] = _("{STR_VAR_1}:\nen jeter {STR_VAR_2}?");
 const u8 gText_DadsAdvice[] = _("Conseil de PAPA…\n{PLAYER}, chaque chose en son temps!{PAUSE_UNTIL_PRESS}");
+const u8 gText_OakForbidsUseOfItemHere[] = _("CHEN: {PLAYER}!\nChaque chose en son temps!{PAUSE_UNTIL_PRESS}"); // Rouge Feu, à Kanto
 const u8 gText_CantDismountBike[] = _("Impossible de descendre de VELO ici.{PAUSE_UNTIL_PRESS}");
 const u8 gText_CoinCase[] = _("JETONS:\n{STR_VAR_1}{PAUSE_UNTIL_PRESS}");
 const u8 gText_BootedUpTM[] = _("CT activée.");

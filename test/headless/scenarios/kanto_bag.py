@@ -44,3 +44,6 @@ def play(game):
     # Vérifications
     expect_text(game, "VELO COURSE est sélectionné")
     expect_song(game, "MUS_RG_CYCLING")     # MUS_CYCLING de RF (MUS_CYCLING d'Émeraude : le vélo de Hoenn)
+    # Le SEAU WAILMER sans plante : à Kanto, c'est le PROF. CHEN qui rappelle « chaque chose en son temps » (RF)
+    expect_text(game, "CHEN:")
+    expect_no_text(game, "Conseil de PAPA")

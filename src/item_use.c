@@ -1,5 +1,6 @@
 #include "global.h"
 #include "fusion_events.h" // PokemonNative3G : POKé MONTURE
+#include "fusion_region.h"
 #include "region_map.h"
 #include "overworld.h"
 #include "constants/moves.h"
@@ -153,7 +154,9 @@ static void DisplayCannotUseItemMessage(u8 taskId, bool8 isUsingRegisteredKeyIte
 
 static void DisplayDadsAdviceCannotUseItemMessage(u8 taskId, bool8 isUsingRegisteredKeyItemOnField)
 {
-    DisplayCannotUseItemMessage(taskId, isUsingRegisteredKeyItemOnField, gText_DadsAdvice);
+    // Rouge Feu (PrintNotTheTimeToUseThat) : à Kanto, c'est le PROF. CHEN qui le rappelle, pas PAPA
+    DisplayCannotUseItemMessage(taskId, isUsingRegisteredKeyItemOnField,
+                                Fusion_IsInKanto() ? gText_OakForbidsUseOfItemHere : gText_DadsAdvice);
 }
 
 static void DisplayCannotDismountBikeMessage(u8 taskId, bool8 isUsingRegisteredKeyItemOnField)
