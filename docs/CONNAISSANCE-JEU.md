@@ -145,7 +145,10 @@ la carte de dresseur, la fanfare des soins hors Centre (toilettage de la sœur d
   (volume 100 contre 90), `MUS_EVOLVED` (vélocités, une note), `SE_RG_CARD_FLIPPING` (une vélocité).
 - **instruments** : les samples de RF sont à 13 379 Hz (ceux d'Émeraude, les mêmes instruments, à 42 048 ou 44 100 Hz)
   et sa batterie « rs » est recouverte par le groupe suivant au-delà de la note 40 ; les copies des musiques de RF
-  dans Émeraude (`mus_rg_*`) jouent donc avec les instruments d'Émeraude. Choix en attente de l'utilisateur.
+  dans Émeraude (`mus_rg_*`) jouent donc avec les instruments d'Émeraude.
+
+**Décision (2026-11-02)** : on garde les copies d'Émeraude (instruments HQ, batterie complète) et ses versions des 4
+sons qui diffèrent ; ce ne sont pas des manques à porter.
 
 ## Easy Chat (messages en mots choisis)
 
