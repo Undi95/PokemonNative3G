@@ -541,6 +541,44 @@ Localize_ConvertEasyChatMessageToString équivalente OtherConvertEasyChatWordsTo
 PopulateAlphabeticalGroups équivalente SetUnlockedWordsByAlphabet (easy_chat.c), un dictionnaire
 UnlockedECMonOrMove équivalente IsEasyChatIndexAndGroupUnlocked (easy_chat.c), un dictionnaire
 EnableRareWord link seul l'Événement Mystère de RF (mystery_event_script.c) débloque des mots rares
+# item_use.c : FieldUseFunc_X / BattleUseFunc_X de RF = ItemUseOutOfBattle_X / ItemUseInBattle_X d'Émeraude ; objets de
+# RF (MEMORYDEX, CARTE, TV ABC, BOITE CT, SAC A BAIES, POKé FLUTE, CHERCHE VS) déjà portés sous ces noms (items.h)
+BattleUseFunc_Ether équivalente ItemUseInBattle_PPRecovery (item_use.c), même aiguillage
+BattleUseFunc_Medicine équivalente ItemUseInBattle_Medicine (item_use.c), même aiguillage
+BattleUseFunc_PokeFlute équivalente ItemUseInBattle_PokeFlute (item_use.c), POKé FLUTE de RF
+BattleUseFunc_PokeBallEtc équivalente ItemUseInBattle_PokeBall (item_use.c), même code
+BattleUseFunc_PokeDoll équivalente ItemUseInBattle_Escape (item_use.c), même code
+BattleUseFunc_StatBooster équivalente ItemUseInBattle_StatIncrease (item_use.c), même code
+Task_BattleUse_StatBooster_DelayAndPrint équivalente Task_UseStatIncreaseItem (item_use.c), même enchaînement
+Task_BattleUse_StatBooster_WaitButton_ReturnToBattle équivalente Task_UseStatIncreaseItem (item_use.c), même enchaînement
+ItemUse_SwitchToPartyMenuInBattle équivalente ItemUseInBattle_ShowPartyMenu (item_use.c), même code
+FieldUseFunc_Bike équivalente ItemUseOutOfBattle_Bike (item_use.c), Piste Cyclable de Kanto comprise
+ItemUseOnFieldCB_Bicycle équivalente ItemUseOnFieldCB_Bike (item_use.c), même code
+FieldUseFunc_CoinCase équivalente ItemUseOutOfBattle_CoinCase (item_use.c), + journal de RF
+FieldUseFunc_Ether équivalente ItemUseOutOfBattle_PPRecovery (item_use.c), même code
+FieldUseFunc_EvoItem équivalente ItemUseOutOfBattle_EvolutionStone (item_use.c), scène de RF avec SAC = KANTO
+FieldUseFunc_Mail équivalente ItemUseOutOfBattle_Mail (item_use.c), même code
+FieldUseFunc_Medicine équivalente ItemUseOutOfBattle_Medicine (item_use.c), scène de RF avec SAC = KANTO
+FieldUseFunc_PokeFlute équivalente ItemUseOutOfBattle_PokeFlute (item_use.c), textes de RF (sKText)
+FieldUseFunc_PowderJar équivalente ItemUseOutOfBattle_PowderJar (item_use.c), + journal de RF
+FieldUseFunc_PpUp équivalente ItemUseOutOfBattle_PPUp (item_use.c), même code
+FieldUseFunc_RareCandy équivalente ItemUseOutOfBattle_RareCandy (item_use.c), scène de RF avec SAC = KANTO
+FieldUseFunc_Rod équivalente ItemUseOutOfBattle_Rod (item_use.c), message de CHEN à Kanto
+FieldUseFunc_VsSeeker équivalente ItemUseOutOfBattle_VsSeeker (item_use.c), CHERCHE VS de RF
+FieldUseFunc_BerryPouch équivalente ItemUseOutOfBattle_BerryPouch (item_use.c), SAC A BAIES de RF
+FieldUseFunc_TmCase équivalente ItemUseOutOfBattle_TMCase (item_use.c), BOITE CT de RF
+FieldUseFunc_TeachyTv équivalente ItemUseOutOfBattle_TeachyTv (item_use.c), TV ABC de RF
+FieldUseFunc_FameChecker équivalente ItemUseOutOfBattle_FameChecker (item_use.c), MEMORYDEX de RF
+FieldUseFunc_TownMap équivalente ItemUseOutOfBattle_TownMap (item_use.c), CARTE de RF
+FieldUseFunc_BlackWhiteFlute équivalente ItemUseOutOfBattle_BlackWhiteFlute (item_use.c), même code
+FieldUseFunc_Repel équivalente ItemUseOutOfBattle_Repel (item_use.c), même code
+FieldUseFunc_OakStopsYou équivalente DisplayDadsAdviceCannotUseItemMessage (item_use.c), message de CHEN à Kanto (porté 2026-11-02)
+PrintNotTheTimeToUseThat équivalente DisplayDadsAdviceCannotUseItemMessage (item_use.c), gText_OakForbidsUseOfItemHere à Kanto (porté 2026-11-02)
+DisplayItemMessageInCurrentContext équivalente DisplayCannotUseItemMessage (item_use.c), sac ou terrain
+Task_ItemUse_CloseMessageBoxAndReturnToField équivalente Task_CloseCantUseKeyItemMessage (item_use.c), même code
+FieldCB2_UseItemFromField équivalente FieldCB_UseItemOnField (item_use.c), retour au terrain avant l'objet
+Task_ItemUseWaitForFade équivalente FieldCB_ReturnToFieldNoScript (field_screen_effect.c), attente du fondu puis déblocage
+ItemUse_SetQuestLogEvent écartée journal de RF
 # player_pc.c : le PC du joueur d'Émeraude (objets, boîte aux lettres), mêmes rôles ; approximation assumée
 # (docs/KANTO-ETAT.md), style de RF par l'option MENUS
 CB2_ReturnToMailbox équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
