@@ -204,9 +204,43 @@ static const u8 sText_Tools[] = _("Outils (sondes)");
 static const u8 sText_Report[] = _("Rapport de bug");
 static const u8 sText_Close[] = _("Fermer");
 
+static const u8 *const sActionNames[DEBUG_COUNT] =
+{
+    [DEBUG_WARP] = sText_Warp,
+    [DEBUG_NOCLIP] = sText_NoClipOff,
+    [DEBUG_ENCOUNTERS] = sText_EncOn,
+    [DEBUG_HEAL] = sText_Heal,
+    [DEBUG_GIVE_MON] = sText_GiveMon,
+    [DEBUG_GIVE_ITEMS] = sText_GiveItems,
+    [DEBUG_UNLOCK_DEXES] = sText_UnlockDexes,
+    [DEBUG_FLY_MAP] = sText_FlyMap,
+    [DEBUG_HOENN_REMATCHES] = sText_HoennRematches,
+    [DEBUG_SEVII_PASSES] = sText_SeviiPasses,
+    [DEBUG_SS_ANNE] = sText_SSAnne,
+    [DEBUG_KANTO_DEX_FULL] = sText_KantoDexFull,
+    [DEBUG_FAME_CHECKER] = sText_FameChecker,
+    [DEBUG_BOTH_LEAGUES] = sText_BothLeagues,
+    [DEBUG_POKE_MONTURE] = sText_PokeMonture,
+    [DEBUG_OLD_MAN] = sText_OldMan,
+    [DEBUG_TOOLS] = sText_Tools,
+    [DEBUG_REPORT] = sText_Report,
+    [DEBUG_CLOSE] = sText_Close,
+};
+
+// Le nom d'une entrée du menu (murs et rencontres : selon leur réglage), NULL après la dernière
+const u8 *DebugMenu_GetActionName(u8 action)
+{
+    if (action == DEBUG_NOCLIP)
+        return gDebugNoClip ? sText_NoClipOn : sText_NoClipOff;
+    if (action == DEBUG_ENCOUNTERS)
+        return gDebugNoEncounters ? sText_EncOff : sText_EncOn;
+    return action < DEBUG_COUNT ? sActionNames[action] : NULL;
+}
+
 #define tListTaskId data[0]
 #define tWindowId   data[1]
 #define tInWarpList data[2]
+#define tWaitKeys   data[3] // rouvert par A ou B (outils) : rien tant qu'ils sont tenus (pas d'entrée choisie d'office)
 
 static EWRAM_DATA struct ListMenuItem *sItems = NULL;
 
@@ -234,27 +268,11 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
     else
     {
         count = DEBUG_COUNT;
-        sItems[DEBUG_WARP].name = sText_Warp;
-        sItems[DEBUG_NOCLIP].name = gDebugNoClip ? sText_NoClipOn : sText_NoClipOff;
-        sItems[DEBUG_ENCOUNTERS].name = gDebugNoEncounters ? sText_EncOff : sText_EncOn;
-        sItems[DEBUG_HEAL].name = sText_Heal;
-        sItems[DEBUG_GIVE_MON].name = sText_GiveMon;
-        sItems[DEBUG_GIVE_ITEMS].name = sText_GiveItems;
-        sItems[DEBUG_UNLOCK_DEXES].name = sText_UnlockDexes;
-        sItems[DEBUG_FLY_MAP].name = sText_FlyMap;
-        sItems[DEBUG_HOENN_REMATCHES].name = sText_HoennRematches;
-        sItems[DEBUG_SEVII_PASSES].name = sText_SeviiPasses;
-        sItems[DEBUG_SS_ANNE].name = sText_SSAnne;
-        sItems[DEBUG_KANTO_DEX_FULL].name = sText_KantoDexFull;
-        sItems[DEBUG_FAME_CHECKER].name = sText_FameChecker;
-        sItems[DEBUG_BOTH_LEAGUES].name = sText_BothLeagues;
-        sItems[DEBUG_POKE_MONTURE].name = sText_PokeMonture;
-        sItems[DEBUG_OLD_MAN].name = sText_OldMan;
-        sItems[DEBUG_TOOLS].name = sText_Tools;
-        sItems[DEBUG_REPORT].name = sText_Report;
-        sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
+        {
+            sItems[i].name = DebugMenu_GetActionName(i);
             sItems[i].id = i;
+        }
     }
     shown = count > 6 ? 6 : count;
 
@@ -310,11 +328,154 @@ static void Task_DebugOpenFlyMap(u8 taskId)
     }
 }
 
+// Les actions du menu qui changent la partie sans écran (soins, Pokémon, objets, drapeaux…) : le menu les fait,
+// l'outil jeu.debug aussi (src/debug_tools.c). FALSE : une action qui a besoin du menu (téléport, carte…)
+bool8 DebugMenu_ApplyAction(u8 action)
+{
+    switch (action)
+    {
+    case DEBUG_HEAL:
+        HealPlayerParty();
+        break;
+    case DEBUG_GIVE_MON:
+        if (ScriptGiveMon(SPECIES_MEWTWO, 70, ITEM_NONE, 0, 0, 0) == MON_GIVEN_TO_PARTY)
+        {
+            // PSYKO (4e attaque) en premier : les tests headless attaquent en appuyant sur A
+            struct Pokemon *mon = &gPlayerParty[CalculatePlayerPartyCount() - 1];
+            u16 move1 = GetMonData(mon, MON_DATA_MOVE1), move4 = GetMonData(mon, MON_DATA_MOVE4);
+            u8 pp1 = GetMonData(mon, MON_DATA_PP1), pp4 = GetMonData(mon, MON_DATA_PP4);
+            SetMonData(mon, MON_DATA_MOVE1, &move4);
+            SetMonData(mon, MON_DATA_PP1, &pp4);
+            SetMonData(mon, MON_DATA_MOVE4, &move1);
+            SetMonData(mon, MON_DATA_PP4, &pp1);
+        }
+        ScriptGiveMon(SPECIES_KADABRA, 30, ITEM_NONE, 0, 0, 0); // CÂBLE LINK : évolution par échange
+        { // COUPE en 4e capacité : tests headless (porte du Trou Pointé)
+            struct Pokemon *kadabra = &gPlayerParty[CalculatePlayerPartyCount() - 1];
+            u16 cut = MOVE_CUT;
+            u8 pp = 30;
+            if (GetMonData(kadabra, MON_DATA_SPECIES) == SPECIES_KADABRA)
+            {
+                SetMonData(kadabra, MON_DATA_MOVE4, &cut);
+                SetMonData(kadabra, MON_DATA_PP4, &pp);
+            }
+        }
+        gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET; // tests headless : pas de « Changer de POKéMON ? »
+        FlagSet(FLAG_SYS_POKEMON_GET);
+        break;
+    case DEBUG_UNLOCK_DEXES:
+        // Pokédex de Hoenn (Prof. Seko) et de Kanto (Prof. Chen : vue KANTO dans les options) ;
+        // pour les tests : les 151 de Kanto vus, un sur deux attrapé
+        FlagSet(FLAG_SYS_POKEDEX_GET);
+        FlagSet(FLAG_KANTO_SYS_POKEDEX_GET);
+        {
+            u16 i;
+            for (i = 1; i <= KANTO_DEX_COUNT; i++)
+            {
+                GetSetPokedexFlag(i, FLAG_SET_SEEN);
+                if (i % 2)
+                    GetSetPokedexFlag(i, FLAG_SET_CAUGHT);
+            }
+        }
+        break;
+    case DEBUG_GIVE_ITEMS:
+        DebugMenu_GiveAllItems();
+        if (GetCoins() < 500)
+            SetCoins(500);
+        break;
+    case DEBUG_HOENN_REMATCHES:
+        // Cherche VS à Hoenn : dresseurs de la table des revanches combattus et inscrits au PokéNav, Cherche VS chargé
+        {
+            u16 i;
+            for (i = 0; i <= REMATCH_SPECIAL_TRAINER_START; i++)
+            {
+                FlagSet(TRAINER_FLAGS_START + gRematchTable[i].trainerIds[0]);
+                FlagSet(TRAINER_REGISTERED_FLAGS_START + i);
+            }
+        }
+        if (!CheckBagHasItem(ITEM_VS_SEEKER, 1))
+            AddBagItem(ITEM_VS_SEEKER, 1);
+        gSaveBlockKanto.trainerRematchStepCounter = (gSaveBlockKanto.trainerRematchStepCounter & 0xFF00) | 100;
+        break;
+    case DEBUG_SEVII_PASSES:
+        // Seagallop : Carmin sur Mer accessible (Tri-Pass) et toutes les îles (Rainbow Pass, menu des destinations)
+        VarSet(VAR_KANTO_MAP_SCENE_CINNABAR_ISLAND, 4);
+        VarSet(VAR_KANTO_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5);
+        if (!CheckBagHasItem(ITEM_TRI_PASS, 1))
+            AddBagItem(ITEM_TRI_PASS, 1);
+        if (!CheckBagHasItem(ITEM_RAINBOW_PASS, 1))
+            AddBagItem(ITEM_RAINBOW_PASS, 1);
+        break;
+    case DEBUG_KANTO_DEX_FULL:
+        // diplôme de Game Freak (Céladopole) : les 151 de Kanto vus et attrapés
+        FlagSet(FLAG_SYS_POKEDEX_GET);
+        FlagSet(FLAG_KANTO_SYS_POKEDEX_GET);
+        {
+            u16 i;
+            for (i = 1; i <= KANTO_DEX_COUNT; i++)
+            {
+                GetSetPokedexFlag(i, FLAG_SET_SEEN);
+                GetSetPokedexFlag(i, FLAG_SET_CAUGHT);
+            }
+        }
+        break;
+    case DEBUG_FAME_CHECKER:
+        // MEMORYDEX (Fame Checker) : toutes les personnes et toutes les fiches (FullyUnlockFameChecker de RF)
+        AddBagItem(ITEM_FAME_CHECKER, 1);
+        FullyUnlockFameChecker();
+        break;
+    case DEBUG_BOTH_LEAGUES:
+        // événements d'après les deux Ligues (Celebi, Jirachi, œufs de starters…)
+        FlagSet(FLAG_SYS_GAME_CLEAR);
+        FlagSet(FLAG_KANTO_SYS_GAME_CLEAR);
+        SetMoney(&gSaveBlock1Ptr->money, 999999); // maison de Bourg Palette
+        FlagSet(FLAG_KANTO_SYS_NOT_SOMEONES_PC); // PC de LÉO (rencontré)
+        FlagSet(FLAG_KANTO_HIDE_RUIN_VALLEY_SCIENTIST); // après la Grotte Glacée : porte du Trou Pointé libre
+        FlagSet(FLAG_SYS_PC_LANETTE); // PC d'ANNETTE (rencontrée)
+        FlagSet(FLAG_SYS_POKENAV_GET); // POKéNAV (carte à Kanto)
+        break;
+    case DEBUG_OLD_MAN:
+        // Colis remis à CHEN : le vieil homme de Jadielle propose sa démonstration de capture (test kanto_old_man)
+        VarSet(VAR_KANTO_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN, 1);
+        break;
+    case DEBUG_POKE_MONTURE:
+        // POKé MONTURE avec ses 7 capacités (flags des CS de RF) et tous les badges des deux régions
+        {
+            u16 i;
+            if (!CheckBagHasItem(ITEM_POKE_MONTURE, 1))
+                AddBagItem(ITEM_POKE_MONTURE, 1);
+            FlagSet(FLAG_KANTO_GOT_HM01);
+            FlagSet(FLAG_KANTO_GOT_HM02);
+            FlagSet(FLAG_KANTO_GOT_HM03);
+            FlagSet(FLAG_KANTO_GOT_HM04);
+            FlagSet(FLAG_KANTO_GOT_HM05);
+            FlagSet(FLAG_KANTO_GOT_HM06);
+            FlagSet(FLAG_KANTO_HIDE_FOUR_ISLAND_ICEFALL_CAVE_1F_HM07);
+            for (i = 0; i < 8; i++)
+            {
+                FlagSet(FLAG_BADGE01_GET + i);
+                FlagSet(FLAG_KANTO_BADGE01_GET + i);
+            }
+        }
+        break;
+    default:
+        return FALSE;
+    }
+    return TRUE;
+}
+
 static void Task_DebugMenu(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    s32 input = ListMenu_ProcessInput(task->tListTaskId);
+    s32 input;
 
+    if (task->tWaitKeys)
+    {
+        if (!JOY_HELD(A_BUTTON | B_BUTTON))
+            task->tWaitKeys = FALSE;
+        return;
+    }
+    input = ListMenu_ProcessInput(task->tListTaskId);
     if (input == LIST_NOTHING_CHOSEN)
         return;
     PlaySE(SE_SELECT);
@@ -352,59 +513,6 @@ static void Task_DebugMenu(u8 taskId)
         DebugMenu_Erase(taskId);
         DebugMenu_Draw(taskId, FALSE);
         break;
-    case DEBUG_HEAL:
-        HealPlayerParty();
-        PlaySE(SE_USE_ITEM);
-        break;
-    case DEBUG_GIVE_MON:
-        if (ScriptGiveMon(SPECIES_MEWTWO, 70, ITEM_NONE, 0, 0, 0) == MON_GIVEN_TO_PARTY)
-        {
-            // PSYKO (4e attaque) en premier : les tests headless attaquent en appuyant sur A
-            struct Pokemon *mon = &gPlayerParty[CalculatePlayerPartyCount() - 1];
-            u16 move1 = GetMonData(mon, MON_DATA_MOVE1), move4 = GetMonData(mon, MON_DATA_MOVE4);
-            u8 pp1 = GetMonData(mon, MON_DATA_PP1), pp4 = GetMonData(mon, MON_DATA_PP4);
-            SetMonData(mon, MON_DATA_MOVE1, &move4);
-            SetMonData(mon, MON_DATA_PP1, &pp4);
-            SetMonData(mon, MON_DATA_MOVE4, &move1);
-            SetMonData(mon, MON_DATA_PP4, &pp1);
-        }
-        ScriptGiveMon(SPECIES_KADABRA, 30, ITEM_NONE, 0, 0, 0); // CÂBLE LINK : évolution par échange
-        { // COUPE en 4e capacité : tests headless (porte du Trou Pointé)
-            struct Pokemon *kadabra = &gPlayerParty[CalculatePlayerPartyCount() - 1];
-            u16 cut = MOVE_CUT;
-            u8 pp = 30;
-            if (GetMonData(kadabra, MON_DATA_SPECIES) == SPECIES_KADABRA)
-            {
-                SetMonData(kadabra, MON_DATA_MOVE4, &cut);
-                SetMonData(kadabra, MON_DATA_PP4, &pp);
-            }
-        }
-        gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET; // tests headless : pas de « Changer de POKéMON ? »
-        FlagSet(FLAG_SYS_POKEMON_GET);
-        PlaySE(SE_USE_ITEM);
-        break;
-    case DEBUG_UNLOCK_DEXES:
-        // Pokédex de Hoenn (Prof. Seko) et de Kanto (Prof. Chen : vue KANTO dans les options) ;
-        // pour les tests : les 151 de Kanto vus, un sur deux attrapé
-        FlagSet(FLAG_SYS_POKEDEX_GET);
-        FlagSet(FLAG_KANTO_SYS_POKEDEX_GET);
-        {
-            u16 i;
-            for (i = 1; i <= KANTO_DEX_COUNT; i++)
-            {
-                GetSetPokedexFlag(i, FLAG_SET_SEEN);
-                if (i % 2)
-                    GetSetPokedexFlag(i, FLAG_SET_CAUGHT);
-            }
-        }
-        PlaySE(SE_USE_ITEM);
-        break;
-    case DEBUG_GIVE_ITEMS:
-        DebugMenu_GiveAllItems();
-        if (GetCoins() < 500)
-            SetCoins(500);
-        PlaySE(SE_USE_ITEM);
-        break;
     case DEBUG_FLY_MAP:
         // conditions du Vol entre régions (SELECT sur la carte) : Ligue de Kanto finie, Rubis/Saphir rendus
         FlagSet(FLAG_KANTO_SYS_GAME_CLEAR);
@@ -413,31 +521,6 @@ static void Task_DebugMenu(u8 taskId)
         LockPlayerFieldControls();
         FadeScreen(FADE_TO_BLACK, 0);
         CreateTask(Task_DebugOpenFlyMap, 0);
-        break;
-    case DEBUG_HOENN_REMATCHES:
-        // Cherche VS à Hoenn : dresseurs de la table des revanches combattus et inscrits au PokéNav, Cherche VS chargé
-        {
-            u16 i;
-            for (i = 0; i <= REMATCH_SPECIAL_TRAINER_START; i++)
-            {
-                FlagSet(TRAINER_FLAGS_START + gRematchTable[i].trainerIds[0]);
-                FlagSet(TRAINER_REGISTERED_FLAGS_START + i);
-            }
-        }
-        if (!CheckBagHasItem(ITEM_VS_SEEKER, 1))
-            AddBagItem(ITEM_VS_SEEKER, 1);
-        gSaveBlockKanto.trainerRematchStepCounter = (gSaveBlockKanto.trainerRematchStepCounter & 0xFF00) | 100;
-        PlaySE(SE_USE_ITEM);
-        break;
-    case DEBUG_SEVII_PASSES:
-        // Seagallop : Carmin sur Mer accessible (Tri-Pass) et toutes les îles (Rainbow Pass, menu des destinations)
-        VarSet(VAR_KANTO_MAP_SCENE_CINNABAR_ISLAND, 4);
-        VarSet(VAR_KANTO_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5);
-        if (!CheckBagHasItem(ITEM_TRI_PASS, 1))
-            AddBagItem(ITEM_TRI_PASS, 1);
-        if (!CheckBagHasItem(ITEM_RAINBOW_PASS, 1))
-            AddBagItem(ITEM_RAINBOW_PASS, 1);
-        PlaySE(SE_USE_ITEM);
         break;
     case DEBUG_SS_ANNE:
         // CS Coupe reçue : en sortant sur le pont, le S.S. Anne quitte le port (cinématique de RF)
@@ -448,63 +531,6 @@ static void Task_DebugMenu(u8 taskId)
         SetWarpDestination(MAP_GROUP(MAP_SSANNE_EXTERIOR), MAP_NUM(MAP_SSANNE_EXTERIOR), WARP_ID_NONE, 32, 13);
         DoWarp();
         return;
-    case DEBUG_KANTO_DEX_FULL:
-        // diplôme de Game Freak (Céladopole) : les 151 de Kanto vus et attrapés
-        FlagSet(FLAG_SYS_POKEDEX_GET);
-        FlagSet(FLAG_KANTO_SYS_POKEDEX_GET);
-        {
-            u16 i;
-            for (i = 1; i <= KANTO_DEX_COUNT; i++)
-            {
-                GetSetPokedexFlag(i, FLAG_SET_SEEN);
-                GetSetPokedexFlag(i, FLAG_SET_CAUGHT);
-            }
-        }
-        PlaySE(SE_USE_ITEM);
-        break;
-    case DEBUG_FAME_CHECKER:
-        // MEMORYDEX (Fame Checker) : toutes les personnes et toutes les fiches (FullyUnlockFameChecker de RF)
-        AddBagItem(ITEM_FAME_CHECKER, 1);
-        FullyUnlockFameChecker();
-        PlaySE(SE_USE_ITEM);
-        break;
-    case DEBUG_BOTH_LEAGUES:
-        // événements d'après les deux Ligues (Celebi, Jirachi, œufs de starters…)
-        FlagSet(FLAG_SYS_GAME_CLEAR);
-        FlagSet(FLAG_KANTO_SYS_GAME_CLEAR);
-        SetMoney(&gSaveBlock1Ptr->money, 999999); // maison de Bourg Palette
-        FlagSet(FLAG_KANTO_SYS_NOT_SOMEONES_PC); // PC de LÉO (rencontré)
-        FlagSet(FLAG_KANTO_HIDE_RUIN_VALLEY_SCIENTIST); // après la Grotte Glacée : porte du Trou Pointé libre
-        FlagSet(FLAG_SYS_PC_LANETTE); // PC d'ANNETTE (rencontrée)
-        FlagSet(FLAG_SYS_POKENAV_GET); // POKéNAV (carte à Kanto)
-        PlaySE(SE_USE_ITEM);
-        break;
-    case DEBUG_OLD_MAN:
-        // Colis remis à CHEN : le vieil homme de Jadielle propose sa démonstration de capture (test kanto_old_man)
-        VarSet(VAR_KANTO_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN, 1);
-        PlaySE(SE_USE_ITEM);
-        break;
-    case DEBUG_POKE_MONTURE:
-        // POKé MONTURE avec ses 7 capacités (flags des CS de RF) et tous les badges des deux régions
-        {
-            u16 i;
-            if (!CheckBagHasItem(ITEM_POKE_MONTURE, 1))
-                AddBagItem(ITEM_POKE_MONTURE, 1);
-            FlagSet(FLAG_KANTO_GOT_HM01);
-            FlagSet(FLAG_KANTO_GOT_HM02);
-            FlagSet(FLAG_KANTO_GOT_HM03);
-            FlagSet(FLAG_KANTO_GOT_HM04);
-            FlagSet(FLAG_KANTO_GOT_HM05);
-            FlagSet(FLAG_KANTO_GOT_HM06);
-            FlagSet(FLAG_KANTO_HIDE_FOUR_ISLAND_ICEFALL_CAVE_1F_HM07);
-            for (i = 0; i < 8; i++)
-            {
-                FlagSet(FLAG_BADGE01_GET + i);
-                FlagSet(FLAG_KANTO_BADGE01_GET + i);
-            }
-        }
-        PlaySE(SE_USE_ITEM);
-        break;
     case DEBUG_TOOLS:
         // Les commandes de src/debug_tools.c (les mêmes que le banc headless et la console du PC)
         DebugMenu_Erase(taskId);
@@ -523,12 +549,17 @@ static void Task_DebugMenu(u8 taskId)
     case LIST_CANCEL:
         DebugMenu_Close(taskId);
         break;
+    default:
+        if (DebugMenu_ApplyAction(input))
+            PlaySE(SE_USE_ITEM);
+        break;
     }
 }
 
 void DebugMenu_Open(void)
 {
     u8 taskId = CreateTask(Task_DebugMenu, 80);
+    gTasks[taskId].tWaitKeys = TRUE;
     DebugMenu_Draw(taskId, FALSE);
 }
 

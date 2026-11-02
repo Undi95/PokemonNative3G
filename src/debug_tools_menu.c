@@ -30,6 +30,9 @@
 #define tDigit      data[6]
 #define tScroll     data[7]
 #define tFromDebug  data[8] // ouvert sur un résultat depuis le menu DEBUG : B y revient
+#define tArgCount   data[9] // les arguments de la commande (plus que les siens : une catégorie ouverte par select)
+#define tCursor     data[10] // la ligne du curseur, pour une commande qui a select
+#define tWaitA      data[11] // ouvert par A (menu DEBUG) : rien tant que A est tenu (pas de 2e rapport de bug)
 
 enum
 {
@@ -37,6 +40,7 @@ enum
     STATE_TOOLS,
     STATE_ARGS,
     STATE_RESULT,
+    STATE_OPEN,     // une image d'attente : le A qui a ouvert l'écran (menu DEBUG) ne choisit pas déjà une catégorie
 };
 
 #define ARG_DIGITS 5
@@ -205,7 +209,7 @@ static void SplitOutput(void)
     const char *start = sNamed;
 
     DevTools_NameAddresses(sNamed, sOutput, sizeof(sNamed));
-    u32 maxWidth = RESULT_WIDTH * 8 - 4;
+    u32 maxWidth = RESULT_WIDTH * 8 - 12;   // à x = 10 derrière le curseur d'une commande qui a select
 
     sLineCount = 0;
     while (*start != '\0' && sLineCount < MAX_LINES)
@@ -250,14 +254,29 @@ static void DrawResult(u8 taskId)
     u8 gameText[LINE_SIZE];
     u32 i;
 
+    bool32 selectable = gDebugTools[task->tTool].select != NULL;
+
     FillWindowPixelBuffer(task->tWindowId, PIXEL_FILL(1));
-    snprintf(header, sizeof(header), "%s  %d-%d/%d  A:relancer B:retour", gDebugTools[task->tTool].id,
-             sLineCount == 0 ? 0 : task->tScroll + 1, min(task->tScroll + RESULT_LINES_SHOWN, sLineCount), sLineCount);
+    if (selectable)
+        snprintf(header, sizeof(header), "%s %d/%d A:ok L/R B:retour", gDebugTools[task->tTool].id,
+                 sLineCount == 0 ? 0 : task->tCursor + 1, sLineCount);
+    else
+        snprintf(header, sizeof(header), "%s  %d-%d/%d  A:relancer B:retour", gDebugTools[task->tTool].id,
+                 sLineCount == 0 ? 0 : task->tScroll + 1, min(task->tScroll + RESULT_LINES_SHOWN, sLineCount), sLineCount);
     DebugTools_ToGameText(gameText, header, sizeof(gameText));
     AddTextPrinterParameterized3(task->tWindowId, FONT_SMALL, 2, 0, sHeaderColors, TEXT_SKIP_DRAW, gameText);
     for (i = 0; i < RESULT_LINES_SHOWN && task->tScroll + i < sLineCount; i++)
-        AddTextPrinterParameterized3(task->tWindowId, FONT_SMALL, 2, RESULT_LINE_HEIGHT + 1 + i * RESULT_LINE_HEIGHT,
-                                     sLineColors, TEXT_SKIP_DRAW, sLines[task->tScroll + i]);
+    {
+        u32 y = RESULT_LINE_HEIGHT + 1 + i * RESULT_LINE_HEIGHT;
+
+        if (selectable && task->tScroll + i == (u32)task->tCursor)
+        {
+            DebugTools_ToGameText(gameText, ">", sizeof(gameText));
+            AddTextPrinterParameterized3(task->tWindowId, FONT_SMALL, 2, y, sLineColors, TEXT_SKIP_DRAW, gameText);
+        }
+        AddTextPrinterParameterized3(task->tWindowId, FONT_SMALL, selectable ? 10 : 2, y, sLineColors, TEXT_SKIP_DRAW,
+                                     sLines[task->tScroll + i]);
+    }
     CopyWindowToVram(task->tWindowId, COPYWIN_FULL);
 }
 
@@ -270,12 +289,76 @@ static void RunTool(u8 taskId)
     u32 i, length;
 
     length = snprintf(line, sizeof(line), "%s", tool->id);
-    for (i = 0; i < tool->argCount && length < sizeof(line); i++)
+    for (i = 0; i < (u32)task->tArgCount && length < sizeof(line); i++)
         length += snprintf(line + length, sizeof(line) - length, " %d", (int)sArgs[i]);
     DebugTools_RunLine(line, &out);
     SplitOutput();
+    if (task->tCursor >= sLineCount)
+        task->tCursor = sLineCount > 0 ? sLineCount - 1 : 0;
     if (task->tScroll + RESULT_LINES_SHOWN > sLineCount)
         task->tScroll = sLineCount > RESULT_LINES_SHOWN ? sLineCount - RESULT_LINES_SHOWN : 0;
+}
+
+// Le curseur d'une commande qui a select, visible
+static void MoveCursor(u8 taskId, s32 lines)
+{
+    struct Task *task = &gTasks[taskId];
+    s32 cursor = task->tCursor + lines;
+
+    if (cursor >= (s32)sLineCount)
+        cursor = sLineCount - 1;
+    if (cursor < 0)
+        cursor = 0;
+    task->tCursor = cursor;
+    if (cursor < task->tScroll)
+        task->tScroll = cursor;
+    else if (cursor >= task->tScroll + RESULT_LINES_SHOWN)
+        task->tScroll = cursor - RESULT_LINES_SHOWN + 1;
+    DrawResult(taskId);
+}
+
+// A, L, R sur la ligne du curseur ; B d'une catégorie ouverte revient à la liste, curseur dessus. FALSE : la touche
+// n'est pas pour select
+static bool32 HandleSelectInput(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    const struct DebugTool *tool = &gDebugTools[task->tTool];
+    u32 argCount = task->tArgCount;
+
+    if (JOY_REPEAT(DPAD_DOWN))
+        MoveCursor(taskId, 1);
+    else if (JOY_REPEAT(DPAD_UP))
+        MoveCursor(taskId, -1);
+    else if (JOY_REPEAT(DPAD_RIGHT))
+        MoveCursor(taskId, RESULT_LINES_SHOWN);
+    else if (JOY_REPEAT(DPAD_LEFT))
+        MoveCursor(taskId, -RESULT_LINES_SHOWN);
+    else if (JOY_NEW(A_BUTTON | L_BUTTON | R_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        tool->select(sArgs, &argCount, task->tCursor, JOY_NEW(A_BUTTON) ? 0 : JOY_NEW(L_BUTTON) ? -1 : 1);
+        if (argCount != (u32)task->tArgCount)
+        {
+            task->tArgCount = argCount;
+            task->tCursor = 0;
+            task->tScroll = 0;
+        }
+        RunTool(taskId);
+        DrawResult(taskId);
+    }
+    else if (JOY_NEW(B_BUTTON) && task->tArgCount > tool->argCount)
+    {
+        PlaySE(SE_SELECT);
+        task->tArgCount--;
+        RunTool(taskId);
+        task->tCursor = 0;
+        MoveCursor(taskId, sArgs[task->tArgCount]);
+    }
+    else
+    {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 static void ShowResult(u8 taskId)
@@ -287,6 +370,8 @@ static void ShowResult(u8 taskId)
     SetStandardWindowBorderStyle(task->tWindowId, FALSE);
     task->tState = STATE_RESULT;
     task->tScroll = 0;
+    task->tCursor = 0;
+    task->tArgCount = gDebugTools[task->tTool].argCount;
     RunTool(taskId);
     DrawResult(taskId);
     ScheduleBgCopyTilemapToVram(0);
@@ -360,8 +445,18 @@ static void Task_DebugToolsMenu(u8 taskId)
     struct Task *task = &gTasks[taskId];
     s32 input;
 
+    if (task->tWaitA)
+    {
+        if (!JOY_HELD(A_BUTTON))
+            task->tWaitA = FALSE;
+        return;
+    }
     switch (task->tState)
     {
+    case STATE_OPEN:
+        if (!JOY_HELD(A_BUTTON))
+            ShowCategories(taskId);
+        break;
     case STATE_CATEGORIES:
         input = ListMenu_ProcessInput(task->tListTaskId);
         if (input == LIST_NOTHING_CHOSEN)
@@ -399,6 +494,8 @@ static void Task_DebugToolsMenu(u8 taskId)
         HandleArgsInput(taskId);
         break;
     case STATE_RESULT:
+        if (gDebugTools[task->tTool].select != NULL && HandleSelectInput(taskId))
+            return;
         if (JOY_REPEAT(DPAD_DOWN))
             ScrollResult(taskId, 1);
         else if (JOY_REPEAT(DPAD_UP))
@@ -433,7 +530,7 @@ void DebugToolsMenu_Open(void)
 {
     u8 taskId = CreateTask(Task_DebugToolsMenu, 80);
 
-    ShowCategories(taskId);
+    gTasks[taskId].tState = STATE_OPEN;
 }
 
 void DebugToolsMenu_OpenResult(const char *id)
@@ -448,6 +545,7 @@ void DebugToolsMenu_OpenResult(const char *id)
     }
     gTasks[taskId].tTool = tool - gDebugTools;
     gTasks[taskId].tFromDebug = TRUE;
+    gTasks[taskId].tWaitA = TRUE;
     ShowResult(taskId);
 }
 

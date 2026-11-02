@@ -34,19 +34,43 @@ FRAMES_PER_STEP = 20000
 MAX_FRAMES = 50_000_000
 # Ce que dit une interaction, gardé dans l'atlas (les textes de plus servent rarement)
 MAX_TEXTS = 40
+# Les états de partie de l'exploration (--etat), posés après le chargement de la sauvegarde de début de partie : des
+# actions du menu DEBUG (jeu.debug, par leur nom) et des drapeaux (scripts.flag, par leur nom)
+STATES = {
+    "debut": [],
+    # L'arrivée à Kanto dans le vrai jeu : le ferry ne part qu'après la Ligue de Hoenn
+    "champion": [("scripts.flag", "FLAG_SYS_GAME_CLEAR", 1), ("scripts.flag", "FLAG_SYS_POKEDEX_GET", 1),
+                 ("scripts.flag", "FLAG_SYS_POKENAV_GET", 1)]
+                + [("scripts.flag", f"FLAG_BADGE0{i}_GET", 1) for i in range(1, 9)],
+    # Les deux Ligues finies, comme le testeur avec le menu DEBUG
+    "fin": [("jeu.debug", "Débloquer les 2 POKéDEX"), ("jeu.debug", "Ajout objets"), ("jeu.debug", "Pass îles Sevii"),
+            ("jeu.debug", "Deux Ligues finies"), ("jeu.debug", "POKé MONTURE + badges")],
+}
+
+
+def apply_state(game, state):
+    """Pose l'état de partie (STATES) ; une action ou un drapeau inconnu est une erreur."""
+    actions = {line.split(" ", 1)[1]: int(line.split(" ", 1)[0]) for line in game.dev("jeu.debug").splitlines()}
+    for command, name, *value in STATES[state]:
+        reply = game.dev(command, actions[name]) if command == "jeu.debug" else game.dev(command, name, *value)
+        if "refuse" in reply:
+            raise GameError(f"état {state} : {command} {name} : {reply.strip()}")
+
+
 # Les écrans qui durent (Panthéon, crédits) : on les laisse aller au bout
 LONG_SCREENS = re.compile(r"HallOfFame|Hof|Credits")
 # Les écrans d'un défi lancé par un PNJ (Zone de Combat, Tentes, concours) : ils ne se quittent qu'en jouant le défi
-CHALLENGE_SCREENS = re.compile(r"SelectScreen|Swap_|Contest|PyramidBag|DomeTourney|ArenaFunction|Factory")
+CHALLENGE_SCREENS = re.compile(r"SelectScreen|Swap_|Contest|PyramidBag|DomeTourney|ArenaFunction|Factory|Blender")
 # Les attaques du MEWTWO des combats (Explorer.give_mewtwo)
 STRONG_MOVES = ("MOVE_PSYCHIC", "MOVE_ICE_BEAM", "MOVE_THUNDERBOLT", "MOVE_FLAMETHROWER")
 # Les salles où l'on n'entre que pendant un défi (Zone de Combat, Tentes, Mont Combat), un concours, un link ou avec
-# un dresseur E-Reader : y
+# un dresseur E-Reader, et les Bases Secrètes (chargées avec la base d'un joueur, ou reçue par Record Mixing) : y
 # arriver par téléport, hors défi, n'a pas de sens (combat sans données, plantage). Elles sont à tester par un vrai
 # défi ; l'explorateur les liste à part.
 CHALLENGE_ROOMS = re.compile(r"BattleTent(Corridor|BattleRoom)$|^BattleColosseum|^TradeCenter$|^RecordCorner$|"
                              r"^UnionRoom$|^(Unused)?ContestHall|^SevenIsland_House_Room2$|"
-                             r"^SootopolisCity_MysteryEventsHouse_B1F$|^TrainerTower_(\dF|Roof|Elevator)$|^BattlePyramidSquare|^TrainerHill_(\dF|Roof|Elevator)$|"
+                             r"^SootopolisCity_MysteryEventsHouse_B1F$|^TrainerTower_(\dF|Roof|Elevator)$|"
+                             r"^SecretBase_|^BattlePyramidSquare|^TrainerHill_(\dF|Roof|Elevator)$|"
                              r"^BattleFrontier_Battle\w*(Elevator|Corridor|BattleRoom|PartnerRoom|Floor|Top|"
                              r"ThreePathRoom|Room(Normal|Final|WildMons))$")
 
@@ -154,8 +178,8 @@ def texts_since(game, before):
 
 
 class Explorer:
-    def __init__(self, binary, out_dir, save):
-        self.binary, self.out_dir, self.save = binary, out_dir, save
+    def __init__(self, binary, out_dir, save, state="debut"):
+        self.binary, self.out_dir, self.save, self.state = binary, out_dir, save, state
         self.game = None
         self.starts = 0
 
@@ -171,6 +195,7 @@ class Explorer:
         continue_game(self.game)
         self.give_mewtwo()
         self.game.dev("jeu.rencontres", 0)
+        apply_state(self.game, self.state)
         # Texte rapide, sans animations de combat (OPTION_TEXT_SPEED, OPTION_BATTLE_SCENE_OFF) : les combats de
         # la Ligue tiennent dans le budget
         self.game.dev("jeu.options", 0, 2)
@@ -388,8 +413,8 @@ class Explorer:
         return result
 
 
-def run_batch(binary, names, out_dir, save, talk):
-    explorer = Explorer(binary, out_dir, save)
+def run_batch(binary, names, out_dir, save, talk, state="debut"):
+    explorer = Explorer(binary, out_dir, save, state)
     results = []
     for name in names:
         try:
@@ -484,9 +509,14 @@ def main():
     parser.add_argument("--jobs", type=int, default=max(1, (os.cpu_count() or 2) // 2))
     parser.add_argument("--lot", type=int, default=8, help="cartes par jeu")
     parser.add_argument("--sans-parler", action="store_true", help="seulement l'arrivée et la capture")
-    parser.add_argument("--out", default=os.path.join(BUILD_DIR, "crawl"))
+    parser.add_argument("--etat", default="debut", choices=sorted(STATES),
+                        help="état de partie : debut (sauvegarde de début), champion (Hoenn fini, l'arrivée à Kanto), "
+                             "fin (les deux Ligues)")
+    parser.add_argument("--out", default=None, help="par défaut build/headless/crawl (crawl-ETAT hors debut)")
     parser.add_argument("--rapport-seul", action="store_true", help="refait rapport.txt depuis atlas.json")
     args = parser.parse_args()
+    if args.out is None:
+        args.out = os.path.join(BUILD_DIR, "crawl" if args.etat == "debut" else f"crawl-{args.etat}")
 
     if args.rapport_seul:
         with open(os.path.join(args.out, "atlas.json"), encoding="utf-8") as f:
@@ -514,7 +544,7 @@ def main():
     results = []
     with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
         futures = [pool.submit(run_batch, binary, batch, os.path.join(args.out, f"lot_{i:03}"), save,
-                               not args.sans_parler) for i, (batch, save) in enumerate(batches)]
+                               not args.sans_parler, args.etat) for i, (batch, save) in enumerate(batches)]
         for done, future in enumerate(concurrent.futures.as_completed(futures), 1):
             results += future.result()
             print(f"  {done}/{len(batches)} lots, {len(results)} cartes, {time.time() - begin:.0f} s", flush=True)

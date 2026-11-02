@@ -37,6 +37,9 @@ struct DebugTool
     const char *help;        // ce que fait la commande et ses arguments
     u8 argCount;             // arguments obligatoires (nombres)
     void (*run)(const s32 *args, u32 argCount, struct DebugToolsOutput *out);
+    // Facultatif : dans le menu DEBUG, un curseur sur les lignes du résultat (une ligne de texte chacune) ; A (delta
+    // 0), L ou R (delta -1 / +1) agit sur la ligne, et peut ajouter des arguments (ouvrir une catégorie)
+    void (*select)(s32 *args, u32 *argCount, u32 line, s32 delta);
 };
 
 extern const struct DebugTool gDebugTools[];

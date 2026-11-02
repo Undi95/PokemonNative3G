@@ -8,6 +8,8 @@
 cd "$(dirname "$0")"
 ASAN=1; [ "$1" = "--no-asan" ] && { ASAN=0; shift; }
 P="$(pwd -W 2>/dev/null || pwd)"; FAIL=0
+echo "== noms des drapeaux, variables et dresseurs des outils de debug (src/data/debug_names.h)"
+python tools/debug_names.py --check || FAIL=1
 echo "== 1/2 : suite sur out/winwsl/pokeemeraude64.exe"
 python test/headless/suite.py out/winwsl/pokeemeraude64.exe "$@" | grep -v "^  " || FAIL=1
 echo "== rapport de bug rejouable (console, rapport, rejeu identique)"

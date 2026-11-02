@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "global.h"
 #include "debug_tools.h"
@@ -12,6 +13,7 @@
 #ifdef KANTO_DEBUG_START
 #include "gba/m4a_internal.h"
 #include "battle.h"
+#include "battle_setup.h"
 #include "day_night.h"
 #include "debug_menu.h"
 #include "debug_checks.h"
@@ -44,6 +46,25 @@
 #include "window.h"
 #include "constants/characters.h"
 #include "constants/moves.h"
+#include "constants/flags.h"
+#include "constants/vars.h"
+#include "constants/kanto.h"
+#include "constants/kanto_flags_vars.h"
+#include "constants/opponents.h"
+#include "constants/kanto_trainers.h"
+
+// Les noms des drapeaux, variables et dresseurs (tools/debug_names.py), par catégorie
+enum { DEBUG_NAME_FLAG, DEBUG_NAME_VAR, DEBUG_NAME_TRAINER };
+
+struct DebugName
+{
+    u16 id;             // le drapeau, la variable, ou le numéro du dresseur (son drapeau : HasTrainerBeenFought)
+    u8 category;        // sDebugNameCategories
+    u8 kind;            // DEBUG_NAME_*
+    const char *name;
+};
+
+#include "data/debug_names.h"
 
 extern void AgbMain(void);
 
@@ -414,18 +435,148 @@ static void Cmd_RunScript(const s32 *args, u32 argCount, struct DebugToolsOutput
     DebugTools_Print(out, "script @%d lance\n", args[0]);
 }
 
+// --- Drapeaux, variables et dresseurs, par nom et par catégorie ----------------------------------------------------
+
+static s32 GetNameState(const struct DebugName *entry)
+{
+    switch (entry->kind)
+    {
+    case DEBUG_NAME_FLAG:    return FlagGet(entry->id);
+    case DEBUG_NAME_VAR:     return VarGet(entry->id);
+    default:                 return HasTrainerBeenFought(entry->id);
+    }
+}
+
+// Le nom sans « FLAG_ », « VAR_ », « TRAINER_ » ni « KANTO_ » (la catégorie dit déjà la région)
+static const char *ShortName(const char *name)
+{
+    static const char *const sPrefixes[] = {"FLAG_KANTO_", "VAR_KANTO_", "TRAINER_KANTO_", "FLAG_", "VAR_", "TRAINER_"};
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sPrefixes); i++)
+    {
+        if (strncmp(name, sPrefixes[i], strlen(sPrefixes[i])) == 0)
+            return name + strlen(sPrefixes[i]);
+    }
+    return name;
+}
+
+// La N-ième entrée de la catégorie, ou NULL
+static const struct DebugName *GetCategoryEntry(u32 category, u32 index)
+{
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sDebugNames); i++)
+    {
+        if (sDebugNames[i].category == category && index-- == 0)
+            return &sDebugNames[i];
+    }
+    return NULL;
+}
+
+// Sans argument : les catégories (combien sont à ON, ou non nulles). [CAT] : chaque drapeau (ON / --), dresseur
+// (battu / --) ou variable (= valeur) de la catégorie. Dans le menu, A les bascule (L / R : variable -1 / +1)
+static void Cmd_Names(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    u32 i, category, count, set;
+    const struct DebugName *entry;
+
+    if (argCount == 0)
+    {
+        for (category = 0; category < ARRAY_COUNT(sDebugNameCategories); category++)
+        {
+            for (count = 0, set = 0, i = 0; i < ARRAY_COUNT(sDebugNames); i++)
+            {
+                if (sDebugNames[i].category != category)
+                    continue;
+                count++;
+                set += GetNameState(&sDebugNames[i]) != 0;
+            }
+            DebugTools_Print(out, "%s : %u (%u ON)\n", sDebugNameCategories[category], count, set);
+        }
+        return;
+    }
+    for (i = 0; (entry = GetCategoryEntry(args[0], i)) != NULL; i++)
+    {
+        if (entry->kind == DEBUG_NAME_VAR)
+            DebugTools_Print(out, "%.34s = %d\n", ShortName(entry->name), GetNameState(entry));
+        else
+            DebugTools_Print(out, "%.38s %s\n", ShortName(entry->name), GetNameState(entry) ? "ON" : "--");
+    }
+}
+
+// Menu DEBUG, A (delta 0) ou L / R (delta -1 / +1) sur une ligne : une catégorie s'ouvre ; un drapeau ou un
+// dresseur bascule ; une variable change de delta (A : remise à 0)
+static void Select_Names(s32 *args, u32 *argCount, u32 line, s32 delta)
+{
+    const struct DebugName *entry;
+
+    if (*argCount == 0)
+    {
+        if (line < ARRAY_COUNT(sDebugNameCategories) && delta == 0)
+        {
+            args[0] = line;
+            *argCount = 1;
+        }
+        return;
+    }
+    if ((entry = GetCategoryEntry(args[0], line)) == NULL)
+        return;
+    switch (entry->kind)
+    {
+    case DEBUG_NAME_FLAG:
+        FlagGet(entry->id) ? FlagClear(entry->id) : FlagSet(entry->id);
+        break;
+    case DEBUG_NAME_VAR:
+        VarSet(entry->id, delta == 0 ? 0 : VarGet(entry->id) + delta);
+        break;
+    default:
+        HasTrainerBeenFought(entry->id) ? ClearTrainerFlag(entry->id) : SetTrainerFlag(entry->id);
+        break;
+    }
+}
+
+// Un nom de drapeau, de variable ou de dresseur (« FLAG_SYS_GAME_CLEAR ») -> son numéro ; FALSE s'il n'existe pas
+static bool8 GetNameValue(const char *name, s32 *value)
+{
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sDebugNames); i++)
+    {
+        if (strcmp(sDebugNames[i].name, name) == 0)
+        {
+            *value = sDebugNames[i].id;
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+// Le nom d'un drapeau ou d'une variable, « ? » sans nom
+static const char *GetIdName(u8 kind, u16 id)
+{
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sDebugNames); i++)
+    {
+        if (sDebugNames[i].kind == kind && sDebugNames[i].id == id)
+            return sDebugNames[i].name;
+    }
+    return "?";
+}
+
 static void Cmd_Flag(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
     if (argCount >= 2)
         args[1] ? FlagSet(args[0]) : FlagClear(args[0]);
-    DebugTools_Print(out, "flag %d = %d\n", args[0], FlagGet(args[0]));
+    DebugTools_Print(out, "flag %d %s = %d\n", args[0], GetIdName(DEBUG_NAME_FLAG, args[0]), FlagGet(args[0]));
 }
 
 static void Cmd_Var(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
     if (argCount >= 2)
         VarSet(args[0], args[1]);
-    DebugTools_Print(out, "var %#x = %d\n", args[0], VarGet(args[0]));
+    DebugTools_Print(out, "var %#x %s = %d\n", args[0], GetIdName(DEBUG_NAME_VAR, args[0]), VarGet(args[0]));
 }
 
 // --- Joueur ---------------------------------------------------------------------------------------------------
@@ -630,6 +781,30 @@ static void Cmd_TextPrinters(const s32 *args, u32 argCount, struct DebugToolsOut
     }
 }
 
+// Les actions du menu DEBUG ; [N] : fait l'action N (celles sans écran : soins, objets, drapeaux de fin de jeu…)
+static void Cmd_DebugAction(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    const u8 *name;
+    char utf8[64];
+    u32 i;
+
+    if (argCount >= 1)
+    {
+        name = DebugMenu_GetActionName(args[0]);
+        DebugTools_GameTextToUtf8(utf8, name != NULL ? name : (const u8 *)"\xFF", sizeof(utf8));
+        if ((u32)args[0] < 256 && DebugMenu_ApplyAction(args[0]))
+            DebugTools_Print(out, "fait : %d %s\n", args[0], utf8);
+        else
+            DebugTools_Print(out, "refuse : %d %s a besoin du menu\n", args[0], utf8);
+        return;
+    }
+    for (i = 0; (name = DebugMenu_GetActionName(i)) != NULL; i++)
+    {
+        DebugTools_GameTextToUtf8(utf8, name, sizeof(utf8));
+        DebugTools_Print(out, "%u %s\n", i, utf8);
+    }
+}
+
 // Le menu Start : ses entrées (MENU_ACTION_* de start_menu.c) et le curseur, pour y aller sans compter
 static void Cmd_StartMenu(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
@@ -716,12 +891,14 @@ static const u8 sName_Options[] = _("Options");
 static const u8 sName_NoClip[] = _("Traverser les murs");
 static const u8 sName_Encounters[] = _("Rencontres sauvages");
 static const u8 sName_StartMenu[] = _("Menu Start");
+static const u8 sName_DebugAction[] = _("Actions du menu DEBUG");
 static const u8 sName_MapInfo[] = _("Carte");
 static const u8 sName_MapObjects[] = _("Objets de la carte");
 static const u8 sName_ScriptContext[] = _("Scripts en cours");
 static const u8 sName_RunScript[] = _("Lancer un script");
 static const u8 sName_Flag[] = _("Flag");
 static const u8 sName_Var[] = _("Variable");
+static const u8 sName_Names[] = _("Drapeaux et variables");
 static const u8 sName_Party[] = _("Équipe");
 static const u8 sName_Bag[] = _("Sac et argent");
 static const u8 sName_SetMove[] = _("Donner une capacité");
@@ -746,12 +923,14 @@ const struct DebugTool gDebugTools[] =
     {"jeu.murs", DEBUG_TOOLS_GAME, sName_NoClip, "[1|0] : traverser les murs (comme le menu DEBUG)", 0, Cmd_NoClip},
     {"jeu.rencontres", DEBUG_TOOLS_GAME, sName_Encounters, "[1|0] : Pokemon sauvages oui / non", 0, Cmd_Encounters},
     {"jeu.menustart", DEBUG_TOOLS_GAME, sName_StartMenu, "entrees du menu Start et curseur", 0, Cmd_StartMenu},
+    {"jeu.debug", DEBUG_TOOLS_GAME, sName_DebugAction, "actions du menu DEBUG ; [N] fait l'action N", 0, Cmd_DebugAction},
     {"carte.info", DEBUG_TOOLS_MAP, sName_MapInfo, "carte, region, joueur, connexions", 0, Cmd_MapInfo},
     {"carte.objets", DEBUG_TOOLS_MAP, sName_MapObjects, "objets actifs de la carte", 0, Cmd_MapObjects},
     {"scripts.contexte", DEBUG_TOOLS_SCRIPT, sName_ScriptContext, "contextes de script global et immediat", 0, Cmd_ScriptContext},
     {"scripts.lancer", DEBUG_TOOLS_SCRIPT, sName_RunScript, "@ADRESSE : lance ce script (game.script(NOM) dans le banc)", 1, Cmd_RunScript},
     {"scripts.flag", DEBUG_TOOLS_SCRIPT, sName_Flag, "FLAG [VALEUR] : lit ou met un flag", 1, Cmd_Flag},
     {"scripts.var", DEBUG_TOOLS_SCRIPT, sName_Var, "VAR [VALEUR] : lit ou met une variable", 1, Cmd_Var},
+    {"scripts.drapeaux", DEBUG_TOOLS_SCRIPT, sName_Names, "[CAT] : drapeaux, dresseurs, variables par categorie ; menu : A bascule, L/R -/+", 0, Cmd_Names, Select_Names},
     {"joueur.equipe", DEBUG_TOOLS_PLAYER, sName_Party, "equipe : espece, PV, dresseur d'origine, lieu de rencontre", 0, Cmd_Party},
     {"joueur.sac", DEBUG_TOOLS_PLAYER, sName_Bag, "argent et poches du sac", 0, Cmd_Bag},
     {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE : donne la capacite (et ses PP)", 3, Cmd_SetMove},
@@ -810,9 +989,9 @@ const struct DebugTool *DebugTools_Find(const char *id)
 bool8 DebugTools_RunLine(const char *line, struct DebugToolsOutput *out)
 {
     char id[32] = "";
+    char words[DEBUG_TOOLS_MAX_ARGS][64];
     s32 args[DEBUG_TOOLS_MAX_ARGS] = {0};
-    long values[DEBUG_TOOLS_MAX_ARGS];
-    int count = sscanf(line, "%31s %li %li %li %li", id, &values[0], &values[1], &values[2], &values[3]) - 1;
+    int count = sscanf(line, "%31s %63s %63s %63s %63s", id, words[0], words[1], words[2], words[3]) - 1;
     const struct DebugTool *tool;
     int i;
 
@@ -829,8 +1008,18 @@ bool8 DebugTools_RunLine(const char *line, struct DebugToolsOutput *out)
         DebugTools_Print(out, "%s : %d argument(s) attendu(s) : %s", id, tool->argCount, tool->help);
         return FALSE;
     }
+    // Un argument est un nombre, ou le nom d'un drapeau, d'une variable ou d'un dresseur (FLAG_SYS_GAME_CLEAR)
     for (i = 0; i < count && i < DEBUG_TOOLS_MAX_ARGS; i++)
-        args[i] = values[i];
+    {
+        char *end;
+
+        args[i] = strtol(words[i], &end, 0);
+        if (*end != '\0' && !GetNameValue(words[i], &args[i]))
+        {
+            DebugTools_Print(out, "%s : ni un nombre ni un nom connu (FLAG_, VAR_, TRAINER_)", words[i]);
+            return FALSE;
+        }
+    }
     tool->run(args, count < 0 ? 0 : count, out);
     return TRUE;
 }

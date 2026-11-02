@@ -43,6 +43,17 @@ Toutes à deux valeurs, 0 = HOENN (Émeraude), 1 = KANTO (RF). Index de `jeu.opt
 de RF : vérifier la police des listes et des textes de plusieurs lignes (le détecteur « texte coupé » et la grille le
 montrent).
 
+## États de partie explorés (`crawl.py --etat`)
+
+| État | Ce que c'est | Dernier passage (2026-11-02) |
+|---|---|---|
+| `debut` | sauvegarde de début de partie de chaque région | 845 cartes, 4 604 interactions, 0 anomalie (police Hoenn et KANTO) |
+| `champion` | Hoenn fini (`FLAG_SYS_GAME_CLEAR`, 8 badges, Pokédex, PokéNav) : l'arrivée réelle à Kanto, le ferry ne part qu'après la Ligue de Hoenn | 835 cartes, 4 586 interactions, 837 combats, 0 anomalie |
+| `fin` | les deux Ligues finies, comme le menu DEBUG (« Deux Ligues finies », POKé MONTURE + badges, passes, Pokédex, objets) | 835 cartes, 4 586 interactions, 862 combats, 0 anomalie |
+
+L'histoire de Hoenn elle-même (variables d'avancement) reste celle du début : un état « fin » exact demande une vraie
+sauvegarde de fin de partie (`crawl.py` part de n'importe quelle sauvegarde : fixture, ou `--etat` + drapeaux).
+
 ## Règle pour les numéros de dresseurs
 
 Les dresseurs de Kanto suivent ceux d'Émeraude (`KANTO_TRAINERS_START` = 864 à 1606). Deux numéros sont aussi ceux
@@ -66,6 +77,9 @@ Limites connues, qui restent dans ses « interactions en erreur » sans être de
   Centre Troc, Union Room) : on n'y entre que pendant un défi. Par téléport, hors défi, un combat démarre sans
   données (division par zéro en `CB2_HandleStartBattle`, 0xc0000094) : pas un chemin du jeu, mais à tester par un vrai
   défi (phase 5).
+- **Bases Secrètes** (`SecretBase_*`) : la salle se charge avec la base du joueur, ou une base reçue par Record Mixing
+  (link). Par téléport, sans base chargée, le dresseur de la base lance un combat de Base Secrète sans données
+  (division par zéro dans son équipe) : à vérifier avec le Record Mixing, en phase 5 (link).
 - **Dresseur E-Reader** de l'Île 7 (`SevenIsland_House_Room2`, où l'on n'entre par `SevenIsland_House_Room1` que si
   un dresseur E-Reader est enregistré) : `BufferEReaderTrainerGreeting` et `StartSpecialBattle` sont encore des stubs
   (link / E-Reader : à porter, désactivés).
