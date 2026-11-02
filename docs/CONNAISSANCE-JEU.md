@@ -107,9 +107,46 @@ combat (`kanto_battle_bg.c`), nom du rival (`battle_message.c`). Pour repérer l
 | Action 7 | SE RAP. | PIERRE : capture × 2 (20 au plus), fuite × 2 tant qu'il est fâché |
 | Tour du Pokémon | « surveille attentivement » | « surveille », « se fâche », « mange » (`gSafariReactionStringIds`, animation `B_ANIM_SAFARI_REACTION`) |
 | Sortie | émission « Safari » de la télé de Hoenn | rien |
+| Fin (temps, balls, PARTIR) | `SafariZone_EventScript_*` : entrée de la Route 121, `VAR_SAFARI_ZONE_STATE` | `Kanto_SafariZone_EventScript_*` (`data/kanto/data/scripts/safari_zone.inc`) : entrée de Parmanie, `VAR_KANTO_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE` (1 ou 3 : « Bonne chasse? ») |
 
 Tout le Safari de Kanto passe par `Fusion_IsInKanto()` (battle_util.c, battle_main.c, battle_ai_script_commands.c,
-battle_controller_safari.c, safari_zone.c, start_menu.c). Scénario : `kanto_safari`.
+battle_controller_safari.c, safari_zone.c, start_menu.c). Avant le 2026-11-02, la fin du Safari de Kanto lançait les
+scripts d'Émeraude et envoyait le joueur à Hoenn (Route 121) ; ceux de RF avaient été retirés comme « jamais
+appelés » — un script jamais appelé peut être le symptôme d'un aiguillage manquant. Scénarios : `kanto_safari`,
+`kanto_safari_exit` (`jeu.safari` met les pas et les balls).
+
+## Sons de Kanto
+
+L'identité d'un son est son **nom d'origine** (commentaire de `include/constants/songs.h`, « `// MUS_ME_ASA` »), pas
+sa constante : RF et Émeraude ont 17 constantes de même nom mais de son différent. `MUS_HEAL` de RF = `MUS_ME_ASA` =
+`MUS_HEAL` d'Émeraude, alors que `MUS_RG_HEAL` est `MUS_HEAL_UNUSED` de RF (jamais joué) ; `SE_SHOP` et `SE_DOOR` de RF
+sont `SE_RG_SHOP` et `SE_RG_DOOR` (ceux d'Émeraude sont `SE_RS_SHOP` et `SE_RS_DOOR` de RF) ; `MUS_GYM`, `MUS_VS_*`,
+`MUS_VICTORY_*`, `MUS_TITLE`… de RF sont les `MUS_RG_*`. Inversement Émeraude réutilise des noms d'origine pour ses
+propres morceaux (`MUS_AJITO` = repaire Aqua/Magma, `MUS_RG_AJITO` = repaire Rocket) : on prend la copie `RG_`
+d'abord. L'importeur des scripts (`tools/kanto/import_kanto.py`, `music` / `sound`) suit cette règle depuis le
+2026-11-02 ; avant, `MUS_X` devenait `MUS_RG_X` s'il existait et les `SE_` restaient tels quels.
+
+Corrigé le 2026-11-02 (scénario `kanto_sounds`) : toutes les portes de Kanto (porte d'Émeraude), la caisse des écrans
+de RF (boutique, vente au sac, boîte CT, sac à baies), du Casino de Céladopole, du Musée d'Argenta et de la photo de
+la carte de dresseur, la fanfare des soins hors Centre (toilettage de la sœur du rival, capitaine de l'Océane,
+`EventScript_OutOfCenterPartyHeal`).
+
+`python tools/audit_sons.py` (après `tools/audit_sons.sh`) :
+- **pieges** : il ne reste que des usages justifiés (machine à sous de Kanto : `SE_RS_SHOP` de RF ; Route Victoire
+  d'Émeraude, carte commune) ;
+- **fichiers** : 501 fichiers de RF ont les mêmes sons que leur copie ; les autres sont des cartes communes gardées
+  d'Émeraude (Colisée, Centre d'échange, Union : link), du code déplacé (ascenseurs dans `kanto_list_menu.c`,
+  Deoxys et trou de la Coupe dans `field_effect.c` / `fldeff_cut.c`), des choix de la fusion (POKé MONTURE au lieu de
+  la CS du capitaine, chute d'Émeraude) ou la démonstration du vieil homme, qui ouvre encore le sac d'Émeraude
+  (`Task_Bag_OldManTutorial` de RF, à porter) ;
+- **chansons** : 335 chansons de RF sur 346 sont identiques (octets joués) à leur équivalent dans la fusion. Les 11
+  autres : fin de piste plus tardive (`MUS_LEVEL_UP`, `MUS_OBTAIN_ITEM` : inaudible, la fanfare s'arrête au bout de
+  sa durée dans `sFanfares`, la même), priorité sur le lecteur de musique (sans effet), mini-jeu link
+  (`SE_RG_POKE_JUMP_FAILURE`), et 4 vraies différences de version de RF : `MUS_SLOTS_JACKPOT` et `MUS_SLOTS_WIN`
+  (volume 100 contre 90), `MUS_EVOLVED` (vélocités, une note), `SE_RG_CARD_FLIPPING` (une vélocité).
+- **instruments** : les samples de RF sont à 13 379 Hz (ceux d'Émeraude, les mêmes instruments, à 42 048 ou 44 100 Hz)
+  et sa batterie « rs » est recouverte par le groupe suivant au-delà de la note 40 ; les copies des musiques de RF
+  dans Émeraude (`mus_rg_*`) jouent donc avec les instruments d'Émeraude. Choix en attente de l'utilisateur.
 
 ## Easy Chat (messages en mots choisis)
 

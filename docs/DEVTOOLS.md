@@ -22,6 +22,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | Jeu | `jeu.etat` | callbacks (cb1, cb2, VBlank, HBlank), fondu, verrous, tâches actives |
 | | `jeu.options [N V]` | toutes les options (bits de la sauvegarde) ; `N V` met l'option N à V |
 | | `jeu.murs [1\|0]`, `jeu.rencontres [1\|0]` | traverser les murs, Pokémon sauvages (les réglages du menu DEBUG) |
+| | `jeu.safari [PAS [BALLS]]` | Parc Safari : en mode Safari ou non, pas restants, SAFARI BALLS ; les met (fin du temps ou des balls en un pas, scénario `kanto_safari_exit`) |
 | | `jeu.menustart` | entrées du menu Start (`MENU_ACTION_*`) et curseur (`game.start_menu()` dans le banc) |
 | | `jeu.debug [N]` | les actions du menu DEBUG ; `N` fait l'action N (celles sans écran : soins, objets, Pokédex, passes, « Deux Ligues finies », POKé MONTURE + badges…), le même code que le menu (`DebugMenu_ApplyAction`) |
 | Carte | `carte.info` | carte, section, région, disposition, météo, musique, joueur, connexions |
@@ -128,11 +129,16 @@ CONNAISSANCE-JEU.md).
 
 ### Sons
 
-Chaque son lancé (`m4aSongNumStart` : PlaySE, sons des animations de combat `playsewithpan`, musiques) envoie un
-événement au banc (`TestState_OnSong`). Les effets sonores vont dans `game.sounds` et dans le journal
-(`SON SE_M_JUMP_KICK`) ; un scénario vérifie qu'un effet ajouté a son son avec `expect_sound(game, "SE_…", image)`
-(kanto_safari, battle_levelup_stripes, kanto_league_mugshot). Les musiques gardent leur événement `MUSIQUE`
-(`expect_song`). `fight_battle(game, watch=f)` appelle `f(game)` à chaque tour de sa boucle : un scénario y capture
+Chaque son lancé (`m4aSongNumStart` : PlaySE, sons des animations de combat `playsewithpan`, fanfares, musiques)
+envoie un événement au banc (`TestState_OnSong`). Il va dans `game.sounds` et dans le journal (`SON SE_M_JUMP_KICK`,
+`SON MUS_HEAL`) ; un scénario vérifie qu'un effet ou une fanfare a son son avec `expect_sound(game, "SE_…", image)`
+(kanto_safari, kanto_sounds, battle_levelup_stripes, kanto_league_mugshot). Une fanfare se joue sur un autre lecteur
+que la musique de la carte, qui garde son événement `MUSIQUE` (`expect_song`).
+
+`tools/audit_sons.sh` (Docker, voir son en-tête) puis `python tools/audit_sons.py [pieges|fichiers|chansons]` :
+les sons de Kanto sont-ils ceux de RF ? Constantes de même nom mais de son différent et leurs usages dans le code
+venu de RF, mêmes sons fichier par fichier, chansons compilées des deux jeux comparées, samples (voir
+CONNAISSANCE-JEU.md, « Sons de Kanto »). `fight_battle(game, watch=f)` appelle `f(game)` à chaque tour de sa boucle : un scénario y capture
 un moment précis du combat (menu des capacités, montée de niveau).
 
 ## Architecture

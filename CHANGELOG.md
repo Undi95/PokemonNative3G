@@ -42,6 +42,11 @@
   deux écrans ont tous les mots des deux jeux : ROUGE, VERT, OR, ARGENT, FEUILLE et FLAMME (groupe DRESSEUR) sont
   maintenant disponibles.
 - Club Événement Mystère de Kanto : un profil écrit à Kanto ne compte plus toujours comme la phrase secrète.
+- Parc Safari de Kanto : à la fin du temps, des SAFARI BALLS ou avec PARTIR, on revient à l'entrée de Parmanie (le jeu
+  envoyait à l'entrée du Parc Safari de la Route 121, à Hoenn).
+- Sons de Kanto : les portes, la caisse (boutique, vente, Casino, Musée, photo) et la fanfare des soins hors Centre
+  sont ceux de Rouge Feu (c'étaient des sons d'Émeraude de même nom, et pour les soins un morceau que Rouge Feu ne
+  joue jamais).
 - Combats : l'IA des dresseurs teste de nouveau les capacités connues exactement comme la cartouche (une lecture
   mal alignée la faisait « mieux » jouer sur PC et Android) ; plus de lecture hors limites à la fin d'un tour de
   combat double, ni dans l'animation de Métronome ; les confettis des résultats de concours ne lisent plus en dehors
