@@ -477,3 +477,44 @@ SaveDialogCB_PrintSavingDontTurnOffPower équivalente SaveSavingMessageCallback 
 SaveDialogCB_ReturnError équivalente SaveReturnErrorCallback (start_menu.c), même code
 SaveDialog_Wait60FramesThenCheckAButtonHeld équivalente SaveErrorTimer (start_menu.c), même attente
 task50_save_game équivalente SaveCallback (start_menu.c), boucle de sauvegarde
+# party_menu.c : écran d'équipe d'Émeraude (palette de RF avec MENUS) ; soins de RF avec SAC = KANTO (item_use.c,
+# KantoItemUseCB_*) ; tutoriel de CHEN écarté ; choix d'équipe des combats link et de la Tour de RF en link
+CursorCB_Cancel2 équivalente CursorCb_Cancel2 (party_menu.c), MENU_B_PRESSED = 255
+CursorCB_Item équivalente CursorCb_Item (party_menu.c), MENU_B_PRESSED = 255
+CursorCB_Mail équivalente CursorCb_Mail (party_menu.c), MENU_B_PRESSED = 255
+CursorCB_Store équivalente CursorCb_Store (party_menu.c), même dépôt
+CursorCB_FieldMove équivalente CursorCb_FieldMove (party_menu.c), badges de la région (HasBadgeForFieldMove), carte de vol de la région
+PartyMenuPrintText équivalente PrintMessage (party_menu.c), WIN_MSG = 6
+ItemUseCB_MedicineStep équivalente KantoItemUseCB_Medicine (item_use.c, SAC = KANTO) et ItemUseCB_Medicine (party_menu.c), + journal de RF
+ItemUseCB_RareCandyStep équivalente KantoItemUseCB_RareCandy (item_use.c, SAC = KANTO) et ItemUseCB_RareCandy (party_menu.c), + journal de RF
+ItemUseCB_TryRestorePP équivalente ItemUseCB_PPRecovery (party_menu.c), en combat ou non
+TryUsePPItemInBattle équivalente TryUsePPItem (party_menu.c), sac de RF hors combat compris ; + journal de RF
+Task_HandleRestoreWhichMoveInput équivalente Task_HandleWhichMoveInput (party_menu.c), même code
+CB2_ReturnToBerryPouchMenu équivalente KantoBag_TryGoToBagMenu (kanto_item_menu.c), ITEMMENULOCATION_LAST revient au sac à baies
+CB2_ReturnToTMCaseMenu équivalente KantoBag_TryGoToBagMenu (kanto_item_menu.c), ITEMMENULOCATION_LAST revient à la boîte CT
+EnterPartyFromItemMenuInBattle équivalente ChooseMonForInBattleItem (party_menu.c), sans la branche de CHEN
+CursorCB_Enter link choix de l'équipe des combats link / Tour de RF
+CursorCB_NoEntry link choix de l'équipe des combats link / Tour de RF
+DisplayPartyPokemonDataForChooseMultiple link choix de l'équipe des combats link / Tour de RF
+InitChooseMonsForBattle link choix de l'équipe des combats link / Tour de RF
+Task_ContinueChoosingMonsForBattle link choix de l'équipe des combats link / Tour de RF
+Task_ValidateChosenMonsForBattle link choix de l'équipe des combats link / Tour de RF
+SetSwappedHeldItemQuestLogEvent écartée journal de RF
+SetSwitchedPartyOrderQuestLogEvent écartée journal de RF
+SetUsedFieldMoveQuestLogEvent écartée journal de RF
+SetUsedFlyQuestLogEvent écartée journal de RF
+OpenPartyMenuInTutorialBattle écartée tutoriel du premier combat avec CHEN (Kanto = post-game)
+PartyMenu_Oak_PrintText écartée tutoriel du premier combat avec CHEN (Kanto = post-game)
+FirstBattleEnterParty_CreateWindowAndMsg1Printer écartée tutoriel du premier combat avec CHEN
+FirstBattleEnterParty_DestroyVoiceoverWindow écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_CreatePrinter écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_DarkenScreen écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_FadeNormal écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_LightenFirstMonIcon écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_RunPrinterMsg1 écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_RunPrinterMsg2 écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_StartPrintMsg2 écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_WaitDarken écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_WaitFadeIn écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_WaitFadeNormal écartée tutoriel du premier combat avec CHEN
+Task_FirstBattleEnterParty_WaitLightenFirstMonIcon écartée tutoriel du premier combat avec CHEN
