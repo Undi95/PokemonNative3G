@@ -209,6 +209,17 @@ static const struct TrainerHillChallenge *const sChallengeData[NUM_TRAINER_HILL_
     [HILL_MODE_EXPERT]  = &sChallenge_Expert,
 };
 
+#ifdef UBFIX
+// Les étages de chaque défi (SetUpDataStruct les suppose rangés juste après le défi)
+static const struct TrainerHillFloor *const sFloorsData[NUM_TRAINER_HILL_MODES] =
+{
+    [HILL_MODE_NORMAL]  = sFloors_Normal,
+    [HILL_MODE_VARIETY] = sFloors_Variety,
+    [HILL_MODE_UNIQUE]  = sFloors_Unique,
+    [HILL_MODE_EXPERT]  = sFloors_Expert,
+};
+#endif
+
 // Unused.
 static const u8 *const sFloorStrings[] =
 {
@@ -380,7 +391,14 @@ static void SetUpDataStruct(void)
         // after the field 'challenge'.
         // e.g. for HILL_MODE_NORMAL, it will copy sChallenge_Normal to sHillData->challenge and
         // it will copy sFloors_Normal to sHillData->floors
+    #ifdef UBFIX
+        // Sur PC, l'éditeur de liens range les données comme il veut : sFloors_Normal ne suit pas forcément
+        // sChallenge_Normal (étages illisibles, tuiles magenta, dresseurs absents). Deux copies séparées.
+        memcpy(&sHillData->challenge, sChallengeData[gSaveBlock1Ptr->trainerHill.mode], sizeof(sHillData->challenge));
+        memcpy(sHillData->floors, sFloorsData[gSaveBlock1Ptr->trainerHill.mode], sizeof(sHillData->floors));
+    #else
         CpuCopy32(sChallengeData[gSaveBlock1Ptr->trainerHill.mode], &sHillData->challenge, sizeof(sHillData->challenge) + sizeof(sHillData->floors));
+    #endif
         TrainerHillDummy();
     }
 }

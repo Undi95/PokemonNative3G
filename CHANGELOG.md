@@ -22,6 +22,9 @@
   d'Émeraude (Base Secrète, Tête de la Zone de Combat).
 - Crédits de Kanto : le métier et les noms s'écrivent de nouveau sur leurs lignes (depuis la 1.1, ils s'écrivaient
   l'un sur l'autre sur une seule ligne, « DiJunichi Masuda »).
+- Dôme de Combat : la fiche du joueur dans le tableau ne fait plus planter le jeu quand ses Pokémon n'ont aucun EV.
+- Mont Combat : les étages s'affichent de nouveau (tuiles magenta, dresseurs absents, joueur bloqué) ; ils étaient
+  lus au mauvais endroit sur PC et Android.
 
 ## Version 1.1 (1er novembre 2026)
 

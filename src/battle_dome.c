@@ -4588,7 +4588,18 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
         for (j = 0, i = 0; i < NUM_STATS; i++)
             j += allocatedArray[NUM_STATS + i];
         for (i = 0; i < NUM_STATS; i++)
+        {
+        #ifdef UBFIX
+            // The player's Pokémon may have no EVs at all (never battled, from the Day Care): the GBA's division
+            // routine gives 0 for a division by zero, the PC stops there
+            if (j == 0)
+            {
+                allocatedArray[i] = 0;
+                continue;
+            }
+        #endif
             allocatedArray[i] = (allocatedArray[NUM_STATS + i] * 100) / j;
+        }
     }
     // Same as above but for regular trainers instead of the frontier brain or player
     else
