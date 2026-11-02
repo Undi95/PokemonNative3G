@@ -59,6 +59,7 @@ static bool sTestMode = false;
 #ifdef KANTO_DEBUG_START
 // --devtools PORT (0 : sans) : console des outils de debug sur 127.0.0.1 (src/platform/devtools.c)
 static int sDevToolsPort = 7777;
+static u16 sFrameKeys; // les touches de l'image en cours (DevTools_FrameKeys)
 #endif
 // --kanto-start 1 : une nouvelle partie démarre à Bourg Palette (builds KANTO_DEBUG=1, tests)
 bool8 gKantoStart = FALSE;
@@ -187,6 +188,22 @@ int main(int argc, char **argv)
     ReadSaveFile(sSavePath);
     // Before AgbMain, whose RtcInit reads it
     InitInternalClock();
+#ifdef KANTO_DEBUG_START
+    // Rapport de bug rejouable (src/platform/devtools.c) : la session commence ici
+    if (!sTestMode)
+    {
+        static char reportDir[1024];
+#ifdef __ANDROID__
+        // Dossier de l'appli sur le stockage partagé (Android/data/…/files/rapports), lisible depuis un PC
+        const char *external = SDL_AndroidGetExternalStoragePath();
+
+        snprintf(reportDir, sizeof(reportDir), "%s/rapports/", external != NULL ? external : sDataDir);
+#else
+        snprintf(reportDir, sizeof(reportDir), "%srapports/", sDataDir);
+#endif
+        DevTools_StartSession(sSavePath, reportDir);
+    }
+#endif
 
     if (sTestMode)
         return RunTestMode();
@@ -327,6 +344,11 @@ int main(int argc, char **argv)
             {
                 //run game logic, draw frame and process DMAs and vblank
                 ENTER_VBLANK(); //you must be in VBlank before running a game tick
+#ifdef KANTO_DEBUG_START
+                // Les touches de cette image (et celles de la console), lues une fois et enregistrées pour le rapport
+                // de bug rejouable
+                sFrameKeys = DevTools_FrameKeys(Input_GetButtons(NULL));
+#endif
                 if (!RunMainLoop())
                 {
                     // Soft reset: drop the old sound, and start the next frame with MainLoop
@@ -669,7 +691,11 @@ u16 Platform_GetKeyInput(void)
 {
     if (sTestMode)
         return sTestButtons;
+#ifdef KANTO_DEBUG_START
+    return sFrameKeys;
+#else
     return Input_GetButtons(NULL);
+#endif
 }
 
 void VDraw(SDL_Texture *texture)

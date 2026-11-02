@@ -53,6 +53,8 @@ void DebugTools_ToGameText(u8 *dest, const char *src, u32 destSize);
 void DebugTools_GameTextToUtf8(char *dest, const u8 *src, u32 destSize);
 // Écran des outils dans le menu DEBUG (src/debug_tools_menu.c) ; B le ferme et rouvre le menu DEBUG
 void DebugToolsMenu_Open(void);
+// Le résultat d'une commande (sans nombres), ouvert depuis le menu DEBUG ; B y revient
+void DebugToolsMenu_OpenResult(const char *id);
 // Une adresse de fonction ou de donnée en distance à AgbMain (écrite « @N » ; les symboles de la build donnent son nom)
 long long DebugTools_Offset(const void *address);
 

@@ -10,7 +10,8 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 |---|---|
 | **En jeu** | Menu Start > DEBUG > **Outils (sondes)** : catégorie, commande, nombres (HAUT/BAS change le chiffre, GAUCHE/DROITE choisit le chiffre, A valide), puis le résultat : HAUT/BAS une ligne, GAUCHE/DROITE une page, **A relance** (état en direct), B revient. |
 | **Banc headless** | `game.dev("gfx.sprites")` dans un scénario (texte, fonctions et données nommées) ; ligne d'entrée `!dev ID ARGS`. |
-| **Partie en cours (PC)** | La build DEBUG écoute sur `127.0.0.1:7777` (`--devtools PORT`, `0` = sans). `python test/headless/dev.py jeu.etat`, `dev.py capture image.png` (dernière image), `dev.py` seul = une commande par ligne. |
+| **Partie en cours (PC)** | La build DEBUG écoute sur `127.0.0.1:7777` (`--devtools PORT`, `0` = sans). `python test/headless/dev.py jeu.etat`, `dev.py capture image.png` (dernière image), `dev.py touche A+UP 10` (appuie 10 images, en plus du joueur), `dev.py` seul = une commande par ligne. |
+| **Partie en cours (téléphone)** | APK debug branché en USB : `adb forward tcp:7777 tcp:7777`, puis les mêmes `dev.py`. |
 
 `aide` donne la liste à jour (c'est elle qui fait foi, pas ce fichier).
 
@@ -37,6 +38,29 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | Son | `son.etat` | musique et effets en cours |
 | Système | `sys.etat` | RNG, heure du jeu, teinte jour/nuit |
 | | `sys.anomalies` | anomalies vues par les détecteurs depuis le lancement |
+| | `sys.rapport` | rapport de bug rejouable (voir plus bas) |
+
+## Rapport de bug rejouable
+
+Menu DEBUG > **Rapport de bug** (ou `sys.rapport`) écrit `rapport_DATE.tar` : `rapports/` dans le dossier des
+données sur PC, `Android/data/fr.undi.pokemonnative3g.debug/files/rapports/` sur le téléphone, où le partage est
+proposé tout de suite (mail, messagerie, Drive… : `GameActivity.shareReport`, `ReportProvider`). Il contient :
+
+| Fichier | Contenu |
+|---|---|
+| `rapport.txt` | l'heure du lancement et du rapport, puis l'état du jeu par les outils (anomalies, moteur, options, carte, scripts, équipe, sac, combat, textes, fenêtres, BG, sprites, son, système) |
+| `touches.txt` | les touches de chaque image depuis le lancement (entrée du banc headless) |
+| `lancement.sav`, `maintenant.sav` | la sauvegarde au lancement (point de départ du rejeu) et maintenant |
+| `capture.ppm`, `avant_00…19.ppm` | la dernière image, et les 10 secondes d'avant (une image toutes les 30) : ce qui était à l'écran avant d'ouvrir le menu |
+
+`python test/headless/replay.py BINAIRE rapport.tar [--images N]` rejoue la session dans le banc (même sauvegarde,
+même heure, mêmes touches, jeu déterministe) jusqu'au rapport, ou N images avant : `journal.txt`, `etat.txt`
+(les outils à la fin), `shots/fin.ppm`, comparée à la capture du rapport. `report_check.py BINAIRE` vérifie toute la
+chaîne avec la build DEBUG du PC (console, rapport, rejeu identique).
+
+APK debug : `build-all.sh` produit `out/PokemonNative3G-VERSION-debug.apk` (variante `debugtools` de
+`android/app/build.gradle`, build KANTO_DEBUG=1, nom « PN3G DEBUG », identifiant `fr.undi.pokemonnative3g.debug` :
+s'installe à côté de la release, avec sa propre sauvegarde ; symboles dans ses assets pour nommer les fonctions).
 
 ## Anomalies (`src/debug_checks.c`)
 
@@ -69,6 +93,8 @@ combat).
 | `src/platform/test_state.c` | Commande `!dev` du banc. |
 | `test/headless/names.py` | `Symbols.expand` : `@N` → nom, côté banc. |
 | `test/headless/dev.py` | Client de la console. |
+| `test/headless/replay.py`, `report_check.py` | Rejeu d'un rapport, vérification de bout en bout. |
+| `android/app/src/debugtools/`, `ReportProvider.java`, `GameActivity.shareReport` | APK debug : réseau local (console), partage des rapports. |
 
 Ajouter une commande : une fonction `static void Cmd_X(const s32 *args, u32 argCount, struct DebugToolsOutput *out)`
 qui écrit avec `DebugTools_Print`, son nom dans le jeu (`static const u8 sName_X[] = _("…")`) et une ligne dans

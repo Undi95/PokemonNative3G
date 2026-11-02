@@ -64,6 +64,7 @@ enum {
     DEBUG_POKE_MONTURE,
     DEBUG_OLD_MAN,
     DEBUG_TOOLS,
+    DEBUG_REPORT,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -200,6 +201,7 @@ static const u8 sText_BothLeagues[] = _("Deux Ligues finies");
 static const u8 sText_PokeMonture[] = _("POKé MONTURE + badges");
 static const u8 sText_OldMan[] = _("VIEIL HOMME JADIELLE");
 static const u8 sText_Tools[] = _("Outils (sondes)");
+static const u8 sText_Report[] = _("Rapport de bug");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -249,6 +251,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_POKE_MONTURE].name = sText_PokeMonture;
         sItems[DEBUG_OLD_MAN].name = sText_OldMan;
         sItems[DEBUG_TOOLS].name = sText_Tools;
+        sItems[DEBUG_REPORT].name = sText_Report;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -508,6 +511,13 @@ static void Task_DebugMenu(u8 taskId)
         FREE_AND_SET_NULL(sItems);
         DestroyTask(taskId);
         DebugToolsMenu_Open();
+        break;
+    case DEBUG_REPORT:
+        // Rapport de bug rejouable (sys.rapport) : son résultat dit où est le fichier
+        DebugMenu_Erase(taskId);
+        FREE_AND_SET_NULL(sItems);
+        DestroyTask(taskId);
+        DebugToolsMenu_OpenResult("sys.rapport");
         break;
     case DEBUG_CLOSE:
     case LIST_CANCEL:

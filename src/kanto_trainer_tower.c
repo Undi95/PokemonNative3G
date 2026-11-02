@@ -1098,7 +1098,9 @@ static void TrainerTowerGetOpponentTextColor(u8 challengeType, u8 facilityClass)
         }
         break;
     }
-    (void)gender; // RF : gSpecialVar_TextColor = gender (texte bleu/rouge, pas encore importé)
+    // Texte bleu (homme) ou rouge (femme) du dresseur avec l'option DIALOGUE = KANTO (ContextNpcGetTextColor)
+    gSpecialVar_PrevTextColor = gSpecialVar_TextColor;
+    gSpecialVar_TextColor = gender;
 }
 
 static void CB2_EndTrainerTowerBattle(void)

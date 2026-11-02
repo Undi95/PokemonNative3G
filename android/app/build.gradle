@@ -1,6 +1,7 @@
 // APK de PokemonNative3G : libmain.so (le jeu, `make android`) + libSDL2.so dans jniLibs/,
 // classes Java de SDL (org.libsdl.app) prises dans les sources de SDL (SDL_JAVA_DIR).
-// Construit par docker/build-android.sh.
+// Construit par docker/build-android.sh : variante standard (la release) ou debugtools (build KANTO_DEBUG=1 :
+// menu DEBUG, outils, rapport de bug partagé ; s'installe à côté de la release).
 plugins {
     id 'com.android.application'
 }
@@ -18,10 +19,26 @@ android {
         ndk { abiFilters 'arm64-v8a' }
     }
 
+    flavorDimensions 'tools'
+    productFlavors {
+        standard {
+            dimension 'tools'
+        }
+        debugtools {
+            dimension 'tools'
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
+    }
+
     sourceSets {
         main {
             java.srcDirs += [System.getenv('SDL_JAVA_DIR') ?: '/opt/SDL2-src/android-project/app/src/main/java']
             jniLibs.srcDirs = ['jniLibs']
+        }
+        // Symboles du jeu (noms des fonctions dans les outils de debug), posés par docker/build-android.sh
+        debugtools {
+            assets.srcDirs = ['debugAssets']
         }
     }
 

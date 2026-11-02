@@ -14,6 +14,9 @@
 #include "battle.h"
 #include "day_night.h"
 #include "debug_checks.h"
+#ifdef PORTABLE
+#include "platform/devtools.h"
+#endif
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
@@ -581,6 +584,21 @@ static void Cmd_Anomalies(const s32 *args, u32 argCount, struct DebugToolsOutput
     DebugChecks_Print(out);
 }
 
+// Rapport de bug rejouable (src/platform/devtools.c) : l'archive tar du dossier des rapports
+static void Cmd_Report(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+#ifdef PORTABLE
+    char name[64];
+
+    if (DevTools_WriteReport(name, sizeof(name)))
+        DebugTools_Print(out, "Rapport enregistre :\n%s\ndans %s\n\nEnvoie ce fichier : il contient la sauvegarde du "
+                         "lancement, toutes les touches, l'etat du jeu et la capture. test/headless/replay.py le "
+                         "rejoue.\n", name, DevTools_GetReportDir());
+    else
+        DebugTools_Print(out, "Rapport impossible a ecrire dans %s\n", DevTools_GetReportDir());
+#endif
+}
+
 static void Cmd_Help(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
     u32 i;
@@ -611,6 +629,7 @@ static const u8 sName_TextPrinters[] = _("Textes en cours");
 static const u8 sName_Sound[] = _("Musique et effets");
 static const u8 sName_System[] = _("RNG, heure, jour/nuit");
 static const u8 sName_Anomalies[] = _("Anomalies vues");
+static const u8 sName_Report[] = _("Rapport de bug");
 static const u8 sName_Help[] = _("Liste des commandes");
 
 const struct DebugTool gDebugTools[] =
@@ -635,6 +654,7 @@ const struct DebugTool gDebugTools[] =
     {"son.etat", DEBUG_TOOLS_SOUND, sName_Sound, "musique et effets en cours", 0, Cmd_Sound},
     {"sys.etat", DEBUG_TOOLS_SYSTEM, sName_System, "RNG, heure du jeu, teinte jour/nuit", 0, Cmd_System},
     {"sys.anomalies", DEBUG_TOOLS_SYSTEM, sName_Anomalies, "anomalies vues par les detecteurs (src/debug_checks.c)", 0, Cmd_Anomalies},
+    {"sys.rapport", DEBUG_TOOLS_SYSTEM, sName_Report, "rapport de bug rejouable (sauvegarde, touches, etat, capture)", 0, Cmd_Report},
     {"aide", DEBUG_TOOLS_SYSTEM, sName_Help, "liste des commandes", 0, Cmd_Help},
 };
 

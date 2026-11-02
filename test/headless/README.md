@@ -82,7 +82,9 @@ check what it did: `game.flag(name, value)`, `game.var`, `game.item(name, add)`,
 `save(game)` and `game.shot(name)`. Names are the constants of `include/constants`.
 `game.dev("gfx.sprites")` runs one of the debug tools (`docs/DEVTOOLS.md`, `aide` lists them) and
 returns its text, with functions and data named; `dev.py` sends the same commands to a DEBUG game
-that runs on the PC.
+that runs on the PC. A bug report made in a DEBUG game (DEBUG > Rapport de bug: the save at launch, the
+keys of every frame, the state and the last screens) is played again with `replay.py BINARY report.tar`,
+up to the same frame; `report_check.py BINARY` checks that whole chain.
 
 Checks fail the scenario and go to the journal: `expect(game, condition, message)`,
 `expect_text` (words of a text the game printed, since a `mark`), `expect_map`,

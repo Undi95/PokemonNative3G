@@ -76,7 +76,7 @@ def mon_text(mon):
 
 class Game:
     def __init__(self, binary, out_dir, save=None, config=None, shot_every=0, audio=False, max_frames=200000,
-                 kanto_start=None, step_timeout=60):
+                 kanto_start=None, step_timeout=60, test_time=None):
         os.makedirs(out_dir, exist_ok=True)
         self.out_dir = out_dir
         self.save_path = os.path.join(out_dir, "game.sav")
@@ -105,6 +105,9 @@ class Game:
             cmd += ["--test-shot-every", str(shot_every)]
         if audio:
             cmd += ["--test-audio", os.path.join(out_dir, "audio.wav")]
+        # The game's clock at frame 0, in seconds (it advances one second every 60 frames): replay.py
+        if test_time is not None:
+            cmd += ["--test-time", str(int(test_time))]
         # TEST_FONT=0 ou 1 : l'option POLICE imposée (textes coupés : ANOMALIE texte coupé dans le journal)
         if os.environ.get("TEST_FONT"):
             cmd += ["--test-font", os.environ["TEST_FONT"]]

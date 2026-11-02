@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Variante debugtools (build KANTO_DEBUG=1) : s'installe à côté de la release (identifiant .debug). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- Console des outils de debug sur 127.0.0.1:7777 (adb forward tcp:7777 tcp:7777, test/headless/dev.py) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:label="PN3G DEBUG"
+        tools:replace="android:label">
+        <!-- Rapports de bug (menu DEBUG > Rapport de bug) proposés au partage : GameActivity.shareReport -->
+        <provider
+            android:name=".ReportProvider"
+            android:authorities="${applicationId}.rapports"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+    </application>
+</manifest>

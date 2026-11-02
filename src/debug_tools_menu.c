@@ -29,6 +29,7 @@
 #define tArg        data[5]
 #define tDigit      data[6]
 #define tScroll     data[7]
+#define tFromDebug  data[8] // ouvert sur un résultat depuis le menu DEBUG : B y revient
 
 enum
 {
@@ -413,6 +414,12 @@ static void Task_DebugToolsMenu(u8 taskId)
         {
             PlaySE(SE_SELECT);
             EraseWindow(taskId);
+            if (task->tFromDebug)
+            {
+                DestroyTask(taskId);
+                DebugMenu_Open();
+                return;
+            }
             ShowTools(taskId);
         }
         break;
@@ -424,6 +431,21 @@ void DebugToolsMenu_Open(void)
     u8 taskId = CreateTask(Task_DebugToolsMenu, 80);
 
     ShowCategories(taskId);
+}
+
+void DebugToolsMenu_OpenResult(const char *id)
+{
+    u8 taskId = CreateTask(Task_DebugToolsMenu, 80);
+    const struct DebugTool *tool = DebugTools_Find(id);
+
+    if (tool == NULL)
+    {
+        ShowCategories(taskId);
+        return;
+    }
+    gTasks[taskId].tTool = tool - gDebugTools;
+    gTasks[taskId].tFromDebug = TRUE;
+    ShowResult(taskId);
 }
 
 #endif // KANTO_DEBUG_START
