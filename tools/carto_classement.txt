@@ -518,3 +518,26 @@ Task_FirstBattleEnterParty_WaitDarken écartée tutoriel du premier combat avec 
 Task_FirstBattleEnterParty_WaitFadeIn écartée tutoriel du premier combat avec CHEN
 Task_FirstBattleEnterParty_WaitFadeNormal écartée tutoriel du premier combat avec CHEN
 Task_FirstBattleEnterParty_WaitLightenFirstMonIcon écartée tutoriel du premier combat avec CHEN
+# easy_chat.c : le dictionnaire de RF ; la fusion n'en a qu'un, celui d'Émeraude, pour les deux écrans (décision
+# 2026-11-02 ; enveloppes KEC_* dans easy_chat.c, kanto_easy_chat_internal.h)
+DestroyEasyChatSelectionData équivalente FreeEasyChatScreenWordData (easy_chat.c), KEC_DestroyEasyChatSelectionData
+EC_DoesEasyChatStringFitOnLine équivalente CanPhraseFitInXRowsYCols (easy_chat.c), un dictionnaire
+EC_IsDeoxys équivalente IsRestrictedWordSpecies (easy_chat.c), un dictionnaire
+GetDisplayedWordByIndex équivalente GetWordFromSelectedGroup (easy_chat.c), KEC_GetDisplayedWordByIndex
+GetNumUnlockedTrendySayings équivalente GetNumTrendySayingsUnlocked (easy_chat.c), un dictionnaire
+GetRandomECPokemon équivalente GetRandomUnlockedEasyChatPokemon (easy_chat.c), un dictionnaire
+GetRandomWordFromAnyGroup équivalente GetRandomEasyChatWordFromUnlockedGroup (easy_chat.c), un dictionnaire
+GetRandomWordFromGroup équivalente GetRandomEasyChatWordFromGroup (easy_chat.c), un dictionnaire
+GetSelectedGroupByIndex équivalente GetUnlockedEasyChatGroupId (easy_chat.c), KEC_GetSelectedGroupByIndex
+GetUnlockedECWords équivalente SetSelectedWordGroup (easy_chat.c), KEC_GetUnlockedECWords
+GetUnlockedWordsInAlphabeticalGroup équivalente SetSelectedWordGroup_AlphabetMode (easy_chat.c), un dictionnaire
+GetUnlockedWordsInECGroup équivalente SetSelectedWordGroup_GroupMode (easy_chat.c), un dictionnaire
+InitEasyChatSelection équivalente InitEasyChatScreenWordData (easy_chat.c), KEC_InitEasyChatSelection
+IsECGroupUnlocked équivalente IsEasyChatGroupUnlocked (easy_chat.c), groupes débloqués d'Émeraude
+IsECWordInvalid équivalente IsEasyChatWordInvalid (easy_chat.c), un dictionnaire
+IsGroupSelectable équivalente IsEasyChatGroupUnlocked2 (easy_chat.c), un dictionnaire
+IsWordUnlocked équivalente IsEasyChatWordUnlocked (easy_chat.c), même code
+Localize_ConvertEasyChatMessageToString équivalente OtherConvertEasyChatWordsToString (easy_chat.c), un dictionnaire
+PopulateAlphabeticalGroups équivalente SetUnlockedWordsByAlphabet (easy_chat.c), un dictionnaire
+UnlockedECMonOrMove équivalente IsEasyChatIndexAndGroupUnlocked (easy_chat.c), un dictionnaire
+EnableRareWord link seul l'Événement Mystère de RF (mystery_event_script.c) débloque des mots rares
