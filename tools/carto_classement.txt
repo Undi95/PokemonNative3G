@@ -9,3 +9,19 @@ SpriteCB_SafariBaitOrRock_ArcFlight équivalente SpriteCB_PokeBlock_Arc (battle_
 SpriteCB_SafariBaitOrRock_Finish équivalente SpriteCB_ThrowPokeBlock_Free (battle_anim_throw.c), même code
 SpriteCB_PlayerThrowInit équivalente SpriteCB_TrainerThrowObject (battle_main.c), même code
 FieldCB_SafariZoneRanOutOfBalls équivalente FieldCB_ReturnToFieldNoScriptCheckMusic (field_screen_effect.c), même enchaînement
+# Rencontres sauvages : règles d'Émeraude dans les deux régions (décision user 2026-11-02 ; wild_encounter.c)
+AddToWildEncounterRateBuff écartée rencontres d'Émeraude partout (décision 2026-11-02)
+DoWildEncounterRateTest écartée rencontres d'Émeraude partout (décision 2026-11-02) ; WildEncounterCheck
+GetAbilityEncounterRateModType écartée rencontres d'Émeraude partout (décision 2026-11-02)
+GetFluteEncounterRateModType écartée rencontres d'Émeraude partout (décision 2026-11-02) ; ApplyFluteEncounterRateMod
+GetMapBaseEncounterCooldown écartée rencontres d'Émeraude partout (décision 2026-11-02)
+HandleWildEncounterCooldown écartée rencontres d'Émeraude partout (décision 2026-11-02)
+IsLeadMonHoldingCleanseTag écartée rencontres d'Émeraude partout (décision 2026-11-02) ; ApplyCleanseTagEncounterRateMod
+ResetEncounterRateModifiers écartée rencontres d'Émeraude partout (décision 2026-11-02)
+SeedWildEncounterRng écartée rencontres d'Émeraude partout (décision 2026-11-02)
+TryStandardWildEncounter écartée rencontres d'Émeraude partout (décision 2026-11-02) ; StandardWildEncounter
+WildEncounterRandom écartée rencontres d'Émeraude partout (décision 2026-11-02)
+DoGlobalWildEncounterDiceRoll écartée rencontres d'Émeraude partout (décision 2026-11-02) ; AllowWildCheckOnNewMetatile
+DoWildEncounterRateDiceRoll écartée rencontres d'Émeraude partout (décision 2026-11-02) ; EncounterOddsCheck
+GenerateWildMon équivalente CreateWildMon (wild_encounter.c), avec la lettre des ZARBI de Tanoby de RF
+GenerateFishingEncounter équivalente GenerateFishingWildMon (wild_encounter.c)

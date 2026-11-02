@@ -35,6 +35,9 @@
   PIERRE, FUITE au lieu de POKéBLOC et SE RAPPROCHER : l'APPAT fait manger le Pokémon (il fuit moins, se capture
   moins bien), la PIERRE le fâche (il se capture mieux, fuit plus), avec les animations et les règles de RF ; la
   fuite dépend de l'espèce. Le Safari de Hoenn ne change pas.
+- Combats (partout) : deux touches de Rouge Feu ajoutées. En combat double, la capacité sous le curseur fait
+  blanchir les Pokémon qu'elle touchera ; un Pokémon qui monte de niveau est traversé de bandes lumineuses, avec
+  leur son.
 - Combats : l'IA des dresseurs teste de nouveau les capacités connues exactement comme la cartouche (une lecture
   mal alignée la faisait « mieux » jouer sur PC et Android) ; plus de lecture hors limites à la fin d'un tour de
   combat double, ni dans l'animation de Métronome ; les confettis des résultats de concours ne lisent plus en dehors

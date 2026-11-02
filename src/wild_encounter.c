@@ -611,7 +611,8 @@ static bool8 AllowWildCheckOnNewMetatile(void)
 
 // PokemonNative3G : à Kanto, RF décide des rencontres d'une case avec le type de rencontre de sa métatuile
 // (StandardWildEncounter et SweetScentWildEncounter de RF ; tools/kanto_tile_attributes.py), Émeraude avec son
-// comportement. Le reste (taux, Repousse, talents…) est celui d'Émeraude dans les deux régions.
+// comportement. Le reste (taux, Repousse, talents…) est celui d'Émeraude dans les deux régions : décision du
+// 2026-11-02, pas le temps de recharge ni le générateur à part de RF (TryStandardWildEncounter).
 static bool8 IsLandWildEncounterAt(s16 x, s16 y, u16 metatileBehavior)
 {
     if (Fusion_IsInKanto())

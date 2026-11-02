@@ -126,6 +126,15 @@ Mont Combat, Tour Dresseur de l'Île 7, concours de Nénucrique. Ils ont trouvé
 la fiche du joueur dans le tableau du Dôme (division par zéro sans EV) et les étages du Mont Combat (voir
 CONNAISSANCE-JEU.md).
 
+### Sons
+
+Chaque son lancé (`m4aSongNumStart` : PlaySE, sons des animations de combat `playsewithpan`, musiques) envoie un
+événement au banc (`TestState_OnSong`). Les effets sonores vont dans `game.sounds` et dans le journal
+(`SON SE_M_JUMP_KICK`) ; un scénario vérifie qu'un effet ajouté a son son avec `expect_sound(game, "SE_…", image)`
+(kanto_safari, battle_levelup_stripes, kanto_league_mugshot). Les musiques gardent leur événement `MUSIQUE`
+(`expect_song`). `fight_battle(game, watch=f)` appelle `f(game)` à chaque tour de sa boucle : un scénario y capture
+un moment précis du combat (menu des capacités, montée de niveau).
+
 ## Architecture
 
 | Fichier | Rôle |
