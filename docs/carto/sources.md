@@ -25,11 +25,9 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | text_window_graphics.c | RF seul | 1 | 1 | 0 | 0 | 0 | 0 | 0 |  |
 | tilemap_util.c | RF seul | 11 | 1 | 0 | 0 | 0 | 1 | 9 |  |
 | window_8bpp.c | RF seul | 7 | 1 | 0 | 0 | 0 | 3 | 3 |  |
-| easy_chat_3.c | RF seul | 92 | 92 | 1 | 0 | 1 | 0 | 0 |  |
 | quest_log.c | RF seul | 88 | 88 | 0 | 2 | 2 | 0 | 0 | kanto_field_specials.c (2) |
 | union_room_chat_display.c | RF seul | 58 | 50 | 1 | 0 | 2 | 0 | 8 |  |
 | oak_speech.c | RF seul | 64 | 64 | 2 | 0 | 3 | 0 | 0 |  |
-| easy_chat_2.c | RF seul | 73 | 57 | 2 | 0 | 3 | 9 | 7 |  |
 | help_system_util.c | RF seul | 41 | 41 | 0 | 2 | 4 | 0 | 0 | kanto_fame_checker.c (1), debug_tools_menu.c (1) |
 | pokemon_storage_system_data.c | RF seul | 83 | 17 | 1 | 0 | 5 | 17 | 49 |  |
 | battle_controller_oak_old_man.c | RF seul | 107 | 81 | 4 | 3 | 8 | 0 | 26 | kanto_battle_controller_pokedude.c (3) |
@@ -42,6 +40,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | pokemon_storage_system_menu.c | RF seul | 29 | 6 | 2 | 0 | 33 | 10 | 13 |  |
 | field_fadetransition.c | RF seul | 59 | 30 | 2 | 12 | 46 | 5 | 24 | field_screen_effect.c (12) |
 | help_message.c | RF seul | 7 | 7 | 0 | 6 | 85 | 0 | 0 | copie kanto_help_message.c : 6/7 fonctions |
+| easy_chat_3.c | RF seul | 92 | 92 | 0 | 92 | 100 | 0 | 0 | copie kanto_easy_chat_3.c : 92/92 fonctions |
 | battle_controller_pokedude.c | RF seul | 108 | 78 | 0 | 78 | 100 | 0 | 30 | copie kanto_battle_controller_pokedude.c : 108/108 fonctions |
 | berry_pouch.c | RF seul | 77 | 77 | 0 | 77 | 100 | 0 | 0 | copie kanto_berry_pouch.c : 77/77 fonctions |
 | tm_case.c | RF seul | 73 | 71 | 0 | 71 | 100 | 0 | 2 | copie kanto_tm_case.c : 73/73 fonctions |
@@ -50,6 +49,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | pokemon_special_anim_scene.c | RF seul | 67 | 64 | 0 | 64 | 100 | 0 | 3 | copie kanto_pokemon_special_anim_scene.c : 65/67 fonctions |
 | item_pc.c | RF seul | 59 | 59 | 0 | 59 | 100 | 0 | 0 | copie kanto_item_pc.c : 59/59 fonctions |
 | teachy_tv.c | RF seul | 58 | 58 | 0 | 58 | 100 | 0 | 0 | copie kanto_teachy_tv.c : 58/58 fonctions |
+| easy_chat_2.c | RF seul | 73 | 57 | 0 | 57 | 100 | 9 | 7 | copie kanto_easy_chat_2.c : 73/73 fonctions |
 | trainer_tower.c | RF seul | 43 | 40 | 0 | 40 | 100 | 0 | 3 | copie kanto_trainer_tower.c : 43/43 fonctions |
 | vs_seeker.c | RF seul | 41 | 38 | 0 | 38 | 100 | 0 | 3 | copie kanto_vs_seeker.c : 41/41 fonctions |
 | pokemon_special_anim.c | RF seul | 31 | 30 | 0 | 30 | 100 | 0 | 1 | copie kanto_pokemon_special_anim.c : 30/31 fonctions |
