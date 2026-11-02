@@ -386,6 +386,8 @@ struct BattleStruct
     u8 safariPkblThrowCounter;
     u8 safariEscapeFactor;
     u8 safariCatchFactor;
+    u8 safariRockThrowCounter; // Rouge Feu : Parc Safari de Kanto
+    u8 safariBaitThrowCounter;
     u8 linkBattleVsSpriteId_V; // The letter "V"
     u8 linkBattleVsSpriteId_S; // The letter "S"
     u8 formToChangeInto;

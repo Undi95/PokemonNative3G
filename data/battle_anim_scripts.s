@@ -4,6 +4,7 @@
 #include "constants/songs.h"
 #include "constants/sound.h"
 #include "constants/moves.h"
+#include "constants/battle_string_ids.h"
 	.include "asm/macros.inc"
 	.include "asm/macros/battle_anim_script.inc"
 	.include "constants/constants.inc"
@@ -413,6 +414,9 @@ gBattleAnims_General::
 	ptrvalue General_MonScared                /* B_ANIM_MON_SCARED (Rouge Feu)*/
 	ptrvalue General_GhostGetOut              /* B_ANIM_GHOST_GET_OUT (Rouge Feu)*/
 	ptrvalue General_SilphScoped              /* B_ANIM_SILPH_SCOPED (Rouge Feu)*/
+	ptrvalue General_SafariRockThrow          /* B_ANIM_ROCK_THROW (Rouge Feu)*/
+	ptrvalue General_SafariReaction           /* B_ANIM_SAFARI_REACTION (Rouge Feu)*/
+	ptrvalue General_BaitThrow                /* B_ANIM_BAIT_THROW (Rouge Feu)*/
 
 	ptr_align
 gBattleAnims_Special::
@@ -10809,6 +10813,74 @@ General_SilphScoped:
 	waitsound
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
+	end
+
+@ Rouge Feu : le Parc Safari de Kanto
+General_BaitThrow:
+	createvisualtask AnimTask_SafariOrGhost_DecideAnimSides, 2, 0
+	createvisualtask AnimTask_LoadBaitGfx, 2
+	delay 0
+	waitplaysewithpan SE_M_JUMP_KICK, SOUND_PAN_ATTACKER, 22
+	createsprite gSafariBaitSpriteTemplate, ANIM_TARGET, 3, -18, 12, 0, 32
+	delay 50
+	loopsewithpan SE_M_TAIL_WHIP, SOUND_PAN_TARGET, 19, 2
+	createvisualtask AnimTask_SwayMon, 5, 1, 8, 1536, 2, ANIM_TARGET
+	waitforvisualfinish
+	createvisualtask AnimTask_FreeBaitGfx, 2
+	end
+
+General_SafariRockThrow:
+	createvisualtask AnimTask_SafariOrGhost_DecideAnimSides, 2, 0
+	waitforvisualfinish
+	loadspritegfx ANIM_TAG_ROCKS
+	loadspritegfx ANIM_TAG_IMPACT
+	delay 0
+	waitplaysewithpan SE_M_JUMP_KICK, SOUND_PAN_ATTACKER, 22
+	createsprite gSafariRockTemplate, ANIM_TARGET, 3, -17, 14, 8, 0
+	delay 50
+	monbg ANIM_DEF_PARTNER
+	setalpha 12, 8
+	delay 0
+	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
+	createsprite gBasicHitSplatSpriteTemplate, ANIM_TARGET, 2, -4, -20, 1, 2
+	waitforvisualfinish
+	clearmonbg ANIM_DEF_PARTNER
+	blendoff
+	waitforvisualfinish
+	end
+
+General_SafariReaction:
+	createvisualtask AnimTask_SafariGetReaction, 2
+	waitforvisualfinish
+	jumpreteq B_MSG_MON_WATCHING, SafariReaction_WatchingCarefully
+	jumpreteq B_MSG_MON_ANGRY, SafariReaction_Angry
+	jumpreteq B_MSG_MON_EATING, SafariReaction_Eating
+	end
+
+SafariReaction_WatchingCarefully:
+	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_TARGET
+	createvisualtask AnimTask_RotateMonToSideAndRestore, 2, 16, 96, 0, 2
+	waitforvisualfinish
+	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_TARGET
+	createvisualtask AnimTask_RotateMonToSideAndRestore, 2, 16, -96, 0, 2
+	end
+
+SafariReaction_Angry:
+	loadspritegfx ANIM_TAG_ANGER
+	createsprite gAngerMarkSpriteTemplate, ANIM_TARGET, 2, 1, 20, -20
+	playsewithpan SE_M_SWAGGER2, SOUND_PAN_TARGET
+	waitforvisualfinish
+	delay 12
+	createsprite gAngerMarkSpriteTemplate, ANIM_TARGET, 2, 1, -20, -20
+	playsewithpan SE_M_SWAGGER2, SOUND_PAN_TARGET
+	end
+
+SafariReaction_Eating:
+	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_TARGET
+	createvisualtask AnimTask_RotateMonToSideAndRestore, 2, 8, 136, 0, 2
+	waitforvisualfinish
+	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_TARGET
+	createvisualtask AnimTask_RotateMonToSideAndRestore, 2, 8, 136, 0, 2
 	end
 
 Special_BallThrowWithTrainer:

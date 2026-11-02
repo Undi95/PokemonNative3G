@@ -380,6 +380,11 @@ static const u8 sText_PkmnCuriousAboutX[] = _("{B_OPPONENT_MON1_NAME} est intér
 static const u8 sText_PkmnEnthralledByX[] = _("{B_OPPONENT_MON1_NAME} est captivé par\n{B_BUFF1}!");
 static const u8 sText_PkmnIgnoredX[] = _("{B_OPPONENT_MON1_NAME} ignore complètement\n{B_BUFF1}!");
 static const u8 sText_ThrewPokeblockAtPkmn[] = _("{B_PLAYER_NAME} lance un {POKEBLOCK}\nà {B_OPPONENT_MON1_NAME}!");
+// Rouge Feu (battle_message.c) : le Parc Safari de Kanto
+static const u8 sText_ThrewARock[] = _("{B_PLAYER_NAME} lance\nune PIERRE au {B_OPPONENT_MON1_NAME}!");
+static const u8 sText_ThrewSomeBait[] = _("{B_PLAYER_NAME} lance\nun APPAT au {B_OPPONENT_MON1_NAME}!");
+static const u8 sText_PkmnIsAngry[] = _("{B_OPPONENT_MON1_NAME} se fâche!");
+static const u8 sText_PkmnIsEating[] = _("{B_OPPONENT_MON1_NAME} mange!");
 static const u8 sText_OutOfSafariBalls[] = _("{PLAY_SE SE_DING_DONG}ANNONCEUR: Vous n'avez plus de\nSAFARI BALLS! Perdu!\p");
 static const u8 sText_OpponentMon1Appeared[] = _("{B_OPPONENT_MON1_NAME} appeared!\p");
 static const u8 sText_WildPkmnAppeared[] = _("Un {B_OPPONENT_MON1_NAME} sauvage apparaît!\p");
@@ -921,6 +926,10 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT - BATTLESTRINGS_TABLE_ST
     [STRINGID_PLAYERPANICKED - BATTLESTRINGS_TABLE_START] = sText_PlayerPanicked,
     [STRINGID_PLAYERLOSTAGAINSTENEMYTRAINER - BATTLESTRINGS_TABLE_START] = sText_PlayerWhiteoutAgainstTrainer,
     [STRINGID_PLAYERPAIDPRIZEMONEY - BATTLESTRINGS_TABLE_START] = sText_PlayerPaidAsPrizeMoney,
+    [STRINGID_THREWROCK - BATTLESTRINGS_TABLE_START] = sText_ThrewARock,
+    [STRINGID_THREWBAIT - BATTLESTRINGS_TABLE_START] = sText_ThrewSomeBait,
+    [STRINGID_PKMNANGRY - BATTLESTRINGS_TABLE_START] = sText_PkmnIsAngry,
+    [STRINGID_PKMNEATING - BATTLESTRINGS_TABLE_START] = sText_PkmnIsEating,
 };
 
 const u16 gMissStringIds[] =
@@ -1224,6 +1233,14 @@ const u16 gSafariGetNearStringIds[] =
     [B_MSG_CANT_GET_CLOSER] = STRINGID_CANTGETCLOSER
 };
 
+// Rouge Feu : Parc Safari de Kanto
+const u16 gSafariReactionStringIds[NUM_SAFARI_REACTIONS] =
+{
+    [B_MSG_MON_WATCHING] = STRINGID_PKMNWATCHINGCAREFULLY,
+    [B_MSG_MON_ANGRY]    = STRINGID_PKMNANGRY,
+    [B_MSG_MON_EATING]   = STRINGID_PKMNEATING
+};
+
 const u16 gSafariPokeblockResultStringIds[] =
 {
     [B_MSG_MON_CURIOUS]    = STRINGID_PKMNCURIOUSABOUTX,
@@ -1311,6 +1328,7 @@ const u8 gText_WhatWillOldManDo[] = _("Que va faire\nle vieil homme?"); // Rouge
 const u8 gText_LinkStandby[] = _("{PAUSE 16}Connexion en cours…");
 const u8 gText_BattleMenu[] = _("ATTAQUE{CLEAR_TO 56}SAC\nPOKéMON{CLEAR_TO 56}FUITE");
 const u8 gText_SafariZoneMenu[] = _("BALL{CLEAR_TO 56}{POKEBLOCK}\nSE RAP.{CLEAR_TO 56}FUITE");
+const u8 gText_SafariZoneMenu_Kanto[] = _("BALL{CLEAR_TO 56}APPAT\nPIERRE{CLEAR_TO 56}FUITE"); // Rouge Feu
 const u8 gText_MoveInterfacePP[] = _("PP ");
 const u8 gText_MoveInterfaceType[] = _("TYPE/");
 const u8 gText_MoveInterfacePPType[] = _("{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW DYNAMIC_COLOR4 DYNAMIC_COLOR5 DYNAMIC_COLOR6}PP\nTYPE/");

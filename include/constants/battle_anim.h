@@ -296,6 +296,7 @@
 #define ANIM_TAG_SLASH_2                    (ANIM_SPRITES_START + 286)
 #define ANIM_TAG_WHIP_HIT                   (ANIM_SPRITES_START + 287)
 #define ANIM_TAG_BLUE_RING_2                (ANIM_SPRITES_START + 288)
+#define ANIM_TAG_SAFARI_BAIT                (ANIM_SPRITES_START + 289) // Rouge Feu (269 dans RF : la place de ANIM_TAG_POKEBLOCK)
 
 // battlers
 #define ANIM_ATTACKER         0
@@ -380,6 +381,9 @@
 #define B_ANIM_MON_SCARED               23 // Rouge Feu
 #define B_ANIM_GHOST_GET_OUT            24 // Rouge Feu
 #define B_ANIM_SILPH_SCOPED             25 // Rouge Feu
+#define B_ANIM_ROCK_THROW               26 // Rouge Feu (Parc Safari de Kanto)
+#define B_ANIM_SAFARI_REACTION          27 // Rouge Feu
+#define B_ANIM_BAIT_THROW               28 // Rouge Feu (4 dans RF : la place de B_ANIM_POKEBLOCK_THROW)
 
 // special animations table (gBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0

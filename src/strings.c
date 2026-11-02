@@ -1583,6 +1583,7 @@ const u8 gText_MenuExit[] = _("RETOUR");
 const u8 gText_MenuRetire[] = _("PARTIR");
 const u8 gText_MenuRest[] = _("REPOS");
 const u8 gText_SafariBallStock[] = _("SAFARI BALLS\nNb: {STR_VAR_1}");
+const u8 gText_MenuSafariStats[] = _("{STR_VAR_1}/{STR_VAR_2}\nBALLS  {STR_VAR_3}"); // Rouge Feu (pas restants / 600)
 const u8 gText_BattlePyramidFloor[] = _("Pyramide\n{STR_VAR_1}");
 const u8 gText_Floor1[] = _("Niveau 1");
 const u8 gText_Floor2[] = _("Niveau 2");

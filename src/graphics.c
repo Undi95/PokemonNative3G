@@ -1034,6 +1034,8 @@ const u32 gBattleAnimSpriteGfx_SweatBead[] = INCGFX_U32("graphics/battle_anims/s
 
 const u32 gBattleAnimSpriteGfx_Pokeblock[] = INCGFX_U32("graphics/battle_anims/sprites/pokeblock.png", ".4bpp.lz");
 const u32 gBattleAnimSpritePal_Pokeblock[] = INCGFX_U32("graphics/battle_anims/sprites/pokeblock.png", ".gbapal.lz");
+const u32 gBattleAnimSpriteGfx_SafariBait[] = INCGFX_U32("graphics/kanto/battle_anims/safari_bait.png", ".4bpp.lz"); // Rouge Feu
+const u32 gBattleAnimSpritePal_SafariBait[] = INCGFX_U32("graphics/kanto/battle_anims/safari_bait.png", ".gbapal.lz");
 
 const u32 gBattleAnimSpriteGfx_Gem1[] = INCGFX_U32("graphics/battle_anims/sprites/gem_1.png", ".4bpp.lz");
 const u32 gBattleAnimSpriteGfx_Gem2[] = INCGFX_U32("graphics/battle_anims/sprites/gem_2.png", ".4bpp.lz");

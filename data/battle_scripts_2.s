@@ -216,6 +216,32 @@ BattleScript_ActionWallyThrow:
 	waitmessage B_WAIT_TIME_LONG
 	end2
 
+@ Rouge Feu : le Parc Safari de Kanto (gBattlescriptsForSafariActions de RF ; la 4e, Wally, ne sert pas à Kanto)
+	ptr_align
+gKantoBattlescriptsForSafariActions::
+	ptrvalue BattleScript_WatchesCarefully
+	ptrvalue BattleScript_ThrowRock
+	ptrvalue BattleScript_ThrowBait
+	ptrvalue BattleScript_ActionWallyThrow
+
+BattleScript_WatchesCarefully::
+	printfromtable gSafariReactionStringIds
+	waitmessage B_WAIT_TIME_LONG
+	playanimation BS_OPPONENT1, B_ANIM_SAFARI_REACTION, NULL
+	end2
+
+BattleScript_ThrowRock::
+	printstring STRINGID_THREWROCK
+	waitmessage B_WAIT_TIME_LONG
+	playanimation BS_ATTACKER, B_ANIM_ROCK_THROW, NULL
+	end2
+
+BattleScript_ThrowBait::
+	printstring STRINGID_THREWBAIT
+	waitmessage B_WAIT_TIME_LONG
+	playanimation BS_ATTACKER, B_ANIM_BAIT_THROW, NULL
+	end2
+
 @ Rouge Feu : Poké Flûte en combat
 BattleScript_UsePokeFlute::
 	checkpokeflute BS_ATTACKER

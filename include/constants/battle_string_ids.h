@@ -391,8 +391,12 @@
 #define STRINGID_PLAYERPANICKED             391 // Rouge Feu (défaite)
 #define STRINGID_PLAYERLOSTAGAINSTENEMYTRAINER 392 // Rouge Feu
 #define STRINGID_PLAYERPAIDPRIZEMONEY       393 // Rouge Feu
+#define STRINGID_THREWROCK                  394 // Rouge Feu (Parc Safari)
+#define STRINGID_THREWBAIT                  395 // Rouge Feu
+#define STRINGID_PKMNANGRY                  396 // Rouge Feu
+#define STRINGID_PKMNEATING                 397 // Rouge Feu
 
-#define BATTLESTRINGS_COUNT                 394
+#define BATTLESTRINGS_COUNT                 398
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,
@@ -560,6 +564,12 @@
 // gSafariGetNearStringIds
 #define B_MSG_CREPT_CLOSER    0
 #define B_MSG_CANT_GET_CLOSER 1
+
+// gSafariReactionStringIds (Rouge Feu : Parc Safari de Kanto)
+#define B_MSG_MON_WATCHING   0
+#define B_MSG_MON_ANGRY      1
+#define B_MSG_MON_EATING     2
+#define NUM_SAFARI_REACTIONS 3
 
 // gSafariPokeblockResultStringIds
 #define B_MSG_MON_CURIOUS    0

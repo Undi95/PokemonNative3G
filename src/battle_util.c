@@ -54,6 +54,7 @@ extern const u8 *const gBattlescriptsForBallThrow[];
 extern const u8 *const gBattlescriptsForRunningByItem[];
 extern const u8 *const gBattlescriptsForUsingItem[];
 extern const u8 *const gBattlescriptsForSafariActions[];
+extern const u8 *const gKantoBattlescriptsForSafariActions[]; // Rouge Feu (data/battle_scripts_2.s)
 
 static const u8 sPkblToEscapeFactor[][3] = {
     {
@@ -553,8 +554,84 @@ void HandleAction_Run(void)
     }
 }
 
+// Rouge Feu (battle_main.c) : le Parc Safari de Kanto, APPAT et PIERRE (actions B_ACTION_SAFARI_BAIT et
+// B_ACTION_SAFARI_GO_NEAR de RF, celles de POKéBLOC et SE RAP. d'Émeraude)
+static void Kanto_HandleAction_WatchesCarefully(void)
+{
+    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+    gBattle_BG0_X = 0;
+    gBattle_BG0_Y = 0;
+    if (gBattleStruct->safariRockThrowCounter != 0)
+    {
+        --gBattleStruct->safariRockThrowCounter;
+        if (gBattleStruct->safariRockThrowCounter == 0)
+        {
+            *(&gBattleStruct->safariCatchFactor) = gSpeciesInfo[GetMonData(gEnemyParty, MON_DATA_SPECIES)].catchRate * 100 / 1275;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
+        }
+        else
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_ANGRY;
+        }
+    }
+    else
+    {
+        if (gBattleStruct->safariBaitThrowCounter != 0)
+        {
+            --gBattleStruct->safariBaitThrowCounter;
+            if (gBattleStruct->safariBaitThrowCounter == 0)
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
+            else
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_EATING;
+        }
+        else
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
+        }
+    }
+    gBattlescriptCurrInstr = gKantoBattlescriptsForSafariActions[0];
+    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
+}
+
+static void HandleAction_ThrowBait(void)
+{
+    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+    gBattle_BG0_X = 0;
+    gBattle_BG0_Y = 0;
+    gBattleStruct->safariBaitThrowCounter += Random() % 5 + 2;
+    if (gBattleStruct->safariBaitThrowCounter > 6)
+        gBattleStruct->safariBaitThrowCounter = 6;
+    gBattleStruct->safariRockThrowCounter = 0;
+    gBattleStruct->safariCatchFactor >>= 1;
+    if (gBattleStruct->safariCatchFactor <= 2)
+        gBattleStruct->safariCatchFactor = 3;
+    gBattlescriptCurrInstr = gKantoBattlescriptsForSafariActions[2];
+    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
+}
+
+static void HandleAction_ThrowRock(void)
+{
+    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+    gBattle_BG0_X = 0;
+    gBattle_BG0_Y = 0;
+    gBattleStruct->safariRockThrowCounter += Random() % 5 + 2;
+    if (gBattleStruct->safariRockThrowCounter > 6)
+        gBattleStruct->safariRockThrowCounter = 6;
+    gBattleStruct->safariBaitThrowCounter = 0;
+    gBattleStruct->safariCatchFactor <<= 1;
+    if (gBattleStruct->safariCatchFactor > 20)
+        gBattleStruct->safariCatchFactor = 20;
+    gBattlescriptCurrInstr = gKantoBattlescriptsForSafariActions[1];
+    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
+}
+
 void HandleAction_WatchesCarefully(void)
 {
+    if (Fusion_IsInKanto())
+    {
+        Kanto_HandleAction_WatchesCarefully();
+        return;
+    }
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
@@ -575,6 +652,11 @@ void HandleAction_SafariZoneBallThrow(void)
 
 void HandleAction_ThrowPokeblock(void)
 {
+    if (Fusion_IsInKanto())
+    {
+        HandleAction_ThrowBait();
+        return;
+    }
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
@@ -604,6 +686,11 @@ void HandleAction_ThrowPokeblock(void)
 
 void HandleAction_GoNear(void)
 {
+    if (Fusion_IsInKanto())
+    {
+        HandleAction_ThrowRock();
+        return;
+    }
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;

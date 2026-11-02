@@ -4438,6 +4438,8 @@ extern const u32 gBattleAnimSpriteGfx_Hail[];
 extern const u32 gBattleAnimSpriteGfx_GlowyRedOrb[];
 extern const u32 gBattleAnimSpriteGfx_GreenSpike[];
 extern const u32 gBattleAnimSpriteGfx_Pokeblock[];
+extern const u32 gBattleAnimSpriteGfx_SafariBait[]; // Rouge Feu
+extern const u32 gBattleAnimSpritePal_SafariBait[];
 extern const u32 gBattleAnimSpriteGfx_WhiteFeather[];
 extern const u32 gBattleAnimSpriteGfx_Sparkle6[];
 extern const u32 gBattleAnimSpriteGfx_Splash[];

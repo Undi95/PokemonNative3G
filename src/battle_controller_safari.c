@@ -20,6 +20,7 @@
 #include "text.h"
 #include "util.h"
 #include "window.h"
+#include "fusion_region.h"
 #include "constants/battle_anim.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
@@ -451,7 +452,8 @@ static void SafariHandleChooseAction(void)
     s32 i;
 
     gBattlerControllerFuncs[gActiveBattler] = HandleChooseActionAfterDma3;
-    BattlePutTextOnWindow(gText_SafariZoneMenu, B_WIN_ACTION_MENU);
+    // Rouge Feu : au Parc Safari de Kanto, APPAT et PIERRE au lieu de POKéBLOC et SE RAP.
+    BattlePutTextOnWindow(Fusion_IsInKanto() ? gText_SafariZoneMenu_Kanto : gText_SafariZoneMenu, B_WIN_ACTION_MENU);
 
     for (i = 0; i < 4; i++)
         ActionSelectionDestroyCursorAt(i);

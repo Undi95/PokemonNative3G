@@ -11,6 +11,7 @@
 #include "tv.h"
 #include "constants/game_stat.h"
 #include "field_screen_effect.h"
+#include "fusion_region.h"
 
 struct PokeblockFeeder
 {
@@ -29,7 +30,7 @@ extern const u8 SafariZone_EventScript_OutOfBallsMidBattle[];
 extern const u8 SafariZone_EventScript_OutOfBalls[];
 
 EWRAM_DATA u8 gNumSafariBalls = 0;
-EWRAM_DATA static u16 sSafariZoneStepCounter = 0;
+EWRAM_DATA u16 gSafariZoneStepCounter = 0; // Rouge Feu : global (le menu Start de RF affiche les pas restants)
 EWRAM_DATA static u8 sSafariZoneCaughtMons = 0;
 EWRAM_DATA static u8 sSafariZonePkblkUses = 0;
 EWRAM_DATA static struct PokeblockFeeder sPokeblockFeeders[NUM_POKEBLOCK_FEEDERS] = {0};
@@ -58,18 +59,20 @@ void EnterSafariMode(void)
     SetSafariZoneFlag();
     ClearAllPokeblockFeeders();
     gNumSafariBalls = 30;
-    sSafariZoneStepCounter = 500;
+    gSafariZoneStepCounter = Fusion_IsInKanto() ? 600 : 500; // Rouge Feu (EnterSafariMode) : 600 pas à Kanto
     sSafariZoneCaughtMons = 0;
     sSafariZonePkblkUses = 0;
 }
 
 void ExitSafariMode(void)
 {
-    TryPutSafariFanClubOnAir(sSafariZoneCaughtMons, sSafariZonePkblkUses);
+    // Rouge Feu (ExitSafariMode) : le Parc Safari de Kanto ne passe pas à la télé de Hoenn
+    if (!Fusion_IsInKanto())
+        TryPutSafariFanClubOnAir(sSafariZoneCaughtMons, sSafariZonePkblkUses);
     ResetSafariZoneFlag();
     ClearAllPokeblockFeeders();
     gNumSafariBalls = 0;
-    sSafariZoneStepCounter = 0;
+    gSafariZoneStepCounter = 0;
 }
 
 bool8 SafariZoneTakeStep(void)
@@ -80,8 +83,8 @@ bool8 SafariZoneTakeStep(void)
     }
 
     DecrementFeederStepCounters();
-    sSafariZoneStepCounter--;
-    if (sSafariZoneStepCounter == 0)
+    gSafariZoneStepCounter--;
+    if (gSafariZoneStepCounter == 0)
     {
         ScriptContext_SetupScript(SafariZone_EventScript_TimesUp);
         return TRUE;

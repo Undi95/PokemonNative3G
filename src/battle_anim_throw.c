@@ -21,6 +21,7 @@
 #include "constants/moves.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
+#include "constants/battle_string_ids.h"
 
 // iwram
 COMMON_DATA u32 gMonShrinkDuration = 0;
@@ -402,6 +403,41 @@ const struct SpriteTemplate gPokeblockSpriteTemplate =
     .paletteTag = ANIM_TAG_POKEBLOCK,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_PokeBlock_Throw,
+};
+
+// Rouge Feu (battle_anim_special.c) : l'APPAT et la PIERRE du Parc Safari de Kanto. Leurs fonctions de RF
+// (SpriteCB_SafariBaitOrRock_*) sont celles du POKéBLOC d'Émeraude sous un autre nom.
+const struct SpriteTemplate gSafariBaitSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SAFARI_BAIT,
+    .paletteTag = ANIM_TAG_SAFARI_BAIT,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_PokeBlock_Throw,
+};
+
+static const union AnimCmd sSpriteAnim_SafariRock_0[] =
+{
+    ANIMCMD_FRAME(64, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sSpriteAnimTable_SafariRock[] =
+{
+    sSpriteAnim_SafariRock_0,
+};
+
+const struct SpriteTemplate gSafariRockTemplate =
+{
+    .tileTag = ANIM_TAG_ROCKS,
+    .paletteTag = ANIM_TAG_ROCKS,
+    .oam = &gOamData_AffineOff_ObjNormal_32x32,
+    .anims = sSpriteAnimTable_SafariRock,
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_PokeBlock_Throw,
@@ -2429,6 +2465,24 @@ void AnimTask_FreePokeblockGfx(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
+// Rouge Feu (battle_anim_special.c)
+void AnimTask_LoadBaitGfx(u8 taskId)
+{
+    u8 UNUSED paletteIndex;
+
+    LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[ANIM_TAG_SAFARI_BAIT - ANIM_SPRITES_START]);
+    LoadCompressedSpritePaletteUsingHeap(&gBattleAnimPaletteTable[ANIM_TAG_SAFARI_BAIT - ANIM_SPRITES_START]);
+    paletteIndex = IndexOfSpritePaletteTag(ANIM_TAG_SAFARI_BAIT);
+    DestroyAnimVisualTask(taskId);
+}
+
+void AnimTask_FreeBaitGfx(u8 taskId)
+{
+    FreeSpriteTilesByTag(ANIM_TAG_SAFARI_BAIT);
+    FreeSpritePaletteByTag(ANIM_TAG_SAFARI_BAIT);
+    DestroyAnimVisualTask(taskId);
+}
+
 #define sDuration data[0]
 #define sTargetX data[2]
 #define sTargetY data[4]
@@ -2549,6 +2603,17 @@ static void GhostBallDodge2(struct Sprite *sprite)
     sprite->callback = DestroySpriteAfterOneFrame;
     gDoingBattleAnim = FALSE;
     UpdateOamPriorityInAllHealthboxes(1);
+}
+
+// Rouge Feu (battle_anim_special.c) : la réaction du Pokémon du Parc Safari (General_SafariReaction)
+void AnimTask_SafariGetReaction(u8 taskId)
+{
+    if (gBattleCommunication[MULTISTRING_CHOOSER] >= NUM_SAFARI_REACTIONS)
+        gBattleAnimArgs[7] = 0;
+    else
+        gBattleAnimArgs[7] = gBattleCommunication[MULTISTRING_CHOOSER];
+
+    DestroyAnimVisualTask(taskId);
 }
 
 void AnimTask_SafariOrGhost_DecideAnimSides(u8 taskId)

@@ -33,6 +33,7 @@
 #include "pokedex.h"
 #include "pokenav.h"
 #include "safari_zone.h"
+#include "fusion_region.h"
 #include "save.h"
 #include "scanline_effect.h"
 #include "script.h"
@@ -199,6 +200,17 @@ static const struct WindowTemplate sWindowTemplate_SafariBalls = {
     .height = 4,
     .paletteNum = 15,
     .baseBlock = 0x8
+};
+
+// Rouge Feu (start_menu.c) : au Parc Safari de Kanto, les pas restants et les SAFARI BALLS
+static const struct WindowTemplate sSafariZoneStatsWindowTemplate = {
+    .bg = 0,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 10,
+    .height = 4,
+    .paletteNum = 15,
+    .baseBlock = 0x008
 };
 
 static const u8 *const sPyramidFloorNames[FRONTIER_STAGES_PER_CHALLENGE + 1] =
@@ -478,8 +490,30 @@ static void BuildMultiPartnerRoomStartMenu(void)
     AddStartMenuAction(MENU_ACTION_EXIT);
 }
 
+// Rouge Feu (DrawSafariZoneStatsWindow) ; RF écrit en FONT_NORMAL de RF (FONT_KANTO), aux mesures de son menu
+static void DrawSafariZoneStatsWindow(void)
+{
+    sSafariBallsWindowId = AddWindow(&sSafariZoneStatsWindowTemplate);
+    PutWindowTilemap(sSafariBallsWindowId);
+    DrawStdWindowFrame(sSafariBallsWindowId, FALSE);
+    ConvertIntToDecimalStringN(gStringVar1, gSafariZoneStepCounter, STR_CONV_MODE_RIGHT_ALIGN, 3);
+    ConvertIntToDecimalStringN(gStringVar2, 600, STR_CONV_MODE_RIGHT_ALIGN, 3);
+    ConvertIntToDecimalStringN(gStringVar3, gNumSafariBalls, STR_CONV_MODE_RIGHT_ALIGN, 2);
+    StringExpandPlaceholders(gStringVar4, gText_MenuSafariStats);
+    if (gSaveBlock2Ptr->optionsMenuStyle)
+        AddTextPrinterParameterized(sSafariBallsWindowId, FONT_KANTO, gStringVar4, 4, 3, TEXT_SKIP_DRAW, NULL);
+    else
+        AddTextPrinterParameterized(sSafariBallsWindowId, FONT_NORMAL, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL);
+    CopyWindowToVram(sSafariBallsWindowId, COPYWIN_GFX);
+}
+
 static void ShowSafariBallsWindow(void)
 {
+    if (Fusion_IsInKanto())
+    {
+        DrawSafariZoneStatsWindow();
+        return;
+    }
     sSafariBallsWindowId = AddWindow(&sWindowTemplate_SafariBalls);
     PutWindowTilemap(sSafariBallsWindowId);
     DrawStdWindowFrame(sSafariBallsWindowId, FALSE);

@@ -15,6 +15,7 @@
 #include "constants/battle_move_effects.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "fusion_region.h"
 
 #define AI_ACTION_DONE          (1 << 0)
 #define AI_ACTION_FLEE          (1 << 1)
@@ -2049,6 +2050,26 @@ static void Cmd_flee(void)
 static void Cmd_if_random_safari_flee(void)
 {
     u8 safariFleeRate = gBattleStruct->safariEscapeFactor * 5; // Safari flee rate, from 0-20.
+
+    // Rouge Feu (Cmd_if_random_safari_flee) : au Parc Safari de Kanto, la PIERRE fait fuir, l'APPAT retient
+    if (Fusion_IsInKanto())
+    {
+        if (gBattleStruct->safariRockThrowCounter)
+        {
+            safariFleeRate = gBattleStruct->safariEscapeFactor * 2;
+            if (safariFleeRate > 20)
+                safariFleeRate = 20;
+        }
+        else if (gBattleStruct->safariBaitThrowCounter != 0)
+        {
+            safariFleeRate = gBattleStruct->safariEscapeFactor / 4;
+            if (safariFleeRate == 0)
+                safariFleeRate = 1;
+        }
+        else
+            safariFleeRate = gBattleStruct->safariEscapeFactor;
+        safariFleeRate *= 5;
+    }
 
     if ((u8)(Random() % 100) < safariFleeRate)
         gAIScriptPtr = T1_READ_PTR(gAIScriptPtr + DSIZE8BIT);

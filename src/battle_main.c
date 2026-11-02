@@ -65,6 +65,7 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "cable_club.h"
+#include "fusion_region.h"
 
 extern const struct BgTemplate gBattleBgTemplates[];
 extern const struct WindowTemplate *const gBattleWindowTemplates[];
@@ -3145,6 +3146,15 @@ static void BattleStartClearSetData(void)
     gBattleStruct->safariPkblThrowCounter = 0;
     *(&gBattleStruct->safariCatchFactor) = gSpeciesInfo[GetMonData(&gEnemyParty[0], MON_DATA_SPECIES)].catchRate * 100 / 1275;
     gBattleStruct->safariEscapeFactor = 3;
+    // Rouge Feu (BattleStartClearSetData) : au Parc Safari de Kanto, la fuite dépend de l'espèce
+    gBattleStruct->safariRockThrowCounter = 0;
+    gBattleStruct->safariBaitThrowCounter = 0;
+    if (Fusion_IsInKanto())
+    {
+        *(&gBattleStruct->safariEscapeFactor) = gSpeciesInfo[GetMonData(&gEnemyParty[0], MON_DATA_SPECIES)].safariZoneFleeRate * 100 / 1275;
+        if (gBattleStruct->safariEscapeFactor <= 1)
+            gBattleStruct->safariEscapeFactor = 2;
+    }
     gBattleStruct->wildVictorySong = 0;
     gBattleStruct->moneyMultiplier = 1;
 
@@ -4317,6 +4327,8 @@ static void HandleTurnActionSelectionState(void)
                     }
                     break;
                 case B_ACTION_SAFARI_POKEBLOCK:
+                    if (Fusion_IsInKanto())
+                        break;  // Rouge Feu : B_ACTION_SAFARI_BAIT, l'APPAT part sans choisir d'objet
                     BtlController_EmitChooseItem(B_COMM_TO_CONTROLLER, gBattleStruct->battlerPartyOrders[gActiveBattler]);
                     MarkBattlerForControllerExec(gActiveBattler);
                     break;
@@ -4479,7 +4491,9 @@ static void HandleTurnActionSelectionState(void)
                     gBattleCommunication[gActiveBattler]++;
                     break;
                 case B_ACTION_SAFARI_POKEBLOCK:
-                    if ((gBattleBufferB[gActiveBattler][1] | (gBattleBufferB[gActiveBattler][2] << 8)) != 0)
+                    if (Fusion_IsInKanto())     // Rouge Feu : B_ACTION_SAFARI_BAIT
+                        gBattleCommunication[gActiveBattler]++;
+                    else if ((gBattleBufferB[gActiveBattler][1] | (gBattleBufferB[gActiveBattler][2] << 8)) != 0)
                         gBattleCommunication[gActiveBattler]++;
                     else
                         gBattleCommunication[gActiveBattler] = STATE_BEFORE_ACTION_CHOSEN;
