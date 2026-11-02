@@ -50,6 +50,9 @@
   celles de Hoenn) ; comme dans Rouge Feu, la Route Victoire, la Route 23 et le Plateau Indigo gardent leur musique à
   vélo ou en surfant.
 - Parmanie : le RAMOLOSS près de la Zone Safari erre lentement, comme dans Rouge Feu.
+- Kanto : RAIKOU, ENTEI et SUICUNE errants ont la musique des légendaires de Rouge Feu (pas celle des Pokémon
+  sauvages).
+- K.O. : le joueur reparaît tourné vers l'infirmière qui le soigne, comme dans Rouge Feu.
 - Carmin-sur-Mer : l'OCEANE qui part ne disparaît plus trop tôt sur la gauche de l'écran.
 - Sons de Kanto : les portes, la caisse (boutique, vente, Casino, Musée, photo) et la fanfare des soins hors Centre
   sont ceux de Rouge Feu (c'étaient des sons d'Émeraude de même nom, et pour les soins un morceau que Rouge Feu ne

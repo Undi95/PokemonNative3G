@@ -18,4 +18,9 @@ u16 GetRoamerLocationMapSectionId(void); // Rouge Feu
 u16 GetKantoRoamerLocationMapSectionId(u16 species);
 struct Roamer *GetCurrentRoamer(void);    // PokemonNative3G
 
+// Outils de debug (jeu.errants, src/debug_tools.c) : les vagabonds de la région de la carte courante
+u32 Roamer_DebugCount(void);
+const struct Roamer *Roamer_DebugGet(u32 i, u8 *mapGroup, u8 *mapNum);
+void Roamer_DebugPlaceHere(void);
+
 #endif // GUARD_ROAMER_H

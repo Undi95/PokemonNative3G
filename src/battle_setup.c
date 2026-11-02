@@ -470,7 +470,8 @@ void BattleSetup_StartRoamerBattle(void)
     StopPlayerAvatar();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_ROAMER;
-    CreateBattleStartTask(GetWildBattleTransition(), 0);
+    // Rouge Feu (StartRoamerBattle) : les errants de Kanto (ENTEI, RAIKOU, SUICUNE) ont la musique des légendaires
+    CreateBattleStartTask(GetWildBattleTransition(), Fusion_IsInKanto() ? MUS_RG_VS_LEGEND : 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
     IncrementDailyWildBattles();

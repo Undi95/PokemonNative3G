@@ -395,3 +395,32 @@ u16 GetRoamerLocationMapSectionId(void)
         return MAPSEC_NONE;
     return Overworld_GetMapHeaderByGroupAndId(sRoamerLocation[MAP_GRP], sRoamerLocation[MAP_NUM])->regionMapSectionId;
 }
+
+// PokemonNative3G : outils de debug (jeu.errants) sur les vagabonds de la région de la carte courante
+u32 Roamer_DebugCount(void)
+{
+    return LastRoamerOfRegion() - FirstRoamerOfRegion() + 1;
+}
+
+const struct Roamer *Roamer_DebugGet(u32 i, u8 *mapGroup, u8 *mapNum)
+{
+    const struct Roamer *roamer;
+
+    sCurRoamer = FirstRoamerOfRegion() + i;
+    roamer = ROAMER;
+    *mapGroup = sRoamerLocation[MAP_GRP];
+    *mapNum = sRoamerLocation[MAP_NUM];
+    sCurRoamer = FirstRoamerOfRegion();
+    return roamer;
+}
+
+// Les vagabonds de la région sur la carte du joueur (jusqu'au prochain changement de carte)
+void Roamer_DebugPlaceHere(void)
+{
+    FOR_EACH_REGION_ROAMER
+    {
+        sRoamerLocation[MAP_GRP] = gSaveBlock1Ptr->location.mapGroup;
+        sRoamerLocation[MAP_NUM] = gSaveBlock1Ptr->location.mapNum;
+    }
+    sCurRoamer = FirstRoamerOfRegion();
+}
