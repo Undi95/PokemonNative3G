@@ -251,30 +251,30 @@ IsFlagOrVarStoredInQuestLog, GetFlagAddr, ResetSpecialVars
 ### event_object_lock.c (commun, 3/4)
 walkrun_is_standing_still, Task_WaitPlayerStopMoving, Task_WaitPlayerAndTargetNPCStopMoving
 
-### event_object_movement.c (commun, 90/129)
-ShouldInitObjectEventStateFromTemplate, TemplateIsObstacleAndWithinView,
-TemplateIsObstacleAndVisibleFromConnectingMap, SetHideObstacleFlag, MakeObjectTemplateFromObjectEventTemplate,
-TryLoadObjectPalette, GetReflectionEffectPaletteSlot, ObjectCB_CameraObject, CameraObject_0, CameraObject_1,
-CameraObject_2, FindCameraObject, CameraObjectReset1, CameraObjectSetFollowedObjectId,
-CameraObjectGetFollowedObjectId, CameraObjectReset2, MovementType_WanderAround_Step5Slower,
-CopyablePlayerMovement_GoSpeed0, CopyablePlayerMovement_GoSpeed1, CopyablePlayerMovement_GoSpeed2,
-cph_IM_DIFFERENT, CopyablePlayerMovement_GoSpeed4, MovementType_WalkInPlaceFast_Step0,
-GetAcroBunnyHopFrontWheelDirectionAnimNum, QL_UpdateObjectEventCurrentMovement, GetWalkSlowestMovementAction,
-QuestLogObjectEventExecHeldMovementAction, InitNpcForWalkSlower, InitWalkSlower, UpdateWalkSlower,
-InitNpcForWalkSlowest, InitWalkSlowest, UpdateWalkSlowest, MovementAction_WalkSlowestDown_Step0,
-MovementAction_WalkSlowestDown_Step1, MovementAction_WalkSlowestUp_Step0, MovementAction_WalkSlowestUp_Step1,
-MovementAction_WalkSlowestLeft_Step0, MovementAction_WalkSlowestLeft_Step1,
-MovementAction_WalkSlowestRight_Step0, MovementAction_WalkSlowestRight_Step1,
-MovementAction_WalkSlowerDown_Step0, MovementAction_WalkSlowerDown_Step1, MovementAction_WalkSlowerUp_Step0,
-MovementAction_WalkSlowerUp_Step1, MovementAction_WalkSlowerLeft_Step0, MovementAction_WalkSlowerLeft_Step1,
-MovementAction_WalkSlowerRight_Step0, MovementAction_WalkSlowerRight_Step1, UpdateMovementGlide,
-MovementAction_GlideDown_Step0, MovementAction_GlideDown_Step1, MovementAction_GlideUp_Step0,
-MovementAction_GlideUp_Step1, MovementAction_GlideLeft_Step0, MovementAction_GlideLeft_Step1,
-MovementAction_GlideRight_Step0, MovementAction_GlideRight_Step1, FaceDirectionFast,
-MovementAction_FaceDownFast_Step0, MovementAction_FaceUpFast_Step0, MovementAction_FaceLeftFast_Step0,
-MovementAction_FaceRightFast_Step0, MovementAction_RunDownSlow_Step0, MovementAction_RunDownSlow_Step1,
-MovementAction_RunUpSlow_Step0, MovementAction_RunUpSlow_Step1, MovementAction_RunLeftSlow_Step0,
-MovementAction_RunLeftSlow_Step1, MovementAction_RunRightSlow_Step0, MovementAction_RunRightSlow_Step1,
+### event_object_movement.c (commun, 89/129)
+ShouldInitObjectEventStateFromTemplate, TemplateIsObstacleAndVisibleFromConnectingMap, SetHideObstacleFlag,
+MakeObjectTemplateFromObjectEventTemplate, TryLoadObjectPalette, GetReflectionEffectPaletteSlot,
+ObjectCB_CameraObject, CameraObject_0, CameraObject_1, CameraObject_2, FindCameraObject, CameraObjectReset1,
+CameraObjectSetFollowedObjectId, CameraObjectGetFollowedObjectId, CameraObjectReset2,
+MovementType_WanderAround_Step5Slower, CopyablePlayerMovement_GoSpeed0, CopyablePlayerMovement_GoSpeed1,
+CopyablePlayerMovement_GoSpeed2, cph_IM_DIFFERENT, CopyablePlayerMovement_GoSpeed4,
+MovementType_WalkInPlaceFast_Step0, GetAcroBunnyHopFrontWheelDirectionAnimNum,
+QL_UpdateObjectEventCurrentMovement, GetWalkSlowestMovementAction, QuestLogObjectEventExecHeldMovementAction,
+InitNpcForWalkSlower, InitWalkSlower, UpdateWalkSlower, InitNpcForWalkSlowest, InitWalkSlowest,
+UpdateWalkSlowest, MovementAction_WalkSlowestDown_Step0, MovementAction_WalkSlowestDown_Step1,
+MovementAction_WalkSlowestUp_Step0, MovementAction_WalkSlowestUp_Step1, MovementAction_WalkSlowestLeft_Step0,
+MovementAction_WalkSlowestLeft_Step1, MovementAction_WalkSlowestRight_Step0,
+MovementAction_WalkSlowestRight_Step1, MovementAction_WalkSlowerDown_Step0,
+MovementAction_WalkSlowerDown_Step1, MovementAction_WalkSlowerUp_Step0, MovementAction_WalkSlowerUp_Step1,
+MovementAction_WalkSlowerLeft_Step0, MovementAction_WalkSlowerLeft_Step1, MovementAction_WalkSlowerRight_Step0,
+MovementAction_WalkSlowerRight_Step1, UpdateMovementGlide, MovementAction_GlideDown_Step0,
+MovementAction_GlideDown_Step1, MovementAction_GlideUp_Step0, MovementAction_GlideUp_Step1,
+MovementAction_GlideLeft_Step0, MovementAction_GlideLeft_Step1, MovementAction_GlideRight_Step0,
+MovementAction_GlideRight_Step1, FaceDirectionFast, MovementAction_FaceDownFast_Step0,
+MovementAction_FaceUpFast_Step0, MovementAction_FaceLeftFast_Step0, MovementAction_FaceRightFast_Step0,
+MovementAction_RunDownSlow_Step0, MovementAction_RunDownSlow_Step1, MovementAction_RunUpSlow_Step0,
+MovementAction_RunUpSlow_Step1, MovementAction_RunLeftSlow_Step0, MovementAction_RunLeftSlow_Step1,
+MovementAction_RunRightSlow_Step0, MovementAction_RunRightSlow_Step1,
 MovementAction_JumpSpecialWithEffectDown_Step0, MovementAction_JumpSpecialWithEffectDown_Step1,
 MovementAction_JumpSpecialWithEffectUp_Step0, MovementAction_JumpSpecialWithEffectUp_Step1,
 MovementAction_JumpSpecialWithEffectLeft_Step0, MovementAction_JumpSpecialWithEffectLeft_Step1,
@@ -361,10 +361,9 @@ Task_BarnDoorWipe, Task_BarnDoorWipeChild
 ### field_special_scene.c (commun, 4/4)
 FieldSpecialScene_Dummy0, FieldSpecialScene_Dummy1, FieldSpecialScene_Dummy2, FieldSpecialScene_Dummy3
 
-### field_specials.c (commun, 8/89)
+### field_specials.c (commun, 7/89)
 QuestLog_CheckDepartingIndoorsMap, QuestLog_TryRecordDepartedLocation, DoDeoxysTriangleInteraction,
-Task_DoDeoxysTriangleInteraction, MoveDeoxysObject, Task_WaitDeoxysFieldEffect, SetDeoxysTrianglePalette,
-BrailleCursorToggle
+Task_DoDeoxysTriangleInteraction, MoveDeoxysObject, Task_WaitDeoxysFieldEffect, SetDeoxysTrianglePalette
 
 ### field_weather.c (commun, 12/13)
 BuildGammaShiftTables, UpdateWeatherGammaShift, ApplyGammaShift, ApplyGammaShiftWithBlend,
@@ -420,7 +419,7 @@ HelpSystem_PrintTopicLabel, HelpMenuSubroutine_HelpItemPrint, HelpMenuSubroutine
 HelpMenuSubroutine_HelpItemWaitButton, PrintWelcomeMessageOnPanel1, PrintTextOnPanel2Row52RightAlign,
 GetHelpSystemMenuLevel, ResetHelpSystemCursor, PrintHelpSystemTopicMouseoverDescription
 
-### help_system_util.c (RF seul, 40/41)
+### help_system_util.c (RF seul, 39/41)
 RunHelpSystemCallback, SaveCallbacks, SaveMapGPURegs, SaveMapTiles, SaveMapTextColors, RestoreCallbacks,
 RestoreGPURegs, RestoreMapTiles, RestoreMapTextColors, CommitTilemap, HS_DrawBgTilemapRect,
 HS_BufferFillMapWithTile1FF, HS_ShowOrHideWordHELPinTopLeft, HS_ShowOrHideControlsGuideInTopRight,
@@ -431,7 +430,7 @@ HS_ShowOrHideScrollArrows, HelpSystemRenderText, DecompressAndRenderGlyph, HelpS
 HelpSystem_PrintTextRightAlign_Row52, HelpSystem_PrintTextAt, HelpSystem_PrintQuestionAndAnswerPair,
 HelpSystem_PrintTopicMouseoverDescription, HelpSystem_FillPanel3, HelpSystem_FillPanel2, HelpSystem_FillPanel1,
 HelpSystem_InitListMenuController, HelpSystem_SetInputDelay, HelpSystem_GetMenuInput,
-HS_UpdateMenuScrollArrows, PrintListMenuItems, HS_RemoveSelectionCursorAt, TryMoveCursor1, MoveCursor
+HS_UpdateMenuScrollArrows, PrintListMenuItems, HS_RemoveSelectionCursorAt, TryMoveCursor1
 
 ### intro.c (commun, 1/71)
 CB2_WaitFadeBeforeSetUpIntro
@@ -531,11 +530,11 @@ NamingScreen_CreateRivalIcon, DecompressToBgTilemapBuffer, Debug_NamingScreenRiv
 ### new_game.c (commun, 2/3)
 ClearBattleTower, WarpToPlayersRoom
 
-### new_menu_helpers.c (RF seul, 15/19)
+### new_menu_helpers.c (RF seul, 14/19)
 DecompressAndCopyTileDataToVram2, DecompressAndLoadBgGfxUsingHeap2, TaskFreeBufAfterCopyingTileDataToVram,
-MallocAndDecompress, CopyDecompressedTileDataToVram, AddTextPrinterDiffStyle, LoadStdWindowFrameGfx,
-GetStdMenuPalette, DisplayYesNoMenuDefaultNo, GetTextSpeedSetting, CreateStartMenuWindow,
-GetDlgWindowBaseTileNum, GetStdWindowBaseTileNum, DrawHelpMessageWindowWithText, DestroyHelpMessageWindow_
+MallocAndDecompress, CopyDecompressedTileDataToVram, LoadStdWindowFrameGfx, GetStdMenuPalette,
+DisplayYesNoMenuDefaultNo, GetTextSpeedSetting, CreateStartMenuWindow, GetDlgWindowBaseTileNum,
+GetStdWindowBaseTileNum, DrawHelpMessageWindowWithText, DestroyHelpMessageWindow_
 
 ### oak_speech.c (RF seul, 62/64)
 StartNewGameScene, Task_NewGameScene, ControlsGuide_LoadPage1, Task_ControlsGuide_LoadPage,
@@ -581,7 +580,7 @@ CreateConfirmLeaveTradeRoomPrompt, Overworld_LinkRecvQueueLengthMoreThan2, LinkP
 ### palette.c (commun, 1/1)
 CopyPaletteInvertedTint
 
-### party_menu.c (commun, 41/70)
+### party_menu.c (commun, 40/70)
 DisplayPartyPokemonDataForChooseMultiple, Task_FirstBattleEnterParty_WaitFadeIn,
 Task_FirstBattleEnterParty_DarkenScreen, Task_FirstBattleEnterParty_WaitDarken,
 Task_FirstBattleEnterParty_CreatePrinter, Task_FirstBattleEnterParty_RunPrinterMsg1,
@@ -589,13 +588,13 @@ Task_FirstBattleEnterParty_LightenFirstMonIcon, Task_FirstBattleEnterParty_WaitL
 Task_FirstBattleEnterParty_StartPrintMsg2, Task_FirstBattleEnterParty_RunPrinterMsg2,
 Task_FirstBattleEnterParty_FadeNormal, Task_FirstBattleEnterParty_WaitFadeNormal, PartyMenuPrintText,
 PartyMenu_Oak_PrintText, FirstBattleEnterParty_CreateWindowAndMsg1Printer,
-FirstBattleEnterParty_DestroyVoiceoverWindow, ToggleFieldMoveDescriptionWindow,
-SetSwitchedPartyOrderQuestLogEvent, CursorCB_Item, CursorCB_Mail, CursorCB_Cancel2, CursorCB_Enter,
-CursorCB_NoEntry, CursorCB_Store, CursorCB_Trade2, CursorCB_FieldMove, SetSwappedHeldItemQuestLogEvent,
-SetUsedFieldMoveQuestLogEvent, SetUsedFlyQuestLogEvent, CB2_ReturnToTMCaseMenu, CB2_ReturnToBerryPouchMenu,
-ItemUseCB_MedicineStep, Task_HandleRestoreWhichMoveInput, ItemUseCB_TryRestorePP, TryUsePPItemInBattle,
-ItemUseCB_RareCandyStep, InitChooseMonsForBattle, Task_ValidateChosenMonsForBattle,
-Task_ContinueChoosingMonsForBattle, OpenPartyMenuInTutorialBattle, EnterPartyFromItemMenuInBattle
+FirstBattleEnterParty_DestroyVoiceoverWindow, SetSwitchedPartyOrderQuestLogEvent, CursorCB_Item, CursorCB_Mail,
+CursorCB_Cancel2, CursorCB_Enter, CursorCB_NoEntry, CursorCB_Store, CursorCB_Trade2, CursorCB_FieldMove,
+SetSwappedHeldItemQuestLogEvent, SetUsedFieldMoveQuestLogEvent, SetUsedFlyQuestLogEvent,
+CB2_ReturnToTMCaseMenu, CB2_ReturnToBerryPouchMenu, ItemUseCB_MedicineStep, Task_HandleRestoreWhichMoveInput,
+ItemUseCB_TryRestorePP, TryUsePPItemInBattle, ItemUseCB_RareCandyStep, InitChooseMonsForBattle,
+Task_ValidateChosenMonsForBattle, Task_ContinueChoosingMonsForBattle, OpenPartyMenuInTutorialBattle,
+EnterPartyFromItemMenuInBattle
 
 ### player_pc.c (commun, 39/43)
 Task_DrawPlayerPcTopMenu, Task_ReturnToTopMenu, Task_PlayerPcItemStorage, Task_PlayerPcMailbox,
@@ -778,11 +777,10 @@ SaveDialogCB_ReturnError, VBlankCB_WhileSavingAfterLinkBattle, DoSetUpSaveAfterL
 CB2_WhileSavingAfterLinkBattle, task50_after_link_battle_save, PrintSaveStats, CloseSaveStatsWindow,
 CloseStartMenu
 
-### text.c (commun, 15/15)
-FontFunc_NormalCopy1, FontFunc_NormalCopy2, FontFunc_Male, FontFunc_Female, SpriteCB_TextCursor,
-CreateTextCursorSprite, DestroyTextCursorSprite, DecompressGlyph_NormalCopy1, GetGlyphWidth_NormalCopy1,
-DecompressGlyph_NormalCopy2, GetGlyphWidth_NormalCopy2, DecompressGlyph_Male, GetGlyphWidth_Male,
-DecompressGlyph_Female, GetGlyphWidth_Female
+### text.c (commun, 12/15)
+FontFunc_NormalCopy1, FontFunc_NormalCopy2, FontFunc_Male, FontFunc_Female, DecompressGlyph_NormalCopy1,
+GetGlyphWidth_NormalCopy1, DecompressGlyph_NormalCopy2, GetGlyphWidth_NormalCopy2, DecompressGlyph_Male,
+GetGlyphWidth_Male, DecompressGlyph_Female, GetGlyphWidth_Female
 
 ### text_printer.c (RF seul, 1/1)
 CopyGlyphToWindow_Parameterized

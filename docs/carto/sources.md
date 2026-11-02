@@ -28,9 +28,9 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | easy_chat_3.c | RF seul | 92 | 92 | 1 | 0 | 1 | 0 | 0 |  |
 | quest_log.c | RF seul | 88 | 88 | 0 | 2 | 2 | 0 | 0 | kanto_field_specials.c (2) |
 | union_room_chat_display.c | RF seul | 58 | 50 | 1 | 0 | 2 | 0 | 8 |  |
-| help_system_util.c | RF seul | 41 | 41 | 0 | 1 | 2 | 0 | 0 | kanto_fame_checker.c (1) |
 | oak_speech.c | RF seul | 64 | 64 | 2 | 0 | 3 | 0 | 0 |  |
 | easy_chat_2.c | RF seul | 73 | 57 | 2 | 0 | 3 | 9 | 7 |  |
+| help_system_util.c | RF seul | 41 | 41 | 0 | 2 | 4 | 0 | 0 | kanto_fame_checker.c (1), debug_tools_menu.c (1) |
 | pokemon_storage_system_data.c | RF seul | 83 | 17 | 1 | 0 | 5 | 17 | 49 |  |
 | battle_controller_oak_old_man.c | RF seul | 107 | 81 | 4 | 3 | 8 | 0 | 26 | kanto_battle_controller_pokedude.c (3) |
 | union_room_chat_objects.c | RF seul | 13 | 12 | 1 | 0 | 8 | 0 | 1 |  |
@@ -38,7 +38,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | cereader_tool.c | RF seul | 8 | 7 | 0 | 1 | 14 | 0 | 1 | kanto_trainer_tower.c (1) |
 | pokemon_storage_system_misc.c | RF seul | 70 | 15 | 3 | 0 | 20 | 16 | 39 |  |
 | battle_anim_special.c | RF seul | 81 | 42 | 4 | 5 | 21 | 15 | 24 | battle_anim_throw.c (3), kanto_battle_controller_pokedude.c (2) |
-| new_menu_helpers.c | RF seul | 54 | 19 | 3 | 1 | 21 | 11 | 24 | menu.c (1) |
+| new_menu_helpers.c | RF seul | 54 | 19 | 3 | 2 | 26 | 11 | 24 | menu.c (2) |
 | pokemon_storage_system_menu.c | RF seul | 29 | 6 | 2 | 0 | 33 | 10 | 13 |  |
 | field_fadetransition.c | RF seul | 59 | 30 | 2 | 12 | 46 | 5 | 24 | field_screen_effect.c (12) |
 | help_message.c | RF seul | 7 | 7 | 0 | 6 | 85 | 0 | 0 | copie kanto_help_message.c : 6/7 fonctions |
@@ -89,8 +89,8 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 
 | Fichier RF | Où | Fonctions | Propres à RF | dont même code dans Ém. | dont portées | % couvert | Identiques à Ém. | Différentes d'Ém. | Fichier(s) de la fusion |
 |---|---|---|---|---|---|---|---|---|---|
-| event_object_movement.c | commun | 759 | 129 | 3 | 36 | 30 | 252 | 378 | event_object_movement.c (34), kanto_fame_checker.c (1), kanto_vs_seeker.c (1) |
-| party_menu.c | commun | 357 | 70 | 10 | 19 | 41 | 142 | 145 | party_menu.c (19) |
+| event_object_movement.c | commun | 759 | 129 | 3 | 37 | 31 | 252 | 378 | event_object_movement.c (35), kanto_fame_checker.c (1), kanto_vs_seeker.c (1) |
+| party_menu.c | commun | 357 | 70 | 10 | 20 | 42 | 142 | 145 | party_menu.c (20) |
 | field_effect.c | commun | 239 | 109 | 13 | 8 | 19 | 36 | 94 | field_effect.c (8) |
 | overworld.c | commun | 242 | 44 | 4 | 10 | 31 | 106 | 92 | overworld.c (10) |
 | battle_script_commands.c | commun | 284 | 3 | 0 | 0 | 0 | 165 | 116 |  |
@@ -132,11 +132,11 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_gfx_sfx_util.c | commun | 48 | 6 | 1 | 1 | 33 | 13 | 29 | battle_gfx_sfx_util.c (1) |
 | cable_club.c | commun | 54 | 7 | 2 | 0 | 28 | 19 | 28 |  |
 | battle_setup.c | commun | 66 | 20 | 0 | 13 | 65 | 21 | 25 | battle_setup.c (11), kanto_battle_bg.c (1), kanto_trainer_tower.c (1) |
-| text.c | commun | 37 | 15 | 0 | 0 | 0 | 5 | 17 |  |
 | item.c | commun | 49 | 29 | 15 | 3 | 62 | 0 | 20 | kanto_item_pc.c (1), kanto_specials.c (1), kanto_tm_case.c (1) |
 | battle_anim_utility_funcs.c | commun | 42 | 1 | 0 | 0 | 0 | 12 | 29 |  |
 | field_control_avatar.c | commun | 49 | 13 | 1 | 8 | 69 | 11 | 25 | field_control_avatar.c (8) |
-| field_specials.c | commun | 118 | 89 | 0 | 81 | 91 | 9 | 20 | copie kanto_field_specials.c+kanto_list_menu.c+kanto_specials.c : 68/118 fonctions; kanto_field_anims.c (4), kanto_itemfinder.c (2), fldeff_cut.c (2) |
+| text.c | commun | 37 | 15 | 0 | 3 | 20 | 5 | 17 | text.c (3) |
+| field_specials.c | commun | 118 | 89 | 0 | 82 | 92 | 9 | 20 | copie kanto_field_specials.c+kanto_list_menu.c+kanto_specials.c : 69/118 fonctions; kanto_field_anims.c (4), kanto_itemfinder.c (2), fldeff_cut.c (2) |
 | field_weather.c | commun | 50 | 13 | 1 | 0 | 7 | 22 | 15 |  |
 | main_menu.c | commun | 29 | 25 | 0 | 0 | 0 | 2 | 2 |  |
 | wild_encounter.c | commun | 36 | 18 | 0 | 3 | 16 | 6 | 12 | wild_encounter.c (2), kanto_pokemon_special_anim_scene.c (1) |

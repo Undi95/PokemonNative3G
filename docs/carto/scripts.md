@@ -6,7 +6,7 @@
 
 Émeraude 524, Rouge Feu 272, communs 125.
 
-**RF seul — portés (122)** :
+**RF seul — portés (123)** :
 NullFieldSpecial, Script_HasTrainerBeenFought, EndTrainerApproach, StartRematchBattle, HasLeadMonBeenRenamed,
 Field_AskSaveTheGame, ShowEasyChatMessage, GetHeracrossSizeRecordInfo, CompareHeracrossSize,
 GetMagikarpSizeRecordInfo, CompareMagikarpSize, NameRaterWasNicknameChanged,
@@ -37,17 +37,17 @@ HelpSystem_Disable, HelpSystem_Enable, Script_HasEnoughBerryPowder, Script_TakeB
 DoPokemonLeagueLightingEffect, CapeBrinkGetMoveToTeachLeadPokemon, HasLearnedAllMovesFromCapeBrinkTutor,
 DoCredits, DrawSeagallopDestinationMenu, GetSelectedSeagallopDestination, GetSeagallopNumber,
 IsPlayerLeftOfVermilionSailor, ReadTrainerTowerAndValidate, HasAllMons, IsPlayerNotInTrainerTowerLobby,
-PlayerPartyContainsSpeciesWithPlayerID, AnimateTeleporterHousing, AnimateTeleporterCable,
+BrailleCursorToggle, PlayerPartyContainsSpeciesWithPlayerID, AnimateTeleporterHousing, AnimateTeleporterCable,
 InitElevatorFloorSelectMenuPos, UpdateLoreleiDollCollection, LoopWingFlapSound
 
-**RF seul — stubs (25)** (`src/kanto_specials_stubs.c`) :
+**RF seul — stubs (24)** (`src/kanto_specials_stubs.c`) :
 EnterColosseumPlayerSpot, EnterTradeSeat, StartWiredCableClubTrade, CableClub_AskSaveTheGame, TryContestLinkup,
 BattleTowerMapScript2, ChooseNextBattleTowerTrainer, CheckPartyBattleTowerBanlist,
 PrintBattleTowerTrainerGreeting, BufferEReaderTrainerGreeting, StartSpecialBattle, SetBattleTowerProperty,
 BattleTowerUtil, SetBattleTowerParty, SaveBattleTowerProgress, BattleTower_SoftReset,
 DetermineBattleTowerPrize, GiveBattleTowerPrize, AwardBattleTowerRibbons, ChooseBattleTowerPlayerParty,
 ReducePlayerPartyToThree, Dummy_TryEnableBravoTrainerBattleTower, DoDeoxysTriangleInteraction,
-SetDeoxysTrianglePalette, BrailleCursorToggle
+SetDeoxysTrianglePalette
 
 **RF seul — absents (0)** :
 (aucun)

@@ -1,0 +1,5 @@
+# Classement à la main des fonctions de Rouge Feu absentes de la fusion (tools/cartographie.py → docs/carto/inventaire.md)
+# Une ligne par fonction : NOM CATÉGORIE PREUVE
+#   catégories : équivalente, morte, link, écartée, manquante
+#   preuve : où est l'équivalent dans la fusion, ou pourquoi la fonction n'a pas à y être
+# Ce classement passe avant le classement automatique (fichier écarté, link, morte dans RF, corps comparés).
