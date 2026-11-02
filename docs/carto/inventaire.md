@@ -6,25 +6,15 @@ Les 1709 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fon
 
 | Catégorie | Sens | Fonctions |
 |---|---|---|
-| manquante | rien de proche dans la fusion : à porter | 360 |
-| à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 194 |
-| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 373 |
+| manquante | rien de proche dans la fusion : à porter | 338 |
+| à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 170 |
+| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 415 |
 | triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 113 |
 | morte | jamais appelée ni référencée dans RF | 105 |
-| link | link / E-Reader : à porter, désactivé | 159 |
+| link | link / E-Reader : à porter, désactivé | 163 |
 | écartée | écartée par décision | 405 |
 
-## Manquante (360) : rien de proche dans la fusion : à porter
-
-### start_menu.c (25)
-DestroySafariZoneStatsWindow, DoDrawStartMenu, PrintSaveStats, PrintStartMenuItems,
-SaveDialogCB_AskOverwriteOrReplacePreviousFileHandleInput, SaveDialogCB_AskReplacePreviousFilePrintYesNoMenu,
-SaveDialogCB_AskSaveHandleInput, SaveDialogCB_DoSave, SaveDialogCB_PrintAskOverwriteText,
-SaveDialogCB_PrintAskSaveText, SaveDialogCB_PrintSaveResult, SaveDialogCB_PrintSavingDontTurnOffPower,
-SaveDialogCB_ReturnError, SaveDialog_Wait60FramesThenCheckAButtonHeld, SetUpStartMenu, SetUpStartMenu_Link,
-SetUpStartMenu_NormalField, SetUpStartMenu_SafariZone, SetUpStartMenu_UnionRoom, StartCB_HandleInput,
-StartCB_Save1, StartCB_Save2, StartMenuPokedexSanityCheck, StartMenu_FadeScreenIfLeavingOverworld,
-task50_save_game
+## Manquante (338) : rien de proche dans la fusion : à porter
 
 ### battle_tower.c (23)
 AppendBattleTowerBannedSpeciesName, BattleTowerMapScript2, BattleTowerUtil, BufferBattleTowerTrainerMessage,
@@ -35,22 +25,23 @@ GetBattleTowerTrainerName, GiveBattleTowerPrize, PopulateBravoTrainerBattleTower
 PrintBattleTowerTrainerGreeting, ResetBattleTowerStreak, SaveBattleTowerProgress, SetBattleTowerProperty,
 SetBattleTowerTrainerGfxId, ShouldBattleEReaderTrainer, StartSpecialBattle
 
-### item_use.c (19)
+### item_use.c (20)
 BattleUseFunc_PokeBallEtc, BattleUseFunc_PokeDoll, BattleUseFunc_StatBooster,
 DisplayItemMessageInCurrentContext, FieldCB2_UseItemFromField, FieldUseFunc_BerryPouch,
 FieldUseFunc_BlackWhiteFlute, FieldUseFunc_FameChecker, FieldUseFunc_OakStopsYou, FieldUseFunc_Repel,
 FieldUseFunc_TeachyTv, FieldUseFunc_TmCase, FieldUseFunc_TownMap, ItemUseOnFieldCB_Bicycle,
 ItemUse_SetQuestLogEvent, ItemUse_SwitchToPartyMenuInBattle, PrintNotTheTimeToUseThat,
-Task_BattleUse_StatBooster_DelayAndPrint, Task_ItemUseWaitForFade
+Task_BattleUse_StatBooster_DelayAndPrint, Task_BattleUse_StatBooster_WaitButton_ReturnToBattle,
+Task_ItemUseWaitForFade
 
 ### party_menu.c (18)
 CB2_ReturnToBerryPouchMenu, CB2_ReturnToTMCaseMenu, CursorCB_NoEntry, EnterPartyFromItemMenuInBattle,
 FirstBattleEnterParty_CreateWindowAndMsg1Printer, FirstBattleEnterParty_DestroyVoiceoverWindow,
-ItemUseCB_RareCandyStep, OpenPartyMenuInTutorialBattle, PartyMenu_Oak_PrintText,
-SetSwappedHeldItemQuestLogEvent, SetSwitchedPartyOrderQuestLogEvent, SetUsedFieldMoveQuestLogEvent,
-SetUsedFlyQuestLogEvent, Task_FirstBattleEnterParty_RunPrinterMsg2, Task_FirstBattleEnterParty_WaitDarken,
+OpenPartyMenuInTutorialBattle, PartyMenu_Oak_PrintText, SetSwappedHeldItemQuestLogEvent,
+SetSwitchedPartyOrderQuestLogEvent, SetUsedFieldMoveQuestLogEvent, SetUsedFlyQuestLogEvent,
+Task_FirstBattleEnterParty_RunPrinterMsg2, Task_FirstBattleEnterParty_WaitDarken,
 Task_FirstBattleEnterParty_WaitFadeIn, Task_FirstBattleEnterParty_WaitFadeNormal,
-Task_FirstBattleEnterParty_WaitLightenFirstMonIcon
+Task_FirstBattleEnterParty_WaitLightenFirstMonIcon, Task_ValidateChosenMonsForBattle
 
 ### main_menu.c (17)
 MoveWindowByMenuTypeAndCursorPos, PrintBadgeCount, PrintDexCount, PrintMessageOnWindow4, PrintPlayTime,
@@ -59,12 +50,6 @@ Task_PrintMainMenuText, Task_ReturnToTileScreen, Task_SaveErrorStatus_RunPrinter
 Task_SetWin0BldRegsAndCheckSaveFile, Task_SetWin0BldRegsNoSaveFileCheck, Task_WaitDma3AndFadeIn,
 Task_WaitFadeAndPrintMainMenuText
 
-### option_menu.c (15)
-BufferOptionMenuString, CB2_OptionMenu, CB2_OptionsMenuFromStartMenu, CloseAndSaveOptionMenu, DrawOptionMenuBg,
-InitOptionMenuBg, LoadOptionMenuItemNames, LoadOptionMenuPalette, Localize_BufferOptionMenuString,
-OptionMenu_PickSwitchCancel, OptionMenu_ProcessInput, PrintOptionMenuHeader, SetOptionMenuTask,
-Task_OptionMenu, UpdateSettingSelectionDisplay
-
 ### player_pc.c (15)
 CB2_ReturnToMailbox, CB2_ReturnToMailboxPc_UpdateScrollVariables, Task_CreateItemStorageSubmenu,
 Task_DrawMailSubmenu, Task_DrawMailboxPcMenu, Task_DrawPlayerPcTopMenu, Task_PlayerPcExitMailSubmenu,
@@ -72,18 +57,23 @@ Task_PlayerPcMailbox, Task_PlayerPcTurnOff, Task_PlayerPcWithdrawItem, Task_Prin
 Task_ReturnToTopMenu, Task_SetPageItemVars, Task_TopMenu_ItemStorageSubmenu_HandleInput,
 Task_TryPutMailInBag_DestroyMsgIfSuccessful
 
-### battle_anim_special.c (13)
-AnimTask_IsBallBlockedByTrainerOrDodged, AnimTask_ShinySparkles, SpriteCB_ShinySparkles_1,
-SpriteCB_ShinySparkles_2, SpriteCB_ThrowBall_Bounce, SpriteCB_ThrowBall_DelayThenBreakOut,
-SpriteCB_ThrowBall_DoShake, SpriteCB_ThrowBall_Init, SpriteCB_ThrowBall_InitClick,
-SpriteCB_ThrowBall_InitShake, SpriteCB_ThrowBall_InitialFall, SpriteCB_ThrowBall_TenFrameDelay,
-TrainerBallBlock2
+### option_menu.c (14)
+BufferOptionMenuString, CB2_OptionMenu, CB2_OptionsMenuFromStartMenu, CloseAndSaveOptionMenu, DrawOptionMenuBg,
+InitOptionMenuBg, LoadOptionMenuItemNames, LoadOptionMenuPalette, Localize_BufferOptionMenuString,
+OptionMenu_PickSwitchCancel, OptionMenu_ProcessInput, SetOptionMenuTask, Task_OptionMenu,
+UpdateSettingSelectionDisplay
 
 ### field_effect.c (13)
 ApplyGlobalFieldPaletteTint, DoBirdSpriteWithPlayerAffineAnim, FallWarpEffect_7,
 FieldEffectScript_LoadFadedPal, FieldEffectScript_LoadPal, ShowMonEffect_Indoors_3, ShowMonEffect_Indoors_7,
 ShowMonEffect_Outdoors_5, ShowMonEffect_Outdoors_7, SpinObjectEvent, TryChangeBirdSprite,
 WarpInObjectEventDownwards, WarpOutObjectEventUpwards
+
+### battle_anim_special.c (11)
+AnimTask_IsBallBlockedByTrainerOrDodged, AnimTask_ShinySparkles, SpriteCB_ShinySparkles_1,
+SpriteCB_ShinySparkles_2, SpriteCB_ThrowBall_Bounce, SpriteCB_ThrowBall_DelayThenBreakOut,
+SpriteCB_ThrowBall_DoShake, SpriteCB_ThrowBall_Init, SpriteCB_ThrowBall_InitClick,
+SpriteCB_ThrowBall_InitialFall, TrainerBallBlock2
 
 ### event_object_movement.c (11)
 MovementAction_FaceDownFast_Step0, MovementAction_FaceLeftFast_Step0, MovementAction_FaceRightFast_Step0,
@@ -96,6 +86,11 @@ DecompressGlyph_Female, DecompressGlyph_Male, DecompressGlyph_NormalCopy1, Decom
 FontFunc_Female, FontFunc_Male, FontFunc_NormalCopy1, FontFunc_NormalCopy2, GetGlyphWidth_Female,
 GetGlyphWidth_Male
 
+### new_menu_helpers.c (9)
+CopyDecompressedTileDataToVram, CreateStartMenuWindow, DecompressAndCopyTileDataToVram2,
+DecompressAndLoadBgGfxUsingHeap2, DisplayYesNoMenuDefaultNo, DrawHelpMessageWindowWithText,
+GetTextSpeedSetting, LoadStdWindowFrameGfx, TaskFreeBufAfterCopyingTileDataToVram
+
 ### save_failed_screen.c (9)
 BlankPalettes, ClearMapBuffer, FillBgMapBufferRect, PrintTextOnSaveFailedScreen, RequestDmaCopyFromCharBuffer,
 RequestDmaCopyFromScreenBuffer, RunSaveFailedScreen, TryWipeDamagedSectors, UpdateMapBufferWithText
@@ -104,6 +99,10 @@ RequestDmaCopyFromScreenBuffer, RunSaveFailedScreen, TryWipeDamagedSectors, Upda
 ExitWarpFadeInScreen, FadeTransition_FadeInOnReturnToStartMenu, Task_CableClubWarp, Task_ContinueScript,
 Task_DoorWarp, Task_ReturnFromLinkRoomWarp, Task_SafariZoneRanOutOfBalls, WarpFadeInScreenWithDelay
 
+### script_menu.c (8)
+CreateMCMenuInputHandlerTask, CreatePCMenuWindow, DrawVerticalMultichoiceMenu, GetMCWindowHeight,
+GetMenuWidthFromList, GetStringTilesWide, MultiChoicePrintHelpDescription, QL_DestroyAbortedDisplay
+
 ### bike.c (7)
 BikeInputHandler_Normal, BikeInputHandler_Slope, BikeInputHandler_Turning, BikeTransition_Downhill,
 BikeTransition_MoveDirection, BikeTransition_Uphill, MetatileBehaviorForbidsBiking
@@ -111,27 +110,18 @@ BikeTransition_MoveDirection, BikeTransition_Uphill, MetatileBehaviorForbidsBiki
 ### daycare.c (7)
 CB2_EggHatch_1, SpriteCB_Egg_0, SpriteCB_Egg_1, SpriteCB_Egg_2, SpriteCB_Egg_3, SpriteCB_Egg_4, SpriteCB_Egg_5
 
-### new_menu_helpers.c (7)
-CopyDecompressedTileDataToVram, CreateStartMenuWindow, DecompressAndCopyTileDataToVram2,
-DecompressAndLoadBgGfxUsingHeap2, DisplayYesNoMenuDefaultNo, DrawHelpMessageWindowWithText,
-LoadStdWindowFrameGfx
-
 ### overworld.c (7)
 CB2_EnterFieldFromQuestLog, CB2_SetUpOverworldForQLPlayback, CountBadgesForOverworldWhiteOutLossCalculation,
 DoCB1_Overworld_QuestLogPlayback, MetatileBehavior_IsSurfableInSeafoamIslands,
 Overworld_ResetStateAfterWhitingOut, QL_LoadMapNormal
 
-### pokemon_storage_system_data.c (7)
-AddBoxMenu, HandleInput_BoxTitle, HandleInput_InBox_Normal, MonPlaceChange_MoveCursorDown, SetMenuTextsForItem,
-SetMenuTextsForMon, ToggleCursorMultiMoveMode
-
-### script_menu.c (7)
-CreateMCMenuInputHandlerTask, CreatePCMenuWindow, DrawVerticalMultichoiceMenu, GetMCWindowHeight,
-GetMenuWidthFromList, GetStringTilesWide, QL_DestroyAbortedDisplay
-
 ### mailbox_pc.c (6)
 ItemPrintFunc, MailboxPC_AddScrollIndicatorArrows, MailboxPC_GetAddWindow, MailboxPC_InitBuffers,
 MailboxPC_InitListMenu, MailboxPC_RemoveWindow
+
+### clear_save_data_screen.c (5)
+CB2_SaveClearScreen_Init, CB2_Sub_SaveClearScreen_Init, Task_CleanUpAndSoftReset, Task_DrawClearSaveDataScreen,
+Task_HandleYesNoMenu
 
 ### field_player_avatar.c (5)
 GetPlayerAvatarVsSeekerGfxId, MetatileAtCoordsIsWaterTile, PlayerAvatarTransition_Bike,
@@ -144,14 +134,14 @@ Task_MapNamePopup
 ### pokemon.c (5)
 InitMonSpritesGfx_Mode1, Localize_BattleStrings, SetMonExpWithMaxLevelCheck, es_sub_8044D1C, es_sub_8044D64
 
+### pokemon_storage_system_data.c (5)
+AddBoxMenu, MonPlaceChange_MoveCursorDown, SetMenuTextsForItem, SetMenuTextsForMon, ToggleCursorMultiMoveMode
+
 ### trainer_card.c (5)
 DmaClearOam, DmaClearPltt, GetCardType, SetTrainerCardBgsAndPals, SetTrainerCardCB2
 
 ### battle_transition.c (4)
 Spiral_End, Spiral_Init, Spiral_UpdateFrame, VBlankCB_Spiral
-
-### clear_save_data_screen.c (4)
-CB2_SaveClearScreen_Init, Task_CleanUpAndSoftReset, Task_DrawClearSaveDataScreen, Task_HandleYesNoMenu
 
 ### event_data.c (4)
 EnableNationalPokedex_RSE, GetFlagAddr, IsFlagOrVarStoredInQuestLog, ResetSpecialVars
@@ -163,14 +153,18 @@ BarnDoorWipeLoadGpuRegs, BarnDoorWipeSaveGpuRegs, Task_BarnDoorWipe, Task_BarnDo
 QuestLog_CheckDepartingIndoorsMap, QuestLog_TryRecordDepartedLocation, SetDeoxysTrianglePalette,
 Task_DoDeoxysTriangleInteraction
 
+### pokemon_storage_system_graphics.c (4)
+DoReleaseMonAnim, DoReleaseMonComeBackAnim, SetShiftMonSpritePtr, ShiftMons
+
+### pokemon_storage_system_menu.c (4)
+ChooseBoxMenu_PrintBoxNameAndCount, ChooseBoxMenu_PrintTextToSprite, CreatePCMainMenu,
+PrintStringToBufferCopyNow
+
 ### pokemon_storage_system_tasks.c (4)
 IsDisplayMonMosaicActive, PrintStorageMessage, SetPokeStorageQuestLogEvent, StartDisplayMonMosaic
 
 ### title_screen.c (4)
 CreateStreakSprites, SpriteCallback_Streak, SpriteCallback_TitleScreenLeaf, Task_LeafSpawner
-
-### battle_gfx_sfx_util.c (3)
-BattleInterfaceSetWindowPals, DecompressTrainerBackPalette, FreeTrainerFrontPicPaletteAndTile
 
 ### field_weather.c (3)
 ApplyGammaShift, BuildGammaShiftTables, SlightlyDarkenPalsInWeather
@@ -181,8 +175,8 @@ ExtractMetatileAttribute, GetAttributeByMetatileIdAndMapLayout, MapGridGetMetati
 ### mail.c (3)
 AddMailMessagePrinters, BufferMailMessage, ShowMailCB_Teardown
 
-### pokemon_storage_system_menu.c (3)
-ChooseBoxMenu_PrintBoxNameAndCount, ChooseBoxMenu_PrintTextToSprite, CreatePCMainMenu
+### pokemon_storage_system_misc.c (3)
+IsActiveItemMoving, MultiMove_Function_MoveMons, MultiMove_InitBg
 
 ### trainer_see.c (3)
 MovementAction_RevealTrainer_RunTrainerSeeFuncList, StartTrainerApproachWithFollowupTask,
@@ -193,6 +187,9 @@ AnimUnusedFeather, AnimUnusedFeather_Step
 
 ### battle_anim_normal.c (2)
 AnimShakeMonOrBattleTerrain, AnimTask_ShakeBattleTerrain
+
+### battle_gfx_sfx_util.c (2)
+BattleInterfaceSetWindowPals, DecompressTrainerBackPalette
 
 ### battle_message.c (2)
 BattleStringShouldBeColored, Localize_TrainerClass_Names
@@ -214,12 +211,6 @@ DestroyYesNoMenu, MultichoiceGrid_PrintItems
 
 ### new_game.c (2)
 ClearBattleTower, WarpToPlayersRoom
-
-### pokemon_storage_system_graphics.c (2)
-SetShiftMonSpritePtr, ShiftMons
-
-### pokemon_storage_system_misc.c (2)
-IsActiveItemMoving, MultiMove_InitBg
 
 ### scrcmd.c (2)
 ScriptContext_GetQuestLogInput, ScriptContext_NextCommandEndsScript
@@ -294,7 +285,7 @@ GetUserWindowGraphics
 TilemapUtil_SetTilemap
 
 
-## À vérifier (194) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
+## À vérifier (170) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
 
 ### player_pc.c (23)
 CB2_ReturnFromDepositMenu ~ ItemStorage_ReshowAfterBagMenu (player_pc.c, 76 %)
@@ -331,6 +322,7 @@ CursorCB_Store ~ CursorCb_Store (party_menu.c, 80 %)
 DisplayPartyPokemonDataForChooseMultiple ~ DisplayPartyPokemonDataForChooseHalf (party_menu.c, 86 %)
 InitChooseMonsForBattle ~ InitChooseHalfPartyForBattle (party_menu.c, 85 %)
 ItemUseCB_MedicineStep ~ ItemUseCB_Medicine (party_menu.c, 96 %)
+ItemUseCB_RareCandyStep ~ ItemUseCB_RareCandy (party_menu.c, 66 %)
 ItemUseCB_TryRestorePP ~ ItemUseCB_PPRecovery (party_menu.c, 90 %)
 PartyMenuPrintText ~ PrintMessage (party_menu.c, 92 %)
 Task_ContinueChoosingMonsForBattle ~ Task_ContinueChoosingHalfParty (party_menu.c, 94 %)
@@ -341,31 +333,7 @@ Task_FirstBattleEnterParty_LightenFirstMonIcon ~ Task_ClosePartyMenu (party_menu
 Task_FirstBattleEnterParty_RunPrinterMsg1 ~ Task_PartyMenu_Pokedude (party_menu.c, 77 %)
 Task_FirstBattleEnterParty_StartPrintMsg2 ~ Task_PartyMenu_Pokedude (party_menu.c, 85 %)
 Task_HandleRestoreWhichMoveInput ~ Task_HandleWhichMoveInput (party_menu.c, 86 %)
-Task_ValidateChosenMonsForBattle ~ Task_ValidateChosenHalfParty (party_menu.c, 64 %)
 TryUsePPItemInBattle ~ TryUsePPItem (party_menu.c, 90 %)
-
-### start_menu.c (21)
-AppendToStartMenuItems ~ AddStartMenuAction (start_menu.c, 75 %)
-CloseSaveStatsWindow ~ RemoveSaveInfoWindow (start_menu.c, 85 %)
-CloseStartMenu ~ HideStartMenuWindow (start_menu.c, 86 %)
-DoSetUpSaveAfterLinkBattle ~ InitSaveWindowAfterLinkBattle (start_menu.c, 88 %)
-DrawStartMenuInOneGo ~ InitStartMenu (start_menu.c, 87 %)
-FieldCB2_DrawStartMenu ~ FieldCB_ReturnToFieldStartMenu (start_menu.c, 76 %)
-OpenStartMenuWithFollowupFunc ~ CreateStartMenuTask (start_menu.c, 83 %)
-PrintSaveTextWithFollowupFunc ~ ShowSaveMessage (start_menu.c, 82 %)
-RunSaveDialogCB ~ RunSaveCallback (start_menu.c, 79 %)
-SaveDialogCB_AskOverwritePrintYesNoMenu ~ SaveYesNoCallback (start_menu.c, 76 %)
-SaveDialogCB_AskSavePrintYesNoMenu ~ SaveYesNoCallback (start_menu.c, 76 %)
-SaveDialogCB_ReturnSuccess ~ SaveReturnSuccessCallback (start_menu.c, 80 %)
-SaveDialogCB_WaitPrintErrorAndPlaySE ~ SaveErrorCallback (start_menu.c, 80 %)
-SaveDialogCB_WaitPrintSuccessAndPlaySE ~ SaveSuccessCallback (start_menu.c, 80 %)
-SaveDialog_Wait60FramesOrAButtonHeld ~ SaveSuccesTimer (start_menu.c, 90 %)
-SetUpReturnToStartMenu ~ ShowReturnToFieldStartMenu (start_menu.c, 85 %)
-StartMenuPlayerCallback ~ StartMenuPokemonCallback (start_menu.c, 91 %)
-StartMenu_PrepareForSave ~ InitSave (start_menu.c, 78 %)
-Task_StartMenuHandleInput ~ Task_ShowStartMenu (start_menu.c, 86 %)
-task50_after_link_battle_save ~ Task_SaveAfterLinkBattle (start_menu.c, 81 %)
-task50_startmenu ~ StartMenuTask (start_menu.c, 93 %)
 
 ### easy_chat.c (20)
 EC_DoesEasyChatStringFitOnLine ~ CanPhraseFitInXRowsYCols (easy_chat.c, 95 %)
@@ -389,7 +357,7 @@ Localize_ConvertEasyChatMessageToString ~ OtherConvertEasyChatWordsToString (eas
 PopulateAlphabeticalGroups ~ SetUnlockedWordsByAlphabet (easy_chat.c, 83 %)
 UnlockedECMonOrMove ~ IsEasyChatIndexAndGroupUnlocked (easy_chat.c, 89 %)
 
-### item_use.c (17)
+### item_use.c (16)
 BattleUseFunc_Ether ~ ItemUseOutOfBattle_ReduceEV (item_use.c, 81 %)
 BattleUseFunc_Medicine ~ ItemUseOutOfBattle_ReduceEV (item_use.c, 81 %)
 BattleUseFunc_PokeFlute ~ ItemUseOutOfBattle_Mail (item_use.c, 78 %)
@@ -405,7 +373,6 @@ FieldUseFunc_PpUp ~ ItemUseOutOfBattle_PPUp (item_use.c, 90 %)
 FieldUseFunc_RareCandy ~ ItemUseOutOfBattle_ReduceEV (item_use.c, 81 %)
 FieldUseFunc_Rod ~ ItemUseOutOfBattle_Rod (item_use.c, 94 %)
 FieldUseFunc_VsSeeker ~ ItemUseOutOfBattle_VsSeeker (item_use.c, 99 %)
-Task_BattleUse_StatBooster_WaitButton_ReturnToBattle ~ Task_ExecuteFuncAfterButtonPress (apprentice.c, 60 %)
 Task_ItemUse_CloseMessageBoxAndReturnToField ~ Task_CloseCantUseKeyItemMessage (item_use.c, 90 %)
 
 ### menu.c (13)
@@ -423,17 +390,6 @@ MultichoiceGrid_MoveCursorIfValid ~ ChangeGridMenuCursorPosition (menu.c, 96 %)
 MultichoiceGrid_RedrawCursor ~ MoveMenuGridCursor (menu.c, 99 %)
 MultichoiceList_PrintItems ~ PrintMenuActionTextsWithSpacing (menu.c, 96 %)
 
-### pokemon_storage_system_misc.c (9)
-Item_FromMonToMoving ~ TakeItemFromMon (pokemon_storage_system.c, 64 %)
-Item_GiveMovingToMon ~ GiveItemToMon (pokemon_storage_system.c, 86 %)
-Item_SwitchMonsWithMoving ~ SwapItemsWithMon (pokemon_storage_system.c, 64 %)
-Item_TakeMons ~ MoveItemFromMonToBag (pokemon_storage_system.c, 79 %)
-MultiMove_Function_ChangeSelection ~ MultiMove_ChangeSelection (pokemon_storage_system.c, 96 %)
-MultiMove_Function_GrabSelection ~ MultiMove_GrabSelection (pokemon_storage_system.c, 86 %)
-MultiMove_Function_MoveMons ~ MultiMove_MoveMons (pokemon_storage_system.c, 66 %)
-MultiMove_Function_PlaceMons ~ MultiMove_PlaceMons (pokemon_storage_system.c, 80 %)
-MultiMove_Function_Start ~ MultiMove_Start (pokemon_storage_system.c, 81 %)
-
 ### item.c (8)
 BagGetQuantityByItemId ~ CountTotalItemQuantityInBag (item.c, 86 %)
 BagPocketCompaction ~ CompactItemsInBagPocket (item.c, 86 %)
@@ -444,6 +400,16 @@ ItemPcCompaction ~ CompactPCItems (item.c, 92 %)
 SetBagPocketsPointers ~ SetBagItemsPointers (item.c, 75 %)
 SortAndCompactBagPocket ~ SortBerriesOrTMHMs (item.c, 84 %)
 
+### pokemon_storage_system_misc.c (8)
+Item_FromMonToMoving ~ TakeItemFromMon (pokemon_storage_system.c, 65 %)
+Item_GiveMovingToMon ~ GiveItemToMon (pokemon_storage_system.c, 80 %)
+Item_SwitchMonsWithMoving ~ SwapItemsWithMon (pokemon_storage_system.c, 60 %)
+Item_TakeMons ~ MoveItemFromMonToBag (pokemon_storage_system.c, 86 %)
+MultiMove_Function_ChangeSelection ~ MultiMove_ChangeSelection (pokemon_storage_system.c, 96 %)
+MultiMove_Function_GrabSelection ~ MultiMove_GrabSelection (pokemon_storage_system.c, 84 %)
+MultiMove_Function_PlaceMons ~ MultiMove_PlaceMons (pokemon_storage_system.c, 87 %)
+MultiMove_Function_Start ~ MultiMove_Start (pokemon_storage_system.c, 86 %)
+
 ### main_menu.c (7)
 LoadUserFrameToBg ~ LoadMainMenuWindowFrameTiles (main_menu.c, 82 %)
 MainMenuGpuInit ~ InitMainMenu (main_menu.c, 75 %)
@@ -453,22 +419,22 @@ PrintContinueStats ~ CB2_MainMenu (main_menu.c, 77 %)
 Task_MysteryGiftError ~ Task_DisplayMainMenuInvalidActionError (main_menu.c, 84 %)
 Task_UpdateVisualSelection ~ Task_HighlightSelectedMainMenuItem (main_menu.c, 82 %)
 
-### script_menu.c (7)
+### pokemon_storage_system_data.c (7)
+HandleInput_BoxTitle ~ HandleInput_OnBox (pokemon_storage_system.c, 67 %)
+HandleInput_InBox_GrabbingMultiple ~ InBoxInput_SelectingMultiple (pokemon_storage_system.c, 61 %)
+HandleInput_InBox_MovingMultiple ~ InBoxInput_MovingMultiple (pokemon_storage_system.c, 64 %)
+HandleInput_InBox_Normal ~ InBoxInput_Normal (pokemon_storage_system.c, 61 %)
+MonPlaceChange_MoveCursorUp ~ MonPlaceChange_CursorUp (pokemon_storage_system.c, 71 %)
+SetMovedMonData ~ SetMovingMonData (pokemon_storage_system.c, 77 %)
+TrySetDisplayMonData ~ TryRefreshDisplayMon (pokemon_storage_system.c, 90 %)
+
+### script_menu.c (6)
 DestroyScriptMenuWindow ~ ClearToTransparentAndRemoveWindow (script_menu.c, 84 %)
 Hask_MultichoiceGridMenu_HandleInput ~ Task_HandleMultichoiceGridInput (script_menu.c, 92 %)
-MultiChoicePrintHelpDescription ~ DrawLinkServicesMultichoiceMenu (script_menu.c, 60 %)
 PicboxWait ~ IsPicboxClosed (script_menu.c, 94 %)
 Task_MultichoiceMenu_HandleInput ~ Task_HandleMultichoiceInput (script_menu.c, 75 %)
 Task_ScriptShowMonPic ~ Task_PokemonPicWindow (script_menu.c, 99 %)
 Task_YesNoMenu_HandleInput ~ Task_HandleYesNoInput (script_menu.c, 88 %)
-
-### pokemon_storage_system_graphics.c (6)
-DestroyAllIconsInColumn ~ DestroyBoxMonIconsInColumn (pokemon_storage_system.c, 84 %)
-DoReleaseMonAnim ~ SetReleaseMon (pokemon_storage_system.c, 63 %)
-DoReleaseMonComeBackAnim ~ ReshowReleaseMon (pokemon_storage_system.c, 66 %)
-SetBoxSpeciesAndPersonalities ~ GetIncomingBoxMonData (pokemon_storage_system.c, 68 %)
-SpriteCB_BoxScrollArrow ~ SpriteCB_Arrow (pokemon_storage_system.c, 88 %)
-SpriteCB_MovePartySpriteToNextSlot ~ SpriteCB_MovePartyMonToNextSlot (pokemon_storage_system.c, 85 %)
 
 ### mail.c (5)
 CB2_InitMailView ~ CB2_InitMailRead (mail.c, 93 %)
@@ -476,13 +442,6 @@ CB2_RunShowMailCB ~ CB2_MailRead (mail.c, 82 %)
 DoInitMailView ~ MailReadBuildGraphics (mail.c, 88 %)
 ShowMailCB_WaitButton ~ CB2_ExitOnKeyPress (mail.c, 90 %)
 ShowMailCB_WaitFadeIn ~ CB2_WaitForPaletteExitOnKeyPress (mail.c, 76 %)
-
-### pokemon_storage_system_data.c (5)
-HandleInput_InBox_GrabbingMultiple ~ InBoxInput_SelectingMultiple (pokemon_storage_system.c, 63 %)
-HandleInput_InBox_MovingMultiple ~ InBoxInput_MovingMultiple (pokemon_storage_system.c, 77 %)
-MonPlaceChange_MoveCursorUp ~ MonPlaceChange_CursorUp (pokemon_storage_system.c, 60 %)
-SetMovedMonData ~ SetMovingMonData (pokemon_storage_system.c, 71 %)
-TrySetDisplayMonData ~ TryRefreshDisplayMon (pokemon_storage_system.c, 96 %)
 
 ### text_window.c (5)
 LoadHelpMessageWindowGfx ~ LoadSignpostWindowGfx (text_window.c, 84 %)
@@ -495,23 +454,24 @@ LoadUserWindowGfxByFrame ~ LoadWindowGfx (text_window.c, 86 %)
 BufferTextForCardBack ~ BufferTextsVarsForCardPage2 (trainer_card.c, 81 %)
 GetTrainerStarCount ~ GetRubyTrainerStars (trainer_card.c, 86 %)
 HandleGpuRegs ~ InitGpuRegs (trainer_card.c, 81 %)
-ResetBgRegs ~ ClearVramOamPlttRegs (battle_records.c, 100 %)
+ResetBgRegs ~ ClearVramOamPlttRegs (battle_records.c, 94 %)
 VBlankCB_TrainerCard ~ VblankCb_TrainerCard (trainer_card.c, 97 %)
 
 ### daycare.c (4)
-CB2_EggHatch_0 ~ CB2_LoadEggHatch (egg_hatch.c, 73 %)
-CreatedHatchedMon ~ CreateHatchedMon (egg_hatch.c, 94 %)
+CB2_EggHatch_0 ~ CB2_LoadEggHatch (egg_hatch.c, 70 %)
+CreatedHatchedMon ~ CreateHatchedMon (egg_hatch.c, 96 %)
 DayCare_GetBoxMonNickname ~ GetBoxMonNickname (daycare.c, 92 %)
 DayCare_GetMonNickname ~ GetMonNickname2 (daycare.c, 92 %)
 
-### new_menu_helpers.c (3)
-GetTextSpeedSetting ~ GetPlayerTextSpeedDelay (menu.c, 80 %)
-MallocAndDecompress ~ malloc_and_decompress (menu.c, 87 %)
-TaskFreeBufAfterCopyingTileDataToVram ~ task_free_buf_after_copying_tile_data_to_vram (menu.c, 75 %)
+### pokemon_storage_system_graphics.c (4)
+DestroyAllIconsInColumn ~ DestroyBoxMonIconsInColumn (pokemon_storage_system.c, 91 %)
+SetBoxSpeciesAndPersonalities ~ GetIncomingBoxMonData (pokemon_storage_system.c, 65 %)
+SpriteCB_BoxScrollArrow ~ SpriteCB_Arrow (pokemon_storage_system.c, 93 %)
+SpriteCB_MovePartySpriteToNextSlot ~ SpriteCB_MovePartyMonToNextSlot (pokemon_storage_system.c, 82 %)
 
-### clear_save_data_screen.c (2)
-CB2_Sub_SaveClearScreen_Init ~ DiplomaReset (kanto_diploma.c, 75 %)
-SaveClearScreen_GpuInit ~ InitRegionMapBgs (kanto_region_map.c, 68 %)
+### battle_anim_special.c (2)
+SpriteCB_ThrowBall_InitShake ~ SpriteCB_Ball_Wobble (battle_anim_throw.c, 68 %)
+SpriteCB_ThrowBall_TenFrameDelay ~ SpriteCB_Ball_MonShrink (battle_anim_throw.c, 60 %)
 
 ### mail_data.c (2)
 GiveMailToMon2 ~ GiveMailToMon (mail_data.c, 96 %)
@@ -529,11 +489,20 @@ MailSpeciesToIconSpecies ~ GetIconSpeciesNoPersonality (pokemon_icon.c, 94 %)
 GetGlyphWidth_NormalCopy1 ~ GetGlyphWidth_Small (text.c, 94 %)
 GetGlyphWidth_NormalCopy2 ~ GetGlyphWidth_Small (text.c, 89 %)
 
+### battle_gfx_sfx_util.c (1)
+FreeTrainerFrontPicPaletteAndTile ~ FreeTrainerFrontPicPalette (battle_gfx_sfx_util.c, 80 %)
+
+### clear_save_data_screen.c (1)
+SaveClearScreen_GpuInit ~ InitRegionMapBgs (kanto_region_map.c, 64 %)
+
+### new_menu_helpers.c (1)
+MallocAndDecompress ~ malloc_and_decompress (menu.c, 90 %)
+
+### option_menu.c (1)
+PrintOptionMenuHeader ~ PrintTradeMessage (trade.c, 60 %)
+
 ### pokemon_storage_system.c (1)
 SeekToNextMonInBox ~ StorageSystemGetNextMonIndex (pokemon_storage_system.c, 81 %)
-
-### pokemon_storage_system_menu.c (1)
-PrintStringToBufferCopyNow ~ UnusedDrawTextWindow (pokemon_storage_system.c, 62 %)
 
 ### save_failed_screen.c (1)
 WipeDamagedSectors ~ WipeSectors (save_failed_screen.c, 84 %)
@@ -542,10 +511,10 @@ WipeDamagedSectors ~ WipeSectors (save_failed_screen.c, 84 %)
 FreeSpriteTilesIfNotUsingSheet ~ DestroySprite (sprite.c, 79 %)
 
 ### title_screen.c (1)
-CreateLeafSprite ~ CreateFlameSprite (kanto_title_screen.c, 73 %)
+CreateLeafSprite ~ CreateFlameSprite (kanto_title_screen.c, 63 %)
 
 
-## Équivalente (373) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
+## Équivalente (415) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
 
 ### field_effect.c (74)
 PokeballGlowEffect_FlashFirstThree (PokeballGlowEffect_Flash1 (field_effect.c), 0x1007 = FLDEFF_PAL_TAG_POKEBALL_GLOW, >= 3 = > 2)
@@ -622,6 +591,52 @@ PokeballGlowEffect_FlashLast → PokeballGlowEffect_Flash2 (field_effect.c)
 TeleportInFieldEffectTask2 → TeleportWarpInFieldEffect_SpinEnter (field_effect.c)
 UseSurfEffect_1 → SurfFieldEffect_Init (field_effect.c)
 waterfall_0_setup → WaterfallFieldEffect_Init (field_effect.c)
+
+### start_menu.c (44)
+SetUpStartMenu (BuildStartMenuActions (start_menu.c), même aiguillage)
+AppendToStartMenuItems (AddStartMenuAction (start_menu.c), même code)
+SetUpStartMenu_NormalField (BuildNormalStartMenu (start_menu.c), mêmes entrées)
+SetUpStartMenu_SafariZone (BuildSafariZoneStartMenu (start_menu.c), mêmes entrées)
+DestroySafariZoneStatsWindow (RemoveExtraStartMenuWindows (start_menu.c), fenêtre du Safari de Kanto comprise)
+PrintStartMenuItems (PrintStartMenuActions (start_menu.c), même code)
+DoDrawStartMenu (InitStartMenuStep (start_menu.c), même enchaînement)
+DrawStartMenuInOneGo (InitStartMenu (start_menu.c), même code)
+task50_startmenu (StartMenuTask (start_menu.c), même code)
+OpenStartMenuWithFollowupFunc (CreateStartMenuTask (start_menu.c), même code)
+FieldCB2_DrawStartMenu (FieldCB_ReturnToFieldStartMenu (start_menu.c), même code)
+SetUpReturnToStartMenu (ShowReturnToFieldStartMenu (start_menu.c), même code)
+Task_StartMenuHandleInput (Task_ShowStartMenu (start_menu.c), même code)
+StartCB_HandleInput (HandleStartMenuInput (start_menu.c), même code)
+StartMenu_FadeScreenIfLeavingOverworld (HandleStartMenuInput (start_menu.c), fondu avant un écran (sauf SAUVER, RETOUR, PARTIR))
+StartMenuPokedexSanityCheck (StartMenuPokedexCallback (start_menu.c), même vérification)
+StartMenuPlayerCallback (StartMenuPlayerNameCallback (start_menu.c), carte de dresseur)
+StartCB_Save1 (StartMenuSaveCallback (start_menu.c), même code)
+StartCB_Save2 (SaveStartCallback (start_menu.c), même code)
+StartMenu_PrepareForSave (InitSave (start_menu.c), même code)
+RunSaveDialogCB (RunSaveCallback (start_menu.c), SAVECB_RETURN_* = SAVE_*)
+PrintSaveTextWithFollowupFunc (ShowSaveMessage (start_menu.c), même code)
+task50_save_game (SaveCallback (start_menu.c), boucle de sauvegarde)
+SaveDialog_Wait60FramesOrAButtonHeld (SaveSuccesTimer (start_menu.c), même code)
+SaveDialog_Wait60FramesThenCheckAButtonHeld (SaveErrorTimer (start_menu.c), même attente)
+SaveDialogCB_PrintAskSaveText (SaveConfirmSaveCallback (start_menu.c), même code)
+SaveDialogCB_AskSavePrintYesNoMenu (SaveYesNoCallback (start_menu.c), même code)
+SaveDialogCB_AskSaveHandleInput (SaveConfirmInputCallback (start_menu.c), même code)
+SaveDialogCB_PrintAskOverwriteText (SaveConfirmOverwriteCallback (start_menu.c), même code)
+SaveDialogCB_AskOverwritePrintYesNoMenu (SaveYesNoCallback (start_menu.c), même code)
+SaveDialogCB_AskReplacePreviousFilePrintYesNoMenu (SaveFileExistsCallback (start_menu.c), même enchaînement)
+SaveDialogCB_AskOverwriteOrReplacePreviousFileHandleInput (SaveOverwriteInputCallback (start_menu.c), même code)
+SaveDialogCB_PrintSavingDontTurnOffPower (SaveSavingMessageCallback (start_menu.c), même code)
+SaveDialogCB_DoSave (SaveDoSaveCallback (start_menu.c), même code)
+SaveDialogCB_PrintSaveResult (SaveSuccessCallback (start_menu.c), résultat de la sauvegarde)
+SaveDialogCB_WaitPrintSuccessAndPlaySE (SaveSuccessCallback (start_menu.c), même code)
+SaveDialogCB_ReturnSuccess (SaveReturnSuccessCallback (start_menu.c), même code)
+SaveDialogCB_WaitPrintErrorAndPlaySE (SaveErrorCallback (start_menu.c), même code)
+SaveDialogCB_ReturnError (SaveReturnErrorCallback (start_menu.c), même code)
+PrintSaveStats (ShowSaveInfoWindow (start_menu.c), même fenêtre)
+CloseSaveStatsWindow (RemoveSaveInfoWindow (start_menu.c), même code)
+CloseStartMenu (HideStartMenu (start_menu.c), SE_SELECT puis HideStartMenuWindow)
+CB2_WhileSavingAfterLinkBattle → MainCB (clear_save_data_screen.c)
+CloseSaveMessageWindow → HideSaveMessageWindow (start_menu.c)
 
 ### event_object_movement.c (42)
 MakeObjectTemplateFromObjectEventTemplate (MakeSpriteTemplateFromObjectEventTemplate (event_object_movement.c), union du gabarit de RF)
@@ -975,10 +990,6 @@ ClearMailStruct → ClearMail (mail_data.c)
 Q_8_8_inv → MathUtil_Inv16 (math_util.c)
 Q_N_S_div → MathUtil_Div16Shift (math_util.c)
 
-### start_menu.c (2)
-CB2_WhileSavingAfterLinkBattle → MainCB (clear_save_data_screen.c)
-CloseSaveMessageWindow → HideSaveMessageWindow (start_menu.c)
-
 ### battle_anim_effects_2.c (1)
 AirCutterProjectile_Step1 (AirCutterProjectileStep1 (battle_anim_effects_2.c), -SOUND_PAN_TARGET = SOUND_PAN_ATTACKER + 1)
 
@@ -1311,7 +1322,7 @@ SetHasPokedexAndPokemon
 CopyGlyphToWindow_Parameterized
 
 
-## Link (159) : link / E-Reader : à porter, désactivé
+## Link (163) : link / E-Reader : à porter, désactivé
 
 ### union_room_chat_display.c (49)
 UnionRoomChat_TryAllocGraphicsWork, UnionRoomChat_RunDisplaySubtask0, UnionRoomChat_FreeGraphicsWork, InitWork,
@@ -1369,6 +1380,12 @@ BerryCrush_SetVBlankCallback, BerryCrush_BuildLocalState, printCrushingResults, 
 
 ### mystery_gift_menu.c (4)
 PrintMysteryGiftOrEReaderTopMenu, AddTextPrinterToWindow1, ClearTextWindow, HandleMysteryGiftListMenu
+
+### start_menu.c (4)
+SetUpStartMenu_Link (menu Start des combats link de RF),
+SetUpStartMenu_UnionRoom (menu Start de l'Union Room de RF),
+DoSetUpSaveAfterLinkBattle (sauvegarde après un combat link),
+task50_after_link_battle_save (sauvegarde après un combat link)
 
 ### battle_controller_link_partner.c (3)
 LinkPartnerDummy, LinkPartnerHandleUnknownYesNoBox, LinkPartnerHandlePlayFanfare

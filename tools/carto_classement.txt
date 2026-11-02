@@ -430,3 +430,50 @@ Task_WaitBT link Tour de Combat de RF (e-Reader)
 IncTrainerCardLossCount link records du Club Câble de RF
 IncTrainerCardWinCount link records du Club Câble de RF
 IndexOfOpponentLinkBattleRecord link records du Club Câble de RF
+# start_menu.c : le menu Start et la sauvegarde d'Émeraude (style de RF par l'option MENUS) ; renommages
+AppendToStartMenuItems équivalente AddStartMenuAction (start_menu.c), même code
+CloseSaveStatsWindow équivalente RemoveSaveInfoWindow (start_menu.c), même code
+CloseStartMenu équivalente HideStartMenu (start_menu.c), SE_SELECT puis HideStartMenuWindow
+DrawStartMenuInOneGo équivalente InitStartMenu (start_menu.c), même code
+FieldCB2_DrawStartMenu équivalente FieldCB_ReturnToFieldStartMenu (start_menu.c), même code
+OpenStartMenuWithFollowupFunc équivalente CreateStartMenuTask (start_menu.c), même code
+PrintSaveTextWithFollowupFunc équivalente ShowSaveMessage (start_menu.c), même code
+RunSaveDialogCB équivalente RunSaveCallback (start_menu.c), SAVECB_RETURN_* = SAVE_*
+SaveDialogCB_AskOverwritePrintYesNoMenu équivalente SaveYesNoCallback (start_menu.c), même code
+SaveDialogCB_AskSavePrintYesNoMenu équivalente SaveYesNoCallback (start_menu.c), même code
+SaveDialogCB_ReturnSuccess équivalente SaveReturnSuccessCallback (start_menu.c), même code
+SaveDialogCB_WaitPrintErrorAndPlaySE équivalente SaveErrorCallback (start_menu.c), même code
+SaveDialogCB_WaitPrintSuccessAndPlaySE équivalente SaveSuccessCallback (start_menu.c), même code
+SaveDialog_Wait60FramesOrAButtonHeld équivalente SaveSuccesTimer (start_menu.c), même code
+SetUpReturnToStartMenu équivalente ShowReturnToFieldStartMenu (start_menu.c), même code
+StartMenuPlayerCallback équivalente StartMenuPlayerNameCallback (start_menu.c), carte de dresseur
+StartMenu_PrepareForSave équivalente InitSave (start_menu.c), même code
+Task_StartMenuHandleInput équivalente Task_ShowStartMenu (start_menu.c), même code
+task50_startmenu équivalente StartMenuTask (start_menu.c), même code
+DoDrawStartMenu équivalente InitStartMenuStep (start_menu.c), même enchaînement
+PrintSaveStats équivalente ShowSaveInfoWindow (start_menu.c), même fenêtre
+PrintStartMenuItems équivalente PrintStartMenuActions (start_menu.c), même code
+DestroySafariZoneStatsWindow équivalente RemoveExtraStartMenuWindows (start_menu.c), fenêtre du Safari de Kanto comprise
+SetUpStartMenu équivalente BuildStartMenuActions (start_menu.c), même aiguillage
+SetUpStartMenu_NormalField équivalente BuildNormalStartMenu (start_menu.c), mêmes entrées
+SetUpStartMenu_SafariZone équivalente BuildSafariZoneStartMenu (start_menu.c), mêmes entrées
+SetUpStartMenu_Link link menu Start des combats link de RF
+SetUpStartMenu_UnionRoom link menu Start de l'Union Room de RF
+task50_after_link_battle_save link sauvegarde après un combat link
+DoSetUpSaveAfterLinkBattle link sauvegarde après un combat link
+StartCB_HandleInput équivalente HandleStartMenuInput (start_menu.c), même code
+StartCB_Save1 équivalente StartMenuSaveCallback (start_menu.c), même code
+StartCB_Save2 équivalente SaveStartCallback (start_menu.c), même code
+StartMenuPokedexSanityCheck équivalente StartMenuPokedexCallback (start_menu.c), même vérification
+StartMenu_FadeScreenIfLeavingOverworld équivalente HandleStartMenuInput (start_menu.c), fondu avant un écran (sauf SAUVER, RETOUR, PARTIR)
+SaveDialogCB_AskOverwriteOrReplacePreviousFileHandleInput équivalente SaveOverwriteInputCallback (start_menu.c), même code
+SaveDialogCB_AskReplacePreviousFilePrintYesNoMenu équivalente SaveFileExistsCallback (start_menu.c), même enchaînement
+SaveDialogCB_AskSaveHandleInput équivalente SaveConfirmInputCallback (start_menu.c), même code
+SaveDialogCB_DoSave équivalente SaveDoSaveCallback (start_menu.c), même code
+SaveDialogCB_PrintAskOverwriteText équivalente SaveConfirmOverwriteCallback (start_menu.c), même code
+SaveDialogCB_PrintAskSaveText équivalente SaveConfirmSaveCallback (start_menu.c), même code
+SaveDialogCB_PrintSaveResult équivalente SaveSuccessCallback (start_menu.c), résultat de la sauvegarde
+SaveDialogCB_PrintSavingDontTurnOffPower équivalente SaveSavingMessageCallback (start_menu.c), même code
+SaveDialogCB_ReturnError équivalente SaveReturnErrorCallback (start_menu.c), même code
+SaveDialog_Wait60FramesThenCheckAButtonHeld équivalente SaveErrorTimer (start_menu.c), même attente
+task50_save_game équivalente SaveCallback (start_menu.c), boucle de sauvegarde
