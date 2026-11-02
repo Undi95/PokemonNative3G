@@ -70,7 +70,6 @@ static void TrySetDestinyBondToHappen(void);
 static u8 AttacksThisTurn(u8 battler, u16 move); // Note: returns 1 if it's a charging turn, otherwise 2.
 static void CheckWonderGuardAndLevitate(void);
 static u8 ChangeStatBuffs(s8 statValue, u8 statId, u8, const u8 *BS_ptr);
-static bool32 IsMonGettingExpSentOut(void);
 static void InitLevelUpBanner(void);
 static bool8 SlideInLevelUpBanner(void);
 static bool8 SlideOutLevelUpBanner(void);
@@ -6243,7 +6242,7 @@ static void SpriteCB_MonIconOnLvlUpBanner(struct Sprite *sprite)
 #undef sDestroy
 #undef sXOffset
 
-static bool32 IsMonGettingExpSentOut(void)
+bool32 IsMonGettingExpSentOut(void) // Rouge Feu : exportée (Task_CreateLevelUpVerticalStripes)
 {
     if (gBattlerPartyIndexes[0] == gBattleStruct->expGetterMonId)
         return TRUE;

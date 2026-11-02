@@ -28,6 +28,8 @@
 #include "text.h"
 #include "util.h"
 #include "window.h"
+#include "battle_script_commands.h"
+#include "kanto_pokemon_special_anim.h"
 #include "constants/battle_anim.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -107,6 +109,8 @@ static void CompleteWhenChoseItem(void);
 static void Task_LaunchLvlUpAnim(u8);
 static void Task_PrepareToGiveExpWithExpBar(u8);
 static void DestroyExpTaskAndCompleteOnInactiveTextPrinter(u8);
+static void Task_CreateLevelUpVerticalStripes(u8); // Rouge Feu
+static void PreviewDeterminativeMoveTargets(void); // Rouge Feu
 static void Task_GiveExpWithExpBar(u8);
 static void Task_UpdateLvlInHealthbox(u8);
 static void PrintLinkStandbyMsg(void);
@@ -471,6 +475,9 @@ static void HandleInputChooseMove(void)
     bool32 canSelectTarget = FALSE;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleBufferA[gActiveBattler][4]);
 
+    // Rouge Feu (HandleInputChooseMove) : en combat double, les Pokémon que la capacité va toucher blanchissent ;
+    // dans tous les combats (décision du 2026-11-02). Chaque sortie et chaque mouvement du curseur rend les couleurs.
+    PreviewDeterminativeMoveTargets();
     if (JOY_HELD(DPAD_ANY) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
         gPlayerDpadHoldFrames++;
     else
@@ -519,6 +526,8 @@ static void HandleInputChooseMove(void)
             }
         }
 
+        ResetPaletteFadeControl(); // Rouge Feu
+        BeginNormalPaletteFade(0xF0000, 0, 0, 0, RGB_WHITE);
         if (!canSelectTarget)
         {
             BtlController_EmitTwoReturnValues(B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[gActiveBattler] | (gMultiUsePlayerCursor << 8));
@@ -543,6 +552,8 @@ static void HandleInputChooseMove(void)
         PlaySE(SE_SELECT);
         BtlController_EmitTwoReturnValues(B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, 0xFFFF);
         PlayerBufferExecCompleted();
+        ResetPaletteFadeControl(); // Rouge Feu
+        BeginNormalPaletteFade(0xF0000, 0, 0, 0, RGB_WHITE);
     }
     else if (JOY_NEW(DPAD_LEFT))
     {
@@ -554,6 +565,7 @@ static void HandleInputChooseMove(void)
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[gActiveBattler], 0);
             MoveSelectionDisplayPPNumber();
             MoveSelectionDisplayMoveType();
+            BeginNormalPaletteFade(0xF0000, 0, 0, 0, RGB_WHITE); // Rouge Feu
         }
     }
     else if (JOY_NEW(DPAD_RIGHT))
@@ -567,6 +579,7 @@ static void HandleInputChooseMove(void)
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[gActiveBattler], 0);
             MoveSelectionDisplayPPNumber();
             MoveSelectionDisplayMoveType();
+            BeginNormalPaletteFade(0xF0000, 0, 0, 0, RGB_WHITE); // Rouge Feu
         }
     }
     else if (JOY_NEW(DPAD_UP))
@@ -579,6 +592,7 @@ static void HandleInputChooseMove(void)
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[gActiveBattler], 0);
             MoveSelectionDisplayPPNumber();
             MoveSelectionDisplayMoveType();
+            BeginNormalPaletteFade(0xF0000, 0, 0, 0, RGB_WHITE); // Rouge Feu
         }
     }
     else if (JOY_NEW(DPAD_DOWN))
@@ -592,6 +606,7 @@ static void HandleInputChooseMove(void)
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[gActiveBattler], 0);
             MoveSelectionDisplayPPNumber();
             MoveSelectionDisplayMoveType();
+            BeginNormalPaletteFade(0xF0000, 0, 0, 0, RGB_WHITE); // Rouge Feu
         }
     }
     else if (JOY_NEW(SELECT_BUTTON))
@@ -1297,16 +1312,186 @@ static void Task_UpdateLvlInHealthbox(u8 taskId)
     }
 }
 
+// Rouge Feu (battle_controller_player.c) : en combat double, blanchit les Pokémon que la capacité sous le curseur
+// touchera à coup sûr (gBattleMoves[].target)
+static void PreviewDeterminativeMoveTargets(void)
+{
+    u32 bitMask = 0;
+    u8 startY = 0;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+    {
+        u8 moveTarget;
+        struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleBufferA[gActiveBattler][4]);
+        u16 move = moveInfo->moves[gMoveSelectionCursor[gActiveBattler]];
+
+        if (move == MOVE_CURSE)
+        {
+            if (moveInfo->monTypes[0] != TYPE_GHOST && moveInfo->monTypes[1] != TYPE_GHOST)
+                moveTarget = MOVE_TARGET_USER;
+            else
+                moveTarget = MOVE_TARGET_SELECTED;
+        }
+        else
+        {
+            moveTarget = gBattleMoves[moveInfo->moves[gMoveSelectionCursor[gActiveBattler]]].target;
+        }
+        switch (moveTarget)
+        {
+        case MOVE_TARGET_SELECTED:
+        case MOVE_TARGET_DEPENDS:
+        case MOVE_TARGET_USER_OR_SELECTED:
+        case MOVE_TARGET_RANDOM:
+            bitMask = 0xF0000;
+            startY = 0;
+            break;
+        case MOVE_TARGET_BOTH:
+        case MOVE_TARGET_OPPONENTS_FIELD:
+            bitMask = (gBitTable[GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)]
+                     | gBitTable[GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)]) << 16;
+            startY = 8;
+            break;
+        case MOVE_TARGET_USER:
+            switch (move)
+            {
+            case MOVE_HAZE:
+            case MOVE_SANDSTORM:
+            case MOVE_PERISH_SONG:
+            case MOVE_RAIN_DANCE:
+            case MOVE_SUNNY_DAY:
+            case MOVE_HAIL:
+            case MOVE_MUD_SPORT:
+            case MOVE_WATER_SPORT:
+                bitMask = 0xF0000;
+                break;
+            case MOVE_SAFEGUARD:
+            case MOVE_REFLECT:
+            case MOVE_LIGHT_SCREEN:
+            case MOVE_MIST:
+            case MOVE_HEAL_BELL:
+            case MOVE_AROMATHERAPY:
+                bitMask = (gBitTable[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)]
+                         | gBitTable[GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)]) << 16;
+                break;
+            case MOVE_HELPING_HAND:
+                bitMask = (gBitTable[GetBattlerAtPosition(GetBattlerPosition(gActiveBattler) ^ BIT_FLANK)]) << 16;
+                break;
+            default:
+                bitMask = (gBitTable[gActiveBattler]) << 16;
+                break;
+            }
+            startY = 8;
+            break;
+        case MOVE_TARGET_FOES_AND_ALLY:
+            bitMask = (gBitTable[GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)]
+                     | gBitTable[GetBattlerAtPosition(GetBattlerPosition(gActiveBattler) ^ BIT_FLANK)]
+                     | gBitTable[GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)]) << 16;
+            startY = 8;
+            break;
+        }
+        BeginNormalPaletteFade(bitMask, 8, startY, 0, RGB_WHITE);
+    }
+}
+
+// Rouge Feu (DestroyExpTaskAndCompleteOnInactiveTextPrinter) : après une montée de niveau, des bandes verticales
+// passent sur le Pokémon (Task_CreateLevelUpVerticalStripes) ; dans tous les combats (décision du 2026-11-02)
 static void DestroyExpTaskAndCompleteOnInactiveTextPrinter(u8 taskId)
 {
-    u8 monIndex;
-    u8 battler;
+    s32 battlerId = gTasks[taskId].tExpTask_battler;
 
-    monIndex = gTasks[taskId].tExpTask_monId;
-    GetMonData(&gPlayerParty[monIndex], MON_DATA_LEVEL);  // Unused return value.
-    battler = gTasks[taskId].tExpTask_battler;
-    gBattlerControllerFuncs[battler] = CompleteOnInactiveTextPrinter;
-    DestroyTask(taskId);
+    if (IsBattlerSpriteVisible((u8)battlerId) == TRUE)
+    {
+        gTasks[taskId].func = Task_CreateLevelUpVerticalStripes;
+        gTasks[taskId].data[15] = 0;
+    }
+    else
+    {
+        gBattlerControllerFuncs[battlerId] = CompleteOnInactiveTextPrinter;
+        DestroyTask(taskId);
+    }
+}
+
+// Rouge Feu
+static void Task_CreateLevelUpVerticalStripes(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    u8 battlerId = tExpTask_battler;
+    u16 bgPriorityRank = GetBattlerSpriteBGPriorityRank(battlerId);
+    bool32 isOnBg2 = ((bgPriorityRank ^ 1)) != 0;
+    struct Sprite *sprite = &gSprites[gBattlerSpriteIds[battlerId]];
+
+    switch (data[15])
+    {
+    case 0:
+        if (!IsTextPrinterActive(0))
+        {
+            if (!isOnBg2)
+            {
+                data[14] = gBattle_BG1_X;
+                data[13] = gBattle_BG1_Y;
+                gBattle_BG1_X = -(sprite->x + sprite->x2) + 32;
+                gBattle_BG1_Y = -(sprite->y + sprite->y2) + 32;
+            }
+            else
+            {
+                data[14] = gBattle_BG2_X;
+                data[13] = gBattle_BG2_Y;
+                gBattle_BG2_X = -(sprite->x + sprite->x2) + 32;
+                gBattle_BG2_Y = -(sprite->y + sprite->y2) + 32;
+            }
+            ++data[15];
+        }
+        break;
+    case 1:
+        {
+            u32 battlerIdAlt = battlerId;
+            bool32 v6Alt = isOnBg2;
+
+            // MoveBattlerSpriteToBG de RF cache toujours le sprite : celui d'Émeraude le fait avec TRUE
+            MoveBattlerSpriteToBG(battlerIdAlt, v6Alt, TRUE);
+        }
+        ++data[15];
+        break;
+    case 2:
+        PlaySE(SE_SHOP); // SE_RS_SHOP de RF : le son de Rubis/Saphir, SE_SHOP d'Émeraude
+        if (IsMonGettingExpSentOut())
+            CreateLevelUpVerticalSpritesTask(sprite->x + sprite->x2,
+                        sprite->y + sprite->y2,
+                        10000,
+                        10000,
+                        1,
+                        0);
+        ++data[15];
+        break;
+    case 3:
+        if (!LevelUpVerticalSpritesTaskIsRunning())
+        {
+            sprite->invisible = FALSE;
+            ++data[15];
+        }
+        break;
+    case 5:
+        ResetBattleAnimBg(isOnBg2);
+        ++data[15];
+        break;
+    case 4:
+        ++data[15];
+        break;
+    case 6:
+        if (!isOnBg2)
+        {
+            gBattle_BG1_X = data[14];
+            gBattle_BG1_Y = data[13];
+        }
+        else
+        {
+            gBattle_BG2_X = data[14];
+            gBattle_BG2_Y = data[13];
+        }
+        gBattlerControllerFuncs[battlerId] = CompleteOnInactiveTextPrinter;
+        DestroyTask(taskId);
+        break;
+    }
 }
 
 static void FreeMonSpriteAfterFaintAnim(void)

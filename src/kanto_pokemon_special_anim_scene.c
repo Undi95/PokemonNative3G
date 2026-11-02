@@ -1965,7 +1965,12 @@ static void CreateLevelUpVerticalSprite(u8 taskId, s16 *data)
     {
         gSprites[spriteId].oam.priority = tPriority;
         gSprites[spriteId].tsYsubpixel = 0;
+#ifdef UBFIX
+        // tMadeSprCt (s16) promu en int : 1103515245 × 2 déborde (indéfini) ; la GBA tronque modulo 2^32, comme u32
+        gSprites[spriteId].tsSpeed = (ISO_RANDOMIZE1((u32)tMadeSprCt) & 0x3F) + 0x20;
+#else
         gSprites[spriteId].tsSpeed = (ISO_RANDOMIZE1(tMadeSprCt) & 0x3F) + 0x20;
+#endif
         gSprites[spriteId].tsTaskId = taskId;
         tActiveSprCt++;
     }
