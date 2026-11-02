@@ -16,6 +16,12 @@
 - Options : avec la police KANTO, le titre de la page (« L R 2/2 : HOENN/KANTO ») ne recouvre plus « OPTIONS ».
 - Dôme de Combat : le tableau du tournoi précédent (panneau du hall) ne fait plus planter le jeu en ouvrant la fiche
   d'un dresseur ou d'un match, ni en y revenant.
+- Arène de Céladopole : le combat contre la Pique-nique TINA faisait planter le jeu (ou, après un autre combat,
+  reprenait l'équipe de ce combat, donnait 0 ¥ et recommençait sans fin). La Pique-nique SOFIA (Grotte, sous-sol)
+  avait l'image et le nom de la Tête de la Zone de Combat. Leurs numéros étaient ceux d'adversaires spéciaux
+  d'Émeraude (Base Secrète, Tête de la Zone de Combat).
+- Crédits de Kanto : le métier et les noms s'écrivent de nouveau sur leurs lignes (depuis la 1.1, ils s'écrivaient
+  l'un sur l'autre sur une seule ligne, « DiJunichi Masuda »).
 
 ## Version 1.1 (1er novembre 2026)
 

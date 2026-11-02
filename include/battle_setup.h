@@ -18,6 +18,13 @@ extern u16 gTrainerBattleOpponent_A;
 extern u16 gTrainerBattleOpponent_B;
 extern u16 gPartnerTrainerId;
 
+// PokemonNative3G : deux dresseurs de Kanto (constants/kanto_trainers.h, à partir de 864) portent les numéros de
+// TRAINER_FRONTIER_BRAIN (1022 : PIQUE-NIQUE SOFIA) et de TRAINER_SECRET_BASE (1024 : PIQUE-NIQUE TINA, qui se
+// battait comme une Base Secrète : équipe d'un autre combat, 0 ¥, pas de drapeau, combat sans fin). Ces adversaires
+// spéciaux ne le sont que dans leur type de combat (gBattleTypeFlags, posé avant tous ces tests)
+#define IS_SECRET_BASE_OPPONENT(trainerId) ((trainerId) == TRAINER_SECRET_BASE && (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE))
+#define IS_FRONTIER_BRAIN_OPPONENT(trainerId) ((trainerId) == TRAINER_FRONTIER_BRAIN && (gBattleTypeFlags & BATTLE_TYPE_FRONTIER))
+
 void BattleSetup_StartWildBattle(void);
 void BattleSetup_StartBattlePikeWildBattle(void);
 void BattleSetup_StartRoamerBattle(void);

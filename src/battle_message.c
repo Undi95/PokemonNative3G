@@ -2338,7 +2338,7 @@ void BufferStringBattle(u16 stringID)
     txtBuff = Alloc(size);
     memcpy(txtBuff, stringPtr, size);
     if (!(gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
-        && gTrainerBattleOpponent_A != TRAINER_UNION_ROOM && gTrainerBattleOpponent_A != TRAINER_FRONTIER_BRAIN
+        && gTrainerBattleOpponent_A != TRAINER_UNION_ROOM && !IS_FRONTIER_BRAIN_OPPONENT(gTrainerBattleOpponent_A)
         && !(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_TRAINER_HILL)))
     {
         u8 *toSwap, *txt;
@@ -2665,7 +2665,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst)
                     trClass = GetSecretBaseTrainerClass();
                 else if (gTrainerBattleOpponent_A == TRAINER_UNION_ROOM)
                     trClass = GetUnionRoomTrainerClass();
-                else if (gTrainerBattleOpponent_A == TRAINER_FRONTIER_BRAIN)
+                else if (IS_FRONTIER_BRAIN_OPPONENT(gTrainerBattleOpponent_A))
                     trClass = GetFrontierBrainTrainerClass();
                 else if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
                     trClass = GetFrontierOpponentClass(gTrainerBattleOpponent_A), gender = IsFrontierTrainerFemale(gTrainerBattleOpponent_A);
@@ -2703,7 +2703,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst)
                     // Rival de Rouge Feu : le nom choisi pour lui (battle_message.c de RF)
                     toCpy = gSaveBlockKanto.rivalName;
                 }
-                else if (gTrainerBattleOpponent_A == TRAINER_FRONTIER_BRAIN)
+                else if (IS_FRONTIER_BRAIN_OPPONENT(gTrainerBattleOpponent_A))
                 {
                     CopyFrontierBrainTrainerName(text);
                     toCpy = text;

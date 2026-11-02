@@ -1997,7 +1997,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
     s32 i, j;
     u8 monsCount;
 
-    if (trainerNum == TRAINER_SECRET_BASE)
+    if (IS_SECRET_BASE_OPPONENT(trainerNum))
         return 0;
 
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && !(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER

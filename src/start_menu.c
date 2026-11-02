@@ -526,12 +526,20 @@ static bool32 PrintStartMenuActions(s8 *pIndex, u32 count)
 
     do
     {
-        if (sStartMenuItems[sCurrentStartMenuActions[index]].func.u8_void == StartMenuPlayerNameCallback)
+        if (gSaveBlock2Ptr->optionsMenuStyle)
         {
-            if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu : police de RF
-                Menu_PrintFormatIntlPlayerName(GetStartMenuWindowId(), sStartMenuItems[sCurrentStartMenuActions[index]].text, 8, START_MENU_ITEM_Y(index));
-            else
-                PrintPlayerNameOnWindow(GetStartMenuWindowId(), sStartMenuItems[sCurrentStartMenuActions[index]].text, 8, START_MENU_ITEM_Y(index));
+            // Rouge Feu : police de RF (le nom du joueur comme Menu_PrintFormatIntlPlayerName). Plus de 7 entrées se
+            // resserrent (KANTO_START_MENU_SPACING) : sur fond transparent (la fenêtre est vidée avant), la case
+            // d'une entrée n'efface plus le bas de celle du dessus ; à 15 px, même rendu que RF
+            static const u8 sKantoStartMenuColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
+
+            StringExpandPlaceholders(gStringVar4, sStartMenuItems[sCurrentStartMenuActions[index]].text);
+            AddTextPrinterParameterized3(GetStartMenuWindowId(), FONT_KANTO, 8, START_MENU_ITEM_Y(index),
+                                         sKantoStartMenuColors, TEXT_SKIP_DRAW, gStringVar4);
+        }
+        else if (sStartMenuItems[sCurrentStartMenuActions[index]].func.u8_void == StartMenuPlayerNameCallback)
+        {
+            PrintPlayerNameOnWindow(GetStartMenuWindowId(), sStartMenuItems[sCurrentStartMenuActions[index]].text, 8, START_MENU_ITEM_Y(index));
         }
         else
         {

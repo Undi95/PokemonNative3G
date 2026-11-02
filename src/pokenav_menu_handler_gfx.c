@@ -1236,7 +1236,9 @@ static void PrintCurrentOptionDescription(void)
         desc = gText_CheckMapOfKanto;
     u32 width = GetStringWidth(FONT_NORMAL, desc, -1);
     FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(6));
-    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (192 - width) / 2, 1, sOptionDescTextColors, 0, desc);
+    // PokemonNative3G : avec la police KANTO, une description peut dépasser les 192 px de la fenêtre ; (192 - width)
+    // / 2 devenait négatif (x rebouclé loin à droite, texte coupé) : x = 0, et WrapTextToWindow resserre ses espaces
+    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, width < 192 ? (192 - width) / 2 : 0, 1, sOptionDescTextColors, 0, desc);
 }
 
 // Printed when Ribbons is selected if no PC/party mons have ribbons
@@ -1247,7 +1249,7 @@ static void PrintNoRibbonWinners(void)
     const u8 *s = gText_NoRibbonWinners;
     u32 width = GetStringWidth(FONT_NORMAL, s, -1);
     FillWindowPixelBuffer(gfx->optionDescWindowId, PIXEL_FILL(6));
-    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, (192 - width) / 2, 1, sOptionDescTextColors2, 0, s);
+    AddTextPrinterParameterized3(gfx->optionDescWindowId, FONT_NORMAL, width < 192 ? (192 - width) / 2 : 0, 1, sOptionDescTextColors2, 0, s); // comme PrintCurrentOptionDescription
 }
 
 static bool32 IsDma3ManagerBusyWithBgCopy_(void)

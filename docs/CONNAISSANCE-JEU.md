@@ -33,6 +33,7 @@ Toutes à deux valeurs, 0 = HOENN (Émeraude), 1 = KANTO (RF). Index de `jeu.opt
 | Pokédex | Émeraude en mode Hoenn ne compte pas un Pokémon hors du Pokédex de Hoenn (MEWTWO : VUS 0) ; RF compte le Pokédex de Kanto | — |
 | Listes de RF (`kanto_list_menu.c` : badges d'Azuria, ascenseurs) | 4 lignes de 14 px dans 7 tiles, avec `FONT_KANTO` | avant le 2026-11-02, `FONT_NORMAL` (16 px) coupait la 4ᵉ ligne |
 | Étages (ascenseurs de RF) | « RC », « 1ᵉʳ », « 2ᵉ »… : `{SUPER_ER}` (0x2C) et `{SUPER_E}` (0x84) sont de vraies lettres | — |
+| Crédits de Kanto | le métier (orange) sur sa ligne, les noms (blancs) en dessous, décalés à droite : deux textes dans la même fenêtre, placés par des lignes vides (« \n\n\nJunichi Masuda\n\n\n ») | `WrapTextToWindow` ne compte que les lignes jusqu'à la dernière non vide ; avant le 2026-11-02, il remettait ces lignes bout à bout (titre et noms sur une seule ligne) |
 | Maison à vendre (Bourg Palette, fusion) | boîte d'argent « 3000¥ » alignée par des `CHAR_SPACER` (0x77) | — |
 
 ## Règle pour le code importé de RF
@@ -41,6 +42,15 @@ Toutes à deux valeurs, 0 = HOENN (Émeraude), 1 = KANTO (RF). Index de `jeu.opt
 écrit avec `FONT_NORMAL` prend les mesures d'Émeraude (16 px) : des lignes coupées en bas de fenêtre. À chaque écran
 de RF : vérifier la police des listes et des textes de plusieurs lignes (le détecteur « texte coupé » et la grille le
 montrent).
+
+## Règle pour les numéros de dresseurs
+
+Les dresseurs de Kanto suivent ceux d'Émeraude (`KANTO_TRAINERS_START` = 864 à 1606). Deux numéros sont aussi ceux
+d'adversaires spéciaux d'Émeraude : 1022 `TRAINER_FRONTIER_BRAIN` (PIQUE-NIQUE SOFIA, Grotte B1F) et 1024
+`TRAINER_SECRET_BASE` (PIQUE-NIQUE TINA, Arène de Céladopole). Hors des fichiers de la Zone de Combat, tout test sur
+ces valeurs passe par `IS_SECRET_BASE_OPPONENT` / `IS_FRONTIER_BRAIN_OPPONENT` (`include/battle_setup.h`), qui
+vérifient aussi le type de combat. Renuméroter Kanto déplacerait les drapeaux de victoire des sauvegardes. Scénario :
+`kanto_trainer_ids`.
 
 ## Ce que l'explorateur ne fait pas (à tester autrement)
 

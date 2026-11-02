@@ -3460,7 +3460,7 @@ static bool8 ShouldGetStatBadgeBoost(u16 badgeFlag, u8 battler)
         return FALSE;
     else if (GetBattlerSide(battler) != B_SIDE_PLAYER)
         return FALSE;
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && gTrainerBattleOpponent_A == TRAINER_SECRET_BASE)
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && IS_SECRET_BASE_OPPONENT(gTrainerBattleOpponent_A))
         return FALSE;
     else if (FlagGet(badgeFlag))
         return TRUE;

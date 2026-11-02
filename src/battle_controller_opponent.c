@@ -1259,7 +1259,7 @@ static void OpponentHandleDrawTrainerPic(void)
     {
         trainerPicId = GetSecretBaseTrainerPicIndex();
     }
-    else if (gTrainerBattleOpponent_A == TRAINER_FRONTIER_BRAIN)
+    else if (IS_FRONTIER_BRAIN_OPPONENT(gTrainerBattleOpponent_A))
     {
         trainerPicId = GetFrontierBrainTrainerPicIndex();
     }
@@ -1343,7 +1343,7 @@ static void OpponentHandleTrainerSlide(void)
     {
         trainerPicId = GetSecretBaseTrainerPicIndex();
     }
-    else if (gTrainerBattleOpponent_A == TRAINER_FRONTIER_BRAIN)
+    else if (IS_FRONTIER_BRAIN_OPPONENT(gTrainerBattleOpponent_A))
     {
         trainerPicId = GetFrontierBrainTrainerPicIndex();
     }
