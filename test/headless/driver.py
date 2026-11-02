@@ -122,6 +122,7 @@ class Game:
         self._lines = queue.Queue()
         threading.Thread(target=self._read_lines, daemon=True).start()
         self.steps = []
+        self.step_names = {}      # index in steps -> the same step without its address of this build (see script())
         self.frames = 0
         self.texts = []           # (frame, window, text) of every text printed
         self.text_colors = []     # the text color (TEXT_COLOR_*) of each of self.texts
@@ -313,6 +314,9 @@ class Game:
         """Lance un script de carte par son nom (« EventScript_PC »), comme si le joueur avait parlé à quelqu'un :
         le joueur doit être libre sur la carte."""
         reply = self.dev("scripts.lancer", self.symbols.offset(label))
+        # L'empreinte des entrées d'une référence d'écran garde le nom, pas l'adresse : elle change d'un build à
+        # l'autre (Windows, Linux ASan) ; input.txt garde l'adresse, pour rejouer
+        self.step_names[len(self.steps) - 1] = f"!dev scripts.lancer {label}"
         if "refuse" in reply:
             raise GameError(f"script {label} : {reply.strip()}")
         return wait_until(self, lambda s: not s.free, limit=60)
@@ -503,7 +507,8 @@ def check_screen(game, name, max_pixels=0):
     shot = Image.open(game.shot(name)).convert("RGB")
     ref = os.path.join(REFS_DIR, name + ".png")
     inputs_path = os.path.join(REFS_DIR, name + ".inputs")
-    inputs = hashlib.sha1(repr(game.steps).encode()).hexdigest()
+    steps = [(f, game.step_names.get(i, b)) for i, (f, b) in enumerate(game.steps)]
+    inputs = hashlib.sha1(repr(steps).encode()).hexdigest()
     if os.environ.get("UPDATE_REFS") == "1" or not os.path.exists(ref):
         os.makedirs(REFS_DIR, exist_ok=True)
         if not os.path.exists(ref) or list(Image.open(ref).convert("RGB").getdata()) != list(shot.getdata()):

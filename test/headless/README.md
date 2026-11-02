@@ -85,7 +85,8 @@ returns its text, with functions and data named; `dev.py` sends the same command
 that runs on the PC. A bug report made in a DEBUG game (DEBUG > Rapport de bug: the save at launch, the
 keys of every frame, the state and the last screens) is played again with `replay.py BINARY report.tar`,
 up to the same frame; `report_check.py BINARY` checks that whole chain. `game.script("EventScript_PC")`
-starts a map script by its name, `game.start_menu()` gives the start menu's entries and cursor.
+starts a map script by its name (the screen references keep the name, not the address, which changes
+from one build to another), `game.start_menu()` gives the start menu's entries and cursor.
 
 Two tools go through the whole game: `crawl.py BINARY` visits every map and talks to every person,
 sign and hidden item (`build/headless/crawl/atlas.json` and `rapport.txt`: texts, battles, anomalies,
