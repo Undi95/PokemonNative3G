@@ -25,3 +25,152 @@ DoGlobalWildEncounterDiceRoll écartée rencontres d'Émeraude partout (décisio
 DoWildEncounterRateDiceRoll écartée rencontres d'Émeraude partout (décision 2026-11-02) ; EncounterOddsCheck
 GenerateWildMon équivalente CreateWildMon (wild_encounter.c), avec la lettre des ZARBI de Tanoby de RF
 GenerateFishingEncounter équivalente GenerateFishingWildMon (wild_encounter.c)
+# ---- Lecture des « à vérifier » (tools/carto_diff.py) ; règle user 2026-11-02 : variante de détail du code commun =
+# ---- Émeraude gardée, notée dans docs/VARIANTES-RF.md (« écartée variante RF »)
+# field_effect.c : anciens noms de RF des mêmes fonctions d'Émeraude. Ne diffèrent que le journal et l'aide de RF
+# (écartés), StoreWord/LoadWordFromTwoHalfwords (pointeur sur deux cases de tâche) = task->ptr.funcPtr du port PC
+# 64 bits, des numéros de case de tâche, des constantes écrites en valeur, des noms de constantes (FLDEFF_POP_OUT_OF_ASH
+# = FLDEFF_ASH_PUFF), les tables de fonctions elles-mêmes appariées.
+CreateTeleportFieldEffectTask équivalente FldEff_TeleportWarpOut (field_effect.c), même code
+EscalatorWarpEffect_1 équivalente EscalatorWarpOut_Init (field_effect.c), + journal de RF
+EscalatorWarpEffect_4 équivalente EscalatorWarpOut_Down_End (field_effect.c), Escalator_AnimatePlayerGoingDown = RideDownEscalatorOut
+EscalatorWarpEffect_6 équivalente EscalatorWarpOut_Up_End (field_effect.c), Escalator_AnimatePlayerGoingUp = RideUpEscalatorOut
+EscalatorWarpInEffect_1 équivalente EscalatorWarpIn_Init (field_effect.c), même code
+EscalatorWarpInEffect_7 équivalente EscalatorWarpIn_End (field_effect.c), RF + UnfreezeObjectEvents et journal (pas d'escalator à Kanto)
+Escalator_TransitionToWarpInEffect équivalente WarpAtEndOfEscalator (field_effect.c), même code
+FallWarpEffect_1 équivalente FallWarpEffect_Init (field_effect.c), même code
+FallWarpEffect_2 équivalente FallWarpEffect_WaitWeather (field_effect.c), même code
+FallWarpEffect_4 équivalente FallWarpEffect_Fall (field_effect.c), même code
+FallWarpEffect_6 équivalente FallWarpEffect_CameraShake (field_effect.c), même code
+FieldCB_EscalatorWarpIn équivalente FieldCallback_EscalatorWarpIn (field_effect.c), RF + FreezeObjectEvents et journal (pas d'escalator à Kanto)
+FieldCallback_EscapeRopeExit équivalente FieldCallback_EscapeRopeWarpIn (field_effect.c), + journal de RF
+FieldCallback_TeleportIn équivalente FieldCallback_TeleportWarpIn (field_effect.c), même code
+LavaridgeGym1FWarpEffect_1 équivalente LavaridgeGym1FWarpEffect_Init (field_effect.c), même code (Arène de Vermilava : Hoenn)
+LavaridgeGym1FWarpEffect_2 équivalente LavaridgeGym1FWarpEffect_AshPuff (field_effect.c), FLDEFF_POP_OUT_OF_ASH = FLDEFF_ASH_PUFF
+LavaridgeGym1FWarpEffect_4 équivalente LavaridgeGym1FWarpEffect_FadeOut (field_effect.c), FLDEFF_POP_OUT_OF_ASH = FLDEFF_ASH_PUFF
+LavaridgeGymB1FWarpEffect_1 équivalente LavaridgeGymB1FWarpEffect_Init (field_effect.c), même code
+LavaridgeGymB1FWarpEffect_3 équivalente LavaridgeGymB1FWarpEffect_Launch (field_effect.c), FLDEFF_LAVARIDGE_GYM_WARP = FLDEFF_ASH_LAUNCH
+LavaridgeGymB1FWarpExitEffect_1 équivalente LavaridgeGymB1FWarpExitEffect_Init (field_effect.c), même code
+LavaridgeGymB1FWarpExitEffect_2 équivalente LavaridgeGymB1FWarpExitEffect_StartPopOut (field_effect.c), FLDEFF_POP_OUT_OF_ASH = FLDEFF_ASH_PUFF
+LavaridgeGymB1FWarpExitEffect_3 équivalente LavaridgeGymB1FWarpExitEffect_PopOut (field_effect.c), même code
+LoadFieldMoveStreaksTilemapToVram équivalente LoadFieldMoveOutdoorStreaksTilemap (field_effect.c), 10 * 32 = ARRAY_COUNT(sFieldMoveStreaksOutdoors_Tilemap)
+PokeballGlowEffect_FlashFirstThree équivalente PokeballGlowEffect_Flash1 (field_effect.c), 0x1007 = FLDEFF_PAL_TAG_POKEBALL_GLOW, >= 3 = > 2
+ShowMonEffect_Indoors_1 équivalente FieldMoveShowMonIndoorsEffect_Init (field_effect.c), pointeur de VBlank (port 64 bits)
+ShowMonEffect_Indoors_2 équivalente FieldMoveShowMonIndoorsEffect_LoadGfx (field_effect.c), même code
+ShowMonEffect_Indoors_4 équivalente FieldMoveShowMonIndoorsEffect_WaitForMon (field_effect.c), même code
+ShowMonEffect_Indoors_5 équivalente FieldMoveShowMonIndoorsEffect_RestoreBg (field_effect.c), RF remet aussi WININ (invisible : fenêtres coupées)
+ShowMonEffect_Indoors_6 équivalente FieldMoveShowMonIndoorsEffect_SlideBannerOff (field_effect.c), même code
+ShowMonEffect_Outdoors_1 équivalente FieldMoveShowMonOutdoorsEffect_Init (field_effect.c), DISPLAY_WIDTH / HEIGHT en valeur, pointeur de VBlank
+ShowMonEffect_Outdoors_2 équivalente FieldMoveShowMonOutdoorsEffect_LoadGfx (field_effect.c), même code
+ShowMonEffect_Outdoors_3 équivalente FieldMoveShowMonOutdoorsEffect_CreateBanner (field_effect.c), WIN_RANGE écrit à la main, mêmes bornes
+ShowMonEffect_Outdoors_4 équivalente FieldMoveShowMonOutdoorsEffect_WaitForMon (field_effect.c), case de tâche
+ShowMonEffect_Outdoors_6 équivalente FieldMoveShowMonOutdoorsEffect_RestoreBg (field_effect.c), WIN_RANGE(0, 241) = DISPLAY_WIDTH + 1
+SpriteCB_FlyBirdWithPlayer écartée variante RF : Émeraude gardée (SpriteCB_FlyBirdSwoopDown : arc 140, pas de 4 ; RF 180, pas de 2) ; docs/VARIANTES-RF.md
+SpriteCB_PopOutOfAsh équivalente SpriteCB_AshLaunch (field_effect.c), FLDEFF_POP_OUT_OF_ASH = FLDEFF_ASH_LAUNCH
+Task_DoTeleportFieldEffect équivalente Task_TeleportWarpOut (field_effect.c), table appariée
+Task_DoTeleportInFieldEffect équivalente Task_TeleportWarpIn (field_effect.c), table appariée
+Task_EscalatorWarpFieldEffect équivalente Task_EscalatorWarpOut (field_effect.c), table appariée
+Task_EscalatorWarpInFieldEffect équivalente Task_EscalatorWarpIn (field_effect.c), même code
+Task_FldEffUseSurf équivalente Task_SurfFieldEffect (field_effect.c), table appariée
+Task_MoveDeoxysRock_Step équivalente Task_MoveDeoxysRock (field_effect.c), << 4 = * 16
+Task_ShowMon_Indoors équivalente Task_FieldMoveShowMonIndoors (field_effect.c), table appariée
+Task_ShowMon_Outdoors équivalente Task_FieldMoveShowMonOutdoors (field_effect.c), table appariée
+TeleportFieldEffectTask1 équivalente TeleportWarpOutFieldEffect_Init (field_effect.c), même code
+TeleportFieldEffectTask2 équivalente TeleportWarpOutFieldEffect_SpinGround (field_effect.c), même table de rotation (initialiseurs nommés)
+TeleportFieldEffectTask3 équivalente TeleportWarpOutFieldEffect_SpinExit (field_effect.c), 168 = DISPLAY_HEIGHT + 8
+TeleportFieldEffectTask4 équivalente TeleportWarpOutFieldEffect_End (field_effect.c), Émeraude + Tour Mirage (Hoenn)
+TeleportInFieldEffectTask3 équivalente TeleportWarpInFieldEffect_SpinGround (field_effect.c), directions en valeur
+UseSurfEffect_2 équivalente SurfFieldEffect_FieldMovePose (field_effect.c), même code
+UseSurfEffect_3 équivalente SurfFieldEffect_ShowMon (field_effect.c), case de tâche, 0x80000000 = 1 << 31
+UseSurfEffect_4 équivalente SurfFieldEffect_JumpOnSurfBlob (field_effect.c), PLAYER_AVATAR_GFX_RIDE de RF = PLAYER_AVATAR_STATE_SURFING
+UseSurfEffect_5 équivalente SurfFieldEffect_End (field_effect.c), + aide de RF
+VBlankCB_ShowMonEffect_Indoors équivalente VBlankCB_FieldMoveShowMonIndoors (field_effect.c), pointeur (port 64 bits)
+VBlankCB_ShowMonEffect_Outdoors équivalente VBlankCB_FieldMoveShowMonOutdoors (field_effect.c), pointeur, cases de tâche
+waterfall_1_do_anim_probably équivalente WaterfallFieldEffect_ShowMon (field_effect.c), même code
+waterfall_2_wait_anim_finish_probably équivalente WaterfallFieldEffect_WaitForShowMon (field_effect.c), même code
+waterfall_3_move_player_probably équivalente WaterfallFieldEffect_RideUp (field_effect.c), WalkSlower de RF = WalkSlow d'Émeraude (1 pixel / 2 images)
+waterfall_4_wait_player_move_probably équivalente WaterfallFieldEffect_ContinueRideOrEnd (field_effect.c), même code
+# event_object_movement.c. Mouvements de RF que ni ses scripts ni son code n'utilisent (macros seulement) : glide_*,
+# jump_special_with_effect_*, walk_slowest_*, emote_smile, face_*_fast et shake_head_or_walk_in_place (seuls
+# PlayerFaceDirectionFast / PlayerShakeHeadOrWalkInPlace de RF, jamais appelés).
+CalcWhetherObjectIsOffscreen équivalente UpdateObjectEventOffscreen (event_object_movement.c), avec la marge de l'OCEANE de RF (portée 2026-11-02)
+CameraObjectReset1 équivalente CameraObjectReset (event_object_movement.c), CAMERA_STATE_INIT = 0
+CameraObjectReset2 équivalente CameraObjectFreeze (event_object_movement.c), CAMERA_STATE_FROZEN = 2
+CameraObjectSetFollowedObjectId équivalente CameraObjectSetFollowedSpriteId (event_object_movement.c), même code
+CopyablePlayerMovement_GoSpeed0 équivalente CopyablePlayerMovement_WalkNormal (event_object_movement.c), + MEW de l'Île Lointaine (Hoenn)
+CopyablePlayerMovement_GoSpeed1 équivalente CopyablePlayerMovement_WalkFast (event_object_movement.c), même code
+CopyablePlayerMovement_GoSpeed2 équivalente CopyablePlayerMovement_WalkFaster (event_object_movement.c), même code
+CopyablePlayerMovement_GoSpeed4 équivalente CopyablePlayerMovement_Jump (event_object_movement.c), même code
+FaceDirectionFast morte face_*_fast : seul PlayerFaceDirectionFast de RF, jamais appelé
+FindCameraObject équivalente FindCameraSprite (event_object_movement.c), même code
+MakeObjectTemplateFromObjectEventTemplate équivalente MakeSpriteTemplateFromObjectEventTemplate (event_object_movement.c), union du gabarit de RF
+MovementAction_EmoteSmile_Step0 morte emote_smile jamais utilisé dans RF
+MovementAction_GlideDown_Step1 morte glide_down jamais utilisé dans RF
+MovementAction_GlideLeft_Step1 morte glide_left jamais utilisé dans RF
+MovementAction_GlideRight_Step1 morte glide_right jamais utilisé dans RF
+MovementAction_GlideUp_Step1 morte glide_up jamais utilisé dans RF
+MovementAction_JumpSpecialWithEffectDown_Step0 morte jamais utilisé dans RF
+MovementAction_JumpSpecialWithEffectDown_Step1 morte jamais utilisé dans RF
+MovementAction_JumpSpecialWithEffectLeft_Step0 morte jamais utilisé dans RF
+MovementAction_JumpSpecialWithEffectLeft_Step1 morte jamais utilisé dans RF
+MovementAction_JumpSpecialWithEffectRight_Step0 morte jamais utilisé dans RF
+MovementAction_JumpSpecialWithEffectRight_Step1 morte jamais utilisé dans RF
+MovementAction_JumpSpecialWithEffectUp_Step0 morte jamais utilisé dans RF
+MovementAction_JumpSpecialWithEffectUp_Step1 morte jamais utilisé dans RF
+MovementAction_ShakeHeadOrWalkInPlace_Step0 morte seul PlayerShakeHeadOrWalkInPlace de RF, jamais appelé
+MovementAction_WalkSlowerDown_Step0 équivalente MovementAction_WalkSlowDown_Step0 (event_object_movement.c), WALK_SLOWER de RF = WALK_SLOW d'Émeraude (macro walk_slower_*)
+MovementAction_WalkSlowerDown_Step1 équivalente MovementAction_WalkSlowDown_Step1 (event_object_movement.c), même vitesse
+MovementAction_WalkSlowerLeft_Step0 équivalente MovementAction_WalkSlowLeft_Step0 (event_object_movement.c), même vitesse
+MovementAction_WalkSlowerLeft_Step1 équivalente MovementAction_WalkSlowLeft_Step1 (event_object_movement.c), même vitesse
+MovementAction_WalkSlowerRight_Step0 équivalente MovementAction_WalkSlowRight_Step0 (event_object_movement.c), même vitesse
+MovementAction_WalkSlowerRight_Step1 équivalente MovementAction_WalkSlowRight_Step1 (event_object_movement.c), même vitesse
+MovementAction_WalkSlowerUp_Step0 équivalente MovementAction_WalkSlowUp_Step0 (event_object_movement.c), même vitesse
+MovementAction_WalkSlowerUp_Step1 équivalente MovementAction_WalkSlowUp_Step1 (event_object_movement.c), même vitesse
+MovementAction_WalkSlowestDown_Step0 morte walk_slowest_* jamais utilisé dans RF
+MovementAction_WalkSlowestDown_Step1 morte walk_slowest_* jamais utilisé dans RF
+MovementAction_WalkSlowestLeft_Step0 morte walk_slowest_* jamais utilisé dans RF
+MovementAction_WalkSlowestLeft_Step1 morte walk_slowest_* jamais utilisé dans RF
+MovementAction_WalkSlowestRight_Step0 morte walk_slowest_* jamais utilisé dans RF
+MovementAction_WalkSlowestRight_Step1 morte walk_slowest_* jamais utilisé dans RF
+MovementAction_WalkSlowestUp_Step0 morte walk_slowest_* jamais utilisé dans RF
+MovementAction_WalkSlowestUp_Step1 morte walk_slowest_* jamais utilisé dans RF
+MovementType_WanderAround_Step5Slower équivalente MovementType_WanderAround_Step5Slower (event_object_movement.c), MOVEMENT_TYPE_WANDER_AROUND_SLOWER portée 2026-11-02 (RAMOLOSS de Parmanie)
+ObjectCB_CameraObject équivalente SpriteCB_CameraObject (event_object_movement.c), même code
+ObjectEventCheckForReflectiveSurface écartée variante RF : Émeraude gardée (ObjectEventGetNearbyReflectionType : zone selon la taille du sprite ; RF 1×2 cases, pareil pour le joueur) ; docs/VARIANTES-RF.md
+QL_UpdateObjectEventCurrentMovement écartée journal de RF (quest_log.c)
+QuestLogObjectEventExecHeldMovementAction écartée journal de RF (quest_log.c)
+TryLoadObjectPalette équivalente LoadSpritePaletteIfTagExists (event_object_movement.c), même code
+UpdateMovementGlide morte glide_* jamais utilisé dans RF
+UpdateObjEventSpriteVisibility équivalente UpdateObjectEventSpriteVisibility (event_object_movement.c), même code
+UpdateWalkSlower équivalente UpdateWalkSlow (event_object_movement.c), même vitesse
+UpdateWalkSlowerAnim équivalente UpdateWalkSlowAnim (event_object_movement.c), même code
+UpdateWalkSlowest morte walk_slowest_* jamais utilisé dans RF
+UpdateWalkSlowestAnim morte walk_slowest_* jamais utilisé dans RF
+# field_player_avatar.c. Pêche : celle d'Émeraude (AlignFishingAnimationFrames sans argument ; télé et chaîne de pêche
+# d'Émeraude en plus) ; trois étapes de RF diffèrent (VARIANTES-RF.md).
+CreateStopSurfingTask_NoMusicChange écartée journal de RF (quest_log_player.c, seul appelant)
+DoBoulderDust équivalente PushBoulder_Move (field_player_avatar.c), + journal de RF ; WalkSlower de RF = WalkSlow
+DoBoulderFinish équivalente PushBoulder_End (field_player_avatar.c), même code (trous et interrupteurs de la Route Victoire de RF)
+Fishing2 équivalente Fishing_GetRodOut (field_player_avatar.c), tables par canne (initialiseurs nommés)
+Fishing3 équivalente Fishing_WaitBeforeDots (field_player_avatar.c), même code
+Fishing5 écartée variante RF : Émeraude gardée (Fishing_ShowDots : un point toutes les 8 images et A arrête ; RF 12 images, pas d'arrêt) ; docs/VARIANTES-RF.md
+Fishing6 écartée variante RF : Émeraude gardée (Fishing_CheckForBite : VENTOUSE et GLUE aident à ferrer ; RF non) ; docs/VARIANTES-RF.md
+Fishing7 écartée variante RF : Émeraude gardée (Fishing_GotBite : « Oh! Ça mord! » puis A à temps ; RF ferre tout seul) ; docs/VARIANTES-RF.md
+Fishing8 équivalente Fishing_WaitForA (field_player_avatar.c), tables par canne
+Fishing9 équivalente Fishing_CheckMoreDots (field_player_avatar.c), tables par canne
+Fishing10 équivalente Fishing_MonOnHook (field_player_avatar.c), même code
+Fishing11 équivalente Fishing_StartEncounter (field_player_avatar.c), + télé et chaîne de pêche d'Émeraude
+Fishing12 équivalente Fishing_NotEvenNibble (field_player_avatar.c), + chaîne de pêche d'Émeraude
+Fishing13 équivalente Fishing_GotAway (field_player_avatar.c), + chaîne de pêche d'Émeraude
+Fishing14 équivalente Fishing_NoMon (field_player_avatar.c), même code
+Fishing15 équivalente Fishing_PutRodAway (field_player_avatar.c), même code
+Fishing16 équivalente Fishing_EndNoMon (field_player_avatar.c), + télé d'Émeraude
+GetTeleportSavedFacingDirection équivalente GetSpinStartFacingDir (field_player_avatar.c), même code
+StartPlayerAvatarSummonMonForFieldMoveAnim équivalente SetPlayerAvatarFieldMove (field_player_avatar.c), PLAYER_AVATAR_GFX_FIELD_MOVE = STATE_FIELD_MOVE
+StartTeleportInPlayerAnim équivalente DoPlayerSpinEntrance (field_player_avatar.c), téléporteurs de RF (KANTO-ETAT)
+StartTeleportWarpOutPlayerAnim équivalente DoPlayerSpinExit (field_player_avatar.c), téléporteurs de RF (KANTO-ETAT)
+Task_BumpBoulder équivalente Task_PushBoulder (field_player_avatar.c), table appariée
+Task_TeleportWarpInPlayerAnim équivalente Task_DoPlayerSpinEntrance (field_player_avatar.c), même rotation
+Task_TeleportWarpOutPlayerAnim équivalente Task_DoPlayerSpinExit (field_player_avatar.c), même code
+TeleportAnim_RotatePlayer équivalente TrySpinPlayerForWarp (field_player_avatar.c), même code
+player_step équivalente PlayerStep (field_player_avatar.c), dalles tournantes de RF déjà dedans ; + Vélo Cross d'Émeraude

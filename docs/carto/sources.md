@@ -89,10 +89,10 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 
 | Fichier RF | Où | Fonctions | Propres à RF | dont même code dans Ém. | dont portées | % couvert | Identiques à Ém. | Différentes d'Ém. | Fichier(s) de la fusion |
 |---|---|---|---|---|---|---|---|---|---|
-| event_object_movement.c | commun | 759 | 129 | 3 | 37 | 31 | 252 | 378 | event_object_movement.c (35), kanto_fame_checker.c (1), kanto_vs_seeker.c (1) |
+| event_object_movement.c | commun | 759 | 129 | 3 | 38 | 31 | 252 | 378 | event_object_movement.c (36), kanto_fame_checker.c (1), kanto_vs_seeker.c (1) |
 | party_menu.c | commun | 357 | 70 | 10 | 20 | 42 | 142 | 145 | party_menu.c (20) |
 | field_effect.c | commun | 239 | 109 | 13 | 8 | 19 | 36 | 94 | field_effect.c (8) |
-| overworld.c | commun | 242 | 44 | 4 | 10 | 31 | 106 | 92 | overworld.c (10) |
+| overworld.c | commun | 242 | 44 | 4 | 11 | 34 | 106 | 92 | overworld.c (11) |
 | battle_script_commands.c | commun | 284 | 3 | 0 | 0 | 0 | 165 | 116 |  |
 | field_player_avatar.c | commun | 176 | 61 | 4 | 13 | 27 | 51 | 64 | field_player_avatar.c (13) |
 | battle_ai_script_commands.c | commun | 105 | 14 | 0 | 0 | 0 | 3 | 88 |  |

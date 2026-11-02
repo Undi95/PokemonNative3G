@@ -135,6 +135,16 @@ script_menu 20, menu 19, field_specials 18, wild_encounter 18, option_menu 17, t
 Une bonne part est du renommage ; à vérifier fichier par fichier avant de porter.
 Tri en cours (2026-10-31) : ~~specials en stub~~ (25 restants, tous hors solo), ~~K.O. et remises à zéro d'overworld~~ (K.O. de RF dans tout le jeu : reprise devant l'infirmière, perte d'argent ; Ligue, Piste Cyclable, Parc Safari ; scénario `kanto_whiteout`), ~~tuiles~~ (`kanto_tiles`). Renommages constatés sans écart de jeu : chute dans un trou, escalators, téléporteurs (DoTeleportWarp), Cascade, Pêche, rocher de Force, animations de Vol / Surf / capacité de terrain. ~~trainer_see~~ (caméra de RF partout), ~~party_menu~~ (description des capacités de terrain avec MENUS = KANTO ; tutoriel du premier combat = conseils de Chen, non repris), ~~item_use, start_menu, script_menu, field_effect~~ (renommages, journal de RF, menus de link). Tri terminé le 2026-10-31.
 
+Lecture fonction par fonction (depuis le 2026-11-02, inventaire `carto/inventaire.md`) : `python tools/carto_diff.py
+FICHIER.c [NOM_RF=NOM_FUSION…] [--court]` montre, pour chaque fonction « à vérifier », les seuls jetons qui diffèrent
+de sa voisine dans la fusion (commentaires, accolades, TRUE/1, hexadécimal, `GetGpuReg(REG_OFFSET_X)`, variables
+locales, appels au journal de RF et macros `#define tX data[N]` mis de côté ; noms appariés par l'inventaire
+remplacés ; `NOM_RF=NOM_FUSION` corrige un mauvais appariement). Chaque fonction lue va dans
+`tools/carto_classement.txt` avec sa preuve. Règle (utilisateur, 2026-11-02) : une variante de détail de RF dans le
+code commun garde la version d'Émeraude et va dans [VARIANTES-RF.md](VARIANTES-RF.md) si elle se voit ; ce qui est
+propre à Kanto (contenu, mécaniques) est porté. La lecture du 2026-10-31 avait pris la pêche pour un renommage : celle
+de RF ferre toute seule (VARIANTES-RF.md).
+
 Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.md).
 
 ## Sauvegarde
