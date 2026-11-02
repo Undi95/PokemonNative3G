@@ -516,7 +516,7 @@ Task_StartWirelessTrade, CreateTask_EnterCableClubSeatNoFollowup, Task_WaitForLi
 GetTrainerHillUnkVal
 
 ### coins.c
-AddCoins, RemoveCoins, PrintCoinsString, ShowCoinsWindow, HideCoinsWindow
+AddCoins, RemoveCoins, PrintCoinsString ✓, ShowCoinsWindow ✓, HideCoinsWindow ✓
 
 ### coord_event_weather.c
 DoCoordEventWeather
@@ -1099,7 +1099,8 @@ BufferMenuWindowTiles, FreeMonMarkingsMenu, CreateMonMarkingAllCombosSprite, Cre
 UpdateMonMarkingTiles
 
 ### money.c
-PrintMoneyAmountInMoneyBox, PrintMoneyAmount, PrintMoneyAmountInMoneyBoxWithBorder, DrawMoneyBox, HideMoneyBox
+PrintMoneyAmountInMoneyBox ✓, PrintMoneyAmount, PrintMoneyAmountInMoneyBoxWithBorder ✓, DrawMoneyBox ✓,
+HideMoneyBox ✓
 
 ### multiboot.c
 MultiBootMain, MultiBootSend, MultiBootCheckComplete, MultiBootHandShake, MultiBootWaitCycles,

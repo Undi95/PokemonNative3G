@@ -23,7 +23,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `jeu.options [N V]` | toutes les options (bits de la sauvegarde) ; `N V` met l'option N à V |
 | | `jeu.murs [1\|0]`, `jeu.rencontres [1\|0]` | traverser les murs, Pokémon sauvages (les réglages du menu DEBUG) |
 | | `jeu.safari [PAS [BALLS]]` | Parc Safari : en mode Safari ou non, pas restants, SAFARI BALLS ; les met (fin du temps ou des balls en un pas, scénario `kanto_safari_exit`) |
-| | `joueur.lettre N OBJET [1]` | lettre `ITEM_*_MAIL` à 9 mots (Easy Chat) signée du joueur, donnée au Pokémon `N` de l'équipe ; `1` ouvre l'écran de lecture (`ReadMail`, retour sur la carte), comme LIRE dans le menu de l'équipe (scénario `kanto_mail`) |
+| | `joueur.lettre N OBJET [1\|2]` | lettre `ITEM_*_MAIL` à 9 mots (Easy Chat) signée du joueur, donnée au Pokémon `N` de l'équipe ; `1` ouvre l'écran de lecture (`ReadMail`, retour sur la carte), comme LIRE dans le menu de l'équipe (scénario `kanto_mail`) ; `2` l'envoie dans la boîte aux lettres du PC (`TakeMailFromMonAndSave`, comme ENVOYER AU PC ; scénario `kanto_mailbox`) |
 | | `joueur.oeuf N` | le Pokémon `N` de l'équipe devient un œuf prêt à éclore ; `scripts.lancer EventScript_EggHatch` avec `VAR_0x8004 = N` le fait éclore (scénario `egg_hatch_kanto`) |
 | | `jeu.hasard [GRAINE]` | état du hasard (`gRngValue`, `gRng2Value`) ; `GRAINE` les fixe : la suite d'un scénario (rencontre, combat) ne dépend plus du minutage d'avant, le hasard avançant à chaque image (scénarios `kanto_rival`, `kanto_bag_battle` : graine 4) |
 | | `joueur.pv N PV` | PV du Pokémon `N` de l'équipe (au plus ses PV max) ; à régler **avant** un combat, ses PV y sont copiés (scénario `kanto_whiteout` : 1 PV, K.O. au premier coup) |
@@ -34,6 +34,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | Carte | `carte.info` | carte, section, région, disposition, météo, musique, étage (`floorNum` : panneau de RF), joueur, connexions |
 | | `carte.objets` | objets actifs : id, sprite, position, mouvement |
 | | `carte.grille` | **la carte telle qu'elle est en jeu**, avec les lettres de `test/headless/maps.py` (`#` bloqué, `g` herbe, `~` eau, `o` trou où l'on tombe, `<>^v` rebord ; les chemins évitent les trous sauf s'ils sont le but) : les étages générés (Mont Combat, Pyramide) et les cases changées par les scripts (`setmetatile`), que les fichiers de la carte ne montrent pas. Dans le banc : `live_map(game)` (un `maps.GridMap`), `walk_to(..., live=True)` |
+| | `carte.metatuiles X Y [L H]` | les métatuiles en jeu (coordonnées de `carte.grille`) : numéro, comportement, et à Kanto le **terrain** (0 normal, 1 herbe, 2 eau, 3 cascade) et le **type de rencontre** de RF (0 aucune, 1 sol, 2 eau), élévation, collision ; 3 × 3 autour de X Y, ou L × H depuis X Y. Pour vérifier une case changée par un script ou un effet (COUPE : scénario `kanto_cut_surf`) |
 | Scripts | `scripts.contexte` | contextes global et immédiat : script en cours (label), pile |
 | | `scripts.lancer @ADRESSE` | lance un script de carte, joueur libre (`game.script("EventScript_PC")` : le banc donne l'adresse par le nom) |
 | | `scripts.flag N [V]`, `scripts.var N [V]` | lit ou met un flag, une variable (avec son nom) |
@@ -41,6 +42,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `scripts.histoire [N]` | **l'histoire finie sans sauvegarde** : `0` Hoenn, `1` Kanto, `2` les deux. Met chaque drapeau que les scripts mettent et ne retirent jamais (hors objets, cachés, temporaires, quotidiens), et chaque variable d'avancement à la dernière valeur que les scripts lui donnent (pas les variables remises à 0 : files d'attente, salles de défi). Déduit des scripts par `tools/debug_states.py` → `src/data/debug_states.h` (`--liste` les montre) |
 | Joueur | `joueur.equipe` | équipe : espèce, PV, objet, dresseur d'origine, lieu et jeu de rencontre |
 | | `joueur.sac` | argent, poches |
+| | `joueur.jetons [N]` | jetons du Casino ; `N` les met (au plus 9 999) (scénario `kanto_money_coins_box`) |
 | | `joueur.capacite N PLACE CAPACITE` | donne une capacité (et ses PP) au Pokémon N, à la place 0-3 |
 | Combat | `combat.etat` | type, combattants, contrôleurs |
 | Graphismes | `gfx.sprites` | sprites : position, tile, palette, priorité, animation (finie, en pause), callback |

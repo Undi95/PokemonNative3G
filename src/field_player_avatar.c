@@ -1,5 +1,6 @@
 #include "global.h"
 #include "fusion_events.h" // PokemonNative3G : POKé MONTURE
+#include "fusion_region.h"
 #include "debug_menu.h"
 #include "main.h"
 #include "bike.h"
@@ -1461,12 +1462,28 @@ bool8 IsPlayerFacingSurfableFishableWater(void)
     s16 y = playerObjEvent->currentCoords.y;
 
     MoveCoords(playerObjEvent->facingDirection, &x, &y);
+    if (Fusion_IsInKanto()) // Rouge Feu : l'eau se reconnaît à son terrain, pas à son comportement
+    {
+        if (GetCollisionAtCoords(playerObjEvent, x, y, playerObjEvent->facingDirection) == COLLISION_ELEVATION_MISMATCH
+         && PlayerGetElevation() == ELEVATION_DEFAULT
+         && MetatileAtCoordsIsWaterTile(x, y) == TRUE)
+            return TRUE;
+        else
+            return FALSE;
+    }
     if (GetCollisionAtCoords(playerObjEvent, x, y, playerObjEvent->facingDirection) == COLLISION_ELEVATION_MISMATCH
      && PlayerGetElevation() == ELEVATION_DEFAULT
      && MetatileBehavior_IsSurfableFishableWater(MapGridGetMetatileBehaviorAt(x, y)))
         return TRUE;
     else
         return FALSE;
+}
+
+// Rouge Feu. TestMetatileAttributeBit(terrain, TILE_TERRAIN_WATER) de RF lit sTileBitAttributes[terrain] & 2, vrai
+// pour le seul terrain TILE_TERRAIN_WATER (sa table : 0, 1 << 0, 1 << 1, 1 << 2…).
+bool8 MetatileAtCoordsIsWaterTile(s16 x, s16 y)
+{
+    return MapGridGetMetatileTerrainAt(x, y) == TILE_TERRAIN_WATER;
 }
 
 void ClearPlayerAvatarInfo(void)

@@ -19,4 +19,5 @@ Trouvées en lisant les fonctions « à vérifier » de l'inventaire (`tools/car
 | **Pêche, la touche** | « Oh! Ça mord! », puis A à temps (la SUPER CANNE peut demander plusieurs fois) | pas de réaction : le Pokémon est ferré directement (« Un POKéMON a mordu! ») | `Fishing7` (field_player_avatar.c) |
 | Pêche, les points avant la touche | un point toutes les 8 images ; A arrête la pêche | un point toutes les 12 images, A sans effet | `Fishing5` (field_player_avatar.c) |
 | Pêche, ferrer | VENTOUSE ou GLUE en tête : touche plus souvent | aucun talent ne compte | `Fishing6` (field_player_avatar.c) |
+| Poison sur le terrain (tous les 4 pas) | mosaïque jusqu'à 10, +2 puis -2 (10 images) | jusqu'à 6, +2 puis -1 (9 images, REVISION ≥ 0xA) | `Task_FieldPoisonEffect` (fldeff_poison.c), `AdjustBgMosaic` |
 | Sons (voir CONNAISSANCE-JEU.md, « Sons de Kanto ») | instruments HQ, batterie complète ; jingles d'Émeraude | samples à 13 kHz ; fanfares du Casino +10 %, évolution, carte retournée | banque de sons de RF |

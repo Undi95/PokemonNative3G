@@ -9,6 +9,8 @@
 #include "sprite.h"
 #include "strings.h"
 #include "decompress.h"
+#include "palette.h"
+#include "kanto_bag_compat.h" // LoadStdWindowGfx (cadre standard de RF) ; en dernier : ses #define
 
 #define MAX_MONEY 999999
 
@@ -196,4 +198,56 @@ void AddMoneyLabelObject(u16 x, u16 y)
 void RemoveMoneyLabelObject(void)
 {
     DestroySpriteAndFreeResources(&gSprites[sMoneyLabelSpriteId]);
+}
+
+// ---- Rouge Feu (money.c) : boîte d'argent des scripts avec MENUS = KANTO (ScrCmd_showmoneybox), comme les choix
+// multiples et le OUI/NON de RF : « ARGENT » écrit dans la fenêtre (8 × 3) et le montant dessous en petite police,
+// dans le cadre standard de RF ; celle d'Émeraude a le montant seul et l'étiquette « ARGENT » en sprite (10 × 2).
+
+static void Kanto_PrintMoneyAmountInMoneyBox(u8 windowId, int amount, u8 speed)
+{
+    u8 *txtPtr;
+    s32 strLength;
+
+    ConvertIntToDecimalStringN(gStringVar1, amount, STR_CONV_MODE_LEFT_ALIGN, 6);
+
+    strLength = 6 - StringLength(gStringVar1);
+    txtPtr = gStringVar4;
+
+    while (strLength-- != 0)
+        *(txtPtr++) = 0;
+
+    StringExpandPlaceholders(txtPtr, gText_PokedollarVar1);
+    AddTextPrinterParameterized(windowId, FONT_SMALL, gStringVar4, 64 - GetStringWidth(FONT_SMALL, gStringVar4, 0), 0xC, speed, NULL);
+}
+
+static void Kanto_PrintMoneyAmountInMoneyBoxWithBorder(u8 windowId, u16 tileStart, u8 paletteNum, int amount)
+{
+    DrawStdFrameWithCustomTileAndPalette(windowId, FALSE, tileStart, paletteNum);
+    AddTextPrinterParameterized(windowId, FONT_KANTO, gText_TrainerCardMoney, 0, 0, TEXT_SKIP_DRAW, NULL); // RF : FONT_NORMAL de RF
+    Kanto_PrintMoneyAmountInMoneyBox(windowId, amount, 0);
+}
+
+void Kanto_ChangeAmountInMoneyBox(int amount)
+{
+    Kanto_PrintMoneyAmountInMoneyBox(sMoneyBoxWindowId, amount, 0);
+}
+
+void Kanto_DrawMoneyBox(int amount, u8 x, u8 y)
+{
+    struct WindowTemplate template;
+
+    SetWindowTemplateFields(&template, 0, x + 1, y + 1, 8, 3, 15, 8);
+    sMoneyBoxWindowId = AddWindow(&template);
+    FillWindowPixelBuffer(sMoneyBoxWindowId, PIXEL_FILL(0));
+    PutWindowTilemap(sMoneyBoxWindowId);
+    LoadStdWindowGfx(sMoneyBoxWindowId, 0x21D, BG_PLTT_ID(13));
+    Kanto_PrintMoneyAmountInMoneyBoxWithBorder(sMoneyBoxWindowId, 0x21D, 13, amount);
+}
+
+void Kanto_HideMoneyBox(void)
+{
+    ClearStdWindowAndFrameToTransparent(sMoneyBoxWindowId, FALSE);
+    CopyWindowToVram(sMoneyBoxWindowId, COPYWIN_GFX);
+    RemoveWindow(sMoneyBoxWindowId);
 }

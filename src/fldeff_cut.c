@@ -11,6 +11,7 @@
 #include "field_player_avatar.h"
 #include "fieldmap.h"
 #include "fldeff.h"
+#include "fusion_region.h"
 #include "malloc.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
@@ -63,6 +64,46 @@ static void CutGrassSpriteCallback1(struct Sprite *);
 static void CutGrassSpriteCallback2(struct Sprite *);
 static void CutGrassSpriteCallbackEnd(struct Sprite *);
 static void HandleLongGrassOnHyper(u8, s16, s16);
+static u8 MetatileAtCoordsIsGrassTile(s16 x, s16 y);
+static void SetCutGrassMetatileAt(s16 x, s16 y);
+
+// Rouge Feu (fldeff_cut.c) : à Kanto, Coupe tond l'herbe (terrain) du carré de 3 × 3 devant le joueur, sans le 5 × 5
+// d'Hyper Cutter ni l'herbe longue de Cimetronelle d'Émeraude
+#define CUT_SIDE 3
+
+static const u16 sCutGrassMetatileMapping[][2] = {
+    {
+        METATILE_ID(General, Plain_Grass),
+        METATILE_ID(General, Plain_Mowed)
+    }, {
+        METATILE_ID(General, ThinTreeTop_Grass),
+        METATILE_ID(General, ThinTreeTop_Mowed)
+    }, {
+        METATILE_ID(General, WideTreeTopLeft_Grass),
+        METATILE_ID(General, WideTreeTopLeft_Mowed)
+    }, {
+        METATILE_ID(General, WideTreeTopRight_Grass),
+        METATILE_ID(General, WideTreeTopRight_Mowed)
+    }, {
+        METATILE_ID(CeladonCity, CyclingRoad_Grass),
+        METATILE_ID(CeladonCity, CyclingRoad_Mowed)
+    }, {
+        METATILE_ID(FuchsiaCity, SafariZoneTreeTopLeft_Grass),
+        METATILE_ID(FuchsiaCity, SafariZoneTreeTopLeft_Mowed)
+    }, {
+        METATILE_ID(FuchsiaCity, SafariZoneTreeTopMiddle_Grass),
+        METATILE_ID(FuchsiaCity, SafariZoneTreeTopMiddle_Mowed)
+    }, {
+        METATILE_ID(FuchsiaCity, SafariZoneTreeTopRight_Grass),
+        METATILE_ID(FuchsiaCity, SafariZoneTreeTopRight_Mowed)
+    }, {
+        METATILE_ID(ViridianForest, HugeTreeTopMiddle_Grass),
+        METATILE_ID(ViridianForest, HugeTreeTopMiddle_Mowed)
+    }, {
+        0xffff,
+        0xffff
+    }
+};
 
 // IWRAM variables
 static u8 sCutSquareSide;
@@ -166,6 +207,29 @@ bool8 SetUpFieldMove_Cut(void)
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
         gPostMenuFieldCallback = FieldCallback_CutTree;
         return TRUE;
+    }
+    else if (Fusion_IsInKanto()) // Rouge Feu
+    {
+        PlayerGetDestCoords(&gPlayerFacingPosition.x, &gPlayerFacingPosition.y);
+
+        for (i = 0; i < CUT_SIDE; i++)
+        {
+            y = gPlayerFacingPosition.y - 1 + i;
+            for (j = 0; j < CUT_SIDE; j++)
+            {
+                x = gPlayerFacingPosition.x - 1 + j;
+                if (MapGridGetElevationAt(x, y) == gPlayerFacingPosition.elevation)
+                {
+                    if (MetatileAtCoordsIsGrassTile(x, y) == TRUE)
+                    {
+                        gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
+                        gPostMenuFieldCallback = FieldCallback_CutGrass;
+                        return TRUE;
+                    }
+                }
+            }
+        }
+        return FALSE;
     }
     else
     {
@@ -356,6 +420,29 @@ bool8 FldEff_CutGrass(void)
 
     PlaySE(SE_M_CUT);
     PlayerGetDestCoords(&gPlayerFacingPosition.x, &gPlayerFacingPosition.y);
+    if (Fusion_IsInKanto()) // Rouge Feu
+    {
+        u8 j;
+
+        for (i = 0; i < CUT_SIDE; i++)
+        {
+            y = gPlayerFacingPosition.y - 1 + i;
+            for (j = 0; j < CUT_SIDE; j++)
+            {
+                x = gPlayerFacingPosition.x - 1 + j;
+                if (MapGridGetElevationAt(x, y) == gPlayerFacingPosition.elevation)
+                {
+                    if (MetatileAtCoordsIsGrassTile(x, y) == TRUE)
+                    {
+                        SetCutGrassMetatileAt(x, y);
+                        AllowObjectAtPosTriggerGroundEffects(x, y); // RF : EnableObjectGroundEffectsByXY
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
     for (i = 0; i < CUT_HYPER_AREA; i++)
     {
         if (sHyperCutTiles[i] == TRUE)
@@ -372,6 +459,7 @@ bool8 FldEff_CutGrass(void)
     }
 
     SetCutGrassMetatiles(gPlayerFacingPosition.x - sTileCountFromPlayer_X, gPlayerFacingPosition.y - (1 + sTileCountFromPlayer_Y));
+    }
     DrawWholeMapView();
     sCutGrassSpriteArrayPtr = AllocZeroed(CUT_SPRITE_ARRAY_COUNT);
 
@@ -384,6 +472,31 @@ bool8 FldEff_CutGrass(void)
     }
 
     return FALSE;
+}
+
+// Rouge Feu. TestMetatileAttributeBit(terrain, TILE_TERRAIN_GRASS) de RF lit sTileBitAttributes[terrain] & 1, vrai
+// pour le seul terrain TILE_TERRAIN_GRASS (sa table : 0, 1 << 0, 1 << 1…).
+static u8 MetatileAtCoordsIsGrassTile(s16 x, s16 y)
+{
+    return MapGridGetMetatileTerrainAt(x, y) == TILE_TERRAIN_GRASS;
+}
+
+// Rouge Feu
+static void SetCutGrassMetatileAt(s16 x, s16 y)
+{
+    u16 i = 0;
+    u16 metatileId = MapGridGetMetatileIdAt(x, y);
+    while (1)
+    {
+        if (sCutGrassMetatileMapping[i][0] == 0xFFFF)
+            return;
+        if (sCutGrassMetatileMapping[i][0] == metatileId)
+        {
+            MapGridSetMetatileIdAt(x, y, sCutGrassMetatileMapping[i][1]);
+            break;
+        }
+        i++;
+    }
 }
 
 // set map grid metatile depending on x, y

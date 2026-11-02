@@ -11,8 +11,11 @@
    Les tuiles de link de RF (moniteur sans fil, records, porte de l'Union Room) et celles sans effet dans RF
    (MB_WINDOW, MB_PORTHOLE) restent MB_NORMAL.
 2. Type de rencontre de RF (bits 24-26 de ses attributs : aucune, sol, eau) : RF décide avec lui des rencontres
-   sauvages de chaque case, Émeraude avec le comportement. Il est rangé dans les bits 8-10 de l'attribut d'Émeraude
+   sauvages de chaque case, Émeraude avec le comportement. Il est rangé dans les bits 8-9 de l'attribut d'Émeraude
    (inutilisés) et lu à Kanto par wild_encounter.c (MapGridGetMetatileEncounterTypeAt).
+3. Terrain de RF (bits 9-13 : normal, herbe, eau, cascade ; 2026-11-02) : RF décide avec lui de l'eau en face du
+   joueur (Surf, cannes : MetatileAtCoordsIsWaterTile) et de l'herbe que Coupe tond (MetatileAtCoordsIsGrassTile),
+   Émeraude avec le comportement. Il est rangé dans les bits 10-11 (MapGridGetMetatileTerrainAt).
 Usage : python tools/kanto_tile_attributes.py   (depuis la racine du projet)
 """
 import os
@@ -29,7 +32,9 @@ RESTORED = (
     'MB_CYCLING_ROAD_WATER', 'MB_SAND_CAVE',
 )
 ENCOUNTER_SHIFT = 8      # METATILE_ATTR_ENCOUNTER_SHIFT (include/global.fieldmap.h)
-ENCOUNTER_MASK = 0x0700  # METATILE_ATTR_ENCOUNTER_MASK
+ENCOUNTER_MASK = 0x0300  # METATILE_ATTR_ENCOUNTER_MASK
+TERRAIN_SHIFT = 10       # METATILE_ATTR_TERRAIN_SHIFT
+TERRAIN_MASK = 0x0C00    # METATILE_ATTR_TERRAIN_MASK
 
 
 def rd(p):
@@ -59,7 +64,9 @@ def patch(path, attrs):
         if i * 2 >= len(out):
             break
         old = struct.unpack_from('<H', out, i * 2)[0]
-        new = (old & ~ENCOUNTER_MASK) | ((((a >> 24) & 0x7) << ENCOUNTER_SHIFT) & ENCOUNTER_MASK)
+        encounter, terrain = (a >> 24) & 0x7, (a >> 9) & 0x1F
+        assert encounter <= ENCOUNTER_MASK >> ENCOUNTER_SHIFT and terrain <= TERRAIN_MASK >> TERRAIN_SHIFT, (path, i, a)
+        new = (old & ~(ENCOUNTER_MASK | TERRAIN_MASK)) | (encounter << ENCOUNTER_SHIFT) | (terrain << TERRAIN_SHIFT)
         if (a & 0x1FF) in fr:
             new = (new & ~0xFF) | fr[a & 0x1FF]
         if new != old:

@@ -2047,6 +2047,14 @@ static const struct BattleWindowText *const sBattleTextOnWindowsInfo[] =
 
 static const u8 sRecordedBattleTextSpeeds[] = {8, 4, 1, 0};
 
+// Rouge Feu (pokemon.c, Localize_BattleStrings ; version française) : contre un dresseur de la TEAM ROCKET, nom et
+// classe échangés (« SBIRE TEAM ROCKET »), comme Émeraude pour les TEAM MAGMA et AQUA
+static bool8 IsKantoTeamRocketTrainer(u16 trainerId)
+{
+    return IS_KANTO_TRAINER(trainerId) && trainerId < KANTO_TRAINERS_START + KANTO_TRAINERS_COUNT
+        && gTrainers[trainerId].trainerClass == TRAINER_CLASS_KANTO_TEAM_ROCKET;
+}
+
 /**
  * French Difference
 */
@@ -2360,9 +2368,10 @@ void BufferStringBattle(u16 stringID)
         && !(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_TRAINER_HILL)))
     {
         u8 *toSwap, *txt;
-        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && gTrainerBattleOpponent_A < TRAINERS_COUNT)
+        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && (gTrainerBattleOpponent_A < TRAINERS_COUNT || IsKantoTeamRocketTrainer(gTrainerBattleOpponent_A)))
         {
-            if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_TEAM_MAGMA || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_TEAM_AQUA)
+            if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_TEAM_MAGMA || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_TEAM_AQUA
+             || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_KANTO_TEAM_ROCKET)
             {
                 toSwap = NULL, txt = txtBuff;
                 while (*txt != EOS)
@@ -2384,9 +2393,10 @@ void BufferStringBattle(u16 stringID)
                 }
             }
         }
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && gTrainerBattleOpponent_B < TRAINERS_COUNT)
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && (gTrainerBattleOpponent_B < TRAINERS_COUNT || IsKantoTeamRocketTrainer(gTrainerBattleOpponent_B)))
         {
-            if (gTrainers[gTrainerBattleOpponent_B].trainerClass == TRAINER_CLASS_TEAM_MAGMA || gTrainers[gTrainerBattleOpponent_B].trainerClass == TRAINER_CLASS_TEAM_AQUA)
+            if (gTrainers[gTrainerBattleOpponent_B].trainerClass == TRAINER_CLASS_TEAM_MAGMA || gTrainers[gTrainerBattleOpponent_B].trainerClass == TRAINER_CLASS_TEAM_AQUA
+             || gTrainers[gTrainerBattleOpponent_B].trainerClass == TRAINER_CLASS_KANTO_TEAM_ROCKET)
             {
                 toSwap = NULL, txt = txtBuff;
                 while (*txt != EOS)

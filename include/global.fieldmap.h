@@ -37,17 +37,27 @@ enum
 // Metatile attributes consist of an 8 bit behavior value, 4 unused bits, and a 4 bit layer type value
 // This is the data stored in each data/tilesets/*/*/metatile_attributes.bin file
 #define METATILE_ATTR_BEHAVIOR_MASK 0x00FF // Bits 0-7
-#define METATILE_ATTR_ENCOUNTER_MASK 0x0700 // Bits 8-10 : PokemonNative3G, type de rencontre de RF (tilesets de Kanto)
+#define METATILE_ATTR_ENCOUNTER_MASK 0x0300 // Bits 8-9 : PokemonNative3G, type de rencontre de RF (tilesets de Kanto)
+#define METATILE_ATTR_TERRAIN_MASK  0x0C00 // Bits 10-11 : PokemonNative3G, terrain de RF (tilesets de Kanto)
 #define METATILE_ATTR_LAYER_MASK    0xF000 // Bits 12-15
 #define METATILE_ATTR_BEHAVIOR_SHIFT 0
 #define METATILE_ATTR_ENCOUNTER_SHIFT 8
+#define METATILE_ATTR_TERRAIN_SHIFT 10
 #define METATILE_ATTR_LAYER_SHIFT   12
 
-// PokemonNative3G : types de rencontre de RF (global.fieldmap.h de RF)
+// PokemonNative3G : types de rencontre et terrains de RF (global.fieldmap.h de RF ; bits 24-26 et 9-13 de ses
+// attributs, rangés ici par tools/kanto_tile_attributes.py ; 0 sur les tilesets de Hoenn)
 enum {
     TILE_ENCOUNTER_NONE,
     TILE_ENCOUNTER_LAND,
     TILE_ENCOUNTER_WATER,
+};
+
+enum {
+    TILE_TERRAIN_NORMAL,
+    TILE_TERRAIN_GRASS,
+    TILE_TERRAIN_WATER,
+    TILE_TERRAIN_WATERFALL,
 };
 
 #define PACK_BEHAVIOR(behavior) PACK(behavior, METATILE_ATTR_BEHAVIOR_SHIFT, METATILE_ATTR_BEHAVIOR_MASK)

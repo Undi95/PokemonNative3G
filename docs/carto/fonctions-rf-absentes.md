@@ -291,17 +291,17 @@ DoUnionRoomWarp, Task_CableClubWarp, Task_ReturnFromLinkRoomWarp, Task_Teleport2
 Task_DrawFieldMessageBox, CreateTask_DrawFieldMessageBox, DestroyTask_DrawFieldMessageBox,
 ExpandStringAndStartDrawFieldMessageBox, StartDrawFieldMessageBox, GetFieldMessageBoxType
 
-### field_player_avatar.c (commun, 44/61)
+### field_player_avatar.c (commun, 43/61)
 player_step, PlayerAvatarTransition_Bike, QL_TryRecordPlayerStepWithDuration0,
 QL_TryRecordNPCStepWithDuration32, PlayerWalkSlower, PlayerGlide, PlayerFaceDirectionFast,
 PlayerShakeHeadOrWalkInPlace, PlayerAcroWheelieCollide, PlayerAcroPopWheelie, PlayerAcroWheelieMove,
-GetPlayerAvatarObjectId, MetatileAtCoordsIsWaterTile, StartPlayerAvatarSummonMonForFieldMoveAnim,
-GetPlayerAvatarVsSeekerGfxId, StartPlayerAvatarFishAnim, Task_BumpBoulder, DoBoulderInit, DoBoulderDust,
-DoBoulderFinish, CreateStopSurfingTask_NoMusicChange, Fishing2, Fishing3, Fishing5, Fishing6, Fishing7,
-Fishing8, Fishing9, Fishing10, Fishing11, Fishing12, Fishing13, Fishing14, Fishing15, Fishing16,
-StartTeleportWarpOutPlayerAnim, WaitTeleportWarpOutPlayerAnim, SavePlayerFacingDirectionForTeleport,
-GetTeleportSavedFacingDirection, Task_TeleportWarpOutPlayerAnim, StartTeleportInPlayerAnim,
-WaitTeleportInPlayerAnim, Task_TeleportWarpInPlayerAnim, TeleportAnim_RotatePlayer
+GetPlayerAvatarObjectId, StartPlayerAvatarSummonMonForFieldMoveAnim, GetPlayerAvatarVsSeekerGfxId,
+StartPlayerAvatarFishAnim, Task_BumpBoulder, DoBoulderInit, DoBoulderDust, DoBoulderFinish,
+CreateStopSurfingTask_NoMusicChange, Fishing2, Fishing3, Fishing5, Fishing6, Fishing7, Fishing8, Fishing9,
+Fishing10, Fishing11, Fishing12, Fishing13, Fishing14, Fishing15, Fishing16, StartTeleportWarpOutPlayerAnim,
+WaitTeleportWarpOutPlayerAnim, SavePlayerFacingDirectionForTeleport, GetTeleportSavedFacingDirection,
+Task_TeleportWarpOutPlayerAnim, StartTeleportInPlayerAnim, WaitTeleportInPlayerAnim,
+Task_TeleportWarpInPlayerAnim, TeleportAnim_RotatePlayer
 
 ### field_screen_effect.c (commun, 6/9)
 DoInwardBarnDoorFade, DoOutwardBarnDoorWipe, BarnDoorWipeSaveGpuRegs, BarnDoorWipeLoadGpuRegs,
@@ -328,9 +328,9 @@ GetSav1Weather
 ### fieldmap.c (commun, 3/3)
 ExtractMetatileAttribute, MapGridGetMetatileAttributeAt, GetAttributeByMetatileIdAndMapLayout
 
-### fldeff_cut.c (commun, 6/7)
-MetatileAtCoordsIsGrassTile, FieldMoveCallback_CutGrass, SetCutGrassMetatileAt, SpriteCallback_CutGrass_Init,
-SpriteCallback_CutGrass_Run, SpriteCallback_CutGrass_Cleanup
+### fldeff_cut.c (commun, 4/7)
+FieldMoveCallback_CutGrass, SpriteCallback_CutGrass_Init, SpriteCallback_CutGrass_Run,
+SpriteCallback_CutGrass_Cleanup
 
 ### fldeff_flash.c (commun, 13/15)
 MapTransitionIsEnter, MapTransitionIsExit, FlashTransition_Exit, Task_FlashTransition_Exit_0,

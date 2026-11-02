@@ -331,6 +331,9 @@ static void MailboxMenu_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListM
 
 void MailboxMenu_AddScrollArrows(struct PlayerPCItemPageStruct *page)
 {
+    if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu (MailboxPC_AddScrollIndicatorArrows) : au milieu de sa liste (x 19, 10 de large)
+        page->scrollIndicatorTaskId = AddScrollIndicatorArrowPairParameterized(2, 0xC2, 12, 0x94, page->count - page->pageItems + 1, 0x6E, 0x6E, &page->itemsAbove);
+    else
     page->scrollIndicatorTaskId = AddScrollIndicatorArrowPairParameterized(2, 0xC8, 12, 0x94, page->count - page->pageItems + 1, 0x6E, 0x6E, &page->itemsAbove);
 }
 

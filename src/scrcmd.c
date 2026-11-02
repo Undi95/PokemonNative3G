@@ -1815,7 +1815,12 @@ bool8 ScrCmd_showmoneybox(struct ScriptContext *ctx)
     u8 ignore = ScriptReadByte(ctx);
 
     if (!ignore)
-        DrawMoneyBox(GetMoney(&gSaveBlock1Ptr->money), x, y);
+    {
+        if (gSaveBlock2Ptr->optionsMenuStyle) // PokemonNative3G : boîte d'argent de RF avec MENUS = KANTO
+            Kanto_DrawMoneyBox(GetMoney(&gSaveBlock1Ptr->money), x, y);
+        else
+            DrawMoneyBox(GetMoney(&gSaveBlock1Ptr->money), x, y);
+    }
     return FALSE;
 }
 
@@ -1824,7 +1829,10 @@ bool8 ScrCmd_hidemoneybox(struct ScriptContext *ctx)
     /*u8 x = ScriptReadByte(ctx);
     u8 y = ScriptReadByte(ctx);*/
 
-    HideMoneyBox();
+    if (gSaveBlock2Ptr->optionsMenuStyle)
+        Kanto_HideMoneyBox();
+    else
+        HideMoneyBox();
     return FALSE;
 }
 
@@ -1835,16 +1843,29 @@ bool8 ScrCmd_updatemoneybox(struct ScriptContext *ctx)
     u8 ignore = ScriptReadByte(ctx);
 
     if (!ignore)
-        ChangeAmountInMoneyBox(GetMoney(&gSaveBlock1Ptr->money));
+    {
+        if (gSaveBlock2Ptr->optionsMenuStyle)
+            Kanto_ChangeAmountInMoneyBox(GetMoney(&gSaveBlock1Ptr->money));
+        else
+            ChangeAmountInMoneyBox(GetMoney(&gSaveBlock1Ptr->money));
+    }
     return FALSE;
 }
 
+// PokemonNative3G : la boîte des jetons de RF avec MENUS = KANTO. Les scripts de RF donnent la case du cadre (son
+// ShowCoinsWindow place la fenêtre une case plus loin : showcoinsbox 0, 0), ceux d'Émeraude la case de la fenêtre
+// (showcoinsbox 1, 1) : la fenêtre est à la même place quelle que soit la boîte.
 bool8 ScrCmd_showcoinsbox(struct ScriptContext *ctx)
 {
     u8 x = ScriptReadByte(ctx);
     u8 y = ScriptReadByte(ctx);
 
-    ShowCoinsWindow(GetCoins(), x, y);
+    if (Fusion_IsInKanto())
+        x++, y++;
+    if (gSaveBlock2Ptr->optionsMenuStyle)
+        Kanto_ShowCoinsWindow(GetCoins(), x - 1, y - 1);
+    else
+        ShowCoinsWindow(GetCoins(), x, y);
     return FALSE;
 }
 
@@ -1853,7 +1874,10 @@ bool8 ScrCmd_hidecoinsbox(struct ScriptContext *ctx)
     u8 UNUSED x = ScriptReadByte(ctx);
     u8 UNUSED y = ScriptReadByte(ctx);
 
-    HideCoinsWindow();
+    if (gSaveBlock2Ptr->optionsMenuStyle)
+        Kanto_HideCoinsWindow();
+    else
+        HideCoinsWindow();
     return FALSE;
 }
 
@@ -1862,7 +1886,10 @@ bool8 ScrCmd_updatecoinsbox(struct ScriptContext *ctx)
     u8 UNUSED x = ScriptReadByte(ctx);
     u8 UNUSED y = ScriptReadByte(ctx);
 
-    PrintCoinsString(GetCoins());
+    if (gSaveBlock2Ptr->optionsMenuStyle)
+        Kanto_PrintCoinsString(GetCoins());
+    else
+        PrintCoinsString(GetCoins());
     return FALSE;
 }
 

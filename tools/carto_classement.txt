@@ -283,7 +283,7 @@ GetBikeTransitionId équivalente CheckMovementInputAcroBike (bike.c), même aigu
 # field_fadetransition.c, field_screen_effect.c
 DoTeleport2Warp link seul ScrCmd_warpspinenter de RF, pour l'Union Room (cable_club.inc)
 DoUnionRoomWarp link Union Room de RF
-Task_Teleport2Warp link seul DoTeleport2Warp
+Task_Teleport2Warp équivalente Task_WarpAndLoadMap (field_screen_effect.c), + effacement de la Tour Mirage (Hoenn) ; DoWarp, DoDiveWarp et Task_DoorWarp de RF l'utilisent aussi
 Task_WaitFadeAndCreateStartMenuTask équivalente Task_WaitForFadeShowStartMenu (field_screen_effect.c), même code
 DoOutwardBarnDoorWipe écartée variante RF : Émeraude gardée (sortie d'un bâtiment : fondu d'Émeraude ; RF ouvre l'écran en portes de grange, Task_ExitDoor) ; docs/VARIANTES-RF.md
 # field_specials.c : l'Île Naissance est celle d'Émeraude (KANTO-ETAT)
@@ -759,3 +759,182 @@ MovementAction_GlideDown_Step0 morte jamais lancée dans RF (PlayerGlide n'est p
 MovementAction_GlideLeft_Step0 morte jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)
 MovementAction_GlideRight_Step0 morte jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)
 MovementAction_GlideUp_Step0 morte jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)
+# field_fadetransition.c (manquantes lues le 2026-11-02)
+ExitWarpFadeInScreen équivalente FieldCB_DefaultWarpExit / FieldCB_WarpExitFadeFromBlack (field_screen_effect.c), le même fondu avant SetUpWarpExitTask (portes : variante RF DoOutwardBarnDoorWipe)
+FadeTransition_FadeInOnReturnToStartMenu équivalente ReturnToFieldOpenStartMenu (field_screen_effect.c), même code
+Task_ContinueScript équivalente Task_WaitForFadeAndEnableScriptCtx (field_screen_effect.c), même code
+Task_DoorWarp équivalente Task_DoDoorWarp (field_screen_effect.c), même code (le cas 5 de RF n'est jamais atteint)
+Task_SafariZoneRanOutOfBalls équivalente Task_ReturnToFieldNoScript (field_screen_effect.c), ClearPlayerHeldMovementAndUnfreezeObjectEvents = ScriptUnfreezeObjectEvents (même code)
+WarpFadeInScreenWithDelay écartée variante RF : Émeraude gardée (seul le volet de grange de RF, Task_ExitDoor, l'appelle) ; docs/VARIANTES-RF.md
+Task_CableClubWarp link Club Câble de RF
+Task_ReturnFromLinkRoomWarp link retour du Club Câble de RF
+# bike.c : un seul vélo, celui de Hoenn (FUSION-OPTIONS, 2026-10-24)
+BikeInputHandler_Normal écartée vélo de RF : un seul vélo, celui de Hoenn ; ses pentes de la Piste Cyclable sont dans MovePlayerOnCyclingRoadSlope (bike.c)
+BikeInputHandler_Slope écartée vélo de RF : un seul vélo, celui de Hoenn ; repris dans MovePlayerOnCyclingRoadSlope (bike.c)
+BikeInputHandler_Turning écartée vélo de RF : un seul vélo, celui de Hoenn
+BikeTransition_Downhill écartée vélo de RF : un seul vélo, celui de Hoenn ; même code dans MovePlayerOnCyclingRoadSlope (bike.c)
+BikeTransition_Uphill écartée vélo de RF : un seul vélo, celui de Hoenn ; même code dans MovePlayerOnCyclingRoadSlope (bike.c)
+BikeTransition_MoveDirection écartée vélo de RF : un seul vélo, celui de Hoenn ; escaliers de roche repris dans MachBikeTransition_TrySpeedUp (bike.c)
+MetatileBehaviorForbidsBiking équivalente IsRunningDisallowedByMetatile (bike.c), même test
+# new_menu_helpers.c
+CopyDecompressedTileDataToVram équivalente copy_decompressed_tile_data_to_vram (menu.c), modes 0 et 1 (les seuls utilisés) identiques
+CreateStartMenuWindow équivalente AddStartMenuWindow (menu.c), gabarit de RF avec MENUS = KANTO (base 0x139 au lieu de 0x13D : voir le commentaire)
+DecompressAndCopyTileDataToVram2 équivalente DecompressAndCopyTileDataToVram (menu.c), sauf la borne à la taille décompressée (tilesets de carte : Émeraude copie aussi la suite du tas dans des tuiles que la carte n'affiche pas ; le tas est un tableau, pas de lecture hors objet)
+DecompressAndLoadBgGfxUsingHeap2 équivalente DecompressAndLoadBgGfxUsingHeap (menu.c), même borne que DecompressAndCopyTileDataToVram2
+DisplayYesNoMenuDefaultNo équivalente DisplayYesNoMenuWithDefault (menu.c) avec 1, OUI/NON de RF avec MENUS = KANTO
+DrawHelpMessageWindowWithText écartée aide de RF : description du menu Start, seulement en mode BOUTONS = AIDE (aide L/R écartée) ; loadhelp n'est utilisée par aucun script
+LoadStdWindowFrameGfx équivalente LoadMessageBoxAndBorderGfx (menu.c), DIALOGUE = KANTO -> LoadKantoMenuMessageWindowGfx (LoadMenuMessageWindowGfx de RF) ; son Menu_LoadStdPal est aussitôt recouvert par la palette du cadre (emplacement 14) ; branche du journal écartée
+# mailbox_pc.c : boîte aux lettres de RF dans menu_specialized.c avec MENUS = KANTO
+ItemPrintFunc équivalente MailboxMenu_ItemPrintFunc (menu_specialized.c), police de RF avec MENUS = KANTO
+MailboxPC_AddScrollIndicatorArrows équivalente MailboxMenu_AddScrollArrows (menu_specialized.c), x de RF (0xC2) avec MENUS = KANTO (2026-11-02, scénario kanto_mailbox)
+MailboxPC_GetAddWindow équivalente MailboxMenu_AddWindow (menu_specialized.c), fenêtres de RF avec MENUS = KANTO
+MailboxPC_InitBuffers équivalente MailboxMenu_Alloc (menu_specialized.c), même code
+MailboxPC_InitListMenu équivalente MailboxMenu_CreateList (menu_specialized.c), liste de RF avec MENUS = KANTO
+MailboxPC_RemoveWindow équivalente MailboxMenu_RemoveWindow (menu_specialized.c), même code
+# overworld.c
+CB2_EnterFieldFromQuestLog écartée journal de RF
+CB2_SetUpOverworldForQLPlayback écartée journal de RF
+DoCB1_Overworld_QuestLogPlayback écartée journal de RF
+QL_LoadMapNormal écartée journal de RF
+CountBadgesForOverworldWhiteOutLossCalculation équivalente CountRegionBadges (fusion_events.c), badges de la région où l'on est (K.O. de RF, 2026-10-31)
+Overworld_ResetStateAfterWhitingOut équivalente Overworld_ResetStateAfterWhiteOut (overworld.c), Piste Cyclable et Parc Safari de Kanto dans Overworld_ResetKantoStateAfterWarp ; drapeaux du journal écartés
+# field_player_avatar.c
+GetPlayerAvatarVsSeekerGfxId équivalente StartPlayerAvatarVsSeekerAnim (field_player_avatar.c), table sPlayerAvatarVsSeekerGfxIds (à pied ou à vélo)
+PlayerAvatarTransition_Bike équivalente PlayerAvatarTransition_MachBike / AcroBike (field_player_avatar.c), sprite du vélo et BikeClearState (un seul vélo, celui de Hoenn) ; journal écarté
+QL_TryRecordNPCStepWithDuration32 écartée journal de RF
+QL_TryRecordPlayerStepWithDuration0 écartée journal de RF
+# fieldmap.c : attributs de RF rangés dans les bits libres de ceux d'Émeraude (tools/kanto_tile_attributes.py)
+ExtractMetatileAttribute équivalente MapGridGetMetatileEncounterTypeAt / MapGridGetMetatileTerrainAt (fieldmap.c), UNPACK des bits 8-9 et 10-11 (rencontre, terrain)
+GetAttributeByMetatileIdAndMapLayout équivalente GetMetatileAttributesById (fieldmap.c), même choix primaire / secondaire
+MapGridGetMetatileAttributeAt équivalente MapGridGetMetatileEncounterTypeAt / MapGridGetMetatileTerrainAt / MapGridGetMetatileBehaviorAt (fieldmap.c), un accesseur par attribut
+# pokemon.c (manquantes lues le 2026-11-02)
+InitMonSpritesGfx_Mode1 écartée discours de Chen : seul appelant CreateMonSpritesGfxManager(1, 1) (oak_speech.c)
+SetMonExpWithMaxLevelCheck équivalente TryIncrementMonLevel (pokemon.c), même plafond d'expérience (pension seulement) ; RF monte de niveau au-delà du seuil (exp >), Émeraude dès le seuil : un pas de pension d'écart
+Localize_BattleStrings équivalente échange classe / nom français de BufferStringBattle (battle_message.c), étendu à la TEAM ROCKET de Kanto (IsKantoTeamRocketTrainer, 2026-11-02, scénario kanto_rocket_grunt)
+es_sub_8044D1C équivalente échange classe / nom français de BufferStringBattle (battle_message.c) : recherche de {B_TRAINER1_CLASS} puis {B_TRAINER1_NAME}
+es_sub_8044D64 équivalente échange classe / nom français de BufferStringBattle (battle_message.c) : échange des deux codes
+# event_data.c
+EnableNationalPokedex_RSE écartée effet nul : VAR_0x403C, pokedex.unused et FLAG_0x838 ne sont jamais lus dans RF (son commentaire)
+GetFlagAddr équivalente GetFlagPointer (event_data.c), + drapeaux de Kanto (gSaveBlockKanto) ; journal écarté
+IsFlagOrVarStoredInQuestLog écartée journal de RF
+ResetSpecialVars équivalente remise à zéro de la RAM au démarrage et au redémarrage (SoftReset, src/platform/system.c) : RF l'appelle avant le menu principal (ResetMenuAndMonGlobals), quand aucune variable spéciale n'a servi ; ses autres appels sont ceux du journal
+# field_screen_effect.c : volet de grange de RF, seulement à la sortie d'un bâtiment (Task_ExitDoor de RF)
+BarnDoorWipeLoadGpuRegs écartée variante RF : Émeraude gardée (volet de grange, DoOutwardBarnDoorWipe) ; docs/VARIANTES-RF.md
+BarnDoorWipeSaveGpuRegs écartée variante RF : Émeraude gardée (volet de grange, DoOutwardBarnDoorWipe) ; docs/VARIANTES-RF.md
+Task_BarnDoorWipe écartée variante RF : Émeraude gardée (volet de grange, DoOutwardBarnDoorWipe) ; docs/VARIANTES-RF.md
+Task_BarnDoorWipeChild écartée variante RF : Émeraude gardée (volet de grange, DoOutwardBarnDoorWipe) ; docs/VARIANTES-RF.md
+# field_specials.c
+QuestLog_CheckDepartingIndoorsMap écartée journal de RF
+QuestLog_TryRecordDepartedLocation écartée journal de RF
+SetDeoxysTrianglePalette écartée Île Naissance de RF : celle d'Émeraude
+Task_DoDeoxysTriangleInteraction écartée Île Naissance de RF : celle d'Émeraude (WaitForDeoxysRockMovement)
+# title_screen.c : branche LEAFGREEN (#elif defined(LEAFGREEN)), absente de Rouge Feu
+CreateStreakSprites morte Vert Feuille seulement (#elif defined(LEAFGREEN))
+SpriteCallback_Streak morte Vert Feuille seulement (#elif defined(LEAFGREEN))
+SpriteCallback_TitleScreenLeaf morte Vert Feuille seulement (#elif defined(LEAFGREEN))
+Task_LeafSpawner morte Vert Feuille seulement (#elif defined(LEAFGREEN))
+# battle_transition.c : B_TRANSITION_SPIRAL n'est choisie nulle part dans RF (ni tables, ni scripts)
+Spiral_End morte B_TRANSITION_SPIRAL jamais choisie dans RF
+Spiral_Init morte B_TRANSITION_SPIRAL jamais choisie dans RF
+Spiral_UpdateFrame morte B_TRANSITION_SPIRAL jamais choisie dans RF
+VBlankCB_Spiral morte B_TRANSITION_SPIRAL jamais choisie dans RF
+# text.c : en français, ces polices de RF ont les lettres et les largeurs de sa police normale (latin_normal_fr =
+# latin_male_fr = latin_female_fr ; mêmes tables de largeurs) ; elles ne diffèrent qu'en japonais. Fusion : FONT_KANTO.
+DecompressGlyph_Female équivalente DecompressGlyph_Kanto (text.c), mêmes lettres en français
+DecompressGlyph_Male équivalente DecompressGlyph_Kanto (text.c), mêmes lettres en français
+DecompressGlyph_NormalCopy1 équivalente DecompressGlyph_Kanto (text.c), mêmes lettres en français
+DecompressGlyph_NormalCopy2 équivalente DecompressGlyph_Kanto (text.c), DecompressGlyph_Normal en français
+FontFunc_Female équivalente FontFunc_Kanto (text.c), même code
+FontFunc_Male équivalente FontFunc_Kanto (text.c), même code
+FontFunc_NormalCopy1 équivalente FontFunc_Kanto (text.c), même code
+FontFunc_NormalCopy2 équivalente FontFunc_Kanto (text.c), même code
+GetGlyphWidth_Female équivalente GetGlyphWidth_Kanto (text.c), même table de largeurs en français
+GetGlyphWidth_Male équivalente GetGlyphWidth_Kanto (text.c), même table de largeurs en français
+# save_failed_screen.c : échec d'écriture de la puce flash ; celle du port PC n'échoue pas
+BlankPalettes écartée variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)
+ClearMapBuffer écartée variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)
+FillBgMapBufferRect écartée variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)
+PrintTextOnSaveFailedScreen écartée variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)
+RequestDmaCopyFromCharBuffer écartée variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)
+RequestDmaCopyFromScreenBuffer écartée variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)
+RunSaveFailedScreen écartée variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)
+TryWipeDamagedSectors écartée variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)
+UpdateMapBufferWithText écartée variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)
+# battle_anim_special.c (lancer de Ball) = battle_anim_throw.c d'Émeraude ; champs nommés autrement (sTransl_*, sState…)
+AnimTask_IsBallBlockedByTrainerOrDodged équivalente AnimTask_IsBallBlockedByTrainer (battle_anim_throw.c), switch au lieu de if, mêmes cas
+AnimTask_ShinySparkles équivalente Task_ShinyStars (battle_anim_throw.c), même code (& 3 = % 4, SOUND_PAN_ATTACKER = -64)
+SpriteCB_ShinySparkles_1 équivalente SpriteCB_ShinyStars_Encircle (battle_anim_throw.c), même code
+SpriteCB_ThrowBall_Bounce équivalente SpriteCB_Ball_Bounce_Step (battle_anim_throw.c), même code (états nommés)
+SpriteCB_ThrowBall_DelayThenBreakOut équivalente SpriteCB_Ball_Release (battle_anim_throw.c), même code (sTimer = data[5] à cet endroit)
+SpriteCB_ThrowBall_DoShake équivalente SpriteCB_Ball_Wobble_Step (battle_anim_throw.c), même code (états et animations affines nommés)
+SpriteCB_ThrowBall_Init équivalente SpriteCB_Ball_Throw (battle_anim_throw.c), même code (sTransl_* = data[1..5])
+SpriteCB_ThrowBall_InitClick équivalente SpriteCB_Ball_Capture (battle_anim_throw.c), même code
+SpriteCB_ThrowBall_InitialFall équivalente SpriteCB_Ball_Bounce (battle_anim_throw.c), même code (champs nommés)
+TrainerBallBlock2 équivalente SpriteCB_Ball_Block_Step (battle_anim_throw.c), DISPLAY_HEIGHT = 160 ; BattleAnimObj_SignalEnd = DestroySpriteAfterOneFrame
+# pokemon_storage_system_*.c : interface du PC (stockage) d'Émeraude gardée (choix utilisateur 2026-10-23,
+# FUSION-OPTIONS) ; mêmes fonctions renommées (gStorage = sStorage, MENU_TEXT_* = MENU_*, sInMultiMoveMode = sAutoActionOn)
+AddBoxMenu équivalente AddBoxOptionsMenu (pokemon_storage_system.c), même code
+SetMenuTextsForItem équivalente SetMenuTexts_Item (pokemon_storage_system.c), même code
+SetMenuTextsForMon équivalente SetMenuTexts_Mon (pokemon_storage_system.c), même code (CURSOR_AREA_IN_BOX = 0)
+ToggleCursorMultiMoveMode équivalente ToggleCursorAutoAction (pokemon_storage_system.c), même code
+MonPlaceChange_MoveCursorDown équivalente MonPlaceChange_CursorDown (pokemon_storage_system.c), même code
+HandleInput_InBox_Normal équivalente InBoxInput_Normal (pokemon_storage_system.c), même code (INPUT_NONE = 0)
+IsActiveItemMoving équivalente IsMovingItem (pokemon_storage_system.c), MAX_ITEM_ICONS = 3
+MultiMove_Function_MoveMons équivalente MultiMove_MoveMons (pokemon_storage_system.c), MultiMove_UpdateBg = MultiMove_UpdateMove
+MultiMove_InitBg équivalente MultiMove_InitMove (pokemon_storage_system.c), même code
+IsDisplayMonMosaicActive équivalente IsDisplayMosaicActive (pokemon_storage_system.c), même code
+SetPokeStorageQuestLogEvent écartée journal de RF
+PrintStorageMessage écartée interface du PC de RF : celle d'Émeraude (PrintMessage : police et fenêtre d'Émeraude ; choix utilisateur 2026-10-23)
+DoReleaseMonAnim écartée interface du PC de RF : celle d'Émeraude (TryHideReleaseMon ; choix utilisateur 2026-10-23)
+SetShiftMonSpritePtr écartée interface du PC de RF : celle d'Émeraude (SetShiftedMonData ; choix utilisateur 2026-10-23)
+ShiftMons écartée interface du PC de RF : celle d'Émeraude (DoMonPlaceChange ; choix utilisateur 2026-10-23)
+ChooseBoxMenu_PrintBoxNameAndCount écartée interface du PC de RF : celle d'Émeraude (ChooseBoxMenu_PrintInfo ; choix utilisateur 2026-10-23)
+ChooseBoxMenu_PrintTextToSprite écartée interface du PC de RF : celle d'Émeraude (ChooseBoxMenu_PrintInfo ; choix utilisateur 2026-10-23)
+CreatePCMainMenu écartée interface du PC de RF : celle d'Émeraude (menu principal du stockage ; choix utilisateur 2026-10-23)
+PrintStringToBufferCopyNow écartée interface du PC de RF : celle d'Émeraude (choix utilisateur 2026-10-23)
+LoadMonIconPalettesAt écartée interface du PC de RF : celle d'Émeraude (déplacement multiple ; choix utilisateur 2026-10-23)
+TilemapUtil_SetTilemap écartée interface du PC de RF : celle d'Émeraude (choix utilisateur 2026-10-23)
+# trainer_see.c
+MovementAction_RevealTrainer_RunTrainerSeeFuncList équivalente SetBuriedTrainerMovement (trainer_see.c), même rôle (dresseur caché dans le sable)
+StartTrainerApproachWithFollowupTask équivalente StartTrainerApproach (trainer_see.c), + deux dresseurs d'Émeraude
+TrainerApproachPlayer équivalente InitTrainerApproachTask (trainer_see.c), + deux dresseurs d'Émeraude
+# combats
+AnimUnusedFeather morte seul sUnusedFeatherSpriteTemplate l'emploie, qu'aucune animation n'utilise
+AnimUnusedFeather_Step morte appelée par AnimUnusedFeather seulement
+AnimShakeMonOrBattleTerrain équivalente AnimShakeMonOrBattlePlatforms (battle_anim_normal.c), renommée
+AnimTask_ShakeBattleTerrain équivalente AnimTask_ShakeBattlePlatforms (battle_anim_normal.c), renommée (macro shake_battle_platforms)
+DecompressTrainerBackPalette équivalente DecompressTrainerBackPic (battle_gfx_sfx_util.c), qui charge aussi la palette
+BattleStringShouldBeColored équivalente sans effet visible : police MALE / FEMALE des messages des dresseurs = police normale en français
+Localize_TrainerClass_Names équivalente GetTrainerClassNameGenderSpecific (international_string_util.c) : en français, ses Localize_TrainerClass_* rendent le nom normal
+AddOpponentLinkBattleRecord link records de combats link de RF
+UpdateBattleOutcomeOnTrainerCards link records de combats link de RF
+Cmd_if_level_compare équivalente Cmd_if_level_cond (battle_ai_script_commands.c), gBattlerAttacker = sBattler_AI pendant l'IA
+GetBattleAnimBgDataByPriorityRank équivalente GetBgDataForTransform (battle_anim_mons.c), + Concours d'Émeraude
+BattleIntroOpponentSendsOutMonAnimation équivalente BattleIntroOpponent1SendsOutMonAnimation (battle_main.c), + doubles et combats enregistrés d'Émeraude
+StartTrainerBattle équivalente BattleSetup_StartTrainerBattle (battle_setup.c), + Pyramide, Colline d'Entraînement et doubles d'Émeraude ; combat-tutoriel du rival (CHEN) écarté
+# divers
+ClearBattleTower link Tour de Combat de RF (e-Reader)
+WarpToPlayersRoom écartée nouvelle partie de RF : la fusion commence à Hoenn (Kanto = post-game)
+ScriptContext_GetQuestLogInput écartée journal de RF
+ScriptContext_NextCommandEndsScript écartée journal de RF (seul appelant : le contexte de script du journal)
+RecordItemTransaction écartée journal de RF (achats et ventes notés pour le journal)
+RecordTransactionForQuestLog écartée journal de RF
+BGMVolumeMax_EnableHelpSystemReduction écartée aide de RF (volume baissé sous l'aide L/R)
+SetBGMVolume_SuppressHelpSystemReduction écartée aide de RF (volume baissé sous l'aide L/R)
+InitEnigmaBerry link Baie Enigma (e-Reader) ; sans elle, Émeraude prend la baie par défaut de la table (IsEnigmaBerryValid) : même affichage
+AdjustBgMosaic écartée variante RF : mosaïque du poison sur le terrain d'Émeraude gardée (Task_FieldPoisonEffect, fldeff_misc.c) ; docs/VARIANTES-RF.md
+BlendPalettesAt écartée journal de RF (seul appelant SlightlyDarkenPalsInWeather)
+SlightlyDarkenPalsInWeather écartée journal de RF
+ApplyGammaShift équivalente ApplyColorMap (field_weather.c), renommée (+ sécheresse d'Émeraude)
+BuildGammaShiftTables équivalente BuildColorMaps (field_weather.c), même calcul (divisions écrites autrement)
+SetThunderCounter équivalente EnqueueThunder (field_weather_effect.c), renommée
+PrintCoinsString_Parameterized morte seul appelant ShowCoinsWindow_Parameterized, inutilisée (son commentaire)
+WaitDma3Request équivalente CheckForSpaceForDma3Request (dma3_manager.c), même code
+QuestLogOverrideJoyVars écartée journal de RF
+SetWhiteoutRespawnHealerNpcAsLastTalked équivalente SetWhiteoutRespawnWarpAndHealerNpc (heal_location.c), K.O. de RF (2026-10-31)
+GetDialogBoxFontId équivalente FONT_KANTO (kanto_bag_compat.h) : FONT_MALE / FONT_FEMALE = police normale en français
+NamingScreen_CreateRivalIcon écartée nom du rival : pas de choix du nom du rival (BLUE, décision 2026-10-30)
+CopyPaletteInvertedTint écartée journal de RF
+GetUserWindowGraphics équivalente GetWindowFrameTilesPal (text_window.c), ->tiles et ->pal
+PopulateECGroups équivalente SetUnlockedEasyChatGroups (easy_chat.c), même déblocage ; + PHRASES TENDANCE d'Émeraude (les deux écrans d'Easy Chat lisent ces groupes)
+ChooseBattleTowerPlayerParty link Tour de Combat de RF (salle e-Reader de l'Île 7) ; stub inaccessible en solo (kanto_specials_stubs.c)

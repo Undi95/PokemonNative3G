@@ -153,6 +153,15 @@ L'inventaire est stable d'une exécution à l'autre depuis ce jour (empreintes e
 lancement de Python). Reste : manquante 201 (dont l'écran Options de RF, terrain, polices, écran d'échec de
 sauvegarde, PC), link 196 (dont la Tour de Combat de RF : e-Reader).
 
+Lecture des « manquantes » (2026-11-02, suite) : 162 -> 2. Portés : terrain des métatuiles de Kanto (Surf, cannes,
+COUPE ; voir CONNAISSANCE-JEU), échange « SBIRE TEAM ROCKET » de la version française, flèches de la boîte aux
+lettres de RF, boîtes d'argent et de jetons de RF (MENUS = KANTO). Les polices MALE / FEMALE / NORMAL_COPY de RF sont
+sa police normale en français (FONT_KANTO) ; le vélo de RF est écarté (un seul vélo, celui de Hoenn), l'interface du
+stockage PC aussi (choix du 2026-10-23) ; l'écran d'échec de sauvegarde et la mosaïque du poison de RF restent des
+variantes (Émeraude gardé) ; la Spirale et les feuilles de l'écran titre (Vert Feuille) sont mortes. Restent à lire :
+`BattleInterfaceSetWindowPals` (couleur 0 des tuiles de la boîte de texte de combat de RF, BOITES COMBAT = KANTO) et
+`SaveStatToString` (fenêtre d'infos de la sauvegarde de RF).
+
 Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.md).
 
 ## Sauvegarde

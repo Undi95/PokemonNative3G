@@ -16,5 +16,8 @@ void DrawMoneyBox(int amount, u8 x, u8 y);
 void HideMoneyBox(void);
 void AddMoneyLabelObject(u16 x, u16 y);
 void RemoveMoneyLabelObject(void);
+void Kanto_DrawMoneyBox(int amount, u8 x, u8 y);
+void Kanto_ChangeAmountInMoneyBox(int amount);
+void Kanto_HideMoneyBox(void);
 
 #endif // GUARD_MONEY_H

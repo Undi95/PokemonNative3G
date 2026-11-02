@@ -34,6 +34,12 @@ bool8 CheckObjectGraphicsInFrontOfPlayer(u16 graphicsId)
     GetXYCoordsOneStepInFrontOfPlayer(&gPlayerFacingPosition.x, &gPlayerFacingPosition.y);
     gPlayerFacingPosition.elevation = PlayerGetElevation();
     objEventId = GetObjectEventIdByPosition(gPlayerFacingPosition.x, gPlayerFacingPosition.y, gPlayerFacingPosition.elevation);
+#ifdef UBFIX
+    // PokemonNative3G : personne en face (OBJECT_EVENTS_COUNT) : la GBA lisait gObjectEvents[16], après le tableau
+    // (aussi dans RF), qui n'est jamais un arbre ou un rocher
+    if (objEventId == OBJECT_EVENTS_COUNT)
+        return FALSE;
+#endif
     if (gObjectEvents[objEventId].graphicsId != graphicsId)
     {
         return FALSE;

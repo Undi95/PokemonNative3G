@@ -16,7 +16,7 @@ Toutes à deux valeurs, 0 = HOENN (Émeraude), 1 = KANTO (RF). Index de `jeu.opt
 | DIALOGUE (8) | la boîte de dialogue (cadre RF : tiles 0-13 sauf 7 ; Émeraude : 1, 3-7, 9, 10 ; détecteur « cadre de boîte ») et les couleurs de texte des PNJ (bleu/rouge de RF, `AddTextPrinterDiffStyle`) | le texte gris des messages du jeu |
 | POLICE (9) | les lettres de **tous** les textes (`DecompressGlyph_Kanto`) | les mesures des fenêtres : `FONT_NORMAL` garde les mesures d'Émeraude (16 px de haut), `FONT_KANTO` celles de RF (14 px) |
 | POKéDEX (10) | le Pokédex : écran d'Émeraude ou de RF (sommaire, habitats) | — |
-| MENUS (11) | menu Start (police RF, entrées tous les 15 px, aide en bas), équipe (palette RF), résumé (écran de RF : 3 pages), boutique (écran d'achat de RF), PC (menus), écran des noms, maître des capacités ; depuis le 2026-11-02, les choix multiples des scripts (`DrawVerticalMultichoiceMenu` de RF : `FONT_KANTO`, lignes de 14 px, fenêtre de `GetMCWindowHeight` : 7 tiles pour 4 choix), leur grille (tableau de l'école de Jadielle), le menu « Accéder à quel PC? » (texte 1 px plus bas) et le OUI / NON (6 × 4 tiles au lieu de 5 × 4, lignes de 14 px) ; les touches comptent dès la 1ʳᵉ image (Émeraude attend 2 images) — scénario `kanto_menus_rf` ; la lecture d'une lettre (`kanto_mail.c` : message en (3,4), signature dans sa fenêtre en (15,15), `FONT_KANTO` ; mêmes images de lettres) — scénario `kanto_mail` ; l'écran Options (celui de RF dans `option_menu.c` : bandeau « CHOIX / CHANGER / ANNUL. », titre au cadre standard de RF, une valeur rouge par ligne de 13 px, ◀▶ change, A ou B ferme, ligne choisie éclairée ; avec les 2 pages de la fusion (L/R) et 7 lignes visibles qui défilent ; MODE BOUTONS commence à NORMAL : l'aide de RF est écartée) — scénario `kanto_options_rf` | la carte de dresseur (voir plus bas) |
+| MENUS (11) | menu Start (police RF, entrées tous les 15 px, aide en bas), équipe (palette RF), résumé (écran de RF : 3 pages), boutique (écran d'achat de RF), PC (menus), écran des noms, maître des capacités ; depuis le 2026-11-02, les choix multiples des scripts (`DrawVerticalMultichoiceMenu` de RF : `FONT_KANTO`, lignes de 14 px, fenêtre de `GetMCWindowHeight` : 7 tiles pour 4 choix), leur grille (tableau de l'école de Jadielle), le menu « Accéder à quel PC? » (texte 1 px plus bas) et le OUI / NON (6 × 4 tiles au lieu de 5 × 4, lignes de 14 px) ; les touches comptent dès la 1ʳᵉ image (Émeraude attend 2 images) — scénario `kanto_menus_rf` ; la lecture d'une lettre (`kanto_mail.c` : message en (3,4), signature dans sa fenêtre en (15,15), `FONT_KANTO` ; mêmes images de lettres) — scénario `kanto_mail` ; l'écran Options (celui de RF dans `option_menu.c` : bandeau « CHOIX / CHANGER / ANNUL. », titre au cadre standard de RF, une valeur rouge par ligne de 13 px, ◀▶ change, A ou B ferme, ligne choisie éclairée ; avec les 2 pages de la fusion (L/R) et 7 lignes visibles qui défilent ; MODE BOUTONS commence à NORMAL : l'aide de RF est écartée) — scénario `kanto_options_rf` ; les boîtes d'argent et de jetons des scripts (`Kanto_DrawMoneyBox`, `Kanto_ShowCoinsWindow` : 8 × 3, « ARGENT » / « JETONS » en `FONT_KANTO`, montant en petite police, cadre standard de RF en 0x21D palette 13 ; les scripts de RF placent la boîte des jetons par son cadre, ceux d'Émeraude par sa fenêtre : `ScrCmd_showcoinsbox` corrige, aussi avec la boîte d'Émeraude ; la roulette de Lavandia garde la sienne) — scénario `kanto_money_coins_box`, et les flèches de la boîte aux lettres du PC — scénario `kanto_mailbox` | la carte de dresseur (voir plus bas) |
 | BOITES COMBAT (12) | les boîtes de combat (action, capacités, PV) | — |
 | SAC (13) | le sac : Émeraude (5 poches, CT & CS, BAIES) ou RF (3 poches ; BOITE CT et SAC A BAIES en OBJ. RARES) ; aussi le sac de la démonstration du vieil homme de Jadielle (Wally d'Émeraude ou `InitOldManBag` de RF, scénario `kanto_old_man_bag`) | — |
 | POKéMON (14) | les sprites des Pokémon (Émeraude animés, RF) ; à l'éclosion d'un œuf, avec les sprites de RF : le cri seul et son attente, Pokémon en y 70 + son `y_offset` (`CB2_EggHatch_1` de RF ; Émeraude : animation, y 75) — scénario `egg_hatch_kanto` | — |
@@ -97,6 +97,26 @@ de la Ligue de Kanto (`GetTrainerBattleTransition`) et le bonus d'amitié des co
 Vérifiés conformes : musique de combat et de victoire, table d'argent (`src/data/kanto/trainer_money.h`), décor de
 combat (`kanto_battle_bg.c`), nom du rival (`battle_message.c`). Pour repérer les autres :
 `grep -n "TRAINER_CLASS_[A-Z_]*" src/*.c | grep "==\|case "` et comparer avec les mêmes tests dans RF.
+Même chose pour les dresseurs de Kanto (numéros à partir de `KANTO_TRAINERS_START` = 864, au-delà de
+`TRAINERS_COUNT`) : un test `trainerId < TRAINERS_COUNT` d'Émeraude les exclut. Trouvé ainsi (2026-11-02) : l'échange
+classe / nom de la version française (`BufferStringBattle`), qu'Émeraude fait pour MAGMA et AQUA et RF pour la TEAM
+ROCKET (`Localize_BattleStrings`) : « SBIRE TEAM ROCKET » (scénario `kanto_rocket_grunt`).
+
+## Terrain des métatuiles de Kanto (RF)
+
+RF range dans chaque métatuile, en plus du comportement, un type de rencontre (aucune, sol, eau) et un terrain (normal,
+herbe, eau, cascade). La fusion les garde dans les bits libres de l'attribut d'Émeraude : rencontre en bits 8-9,
+terrain en bits 10-11 (`tools/kanto_tile_attributes.py` ; 0 sur les tilesets de Hoenn ; `carte.metatuiles X Y` les
+affiche). RF décide avec eux, Émeraude avec le comportement :
+- rencontres sauvages de chaque case (`MapGridGetMetatileEncounterTypeAt`, wild_encounter.c) ;
+- eau en face du joueur, pour le Surf et les cannes (`MetatileAtCoordsIsWaterTile`, `IsPlayerFacingSurfableFishableWater`) :
+  sur la plage de la Route 18, le rivage de l'étang a le comportement « océan » mais pas le terrain « eau », donc pas de
+  Surf depuis le sable ;
+- herbe que COUPE tond (`MetatileAtCoordsIsGrassTile`, `SetCutGrassMetatileAt`, carré de 3 × 3 autour du joueur, sans
+  Hyper Cutter) : herbe haute, cimes d'arbre sur herbe, herbe de la Piste Cyclable, du Parc Safari, de la Forêt de Jade.
+À Kanto, les numéros de métatuile sont ceux de RF (le primaire de RF, 640 métatuiles, est coupé en 512 + les 128
+dernières en tête de chaque secondaire) : les `METATILE_*` de `constants/kanto/metatile_labels.h` s'emploient tels
+quels, ceux d'Émeraude (`constants/metatile_labels.h`) désignent d'autres métatuiles. Scénario `kanto_cut_surf`.
 
 ## Parc Safari : Hoenn (Émeraude) et Kanto (Rouge Feu)
 
@@ -195,8 +215,11 @@ doit refaire cette valeur quand on la connaît, sinon garder le comportement en 
 - **Fenêtre absente ou déjà supprimée** : rien. Lettre d'Émeraude : `PrintMailText` écrit dans une fenêtre 1 qui
   n'existe pas ; OUI / NON effacé deux fois (`Menu_ProcessInputNoWrapClearOnChoose` puis l'écran d'effacement de RF) :
   `EraseYesNoWindow` ne refait rien, comme `DestroyYesNoMenu` de RF à partir de `REVISION 0xA`.
+- **Personne en face** (`GetObjectEventIdByPosition` rend `OBJECT_EVENTS_COUNT`) : pas d'objet. COUPE ou ÉCLATE-ROC
+  depuis l'équipe sans rien en face : `CheckObjectGraphicsInFrontOfPlayer` (Émeraude et RF) lisait `gObjectEvents[16]`,
+  après le tableau, jamais un arbre ni un rocher : FALSE.
 Les scénarios de défis (`challenge_*`) sous ASan ont trouvé ces cas ; `docker/test-sanitize.sh` les vérifie (les
-derniers : `egg_hatch_kanto`, `kanto_mail`, `kanto_clear_save`, le 2026-11-02).
+derniers : `egg_hatch_kanto`, `kanto_mail`, `kanto_clear_save`, `kanto_cut_surf`, le 2026-11-02).
 
 ## Ce que l'explorateur ne fait pas (à tester autrement)
 

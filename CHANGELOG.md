@@ -61,10 +61,20 @@
   nouveau emporté par le courant jusqu'à l'étage du dessous, comme dans Rouge Feu (il surfait librement et l'énigme
   des rochers était sautée).
 - Éclosion d'un œuf, lecture d'une lettre : plus de lecture hors limites (palettes et tiles de la plateforme, fenêtre
-  inexistante de la lettre d'Émeraude) ; un OUI / NON n'est plus effacé deux fois.
+  inexistante de la lettre d'Émeraude) ; un OUI / NON n'est plus effacé deux fois. De même pour COUPE ou ÉCLATE-ROC
+  depuis l'équipe sans rien en face du joueur.
 - Carte Dresseur de Kanto : la photo de l'imprimante du Casino de Céladopole (les Pokémon de l'équipe, au dos) et
   les STICKERS de l'homme de l'Île 4 apparaissent enfin sur la carte. Les étoiles et la couleur suivent les règles de
   Rouge Feu (Panthéon, Pokédex de Kanto, Pokédex national, 200 baies et 200 sauts), et le Pokédex compte ceux de Kanto.
+- COUPE à Kanto : elle tond l'herbe comme dans Rouge Feu, avec les cimes d'arbre sur l'herbe, l'herbe de la Piste
+  Cyclable, du Parc Safari et de la Forêt de Jade (seule l'herbe haute était tondue).
+- SURF et cannes à Kanto : l'eau en face du joueur se reconnaît comme dans Rouge Feu. Sur la plage de la Route 18,
+  l'étang n'est plus accessible en Surf ni pêchable depuis le rivage.
+- Combats contre la TEAM ROCKET : « SBIRE TEAM ROCKET » (et non plus « TEAM ROCKET SBIRE »), comme dans Rouge Feu.
+- Boîte aux lettres du PC avec MENUS = KANTO : les flèches de défilement sont au milieu de la liste.
+- Avec MENUS = KANTO, les boîtes d'argent et de jetons des PNJ (Casino, distributeurs, Musée, Parc Safari, pension…)
+  sont celles de Rouge Feu (« ARGENT » / « JETONS » écrits au-dessus du montant), comme les choix et le OUI/NON.
+  Avec MENUS = HOENN, la boîte des jetons du Casino de Céladopole n'est plus à moitié hors de l'écran.
 
 ### Nouveautés
 - Kanto : en entrant dans un lieu, le panneau du nom est celui de Rouge Feu (boîte blanche en haut à gauche), avec

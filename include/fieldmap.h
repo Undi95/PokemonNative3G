@@ -35,6 +35,7 @@ u16 GetMetatileAttributesById(u16 metatile);
 void GetCameraFocusCoords(u16 *x, u16 *y);
 u8 MapGridGetMetatileLayerTypeAt(s32 x, s32 y);
 u8 MapGridGetMetatileEncounterTypeAt(s32 x, s32 y);
+u8 MapGridGetMetatileTerrainAt(s32 x, s32 y);
 u8 MapGridGetElevationAt(s32 x, s32 y);
 bool8 CameraMove(s32 x, s32 y);
 void SaveMapView(void);

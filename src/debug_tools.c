@@ -14,6 +14,7 @@
 #include "gba/m4a_internal.h"
 #include "battle.h"
 #include "battle_setup.h"
+#include "coins.h"
 #include "day_night.h"
 #include "debug_menu.h"
 #include "debug_checks.h"
@@ -49,6 +50,7 @@
 #include "text.h"
 #include "window.h"
 #include "constants/characters.h"
+#include "constants/coins.h"
 #include "constants/moves.h"
 #include "constants/easy_chat.h"
 #include "constants/flags.h"
@@ -507,6 +509,32 @@ static void Cmd_MapGrid(const s32 *args, u32 argCount, struct DebugToolsOutput *
     }
 }
 
+// Les métatuiles d'un rectangle de la carte (coordonnées de la carte, comme carte.grille ; 3 × 3 autour de X Y par
+// défaut) : numéro, comportement, et à Kanto le terrain et le type de rencontre de RF (tools/kanto_tile_attributes.py)
+static void Cmd_MapMetatiles(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    s32 x, y;
+    s32 left = argCount >= 4 ? args[0] : args[0] - 1, top = argCount >= 4 ? args[1] : args[1] - 1;
+    s32 width = argCount >= 4 ? args[2] : 3, height = argCount >= 4 ? args[3] : 3;
+
+    if (width < 1 || height < 1 || width * height > 256)
+    {
+        DebugTools_Print(out, "refuse : 1 a 256 cases\n");
+        return;
+    }
+    for (y = top; y < top + height; y++)
+    {
+        for (x = left; x < left + width; x++)
+        {
+            s32 mx = x + MAP_OFFSET, my = y + MAP_OFFSET;
+            DebugTools_Print(out, "%d,%d : metatuile 0x%03x comportement 0x%02x terrain %d rencontre %d elevation %d collision %d\n",
+                             x, y, MapGridGetMetatileIdAt(mx, my), MapGridGetMetatileBehaviorAt(mx, my),
+                             MapGridGetMetatileTerrainAt(mx, my), MapGridGetMetatileEncounterTypeAt(mx, my),
+                             MapGridGetElevationAt(mx, my), MapGridGetCollisionAt(mx, my));
+        }
+    }
+}
+
 // --- Scripts --------------------------------------------------------------------------------------------------
 
 static void PrintScriptContext(struct DebugToolsOutput *out, const char *name, const struct ScriptContext *ctx)
@@ -814,11 +842,29 @@ static void Cmd_Mail(const s32 *args, u32 argCount, struct DebugToolsOutput *out
     for (i = 0; i < MAIL_WORDS_COUNT; i++)
         gSaveBlock1Ptr->mail[mailId].words[i] = sDebugMailWords[i];
     DebugTools_Print(out, "Pokemon %d : lettre %d (objet %d)\n", args[0], mailId, args[1]);
+    if (argCount >= 3 && args[2] == 2)
+    {
+        // envoyée dans la boîte aux lettres du PC, comme ENVOYER AU PC (menu de l'équipe)
+        mailId = TakeMailFromMonAndSave(mon);
+        if (mailId == MAIL_NONE)
+            DebugTools_Print(out, "refuse : boite aux lettres du PC pleine\n");
+        else
+            DebugTools_Print(out, "envoyee au PC : lettre %d\n", mailId);
+        return;
+    }
     if (argCount >= 3 && args[2] == 1 && gMain.callback2 == CB2_Overworld)
     {
         ReadMail(&gSaveBlock1Ptr->mail[mailId], CB2_ReturnToField, TRUE);
         DebugTools_Print(out, "lecture ouverte\n");
     }
+}
+
+// Jetons du Casino (BOITE JETONS) : les lit, ou les met à N (au plus MAX_COINS)
+static void Cmd_Coins(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (argCount >= 1)
+        SetCoins(min(max(args[0], 0), MAX_COINS));
+    DebugTools_Print(out, "jetons %u\n", GetCoins());
 }
 
 // PV du Pokémon N de l'équipe (au plus ses PV max) : un K.O. qui ne dépend plus du hasard (scénario kanto_whiteout)
@@ -1126,6 +1172,7 @@ static const u8 sName_DebugAction[] = _("Actions du menu DEBUG");
 static const u8 sName_MapInfo[] = _("Carte");
 static const u8 sName_MapObjects[] = _("Objets de la carte");
 static const u8 sName_MapGrid[] = _("Grille de la carte");
+static const u8 sName_MapMetatiles[] = _("Métatuiles");
 static const u8 sName_ScriptContext[] = _("Scripts en cours");
 static const u8 sName_RunScript[] = _("Lancer un script");
 static const u8 sName_Flag[] = _("Flag");
@@ -1134,6 +1181,7 @@ static const u8 sName_Names[] = _("Drapeaux et variables");
 static const u8 sName_Story[] = _("Histoires finies");
 static const u8 sName_Party[] = _("Équipe");
 static const u8 sName_Bag[] = _("Sac et argent");
+static const u8 sName_Coins[] = _("Jetons");
 static const u8 sName_SetMove[] = _("Donner une capacité");
 static const u8 sName_Mail[] = _("Lettre");
 static const u8 sName_Egg[] = _("Oeuf à faire éclore");
@@ -1167,6 +1215,7 @@ const struct DebugTool gDebugTools[] =
     {"carte.info", DEBUG_TOOLS_MAP, sName_MapInfo, "carte, region, joueur, connexions", 0, Cmd_MapInfo},
     {"carte.objets", DEBUG_TOOLS_MAP, sName_MapObjects, "objets actifs de la carte", 0, Cmd_MapObjects},
     {"carte.grille", DEBUG_TOOLS_MAP, sName_MapGrid, "la carte en jeu : # bloque, g herbe, ~ eau, <>^v rebord", 0, Cmd_MapGrid},
+    {"carte.metatuiles", DEBUG_TOOLS_MAP, sName_MapMetatiles, "X Y [L H] : metatuiles (numero, comportement, terrain et rencontre de RF) ; 3x3 autour de X Y, ou L x H depuis X Y", 2, Cmd_MapMetatiles},
     {"scripts.contexte", DEBUG_TOOLS_SCRIPT, sName_ScriptContext, "contextes de script global et immediat", 0, Cmd_ScriptContext},
     {"scripts.lancer", DEBUG_TOOLS_SCRIPT, sName_RunScript, "@ADRESSE : lance ce script (game.script(NOM) dans le banc)", 1, Cmd_RunScript},
     {"scripts.flag", DEBUG_TOOLS_SCRIPT, sName_Flag, "FLAG [VALEUR] : lit ou met un flag", 1, Cmd_Flag},
@@ -1175,10 +1224,11 @@ const struct DebugTool gDebugTools[] =
     {"scripts.drapeaux", DEBUG_TOOLS_SCRIPT, sName_Names, "[CAT] : drapeaux, dresseurs, variables par categorie ; menu : A bascule, L/R -/+", 0, Cmd_Names, Select_Names},
     {"joueur.equipe", DEBUG_TOOLS_PLAYER, sName_Party, "equipe : espece, PV, dresseur d'origine, lieu de rencontre", 0, Cmd_Party},
     {"joueur.sac", DEBUG_TOOLS_PLAYER, sName_Bag, "argent et poches du sac", 0, Cmd_Bag},
+    {"joueur.jetons", DEBUG_TOOLS_PLAYER, sName_Coins, "[N] : jetons du Casino ; N les met", 0, Cmd_Coins},
     {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE : donne la capacite (et ses PP)", 3, Cmd_SetMove},
     {"joueur.pv", DEBUG_TOOLS_PLAYER, sName_SetHp, "N PV : PV du Pokemon N (au plus ses PV max)", 2, Cmd_SetHp},
     {"joueur.oeuf", DEBUG_TOOLS_PLAYER, sName_Egg, "N : le Pokemon N devient un oeuf pret a eclore (EventScript_EggHatch, VAR_0x8004 = N)", 1, Cmd_Egg},
-    {"joueur.lettre", DEBUG_TOOLS_PLAYER, sName_Mail, "N OBJET [1] : lettre ITEM_*_MAIL a 9 mots au Pokemon N ; 1 = la lire (sur la carte)", 2, Cmd_Mail},
+    {"joueur.lettre", DEBUG_TOOLS_PLAYER, sName_Mail, "N OBJET [1|2] : lettre ITEM_*_MAIL a 9 mots au Pokemon N ; 1 = la lire (sur la carte), 2 = l'envoyer au PC", 2, Cmd_Mail},
     {"combat.etat", DEBUG_TOOLS_BATTLE, sName_Battle, "type, combattants, controleurs", 0, Cmd_Battle},
     {"gfx.sprites", DEBUG_TOOLS_GFX, sName_Sprites, "sprites utilises : position, tile, palette, animation", 0, Cmd_Sprites},
     {"gfx.palette", DEBUG_TOOLS_GFX, sName_Palette, "TYPE BANQUE (0 BG, 1 OBJ) : couleurs non fondues, fondues, a l'ecran", 2, Cmd_Palette},

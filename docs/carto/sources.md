@@ -94,7 +94,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | field_effect.c | commun | 239 | 109 | 13 | 8 | 19 | 36 | 94 | field_effect.c (8) |
 | battle_script_commands.c | commun | 284 | 3 | 0 | 0 | 0 | 165 | 116 |  |
 | overworld.c | commun | 242 | 44 | 4 | 13 | 38 | 106 | 92 | overworld.c (13) |
-| field_player_avatar.c | commun | 176 | 61 | 4 | 13 | 27 | 51 | 64 | field_player_avatar.c (13) |
+| field_player_avatar.c | commun | 176 | 61 | 4 | 14 | 29 | 51 | 64 | field_player_avatar.c (14) |
 | battle_ai_script_commands.c | commun | 105 | 14 | 0 | 0 | 0 | 3 | 88 |  |
 | battle_transition.c | commun | 134 | 10 | 0 | 5 | 50 | 47 | 77 | battle_transition.c (5) |
 | battle_anim_effects_1.c | commun | 154 | 1 | 1 | 0 | 100 | 76 | 77 |  |
@@ -190,7 +190,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_records.c | commun | 31 | 21 | 0 | 16 | 76 | 3 | 7 | kanto_trainer_tower.c (15), kanto_seagallop.c (1) |
 | main.c | commun | 28 | 2 | 0 | 0 | 0 | 16 | 10 |  |
 | battle_anim_ground.c | commun | 25 | 2 | 2 | 0 | 100 | 12 | 11 |  |
-| fldeff_cut.c | commun | 13 | 7 | 1 | 0 | 14 | 1 | 5 |  |
 | pokeball.c | commun | 37 | 0 | 0 | 0 | 100 | 26 | 11 |  |
 | field_screen_effect.c | commun | 19 | 9 | 0 | 3 | 33 | 6 | 4 | field_screen_effect.c (3) |
 | menu_helpers.c | commun | 17 | 3 | 1 | 1 | 66 | 5 | 9 | kanto_bag.c (1) |
@@ -202,6 +201,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | berry_powder.c | commun | 14 | 2 | 0 | 2 | 100 | 3 | 9 | kanto_specials.c (2) |
 | ereader_helpers.c | commun | 17 | 1 | 1 | 0 | 100 | 7 | 9 |  |
 | evolution_scene.c | commun | 23 | 1 | 1 | 0 | 100 | 13 | 9 |  |
+| fldeff_cut.c | commun | 13 | 7 | 1 | 2 | 42 | 1 | 5 | fldeff_cut.c (2) |
 | fldeff_rocksmash.c | commun | 10 | 7 | 1 | 0 | 14 | 0 | 3 |  |
 | mail_data.c | commun | 12 | 4 | 0 | 0 | 0 | 3 | 5 |  |
 | window.c | commun | 21 | 1 | 0 | 0 | 0 | 12 | 8 |  |
