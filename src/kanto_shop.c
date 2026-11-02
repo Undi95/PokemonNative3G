@@ -1285,7 +1285,7 @@ static void BuyMenuSubtractMoney(u8 taskId)
 {
     IncrementGameStat(GAME_STAT_SHOPPED);
     RemoveMoney(&gSaveBlock1Ptr->money, sShopData.itemPrice);
-    PlaySE(SE_SHOP);
+    PlaySE(SE_RG_SHOP); // SE_SHOP de RF ; SE_SHOP d'Émeraude est SE_RS_SHOP de RF
     KShop_PrintMoneyAmountInMoneyBox(0, GetMoney(&gSaveBlock1Ptr->money), 0);
     gTasks[taskId].func = Task_ReturnToItemListAfterItemPurchase;
 }

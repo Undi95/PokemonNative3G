@@ -1427,7 +1427,7 @@ static void Task_SellYes(u8 taskId)
 static void Task_SellBerries_PlaySfxAndRemoveBerries(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
-    PlaySE(SE_SHOP);
+    PlaySE(SE_RG_SHOP); // SE_SHOP de RF ; SE_SHOP d'Émeraude est SE_RS_SHOP de RF
     RemoveBagItem(gSpecialVar_ItemId, data[8]);
     AddMoney(&gSaveBlock1Ptr->money, ItemId_GetPrice(gSpecialVar_ItemId) / 2 * data[8]);
     DestroyListMenuTask(data[0], &sStaticCnt.listMenuScrollOffset, &sStaticCnt.listMenuSelectedRow);

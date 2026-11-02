@@ -248,10 +248,13 @@ class Game:
             elif kind == "item":
                 self.note(f"OBJET {names.name('ITEM_', event['id'])} : {event['n']} dans le sac")
             elif kind == "song":
+                # Tout morceau lancé (m4aSongNumStart) : effets et fanfares, qui se jouent sur un autre lecteur que
+                # la musique de la carte (son événement « bgm »)
                 sound = names.name("SE_", event["v"])
-                if "0x" not in sound:   # les musiques ont leur événement « bgm »
-                    self.sounds.append((self.frames, sound))
-                    self.note(f"SON {sound}")
+                if "0x" in sound:
+                    sound = names.name("MUS_", event["v"])
+                self.sounds.append((self.frames, sound))
+                self.note(f"SON {sound}")
             elif kind == "bgm" and event["v"] >= 0:
                 self.note(f"MUSIQUE {names.name('MUS_', event['v'])}", event["f"])
                 self.songs.append((event["f"], names.name("MUS_", event["v"])))
@@ -459,7 +462,7 @@ def expect_battle_outcome(game, outcome):
 
 
 def expect_sound(game, sound, since_frame=0):
-    """Un effet sonore (SE_...) a été joué, depuis une image."""
+    """Un effet sonore (SE_...) ou une fanfare (MUS_...) a été lancé, depuis une image."""
     played = [name for frame, name in game.sounds if frame >= since_frame]
     expect(game, sound in played, f"son {sound}" + ("" if sound in played else f" (joués : {played[-8:]})"))
 

@@ -137,6 +137,8 @@ class ScriptConverter:
             return self.imp.id_rename.get(t, t)
         if t.startswith('MUS_'):
             return self.imp.music(t)
+        if t.startswith('SE_'):
+            return self.imp.sound(t)
         if t in FR_TRAINER_IDS:
             return 'TRAINER_KANTO_' + t[len('TRAINER_'):]
         return t

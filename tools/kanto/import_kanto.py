@@ -56,6 +56,19 @@ def parse_defines(path, prefix):
     return out
 
 
+def song_ids(path):
+    """Le nom d'origine de chaque son (commentaire de songs.h : « #define MUS_HEAL 368 // MUS_ME_ASA »), sans le RG_
+    des copies de RF dans Émeraude (MUS_RG_AJITO d'Émeraude = MUS_AJITO de RF). Deux sons de même nom ne sont pas
+    toujours le même son : MUS_HEAL de RF est MUS_ME_ASA (MUS_HEAL d'Émeraude), MUS_RG_HEAL d'Émeraude est
+    MUS_KAIHUKU (MUS_HEAL_UNUSED de RF) ; SE_SHOP et SE_DOOR de RF sont SE_RG_SHOP et SE_RG_DOOR d'Émeraude."""
+    out = {}
+    for line in open(path, encoding='utf-8'):
+        m = re.match(r'\s*#define\s+((?:MUS|SE)_\w+)\s+\d+\s*//\s*(\w+)', line)
+        if m:
+            out[m.group(1)] = m.group(2).replace('_RG_', '_', 1)
+    return out
+
+
 def parse_enum(path, prefix):
     """Valeurs d'un enum C simple (un membre par ligne)."""
     out, n = {}, 0
@@ -90,6 +103,8 @@ class Importer:
         self.fr_layouts = {l['id']: l for l in json.load(open(f'{fr}/data/layouts/layouts.json'))['layouts'] if 'id' in l}
         self.fr_tilesets = self._tileset_sources(fr)
         self.em_songs = parse_defines(f'{em}/include/constants/songs.h', 'MUS_')
+        self.fr_song_ids = song_ids(f'{fr}/include/constants/songs.h')
+        self.em_song_ids = song_ids(f'{em}/include/constants/songs.h')
 
     # --- tilesets -------------------------------------------------------------
     def _tileset_sources(self, root):
@@ -254,13 +269,25 @@ class Importer:
     def music(self, fr_name):
         if fr_name == 'MUS_NONE':
             return fr_name
-        cand = 'MUS_RG_' + fr_name[len('MUS_'):]
-        if cand in self.em_songs:
-            return cand
-        if fr_name in self.em_songs:
-            return fr_name
+        same = self.same_song(fr_name)
+        if same:
+            return same
         self.warn('musique sans équivalent -> MUS_NONE', fr_name)
         return 'MUS_NONE'
+
+    def sound(self, fr_name):
+        """Un effet sonore de RF : le SE_ de la fusion qui a le même son d'origine (SE_SHOP -> SE_RG_SHOP)."""
+        return self.same_song(fr_name) or fr_name
+
+    def same_song(self, fr_name):
+        """Le son de la fusion qui a le même nom d'origine que fr_name dans RF : la copie de RF (RG_) d'abord, car
+        Émeraude réutilise des noms d'origine pour ses propres morceaux (MUS_AJITO : repaire Aqua/Magma)."""
+        jp = self.fr_song_ids.get(fr_name)
+        if jp is None:
+            return None
+        same = [n for n, j in self.em_song_ids.items() if j == jp]
+        rg = [n for n in same if '_RG_' in n]
+        return (rg or [n for n in same if n == fr_name] or same or [None])[0]
 
     def warn(self, kind, what):
         self.warnings.setdefault(kind, set()).add(what)

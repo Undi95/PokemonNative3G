@@ -1362,7 +1362,7 @@ static void Task_DoSaleOfTMs(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
 
-    PlaySE(SE_SHOP);
+    PlaySE(SE_RG_SHOP); // SE_SHOP de RF ; SE_SHOP d'Émeraude est SE_RS_SHOP de RF
     RemoveBagItem(gSpecialVar_ItemId, tQuantitySelected);
     AddMoney(&gSaveBlock1Ptr->money, ItemId_GetPrice(gSpecialVar_ItemId) / 2 * tQuantitySelected);
     DestroyListMenuTask(tListTaskId, &sTMCaseStaticResources.scrollOffset, &sTMCaseStaticResources.selectedRow);

@@ -771,9 +771,10 @@ Kanto_EventScript_ResetAllMapFlags::
 	.include "data/kanto/data/scripts/set_gym_trainers.inc"
 	.include "data/kanto/data/scripts/bag_full.inc"
 
+@ MUS_HEAL de RF = MUS_ME_ASA = MUS_HEAL d'Émeraude ; MUS_RG_HEAL est MUS_HEAL_UNUSED de RF (jamais joué)
 EventScript_OutOfCenterPartyHeal::
 	fadescreen FADE_TO_BLACK
-	playfanfare MUS_RG_HEAL
+	playfanfare MUS_HEAL
 	waitfanfare
 	special HealPlayerParty
 	fadescreen FADE_FROM_BLACK

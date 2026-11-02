@@ -523,7 +523,7 @@ bool8 Kanto_FieldIsDoorAnimationRunning(void)
 u16 Kanto_GetDoorSoundEffect(int x, int y)
 {
     if (GetDoorSoundType(sDoorGraphics, x, y) == DOOR_SOUND_NORMAL)
-        return SE_DOOR;
+        return SE_RG_DOOR; // SE_DOOR de RF (SE_W_DOOR) ; SE_DOOR d'Émeraude est SE_RS_DOOR de RF
     else // DOOR_SOUND_SLIDING
         return SE_SLIDING_DOOR;
 }
