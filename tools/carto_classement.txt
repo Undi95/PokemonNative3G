@@ -296,3 +296,137 @@ ValidateRamScript équivalente ValidateSavedRamScript (script.c), LOCALID_PLAYER
 CB2_ReturnFromChooseBattleTowerParty link Tour de Combat de RF (salle e-Reader)
 ReducePlayerPartyToThree link Tour de Combat de RF (salle e-Reader)
 Task_WaitPlayerAndTargetNPCStopMoving équivalente Task_FreezeSelectedObjectAndPlayer (event_object_lock.c), HandleEnforcedLookDirectionOnPlayerStopMoving = PlayerFreeze (même code)
+# battle_controller_oak_old_man.c : contrôleur commun au tutoriel de CHEN (BATTLE_TYPE_FIRST_BATTLE, écarté : Kanto =
+# post-game, décision 2026-11-02) et au vieil homme de Jadielle (battle_controller_old_man.c, OldMan*). Les seules
+# différences sont les branches BATTLE_TYPE_FIRST_BATTLE.
+CopyOakOldManMonData équivalente CopyOldManMonData (battle_controller_old_man.c), même code
+SetOakOldManMonData équivalente SetOldManMonData (battle_controller_old_man.c), même code
+SetControllerToOakOrOldMan équivalente SetControllerToOldMan (battle_controller_old_man.c), sans CHEN
+SimulateInputChooseAction équivalente OldManHandleActions (battle_controller_old_man.c), mêmes touches simulées (compteurs de Wally)
+OakOldManBufferExecCompleted équivalente OldManBufferExecCompleted (battle_controller_old_man.c), même code
+OakOldManBufferRunCommand équivalente OldManBufferRunCommand (battle_controller_old_man.c), table appariée
+OakOldManDoMoveAnimation équivalente OldManDoMoveAnimation (battle_controller_old_man.c), même code
+OakOldManHandleBattleAnimation équivalente OldManHandleBattleAnimation (battle_controller_old_man.c), même code
+OakOldManHandleChooseAction équivalente OldManHandleChooseAction (battle_controller_old_man.c), sans la branche de CHEN
+OakOldManHandleChooseMove équivalente OldManHandleChooseMove (battle_controller_old_man.c), sans la branche de CHEN
+OakOldManHandleChoosePokemon équivalente OldManHandleChoosePokemon (battle_controller_old_man.c), sans la branche de CHEN
+OakOldManHandleCmd55 équivalente OldManHandleEndLinkBattle (battle_controller_old_man.c), même code
+OakOldManHandleDrawPartyStatusSummary équivalente OldManHandleDrawPartyStatusSummary (battle_controller_old_man.c), même code
+OakOldManHandleDrawTrainerPic équivalente OldManHandleDrawTrainerPic (battle_controller_old_man.c), dos du vieil homme ; sans la branche de CHEN
+OakOldManHandleEndBounceEffect équivalente OldManHandleEndBounceEffect (battle_controller_old_man.c), sans la branche de CHEN
+OakOldManHandleExpUpdate équivalente OldManHandleExpUpdate (battle_controller_old_man.c), sans la branche de CHEN
+OakOldManHandleFaintAnimation équivalente OldManHandleFaintAnimation (battle_controller_old_man.c), sans la branche de CHEN
+OakOldManHandleFaintingCry équivalente OldManHandleFaintingCry (battle_controller_old_man.c), même code
+OakOldManHandleGetMonData équivalente OldManHandleGetMonData (battle_controller_old_man.c), même code
+OakOldManHandleHitAnimation équivalente OldManHandleHitAnimation (battle_controller_old_man.c), même code
+OakOldManHandleIntroSlide équivalente OldManHandleIntroSlide (battle_controller_old_man.c), même code
+OakOldManHandleIntroTrainerBallThrow équivalente OldManHandleIntroTrainerBallThrow (battle_controller_old_man.c), sans la branche de CHEN
+OakOldManHandleLinkStandbyMsg équivalente OldManHandleLinkStandbyMsg (battle_controller_old_man.c), sans la branche de CHEN
+OakOldManHandleMoveAnimation équivalente OldManHandleMoveAnimation (battle_controller_old_man.c), même code
+OakOldManHandlePlayFanfare équivalente OldManHandlePlayFanfareOrBGM (battle_controller_old_man.c), même code
+OakOldManHandlePlaySE équivalente OldManHandlePlaySE (battle_controller_old_man.c), même code
+OakOldManHandlePrintSelectionString équivalente OldManHandlePrintSelectionString (battle_controller_old_man.c), même code
+OakOldManHandlePrintString équivalente OldManHandlePrintString (battle_controller_old_man.c), BATTLE_TYPE_OLD_MAN_TUTORIAL = WALLY_TUTORIAL ; sans les textes de CHEN
+OakOldManHandleReturnMonToBall équivalente OldManHandleReturnMonToBall (battle_controller_old_man.c), même code
+OakOldManHandleSetMonData équivalente OldManHandleSetMonData (battle_controller_old_man.c), même code
+OakOldManHandleTrainerSlide équivalente OldManHandleTrainerSlide (battle_controller_old_man.c), sans la branche de CHEN
+OakOldManHandleInputChooseMove écartée tutoriel du premier combat avec CHEN (Kanto = post-game)
+OakHandleChooseMove_WaitDma3 écartée tutoriel du premier combat avec CHEN (Kanto = post-game)
+BtlCtrl_OakOldMan_SetState2Flag écartée messages du tutoriel de CHEN (Kanto = post-game)
+BtlCtrl_OakOldMan_TestState2Flag écartée messages du tutoriel de CHEN (Kanto = post-game)
+PrintOakTextWithMainBgDarkened écartée conseils de CHEN (Kanto = post-game)
+PrintOakText_ForPetesSake écartée conseils de CHEN (Kanto = post-game)
+PrintOakText_HowDisappointing écartée conseils de CHEN (Kanto = post-game)
+PrintOakText_InflictingDamageIsKey écartée conseils de CHEN (Kanto = post-game)
+PrintOakText_KeepAnEyeOnHP écartée conseils de CHEN (Kanto = post-game)
+PrintOakText_LoweringStats écartée conseils de CHEN (Kanto = post-game)
+PrintOakText_OakNoRunningFromATrainer écartée conseils de CHEN (Kanto = post-game)
+PrintOakText_WinEarnsPrizeMoney écartée conseils de CHEN (Kanto = post-game)
+# evolution_graphics.c : mêmes étincelles et mêmes tailles ; seuls les masques de palettes du flash changent (chaque jeu
+# range autrement les palettes de son écran d'évolution : la fusion garde celui d'Émeraude, ses masques avec)
+CreatePostEvoSparkleSet1 équivalente CreateSparkle_CircleInward (evolution_graphics.c), 120 = DISPLAY_WIDTH / 2
+CreatePostEvoSparkleSet2 équivalente CreateSparkle_Spray (evolution_graphics.c), même code
+CreatePreEvoSparkleSet1 équivalente CreateSparkle_SpiralUpward (evolution_graphics.c), même code
+CreatePreEvoSparkleSet2 équivalente CreateSparkle_ArcDown (evolution_graphics.c), même code
+EvoTask_ChooseNextEvoSpriteAnim équivalente Task_CycleEvolutionMonSprite_TryEnd (evolution_graphics.c), même code
+EvoTask_CreatePostEvoSparklesSet1 équivalente Task_Sparkles_CircleInward (evolution_graphics.c), même code
+EvoTask_CreatePostEvoSparklesSet2 équivalente Task_Sparkles_SprayAndFlash (evolution_graphics.c), masque de palettes de l'écran
+EvoTask_CreatePostEvoSparklesSet2Trade équivalente Task_Sparkles_SprayAndFlash (evolution_graphics.c), masque de palettes de l'écran (échange)
+EvoTask_CreatePreEvoSparkleSet1 équivalente Task_Sparkles_SpiralUpward (evolution_graphics.c), même calcul
+EvoTask_CreatePreEvoSparklesSet2 équivalente Task_Sparkles_ArcDown (evolution_graphics.c), même calcul
+EvoTask_PostEvoSparklesSet1Init équivalente Task_Sparkles_CircleInward_Init (evolution_graphics.c), même code
+EvoTask_PostEvoSparklesSet2Init équivalente Task_Sparkles_SprayAndFlash_Init (evolution_graphics.c), masque de palettes de l'écran
+EvoTask_PostEvoSparklesSet2TradeInit équivalente Task_Sparkles_SprayAndFlash_Init (evolution_graphics.c), masque de palettes de l'écran (échange)
+EvoTask_PreEvoSparkleSet1Init équivalente Task_Sparkles_SpiralUpward_Init (evolution_graphics.c), même code
+EvoTask_PreEvoSparkleSet2Init équivalente Task_Sparkles_ArcDown_Init (evolution_graphics.c), même code
+EvoTask_PrePostEvoMonSpritesInit équivalente Task_CycleEvolutionMonSprite_Init (evolution_graphics.c), même code
+EvoTask_ShrinkOrExpandEvoSprites équivalente Task_CycleEvolutionMonSprite_UpdateSize (evolution_graphics.c), même calcul
+SpriteCB_PostEvoSparkleSet2 équivalente SpriteCB_Sparkle_Spray (evolution_graphics.c), même calcul
+SpriteCB_PreEvoSparkleSet1 équivalente SpriteCB_Sparkle_SpiralUpward (evolution_graphics.c), même calcul
+SpriteCB_PreEvoSparkleSet2 équivalente SpriteCB_Sparkle_ArcDown (evolution_graphics.c), même calcul
+# battle_anim_special.c (lancer de balle du vieil homme, du Safari) = battle_anim_throw.c d'Émeraude
+AnimTask_ThrowBallSpecial équivalente AnimTask_ThrowBall_StandingTrainer (battle_anim_throw.c), vieil homme compris (IsOldManTutorialBattle)
+AnimTask_ThrowBallSpecial_PlaySfx équivalente AnimTask_ThrowBall_StandingTrainer_Step (battle_anim_throw.c), même enchaînement
+CreateStarsWhenBallClicks équivalente MakeCaptureStars (battle_anim_throw.c), même code (cases nommées)
+SpriteCB_ThrowBall_ArcFlight équivalente SpriteCB_Ball_Arc (battle_anim_throw.c), même code
+SpriteCB_ThrowBall_BeginBreakOut équivalente SpriteCB_Ball_Release_Step (battle_anim_throw.c), BATTLER_AFFINE_EMERGE = 1
+SpriteCB_ThrowBall_DoClick équivalente SpriteCB_Ball_Capture_Step (battle_anim_throw.c), même code
+SpriteCB_ThrowBall_FinishClick équivalente SpriteCB_Ball_FadeOut (battle_anim_throw.c), même code
+SpriteCB_ThrowBall_RunBreakOut équivalente SpriteCB_Ball_Release_Wait (battle_anim_throw.c), même code
+SpriteCB_ThrowBall_ShrinkMon équivalente SpriteCB_Ball_MonShrink_Step (battle_anim_throw.c), même code
+TrainerBallBlock équivalente SpriteCB_Ball_Block (battle_anim_throw.c), même code
+# battle_main.c, battle_interface.c, battle_anim_*.c, battle_script_commands.c, battle_ai_script_commands.c, battle_controller*.c
+BattleIntroPlayerSendsOutMonAnimation équivalente BattleIntroPlayer1SendsOutMonAnimation (battle_main.c), + combats enregistrés d'Émeraude
+SpriteCB_PlayerThrowUpdate équivalente SpriteCB_TrainerThrowObject_Main (battle_main.c), même code
+SpriteCB_UnusedDebugSprite morte jamais utilisé dans RF (debug)
+SpriteCB_UnusedDebugSprite_Step morte jamais utilisé dans RF (debug)
+UpdatePartyOwnerOnSwitch_NonMulti équivalente SwitchPartyOrder (battle_main.c), même code
+UpdatePlayerPosInThrowAnim équivalente AnimSetCenterToCornerVecX (battle_main.c), même code
+LinkBattleComputeBattleTypeFlags link combats link de RF
+PrepareOwnMultiPartnerBuffer link combats multi de RF
+DrawHealthbarOntoScreen équivalente Debug_TestHealthBar_Helper (battle_interface.c), même dessin
+GetReceivedValueInPixels équivalente GetScaledExpFraction (battle_interface.c), même calcul
+SpriteCB_PartySummaryBall_Exit équivalente SpriteCB_StatusSummaryBalls_Exit (battle_interface.c), / 16 = >> 4, DISPLAY_WIDTH + 8 = 248
+SpriteCB_PartySummaryBall_OnBattleStart équivalente SpriteCB_StatusSummaryBalls_Enter (battle_interface.c), même code
+SpriteCB_PartySummaryBall_OnSwitchout équivalente SpriteCB_StatusSummaryBalls_OnSwitchout (battle_interface.c), même code
+InitBattleAnimBg équivalente ClearBattleAnimBg (battle_anim_mons.c), même code
+PlayerThrowBall_AnimTranslateLinear_WithFollowup équivalente AnimTranslateLinear_WithFollowup_SetCornerVecX (battle_anim_mons.c), même code
+PlayerThrowBall_StartAnimLinearTranslation équivalente StartAnimLinearTranslation (battle_anim_mons.c), même code
+SetGreyscaleOrOriginalPalette équivalente SetGrayscaleOrOriginalPalette (battle_anim_mons.c), même code
+ToggleBg3Mode équivalente UpdateAnimBg3ScreenSize (battle_anim_mons.c), + concours d'Émeraude
+Cmd_callterrainattack équivalente Cmd_callenvironmentattack (battle_script_commands.c), terrain = environment
+Cmd_cureifburnedparalysedorpoisoned équivalente Cmd_cureifburnedparalyzedorpoisoned (battle_script_commands.c), tailles d'arguments du port 64 bits
+Cmd_settypetoterrain équivalente Cmd_settypetoenvironment (battle_script_commands.c), terrain = environment
+Cmd_count_alive_pokemon équivalente Cmd_count_usable_party_mons (battle_ai_script_commands.c), position ^ BIT_FLANK = BATTLE_PARTNER
+Cmd_if_would_go_first équivalente Cmd_if_user_goes (battle_ai_script_commands.c), même code
+Cmd_if_would_not_go_first équivalente Cmd_if_user_goes (battle_ai_script_commands.c), même code
+BtlController_EmitPlayFanfare équivalente BtlController_EmitPlayFanfareOrBGM (battle_controllers.c), même transfert
+SetUpBattleVars équivalente SetUpBattleVarsAndBirchZigzagoon (battle_controllers.c), sans le ZIGZATON de Seko
+PlayerHandleCmd55 équivalente PlayerHandleEndLinkBattle (battle_controller_player.c), + combats enregistrés d'Émeraude
+PlayerHandlePlayFanfare équivalente PlayerHandlePlayFanfareOrBGM (battle_controller_player.c), même code
+OpponentHandlePlayFanfare équivalente OpponentHandlePlayFanfareOrBGM (battle_controller_opponent.c), même code
+AnimShakeMonOrBattleTerrain_Step équivalente AnimShakeMonOrBattlePlatforms_Step (battle_anim_normal.c), même code
+AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled équivalente AnimShakeMonOrBattlePlatforms_UpdateCoordOffsetEnabled (battle_anim_normal.c), même code
+AnimTask_ShakeMon2Step équivalente AnimTask_ShakeMon2_Step (battle_anim_mon_movement.c), même code
+AnimTask_SwayMon_Step équivalente AnimTask_SwayMonStep (battle_anim_mon_movement.c), même code
+AirCutterProjectile_Step1 équivalente AirCutterProjectileStep1 (battle_anim_effects_2.c), -SOUND_PAN_TARGET = SOUND_PAN_ATTACKER + 1
+AnimTask_GetBattleTerrain équivalente AnimTask_GetBattleEnvironment (battle_anim_utility_funcs.c), terrain = environment
+CopyBattlerSpriteToBg équivalente DrawBattlerOnBg (battle_intro.c), même code
+Task_Spiral morte B_TRANSITION_SPIRAL : aucun combat de RF ne l'utilise
+AtkCanceller_UnableToUseMove équivalente AtkCanceler_UnableToUseMove (battle_util.c), canceller = canceler
+ReshowBattleScreen_TurnOnDisplay équivalente CB2_ReshowBattleScreenAfterMenu (reshow_battle_screen.c), écran de combat rétabli par celui d'Émeraude
+# battle_setup.c
+EndPokedudeBattle morte « Unused » dans RF (StartPokedudeBattle jamais appelé)
+StartRoamerBattle équivalente BattleSetup_StartRoamerBattle (battle_setup.c), musique des légendaires de RF à Kanto (portée 2026-11-02)
+StartScriptedWildBattle équivalente BattleSetup_StartScriptedWildBattle (battle_setup.c), BATTLE_TYPE_WILD_SCRIPTED de RF (gBattleWildScriptedFrlg)
+# battle_tower.c, battle_records.c : Tour de Combat (salle e-Reader) et records du Club Câble de RF
+BufferEReaderTrainerGreeting link Tour de Combat de RF (e-Reader)
+CopyEReaderTrainerName5 link Tour de Combat de RF (e-Reader)
+PrintEReaderTrainerFarewellMessage link Tour de Combat de RF (e-Reader)
+SetBattleTowerParty link Tour de Combat de RF (e-Reader)
+SetBattleTowerRecordChecksum link Tour de Combat de RF (e-Reader)
+SetPlayerBattleTowerRecord link Tour de Combat de RF (e-Reader)
+Task_WaitBT link Tour de Combat de RF (e-Reader)
+IncTrainerCardLossCount link records du Club Câble de RF
+IncTrainerCardWinCount link records du Club Câble de RF
+IndexOfOpponentLinkBattleRecord link records du Club Câble de RF
