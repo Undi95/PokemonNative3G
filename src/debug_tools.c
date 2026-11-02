@@ -13,6 +13,7 @@
 #include "gba/m4a_internal.h"
 #include "battle.h"
 #include "day_night.h"
+#include "debug_menu.h"
 #include "debug_checks.h"
 #ifdef PORTABLE
 #include "platform/devtools.h"
@@ -281,6 +282,21 @@ static void Cmd_Options(const s32 *args, u32 argCount, struct DebugToolsOutput *
         SetOption(args[0], args[1]);
     for (i = 0; i < OPTION_COUNT; i++)
         DebugTools_Print(out, "%u %s = %d\n", i, sOptionNames[i], GetOption(i));
+}
+
+// Les réglages du menu DEBUG (debug_menu.c) : [V] = 1 oui, 0 non
+static void Cmd_NoClip(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (argCount >= 1)
+        gDebugNoClip = args[0] != 0;
+    DebugTools_Print(out, "traverser les murs : %d\n", gDebugNoClip);
+}
+
+static void Cmd_Encounters(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (argCount >= 1)
+        gDebugNoEncounters = args[0] == 0;
+    DebugTools_Print(out, "rencontres sauvages : %d\n", !gDebugNoEncounters);
 }
 
 // --- Carte ----------------------------------------------------------------------------------------------------
@@ -611,6 +627,8 @@ static void Cmd_Help(const s32 *args, u32 argCount, struct DebugToolsOutput *out
 
 static const u8 sName_GameState[] = _("État du moteur");
 static const u8 sName_Options[] = _("Options");
+static const u8 sName_NoClip[] = _("Traverser les murs");
+static const u8 sName_Encounters[] = _("Rencontres sauvages");
 static const u8 sName_MapInfo[] = _("Carte");
 static const u8 sName_MapObjects[] = _("Objets de la carte");
 static const u8 sName_ScriptContext[] = _("Scripts en cours");
@@ -636,6 +654,8 @@ const struct DebugTool gDebugTools[] =
 {
     {"jeu.etat", DEBUG_TOOLS_GAME, sName_GameState, "callbacks, fondu, verrous, taches actives", 0, Cmd_GameState},
     {"jeu.options", DEBUG_TOOLS_GAME, sName_Options, "toutes les options ; [N V] met l'option N a V", 0, Cmd_Options},
+    {"jeu.murs", DEBUG_TOOLS_GAME, sName_NoClip, "[1|0] : traverser les murs (comme le menu DEBUG)", 0, Cmd_NoClip},
+    {"jeu.rencontres", DEBUG_TOOLS_GAME, sName_Encounters, "[1|0] : Pokemon sauvages oui / non", 0, Cmd_Encounters},
     {"carte.info", DEBUG_TOOLS_MAP, sName_MapInfo, "carte, region, joueur, connexions", 0, Cmd_MapInfo},
     {"carte.objets", DEBUG_TOOLS_MAP, sName_MapObjects, "objets actifs de la carte", 0, Cmd_MapObjects},
     {"scripts.contexte", DEBUG_TOOLS_SCRIPT, sName_ScriptContext, "contextes de script global et immediat", 0, Cmd_ScriptContext},
