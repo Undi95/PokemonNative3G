@@ -26,15 +26,15 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `jeu.debug [N]` | les actions du menu DEBUG ; `N` fait l'action N (celles sans écran : soins, objets, Pokédex, passes, « Deux Ligues finies », POKé MONTURE + badges…), le même code que le menu (`DebugMenu_ApplyAction`) |
 | Carte | `carte.info` | carte, section, région, disposition, météo, musique, joueur, connexions |
 | | `carte.objets` | objets actifs : id, sprite, position, mouvement |
+| | `carte.grille` | **la carte telle qu'elle est en jeu**, avec les lettres de `test/headless/maps.py` (`#` bloqué, `g` herbe, `~` eau, `<>^v` rebord) : les étages générés (Mont Combat, Pyramide) et les cases changées par les scripts (`setmetatile`), que les fichiers de la carte ne montrent pas. Dans le banc : `live_map(game)` (un `maps.GridMap`), `walk_to(..., live=True)` |
 | Scripts | `scripts.contexte` | contextes global et immédiat : script en cours (label), pile |
 | | `scripts.lancer @ADRESSE` | lance un script de carte, joueur libre (`game.script("EventScript_PC")` : le banc donne l'adresse par le nom) |
 | | `scripts.flag N [V]`, `scripts.var N [V]` | lit ou met un flag, une variable (avec son nom) |
 | | `scripts.drapeaux [CAT]` | **tous les drapeaux, dresseurs et variables du jeu**, par région et catégorie (système, badges, personnages cachés, objets, cadeaux, combats, PokéNav, carte, temporaires, dresseurs, variables…) : sans argument les catégories (combien à ON), avec `CAT` chaque nom et son état. Dans le menu : un curseur, **A** ouvre une catégorie ou bascule ON/OFF (une variable : remise à 0), **L / R** variable -1 / +1, B revient. Les noms viennent de `tools/debug_names.py` → `src/data/debug_names.h` |
-
-Partout (banc, console, menu), un argument peut être un **nom** de drapeau, de variable ou de dresseur au lieu d'un
-nombre : `dev.py scripts.flag FLAG_SYS_GAME_CLEAR 1`, `game.dev("scripts.var", "VAR_KANTO_MAP_SCENE_VIRIDIAN_CITY", 2)`.
+| | `scripts.histoire [N]` | **l'histoire finie sans sauvegarde** : `0` Hoenn, `1` Kanto, `2` les deux. Met chaque drapeau que les scripts mettent et ne retirent jamais (hors objets, cachés, temporaires, quotidiens), et chaque variable d'avancement à la dernière valeur que les scripts lui donnent (pas les variables remises à 0 : files d'attente, salles de défi). Déduit des scripts par `tools/debug_states.py` → `src/data/debug_states.h` (`--liste` les montre) |
 | Joueur | `joueur.equipe` | équipe : espèce, PV, objet, dresseur d'origine, lieu et jeu de rencontre |
 | | `joueur.sac` | argent, poches |
+| | `joueur.capacite N PLACE CAPACITE` | donne une capacité (et ses PP) au Pokémon N, à la place 0-3 |
 | Combat | `combat.etat` | type, combattants, contrôleurs |
 | Graphismes | `gfx.sprites` | sprites : position, tile, palette, priorité, animation (finie, en pause), callback |
 | | `gfx.palette TYPE BANQUE` | 16 couleurs (0 BG, 1 OBJ) : non fondues, fondues, à l'écran (après jour/nuit) |
@@ -47,6 +47,11 @@ nombre : `dev.py scripts.flag FLAG_SYS_GAME_CLEAR 1`, `game.dev("scripts.var", "
 | Système | `sys.etat` | RNG, heure du jeu, teinte jour/nuit |
 | | `sys.anomalies` | anomalies vues par les détecteurs depuis le lancement |
 | | `sys.rapport` | rapport de bug rejouable (voir plus bas) |
+
+Partout (banc, console, menu), un argument peut être un **nom** de drapeau, de variable ou de dresseur au lieu d'un
+nombre : `dev.py scripts.flag FLAG_SYS_GAME_CLEAR 1`, `game.dev("scripts.var", "VAR_KANTO_MAP_SCENE_VIRIDIAN_CITY", 2)`.
+`tools/debug_names.py --check` et `tools/debug_states.py --check` (lancés par `test-release.sh`) vérifient que les
+tables générées suivent les en-têtes et les scripts.
 
 ## Rapport de bug rejouable
 
@@ -96,8 +101,30 @@ crédits de Kanto écrits sur une seule ligne).
 
 | Outil | Ce qu'il fait |
 |---|---|
-| `python test/headless/crawl.py BINAIRE [--cartes REGEX] [--jobs N] [--etat debut\|champion\|fin]` | **Explorateur** (état de partie : `debut` la sauvegarde de début de partie, `champion` Hoenn fini = l'arrivée réelle à Kanto, `fin` les deux Ligues comme avec le menu DEBUG ; `build/headless/crawl-ETAT`) : chaque carte (914), depuis la sauvegarde de début de partie de sa région ; arrivée sur son premier warp et capture, puis téléport à côté de chaque PNJ (visé par son localId : l'état du banc donne `object_ids`), de chaque panneau (du bon côté) et de chaque objet caché, A jusqu'au bout (B pour sortir d'un menu), combats faits avec un MEWTWO N.100 aux 4 attaques (`joueur.capacite`), texte rapide et sans animations de combat. Style de combat DÉFINI (pas de « changer de POKéMON ? »). Salles de défi, de concours, de link et d'E-Reader listées à part (on n'y entre que pendant un défi) ; un PNJ qui lance un défi (écran de choix de la Zone de Combat, concours) est noté « défi lancé » ; Panthéon et crédits vont au bout. 20 000 images au plus par interaction (un script sans fin est une erreur, pas un gel du banc) ; un jeu qui plante est relancé. `build/headless/crawl/atlas.json` (textes, combats, anomalies, erreurs par carte et par interaction) et `rapport.txt` : anomalies, erreurs, PNJ muets ou inaccessibles, **textes suspects** (octet sans lettre `�`, code `{XX}` non remplacé, reste d'anglais). `--rapport-seul` refait le rapport depuis l'atlas. |
+| `python test/headless/crawl.py BINAIRE [--cartes REGEX] [--jobs N] [--etat debut\|champion\|fin\|histoire]` | **Explorateur** (état de partie : `debut` la sauvegarde de début de partie, `champion` Hoenn fini = l'arrivée réelle à Kanto, `fin` les deux Ligues comme avec le menu DEBUG, `histoire` = `fin` + `scripts.histoire 2` : toute l'histoire des deux régions finie ; `build/headless/crawl-ETAT`) : chaque carte (914), depuis la sauvegarde de début de partie de sa région ; arrivée sur son premier warp et capture, puis téléport à côté de chaque PNJ (visé par son localId : l'état du banc donne `object_ids`), de chaque panneau (du bon côté) et de chaque objet caché, A jusqu'au bout (B pour sortir d'un menu), combats faits avec un MEWTWO N.100 aux 4 attaques (`joueur.capacite`), texte rapide et sans animations de combat. Style de combat DÉFINI (pas de « changer de POKéMON ? »). Salles de défi, de concours, de link et d'E-Reader listées à part (on n'y entre que pendant un défi) ; un PNJ qui lance un défi (écran de choix de la Zone de Combat, concours) est noté « défi lancé » ; Panthéon et crédits vont au bout. 20 000 images au plus par interaction (un script sans fin est une erreur, pas un gel du banc) ; un jeu qui plante est relancé. `build/headless/crawl/atlas.json` (textes, combats, anomalies, erreurs par carte et par interaction) et `rapport.txt` : anomalies, erreurs, PNJ muets ou inaccessibles, **textes suspects** (octet sans lettre `�`, code `{XX}` non remplacé, reste d'anglais). `--rapport-seul` refait le rapport depuis l'atlas. |
 | `python test/headless/matrix.py BINAIRE [--ecrans REGEX] [--regions kanto,hoenn]` | **Grille options × écrans** : les 9 options d'affichage (PERSO, DIALOGUE, POLICE, POKéDEX, MENUS, BOITES COMBAT, SAC, POKéMON, JOUR/NUIT) en 9 combinaisons qui montrent chaque paire de valeurs, le cadre des fenêtres changé à chaque fois, dans les deux régions ; écrans : menu Start, équipe, résumé, sac, Pokédex, carte de dresseur, sauvegarde, options, panneau, PNJ, boutique, PC, combat sauvage, combat de dresseur. Une planche par écran (`build/headless/matrix/planches/`, une ligne par jeu), anomalies et erreurs dans `rapport.txt`. |
+
+### Défis (`test/headless/challenges.py`, scénarios `challenge_*`)
+
+Le pilote des défis fait ce que ferait un joueur : il parle au préposé (ou monte sur la case de départ), répond aux
+questions (A, ou les touches d'`ANSWERS` : « COMBATTRE » du Dôme), choisit l'équipe (le nombre lu dans le texte :
+« les deux POKéMON » à chaque match du Dôme) ou les Pokémon de location, fait les combats (style DÉFINI), passe le
+tableau du Dôme et l'échange de l'Usine. Libre dans une salle de défi, il marche sur la **grille en jeu**
+(`carte.grille`) : il va parler à chaque dresseur, objet ou PNJ qu'il n'a pas encore abordé, sinon il prend une porte
+plus haut que lui (jamais celle par laquelle il est entré ; la direction maintenue, pour les escaliers latéraux de
+RF), sinon il fait un bout de marche.
+
+| Paramètre de `run` | Sens |
+|---|---|
+| `battles` | combats gagnés attendus ; `0` : aucun (concours) |
+| `rentals`, `walking` | un combat joué jusqu'au bout suffit : Pokémon loués tirés au hasard, ou défi qui remet l'issue à zéro (Antre, Pyramide, Mont Combat) |
+| `reach` | une carte, ou une suite de cartes, à atteindre dans l'ordre après les combats : l'étage suivant du Mont Combat ou de la Tour Dresseur (il ne s'ouvre qu'aux vainqueurs), la salle du concours puis le hall |
+| `trigger`, `flags`, `team`, `level` | case de départ (on y monte par le bas), drapeaux demandés (`FLAG_SYS_GAME_CLEAR` du Mont Combat), équipe (`TEAM` autorisée à la Zone de Combat ; `HILL_TEAM` de légendaires pour les combats doubles à deux dresseurs) et niveau |
+
+Les 15 défis passent (2026-11-02) : Tour (simple, double), Dôme, Palais, Arène, Usine, Antre, Pyramide, les 3 Tentes,
+Mont Combat, Tour Dresseur de l'Île 7, concours de Nénucrique. Ils ont trouvé deux plantages ou blocages du port PC :
+la fiche du joueur dans le tableau du Dôme (division par zéro sans EV) et les étages du Mont Combat (voir
+CONNAISSANCE-JEU.md).
 
 ## Architecture
 

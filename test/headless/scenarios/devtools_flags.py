@@ -16,7 +16,7 @@ def play(game):
     wait_text(game, "Scripts", since); game.wait(30)
     game.tap("DOWN", 2, gap=16); game.wait(10); game.tap("A")                 # Scripts
     wait_text(game, "Drapeaux et variables", since); game.wait(30)
-    game.tap("DOWN", 4, gap=16); game.wait(10); game.tap("A"); game.wait(60)  # Drapeaux et variables
+    game.tap("DOWN", 5, gap=16); game.wait(10); game.tap("A"); game.wait(60)  # Drapeaux et variables (après Histoires finies)
     check_screen(game, "devtools_flags-categories")
     expect_text(game, "Hoenn : Badges : 8 (0 ON)", since)
 

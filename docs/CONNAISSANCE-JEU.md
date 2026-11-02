@@ -50,9 +50,31 @@ montrent).
 | `debut` | sauvegarde de début de partie de chaque région | 845 cartes, 4 604 interactions, 0 anomalie (police Hoenn et KANTO) |
 | `champion` | Hoenn fini (`FLAG_SYS_GAME_CLEAR`, 8 badges, Pokédex, PokéNav) : l'arrivée réelle à Kanto, le ferry ne part qu'après la Ligue de Hoenn | 835 cartes, 4 586 interactions, 837 combats, 0 anomalie |
 | `fin` | les deux Ligues finies, comme le menu DEBUG (« Deux Ligues finies », POKé MONTURE + badges, passes, Pokédex, objets) | 835 cartes, 4 586 interactions, 862 combats, 0 anomalie |
+| `histoire` | `fin` + toute l'histoire des deux régions (`scripts.histoire 2` : drapeaux et variables d'avancement déduits des scripts, sans sauvegarde) | 0 anomalie, 0 texte suspect |
 
-L'histoire de Hoenn elle-même (variables d'avancement) reste celle du début : un état « fin » exact demande une vraie
-sauvegarde de fin de partie (`crawl.py` part de n'importe quelle sauvegarde : fixture, ou `--etat` + drapeaux).
+Pas besoin d'une sauvegarde pour atteindre un point du jeu : `scripts.histoire` met l'histoire finie, et
+`scripts.drapeaux` (menu DEBUG ou banc) met chaque drapeau ou variable à la main.
+
+## Défis (`challenges.py`) : ce qu'il faut savoir
+
+- **Mont Combat** : les étages sont générés en jeu (`GenerateTrainerHillFloorLayout`) depuis les données du défi
+  choisi. `SetUpDataStruct` copiait le défi et ses étages d'un seul bloc, en supposant les étages rangés juste après
+  le défi en mémoire (vrai sur la cartouche, pas sur PC) : étages en tuiles magenta, sans dresseurs. Correctif UBFIX :
+  deux copies. Les barres bleues des étages sont des **rebords** (`MB_JUMP_SOUTH`) qui ont le bit de collision : le
+  jeu les fait sauter quand même (`CheckForObjectEventCollision` teste `ShouldJumpLedge` avant la collision). C'est
+  le seul chemin vers les dresseurs au 1er étage du défi normal. L'étage suivant ne s'ouvre qu'après avoir battu les
+  dresseurs ; combats doubles à deux dresseurs, adversaires au niveau du plus fort Pokémon de l'équipe.
+- **Rebords avec collision** : 1 988 cases, surtout sur les routes de Kanto (Route 9, 22, 15…). Un chemin calculé
+  sur les fichiers de carte doit les traiter comme des rebords, pas comme des murs (`maps.py`, `carte.grille`).
+- **Tour Dresseur de l'Île 7** (RF) : l'entrée et les étages se prennent par des **escaliers latéraux**
+  (`MB_UP_RIGHT_STAIR_WARP`…) : sur la case, on maintient la direction de l'escalier (DROITE) ; le jeu attend une
+  quarantaine d'images (animation de l'escalier) avant le warp.
+- **Concours** : l'hôtesse envoie dans la salle de la catégorie choisie (`ContestHallCool`…), pas dans
+  `LilycoveCity_ContestHall` ; le jeu choisit, appels (une capacité par tour, 5 tours), résultats, retour au hall.
+- **Dôme** : la fiche du joueur dans le tableau divise par la somme des EV de ses Pokémon (0 sur GBA si aucun EV ;
+  plantage sur PC) : correctif UBFIX.
+- **Antre, Pyramide, Mont Combat** remettent `gBattleOutcome` à zéro après un combat : la victoire se lit à la suite
+  (l'étage suivant, le défi qui continue), pas dans l'issue du combat.
 
 ## Règle pour les numéros de dresseurs
 
@@ -75,8 +97,8 @@ Limites connues, qui restent dans ses « interactions en erreur » sans être de
 
 - **Salles de défi, de concours, de link** (Zone de Combat, Tentes, Mont Combat, Pyramide, concours, Colisée,
   Centre Troc, Union Room) : on n'y entre que pendant un défi. Par téléport, hors défi, un combat démarre sans
-  données (division par zéro en `CB2_HandleStartBattle`, 0xc0000094) : pas un chemin du jeu, mais à tester par un vrai
-  défi (phase 5).
+  données (division par zéro en `CB2_HandleStartBattle`, 0xc0000094) : pas un chemin du jeu. Les défis eux-mêmes
+  sont joués par `challenges.py` (scénarios `challenge_*`, voir plus haut) ; restent les salles de link.
 - **Bases Secrètes** (`SecretBase_*`) : la salle se charge avec la base du joueur, ou une base reçue par Record Mixing
   (link). Par téléport, sans base chargée, le dresseur de la base lance un combat de Base Secrète sans données
   (division par zéro dans son équipe) : à vérifier avec le Record Mixing, en phase 5 (link).

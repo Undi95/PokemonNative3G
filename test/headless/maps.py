@@ -91,7 +91,10 @@ class Map:
             for x in range(self.width):
                 block = struct.unpack_from("<H", blocks, (y * self.width + x) * 2)[0]
                 metatile = block & 0x3FF
-                row += "#" if block & 0xC00 else _tile_kind(behaviors[metatile] if metatile < len(behaviors) else 0)
+                kind = _tile_kind(behaviors[metatile] if metatile < len(behaviors) else 0)
+                # Un rebord se saute même avec le bit de collision (CheckForObjectEventCollision teste
+                # ShouldJumpLedge avant) : beaucoup de routes de Kanto
+                row += kind if kind in LEDGE_DIRECTIONS else "#" if block & 0xC00 else kind
             self.tiles.append(row)
         self.warps = {(warp["x"], warp["y"]): warp["dest_map"] for warp in info.get("warp_events", [])}
 
@@ -133,6 +136,18 @@ class Map:
                     best[(nx, ny)] = step
                     heapq.heappush(queue, (step, (nx, ny), directions + [direction]))
         return None
+
+
+class GridMap(Map):
+    """La carte telle qu'elle est en jeu (l'outil carte.grille : mêmes lettres), avec les warps de son fichier : les
+    étages générés (Mont Combat, Pyramide) et les cases changées par les scripts, que les fichiers ne montrent pas."""
+
+    def __init__(self, name, text):
+        self.name = name
+        lines = text.strip().splitlines()
+        self.width, self.height = (int(n) for n in lines[0].split()[1].split("x"))
+        self.tiles = lines[1:1 + self.height]
+        self.warps = load(name).warps
 
 
 _maps = {}

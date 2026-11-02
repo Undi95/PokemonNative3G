@@ -45,4 +45,5 @@ def play(game):
 
     # Vérifications
     expect_text(game, "2/2 : HOENN/KANTO")
-    expect_battle(game, foe="SPECIES_PIDGEY", outcome="WON")
+    # Le Pokémon sauvage de la Route 1 (ROUCOOL ou RATTATA) dépend du chemin pris : seul le combat compte ici
+    expect_battle(game, outcome="WON")

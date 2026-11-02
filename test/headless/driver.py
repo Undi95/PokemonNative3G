@@ -606,10 +606,30 @@ def fight_battle(game, limit=600):
     learning a move."""
     seen = mark(game)
     change_move = False
+    menu_opened = False     # le menu d'un Pokémon de l'équipe vient de s'ouvrir (K.O. : le remplaçant)
     turns = 0   # the moves' cursor goes 0 -RIGHT-> 1 -DOWN-> 3 -LEFT-> 2 -UP-> 0
     for _ in range(limit):
         if not game.state.battle:
             return wait_until(game, lambda s: not s.fade and s.overworld)
+        screen = game.function(game.state.cb2)
+        if "PartyMenu" in screen:
+            # Le Pokémon au combat est K.O. : le suivant, jusqu'à un qui peut y aller. Selon la tâche du menu : le
+            # choix du Pokémon (BAS, A), son menu tout juste ouvert (A : ENVOYER, en haut ; sinon B), un message (A)
+            tasks = [game.function(t) for t in game.state.tasks]
+            if any("SelectionMenuInput" in t for t in tasks):
+                game.tap("A" if menu_opened else "B", gap=40)
+                menu_opened = False
+            elif any("HandleChooseMonInput" in t for t in tasks):
+                game.tap("DOWN", gap=20)
+                game.tap("A", gap=40)
+                menu_opened = True
+            else:
+                game.tap("A", gap=30)
+            continue
+        if screen == "MainCB2" and any("PokemonCry" in game.function(t) or "HandleInput" in game.function(t)
+                                       for t in game.state.tasks):
+            game.tap("B", gap=60)       # le résumé d'un Pokémon, ouvert à la place d'ENVOYER
+            continue
         new_texts = [text for _, _, text in game.texts[seen:]]
         seen = mark(game)
         # Plus de PP, sans effet, ou refusée (TOURMENTE « empêche », ENTRAVE, PROVOC « ne peut pas ») : une autre
@@ -624,13 +644,20 @@ def fight_battle(game, limit=600):
     raise GameError(f"the battle didn't end: {game.describe()}")
 
 
-def walk_to(game, x, y, grass_cost=20, on_battle=fight_battle):
+def live_map(game):
+    """La carte où est le joueur, telle qu'elle est en jeu (outil carte.grille, maps.GridMap)."""
+    return maps.GridMap(game.state.map_name, game.dev("carte.grille"))
+
+
+def walk_to(game, x, y, grass_cost=20, on_battle=fight_battle, live=False):
     """Walks to (x, y) on the current map, around people and through as little
     grass as it can. Battles that come up go to on_battle, and scripts that
     start are finished with finish_dialog. Stops if something takes the player
-    to another map."""
+    to another map. Avec live, sur la carte telle qu'elle est en jeu (live_map)
+    plutôt que celle des fichiers."""
     goal = (x, y)
     start_map = game.state.map
+    grid = live_map(game) if live else None
     blocked = set()
     tried = 0
     while True:
@@ -652,7 +679,7 @@ def walk_to(game, x, y, grass_cost=20, on_battle=fight_battle):
             game.wait(1)
             continue
 
-        path = maps.load(state.map_name).path(state.pos, goal, blocked | set(state.objects), grass_cost)
+        path = (grid or maps.load(state.map_name)).path(state.pos, goal, blocked | set(state.objects), grass_cost)
         if path is None:
             raise GameError(f"no way to {goal} from {state}")
         dx, dy = maps.DIRECTIONS[path[0]]
@@ -689,14 +716,14 @@ def talk_to(game, direction, finish=True):
     return finish_dialog(game) if finish else game.state
 
 
-def talk_to_object(game, x, y, finish=True):
+def talk_to_object(game, x, y, finish=True, live=False):
     """Walks next to whoever is at (x, y) on the current map and talks to them.
-    Tries each side, from the nearest."""
+    Tries each side, from the nearest. Avec live : sur la carte en jeu (walk_to)."""
     px, py = game.state.pos
     sides = sorted(maps.DIRECTIONS.items(), key=lambda d: abs(x - d[1][0] - px) + abs(y - d[1][1] - py))
     for direction, (dx, dy) in sides:
         try:
-            walk_to(game, x - dx, y - dy)
+            walk_to(game, x - dx, y - dy, live=live)
         except GameError:
             continue
         if game.state.pos == (x - dx, y - dy):
