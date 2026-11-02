@@ -29,6 +29,7 @@
 #include "item.h"
 #include "m4a.h"
 #include "main.h"
+#include "metatile_behavior.h"
 #include "money.h"
 #include "overworld.h"
 #include "palette.h"
@@ -65,6 +66,7 @@ struct DebugName
 };
 
 #include "data/debug_names.h"
+#include "data/debug_states.h"
 
 extern void AgbMain(void);
 
@@ -399,6 +401,51 @@ static void Cmd_MapObjects(const s32 *args, u32 argCount, struct DebugToolsOutpu
     }
 }
 
+// Une case de la grille, avec les lettres de test/headless/maps.py
+static char GetGridTile(s32 x, s32 y)
+{
+    u8 behavior = MapGridGetMetatileBehaviorAt(x, y);
+
+    // Un rebord se saute même avec le bit de collision (CheckForObjectEventCollision teste ShouldJumpLedge avant) :
+    // c'est le cas des rebords des étages du Mont Combat et de beaucoup de routes de Kanto
+    if (MetatileBehavior_IsJumpEast(behavior))
+        return '>';
+    if (MetatileBehavior_IsJumpWest(behavior))
+        return '<';
+    if (MetatileBehavior_IsJumpNorth(behavior))
+        return '^';
+    if (MetatileBehavior_IsJumpSouth(behavior))
+        return 'v';
+    if (MapGridGetCollisionAt(x, y))
+        return '#';
+    if (MetatileBehavior_IsTallGrass(behavior) || MetatileBehavior_IsLongGrass(behavior))
+        return 'g';
+    if (MetatileBehavior_IsSurfableWaterOrUnderwater(behavior) || MetatileBehavior_IsWaterfall(behavior))
+        return '~';
+    return '.';
+}
+
+// La grille de la carte telle qu'elle est en jeu : les étages générés (Mont Combat, Pyramide) et les cases changées
+// par les scripts (setmetatile : portes, puzzles), que les fichiers de la carte ne montrent pas
+static void Cmd_MapGrid(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    s32 x, y;
+    s32 width = gMapHeader.mapLayout->width, height = gMapHeader.mapLayout->height;
+
+    DebugTools_Print(out, "grille %dx%d\n", width, height);
+    for (y = 0; y < height; y++)
+    {
+        char row[256 + 2];
+        s32 n = 0;
+
+        for (x = 0; x < width && n < 256; x++)
+            row[n++] = GetGridTile(x + MAP_OFFSET, y + MAP_OFFSET);
+        row[n++] = '\n';
+        row[n] = '\0';
+        DebugTools_Print(out, "%s", row);
+    }
+}
+
 // --- Scripts --------------------------------------------------------------------------------------------------
 
 static void PrintScriptContext(struct DebugToolsOutput *out, const char *name, const struct ScriptContext *ctx)
@@ -533,6 +580,46 @@ static void Select_Names(s32 *args, u32 *argCount, u32 line, s32 delta)
     default:
         HasTrainerBeenFought(entry->id) ? ClearTrainerFlag(entry->id) : SetTrainerFlag(entry->id);
         break;
+    }
+}
+
+// Les histoires finies (tools/debug_states.py, déduites des scripts) : sans argument la liste ; [N] pose l'état N
+static void Cmd_Story(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    static const char *const sStoryNames[] = {"Hoenn : histoire finie", "Kanto : histoire finie",
+                                              "Hoenn et Kanto : histoires finies"};
+    u32 i, flags = 0, vars = 0;
+
+    if (argCount == 0 || (u32)args[0] >= ARRAY_COUNT(sStoryNames))
+    {
+        for (i = 0; i < ARRAY_COUNT(sStoryNames); i++)
+            DebugTools_Print(out, "%u %s\n", i, sStoryNames[i]);
+        return;
+    }
+    if (args[0] != 1)
+    {
+        for (i = 0; i < ARRAY_COUNT(sStoryFlags_Hoenn); i++, flags++)
+            FlagSet(sStoryFlags_Hoenn[i]);
+        for (i = 0; i < ARRAY_COUNT(sStoryVars_Hoenn); i++, vars++)
+            VarSet(sStoryVars_Hoenn[i][0], sStoryVars_Hoenn[i][1]);
+    }
+    if (args[0] != 0)
+    {
+        for (i = 0; i < ARRAY_COUNT(sStoryFlags_Kanto); i++, flags++)
+            FlagSet(sStoryFlags_Kanto[i]);
+        for (i = 0; i < ARRAY_COUNT(sStoryVars_Kanto); i++, vars++)
+            VarSet(sStoryVars_Kanto[i][0], sStoryVars_Kanto[i][1]);
+    }
+    DebugTools_Print(out, "fait : %s (%u drapeaux, %u variables)\n", sStoryNames[args[0]], flags, vars);
+}
+
+// Menu DEBUG : A sur une histoire la pose (le résultat le dit) ; B revient à la liste
+static void Select_Story(s32 *args, u32 *argCount, u32 line, s32 delta)
+{
+    if (*argCount == 0 && delta == 0)
+    {
+        args[0] = line;
+        *argCount = 1;
     }
 }
 
@@ -894,11 +981,13 @@ static const u8 sName_StartMenu[] = _("Menu Start");
 static const u8 sName_DebugAction[] = _("Actions du menu DEBUG");
 static const u8 sName_MapInfo[] = _("Carte");
 static const u8 sName_MapObjects[] = _("Objets de la carte");
+static const u8 sName_MapGrid[] = _("Grille de la carte");
 static const u8 sName_ScriptContext[] = _("Scripts en cours");
 static const u8 sName_RunScript[] = _("Lancer un script");
 static const u8 sName_Flag[] = _("Flag");
 static const u8 sName_Var[] = _("Variable");
 static const u8 sName_Names[] = _("Drapeaux et variables");
+static const u8 sName_Story[] = _("Histoires finies");
 static const u8 sName_Party[] = _("Équipe");
 static const u8 sName_Bag[] = _("Sac et argent");
 static const u8 sName_SetMove[] = _("Donner une capacité");
@@ -926,10 +1015,12 @@ const struct DebugTool gDebugTools[] =
     {"jeu.debug", DEBUG_TOOLS_GAME, sName_DebugAction, "actions du menu DEBUG ; [N] fait l'action N", 0, Cmd_DebugAction},
     {"carte.info", DEBUG_TOOLS_MAP, sName_MapInfo, "carte, region, joueur, connexions", 0, Cmd_MapInfo},
     {"carte.objets", DEBUG_TOOLS_MAP, sName_MapObjects, "objets actifs de la carte", 0, Cmd_MapObjects},
+    {"carte.grille", DEBUG_TOOLS_MAP, sName_MapGrid, "la carte en jeu : # bloque, g herbe, ~ eau, <>^v rebord", 0, Cmd_MapGrid},
     {"scripts.contexte", DEBUG_TOOLS_SCRIPT, sName_ScriptContext, "contextes de script global et immediat", 0, Cmd_ScriptContext},
     {"scripts.lancer", DEBUG_TOOLS_SCRIPT, sName_RunScript, "@ADRESSE : lance ce script (game.script(NOM) dans le banc)", 1, Cmd_RunScript},
     {"scripts.flag", DEBUG_TOOLS_SCRIPT, sName_Flag, "FLAG [VALEUR] : lit ou met un flag", 1, Cmd_Flag},
     {"scripts.var", DEBUG_TOOLS_SCRIPT, sName_Var, "VAR [VALEUR] : lit ou met une variable", 1, Cmd_Var},
+    {"scripts.histoire", DEBUG_TOOLS_SCRIPT, sName_Story, "[N] : histoire finie (0 Hoenn, 1 Kanto, 2 les deux), deduite des scripts", 0, Cmd_Story, Select_Story},
     {"scripts.drapeaux", DEBUG_TOOLS_SCRIPT, sName_Names, "[CAT] : drapeaux, dresseurs, variables par categorie ; menu : A bascule, L/R -/+", 0, Cmd_Names, Select_Names},
     {"joueur.equipe", DEBUG_TOOLS_PLAYER, sName_Party, "equipe : espece, PV, dresseur d'origine, lieu de rencontre", 0, Cmd_Party},
     {"joueur.sac", DEBUG_TOOLS_PLAYER, sName_Bag, "argent et poches du sac", 0, Cmd_Bag},

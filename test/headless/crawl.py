@@ -46,6 +46,8 @@ STATES = {
     "fin": [("jeu.debug", "Débloquer les 2 POKéDEX"), ("jeu.debug", "Ajout objets"), ("jeu.debug", "Pass îles Sevii"),
             ("jeu.debug", "Deux Ligues finies"), ("jeu.debug", "POKé MONTURE + badges")],
 }
+# Et les deux histoires finies : l'avancement déduit des scripts (scripts.histoire, tools/debug_states.py)
+STATES["histoire"] = STATES["fin"] + [("scripts.histoire", 2)]
 
 
 def apply_state(game, state):
@@ -511,7 +513,7 @@ def main():
     parser.add_argument("--sans-parler", action="store_true", help="seulement l'arrivée et la capture")
     parser.add_argument("--etat", default="debut", choices=sorted(STATES),
                         help="état de partie : debut (sauvegarde de début), champion (Hoenn fini, l'arrivée à Kanto), "
-                             "fin (les deux Ligues)")
+                             "fin (les deux Ligues), histoire (et l'avancement des deux histoires, déduit des scripts)")
     parser.add_argument("--out", default=None, help="par défaut build/headless/crawl (crawl-ETAT hors debut)")
     parser.add_argument("--rapport-seul", action="store_true", help="refait rapport.txt depuis atlas.json")
     args = parser.parse_args()
