@@ -189,7 +189,14 @@ doit refaire cette valeur quand on la connaît, sinon garder le comportement en 
 - **Division par zéro** : 0.
 - **Avant le début d'une table en ROM** (`Sin` avec un indice négatif) : contenu inconnu ; on prend la lecture que le
   code voulait faire (indice non signé).
-Les scénarios de défis (`challenge_*`) sous ASan ont trouvé ces cas ; `docker/test-sanitize.sh` les vérifie.
+- **Copie plus longue que le tableau, dont le surplus ne sert pas** : on copie le tableau seul. Éclosion d'un œuf
+  (Émeraude et RF) : 5 palettes depuis `gTradeGba2_Pal` qui en a 3 (palettes 4 et 5 inutilisées), 0x1420 octets de
+  tiles depuis `gTradeGba_Gfx` qui en a 0x1400 (le tile 160 n'est pas dans la carte de la plateforme).
+- **Fenêtre absente ou déjà supprimée** : rien. Lettre d'Émeraude : `PrintMailText` écrit dans une fenêtre 1 qui
+  n'existe pas ; OUI / NON effacé deux fois (`Menu_ProcessInputNoWrapClearOnChoose` puis l'écran d'effacement de RF) :
+  `EraseYesNoWindow` ne refait rien, comme `DestroyYesNoMenu` de RF à partir de `REVISION 0xA`.
+Les scénarios de défis (`challenge_*`) sous ASan ont trouvé ces cas ; `docker/test-sanitize.sh` les vérifie (les
+derniers : `egg_hatch_kanto`, `kanto_mail`, `kanto_clear_save`, le 2026-11-02).
 
 ## Ce que l'explorateur ne fait pas (à tester autrement)
 

@@ -1327,8 +1327,18 @@ s8 Menu_ProcessInputNoWrapClearOnChoose(void)
 
 void EraseYesNoWindow(void)
 {
+#ifdef UBFIX
+    // PokemonNative3G : comme DestroyYesNoMenu de RF (REVISION >= 0xA) : une fenêtre déjà effacée (par
+    // Menu_ProcessInputNoWrapClearOnChoose, puis l'écran d'effacement de RF) ne l'est pas deux fois ; sur GBA, la
+    // fenêtre supprimée était relue (fond n° 255)
+    if (sYesNoWindowId == WINDOW_NONE)
+        return;
+#endif
     ClearStdWindowAndFrameToTransparent(sYesNoWindowId, TRUE);
     RemoveWindow(sYesNoWindowId);
+#ifdef UBFIX
+    sYesNoWindowId = WINDOW_NONE;
+#endif
 }
 
 static void PrintMenuActionGridText(u8 windowId, u8 fontId, u8 left, u8 top, u8 width, u8 height, u8 columns, u8 rows, const struct MenuAction *menuActions)

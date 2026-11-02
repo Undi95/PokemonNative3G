@@ -682,9 +682,13 @@ static void PrintMailText(void)
 
     y = 0;
     PutWindowTilemap(0);
+#ifndef UBFIX // PokemonNative3G : la fenêtre 1 n'existe pas (sWindowTemplates n'en a qu'une) : fond n° 255 sur PC
     PutWindowTilemap(1);
+#endif
     FillWindowPixelBuffer(0, PIXEL_FILL(0));
+#ifndef UBFIX
     FillWindowPixelBuffer(1, PIXEL_FILL(0));
+#endif
     for (i = 0; i < sMailRead->layout->numLines; i ++)
     {
         if (sMailRead->message[i][0] == EOS || sMailRead->message[i][0] == CHAR_SPACE)
@@ -699,7 +703,9 @@ static void PrintMailText(void)
     box_y = sMailRead->layout->signatureYPos + 88;
     AddTextPrinterParameterized3(0, FONT_NORMAL, box_x, box_y, sTextColors, 0, signature);
     CopyWindowToVram(0, COPYWIN_FULL);
+#ifndef UBFIX // la fenêtre 1 n'existe pas (voir plus haut)
     CopyWindowToVram(1, COPYWIN_FULL);
+#endif
 }
 
 static void VBlankCB_MailRead(void)

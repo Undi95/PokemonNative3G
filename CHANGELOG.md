@@ -57,6 +57,8 @@
 - Sons de Kanto : les portes, la caisse (boutique, vente, Casino, Musée, photo) et la fanfare des soins hors Centre
   sont ceux de Rouge Feu (c'étaient des sons d'Émeraude de même nom, et pour les soins un morceau que Rouge Feu ne
   joue jamais).
+- Éclosion d'un œuf, lecture d'une lettre : plus de lecture hors limites (palettes et tiles de la plateforme, fenêtre
+  inexistante de la lettre d'Émeraude) ; un OUI / NON n'est plus effacé deux fois.
 - Carte Dresseur de Kanto : la photo de l'imprimante du Casino de Céladopole (les Pokémon de l'équipe, au dos) et
   les STICKERS de l'homme de l'Île 4 apparaissent enfin sur la carte. Les étoiles et la couleur suivent les règles de
   Rouge Feu (Panthéon, Pokédex de Kanto, Pokédex national, 200 baies et 200 sauts), et le Pokédex compte ceux de Kanto.

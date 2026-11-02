@@ -557,8 +557,20 @@ static void CB2_LoadEggHatch(void)
         break;
     case 7:
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
+    #ifdef UBFIX
+        // PokemonNative3G : le tableau n'a que 3 palettes ; la GBA lisait les 2 suivantes dans les tiles qui le suivent
+        // en ROM (palettes 4 et 5, que la plateforme n'utilise pas : seulement la 3) — aussi dans RF (daycare.c)
+        LoadPalette(gTradeGba2_Pal, BG_PLTT_ID(1), 3 * PLTT_SIZE_4BPP);
+    #else
         LoadPalette(gTradeGba2_Pal, BG_PLTT_ID(1), 5 * PLTT_SIZE_4BPP);
+    #endif
+    #ifdef UBFIX
+        // PokemonNative3G : l'image n'a que 0x1400 octets (160 tiles) ; la GBA en copiait un de plus (le 161e, lu dans
+        // ce qui la suit en ROM), que la plateforme n'utilise pas (tiles 0 à 150)
+        LoadBgTiles(1, gTradeGba_Gfx, 0x1400, 0);
+    #else
         LoadBgTiles(1, gTradeGba_Gfx, 0x1420, 0);
+    #endif
         CopyToBgTilemapBuffer(1, gTradePlatform_Tilemap, 0x1000, 0);
         CopyBgTilemapBufferToVram(1);
         gMain.state++;
