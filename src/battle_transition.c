@@ -112,6 +112,11 @@ static void Task_Phoebe(u8);
 static void Task_Glacia(u8);
 static void Task_Drake(u8);
 static void Task_Champion(u8);
+static void Task_Lorelei(u8); // Rouge Feu
+static void Task_Bruno(u8);
+static void Task_Agatha(u8);
+static void Task_Lance(u8);
+static void Task_Blue(u8);
 static void Task_Aqua(u8);
 static void Task_Magma(u8);
 static void Task_Regice(u8);
@@ -388,6 +393,11 @@ static const TaskFunc sTasks_Main[B_TRANSITION_COUNT] =
     [B_TRANSITION_FRONTIER_CIRCLES_CROSS_IN_SEQ] = Task_FrontierCirclesCrossInSeq,
     [B_TRANSITION_FRONTIER_CIRCLES_ASYMMETRIC_SPIRAL_IN_SEQ] = Task_FrontierCirclesAsymmetricSpiralInSeq,
     [B_TRANSITION_FRONTIER_CIRCLES_SYMMETRIC_SPIRAL_IN_SEQ] = Task_FrontierCirclesSymmetricSpiralInSeq,
+    [B_TRANSITION_LORELEI] = Task_Lorelei, // Rouge Feu
+    [B_TRANSITION_BRUNO] = Task_Bruno,
+    [B_TRANSITION_AGATHA] = Task_Agatha,
+    [B_TRANSITION_LANCE] = Task_Lance,
+    [B_TRANSITION_BLUE] = Task_Blue,
 };
 
 static const TransitionStateFunc sTaskHandlers[] =
@@ -548,6 +558,12 @@ static const u8 sMugshotsTrainerPicIDsTable[MUGSHOTS_COUNT] =
     [MUGSHOT_GLACIA]   = TRAINER_PIC_ELITE_FOUR_GLACIA,
     [MUGSHOT_DRAKE]    = TRAINER_PIC_ELITE_FOUR_DRAKE,
     [MUGSHOT_CHAMPION] = TRAINER_PIC_CHAMPION_WALLACE,
+    // Rouge Feu (sMugshotsTrainerPicIDsTable)
+    [MUGSHOT_LORELEI]  = TRAINER_PIC_KANTO_ELITE_FOUR_LORELEI,
+    [MUGSHOT_BRUNO]    = TRAINER_PIC_KANTO_ELITE_FOUR_BRUNO,
+    [MUGSHOT_AGATHA]   = TRAINER_PIC_KANTO_ELITE_FOUR_AGATHA,
+    [MUGSHOT_LANCE]    = TRAINER_PIC_KANTO_ELITE_FOUR_LANCE,
+    [MUGSHOT_BLUE]     = TRAINER_PIC_KANTO_CHAMPION_RIVAL,
 };
 static const s16 sMugshotsOpponentRotationScales[MUGSHOTS_COUNT][2] =
 {
@@ -556,6 +572,11 @@ static const s16 sMugshotsOpponentRotationScales[MUGSHOTS_COUNT][2] =
     [MUGSHOT_GLACIA] =   {0x1B0, 0x1B0},
     [MUGSHOT_DRAKE] =    {0x1A0, 0x1A0},
     [MUGSHOT_CHAMPION] = {0x188, 0x188},
+    [MUGSHOT_LORELEI] =  {0x200, 0x200}, // Rouge Feu
+    [MUGSHOT_BRUNO] =    {0x200, 0x200},
+    [MUGSHOT_AGATHA] =   {0x200, 0x200},
+    [MUGSHOT_LANCE] =    {0x200, 0x200},
+    [MUGSHOT_BLUE] =     {0x200, 0x200},
 };
 static const s16 sMugshotsOpponentCoords[MUGSHOTS_COUNT][2] =
 {
@@ -564,6 +585,11 @@ static const s16 sMugshotsOpponentCoords[MUGSHOTS_COUNT][2] =
     [MUGSHOT_GLACIA] =   {-4,  4},
     [MUGSHOT_DRAKE] =    { 0,  5},
     [MUGSHOT_CHAMPION] = {-8,  7},
+    [MUGSHOT_LORELEI] =  { -8, 0}, // Rouge Feu
+    [MUGSHOT_BRUNO] =    {-10, 0},
+    [MUGSHOT_AGATHA] =   {  0, 0},
+    [MUGSHOT_LANCE] =    {-32, 0},
+    [MUGSHOT_BLUE] =     {  0, 0},
 };
 
 static const TransitionSpriteCallback sMugshotTrainerPicFuncs[] =
@@ -893,6 +919,14 @@ static const u16 sMugshotPal_Drake[] = INCGFX_U16("graphics/battle_transitions/d
 static const u16 sMugshotPal_Champion[] = INCGFX_U16("graphics/battle_transitions/wallace_bg.pal", ".gbapal");
 static const u16 sMugshotPal_Brendan[] = INCGFX_U16("graphics/battle_transitions/brendan_bg.pal", ".gbapal");
 static const u16 sMugshotPal_May[] = INCGFX_U16("graphics/battle_transitions/may_bg.pal", ".gbapal");
+// Rouge Feu
+static const u16 sMugshotPal_Lorelei[] = INCGFX_U16("graphics/kanto/battle_transitions/lorelei_bg.pal", ".gbapal");
+static const u16 sMugshotPal_Bruno[] = INCGFX_U16("graphics/kanto/battle_transitions/bruno_bg.pal", ".gbapal");
+static const u16 sMugshotPal_Agatha[] = INCGFX_U16("graphics/kanto/battle_transitions/agatha_bg.pal", ".gbapal");
+static const u16 sMugshotPal_Lance[] = INCGFX_U16("graphics/kanto/battle_transitions/lance_bg.pal", ".gbapal");
+static const u16 sMugshotPal_Blue[] = INCGFX_U16("graphics/kanto/battle_transitions/blue_bg.pal", ".gbapal");
+static const u16 sMugshotPal_Red[] = INCGFX_U16("graphics/kanto/battle_transitions/red_bg.pal", ".gbapal");
+static const u16 sMugshotPal_Green[] = INCGFX_U16("graphics/kanto/battle_transitions/green_bg.pal", ".gbapal");
 
 static const u16 *const sOpponentMugshotsPals[MUGSHOTS_COUNT] =
 {
@@ -900,13 +934,25 @@ static const u16 *const sOpponentMugshotsPals[MUGSHOTS_COUNT] =
     [MUGSHOT_PHOEBE] = sMugshotPal_Phoebe,
     [MUGSHOT_GLACIA] = sMugshotPal_Glacia,
     [MUGSHOT_DRAKE] = sMugshotPal_Drake,
-    [MUGSHOT_CHAMPION] = sMugshotPal_Champion
+    [MUGSHOT_CHAMPION] = sMugshotPal_Champion,
+    [MUGSHOT_LORELEI] = sMugshotPal_Lorelei, // Rouge Feu
+    [MUGSHOT_BRUNO] = sMugshotPal_Bruno,
+    [MUGSHOT_AGATHA] = sMugshotPal_Agatha,
+    [MUGSHOT_LANCE] = sMugshotPal_Lance,
+    [MUGSHOT_BLUE] = sMugshotPal_Blue,
 };
 
 static const u16 *const sPlayerMugshotsPals[GENDER_COUNT] =
 {
     [MALE] = sMugshotPal_Brendan,
     [FEMALE] = sMugshotPal_May
+};
+
+// Rouge Feu : la moitié du joueur, quand c'est Red ou Leaf (option PERSO, comme son portrait)
+static const u16 *const sPlayerMugshotsPals_Kanto[GENDER_COUNT] =
+{
+    [MALE] = sMugshotPal_Red,
+    [FEMALE] = sMugshotPal_Green
 };
 
 static const u16 sUnusedTrainerPalette[] = INCGFX_U16("graphics/battle_transitions/unused_trainer.pal", ".gbapal");
@@ -2301,6 +2347,37 @@ static void Task_Champion(u8 taskId)
     DoMugshotTransition(taskId);
 }
 
+// Rouge Feu : B_TRANSITION_LORELEI, B_TRANSITION_BRUNO, B_TRANSITION_AGATHA, B_TRANSITION_LANCE, B_TRANSITION_BLUE
+static void Task_Lorelei(u8 taskId)
+{
+    gTasks[taskId].tMugshotId = MUGSHOT_LORELEI;
+    DoMugshotTransition(taskId);
+}
+
+static void Task_Bruno(u8 taskId)
+{
+    gTasks[taskId].tMugshotId = MUGSHOT_BRUNO;
+    DoMugshotTransition(taskId);
+}
+
+static void Task_Agatha(u8 taskId)
+{
+    gTasks[taskId].tMugshotId = MUGSHOT_AGATHA;
+    DoMugshotTransition(taskId);
+}
+
+static void Task_Lance(u8 taskId)
+{
+    gTasks[taskId].tMugshotId = MUGSHOT_LANCE;
+    DoMugshotTransition(taskId);
+}
+
+static void Task_Blue(u8 taskId)
+{
+    gTasks[taskId].tMugshotId = MUGSHOT_BLUE;
+    DoMugshotTransition(taskId);
+}
+
 static void DoMugshotTransition(u8 taskId)
 {
     while (sMugshot_Funcs[gTasks[taskId].tState](&gTasks[taskId]));
@@ -2340,7 +2417,11 @@ static bool8 Mugshot_SetGfx(struct Task *task)
     GetBg0TilesDst(&tilemap, &tileset);
     CpuSet(sEliteFour_Tileset, tileset, 0xF0);
     LoadPalette(sOpponentMugshotsPals[task->tMugshotId], BG_PLTT_ID(15), PLTT_SIZE_4BPP);
-    LoadPalette(sPlayerMugshotsPals[gSaveBlock2Ptr->playerGender], BG_PLTT_ID(15) + 10, PLTT_SIZEOF(6));
+    // PokemonNative3G : option PERSO (Red et Leaf : leurs couleurs de RF, comme leur portrait)
+    if (gSaveBlock2Ptr->optionsPlayerCharacter)
+        LoadPalette(sPlayerMugshotsPals_Kanto[gSaveBlock2Ptr->playerGender], BG_PLTT_ID(15) + 10, PLTT_SIZEOF(6));
+    else
+        LoadPalette(sPlayerMugshotsPals[gSaveBlock2Ptr->playerGender], BG_PLTT_ID(15) + 10, PLTT_SIZEOF(6));
 
     for (i = 0; i < 20; i++)
     {
