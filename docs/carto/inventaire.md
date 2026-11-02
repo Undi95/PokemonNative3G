@@ -6,15 +6,15 @@ Les 1709 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fon
 
 | Catégorie | Sens | Fonctions |
 |---|---|---|
-| manquante | rien de proche dans la fusion : à porter | 380 |
-| à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 347 |
-| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 240 |
+| manquante | rien de proche dans la fusion : à porter | 396 |
+| à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 283 |
+| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 276 |
 | triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 113 |
-| morte | jamais appelée ni référencée dans RF | 100 |
-| link | link / E-Reader : à porter, désactivé | 142 |
-| écartée | écartée par décision | 387 |
+| morte | jamais appelée ni référencée dans RF | 101 |
+| link | link / E-Reader : à porter, désactivé | 147 |
+| écartée | écartée par décision | 393 |
 
-## Manquante (380) : rien de proche dans la fusion : à porter
+## Manquante (396) : rien de proche dans la fusion : à porter
 
 ### start_menu.c (25)
 DestroySafariZoneStatsWindow, DoDrawStartMenu, PrintSaveStats, PrintStartMenuItems,
@@ -26,6 +26,16 @@ SetUpStartMenu_NormalField, SetUpStartMenu_SafariZone, SetUpStartMenu_UnionRoom,
 StartCB_Save1, StartCB_Save2, StartMenuPokedexSanityCheck, StartMenu_FadeScreenIfLeavingOverworld,
 task50_save_game
 
+### battle_controller_oak_old_man.c (23)
+BtlCtrl_OakOldMan_SetState2Flag, BtlCtrl_OakOldMan_TestState2Flag, OakHandleChooseMove_WaitDma3,
+OakOldManBufferRunCommand, OakOldManHandleChooseMove, OakOldManHandleCmd55, OakOldManHandleDrawTrainerPic,
+OakOldManHandleEndBounceEffect, OakOldManHandleFaintingCry, OakOldManHandleInputChooseMove,
+OakOldManHandlePrintSelectionString, OakOldManHandlePrintString, OakOldManHandleTrainerSlide,
+PrintOakTextWithMainBgDarkened, PrintOakText_ForPetesSake, PrintOakText_HowDisappointing,
+PrintOakText_InflictingDamageIsKey, PrintOakText_KeepAnEyeOnHP, PrintOakText_LoweringStats,
+PrintOakText_OakNoRunningFromATrainer, PrintOakText_WinEarnsPrizeMoney, SetControllerToOakOrOldMan,
+SimulateInputChooseAction
+
 ### battle_tower.c (23)
 AppendBattleTowerBannedSpeciesName, BattleTowerMapScript2, BattleTowerUtil, BufferBattleTowerTrainerMessage,
 CB2_FinishEReaderBattle, CheckMonBattleTowerBanlist, CheckPartyBattleTowerBanlist,
@@ -35,22 +45,23 @@ GetBattleTowerTrainerName, GiveBattleTowerPrize, PopulateBravoTrainerBattleTower
 PrintBattleTowerTrainerGreeting, ResetBattleTowerStreak, SaveBattleTowerProgress, SetBattleTowerProperty,
 SetBattleTowerTrainerGfxId, ShouldBattleEReaderTrainer, StartSpecialBattle
 
-### battle_controller_oak_old_man.c (19)
-BtlCtrl_OakOldMan_SetState2Flag, BtlCtrl_OakOldMan_TestState2Flag, OakHandleChooseMove_WaitDma3,
-OakOldManBufferRunCommand, OakOldManHandleChooseMove, OakOldManHandleInputChooseMove,
-OakOldManHandleIntroSlide, OakOldManHandlePrintSelectionString, OakOldManHandlePrintString,
-PrintOakTextWithMainBgDarkened, PrintOakText_ForPetesSake, PrintOakText_HowDisappointing,
-PrintOakText_InflictingDamageIsKey, PrintOakText_KeepAnEyeOnHP, PrintOakText_LoweringStats,
-PrintOakText_OakNoRunningFromATrainer, PrintOakText_WinEarnsPrizeMoney, SetControllerToOakOrOldMan,
-SimulateInputChooseAction
-
-### item_use.c (19)
+### item_use.c (20)
 BattleUseFunc_PokeBallEtc, BattleUseFunc_PokeDoll, BattleUseFunc_StatBooster,
-DisplayItemMessageInCurrentContext, FieldCB2_UseItemFromField, FieldUseFunc_BlackWhiteFlute,
-FieldUseFunc_FameChecker, FieldUseFunc_OakStopsYou, FieldUseFunc_Repel, FieldUseFunc_TeachyTv,
-FieldUseFunc_TmCase, FieldUseFunc_TownMap, ItemUseOnFieldCB_Bicycle, ItemUse_SetQuestLogEvent,
-ItemUse_SwitchToPartyMenuInBattle, PrintNotTheTimeToUseThat, Task_BattleUse_StatBooster_DelayAndPrint,
-Task_BattleUse_StatBooster_WaitButton_ReturnToBattle, Task_ItemUseWaitForFade
+DisplayItemMessageInCurrentContext, FieldCB2_UseItemFromField, FieldUseFunc_BerryPouch,
+FieldUseFunc_BlackWhiteFlute, FieldUseFunc_FameChecker, FieldUseFunc_OakStopsYou, FieldUseFunc_Repel,
+FieldUseFunc_TeachyTv, FieldUseFunc_TmCase, FieldUseFunc_TownMap, ItemUseOnFieldCB_Bicycle,
+ItemUse_SetQuestLogEvent, ItemUse_SwitchToPartyMenuInBattle, PrintNotTheTimeToUseThat,
+Task_BattleUse_StatBooster_DelayAndPrint, Task_BattleUse_StatBooster_WaitButton_ReturnToBattle,
+Task_ItemUseWaitForFade
+
+### party_menu.c (19)
+CB2_ReturnToBerryPouchMenu, CB2_ReturnToTMCaseMenu, CursorCB_NoEntry, EnterPartyFromItemMenuInBattle,
+FirstBattleEnterParty_CreateWindowAndMsg1Printer, FirstBattleEnterParty_DestroyVoiceoverWindow,
+ItemUseCB_RareCandyStep, OpenPartyMenuInTutorialBattle, PartyMenu_Oak_PrintText,
+SetSwappedHeldItemQuestLogEvent, SetSwitchedPartyOrderQuestLogEvent, SetUsedFieldMoveQuestLogEvent,
+SetUsedFlyQuestLogEvent, Task_FirstBattleEnterParty_RunPrinterMsg2, Task_FirstBattleEnterParty_WaitDarken,
+Task_FirstBattleEnterParty_WaitFadeIn, Task_FirstBattleEnterParty_WaitFadeNormal,
+Task_FirstBattleEnterParty_WaitLightenFirstMonIcon, Task_ValidateChosenMonsForBattle
 
 ### main_menu.c (17)
 MoveWindowByMenuTypeAndCursorPos, PrintBadgeCount, PrintDexCount, PrintMessageOnWindow4, PrintPlayTime,
@@ -59,19 +70,12 @@ Task_PrintMainMenuText, Task_ReturnToTileScreen, Task_SaveErrorStatus_RunPrinter
 Task_SetWin0BldRegsAndCheckSaveFile, Task_SetWin0BldRegsNoSaveFileCheck, Task_WaitDma3AndFadeIn,
 Task_WaitFadeAndPrintMainMenuText
 
-### party_menu.c (16)
-CB2_ReturnToBerryPouchMenu, CB2_ReturnToTMCaseMenu, CursorCB_NoEntry, EnterPartyFromItemMenuInBattle,
-FirstBattleEnterParty_CreateWindowAndMsg1Printer, FirstBattleEnterParty_DestroyVoiceoverWindow,
-OpenPartyMenuInTutorialBattle, PartyMenu_Oak_PrintText, SetSwappedHeldItemQuestLogEvent,
-SetSwitchedPartyOrderQuestLogEvent, SetUsedFieldMoveQuestLogEvent, SetUsedFlyQuestLogEvent,
-Task_FirstBattleEnterParty_RunPrinterMsg2, Task_FirstBattleEnterParty_WaitFadeIn,
-Task_FirstBattleEnterParty_WaitFadeNormal, Task_ValidateChosenMonsForBattle
-
-### option_menu.c (15)
-BufferOptionMenuString, CB2_OptionMenu, CB2_OptionsMenuFromStartMenu, CloseAndSaveOptionMenu, DrawOptionMenuBg,
-InitOptionMenuBg, LoadOptionMenuItemNames, LoadOptionMenuPalette, Localize_BufferOptionMenuString,
-OptionMenu_PickSwitchCancel, OptionMenu_ProcessInput, PrintOptionMenuHeader, SetOptionMenuTask,
-Task_OptionMenu, UpdateSettingSelectionDisplay
+### battle_anim_special.c (15)
+AnimTask_IsBallBlockedByTrainerOrDodged, AnimTask_ShinySparkles, AnimTask_ThrowBallSpecial,
+SpriteCB_ShinySparkles_1, SpriteCB_ShinySparkles_2, SpriteCB_ThrowBall_DelayThenBreakOut,
+SpriteCB_ThrowBall_DoClick, SpriteCB_ThrowBall_DoShake, SpriteCB_ThrowBall_Init, SpriteCB_ThrowBall_InitClick,
+SpriteCB_ThrowBall_InitShake, SpriteCB_ThrowBall_InitialFall, SpriteCB_ThrowBall_TenFrameDelay,
+TrainerBallBlock, TrainerBallBlock2
 
 ### player_pc.c (15)
 CB2_ReturnToMailbox, CB2_ReturnToMailboxPc_UpdateScrollVariables, Task_CreateItemStorageSubmenu,
@@ -80,17 +84,17 @@ Task_PlayerPcMailbox, Task_PlayerPcTurnOff, Task_PlayerPcWithdrawItem, Task_Prin
 Task_ReturnToTopMenu, Task_SetPageItemVars, Task_TopMenu_ItemStorageSubmenu_HandleInput,
 Task_TryPutMailInBag_DestroyMsgIfSuccessful
 
+### option_menu.c (14)
+BufferOptionMenuString, CB2_OptionMenu, CB2_OptionsMenuFromStartMenu, CloseAndSaveOptionMenu, DrawOptionMenuBg,
+LoadOptionMenuItemNames, LoadOptionMenuPalette, Localize_BufferOptionMenuString, OptionMenu_PickSwitchCancel,
+OptionMenu_ProcessInput, PrintOptionMenuHeader, SetOptionMenuTask, Task_OptionMenu,
+UpdateSettingSelectionDisplay
+
 ### field_effect.c (13)
 ApplyGlobalFieldPaletteTint, DoBirdSpriteWithPlayerAffineAnim, FallWarpEffect_7,
 FieldEffectScript_LoadFadedPal, FieldEffectScript_LoadPal, ShowMonEffect_Indoors_3, ShowMonEffect_Indoors_7,
 ShowMonEffect_Outdoors_5, ShowMonEffect_Outdoors_7, SpinObjectEvent, TryChangeBirdSprite,
 WarpInObjectEventDownwards, WarpOutObjectEventUpwards
-
-### battle_anim_special.c (12)
-AnimTask_IsBallBlockedByTrainerOrDodged, AnimTask_ShinySparkles, SpriteCB_ShinySparkles_1,
-SpriteCB_ShinySparkles_2, SpriteCB_ThrowBall_Bounce, SpriteCB_ThrowBall_DelayThenBreakOut,
-SpriteCB_ThrowBall_DoShake, SpriteCB_ThrowBall_Init, SpriteCB_ThrowBall_InitShake,
-SpriteCB_ThrowBall_InitialFall, SpriteCB_ThrowBall_TenFrameDelay, TrainerBallBlock2
 
 ### event_object_movement.c (11)
 MovementAction_FaceDownFast_Step0, MovementAction_FaceLeftFast_Step0, MovementAction_FaceRightFast_Step0,
@@ -103,18 +107,19 @@ DecompressGlyph_Female, DecompressGlyph_Male, DecompressGlyph_NormalCopy1, Decom
 FontFunc_Female, FontFunc_Male, FontFunc_NormalCopy1, FontFunc_NormalCopy2, GetGlyphWidth_Female,
 GetGlyphWidth_Male
 
+### new_menu_helpers.c (9)
+CopyDecompressedTileDataToVram, CreateStartMenuWindow, DecompressAndCopyTileDataToVram2,
+DecompressAndLoadBgGfxUsingHeap2, DisplayYesNoMenuDefaultNo, DrawHelpMessageWindowWithText,
+GetTextSpeedSetting, LoadStdWindowFrameGfx, TaskFreeBufAfterCopyingTileDataToVram
+
+### pokemon_storage_system_data.c (9)
+AddBoxMenu, HandleInput_InBox_GrabbingMultiple, HandleInput_InBox_Normal, MonPlaceChange_MoveCursorDown,
+MonPlaceChange_MoveCursorUp, SetMenuTextsForItem, SetMenuTextsForMon, SetMovedMonData,
+ToggleCursorMultiMoveMode
+
 ### save_failed_screen.c (9)
 BlankPalettes, ClearMapBuffer, FillBgMapBufferRect, PrintTextOnSaveFailedScreen, RequestDmaCopyFromCharBuffer,
 RequestDmaCopyFromScreenBuffer, RunSaveFailedScreen, TryWipeDamagedSectors, UpdateMapBufferWithText
-
-### field_fadetransition.c (8)
-ExitWarpFadeInScreen, FadeTransition_FadeInOnReturnToStartMenu, Task_CableClubWarp, Task_ContinueScript,
-Task_DoorWarp, Task_ReturnFromLinkRoomWarp, Task_SafariZoneRanOutOfBalls, WarpFadeInScreenWithDelay
-
-### new_menu_helpers.c (8)
-CopyDecompressedTileDataToVram, CreateStartMenuWindow, DecompressAndCopyTileDataToVram2,
-DecompressAndLoadBgGfxUsingHeap2, DisplayYesNoMenuDefaultNo, DrawHelpMessageWindowWithText,
-GetTextSpeedSetting, LoadStdWindowFrameGfx
 
 ### script_menu.c (8)
 CreateMCMenuInputHandlerTask, CreatePCMenuWindow, DrawVerticalMultichoiceMenu, GetMCWindowHeight,
@@ -127,14 +132,22 @@ BikeTransition_MoveDirection, BikeTransition_Uphill, MetatileBehaviorForbidsBiki
 ### daycare.c (7)
 CB2_EggHatch_1, SpriteCB_Egg_0, SpriteCB_Egg_1, SpriteCB_Egg_2, SpriteCB_Egg_3, SpriteCB_Egg_4, SpriteCB_Egg_5
 
-### overworld.c (7)
-CB2_EnterFieldFromQuestLog, CB2_SetUpOverworldForQLPlayback, CountBadgesForOverworldWhiteOutLossCalculation,
-DoCB1_Overworld_QuestLogPlayback, MetatileBehavior_IsSurfableInSeafoamIslands,
-Overworld_ResetStateAfterWhitingOut, QL_LoadMapNormal
+### field_fadetransition.c (7)
+ExitWarpFadeInScreen, FadeTransition_FadeInOnReturnToStartMenu, Task_CableClubWarp, Task_DoorWarp,
+Task_ReturnFromLinkRoomWarp, Task_SafariZoneRanOutOfBalls, WarpFadeInScreenWithDelay
 
 ### mailbox_pc.c (6)
 ItemPrintFunc, MailboxPC_AddScrollIndicatorArrows, MailboxPC_GetAddWindow, MailboxPC_InitBuffers,
 MailboxPC_InitListMenu, MailboxPC_RemoveWindow
+
+### overworld.c (6)
+CB2_SetUpOverworldForQLPlayback, CountBadgesForOverworldWhiteOutLossCalculation,
+DoCB1_Overworld_QuestLogPlayback, MetatileBehavior_IsSurfableInSeafoamIslands,
+Overworld_ResetStateAfterWhitingOut, QL_LoadMapNormal
+
+### pokemon_storage_system_misc.c (6)
+IsActiveItemMoving, Item_FromMonToMoving, Item_SwitchMonsWithMoving, Item_TakeMons,
+MultiMove_Function_MoveMons, MultiMove_InitBg
 
 ### clear_save_data_screen.c (5)
 CB2_SaveClearScreen_Init, CB2_Sub_SaveClearScreen_Init, Task_CleanUpAndSoftReset, Task_DrawClearSaveDataScreen,
@@ -143,10 +156,6 @@ Task_HandleYesNoMenu
 ### field_player_avatar.c (5)
 GetPlayerAvatarVsSeekerGfxId, MetatileAtCoordsIsWaterTile, PlayerAvatarTransition_Bike,
 QL_TryRecordNPCStepWithDuration32, QL_TryRecordPlayerStepWithDuration0
-
-### map_name_popup.c (5)
-DismissMapNamePopup, MapNamePopupAppendFloorNum, MapNamePopupCreateWindow, MapNamePopupPrintMapNameOnWindow,
-Task_MapNamePopup
 
 ### pokemon.c (5)
 InitMonSpritesGfx_Mode1, Localize_BattleStrings, SetMonExpWithMaxLevelCheck, es_sub_8044D1C, es_sub_8044D64
@@ -167,14 +176,15 @@ BarnDoorWipeLoadGpuRegs, BarnDoorWipeSaveGpuRegs, Task_BarnDoorWipe, Task_BarnDo
 QuestLog_CheckDepartingIndoorsMap, QuestLog_TryRecordDepartedLocation, SetDeoxysTrianglePalette,
 Task_DoDeoxysTriangleInteraction
 
-### pokemon_storage_system_data.c (4)
-AddBoxMenu, SetMenuTextsForItem, SetMovedMonData, ToggleCursorMultiMoveMode
+### map_name_popup.c (4)
+MapNamePopupAppendFloorNum, MapNamePopupCreateWindow, MapNamePopupPrintMapNameOnWindow, Task_MapNamePopup
 
-### pokemon_storage_system_graphics.c (4)
-DoReleaseMonAnim, DoReleaseMonComeBackAnim, SetShiftMonSpritePtr, ShiftMons
+### pokemon_storage_system_menu.c (4)
+ChooseBoxMenu_PrintBoxNameAndCount, ChooseBoxMenu_PrintTextToSprite, CreatePCMainMenu,
+PrintStringToBufferCopyNow
 
-### pokemon_storage_system_misc.c (4)
-IsActiveItemMoving, Item_SwitchMonsWithMoving, MultiMove_Function_MoveMons, MultiMove_InitBg
+### pokemon_storage_system_tasks.c (4)
+IsDisplayMonMosaicActive, PrintStorageMessage, SetPokeStorageQuestLogEvent, StartDisplayMonMosaic
 
 ### title_screen.c (4)
 CreateStreakSprites, SpriteCallback_Streak, SpriteCallback_TitleScreenLeaf, Task_LeafSpawner
@@ -191,11 +201,8 @@ ExtractMetatileAttribute, GetAttributeByMetatileIdAndMapLayout, MapGridGetMetati
 ### mail.c (3)
 AddMailMessagePrinters, BufferMailMessage, ShowMailCB_Teardown
 
-### pokemon_storage_system_menu.c (3)
-ChooseBoxMenu_PrintBoxNameAndCount, ChooseBoxMenu_PrintTextToSprite, CreatePCMainMenu
-
-### pokemon_storage_system_tasks.c (3)
-IsDisplayMonMosaicActive, PrintStorageMessage, SetPokeStorageQuestLogEvent
+### pokemon_storage_system_graphics.c (3)
+DoReleaseMonComeBackAnim, SetShiftMonSpritePtr, ShiftMons
 
 ### trainer_see.c (3)
 MovementAction_RevealTrainer_RunTrainerSeeFuncList, StartTrainerApproachWithFollowupTask,
@@ -261,6 +268,9 @@ AdjustBgMosaic
 ### blend_palette.c (1)
 BlendPalettesAt
 
+### coins.c (1)
+PrintCoinsString_Parameterized
+
 ### dma3_manager.c (1)
 WaitDma3Request
 
@@ -285,9 +295,6 @@ CopyPaletteInvertedTint
 ### pokemon_icon.c (1)
 LoadMonIconPalettesAt
 
-### reshow_battle_screen.c (1)
-ReshowBattleScreen_TurnOnDisplay
-
 ### save_menu_util.c (1)
 SaveStatToString
 
@@ -301,58 +308,7 @@ GetUserWindowGraphics
 TilemapUtil_SetTilemap
 
 
-## À vérifier (347) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
-
-### battle_controller_oak_old_man.c (24)
-CopyOakOldManMonData ~ CopyLinkPartnerMonData (battle_controller_link_partner.c, 96 %)
-OakOldManBufferExecCompleted ~ PokedudeBufferExecCompleted (kanto_battle_controller_pokedude.c, 81 %)
-OakOldManDoMoveAnimation ~ PokedudeDoMoveAnimation (kanto_battle_controller_pokedude.c, 83 %)
-OakOldManHandleBattleAnimation ~ LinkOpponentHandleBattleAnimation (battle_controller_link_opponent.c, 90 %)
-OakOldManHandleChooseAction ~ OldManHandleChooseAction (battle_controller_old_man.c, 60 %)
-OakOldManHandleChoosePokemon ~ PokedudeHandleChoosePokemon (kanto_battle_controller_pokedude.c, 92 %)
-OakOldManHandleCmd55 ~ OldManHandleEndLinkBattle (battle_controller_old_man.c, 76 %)
-OakOldManHandleDrawPartyStatusSummary ~ PokedudeHandleDrawPartyStatusSummary (kanto_battle_controller_pokedude.c, 85 %)
-OakOldManHandleDrawTrainerPic ~ SafariHandleDrawTrainerPic (battle_controller_safari.c, 66 %)
-OakOldManHandleEndBounceEffect ~ UnusedEndBounceEffect (battle_controller_player.c, 60 %)
-OakOldManHandleExpUpdate ~ PlayerHandleExpUpdate (battle_controller_player.c, 90 %)
-OakOldManHandleFaintAnimation ~ PokedudeHandleFaintAnimation (kanto_battle_controller_pokedude.c, 82 %)
-OakOldManHandleFaintingCry ~ OldManHandleFaintingCry (battle_controller_old_man.c, 62 %)
-OakOldManHandleGetMonData ~ PokedudeHandleGetMonData (kanto_battle_controller_pokedude.c, 69 %)
-OakOldManHandleHitAnimation ~ LinkOpponentHandleHitAnimation (battle_controller_link_opponent.c, 80 %)
-OakOldManHandleIntroTrainerBallThrow ~ WallyHandleIntroTrainerBallThrow (battle_controller_wally.c, 83 %)
-OakOldManHandleLinkStandbyMsg ~ PokedudeHandleLinkStandbyMsg (kanto_battle_controller_pokedude.c, 83 %)
-OakOldManHandleMoveAnimation ~ LinkOpponentHandleMoveAnimation (battle_controller_link_opponent.c, 90 %)
-OakOldManHandlePlayFanfare ~ LinkOpponentHandlePlayFanfareOrBGM (battle_controller_link_opponent.c, 66 %)
-OakOldManHandlePlaySE ~ LinkOpponentHandlePlaySE (battle_controller_link_opponent.c, 60 %)
-OakOldManHandleReturnMonToBall ~ OldManHandleReturnMonToBall (battle_controller_old_man.c, 76 %)
-OakOldManHandleSetMonData ~ PokedudeHandleSetMonData (kanto_battle_controller_pokedude.c, 76 %)
-OakOldManHandleTrainerSlide ~ SafariHandleDrawTrainerPic (battle_controller_safari.c, 62 %)
-SetOakOldManMonData ~ SetLinkPartnerMonData (battle_controller_link_partner.c, 98 %)
-
-### party_menu.c (23)
-CursorCB_Cancel2 ~ CursorCb_DeoxysForm (party_menu.c, 86 %)
-CursorCB_Enter ~ CursorCb_Enter (party_menu.c, 81 %)
-CursorCB_FieldMove ~ CursorCb_FieldMove (party_menu.c, 96 %)
-CursorCB_Item ~ CursorCb_Item (party_menu.c, 96 %)
-CursorCB_Mail ~ CursorCb_Mail (party_menu.c, 96 %)
-CursorCB_Store ~ CursorCb_Store (party_menu.c, 80 %)
-DisplayPartyPokemonDataForChooseMultiple ~ DisplayPartyPokemonDataForChooseHalf (party_menu.c, 86 %)
-InitChooseMonsForBattle ~ InitChooseHalfPartyForBattle (party_menu.c, 85 %)
-ItemUseCB_MedicineStep ~ ItemUseCB_Medicine (party_menu.c, 96 %)
-ItemUseCB_RareCandyStep ~ ItemUseCB_RareCandy (party_menu.c, 69 %)
-ItemUseCB_TryRestorePP ~ ItemUseCB_PPRecovery (party_menu.c, 90 %)
-PartyMenuPrintText ~ PrintMessage (party_menu.c, 92 %)
-Task_ContinueChoosingMonsForBattle ~ Task_ContinueChoosingHalfParty (party_menu.c, 94 %)
-Task_FirstBattleEnterParty_CreatePrinter ~ Task_PartyMenu_Pokedude (party_menu.c, 77 %)
-Task_FirstBattleEnterParty_DarkenScreen ~ Task_ClosePartyMenu (party_menu.c, 79 %)
-Task_FirstBattleEnterParty_FadeNormal ~ Task_ClosePartyMenu (party_menu.c, 75 %)
-Task_FirstBattleEnterParty_LightenFirstMonIcon ~ Task_ClosePartyMenu (party_menu.c, 75 %)
-Task_FirstBattleEnterParty_RunPrinterMsg1 ~ Task_PartyMenu_Pokedude (party_menu.c, 77 %)
-Task_FirstBattleEnterParty_StartPrintMsg2 ~ Task_PartyMenu_Pokedude (party_menu.c, 85 %)
-Task_FirstBattleEnterParty_WaitDarken ~ Task_TrainerHillWaitForPaletteFade (battle_records.c, 75 %)
-Task_FirstBattleEnterParty_WaitLightenFirstMonIcon ~ Task_TrainerHillWaitForPaletteFade (battle_records.c, 60 %)
-Task_HandleRestoreWhichMoveInput ~ Task_HandleWhichMoveInput (party_menu.c, 86 %)
-TryUsePPItemInBattle ~ TryUsePPItem (party_menu.c, 90 %)
+## À vérifier (283) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
 
 ### player_pc.c (23)
 CB2_ReturnFromDepositMenu ~ ItemStorage_ReshowAfterBagMenu (player_pc.c, 76 %)
@@ -402,6 +358,28 @@ Task_StartMenuHandleInput ~ Task_ShowStartMenu (start_menu.c, 86 %)
 task50_after_link_battle_save ~ Task_SaveAfterLinkBattle (start_menu.c, 81 %)
 task50_startmenu ~ StartMenuTask (start_menu.c, 93 %)
 
+### battle_controller_oak_old_man.c (20)
+CopyOakOldManMonData ~ CopyLinkPartnerMonData (battle_controller_link_partner.c, 96 %)
+OakOldManBufferExecCompleted ~ PokedudeBufferExecCompleted (kanto_battle_controller_pokedude.c, 81 %)
+OakOldManDoMoveAnimation ~ LinkOpponentDoMoveAnimation (battle_controller_link_opponent.c, 86 %)
+OakOldManHandleBattleAnimation ~ LinkOpponentHandleBattleAnimation (battle_controller_link_opponent.c, 77 %)
+OakOldManHandleChooseAction ~ OldManHandleChooseAction (battle_controller_old_man.c, 75 %)
+OakOldManHandleChoosePokemon ~ PokedudeHandleChoosePokemon (kanto_battle_controller_pokedude.c, 96 %)
+OakOldManHandleDrawPartyStatusSummary ~ PokedudeHandleDrawPartyStatusSummary (kanto_battle_controller_pokedude.c, 87 %)
+OakOldManHandleExpUpdate ~ PlayerHandleExpUpdate (battle_controller_player.c, 86 %)
+OakOldManHandleFaintAnimation ~ PokedudeHandleFaintAnimation (kanto_battle_controller_pokedude.c, 84 %)
+OakOldManHandleGetMonData ~ PokedudeHandleGetMonData (kanto_battle_controller_pokedude.c, 86 %)
+OakOldManHandleHitAnimation ~ LinkOpponentHandleHitAnimation (battle_controller_link_opponent.c, 77 %)
+OakOldManHandleIntroSlide ~ LinkOpponentHandleIntroSlide (battle_controller_link_opponent.c, 80 %)
+OakOldManHandleIntroTrainerBallThrow ~ WallyHandleIntroTrainerBallThrow (battle_controller_wally.c, 84 %)
+OakOldManHandleLinkStandbyMsg ~ PokedudeHandleLinkStandbyMsg (kanto_battle_controller_pokedude.c, 83 %)
+OakOldManHandleMoveAnimation ~ LinkOpponentHandleMoveAnimation (battle_controller_link_opponent.c, 97 %)
+OakOldManHandlePlayFanfare ~ LinkOpponentHandlePlayFanfareOrBGM (battle_controller_link_opponent.c, 77 %)
+OakOldManHandlePlaySE ~ LinkOpponentHandlePlayFanfareOrBGM (battle_controller_link_opponent.c, 77 %)
+OakOldManHandleReturnMonToBall ~ OldManHandleReturnMonToBall (battle_controller_old_man.c, 76 %)
+OakOldManHandleSetMonData ~ PokedudeHandleSetMonData (kanto_battle_controller_pokedude.c, 62 %)
+SetOakOldManMonData ~ SetLinkPartnerMonData (battle_controller_link_partner.c, 98 %)
+
 ### easy_chat.c (20)
 EC_DoesEasyChatStringFitOnLine ~ CanPhraseFitInXRowsYCols (easy_chat.c, 95 %)
 EC_IsDeoxys ~ IsRestrictedWordSpecies (easy_chat.c, 92 %)
@@ -446,11 +424,32 @@ SpriteCB_PostEvoSparkleSet2 ~ SpriteCB_Sparkle_Spray (evolution_graphics.c, 93 %
 SpriteCB_PreEvoSparkleSet1 ~ SpriteCB_Sparkle_SpiralUpward (evolution_graphics.c, 96 %)
 SpriteCB_PreEvoSparkleSet2 ~ SpriteCB_Sparkle_ArcDown (evolution_graphics.c, 97 %)
 
-### item_use.c (17)
+### party_menu.c (20)
+CursorCB_Cancel2 ~ CursorCb_DeoxysForm (party_menu.c, 86 %)
+CursorCB_Enter ~ CursorCb_Enter (party_menu.c, 81 %)
+CursorCB_FieldMove ~ CursorCb_FieldMove (party_menu.c, 96 %)
+CursorCB_Item ~ CursorCb_Item (party_menu.c, 96 %)
+CursorCB_Mail ~ CursorCb_Mail (party_menu.c, 96 %)
+CursorCB_Store ~ CursorCb_Store (party_menu.c, 80 %)
+DisplayPartyPokemonDataForChooseMultiple ~ DisplayPartyPokemonDataForChooseHalf (party_menu.c, 86 %)
+InitChooseMonsForBattle ~ InitChooseHalfPartyForBattle (party_menu.c, 85 %)
+ItemUseCB_MedicineStep ~ ItemUseCB_Medicine (party_menu.c, 96 %)
+ItemUseCB_TryRestorePP ~ ItemUseCB_PPRecovery (party_menu.c, 90 %)
+PartyMenuPrintText ~ PrintMessage (party_menu.c, 92 %)
+Task_ContinueChoosingMonsForBattle ~ Task_ContinueChoosingHalfParty (party_menu.c, 94 %)
+Task_FirstBattleEnterParty_CreatePrinter ~ Task_PartyMenu_Pokedude (party_menu.c, 77 %)
+Task_FirstBattleEnterParty_DarkenScreen ~ Task_ClosePartyMenu (party_menu.c, 79 %)
+Task_FirstBattleEnterParty_FadeNormal ~ Task_ClosePartyMenu (party_menu.c, 75 %)
+Task_FirstBattleEnterParty_LightenFirstMonIcon ~ Task_ClosePartyMenu (party_menu.c, 75 %)
+Task_FirstBattleEnterParty_RunPrinterMsg1 ~ Task_PartyMenu_Pokedude (party_menu.c, 77 %)
+Task_FirstBattleEnterParty_StartPrintMsg2 ~ Task_PartyMenu_Pokedude (party_menu.c, 85 %)
+Task_HandleRestoreWhichMoveInput ~ Task_HandleWhichMoveInput (party_menu.c, 86 %)
+TryUsePPItemInBattle ~ TryUsePPItem (party_menu.c, 90 %)
+
+### item_use.c (16)
 BattleUseFunc_Ether ~ ItemUseOutOfBattle_ReduceEV (item_use.c, 81 %)
 BattleUseFunc_Medicine ~ ItemUseOutOfBattle_ReduceEV (item_use.c, 81 %)
 BattleUseFunc_PokeFlute ~ ItemUseOutOfBattle_Mail (item_use.c, 78 %)
-FieldUseFunc_BerryPouch ~ ItemUseOutOfBattle_BerryPouch (kanto_berry_pouch.c, 61 %)
 FieldUseFunc_Bike ~ ItemUseOutOfBattle_Bike (item_use.c, 77 %)
 FieldUseFunc_CoinCase ~ ItemUseOutOfBattle_CoinCase (item_use.c, 79 %)
 FieldUseFunc_Ether ~ ItemUseOutOfBattle_ReduceEV (item_use.c, 81 %)
@@ -480,28 +479,15 @@ MultichoiceGrid_MoveCursorIfValid ~ ChangeGridMenuCursorPosition (menu.c, 96 %)
 MultichoiceGrid_RedrawCursor ~ MoveMenuGridCursor (menu.c, 99 %)
 MultichoiceList_PrintItems ~ PrintMenuActionTextsWithSpacing (menu.c, 96 %)
 
-### battle_anim_special.c (11)
-AnimTask_ThrowBallSpecial ~ AnimTask_ThrowBall_StandingTrainer (battle_anim_throw.c, 65 %)
-AnimTask_ThrowBallSpecial_PlaySfx ~ AnimTask_ThrowBall_StandingTrainer_Step (battle_anim_throw.c, 72 %)
-CreateStarsWhenBallClicks ~ MakeCaptureStars (battle_anim_throw.c, 74 %)
-SpriteCB_ThrowBall_ArcFlight ~ SpriteCB_Ball_Arc (battle_anim_throw.c, 87 %)
-SpriteCB_ThrowBall_BeginBreakOut ~ SpriteCB_Ball_Release_Step (battle_anim_throw.c, 75 %)
-SpriteCB_ThrowBall_DoClick ~ SpriteCB_Ball_Capture_Step (battle_anim_throw.c, 67 %)
-SpriteCB_ThrowBall_FinishClick ~ SpriteCB_Ball_FadeOut (battle_anim_throw.c, 68 %)
-SpriteCB_ThrowBall_InitClick ~ SpriteCB_BallThrow_StartCaptureMon (pokeball.c, 63 %)
-SpriteCB_ThrowBall_RunBreakOut ~ SpriteCB_Ball_Release_Wait (battle_anim_throw.c, 73 %)
+### battle_anim_special.c (8)
+AnimTask_ThrowBallSpecial_PlaySfx ~ AnimTask_ThrowBall_StandingTrainer_Step (battle_anim_throw.c, 66 %)
+CreateStarsWhenBallClicks ~ MakeCaptureStars (battle_anim_throw.c, 68 %)
+SpriteCB_ThrowBall_ArcFlight ~ SpriteCB_Ball_Arc (battle_anim_throw.c, 74 %)
+SpriteCB_ThrowBall_BeginBreakOut ~ SpriteCB_Ball_Release_Step (battle_anim_throw.c, 83 %)
+SpriteCB_ThrowBall_Bounce ~ SpriteCB_BallThrow_FallToGround (pokeball.c, 61 %)
+SpriteCB_ThrowBall_FinishClick ~ SpriteCB_Ball_FadeOut (battle_anim_throw.c, 73 %)
+SpriteCB_ThrowBall_RunBreakOut ~ SpriteCB_Ball_Release_Wait (battle_anim_throw.c, 62 %)
 SpriteCB_ThrowBall_ShrinkMon ~ SpriteCB_Ball_MonShrink_Step (battle_anim_throw.c, 72 %)
-TrainerBallBlock ~ SpriteCB_Ball_Block (battle_anim_throw.c, 77 %)
-
-### field_weather.c (8)
-ApplyDroughtGammaShiftWithBlend ~ ApplyDroughtColorMapWithBlend (field_weather.c, 81 %)
-ApplyGammaShiftWithBlend ~ ApplyColorMapWithBlend (field_weather.c, 91 %)
-ApplyWeatherGammaShiftToPal ~ ApplyWeatherColorMapToPal (field_weather.c, 85 %)
-FadeSelectedPals ~ FadeScreen (field_weather.c, 97 %)
-SetDroughtGamma ~ SetDroughtColorMap (field_weather.c, 80 %)
-UpdateWeatherGammaShift ~ UpdateWeatherColorMap (field_weather.c, 82 %)
-WeatherBeginGammaFade ~ ApplyWeatherColorMapIfIdle_Gradual (field_weather.c, 83 %)
-WeatherShiftGammaIfPalStateIdle ~ ApplyWeatherColorMapIfIdle (field_weather.c, 86 %)
 
 ### item.c (8)
 BagGetQuantityByItemId ~ CountTotalItemQuantityInBag (item.c, 86 %)
@@ -512,16 +498,6 @@ CountItemsInPC ~ CountUsedPCItemSlots (item.c, 93 %)
 ItemPcCompaction ~ CompactPCItems (item.c, 92 %)
 SetBagPocketsPointers ~ SetBagItemsPointers (item.c, 75 %)
 SortAndCompactBagPocket ~ SortBerriesOrTMHMs (item.c, 84 %)
-
-### pokemon_storage_system_data.c (8)
-HandleInput_BoxTitle ~ HandleInput_OnBox (pokemon_storage_system.c, 66 %)
-HandleInput_InBox_GrabbingMultiple ~ InBoxInput_SelectingMultiple (pokemon_storage_system.c, 62 %)
-HandleInput_InBox_MovingMultiple ~ InBoxInput_MovingMultiple (pokemon_storage_system.c, 71 %)
-HandleInput_InBox_Normal ~ InBoxInput_Normal (pokemon_storage_system.c, 60 %)
-MonPlaceChange_MoveCursorDown ~ MonPlaceChange_CursorDown (pokemon_storage_system.c, 62 %)
-MonPlaceChange_MoveCursorUp ~ MonPlaceChange_CursorUp (pokemon_storage_system.c, 80 %)
-SetMenuTextsForMon ~ SetMenuTexts_Mon (pokemon_storage_system.c, 62 %)
-TrySetDisplayMonData ~ TryRefreshDisplayMon (pokemon_storage_system.c, 96 %)
 
 ### battle_main.c (7)
 LinkBattleComputeBattleTypeFlags ~ FindLinkBattleMaster (battle_main.c, 98 %)
@@ -550,23 +526,6 @@ PrintContinueStats ~ CB2_MainMenu (main_menu.c, 77 %)
 Task_MysteryGiftError ~ Task_DisplayMainMenuInvalidActionError (main_menu.c, 84 %)
 Task_UpdateVisualSelection ~ Task_HighlightSelectedMainMenuItem (main_menu.c, 82 %)
 
-### pokemon_storage_system_misc.c (7)
-Item_FromMonToMoving ~ TakeItemFromMon (pokemon_storage_system.c, 62 %)
-Item_GiveMovingToMon ~ GiveItemToMon (pokemon_storage_system.c, 83 %)
-Item_TakeMons ~ MoveItemFromMonToBag (pokemon_storage_system.c, 72 %)
-MultiMove_Function_ChangeSelection ~ MultiMove_ChangeSelection (pokemon_storage_system.c, 93 %)
-MultiMove_Function_GrabSelection ~ MultiMove_GrabSelection (pokemon_storage_system.c, 75 %)
-MultiMove_Function_PlaceMons ~ MultiMove_PlaceMons (pokemon_storage_system.c, 80 %)
-MultiMove_Function_Start ~ MultiMove_Start (pokemon_storage_system.c, 90 %)
-
-### fldeff_rocksmash.c (6)
-CreateFieldEffectShowMon ~ CreateFieldMoveTask (fldeff_rocksmash.c, 95 %)
-FieldCallback_UseRockSmash ~ FieldCallback_RockSmash (fldeff_rocksmash.c, 93 %)
-Task_FieldEffectShowMon_Cleanup ~ Task_DoFieldMove_RunFunc (fldeff_rocksmash.c, 78 %)
-Task_FieldEffectShowMon_Init ~ Task_DoFieldMove_Init (fldeff_rocksmash.c, 91 %)
-Task_FieldEffectShowMon_WaitFldeff ~ Task_DoFieldMove_WaitForMon (fldeff_rocksmash.c, 99 %)
-Task_FieldEffectShowMon_WaitPlayerAnim ~ Task_DoFieldMove_ShowMonAfterPose (fldeff_rocksmash.c, 97 %)
-
 ### script_menu.c (6)
 DestroyScriptMenuWindow ~ ClearToTransparentAndRemoveWindow (script_menu.c, 84 %)
 Hask_MultichoiceGridMenu_HandleInput ~ Task_HandleMultichoiceGridInput (script_menu.c, 92 %)
@@ -589,19 +548,26 @@ SpriteCB_PartySummaryBall_Exit ~ SpriteCB_StatusSummaryBalls_Exit (battle_interf
 SpriteCB_PartySummaryBall_OnBattleStart ~ SpriteCB_StatusSummaryBalls_Enter (battle_interface.c, 86 %)
 SpriteCB_PartySummaryBall_OnSwitchout ~ SpriteCB_StatusSummaryBalls_OnSwitchout (battle_interface.c, 91 %)
 
-### field_message_box.c (5)
-CreateTask_DrawFieldMessageBox ~ CreateTask_DrawFieldMessage (field_message_box.c, 77 %)
-DestroyTask_DrawFieldMessageBox ~ DestroyTask_DrawFieldMessage (field_message_box.c, 90 %)
-ExpandStringAndStartDrawFieldMessageBox ~ ExpandStringAndStartDrawFieldMessage (field_message_box.c, 88 %)
-StartDrawFieldMessageBox ~ StartDrawFieldMessage (field_message_box.c, 90 %)
-Task_DrawFieldMessageBox ~ Task_DrawFieldMessage (field_message_box.c, 82 %)
-
 ### mail.c (5)
 CB2_InitMailView ~ CB2_InitMailRead (mail.c, 93 %)
 CB2_RunShowMailCB ~ CB2_MailRead (mail.c, 82 %)
 DoInitMailView ~ MailReadBuildGraphics (mail.c, 88 %)
 ShowMailCB_WaitButton ~ CB2_ExitOnKeyPress (mail.c, 90 %)
 ShowMailCB_WaitFadeIn ~ CB2_WaitForPaletteExitOnKeyPress (mail.c, 76 %)
+
+### pokemon_storage_system_graphics.c (5)
+DestroyAllIconsInColumn ~ DestroyBoxMonIconsInColumn (pokemon_storage_system.c, 64 %)
+DoReleaseMonAnim ~ SetReleaseMon (pokemon_storage_system.c, 68 %)
+SetBoxSpeciesAndPersonalities ~ GetIncomingBoxMonData (pokemon_storage_system.c, 67 %)
+SpriteCB_BoxScrollArrow ~ SpriteCB_Arrow (pokemon_storage_system.c, 87 %)
+SpriteCB_MovePartySpriteToNextSlot ~ SpriteCB_MovePartyMonToNextSlot (pokemon_storage_system.c, 80 %)
+
+### pokemon_storage_system_misc.c (5)
+Item_GiveMovingToMon ~ GiveItemToMon (pokemon_storage_system.c, 62 %)
+MultiMove_Function_ChangeSelection ~ MultiMove_ChangeSelection (pokemon_storage_system.c, 95 %)
+MultiMove_Function_GrabSelection ~ MultiMove_GrabSelection (pokemon_storage_system.c, 71 %)
+MultiMove_Function_PlaceMons ~ MultiMove_PlaceMons (pokemon_storage_system.c, 78 %)
+MultiMove_Function_Start ~ MultiMove_Start (pokemon_storage_system.c, 79 %)
 
 ### text_window.c (5)
 LoadHelpMessageWindowGfx ~ LoadSignpostWindowGfx (text_window.c, 84 %)
@@ -614,32 +580,14 @@ LoadUserWindowGfxByFrame ~ LoadWindowGfx (text_window.c, 86 %)
 BufferTextForCardBack ~ BufferTextsVarsForCardPage2 (trainer_card.c, 81 %)
 GetTrainerStarCount ~ GetRubyTrainerStars (trainer_card.c, 86 %)
 HandleGpuRegs ~ InitGpuRegs (trainer_card.c, 81 %)
-ResetBgRegs ~ ClearVramOamPlttRegs (battle_records.c, 93 %)
+ResetBgRegs ~ ClearVramOamPlttRegs (battle_records.c, 100 %)
 VBlankCB_TrainerCard ~ VblankCb_TrainerCard (trainer_card.c, 97 %)
 
 ### daycare.c (4)
-CB2_EggHatch_0 ~ CB2_LoadEggHatch (egg_hatch.c, 73 %)
+CB2_EggHatch_0 ~ CB2_LoadEggHatch (egg_hatch.c, 68 %)
 CreatedHatchedMon ~ CreateHatchedMon (egg_hatch.c, 100 %)
 DayCare_GetBoxMonNickname ~ GetBoxMonNickname (daycare.c, 92 %)
 DayCare_GetMonNickname ~ GetMonNickname2 (daycare.c, 92 %)
-
-### field_effect_helpers.c (4)
-CreateBobbingEffect ~ UpdateBobbingEffect (field_effect_helpers.c, 83 %)
-FldEff_UnusedWaterSurfacing ~ FldEff_WaterSurfacing (field_effect_helpers.c, 95 %)
-SynchroniseSurfAnim ~ SynchronizeSurfAnim (field_effect_helpers.c, 78 %)
-SynchroniseSurfPosition ~ SynchronizeSurfPosition (field_effect_helpers.c, 87 %)
-
-### field_fadetransition.c (4)
-DoTeleport2Warp ~ DoTeleportWarp (field_screen_effect.c, 75 %)
-DoUnionRoomWarp ~ DoDoorWarp (field_screen_effect.c, 75 %)
-Task_Teleport2Warp ~ Task_TeleportWarp (field_screen_effect.c, 64 %)
-Task_WaitFadeAndCreateStartMenuTask ~ Task_WaitForFadeShowStartMenu (field_screen_effect.c, 71 %)
-
-### pokemon_storage_system_graphics.c (4)
-DestroyAllIconsInColumn ~ DestroyBoxMonIconsInColumn (pokemon_storage_system.c, 92 %)
-SetBoxSpeciesAndPersonalities ~ GetIncomingBoxMonData (pokemon_storage_system.c, 71 %)
-SpriteCB_BoxScrollArrow ~ SpriteCB_Arrow (pokemon_storage_system.c, 91 %)
-SpriteCB_MovePartySpriteToNextSlot ~ SpriteCB_MovePartyMonToNextSlot (pokemon_storage_system.c, 94 %)
 
 ### battle_ai_script_commands.c (3)
 Cmd_count_alive_pokemon ~ Cmd_count_usable_party_mons (battle_ai_script_commands.c, 90 %)
@@ -661,25 +609,10 @@ EndPokedudeBattle ~ CB2_EndFirstBattle (battle_setup.c, 76 %)
 StartRoamerBattle ~ BattleSetup_StartRoamerBattle (battle_setup.c, 89 %)
 StartScriptedWildBattle ~ StartSouthernIslandBattle (battle_setup.c, 97 %)
 
-### bike.c (3)
-BikeTransition_TurnDirection ~ AcroBikeTransition_TurnDirection (bike.c, 92 %)
-CanBikeFaceDirectionOnRail ~ CanBikeFaceDirOnMetatile (bike.c, 92 %)
-GetBikeTransitionId ~ CheckMovementInputAcroBike (bike.c, 88 %)
-
-### field_camera.c (3)
-FieldCameraGetPixelOffsetAtGround ~ GetCameraOffsetWithPan (field_camera.c, 90 %)
-coords8_add ~ AddCameraPixelOffset (field_camera.c, 88 %)
-tilemap_move_something ~ AddCameraTileOffset (field_camera.c, 94 %)
-
-### field_specials.c (3)
-DoDeoxysTriangleInteraction ~ DoDeoxysRockInteraction (field_specials.c, 88 %)
-MoveDeoxysObject ~ ChangeDeoxysRockLevel (field_specials.c, 88 %)
-Task_WaitDeoxysFieldEffect ~ WaitForDeoxysRockMovement (field_specials.c, 90 %)
-
-### fldeff_cut.c (3)
-SpriteCallback_CutGrass_Cleanup ~ CutGrassSpriteCallbackEnd (fldeff_cut.c, 83 %)
-SpriteCallback_CutGrass_Init ~ CutGrassSpriteCallback1 (fldeff_cut.c, 97 %)
-SpriteCallback_CutGrass_Run ~ CutGrassSpriteCallback2 (fldeff_cut.c, 91 %)
+### pokemon_storage_system_data.c (3)
+HandleInput_BoxTitle ~ HandleInput_OnBox (pokemon_storage_system.c, 68 %)
+HandleInput_InBox_MovingMultiple ~ InBoxInput_MovingMultiple (pokemon_storage_system.c, 62 %)
+TrySetDisplayMonData ~ TryRefreshDisplayMon (pokemon_storage_system.c, 100 %)
 
 ### battle_anim_mon_movement.c (2)
 AnimTask_ShakeMon2Step ~ AnimTask_ShakeMon2_Step (battle_anim_mon_movement.c, 99 %)
@@ -690,20 +623,16 @@ AnimShakeMonOrBattleTerrain_Step ~ AnimShakeMonOrBattlePlatforms_Step (battle_an
 AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled ~ AnimShakeMonOrBattlePlatforms_UpdateCoordOffsetEnabled (battle_anim_normal.c, 86 %)
 
 ### battle_controller_player.c (2)
-PlayerHandleCmd55 ~ OldManHandleEndLinkBattle (battle_controller_old_man.c, 62 %)
+PlayerHandleCmd55 ~ OldManHandleEndLinkBattle (battle_controller_old_man.c, 66 %)
 PlayerHandlePlayFanfare ~ PlayerHandlePlayBGM (battle_controller_player.c, 96 %)
 
 ### battle_controllers.c (2)
 BtlController_EmitPlayFanfare ~ BtlController_EmitPlaySE (battle_controllers.c, 97 %)
-SetUpBattleVars ~ SetUpBattleVarsAndBirchZigzagoon (battle_controllers.c, 75 %)
+SetUpBattleVars ~ SetUpBattleVarsAndBirchZigzagoon (battle_controllers.c, 91 %)
 
 ### mail_data.c (2)
 GiveMailToMon2 ~ GiveMailToMon (mail_data.c, 96 %)
 TakeMailFromMon2 ~ TakeMailFromMonAndSave (mail_data.c, 96 %)
-
-### new_menu_helpers.c (2)
-MallocAndDecompress ~ malloc_and_decompress (menu.c, 86 %)
-TaskFreeBufAfterCopyingTileDataToVram ~ task_free_buf_after_copying_tile_data_to_vram (menu.c, 76 %)
 
 ### pokemon.c (2)
 Battle_PrintStatBoosterEffectMessage ~ UseStatIncreaseItem (pokemon.c, 97 %)
@@ -712,14 +641,6 @@ InitMonSpritesGfx_Mode0 ~ InitMonSpritesGfx_FullParty (pokemon.c, 89 %)
 ### pokemon_icon.c (2)
 CreateMonIcon_HandleDeoxys ~ CreateMonIconNoPersonality (pokemon_icon.c, 98 %)
 MailSpeciesToIconSpecies ~ GetIconSpeciesNoPersonality (pokemon_icon.c, 94 %)
-
-### script.c (2)
-IsQuestLogInputDpad ~ CanWalkAwayToCancelMsgBox (script.c, 93 %)
-ValidateRamScript ~ ValidateSavedRamScript (script.c, 97 %)
-
-### script_pokemon_util.c (2)
-CB2_ReturnFromChooseBattleTowerParty ~ CB2_ReturnFromChooseHalfParty (script_pokemon_util.c, 89 %)
-ReducePlayerPartyToThree ~ ReducePlayerPartyToSelectedMons (script_pokemon_util.c, 82 %)
 
 ### text.c (2)
 GetGlyphWidth_NormalCopy1 ~ GetGlyphWidth_Small (text.c, 94 %)
@@ -732,7 +653,7 @@ AirCutterProjectile_Step1 ~ AirCutterProjectileStep1 (battle_anim_effects_2.c, 9
 AnimTask_GetBattleTerrain ~ AnimTask_GetBattleEnvironment (battle_anim_utility_funcs.c, 92 %)
 
 ### battle_controller_opponent.c (1)
-OpponentHandlePlayFanfare ~ LinkOpponentHandlePlayFanfareOrBGM (battle_controller_link_opponent.c, 100 %)
+OpponentHandlePlayFanfare ~ LinkOpponentHandlePlayFanfareOrBGM (battle_controller_link_opponent.c, 87 %)
 
 ### battle_intro.c (1)
 CopyBattlerSpriteToBg ~ DrawBattlerOnBg (battle_intro.c, 87 %)
@@ -746,32 +667,26 @@ AtkCanceller_UnableToUseMove ~ AtkCanceler_UnableToUseMove (battle_util.c, 97 %)
 ### clear_save_data_screen.c (1)
 SaveClearScreen_GpuInit ~ PokeSum_Setup_InitGpu (kanto_summary_screen.c, 70 %)
 
-### coins.c (1)
-PrintCoinsString_Parameterized ~ KShop_PrintMoneyAmount (kanto_shop.c, 72 %)
+### field_fadetransition.c (1)
+Task_ContinueScript ~ Task_WaitForFadeShowStartMenu (field_screen_effect.c, 100 %)
 
-### event_object_lock.c (1)
-Task_WaitPlayerAndTargetNPCStopMoving ~ Task_FreezeSelectedObjectAndPlayer (event_object_lock.c, 93 %)
+### map_name_popup.c (1)
+DismissMapNamePopup ~ ResetFieldTasksArgs (field_tasks.c, 71 %)
 
-### field_control_avatar.c (1)
-UpdateHappinessStepCounter ~ UpdateFriendshipStepCounter (field_control_avatar.c, 98 %)
+### new_menu_helpers.c (1)
+MallocAndDecompress ~ malloc_and_decompress (menu.c, 88 %)
 
-### field_screen_effect.c (1)
-DoOutwardBarnDoorWipe ~ FadeOutOrbEffect (field_screen_effect.c, 78 %)
+### option_menu.c (1)
+InitOptionMenuBg ~ PokeSum_Setup_InitGpu (kanto_summary_screen.c, 63 %)
 
-### fldeff_strength.c (1)
-FieldCB_UseStrength ~ FieldCallback_Strength (fldeff_strength.c, 93 %)
-
-### heal_location.c (1)
-GetHealLocationIndexFromMapGroupAndNum ~ GetHealLocationIndexByMap (heal_location.c, 98 %)
+### overworld.c (1)
+CB2_EnterFieldFromQuestLog ~ CB2_ContinueSavedGame (overworld.c, 63 %)
 
 ### pokemon_storage_system.c (1)
 SeekToNextMonInBox ~ StorageSystemGetNextMonIndex (pokemon_storage_system.c, 81 %)
 
-### pokemon_storage_system_menu.c (1)
-PrintStringToBufferCopyNow ~ UnusedDrawTextWindow (pokemon_storage_system.c, 73 %)
-
-### pokemon_storage_system_tasks.c (1)
-StartDisplayMonMosaic ~ StartDisplayMonMosaicEffect (pokemon_storage_system.c, 64 %)
+### reshow_battle_screen.c (1)
+ReshowBattleScreen_TurnOnDisplay ~ ResetGpuRegsAndBgs (frontier_pass.c, 60 %)
 
 ### save_failed_screen.c (1)
 WipeDamagedSectors ~ WipeSectors (save_failed_screen.c, 84 %)
@@ -780,10 +695,10 @@ WipeDamagedSectors ~ WipeSectors (save_failed_screen.c, 84 %)
 FreeSpriteTilesIfNotUsingSheet ~ DestroySprite (sprite.c, 79 %)
 
 ### title_screen.c (1)
-CreateLeafSprite ~ CreateFlameSprite (kanto_title_screen.c, 73 %)
+CreateLeafSprite ~ CreateFlameSprite (kanto_title_screen.c, 72 %)
 
 
-## Équivalente (240) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
+## Équivalente (276) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
 
 ### field_effect.c (74)
 PokeballGlowEffect_FlashFirstThree (PokeballGlowEffect_Flash1 (field_effect.c), 0x1007 = FLDEFF_PAL_TAG_POKEBALL_GLOW, >= 3 = > 2)
@@ -989,6 +904,16 @@ LinkPlayerDetectCollision → LinkPlayerGetCollision (overworld.c)
 Overworld_LinkRecvQueueLengthMoreThan2 → Overworld_IsRecvQueueAtMax (overworld.c)
 ResetAllLinkStates → ResetAllPlayerLinkStates (overworld.c)
 
+### field_weather.c (8)
+UpdateWeatherGammaShift (UpdateWeatherColorMap (field_weather.c), renommage)
+ApplyGammaShiftWithBlend (ApplyColorMapWithBlend (field_weather.c), renommage)
+ApplyDroughtGammaShiftWithBlend (ApplyDroughtColorMapWithBlend (field_weather.c), renommage)
+WeatherShiftGammaIfPalStateIdle (ApplyWeatherColorMapIfIdle (field_weather.c), renommage)
+WeatherBeginGammaFade (ApplyWeatherColorMapIfIdle_Gradual (field_weather.c), renommage)
+FadeSelectedPals (kanto_credits.c (macro FadeSelectedPals) et overworld.c (BeginNormalPaletteFade(0x3FFFFFFF, …)), ses deux appelants de RF)
+ApplyWeatherGammaShiftToPal (ApplyWeatherColorMapToPal (field_weather.c), renommage)
+SetDroughtGamma (SetDroughtColorMap (field_weather.c), renommage)
+
 ### battle_anim_special.c (6)
 SpriteCB_SafariBaitOrRock_Init (SpriteCB_PokeBlock_Throw (battle_anim_throw.c), même code ; gSafariBaitSpriteTemplate et gSafariRockTemplate l'utilisent)
 SpriteCB_SafariBaitOrRock_WaitPlayerThrow (SpriteCB_PokeBlock_LiftArm (battle_anim_throw.c), même code)
@@ -997,12 +922,59 @@ AnimTask_ShinySparkles_WaitSparkles → Task_ShinyStars_Wait (battle_anim_throw.
 AnimTask_ThrowBall_WaitAnimObjComplete → AnimTask_ThrowBall_Step (battle_anim_throw.c)
 BattleAnimObj_SignalEnd → DestroySpriteAfterOneFrame (battle_anim_throw.c)
 
+### fldeff_rocksmash.c (6)
+CreateFieldEffectShowMon (CreateFieldMoveTask (fldeff_rocksmash.c), même code)
+Task_FieldEffectShowMon_Init (Task_DoFieldMove_Init (fldeff_rocksmash.c), StartPlayerAvatarSummonMonForFieldMoveAnim = SetPlayerAvatarFieldMove)
+Task_FieldEffectShowMon_WaitPlayerAnim (Task_DoFieldMove_ShowMonAfterPose (fldeff_rocksmash.c), même code)
+Task_FieldEffectShowMon_WaitFldeff (Task_DoFieldMove_WaitForMon (fldeff_rocksmash.c), même code)
+Task_FieldEffectShowMon_Cleanup (Task_DoFieldMove_RunFunc (fldeff_rocksmash.c), pointeur (port 64 bits))
+FieldCallback_UseRockSmash (FieldCallback_RockSmash (fldeff_rocksmash.c), scripts équivalents)
+
+### field_message_box.c (5)
+Task_DrawFieldMessageBox (Task_DrawFieldMessage (field_message_box.c), + journal de RF ; cadre selon l'option DIALOGUE)
+CreateTask_DrawFieldMessageBox (CreateTask_DrawFieldMessage (field_message_box.c), même code)
+DestroyTask_DrawFieldMessageBox (DestroyTask_DrawFieldMessage (field_message_box.c), TASK_NONE = 255)
+ExpandStringAndStartDrawFieldMessageBox (ExpandStringAndStartDrawFieldMessage (field_message_box.c), même code)
+StartDrawFieldMessageBox (StartDrawFieldMessage (field_message_box.c), même code)
+
 ### metatile_behavior.c (5)
 MetatileBehavior_IsSandOrShallowFlowingWater (kanto_battle_bg.c (Kanto_BattleSetup_GetTerrainId), écrite en ligne)
 MetatileBehavior_IsWarpDoor_2 (MetatileBehavior_IsDoor (metatile_behavior.c), MB_WARP_DOOR importé en MB_ANIMATED_DOOR)
 MetatileBehavior_IsSurfable (MetatileBehavior_IsSurfableWaterOrUnderwater (metatile_behavior.c), kanto_battle_bg.c)
 MetatileBehavior_IsDeepWaterTerrain (MetatileBehavior_IsDeepOrOceanWater (metatile_behavior.c), décor de combat de Kanto (kanto_battle_bg.c) ; MB_FAST_WATER importé en MB_OCEAN_WATER)
 TestMetatileAttributeBit (sTileBitAttributes (metatile_behavior.c), même table de bits)
+
+### field_effect_helpers.c (4)
+SynchroniseSurfAnim (SynchronizeSurfAnim (field_effect_helpers.c), + diagonales d'Émeraude)
+SynchroniseSurfPosition (SynchronizeSurfPosition (field_effect_helpers.c), cases du sprite rangées autrement)
+UpdateAshFieldEffect_Step0 → UpdateAshFieldEffect_Wait (field_effect_helpers.c)
+UpdateAshFieldEffect_Step1 → UpdateAshFieldEffect_Show (field_effect_helpers.c)
+
+### fldeff_cut.c (4)
+SpriteCallback_CutGrass_Init (CutGrassSpriteCallback1 (fldeff_cut.c), même code)
+SpriteCallback_CutGrass_Run (CutGrassSpriteCallback2 (fldeff_cut.c), même calcul)
+SpriteCallback_CutGrass_Cleanup (CutGrassSpriteCallbackEnd (fldeff_cut.c), + MEW de l'Île Lointaine (Hoenn))
+FieldMoveCallback_CutGrass → StartCutGrassFieldEffect (fldeff_cut.c)
+
+### bike.c (3)
+GetBikeTransitionId (CheckMovementInputAcroBike (bike.c), même aiguillage)
+BikeTransition_TurnDirection (AcroBikeTransition_TurnDirection (bike.c), même code)
+CanBikeFaceDirectionOnRail (CanBikeFaceDirOnMetatile (bike.c), même code)
+
+### event_object_lock.c (3)
+Task_WaitPlayerAndTargetNPCStopMoving (Task_FreezeSelectedObjectAndPlayer (event_object_lock.c), HandleEnforcedLookDirectionOnPlayerStopMoving = PlayerFreeze (même code))
+Task_WaitPlayerStopMoving → Task_FreezePlayer (event_object_lock.c)
+walkrun_is_standing_still → IsPlayerStandingStill (event_object_lock.c)
+
+### field_camera.c (3)
+tilemap_move_something (AddCameraTileOffset (field_camera.c), même code)
+coords8_add (AddCameraPixelOffset (field_camera.c), même code)
+FieldCameraGetPixelOffsetAtGround (GetCameraOffsetWithPan (field_camera.c), même code)
+
+### field_fadetransition.c (3)
+Task_WaitFadeAndCreateStartMenuTask (Task_WaitForFadeShowStartMenu (field_screen_effect.c), même code)
+FieldCB_SafariZoneRanOutOfBalls (FieldCB_ReturnToFieldNoScriptCheckMusic (field_screen_effect.c), même enchaînement)
+Task_ContinueScriptUnionRoom → Task_WaitForUnionRoomFade (field_screen_effect.c)
 
 ### item_use.c (3)
 BattleUseFunc_BerryPouch → ItemUseInBattle_BerryPouch (kanto_berry_pouch.c)
@@ -1013,9 +985,9 @@ Task_WaitFadeIn_CallItemUseOnFieldCB → Task_CallItemUseOnFieldCallback (item_u
 SpriteCB_PlayerThrowInit (SpriteCB_TrainerThrowObject (battle_main.c), même code)
 SpriteCB_AllyMon → SpriteCB_BattleSpriteStartSlideLeft (battle_main.c)
 
-### field_fadetransition.c (2)
-FieldCB_SafariZoneRanOutOfBalls (FieldCB_ReturnToFieldNoScriptCheckMusic (field_screen_effect.c), même enchaînement)
-Task_ContinueScriptUnionRoom → Task_WaitForUnionRoomFade (field_screen_effect.c)
+### field_control_avatar.c (2)
+UpdateHappinessStepCounter (UpdateFriendshipStepCounter (field_control_avatar.c), VAR_HAPPINESS = VAR_FRIENDSHIP)
+Task_QuestLogPlayback_OpenStartMenu → Task_OpenStartMenuAfterSignpost (field_control_avatar.c)
 
 ### wild_encounter.c (2)
 GenerateWildMon (CreateWildMon (wild_encounter.c), avec la lettre des ZARBI de Tanoby de RF)
@@ -1025,17 +997,9 @@ GenerateFishingEncounter (GenerateFishingWildMon (wild_encounter.c))
 SpriteCB_PartySummaryBar → SpriteCB_StatusSummaryBar_Enter (battle_interface.c)
 SpriteCB_PartySummaryBar_Exit → SpriteCB_StatusSummaryBar_Exit (battle_interface.c)
 
-### event_object_lock.c (2)
-Task_WaitPlayerStopMoving → Task_FreezePlayer (event_object_lock.c)
-walkrun_is_standing_still → IsPlayerStandingStill (event_object_lock.c)
-
 ### evolution_graphics.c (2)
 EvoTask_WaitForPre1SparklesToGoUp → Task_Sparkles_SpiralUpward_End (evolution_graphics.c)
 SpriteCB_PostEvoSparkleSet1 → SpriteCB_Sparkle_CircleInward (evolution_graphics.c)
-
-### field_effect_helpers.c (2)
-UpdateAshFieldEffect_Step0 → UpdateAshFieldEffect_Wait (field_effect_helpers.c)
-UpdateAshFieldEffect_Step1 → UpdateAshFieldEffect_Show (field_effect_helpers.c)
 
 ### load_save.c (2)
 LoadSerializedGame → CopyPartyAndObjectsFromSave (load_save.c)
@@ -1052,6 +1016,15 @@ Q_N_S_div → MathUtil_Div16Shift (math_util.c)
 ### start_menu.c (2)
 CB2_WhileSavingAfterLinkBattle → MainCB (clear_save_data_screen.c)
 CloseSaveMessageWindow → HideSaveMessageWindow (start_menu.c)
+
+### fldeff_strength.c (1)
+FieldCB_UseStrength (FieldCallback_Strength (fldeff_strength.c), scripts équivalents)
+
+### heal_location.c (1)
+GetHealLocationIndexFromMapGroupAndNum (GetHealLocationIndexByMap (heal_location.c), même code)
+
+### script.c (1)
+ValidateRamScript (ValidateSavedRamScript (script.c), LOCALID_PLAYER = 255)
 
 ### battle_anim_fight.c (1)
 AnimStompFootStep → AnimStompFoot_Step (battle_anim_fight.c)
@@ -1070,12 +1043,6 @@ SafariHandleCmd55 → SafariHandleEndLinkBattle (battle_controller_safari.c)
 
 ### battle_setup.c (1)
 StartWildBattle → BattleSetup_StartWildBattle (battle_setup.c)
-
-### field_control_avatar.c (1)
-Task_QuestLogPlayback_OpenStartMenu → Task_OpenStartMenuAfterSignpost (field_control_avatar.c)
-
-### fldeff_cut.c (1)
-FieldMoveCallback_CutGrass → StartCutGrassFieldEffect (fldeff_cut.c)
 
 ### intro.c (1)
 CB2_WaitFadeBeforeSetUpIntro → KantoIntro_Start (kanto_intro.c)
@@ -1224,7 +1191,7 @@ nullsub_8
 nullsub_9
 
 
-## Morte (100) : jamais appelée ni référencée dans RF
+## Morte (101) : jamais appelée ni référencée dans RF
 
 ### event_object_movement.c (30)
 GetReflectionEffectPaletteSlot, CameraObjectGetFollowedObjectId, GetAcroBunnyHopFrontWheelDirectionAnimNum,
@@ -1322,6 +1289,9 @@ ShowCoinsWindow_Parameterized
 ### field_control_avatar.c (1)
 Unref_ClearHappinessStepCounter
 
+### field_effect_helpers.c (1)
+FldEff_UnusedWaterSurfacing (seulement dans la table des effets de RF, jamais lancé)
+
 ### field_fadetransition.c (1)
 WarpFadeOutScreenWithDelay
 
@@ -1365,7 +1335,7 @@ SetHasPokedexAndPokemon
 CopyGlyphToWindow_Parameterized
 
 
-## Link (142) : link / E-Reader : à porter, désactivé
+## Link (147) : link / E-Reader : à porter, désactivé
 
 ### union_room_chat_display.c (49)
 UnionRoomChat_TryAllocGraphicsWork, UnionRoomChat_RunDisplaySubtask0, UnionRoomChat_FreeGraphicsWork, InitWork,
@@ -1419,6 +1389,10 @@ PrintMysteryGiftOrEReaderTopMenu, AddTextPrinterToWindow1, ClearTextWindow, Hand
 ### battle_controller_link_partner.c (3)
 LinkPartnerDummy, LinkPartnerHandleUnknownYesNoBox, LinkPartnerHandlePlayFanfare
 
+### field_fadetransition.c (3)
+DoTeleport2Warp (seul ScrCmd_warpspinenter de RF, pour l'Union Room (cable_club.inc)),
+DoUnionRoomWarp (Union Room de RF), Task_Teleport2Warp (seul DoTeleport2Warp)
+
 ### link_rfu_2.c (3)
 LinkRfu_ForceChangeSpParent, RfuGetErrorInfo, DestroyTask_RfuReconnectWithParent
 
@@ -1437,6 +1411,10 @@ ZeroName, NameIsEmpty
 ### metatile_behavior.c (2)
 MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor (moniteur sans fil de RF),
 MetatileBehavior_IsPlayerFacingBattleRecords (écran des records du Club Câble de RF)
+
+### script_pokemon_util.c (2)
+CB2_ReturnFromChooseBattleTowerParty (Tour de Combat de RF (salle e-Reader)),
+ReducePlayerPartyToThree (Tour de Combat de RF (salle e-Reader))
 
 ### trade.c (2)
 CB2_ReturnToTradeMenuFromSummary, CommunicateWhetherMonCanBeTraded
@@ -1466,7 +1444,7 @@ MakeGroupAssemblyAreasPassable
 ExitWirelessCommunicationStatusScreen
 
 
-## Écartée (387) : écartée par décision
+## Écartée (393) : écartée par décision
 
 ### quest_log_events.c (117)
 — « Précédemment » de RF (Kanto = post-game, décision 2026-11-02), SetQuestLogEvent,
@@ -1628,11 +1606,25 @@ QL_UpdateObjectEventCurrentMovement (journal de RF (quest_log.c)),
 QuestLogObjectEventExecHeldMovementAction (journal de RF (quest_log.c)),
 ObjectEventCheckForReflectiveSurface (variante RF : Émeraude gardée (ObjectEventGetNearbyReflectionType : zone selon la taille du sprite ; RF 1×2 cases, pareil pour le joueur) ; docs/VARIANTES-RF.md)
 
+### field_specials.c (3)
+DoDeoxysTriangleInteraction (Île Naissance de RF : celle d'Émeraude (DoDeoxysRockInteraction)),
+MoveDeoxysObject (Île Naissance de RF : celle d'Émeraude (ChangeDeoxysRockLevel)),
+Task_WaitDeoxysFieldEffect (Île Naissance de RF : celle d'Émeraude (WaitForDeoxysRockMovement))
+
 ### help_message.c (1)
 — aide L/R de RF (Kanto = post-game, décision 2026-11-02), MapNamePopupWindowIdSetDummy
 
 ### field_effect.c (1)
 SpriteCB_FlyBirdWithPlayer (variante RF : Émeraude gardée (SpriteCB_FlyBirdSwoopDown : arc 140, pas de 4 ; RF 180, pas de 2) ; docs/VARIANTES-RF.md)
+
+### field_effect_helpers.c (1)
+CreateBobbingEffect (variante RF : Émeraude gardée (UpdateBobbingEffect : le Pokémon du Surf monte et descend 2× plus vite que dans RF) ; docs/VARIANTES-RF.md)
+
+### field_screen_effect.c (1)
+DoOutwardBarnDoorWipe (variante RF : Émeraude gardée (sortie d'un bâtiment : fondu d'Émeraude ; RF ouvre l'écran en portes de grange, Task_ExitDoor) ; docs/VARIANTES-RF.md)
+
+### script.c (1)
+IsQuestLogInputDpad (journal de RF)
 
 ### trainer_see.c (1)
 TrainerSeeFunc_PrepareToEngage (variante RF : Émeraude gardée (PlayerFaceApproachingTrainer : le joueur se tourne vers le dresseur ; RF non) ; docs/VARIANTES-RF.md)

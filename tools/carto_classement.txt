@@ -241,3 +241,58 @@ TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveUp équivalente OffscreenAboveT
 TrainerSeeFunc_OffscreenAboveTrainerCreateCameraObj équivalente OffscreenAboveTrainerCreateCameraObj (trainer_see.c), MAP_OFFSET = 7
 TrainerSeeFunc_PrepareToEngage écartée variante RF : Émeraude gardée (PlayerFaceApproachingTrainer : le joueur se tourne vers le dresseur ; RF non) ; docs/VARIANTES-RF.md
 TrainerSeeFunc_StartExclMark équivalente TrainerExclamationMark (trainer_see.c), états nommés
+# field_weather.c : « gamma » de RF = « color map » d'Émeraude (renommage) ; sécheresse = Groudon (Hoenn)
+ApplyDroughtGammaShiftWithBlend équivalente ApplyDroughtColorMapWithBlend (field_weather.c), renommage
+ApplyGammaShiftWithBlend équivalente ApplyColorMapWithBlend (field_weather.c), renommage
+ApplyWeatherGammaShiftToPal équivalente ApplyWeatherColorMapToPal (field_weather.c), renommage
+FadeSelectedPals équivalente kanto_credits.c (macro FadeSelectedPals) et overworld.c (BeginNormalPaletteFade(0x3FFFFFFF, …)), ses deux appelants de RF
+SetDroughtGamma équivalente SetDroughtColorMap (field_weather.c), renommage
+UpdateWeatherGammaShift équivalente UpdateWeatherColorMap (field_weather.c), renommage
+WeatherBeginGammaFade équivalente ApplyWeatherColorMapIfIdle_Gradual (field_weather.c), renommage
+WeatherShiftGammaIfPalStateIdle équivalente ApplyWeatherColorMapIfIdle (field_weather.c), renommage
+# fldeff_rocksmash.c, field_message_box.c, field_camera.c, fldeff_cut.c, fldeff_strength.c, heal_location.c, field_control_avatar.c
+CreateFieldEffectShowMon équivalente CreateFieldMoveTask (fldeff_rocksmash.c), même code
+FieldCallback_UseRockSmash équivalente FieldCallback_RockSmash (fldeff_rocksmash.c), scripts équivalents
+Task_FieldEffectShowMon_Cleanup équivalente Task_DoFieldMove_RunFunc (fldeff_rocksmash.c), pointeur (port 64 bits)
+Task_FieldEffectShowMon_Init équivalente Task_DoFieldMove_Init (fldeff_rocksmash.c), StartPlayerAvatarSummonMonForFieldMoveAnim = SetPlayerAvatarFieldMove
+Task_FieldEffectShowMon_WaitFldeff équivalente Task_DoFieldMove_WaitForMon (fldeff_rocksmash.c), même code
+Task_FieldEffectShowMon_WaitPlayerAnim équivalente Task_DoFieldMove_ShowMonAfterPose (fldeff_rocksmash.c), même code
+CreateTask_DrawFieldMessageBox équivalente CreateTask_DrawFieldMessage (field_message_box.c), même code
+DestroyTask_DrawFieldMessageBox équivalente DestroyTask_DrawFieldMessage (field_message_box.c), TASK_NONE = 255
+ExpandStringAndStartDrawFieldMessageBox équivalente ExpandStringAndStartDrawFieldMessage (field_message_box.c), même code
+StartDrawFieldMessageBox équivalente StartDrawFieldMessage (field_message_box.c), même code
+Task_DrawFieldMessageBox équivalente Task_DrawFieldMessage (field_message_box.c), + journal de RF ; cadre selon l'option DIALOGUE
+FieldCameraGetPixelOffsetAtGround équivalente GetCameraOffsetWithPan (field_camera.c), même code
+coords8_add équivalente AddCameraPixelOffset (field_camera.c), même code
+tilemap_move_something équivalente AddCameraTileOffset (field_camera.c), même code
+SpriteCallback_CutGrass_Cleanup équivalente CutGrassSpriteCallbackEnd (fldeff_cut.c), + MEW de l'Île Lointaine (Hoenn)
+SpriteCallback_CutGrass_Init équivalente CutGrassSpriteCallback1 (fldeff_cut.c), même code
+SpriteCallback_CutGrass_Run équivalente CutGrassSpriteCallback2 (fldeff_cut.c), même calcul
+FieldCB_UseStrength équivalente FieldCallback_Strength (fldeff_strength.c), scripts équivalents
+GetHealLocationIndexFromMapGroupAndNum équivalente GetHealLocationIndexByMap (heal_location.c), même code
+UpdateHappinessStepCounter équivalente UpdateFriendshipStepCounter (field_control_avatar.c), VAR_HAPPINESS = VAR_FRIENDSHIP
+# field_effect_helpers.c
+CreateBobbingEffect écartée variante RF : Émeraude gardée (UpdateBobbingEffect : le Pokémon du Surf monte et descend 2× plus vite que dans RF) ; docs/VARIANTES-RF.md
+FldEff_UnusedWaterSurfacing morte seulement dans la table des effets de RF, jamais lancé
+SynchroniseSurfAnim équivalente SynchronizeSurfAnim (field_effect_helpers.c), + diagonales d'Émeraude
+SynchroniseSurfPosition équivalente SynchronizeSurfPosition (field_effect_helpers.c), cases du sprite rangées autrement
+# bike.c : vélo de RF déjà dans bike.c (Vélo Course bridé à sa 2e vitesse à Kanto, KANTO-ETAT)
+BikeTransition_TurnDirection équivalente AcroBikeTransition_TurnDirection (bike.c), même code
+CanBikeFaceDirectionOnRail équivalente CanBikeFaceDirOnMetatile (bike.c), même code
+GetBikeTransitionId équivalente CheckMovementInputAcroBike (bike.c), même aiguillage
+# field_fadetransition.c, field_screen_effect.c
+DoTeleport2Warp link seul ScrCmd_warpspinenter de RF, pour l'Union Room (cable_club.inc)
+DoUnionRoomWarp link Union Room de RF
+Task_Teleport2Warp link seul DoTeleport2Warp
+Task_WaitFadeAndCreateStartMenuTask équivalente Task_WaitForFadeShowStartMenu (field_screen_effect.c), même code
+DoOutwardBarnDoorWipe écartée variante RF : Émeraude gardée (sortie d'un bâtiment : fondu d'Émeraude ; RF ouvre l'écran en portes de grange, Task_ExitDoor) ; docs/VARIANTES-RF.md
+# field_specials.c : l'Île Naissance est celle d'Émeraude (KANTO-ETAT)
+DoDeoxysTriangleInteraction écartée Île Naissance de RF : celle d'Émeraude (DoDeoxysRockInteraction)
+MoveDeoxysObject écartée Île Naissance de RF : celle d'Émeraude (ChangeDeoxysRockLevel)
+Task_WaitDeoxysFieldEffect écartée Île Naissance de RF : celle d'Émeraude (WaitForDeoxysRockMovement)
+# script.c, script_pokemon_util.c, event_object_lock.c
+IsQuestLogInputDpad écartée journal de RF
+ValidateRamScript équivalente ValidateSavedRamScript (script.c), LOCALID_PLAYER = 255
+CB2_ReturnFromChooseBattleTowerParty link Tour de Combat de RF (salle e-Reader)
+ReducePlayerPartyToThree link Tour de Combat de RF (salle e-Reader)
+Task_WaitPlayerAndTargetNPCStopMoving équivalente Task_FreezeSelectedObjectAndPlayer (event_object_lock.c), HandleEnforcedLookDirectionOnPlayerStopMoving = PlayerFreeze (même code)

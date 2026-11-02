@@ -13,6 +13,8 @@ Trouvées en lisant les fonctions « à vérifier » de l'inventaire (`tools/car
 | Vol, l'oiseau qui emporte le joueur | arc de rayon 140, 4 par image | arc de rayon 180, 2 par image (plus large, 2× plus lent) | `SpriteCB_FlyBirdWithPlayer` (field_effect.c) |
 | Dresseur qui repère le joueur | le joueur se tourne vers lui | le joueur ne bouge pas | `TrainerSeeFunc_PrepareToEngage` (trainer_see.c) |
 | Reflets dans l'eau et la glace | cases regardées selon la taille du sprite | toujours 1 × 2 cases (pareil pour le joueur et les PNJ ordinaires ; diffère pour les grands sprites) | `ObjectEventCheckForReflectiveSurface` (event_object_movement.c) |
+| **Sortie d'un bâtiment** | fondu d'Émeraude | l'écran s'ouvre depuis le milieu, en portes de grange | `DoOutwardBarnDoorWipe` (field_screen_effect.c), `Task_ExitDoor` |
+| Surf, le Pokémon qui porte le joueur | monte et descend toutes les 4 / 8 images | 2× plus lent | `CreateBobbingEffect` (field_effect_helpers.c) |
 | **Pêche, la touche** | « Oh! Ça mord! », puis A à temps (la SUPER CANNE peut demander plusieurs fois) | pas de réaction : le Pokémon est ferré directement (« Un POKéMON a mordu! ») | `Fishing7` (field_player_avatar.c) |
 | Pêche, les points avant la touche | un point toutes les 8 images ; A arrête la pêche | un point toutes les 12 images, A sans effet | `Fishing5` (field_player_avatar.c) |
 | Pêche, ferrer | VENTOUSE ou GLUE en tête : touche plus souvent | aucun talent ne compte | `Fishing6` (field_player_avatar.c) |
