@@ -2,25 +2,19 @@
 
 > Généré par `tools/cartographie.py` — ne pas éditer à la main.
 
-Les 1658 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
+Les 1641 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
 
 | Catégorie | Sens | Fonctions |
 |---|---|---|
-| manquante | rien de proche dans la fusion : à porter | 201 |
-| à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 1 |
-| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 617 |
-| triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 112 |
+| manquante | rien de proche dans la fusion : à porter | 187 |
+| à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 0 |
+| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 616 |
+| triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 111 |
 | morte | jamais appelée ni référencée dans RF | 101 |
 | link | link / E-Reader : à porter, désactivé | 196 |
 | écartée | écartée par décision | 430 |
 
-## Manquante (201) : rien de proche dans la fusion : à porter
-
-### option_menu.c (14)
-BufferOptionMenuString, CB2_OptionMenu, CB2_OptionsMenuFromStartMenu, CloseAndSaveOptionMenu, DrawOptionMenuBg,
-InitOptionMenuBg, LoadOptionMenuItemNames, LoadOptionMenuPalette, Localize_BufferOptionMenuString,
-OptionMenu_PickSwitchCancel, OptionMenu_ProcessInput, SetOptionMenuTask, Task_OptionMenu,
-UpdateSettingSelectionDisplay
+## Manquante (187) : rien de proche dans la fusion : à porter
 
 ### field_effect.c (13)
 ApplyGlobalFieldPaletteTint, DoBirdSpriteWithPlayerAffineAnim, FallWarpEffect_7,
@@ -214,13 +208,10 @@ GetUserWindowGraphics
 TilemapUtil_SetTilemap
 
 
-## À vérifier (1) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
-
-### option_menu.c (1)
-PrintOptionMenuHeader ~ PrintTradeMessage (trade.c, 100 %)
+## À vérifier (0) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
 
 
-## Équivalente (617) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
+## Équivalente (616) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
 
 ### field_effect.c (74)
 PokeballGlowEffect_FlashFirstThree (PokeballGlowEffect_Flash1 (field_effect.c), 0x1007 = FLDEFF_PAL_TAG_POKEBALL_GLOW, >= 3 = > 2)
@@ -984,11 +975,8 @@ MoveCursorFunc → MailboxMenu_MoveCursorFunc (menu_specialized.c)
 ### naming_screen.c (1)
 DecompressToBgTilemapBuffer → DrawBgTilemap (naming_screen.c)
 
-### option_menu.c (1)
-OptionMenu_ResetSpriteData → DiplomaReset (kanto_diploma.c)
 
-
-## Triviale (112) : corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant
+## Triviale (111) : corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant
 
 ### battle_controller_oak_old_man.c (30)
 OakOldManDummy, OakOldManHandleGetRawMonData, OakOldManHandleSetRawMonData, OakOldManHandleLoadMonSprite,
@@ -1078,9 +1066,6 @@ GetSav1Weather
 
 ### mailbox_pc.c (1)
 MailboxPC_DestroyListMenuBuffer
-
-### option_menu.c (1)
-OptionMenu_SetVBlankCallback
 
 ### party_menu.c (1)
 CursorCB_Trade2

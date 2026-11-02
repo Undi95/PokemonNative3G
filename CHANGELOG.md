@@ -73,7 +73,8 @@
   sur cet écran titre ouvre aussi l'écran d'effacement de la sauvegarde de Rouge Feu.
 - Options > MENUS = KANTO : les choix proposés par les personnages (et leur grille), le choix du PC et les OUI / NON
   sont aussi ceux de Rouge Feu (police de RF, lignes plus serrées, OUI / NON plus large), ainsi que la lecture d'une
-  lettre (message et signature placés comme dans Rouge Feu).
+  lettre (message et signature placés comme dans Rouge Feu) et l'écran Options (celui de Rouge Feu, avec les deux
+  pages de la fusion : L/R).
 - Options > POKéMON = KANTO : à l'éclosion d'un œuf, le Pokémon pousse son cri et se place comme dans Rouge Feu.
 - Combats : l'IA des dresseurs teste de nouveau les capacités connues exactement comme la cartouche (une lecture
   mal alignée la faisait « mieux » jouer sur PC et Android) ; plus de lecture hors limites à la fin d'un tour de

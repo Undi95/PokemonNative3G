@@ -19,6 +19,12 @@
 #include "window.h"
 #include "gba/m4a_internal.h"
 #include "constants/rgb.h"
+#include "field_screen_effect.h"
+#include "kanto_help_message.h"
+#include "malloc.h"
+#include "overworld.h"
+#include "string_util.h"
+#include "kanto_bag_compat.h" // LoadStdWindowGfxOnBg (cadre standard de RF) ; en dernier : ses #define
 
 #define tMenuSelection data[0]
 #define tTextSpeed data[1]
@@ -253,6 +259,11 @@ void CB2_InitOptionMenu(void)
     {
     default:
     case 0:
+        if (gSaveBlock2Ptr->optionsMenuStyle) // PokemonNative3G : MENUS = KANTO, l'écran de Rouge Feu (plus bas)
+        {
+            CB2_OptionsMenuFromStartMenu();
+            return;
+        }
         SetVBlankCallback(NULL);
         gMain.state++;
         break;
@@ -1048,4 +1059,701 @@ static void ChangeOptionMenuPage(u8 taskId)
     DrawOptionMenuChoices(taskId);
     HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
+}
+
+// ---- Rouge Feu (option_menu.c de RF) : l'écran Options avec Options > MENUS = KANTO (choix user 2026-11-02) ----
+// Aspect de RF : cadre standard de RF autour du titre, cadre de l'option FENETRE autour de la liste, bandeau
+// « CHOIX / CHANGER / ANNUL. », une valeur par ligne (lignes de 13 px), la ligne choisie éclairée (WIN0). Il garde les
+// options de la fusion et leurs deux pages (L/R, défilement, POKéDEX masqué : comme l'écran d'Émeraude plus haut) ;
+// la fenêtre de RF montre 7 lignes. L'aide de RF (MODE BOUTONS = AIDE, SetHelpContext) est écartée : la valeur 0 du
+// mode des boutons est NORMAL, comme Émeraude. FONT_NORMAL de RF = FONT_KANTO ; GetUserWindowGraphics de RF =
+// GetWindowFrameTilesPal ; GetTextWindowPalette(2) de RF = gHelpMessageWindow_Pal ; le CB2 et la VBlank de RF ont le
+// code de MainCB2 et VBlankCB.
+
+#define WIN_TEXT_OPTION WIN_HEADER // RF : WIN_TEXT_OPTION, WIN_OPTIONS (les mêmes numéros)
+
+// RAM symbols
+struct OptionMenu
+{
+    u16 option[MENUITEM_COUNT];
+    u16 cursorPos;
+    u8 loadState;
+    u8 state;
+    u8 loadPaletteState;
+};
+
+static EWRAM_DATA struct OptionMenu *sOptionMenuPtr = NULL;
+
+static void OptionMenu_InitCallbacks(void);
+static void OptionMenu_SetVBlankCallback(void);
+static void CB2_OptionMenu(void);
+static void SetOptionMenuTask(void);
+static void InitOptionMenuBg(void);
+static void OptionMenu_PickSwitchCancel(void);
+static void OptionMenu_ResetSpriteData(void);
+static bool8 LoadOptionMenuPalette(void);
+static void Task_OptionMenu(u8 taskId);
+static u8 OptionMenu_ProcessInput(void);
+static void BufferOptionMenuString(u8 selection);
+static void CloseAndSaveOptionMenu(u8 taskId);
+static void PrintOptionMenuHeader(void);
+static void DrawOptionMenuBg(void);
+static void LoadOptionMenuItemNames(void);
+static void UpdateSettingSelectionDisplay(u16 selection);
+static void Localize_BufferOptionMenuString(void);
+
+// Fenêtres et fonds de RF (noms d'Émeraude déjà pris : sKanto…)
+static const struct WindowTemplate sKantoOptionMenuWinTemplates[] =
+{
+    {
+        .bg = 1,
+        .tilemapLeft = 2,
+        .tilemapTop = 3,
+        .width = 26,
+        .height = 2,
+        .paletteNum = 1,
+        .baseBlock = 2
+    },
+    {
+        .bg = 0,
+        .tilemapLeft = 2,
+        .tilemapTop = 7,
+        .width = 26,
+        .height = 12,
+        .paletteNum = 1,
+        .baseBlock = 0x36
+    },
+    {
+        .bg = 2,
+        .tilemapLeft = 0,
+        .tilemapTop = 0,
+        .width = 30,
+        .height = 2,
+        .paletteNum = 15,
+        .baseBlock = 0x16e
+    },
+    DUMMY_WIN_TEMPLATE
+};
+
+static const struct BgTemplate sKantoOptionMenuBgTemplates[] =
+{
+   {
+       .bg = 1,
+       .charBaseIndex = 1,
+       .mapBaseIndex = 30,
+       .screenSize = 0,
+       .paletteMode = 0,
+       .priority = 0,
+       .baseTile = 0
+   },
+   {
+       .bg = 0,
+       .charBaseIndex = 1,
+       .mapBaseIndex = 31,
+       .screenSize = 0,
+       .paletteMode = 0,
+       .priority = 1,
+       .baseTile = 0
+   },
+   {
+       .bg = 2,
+       .charBaseIndex = 1,
+       .mapBaseIndex = 29,
+       .screenSize = 0,
+       .paletteMode = 0,
+       .priority = 2,
+       .baseTile = 0
+   },
+};
+
+static const u16 sOptionMenuPalette[] = INCGFX_U16("graphics/kanto/misc/option_menu.pal", ".gbapal");
+// Nombre de valeurs de chaque option (RF : {3, 2, 2, 2, 3, 10, 0}) ; les cadres sont ceux des deux jeux
+static const u16 sOptionMenuItemCounts[MENUITEM_COUNT] = {
+    [MENUITEM_TEXTSPEED] = 3,
+    [MENUITEM_BATTLESCENE] = 2,
+    [MENUITEM_BATTLESTYLE] = 2,
+    [MENUITEM_SOUND] = 2,
+    [MENUITEM_BUTTONMODE] = 3,
+    [MENUITEM_FRAMETYPE] = WINDOW_FRAMES_COUNT,
+    [MENUITEM_DAYNIGHT] = 2,
+    [MENUITEM_CHARACTER] = 2,
+    [MENUITEM_MONSPRITES] = 2,
+    [MENUITEM_DIALOGSTYLE] = 2,
+    [MENUITEM_FONT] = 2,
+    [MENUITEM_BATTLEUI] = 2,
+    [MENUITEM_MENUSTYLE] = 2,
+    [MENUITEM_BAGSTYLE] = 2,
+    [MENUITEM_POKEDEXSTYLE] = 2,
+    [MENUITEM_TITLESCREEN] = 2,
+    [MENUITEM_INTRO] = 2,
+    [MENUITEM_CANCEL] = 0,
+};
+
+// Valeurs, sans couleur dans le texte (RF les colore : sOptionMenuTextColor) ; textes de RF (strings_*_fr.h)
+static const u8 sKText_Text_TextSpeedSlow[] = _("1");
+static const u8 sKText_Text_TextSpeedMid[] = _("2");
+static const u8 sKText_Text_TextSpeedFast[] = _("3");
+static const u8 sKText_Text_BattleSceneOn[] = _("OUI");
+static const u8 sKText_Text_BattleSceneOff[] = _("NON");
+static const u8 sKText_Text_BattleStyleShift[] = _("CHOIX");
+static const u8 sKText_Text_BattleStyleSet[] = _("DEFINI");
+static const u8 sKText_Text_SoundMono[] = _("MONO");
+static const u8 sKText_Text_SoundStereo[] = _("STEREO");
+static const u8 sKText_Text_ButtonTypeNormal[] = _("NORMAL"); // « AIDE » de RF : aide écartée, NORMAL d'Émeraude
+static const u8 sKText_Text_ButtonTypeLR[] = _("LR");
+static const u8 sKText_Text_ButtonTypeLEqualsA[] = _("L=A");
+static const u8 sKText_Text_FrameType[] = _("TYPE");
+static const u8 sKText_Text_PickSwitchCancel[] = _("{DPAD_UPDOWN}CHOIX {DPAD_LEFTRIGHT}CHANGER {A_BUTTON}{B_BUTTON}ANNUL.");
+// Valeurs des options de la fusion (mêmes mots que l'écran d'Émeraude, sans sa couleur)
+static const u8 sKText_RegionHoenn[] = _("HOENN");
+static const u8 sKText_RegionKanto[] = _("KANTO");
+static const u8 sKText_CharacterBrendan[] = _("BRICE");
+static const u8 sKText_CharacterMay[] = _("FLORA");
+static const u8 sKText_CharacterRed[] = _("RED");
+static const u8 sKText_CharacterLeaf[] = _("LEAF");
+static const u8 sKText_TitleScreenEmerald[] = _("ÉMERAUDE");
+static const u8 sKText_TitleScreenFireRed[] = _("R.FEU");
+
+static const u8 *const sTextSpeedOptions[] =
+{
+    sKText_Text_TextSpeedSlow,
+    sKText_Text_TextSpeedMid,
+    sKText_Text_TextSpeedFast
+};
+
+static const u8 *const sBattleSceneOptions[] =
+{
+    sKText_Text_BattleSceneOn,
+    sKText_Text_BattleSceneOff
+};
+
+static const u8 *const sBattleStyleOptions[] =
+{
+    sKText_Text_BattleStyleShift,
+    sKText_Text_BattleStyleSet
+};
+
+static const u8 *const sSoundOptions[] =
+{
+    sKText_Text_SoundMono,
+    sKText_Text_SoundStereo
+};
+
+static const u8 *const sButtonTypeOptions[] =
+{
+    sKText_Text_ButtonTypeNormal,
+    sKText_Text_ButtonTypeLR,
+    sKText_Text_ButtonTypeLEqualsA
+};
+
+// JOUR/NUIT : 0 = NON (option_menu.c de la fusion : DayNight_DrawChoices)
+static const u8 *const sDayNightOptions[] =
+{
+    sKText_Text_BattleSceneOff,
+    sKText_Text_BattleSceneOn
+};
+
+static const u8 *const sRegionOptions[] =
+{
+    sKText_RegionHoenn,
+    sKText_RegionKanto
+};
+
+static const u8 *const sTitleScreenOptions[] =
+{
+    sKText_TitleScreenEmerald,
+    sKText_TitleScreenFireRed
+};
+
+static const u8 sOptionMenuPickSwitchCancelTextColor[] = {TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY};
+static const u8 sOptionMenuTextColor[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_LIGHT_RED, TEXT_COLOR_RED};
+
+void CB2_OptionsMenuFromStartMenu(void)
+{
+    u8 i;
+
+    if (gMain.savedCallback == NULL)
+        gMain.savedCallback = CB2_ReturnToFieldWithOpenMenu;
+    sOptionMenuPtr = AllocZeroed(sizeof(struct OptionMenu));
+    sOptionMenuPtr->loadState = 0;
+    sOptionMenuPtr->loadPaletteState = 0;
+    sOptionMenuPtr->state = 0;
+    sOptionMenuPtr->cursorPos = 0;
+    sOptionMenuPtr->option[MENUITEM_TEXTSPEED] = gSaveBlock2Ptr->optionsTextSpeed;
+    sOptionMenuPtr->option[MENUITEM_BATTLESCENE] = gSaveBlock2Ptr->optionsBattleSceneOff;
+    sOptionMenuPtr->option[MENUITEM_BATTLESTYLE] = gSaveBlock2Ptr->optionsBattleStyle;
+    sOptionMenuPtr->option[MENUITEM_SOUND] = gSaveBlock2Ptr->optionsSound;
+    sOptionMenuPtr->option[MENUITEM_BUTTONMODE] = gSaveBlock2Ptr->optionsButtonMode;
+    sOptionMenuPtr->option[MENUITEM_FRAMETYPE] = gSaveBlock2Ptr->optionsWindowFrameType;
+    // PokemonNative3G : les options de la fusion (Task_OptionMenuSave plus haut)
+    sOptionMenuPtr->option[MENUITEM_DAYNIGHT] = gSaveBlock2Ptr->optionsDayNight;
+    sOptionMenuPtr->option[MENUITEM_CHARACTER] = gSaveBlock2Ptr->optionsPlayerCharacter;
+    sOptionMenuPtr->option[MENUITEM_MONSPRITES] = gSaveBlock2Ptr->optionsMonSprites;
+    sOptionMenuPtr->option[MENUITEM_DIALOGSTYLE] = gSaveBlock2Ptr->optionsDialogStyle;
+    sOptionMenuPtr->option[MENUITEM_FONT] = gSaveBlock2Ptr->optionsFont;
+    sOptionMenuPtr->option[MENUITEM_BATTLEUI] = gSaveBlock2Ptr->optionsBattleUI;
+    sOptionMenuPtr->option[MENUITEM_MENUSTYLE] = gSaveBlock2Ptr->optionsMenuStyle;
+    sOptionMenuPtr->option[MENUITEM_BAGSTYLE] = gSaveBlock2Ptr->optionsBagStyle;
+    sOptionMenuPtr->option[MENUITEM_POKEDEXSTYLE] = gSaveBlock2Ptr->optionsPokedexStyle;
+    sOptionMenuPtr->option[MENUITEM_TITLESCREEN] = gSaveBlock2Ptr->optionsTitleScreen;
+    sOptionMenuPtr->option[MENUITEM_INTRO] = !gSaveBlock2Ptr->optionsIntroHoenn; // 1 = KANTO dans le menu
+
+    for (i = 0; i < MENUITEM_COUNT - 1; i++)
+    {
+        if (sOptionMenuPtr->option[i] > (sOptionMenuItemCounts[i]) - 1)
+            sOptionMenuPtr->option[i] = 0;
+    }
+    sOptionPage = 0;
+    sScrollOffset = 0;
+    SetMainCallback2(CB2_OptionMenu);
+}
+
+static void OptionMenu_InitCallbacks(void)
+{
+    SetVBlankCallback(NULL);
+    SetHBlankCallback(NULL);
+}
+
+static void OptionMenu_SetVBlankCallback(void)
+{
+    SetVBlankCallback(VBlankCB); // VBlankCB_OptionMenu de RF
+}
+
+static void CB2_OptionMenu(void)
+{
+    u8 i, state;
+    state = sOptionMenuPtr->state;
+    switch (state)
+    {
+    case 0:
+        OptionMenu_InitCallbacks();
+        break;
+    case 1:
+        InitOptionMenuBg();
+        break;
+    case 2:
+        OptionMenu_ResetSpriteData();
+        break;
+    case 3:
+        if (LoadOptionMenuPalette() != TRUE)
+            return;
+        break;
+    case 4:
+        PrintOptionMenuHeader();
+        break;
+    case 5:
+        DrawOptionMenuBg();
+        break;
+    case 6:
+        LoadOptionMenuItemNames();
+        break;
+    case 7:
+        for (i = 0; i < MENUITEM_COUNT; i++)
+            BufferOptionMenuString(i);
+        break;
+    case 8:
+        UpdateSettingSelectionDisplay(sOptionMenuPtr->cursorPos);
+        break;
+    case 9:
+        OptionMenu_PickSwitchCancel();
+        break;
+    default:
+        SetOptionMenuTask();
+        break;
+    }
+    sOptionMenuPtr->state++;
+}
+
+static void SetOptionMenuTask(void)
+{
+    CreateTask(Task_OptionMenu, 0);
+    SetMainCallback2(MainCB2); // CB2_InitOptionMenu de RF
+}
+
+static void InitOptionMenuBg(void)
+{
+    void *dest = (void *)VRAM;
+    DmaClearLarge16(3, dest, VRAM_SIZE, 0x1000);
+    DmaClear32(3, (void *)OAM, OAM_SIZE);
+    DmaClear16(3, (void *)PLTT, PLTT_SIZE);
+    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0);
+    ResetBgsAndClearDma3BusyFlags(0);
+    InitBgsFromTemplates(0, sKantoOptionMenuBgTemplates, ARRAY_COUNT(sKantoOptionMenuBgTemplates));
+    ChangeBgX(0, 0, BG_COORD_SET);
+    ChangeBgY(0, 0, BG_COORD_SET);
+    ChangeBgX(1, 0, BG_COORD_SET);
+    ChangeBgY(1, 0, BG_COORD_SET);
+    ChangeBgX(2, 0, BG_COORD_SET);
+    ChangeBgY(2, 0, BG_COORD_SET);
+    ChangeBgX(3, 0, BG_COORD_SET);
+    ChangeBgY(3, 0, BG_COORD_SET);
+    InitWindows(sKantoOptionMenuWinTemplates);
+    DeactivateAllTextPrinters();
+    SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_BLEND | BLDCNT_EFFECT_LIGHTEN);
+    SetGpuReg(REG_OFFSET_BLDY, BLDCNT_TGT1_BG1);
+    SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_BG0);
+    SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG0 | WINOUT_WIN01_BG1 | WINOUT_WIN01_BG2 | WINOUT_WIN01_CLR);
+    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON | DISPCNT_WIN0_ON);
+    ShowBg(0);
+    ShowBg(1);
+    ShowBg(2);
+}
+
+static void OptionMenu_PickSwitchCancel(void)
+{
+    s32 x;
+    x = 0xE4 - GetStringWidth(FONT_SMALL, sKText_Text_PickSwitchCancel, 0);
+    FillWindowPixelBuffer(2, PIXEL_FILL(15));
+    AddTextPrinterParameterized3(2, FONT_SMALL, x, 0, sOptionMenuPickSwitchCancelTextColor, 0, sKText_Text_PickSwitchCancel);
+    PutWindowTilemap(2);
+    CopyWindowToVram(2, COPYWIN_FULL);
+}
+
+static void OptionMenu_ResetSpriteData(void)
+{
+    ResetSpriteData();
+    ResetPaletteFade();
+    FreeAllSpritePalettes();
+    ResetTasks();
+    ScanlineEffect_Stop();
+}
+
+static bool8 LoadOptionMenuPalette(void)
+{
+    switch (sOptionMenuPtr->loadPaletteState)
+    {
+    case 0:
+        LoadBgTiles(1, GetWindowFrameTilesPal(sOptionMenuPtr->option[MENUITEM_FRAMETYPE])->tiles, 0x120, 0x1AA);
+        break;
+    case 1:
+        LoadPalette(GetWindowFrameTilesPal(sOptionMenuPtr->option[MENUITEM_FRAMETYPE])->pal, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
+        break;
+    case 2:
+        LoadPalette(sOptionMenuPalette, BG_PLTT_ID(1), sizeof(sOptionMenuPalette));
+        LoadPalette(gHelpMessageWindow_Pal, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
+        break;
+    case 3:
+        LoadStdWindowGfxOnBg(1, 0x1B3, BG_PLTT_ID(3));
+        break;
+    default:
+        return TRUE;
+    }
+    sOptionMenuPtr->loadPaletteState++;
+    return FALSE;
+}
+
+static void Task_OptionMenu(u8 taskId)
+{
+    switch (sOptionMenuPtr->loadState)
+    {
+    case 0:
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
+        OptionMenu_SetVBlankCallback();
+        sOptionMenuPtr->loadState++;
+        break;
+    case 1:
+        if (gPaletteFade.active)
+            return;
+        sOptionMenuPtr->loadState++;
+        break;
+    case 2:
+        if (((bool32)IsActiveOverworldLinkBusy()) == TRUE)
+            break;
+        switch (OptionMenu_ProcessInput())
+        {
+        case 0:
+            break;
+        case 1:
+            sOptionMenuPtr->loadState++;
+            break;
+        case 2:
+            LoadBgTiles(1, GetWindowFrameTilesPal(sOptionMenuPtr->option[MENUITEM_FRAMETYPE])->tiles, 0x120, 0x1AA);
+            LoadPalette(GetWindowFrameTilesPal(sOptionMenuPtr->option[MENUITEM_FRAMETYPE])->pal, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
+            Localize_BufferOptionMenuString();
+            break;
+        case 3:
+            UpdateSettingSelectionDisplay(sOptionMenuPtr->cursorPos);
+            break;
+        case 4:
+            Localize_BufferOptionMenuString();
+            break;
+        case 5: // PokemonNative3G : autre page ou défilement : titre, noms, valeurs, ligne choisie
+            PrintOptionMenuHeader();
+            LoadOptionMenuItemNames();
+            Localize_BufferOptionMenuString();
+            UpdateSettingSelectionDisplay(sOptionMenuPtr->cursorPos);
+            break;
+        }
+        break;
+    case 3:
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
+        sOptionMenuPtr->loadState++;
+        break;
+    case 4:
+        if (gPaletteFade.active)
+            return;
+        sOptionMenuPtr->loadState++;
+        break;
+    case 5:
+        CloseAndSaveOptionMenu(taskId);
+        break;
+    }
+}
+
+// PokemonNative3G : ligne choisie dans la fenêtre (ScrollOptionMenu plus haut) ; TRUE si la liste a défilé
+static bool8 KantoOptionMenu_Scroll(void)
+{
+    u8 row = OptionRow(sOptionMenuPtr->cursorPos);
+    u8 offset = sScrollOffset;
+
+    if (row < offset)
+        offset = row;
+    else if (row >= offset + MAX_VISIBLE_ITEMS)
+        offset = row - MAX_VISIBLE_ITEMS + 1;
+    if (offset == sScrollOffset)
+        return FALSE;
+    sScrollOffset = offset;
+    return TRUE;
+}
+
+static u8 OptionMenu_ProcessInput(void)
+{
+    u16 current;
+    u16 *curr;
+    if (sOptionMenuPtr->cursorPos != MENUITEM_CANCEL && JOY_REPEAT(DPAD_RIGHT)) // RETOUR n'a pas de valeur
+    {
+        current = sOptionMenuPtr->option[(sOptionMenuPtr->cursorPos)];
+        if (current == (sOptionMenuItemCounts[sOptionMenuPtr->cursorPos] - 1))
+            sOptionMenuPtr->option[sOptionMenuPtr->cursorPos] = 0;
+        else
+            sOptionMenuPtr->option[sOptionMenuPtr->cursorPos] = current + 1;
+        if (sOptionMenuPtr->cursorPos == MENUITEM_FRAMETYPE)
+            return 2;
+        else
+            return 4;
+    }
+    else if (sOptionMenuPtr->cursorPos != MENUITEM_CANCEL && JOY_REPEAT(DPAD_LEFT))
+    {
+        curr = &sOptionMenuPtr->option[sOptionMenuPtr->cursorPos];
+        if (*curr == 0)
+            *curr = sOptionMenuItemCounts[sOptionMenuPtr->cursorPos] - 1;
+        else
+            --*curr;
+
+        if (sOptionMenuPtr->cursorPos == MENUITEM_FRAMETYPE)
+            return 2;
+        else
+            return 4;
+    }
+    else if (JOY_REPEAT(DPAD_UP))
+    {
+        // PokemonNative3G : les options de l'autre page et masquées sont sautées
+        do
+        {
+            if (sOptionMenuPtr->cursorPos == MENUITEM_TEXTSPEED)
+                sOptionMenuPtr->cursorPos = MENUITEM_CANCEL;
+            else
+                sOptionMenuPtr->cursorPos = sOptionMenuPtr->cursorPos - 1;
+        } while (IsOptionHidden(sOptionMenuPtr->cursorPos));
+        return KantoOptionMenu_Scroll() ? 5 : 3;
+    }
+    else if (JOY_REPEAT(DPAD_DOWN))
+    {
+        do
+        {
+            if (sOptionMenuPtr->cursorPos == MENUITEM_CANCEL)
+                sOptionMenuPtr->cursorPos = MENUITEM_TEXTSPEED;
+            else
+                sOptionMenuPtr->cursorPos = sOptionMenuPtr->cursorPos + 1;
+        } while (IsOptionHidden(sOptionMenuPtr->cursorPos));
+        return KantoOptionMenu_Scroll() ? 5 : 3;
+    }
+    else if (JOY_NEW(L_BUTTON) || JOY_NEW(R_BUTTON)) // PokemonNative3G : page suivante (ChangeOptionMenuPage plus haut)
+    {
+        sOptionPage = (sOptionPage + 1) % OPTION_PAGE_COUNT;
+        sOptionMenuPtr->cursorPos = 0;
+        while (IsOptionHidden(sOptionMenuPtr->cursorPos))
+            sOptionMenuPtr->cursorPos++;
+        sScrollOffset = 0;
+        PlaySE(SE_SELECT);
+        return 5;
+    }
+    else if (JOY_NEW(B_BUTTON) || JOY_NEW(A_BUTTON))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+// PokemonNative3G : la valeur affichée d'une option (RF : un tableau par option)
+static const u8 *KantoOptionMenu_ValueText(u8 selection)
+{
+    u16 value = sOptionMenuPtr->option[selection];
+
+    switch (selection)
+    {
+    case MENUITEM_TEXTSPEED:
+        return sTextSpeedOptions[value];
+    case MENUITEM_BATTLESCENE:
+        return sBattleSceneOptions[value];
+    case MENUITEM_BATTLESTYLE:
+        return sBattleStyleOptions[value];
+    case MENUITEM_SOUND:
+        return sSoundOptions[value];
+    case MENUITEM_BUTTONMODE:
+        return sButtonTypeOptions[value];
+    case MENUITEM_DAYNIGHT:
+        return sDayNightOptions[value];
+    case MENUITEM_CHARACTER:
+        if (gSaveBlock2Ptr->playerGender == MALE)
+            return value ? sKText_CharacterRed : sKText_CharacterBrendan;
+        return value ? sKText_CharacterLeaf : sKText_CharacterMay;
+    case MENUITEM_TITLESCREEN:
+        return sTitleScreenOptions[value];
+    case MENUITEM_MONSPRITES:
+    case MENUITEM_DIALOGSTYLE:
+    case MENUITEM_FONT:
+    case MENUITEM_BATTLEUI:
+    case MENUITEM_MENUSTYLE:
+    case MENUITEM_BAGSTYLE:
+    case MENUITEM_POKEDEXSTYLE:
+    case MENUITEM_INTRO:
+        return sRegionOptions[value];
+    default:
+        return NULL;
+    }
+}
+
+static void BufferOptionMenuString(u8 selection)
+{
+    u8 str[20];
+    u8 buf[12];
+    u8 dst[3];
+    u8 x, y;
+    const u8 *text;
+
+    if (!IS_OPTION_ROW_VISIBLE(selection)) // PokemonNative3G : autre page, masquée, ou hors de la fenêtre
+        return;
+    memcpy(dst, sOptionMenuTextColor, 3);
+    x = 0x82;
+    y = ((GetFontAttribute(FONT_KANTO, FONTATTR_MAX_LETTER_HEIGHT) - 1) * (OptionRow(selection) - sScrollOffset)) + 2;
+    FillWindowPixelRect(1, 1, x, y, 0x46, GetFontAttribute(FONT_KANTO, FONTATTR_MAX_LETTER_HEIGHT));
+
+    if (selection == MENUITEM_FRAMETYPE)
+    {
+        StringCopy(str, sKText_Text_FrameType);
+        ConvertIntToDecimalStringN(buf, sOptionMenuPtr->option[selection] + 1, 1, 2);
+        StringAppendN(str, buf, 3);
+        AddTextPrinterParameterized3(1, FONT_KANTO, x, y, dst, -1, str);
+    }
+    else if ((text = KantoOptionMenu_ValueText(selection)) != NULL)
+    {
+        AddTextPrinterParameterized3(1, FONT_KANTO, x, y, dst, -1, text);
+    }
+    PutWindowTilemap(1);
+    CopyWindowToVram(1, COPYWIN_FULL);
+}
+
+// RF : toutes les valeurs de nouveau (après un changement de valeur ou de cadre) ; ici, celles des lignes visibles
+static void Localize_BufferOptionMenuString(void)
+{
+    u8 i;
+    u8 rowHeight = GetFontAttribute(FONT_KANTO, FONTATTR_MAX_LETTER_HEIGHT) - 1;
+
+    FillWindowPixelRect(1, 1, 0x82, 2, 0x46, GetFontAttribute(FONT_KANTO, FONTATTR_MAX_LETTER_HEIGHT) + rowHeight * (MAX_VISIBLE_ITEMS - 1));
+    for (i = 0; i < MENUITEM_COUNT; i++)
+        BufferOptionMenuString(i);
+    PutWindowTilemap(1);
+    CopyWindowToVram(1, COPYWIN_FULL);
+}
+
+static void CloseAndSaveOptionMenu(u8 taskId)
+{
+    gFieldCallback = FieldCB_DefaultWarpExit;
+    SetMainCallback2(gMain.savedCallback);
+    FreeAllWindowBuffers();
+    gSaveBlock2Ptr->optionsTextSpeed = sOptionMenuPtr->option[MENUITEM_TEXTSPEED];
+    gSaveBlock2Ptr->optionsBattleSceneOff = sOptionMenuPtr->option[MENUITEM_BATTLESCENE];
+    gSaveBlock2Ptr->optionsBattleStyle = sOptionMenuPtr->option[MENUITEM_BATTLESTYLE];
+    gSaveBlock2Ptr->optionsSound = sOptionMenuPtr->option[MENUITEM_SOUND];
+    gSaveBlock2Ptr->optionsButtonMode = sOptionMenuPtr->option[MENUITEM_BUTTONMODE];
+    gSaveBlock2Ptr->optionsWindowFrameType = sOptionMenuPtr->option[MENUITEM_FRAMETYPE];
+    // PokemonNative3G : les options de la fusion (Task_OptionMenuSave plus haut)
+    gSaveBlock2Ptr->optionsDayNight = sOptionMenuPtr->option[MENUITEM_DAYNIGHT];
+    gSaveBlock2Ptr->optionsPlayerCharacter = sOptionMenuPtr->option[MENUITEM_CHARACTER];
+    gSaveBlock2Ptr->optionsMonSprites = sOptionMenuPtr->option[MENUITEM_MONSPRITES];
+    gSaveBlock2Ptr->optionsDialogStyle = sOptionMenuPtr->option[MENUITEM_DIALOGSTYLE];
+    gSaveBlock2Ptr->optionsFont = sOptionMenuPtr->option[MENUITEM_FONT];
+    gSaveBlock2Ptr->optionsBattleUI = sOptionMenuPtr->option[MENUITEM_BATTLEUI];
+    gSaveBlock2Ptr->optionsMenuStyle = sOptionMenuPtr->option[MENUITEM_MENUSTYLE];
+    gSaveBlock2Ptr->optionsBagStyle = sOptionMenuPtr->option[MENUITEM_BAGSTYLE];
+    gSaveBlock2Ptr->optionsPokedexStyle = sOptionMenuPtr->option[MENUITEM_POKEDEXSTYLE];
+    gSaveBlock2Ptr->optionsTitleScreen = sOptionMenuPtr->option[MENUITEM_TITLESCREEN];
+    gSaveBlock2Ptr->optionsIntroHoenn = !sOptionMenuPtr->option[MENUITEM_INTRO];
+    sScrollOffset = 0;
+    sOptionPage = 0;
+    SetPokemonCryStereo(gSaveBlock2Ptr->optionsSound);
+    FREE_AND_SET_NULL(sOptionMenuPtr);
+    DestroyTask(taskId);
+}
+
+static void PrintOptionMenuHeader(void)
+{
+    // PokemonNative3G : la page et ses touches à droite (DrawHeaderText plus haut)
+    const u8 *page = sOptionPage == 0 ? sText_OptionPage1 : sText_OptionPage2;
+
+    FillWindowPixelBuffer(0, PIXEL_FILL(1));
+    AddTextPrinterParameterized(WIN_TEXT_OPTION, FONT_KANTO, gText_Option, 8, 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized(WIN_TEXT_OPTION, FONT_KANTO, page, GetStringRightAlignXOffset(FONT_KANTO, page, 26 * 8) - 4, 1, TEXT_SKIP_DRAW, NULL);
+    PutWindowTilemap(0);
+    CopyWindowToVram(0, COPYWIN_FULL);
+}
+
+static void DrawOptionMenuBg(void)
+{
+    u8 h;
+    h = 2;
+
+    FillBgTilemapBufferRect(1, 0x1B3, 1, 2, 1, 1, 3);
+    FillBgTilemapBufferRect(1, 0x1B4, 2, 2, 0x1B, 1, 3);
+    FillBgTilemapBufferRect(1, 0x1B5, 0x1C, 2, 1, 1, 3);
+    FillBgTilemapBufferRect(1, 0x1B6, 1, 3, 1, h, 3);
+    FillBgTilemapBufferRect(1, 0x1B8, 0x1C, 3, 1, h, 3);
+    FillBgTilemapBufferRect(1, 0x1B9, 1, 5, 1, 1, 3);
+    FillBgTilemapBufferRect(1, 0x1BA, 2, 5, 0x1B, 1, 3);
+    FillBgTilemapBufferRect(1, 0x1BB, 0x1C, 5, 1, 1, 3);
+    FillBgTilemapBufferRect(1, 0x1AA, 1, 6, 1, 1, h);
+    FillBgTilemapBufferRect(1, 0x1AB, 2, 6, 0x1A, 1, h);
+    FillBgTilemapBufferRect(1, 0x1AC, 0x1C, 6, 1, 1, h);
+    FillBgTilemapBufferRect(1, 0x1AD, 1, 7, 1, 0x10, h);
+    FillBgTilemapBufferRect(1, 0x1AF, 0x1C, 7, 1, 0x10, h);
+    FillBgTilemapBufferRect(1, 0x1B0, 1, 0x13, 1, 1, h);
+    FillBgTilemapBufferRect(1, 0x1B1, 2, 0x13, 0x1A, 1, h);
+    FillBgTilemapBufferRect(1, 0x1B2, 0x1C, 0x13, 1, 1, h);
+    CopyBgTilemapBufferToVram(1);
+}
+
+static void LoadOptionMenuItemNames(void)
+{
+    u8 i;
+
+    FillWindowPixelBuffer(1, PIXEL_FILL(1));
+    for (i = 0; i < MENUITEM_COUNT; i++)
+    {
+        if (IS_OPTION_ROW_VISIBLE(i)) // PokemonNative3G : la page, les lignes visibles
+            AddTextPrinterParameterized(WIN_OPTIONS, FONT_KANTO, sOptionMenuItemsNames[i], 8, (u8)(((OptionRow(i) - sScrollOffset) * (GetFontAttribute(FONT_KANTO, FONTATTR_MAX_LETTER_HEIGHT))) + 2) - (OptionRow(i) - sScrollOffset), TEXT_SKIP_DRAW, NULL);
+    }
+}
+
+static void UpdateSettingSelectionDisplay(u16 selection)
+{
+    u16 maxLetterHeight, y;
+
+    maxLetterHeight = GetFontAttribute(FONT_KANTO, FONTATTR_MAX_LETTER_HEIGHT);
+    y = (OptionRow(selection) - sScrollOffset) * (maxLetterHeight - 1) + 0x3A;
+    SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(y, y + maxLetterHeight));
+    SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(0x10, 0xE0));
 }

@@ -489,13 +489,6 @@ SpriteCB_Pikachu, CreatePikachuOrPlatformSprites, DestroyPikachuOrPlatformSprite
 ClearTrainerPic, Task_SlowFadeIn, CreateFadeInTask, Task_SlowFadeOut, CreateFadeOutTask,
 PrintNameChoiceOptions, GetDefaultName
 
-### option_menu.c (commun, 17/19)
-CB2_OptionsMenuFromStartMenu, OptionMenu_SetVBlankCallback, CB2_OptionMenu, SetOptionMenuTask,
-InitOptionMenuBg, OptionMenu_PickSwitchCancel, OptionMenu_ResetSpriteData, LoadOptionMenuPalette,
-Task_OptionMenu, OptionMenu_ProcessInput, BufferOptionMenuString, Localize_BufferOptionMenuString,
-CloseAndSaveOptionMenu, PrintOptionMenuHeader, DrawOptionMenuBg, LoadOptionMenuItemNames,
-UpdateSettingSelectionDisplay
-
 ### overworld.c (commun, 28/44)
 CountBadgesForOverworldWhiteOutLossCalculation, Overworld_ResetStateAfterWhitingOut,
 Overworld_ResetStateOnContinue, Overworld_SetWhiteoutRespawnPoint, QL_LoadMapNormal,

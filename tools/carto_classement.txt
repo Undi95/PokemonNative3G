@@ -732,3 +732,6 @@ MonPlaceChange_MoveCursorUp équivalente MonPlaceChange_CursorUp (pokemon_storag
 StartDisplayMonMosaic équivalente StartDisplayMonMosaicEffect (pokemon_storage_system.c d'Émeraude), même code
 BufferBattleTowerTrainerMessage link Tour de Combat de RF : dresseurs e-Reader et records mélangés
 CreateLeafSprite écartée version Vert Feuille (la fusion est Rouge Feu)
+# option_menu.c : l'écran Options de RF (MENUS = KANTO) est dans option_menu.c ; son CB2 et sa VBlank ont le code d'Émeraude
+VBlankCB_OptionMenu équivalente VBlankCB (option_menu.c d'Émeraude), même code
+PrintOptionMenuHeader équivalente PrintOptionMenuHeader (option_menu.c de la fusion, écran de RF avec MENUS = KANTO)

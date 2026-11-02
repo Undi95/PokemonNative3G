@@ -147,7 +147,8 @@ de RF ferre toute seule (VARIANTES-RF.md). Un écran de RF « de façade » suit
 son voisin (menu principal et effacement : TITRE ; choix multiples, OUI/NON, lettre : MENUS ; panneau du lieu :
 région). `--tout` montre toutes les différences d'une fonction.
 
-Fin de la lecture des « à vérifier » le 2026-11-02 : il n'en reste qu'une (l'écran Options de RF, question posée).
+Fin de la lecture des « à vérifier » le 2026-11-02 : plus aucune (la dernière, l'écran Options de RF, est portée :
+MENUS = KANTO, choix user).
 L'inventaire est stable d'une exécution à l'autre depuis ce jour (empreintes en crc32 ; `hash()` changeait à chaque
 lancement de Python). Reste : manquante 201 (dont l'écran Options de RF, terrain, polices, écran d'échec de
 sauvegarde, PC), link 196 (dont la Tour de Combat de RF : e-Reader).

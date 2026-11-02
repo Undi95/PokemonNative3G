@@ -169,7 +169,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_anim_flying.c | commun | 33 | 2 | 0 | 0 | 0 | 15 | 16 |  |
 | battle_util.c | commun | 37 | 1 | 0 | 0 | 0 | 19 | 17 |  |
 | fldeff_flash.c | commun | 22 | 15 | 0 | 2 | 13 | 2 | 5 | fldeff_flash.c (2) |
-| option_menu.c | commun | 20 | 19 | 2 | 0 | 10 | 0 | 1 |  |
 | script_menu.c | commun | 29 | 21 | 0 | 12 | 57 | 0 | 8 | script_menu.c (11), kanto_specials.c (1) |
 | battle_anim_psychic.c | commun | 26 | 0 | 0 | 0 | 100 | 10 | 16 |  |
 | field_door.c | commun | 21 | 2 | 0 | 2 | 100 | 3 | 16 | copie kanto_field_door.c : 21/21 fonctions |
@@ -275,6 +274,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | m4a.c | commun | 72 | 0 | 0 | 0 | 100 | 71 | 1 |  |
 | mail.c | commun | 10 | 9 | 0 | 9 | 100 | 0 | 1 | copie kanto_mail.c : 10/10 fonctions |
 | map_name_popup.c | commun | 7 | 6 | 0 | 6 | 100 | 0 | 1 | copie kanto_map_name_popup.c : 7/7 fonctions |
+| option_menu.c | commun | 20 | 19 | 1 | 18 | 100 | 0 | 1 | option_menu.c (18) |
 | play_time.c | commun | 5 | 0 | 0 | 0 | 100 | 4 | 1 |  |
 | pokedex.c | commun | 8 | 0 | 0 | 0 | 100 | 7 | 1 |  |
 | agb_flash_1m.c | commun | 2 | 0 | 0 | 0 | 100 | 2 | 0 |  |
