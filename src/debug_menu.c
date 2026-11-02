@@ -1,9 +1,10 @@
 // Menu de debug (builds KANTO_DEBUG=1 uniquement), ouvert depuis le menu Start.
-// Téléportation, traverser les murs, rencontres sauvages, soin de l'équipe.
+// Téléportation, traverser les murs, rencontres sauvages, soin de l'équipe, outils de debug (src/debug_tools_menu.c).
 #include "global.h"
 #include "money.h"
 #include "constants/kanto_flags_vars.h"
 #include "debug_menu.h"
+#include "debug_tools.h"
 #include "coins.h"
 #include "event_object_lock.h"
 #include "event_object_movement.h"
@@ -62,6 +63,7 @@ enum {
     DEBUG_BOTH_LEAGUES,
     DEBUG_POKE_MONTURE,
     DEBUG_OLD_MAN,
+    DEBUG_TOOLS,
     DEBUG_CLOSE,
     DEBUG_COUNT
 };
@@ -197,6 +199,7 @@ static const u8 sText_FameChecker[] = _("MEMORYDEX complet");
 static const u8 sText_BothLeagues[] = _("Deux Ligues finies");
 static const u8 sText_PokeMonture[] = _("POKé MONTURE + badges");
 static const u8 sText_OldMan[] = _("VIEIL HOMME JADIELLE");
+static const u8 sText_Tools[] = _("Outils (sondes)");
 static const u8 sText_Close[] = _("Fermer");
 
 #define tListTaskId data[0]
@@ -245,6 +248,7 @@ static void DebugMenu_Draw(u8 taskId, bool8 warpList)
         sItems[DEBUG_BOTH_LEAGUES].name = sText_BothLeagues;
         sItems[DEBUG_POKE_MONTURE].name = sText_PokeMonture;
         sItems[DEBUG_OLD_MAN].name = sText_OldMan;
+        sItems[DEBUG_TOOLS].name = sText_Tools;
         sItems[DEBUG_CLOSE].name = sText_Close;
         for (i = 0; i < count; i++)
             sItems[i].id = i;
@@ -497,6 +501,13 @@ static void Task_DebugMenu(u8 taskId)
             }
         }
         PlaySE(SE_USE_ITEM);
+        break;
+    case DEBUG_TOOLS:
+        // Les commandes de src/debug_tools.c (les mêmes que le banc headless et la console du PC)
+        DebugMenu_Erase(taskId);
+        FREE_AND_SET_NULL(sItems);
+        DestroyTask(taskId);
+        DebugToolsMenu_Open();
         break;
     case DEBUG_CLOSE:
     case LIST_CANCEL:

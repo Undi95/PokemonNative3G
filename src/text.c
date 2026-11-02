@@ -260,6 +260,12 @@ static void SetFontsPointer(const struct FontInfo *fonts)
     gFonts = fonts;
 }
 
+// PokemonNative3G : outils de debug (debug_tools.c)
+const struct TextPrinter *GetTextPrinter(u8 windowId)
+{
+    return &sTextPrinters[windowId];
+}
+
 void DeactivateAllTextPrinters(void)
 {
     int printer;

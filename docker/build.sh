@@ -14,6 +14,7 @@ if [ "$(cat "$STAMP" 2>/dev/null)" != "$MAKEFLAGS_EXTRA" ]; then touch src/new_g
 make "$TARGET" -j"${JOBS:-$(nproc)}" $MAKEFLAGS_EXTRA 2>&1 | tail -n "${TAILN:-40}"
 OUT=/out/${OUT_NAME:-$TARGET}; mkdir -p $OUT
 if [ "$TARGET" = winwsl ]; then cp -v pokeemeraude64.exe $OUT/; else cp -v pokeemeraude64 $OUT/; fi
-# Les symboles, pour que les tests nomment les fonctions en cours (test/headless/names.py)
-if [ "$TARGET" = winwsl ]; then x86_64-w64-mingw32-nm --defined-only pokeemeraude64.exe | grep -i ' t ' > $OUT/pokeemeraude64.syms; else nm --defined-only pokeemeraude64 | grep -i ' t ' > $OUT/pokeemeraude64.syms; fi
+# Les symboles (fonctions et données), pour que les tests et les outils de debug nomment les adresses
+# (test/headless/names.py)
+if [ "$TARGET" = winwsl ]; then x86_64-w64-mingw32-nm --defined-only pokeemeraude64.exe | grep -i ' [tdrbs] ' > $OUT/pokeemeraude64.syms; else nm --defined-only pokeemeraude64 | grep -i ' [tdrbs] ' > $OUT/pokeemeraude64.syms; fi
 if [ "$TARGET" = winwsl ]; then cp -v /opt/SDL2/x86_64-w64-mingw32/bin/SDL2.dll $OUT/; fi

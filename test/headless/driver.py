@@ -285,6 +285,11 @@ class Game:
                         raise GameError(f"{line}: {reply['error']}")
                     return reply["reply"]
 
+    def dev(self, *words):
+        """Runs a debug tool (src/debug_tools.c, "aide" lists them) and returns its
+        text, with the functions and data named."""
+        return self.symbols.expand(self.command("dev", *words))
+
     def flag(self, flag, set_to=None):
         """Reads a flag (a name like "FLAG_BADGE01_GET" or a number), or sets it."""
         args = [names.number(flag)] + ([int(set_to)] if set_to is not None else [])

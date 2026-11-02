@@ -112,6 +112,23 @@ void ResetMapMusic(void)
     sMapMusicFadeInSpeed = 0;
 }
 
+// PokemonNative3G : morceau joué par un lecteur de musique (gMPlayInfo_BGM, _SE1…), ou -1 (banc de test, outils de debug)
+int GetPlayerSong(const struct MusicPlayerInfo *player)
+{
+    int i;
+
+    if (player->songHeader == NULL || (player->status & MUSICPLAYER_STATUS_PAUSE)
+     || !(player->status & MUSICPLAYER_STATUS_TRACK))
+        return -1;
+    // PH_NURSE_SOLO is the last song in the table
+    for (i = 0; i <= PH_NURSE_SOLO; i++)
+    {
+        if (gSongTable[i].header == player->songHeader)
+            return i;
+    }
+    return -1;
+}
+
 u16 GetCurrentMapMusic(void)
 {
     return sCurrentMapMusic;

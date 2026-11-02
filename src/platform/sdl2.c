@@ -18,6 +18,7 @@
 #include "gba/m4a_internal.h"
 #include "cgb_audio.h"
 #include "gba/flash_internal.h"
+#include "platform/devtools.h"
 #include "platform/dma.h"
 #include "platform/framedraw.h"
 #include "platform/settings.h"
@@ -54,6 +55,10 @@ static char *sDataDir;
 
 // Headless test mode, see RunTestMode()
 static bool sTestMode = false;
+#ifdef KANTO_DEBUG_START
+// --devtools PORT (0 : sans) : console des outils de debug sur 127.0.0.1 (src/platform/devtools.c)
+static int sDevToolsPort = 7777;
+#endif
 // --kanto-start 1 : une nouvelle partie démarre à Bourg Palette (builds KANTO_DEBUG=1, tests)
 bool8 gKantoStart = FALSE;
 
@@ -192,6 +197,10 @@ int main(int argc, char **argv)
     }
 
     Touch_Init();
+#ifdef KANTO_DEBUG_START
+    if (sDevToolsPort != 0)
+        DevTools_StartConsole(sDevToolsPort);
+#endif
 
     // Mappings for controllers SDL doesn't know, from https://github.com/mdqinc/SDL_GameControllerDB
     {
@@ -290,6 +299,9 @@ int main(int argc, char **argv)
         int steps = 0;
 
         ProcessEvents();
+#ifdef KANTO_DEBUG_START
+        DevTools_PollConsole();
+#endif
 
         curGameTime = SDL_GetPerformanceCounter();
         deltaTime = (double)((curGameTime - lastGameTime) / (double)SDL_GetPerformanceFrequency());
@@ -662,6 +674,9 @@ void VDraw(SDL_Texture *texture)
 
     memset(image, 0, sizeof(image));
     DrawFrame(image);
+#ifdef KANTO_DEBUG_START
+    DevTools_SetFrame(image);
+#endif
     SDL_UpdateTexture(texture, NULL, image, DISPLAY_WIDTH * sizeof (Uint16));
     REG_VCOUNT = 161; // prep for being in VBlank period
 }
@@ -861,6 +876,12 @@ static bool ParseArgs(int argc, char **argv)
         {
             sTestShotEvery = strtoul(value, NULL, 10);
         }
+#ifdef KANTO_DEBUG_START
+        else if (strcmp(arg, "--devtools") == 0)
+        {
+            sDevToolsPort = atoi(value);
+        }
+#endif
         else if (strcmp(arg, "--test-font") == 0)
         {
             gTestFont = strtol(value, NULL, 10);

@@ -225,6 +225,18 @@ bool8 ArePlayerFieldControlsLocked(void)
 // which yields control back to native code should the script make a wait call.
 
 // Checks if the global script context is able to be run right now.
+// PokemonNative3G : outils de debug (debug_tools.c)
+const struct ScriptContext *GetGlobalScriptContext(u8 *status)
+{
+    *status = sGlobalScriptContextStatus;
+    return &sGlobalScriptContext;
+}
+
+const struct ScriptContext *GetImmediateScriptContext(void)
+{
+    return &sImmediateScriptContext;
+}
+
 bool8 ScriptContext_IsEnabled(void)
 {
     if (sGlobalScriptContextStatus == CONTEXT_RUNNING)

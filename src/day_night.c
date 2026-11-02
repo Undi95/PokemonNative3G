@@ -59,6 +59,16 @@ bool8 IsDayNightHourNight(u8 hours)
     return hours >= DAY_NIGHT_NIGHT_BEGIN || hours < DAY_NIGHT_NIGHT_END;
 }
 
+// PokemonNative3G : outils de debug (debug_tools.c) : teinte en cours (256 = couleur d'origine), gris, lumière des fenêtres
+void DayNight_GetTint(u16 *r, u16 *g, u16 *b, u16 *gray, u16 *light)
+{
+    *r = sTintR;
+    *g = sTintG;
+    *b = sTintB;
+    *gray = sGray;
+    *light = sLight;
+}
+
 void DayNight_SetMarkLights(bool8 mark)
 {
     sMarkLights = mark;

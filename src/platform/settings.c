@@ -257,6 +257,7 @@ void LoadSettings(const char *path)
     char *text = malloc(sizeof(sDefaultSettings));
     FILE *file;
     long size;
+    bool hasResetKey;
 
     memset(sBindings, 0, sizeof(sBindings));
     memcpy(text, sDefaultSettings, sizeof(sDefaultSettings));
@@ -283,9 +284,11 @@ void LoadSettings(const char *path)
     size = fread(text, 1, size, file);
     text[size] = '\0';
     fclose(file);
+    // Settings files from older versions lack the reset key: add its default line (looked for before
+    // ParseSettings, which cuts the text into lines)
+    hasResetKey = strstr(text, "key_reset") != NULL;
     ParseSettings(text, path);
-    // Settings files from older versions lack the reset key: add its default line
-    if (strstr(text, "key_reset") == NULL && (file = fopen(path, "ab")) != NULL)
+    if (!hasResetKey && (file = fopen(path, "ab")) != NULL)
     {
         fputs("\n# Soft reset (back to the title screen, like A+B+START+SELECT)\nkey_reset = F5\n", file);
         fclose(file);

@@ -23,6 +23,7 @@
 #include "pokemon.h"
 #include "script.h"
 #include "script_pokemon_util.h"
+#include "sound.h"
 #include "sprite.h"
 #include "task.h"
 #include "constants/items.h"
@@ -30,6 +31,7 @@
 #include "platform/test_state.h"
 #include "rtc.h"
 #include "day_night.h"
+#include "debug_tools.h"
 
 extern void AgbMain(void);
 
@@ -183,16 +185,7 @@ static void FindChanges(void)
 // The song the BGM player is playing, or -1
 static int GetBgmSong(void)
 {
-    if (gMPlayInfo_BGM.songHeader == NULL || (gMPlayInfo_BGM.status & MUSICPLAYER_STATUS_PAUSE)
-     || !(gMPlayInfo_BGM.status & MUSICPLAYER_STATUS_TRACK))
-        return -1;
-    // PH_NURSE_SOLO is the last song in the table
-    for (int i = 0; i <= PH_NURSE_SOLO; i++)
-    {
-        if (gSongTable[i].header == gMPlayInfo_BGM.songHeader)
-            return i;
-    }
-    return -1;
+    return GetPlayerSong(&gMPlayInfo_BGM);
 }
 
 // A function as its distance from AgbMain, which the tests turn into its name
@@ -345,6 +338,24 @@ void WriteTestState(FILE *file, u32 frame)
     fflush(file);
 }
 
+// Text as a JSON string
+static void WriteJsonString(FILE *file, const char *text)
+{
+    fputc('"', file);
+    for (; *text != '\0'; text++)
+    {
+        if (*text == '"' || *text == '\\')
+            fprintf(file, "\\%c", *text);
+        else if (*text == '\n')
+            fputs("\\n", file);
+        else if ((unsigned char)*text < 0x20)
+            fprintf(file, "\\u%04x", (unsigned char)*text);
+        else
+            fputc(*text, file);
+    }
+    fputc('"', file);
+}
+
 // A test command, a line starting with '!' in the test input: reads or sets
 // part of the game's state, to check what a scenario did or to set one up
 // quickly. Writes its answer as a line of JSON, {"reply": ...}.
@@ -409,6 +420,19 @@ void RunTestCommand(FILE *file, const char *line)
             gSaveBlock2Ptr->optionsFont = args[0] != 0;
         fprintf(file, "{\"reply\": %d}\n", gSaveBlock2Ptr->optionsFont);
     }
+#ifdef KANTO_DEBUG_START
+    else if (strcmp(name, "dev") == 0)
+    {
+        // Une commande des outils de debug (src/debug_tools.c) : « !dev ID ARGS », réponse = son texte
+        static char sText[32768];
+        struct DebugToolsOutput out = {sText, sizeof(sText), 0};
+        bool8 ok = DebugTools_RunLine(line + 4, &out);
+
+        fprintf(file, "{\"reply\": ");
+        WriteJsonString(file, sText);
+        fprintf(file, "%s}\n", ok ? "" : ", \"error\": \"commande refusee\"");
+    }
+#endif
     else if (strcmp(name, "heal") == 0)
     {
         HealPlayerParty();

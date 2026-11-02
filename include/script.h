@@ -38,6 +38,8 @@ void UnlockPlayerFieldControls(void);
 bool8 ArePlayerFieldControlsLocked(void);
 void ScriptContext_Init(void);
 bool8 ScriptContext_IsEnabled(void);
+const struct ScriptContext *GetGlobalScriptContext(u8 *status);
+const struct ScriptContext *GetImmediateScriptContext(void);
 bool8 ScriptContext_RunScript(void);
 void ScriptContext_SetupScript(const u8 *ptr);
 // PokemonNative3G : panneaux de Rouge Feu (script.c de RF)

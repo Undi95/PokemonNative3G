@@ -84,8 +84,9 @@ def name(prefix, number):
 # --- Functions -------------------------------------------------------------
 
 class Symbols:
-    """The functions of a build, from the .syms file next to it (see
-    docker/build.sh), to name the offsets from AgbMain in the state."""
+    """The functions and data of a build, from the .syms file next to it (see
+    docker/build.sh), to name the offsets from AgbMain in the state and in the
+    debug tools' text ("@N", see expand())."""
 
     def __init__(self, binary):
         self.addresses, self.names = [], []
@@ -113,6 +114,10 @@ class Symbols:
         if i < 0:
             return f"?{offset:+#x}"
         return self.names[i] if offset == self.addresses[i] else f"{self.names[i]}+{offset - self.addresses[i]:#x}"
+
+    def expand(self, text):
+        """The debug tools' text (src/debug_tools.c) with each "@N" replaced by its symbol."""
+        return re.sub(r"@(-?\d+)", lambda m: self(int(m.group(1))) or "NULL", text)
 
 
 # --- Text ------------------------------------------------------------------

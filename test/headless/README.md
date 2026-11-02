@@ -76,6 +76,9 @@ input, so a run can still be replayed from `input.txt`), to set a scenario up qu
 check what it did: `game.flag(name, value)`, `game.var`, `game.item(name, add)`,
 `game.money`, `game.give_mon(species, level)`, `game.heal()`, `game.warp(map, x, y)`,
 `save(game)` and `game.shot(name)`. Names are the constants of `include/constants`.
+`game.dev("gfx.sprites")` runs one of the debug tools (`docs/DEVTOOLS.md`, `aide` lists them) and
+returns its text, with functions and data named; `dev.py` sends the same commands to a DEBUG game
+that runs on the PC.
 
 Checks fail the scenario and go to the journal: `expect(game, condition, message)`,
 `expect_text` (words of a text the game printed, since a `mark`), `expect_map`,

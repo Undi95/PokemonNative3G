@@ -22,6 +22,7 @@ extern struct DayNightRender gDayNightRender;
 bool8 IsDayNightHourNight(u8 hours);
 void DayNight_TintPltt(void);
 void DayNight_SetMarkLights(bool8 mark);
+void DayNight_GetTint(u16 *r, u16 *g, u16 *b, u16 *gray, u16 *light);
 void DayNight_DoorAnimMetatile(u32 tileNum, s32 x, s32 y);
 void DayNight_DoorClosed(void);
 

@@ -4,6 +4,8 @@
 #include "constants/sound.h"
 
 void InitMapMusic(void);
+struct MusicPlayerInfo;
+int GetPlayerSong(const struct MusicPlayerInfo *player);
 void MapMusicMain(void);
 void ResetMapMusic(void);
 u16 GetCurrentMapMusic(void);
