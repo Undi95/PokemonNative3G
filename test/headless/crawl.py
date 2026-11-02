@@ -46,7 +46,7 @@ STRONG_MOVES = ("MOVE_PSYCHIC", "MOVE_ICE_BEAM", "MOVE_THUNDERBOLT", "MOVE_FLAME
 # défi ; l'explorateur les liste à part.
 CHALLENGE_ROOMS = re.compile(r"BattleTent(Corridor|BattleRoom)$|^BattleColosseum|^TradeCenter$|^RecordCorner$|"
                              r"^UnionRoom$|^(Unused)?ContestHall|^SevenIsland_House_Room2$|"
-                             r"^SootopolisCity_MysteryEventsHouse_B1F$|^BattlePyramidSquare|^TrainerHill_(\dF|Roof|Elevator)$|"
+                             r"^SootopolisCity_MysteryEventsHouse_B1F$|^TrainerTower_(\dF|Roof|Elevator)$|^BattlePyramidSquare|^TrainerHill_(\dF|Roof|Elevator)$|"
                              r"^BattleFrontier_Battle\w*(Elevator|Corridor|BattleRoom|PartnerRoom|Floor|Top|"
                              r"ThreePathRoom|Room(Normal|Final|WildMons))$")
 
@@ -131,7 +131,8 @@ def spots(name, x, y, side=None):
             if side and direction != side:
                 continue
             sx, sy = x - dx * distance, y - dy * distance
-            if the_map.tile(sx, sy) in ".g" and (sx, sy) not in the_map.warps:
+            # L'eau aussi (« ~ ») : le téléport y pose le joueur, de quoi parler aux nageurs
+            if the_map.tile(sx, sy) in ".g~" and (sx, sy) not in the_map.warps:
                 if distance == 1 or the_map.tile(x - dx, y - dy) == "#":
                     found.append((sx, sy, direction))
     return found
@@ -289,8 +290,18 @@ class Explorer:
                         record["absent"] = True     # caché par un flag, ou parti
                         return
                     if pos != (target["x"], target["y"]):
-                        # Il s'est promené : on va le voir à pied
-                        talk_to_object(game, *pos, finish=False)
+                        # Il s'est promené : on va le voir à pied, ou par téléport (sur l'eau : un nageur)
+                        record["bouge"] = True
+                        try:
+                            talk_to_object(game, *pos, finish=False)
+                        except GameError:
+                            near = spots(name, *pos)
+                            error = self.arrive(name, near[0][:2]) if near else "personne où se tenir"
+                            if error and not self.alive():  # arrêté par arrive : relancé par explore
+                                raise GameError(f"arrivée à côté : {error}")
+                            if error:
+                                continue
+                            talk_to(game, near[0][2], finish=False)
                         self.finish(game)
                         if happened(said):
                             return
@@ -304,7 +315,12 @@ class Explorer:
         try:
             self.within_budget(talk)
         except GameError as e:
-            record["erreur"] = str(e)[:400]
+            if record.get("bouge") and not any(window == 0 for _, window, _ in game.texts[before:]):
+                # Un PNJ qui bouge sans cesse, rattrapé nulle part dans le budget : aucun dialogue (le nom de la
+                # carte, à chaque téléport, ne compte pas)
+                record["insaisissable"] = str(e)[:200]
+            else:
+                record["erreur"] = str(e)[:400]
         record["textes"] = texts_since(game, before)
         record["anomalies"] = [f"{kind} : {text}" for _, kind, text in game.anomalies[anomalies:]]
         record["combats"] = game.battles[battles:]
@@ -450,6 +466,10 @@ def summary(results):
     if challenge_rooms:
         lines.append(f"\nSalles de défi, de concours ou de link, à tester par un vrai défi ({len(challenge_rooms)}) :")
         lines.append("  " + ", ".join(challenge_rooms))
+    elusive = [(r["carte"], i) for r in results for i in r.get("interactions", []) if i.get("insaisissable")]
+    if elusive:
+        lines.append("\nPNJ insaisissables (ils bougent sans cesse ; rattrapés nulle part) :")
+        lines += [f"  {name} {i['genre']} {i['x']},{i['y']} ({i['script']})" for name, i in elusive]
     challenges = [(r["carte"], i) for r in results for i in r.get("interactions", []) if i.get("defi")]
     if challenges:
         lines.append("\nDéfis lancés par un PNJ, à tester par un vrai défi :")

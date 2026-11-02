@@ -54,6 +54,14 @@ vérifient aussi le type de combat. Renuméroter Kanto déplacerait les drapeaux
 
 ## Ce que l'explorateur ne fait pas (à tester autrement)
 
+Limites connues, qui restent dans ses « interactions en erreur » sans être des bugs :
+- **MARC** (Grotte Originelle B1F) repose sa question tant qu'on ne répond pas PILIER CELESTE (3ᵉ choix) ; l'explorateur
+  répond A (1ᵉʳ choix) ou B (« Aucun souvenir »).
+- **Le garçon de l'Arène de Clémenti-Ville** : la case à côté de lui déclenche sa visite de l'Arène à chaque
+  téléport, le budget s'épuise.
+- PNJ « insaisissables » (ils marchent sans cesse, Koichi Route 115) et « inaccessibles » (décor du camion, panneaux
+  au-dessus d'un mur, tunnel de l'Île 3 derrière des rochers) : listés à part.
+
 - **Salles de défi, de concours, de link** (Zone de Combat, Tentes, Mont Combat, Pyramide, concours, Colisée,
   Centre Troc, Union Room) : on n'y entre que pendant un défi. Par téléport, hors défi, un combat démarre sans
   données (division par zéro en `CB2_HandleStartBattle`, 0xc0000094) : pas un chemin du jeu, mais à tester par un vrai
