@@ -23,6 +23,8 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `jeu.options [N V]` | toutes les options (bits de la sauvegarde) ; `N V` met l'option N à V |
 | | `jeu.murs [1\|0]`, `jeu.rencontres [1\|0]` | traverser les murs, Pokémon sauvages (les réglages du menu DEBUG) |
 | | `jeu.safari [PAS [BALLS]]` | Parc Safari : en mode Safari ou non, pas restants, SAFARI BALLS ; les met (fin du temps ou des balls en un pas, scénario `kanto_safari_exit`) |
+| | `joueur.lettre N OBJET [1]` | lettre `ITEM_*_MAIL` à 9 mots (Easy Chat) signée du joueur, donnée au Pokémon `N` de l'équipe ; `1` ouvre l'écran de lecture (`ReadMail`, retour sur la carte), comme LIRE dans le menu de l'équipe (scénario `kanto_mail`) |
+| | `joueur.oeuf N` | le Pokémon `N` de l'équipe devient un œuf prêt à éclore ; `scripts.lancer EventScript_EggHatch` avec `VAR_0x8004 = N` le fait éclore (scénario `egg_hatch_kanto`) |
 | | `jeu.stat N [V]` | statistique de jeu `GAME_STAT_*` (nombre d'entrées au Panthéon, date de la première, œufs éclos, victoires en link…), mise à `V` si donné (scénario `kanto_card_stickers`) |
 | | `jeu.errants [1\|2]` | Pokémon errants de la région (espèce, niveau, actif, carte, PV) ; `1` les lâche (`InitRoamer`, comme leur script), `2` les met sur la carte du joueur jusqu'au prochain changement de carte (scénario `kanto_roamer`) |
 | | `jeu.menustart` | entrées du menu Start (`MENU_ACTION_*`) et curseur (`game.start_menu()` dans le banc) |

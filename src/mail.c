@@ -447,6 +447,12 @@ void ReadMail(struct Mail *mail, MainCallback exitCallback, bool8 hasText)
     u16 buffer[2];
     u16 species;
 
+    if (gSaveBlock2Ptr->optionsMenuStyle) // PokemonNative3G : MENUS = KANTO, lettre de Rouge Feu (kanto_mail.c)
+    {
+        Kanto_ReadMail(mail, exitCallback, hasText);
+        return;
+    }
+
     sMailRead = AllocZeroed(sizeof(*sMailRead));
     sMailRead->language = GAME_LANGUAGE;
     sMailRead->international = TRUE;

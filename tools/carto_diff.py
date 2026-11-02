@@ -123,6 +123,7 @@ def source(path_or_name, base):
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     short = '--court' in sys.argv
+    shown = None if '--tout' in sys.argv else 12   # --tout : toutes les différences
     rf_file = args[0]
     # NOM_RF=NOM_FUSION[@fichier.c] : comparer à une autre fonction que celle que l'inventaire a devinée
     forced = {}
@@ -158,11 +159,11 @@ def main():
         print(f'{rf_name} ~ {fu_name} ({fu_file}) : {len(ops)} différence(s)')
         if short:
             continue
-        for tag, i1, i2, j1, j2 in ops[:12]:
+        for tag, i1, i2, j1, j2 in ops[:shown]:
             ctx = ' '.join(ta[max(0, i1 - 4):i1])
             print(f'    … {ctx} | RF « {" ".join(ta[i1:i2])} » / fusion « {" ".join(tb[j1:j2])} »')
-        if len(ops) > 12:
-            print(f'    … et {len(ops) - 12} autres')
+        if shown and len(ops) > shown:
+            print(f'    … et {len(ops) - shown} autres (--tout pour les voir)')
     print(f'\n{same} fonction(s) au même code')
 
 

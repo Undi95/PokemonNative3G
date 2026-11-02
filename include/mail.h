@@ -18,6 +18,7 @@
 
 // mail.h
 void ReadMail(struct Mail *mail, MainCallback exitCallback, bool8 hasText);
+void Kanto_ReadMail(struct Mail * mail, void (*savedCallback)(void), bool8 messageExists); // kanto_mail.c (MENUS = KANTO)
 
 // mail_data.h
 void ClearAllMail(void);

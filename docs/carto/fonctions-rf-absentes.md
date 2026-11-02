@@ -420,10 +420,6 @@ ZeroName, NameIsEmpty
 ### load_save.c (commun, 2/2)
 SaveSerializedGame, LoadSerializedGame
 
-### mail.c (commun, 8/9)
-DoInitMailView, CB2_InitMailView, BufferMailMessage, AddMailMessagePrinters, CB2_RunShowMailCB,
-ShowMailCB_WaitFadeIn, ShowMailCB_WaitButton, ShowMailCB_Teardown
-
 ### mail_data.c (commun, 4/4)
 ClearMailData, ClearMailStruct, GiveMailToMon2, TakeMailFromMon2
 

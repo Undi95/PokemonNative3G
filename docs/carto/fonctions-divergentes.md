@@ -1035,7 +1035,7 @@ ClearSav2, ClearSav1, SetSaveBlocksPointers, MoveSaveBlocks_ResetHeap, ApplyNewE
 m4aSoundInit
 
 ### mail.c
-ReadMail
+ReadMail ✓
 
 ### mail_data.c
 MonHasMail, GiveMailToMon, SpeciesToMailSpecies, MailSpeciesToSpecies, TakeMailFromMon

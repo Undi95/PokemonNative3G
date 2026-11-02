@@ -454,7 +454,8 @@ static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, u16 *speciesL
     case 1:
         // Create mon sprite
         SetMultiuseSpriteTemplateToPokemon(GetMonSpritePalStruct(mon)->tag, position);
-        spriteId = CreateSprite(&gMultiuseSpriteTemplate, EGG_X, EGG_Y, 6);
+        // PokemonNative3G : sprites de RF (option POKéMON) : en (120, 70), comme dans RF (EggHatchCreateMonSprite)
+        spriteId = CreateSprite(&gMultiuseSpriteTemplate, EGG_X, MON_PICS_KANTO ? 70 : EGG_Y, 6);
         gSprites[spriteId].invisible = TRUE;
         gSprites[spriteId].callback = SpriteCallbackDummy;
         break;
@@ -640,13 +641,16 @@ static void CB2_EggHatch(void)
         if (gSprites[sEggHatchData->eggSpriteId].callback == SpriteCallbackDummy)
         {
             species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
-            DoMonFrontSpriteAnimation(&gSprites[sEggHatchData->monSpriteId], species, FALSE, 1);
+            if (MON_PICS_KANTO) // PokemonNative3G : sprites de RF (option POKéMON), CB2_EggHatch_1 de RF : le cri seul
+                PlayCry_Normal(species, 0);
+            else
+                DoMonFrontSpriteAnimation(&gSprites[sEggHatchData->monSpriteId], species, FALSE, 1);
             sEggHatchData->state++;
         }
         break;
     case 4:
         // Wait for Pokémon's front sprite animation
-        if (gSprites[sEggHatchData->monSpriteId].callback == SpriteCallbackDummy)
+        if (MON_PICS_KANTO ? IsCryFinished() : gSprites[sEggHatchData->monSpriteId].callback == SpriteCallbackDummy) // RF : la fin du cri
             sEggHatchData->state++;
         break;
     case 5:
@@ -786,7 +790,8 @@ static void SpriteCB_Egg_Shake3(struct Sprite *sprite)
             sprite->sTimer = 0;
             species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
             gSprites[sEggHatchData->monSpriteId].x2 = 0;
-            gSprites[sEggHatchData->monSpriteId].y2 = 0;
+            // PokemonNative3G : sprites de RF (option POKéMON) : placés par leur y_offset, comme dans RF (SpriteCB_Egg_2)
+            gSprites[sEggHatchData->monSpriteId].y2 = MON_PICS_KANTO ? gMonFrontPicCoords[species].y_offset : 0;
         }
         else
         {

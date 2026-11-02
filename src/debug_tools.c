@@ -28,6 +28,7 @@
 #include "gpu_regs.h"
 #include "item.h"
 #include "m4a.h"
+#include "mail.h"
 #include "main.h"
 #include "metatile_behavior.h"
 #include "money.h"
@@ -49,8 +50,10 @@
 #include "window.h"
 #include "constants/characters.h"
 #include "constants/moves.h"
+#include "constants/easy_chat.h"
 #include "constants/flags.h"
 #include "constants/game_stat.h"
+#include "constants/items.h"
 #include "constants/vars.h"
 #include "constants/kanto.h"
 #include "constants/kanto_flags_vars.h"
@@ -761,6 +764,68 @@ static void Cmd_SetMove(const s32 *args, u32 argCount, struct DebugToolsOutput *
                      args[1], GetMonData(mon, MON_DATA_PP1 + args[1]));
 }
 
+// Lettre OBJET (ITEM_*_MAIL) donnée au Pokémon N de l'équipe, avec 9 mots et la signature du joueur (comme une lettre
+// écrite dans l'Easy Chat) ; LIRE = 1 ouvre l'écran de lecture (ReadMail, comme LIRE dans le menu de l'équipe),
+// retour sur la carte
+static const u16 sDebugMailWords[MAIL_WORDS_COUNT] = {
+    EC_WORD_HELLO, EC_WORD_FRIEND, EC_WORD_POKEMON, EC_WORD_BATTLE, EC_WORD_GOOD,
+    EC_WORD_THANK_YOU, EC_WORD_YOU, EC_WORD_LETTER, EC_WORD_SEE_YA,
+};
+
+static void Cmd_Mail(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    struct Pokemon *mon;
+    u8 mailId;
+    u32 i;
+
+    if ((u32)args[0] >= PARTY_SIZE || !IS_ITEM_MAIL(args[1]))
+    {
+        DebugTools_Print(out, "refuse : equipe 0-5, objet ITEM_*_MAIL (%d a %d)\n", ITEM_ORANGE_MAIL, ITEM_RETRO_MAIL);
+        return;
+    }
+    mon = &gPlayerParty[args[0]];
+    if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
+    {
+        DebugTools_Print(out, "refuse : pas de Pokemon en %d\n", args[0]);
+        return;
+    }
+    if (MonHasMail(mon))
+        TakeMailFromMon(mon);
+    mailId = GiveMailToMonByItemId(mon, args[1]);
+    if (mailId == MAIL_NONE)
+    {
+        DebugTools_Print(out, "refuse : plus de place pour une lettre\n");
+        return;
+    }
+    for (i = 0; i < MAIL_WORDS_COUNT; i++)
+        gSaveBlock1Ptr->mail[mailId].words[i] = sDebugMailWords[i];
+    DebugTools_Print(out, "Pokemon %d : lettre %d (objet %d)\n", args[0], mailId, args[1]);
+    if (argCount >= 3 && args[2] == 1 && gMain.callback2 == CB2_Overworld)
+    {
+        ReadMail(&gSaveBlock1Ptr->mail[mailId], CB2_ReturnToField, TRUE);
+        DebugTools_Print(out, "lecture ouverte\n");
+    }
+}
+
+// Le Pokémon N de l'équipe devient un œuf prêt à éclore (MON_DATA_IS_EGG, 0 cycle d'éclosion dans l'amitié) ; le script
+// EventScript_EggHatch avec VAR_0x8004 = N le fait éclore (scénario egg_hatch_kanto)
+static void Cmd_Egg(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    struct Pokemon *mon;
+    bool8 isEgg = TRUE;
+    u8 cycles = 0;
+
+    if ((u32)args[0] >= PARTY_SIZE || GetMonData(&gPlayerParty[args[0]], MON_DATA_SPECIES) == SPECIES_NONE)
+    {
+        DebugTools_Print(out, "refuse : pas de Pokemon en %d (equipe 0-5)\n", args[0]);
+        return;
+    }
+    mon = &gPlayerParty[args[0]];
+    SetMonData(mon, MON_DATA_IS_EGG, &isEgg);
+    SetMonData(mon, MON_DATA_FRIENDSHIP, &cycles);
+    DebugTools_Print(out, "Pokemon %d : oeuf d'espece %d, pret a eclore\n", args[0], GetMonData(mon, MON_DATA_SPECIES));
+}
+
 static void Cmd_Bag(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
     u32 pocket, i;
@@ -1038,6 +1103,8 @@ static const u8 sName_Story[] = _("Histoires finies");
 static const u8 sName_Party[] = _("Équipe");
 static const u8 sName_Bag[] = _("Sac et argent");
 static const u8 sName_SetMove[] = _("Donner une capacité");
+static const u8 sName_Mail[] = _("Lettre");
+static const u8 sName_Egg[] = _("Oeuf à faire éclore");
 static const u8 sName_Battle[] = _("Combat");
 static const u8 sName_Sprites[] = _("Sprites");
 static const u8 sName_Palette[] = _("Palette");
@@ -1075,6 +1142,8 @@ const struct DebugTool gDebugTools[] =
     {"joueur.equipe", DEBUG_TOOLS_PLAYER, sName_Party, "equipe : espece, PV, dresseur d'origine, lieu de rencontre", 0, Cmd_Party},
     {"joueur.sac", DEBUG_TOOLS_PLAYER, sName_Bag, "argent et poches du sac", 0, Cmd_Bag},
     {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE : donne la capacite (et ses PP)", 3, Cmd_SetMove},
+    {"joueur.oeuf", DEBUG_TOOLS_PLAYER, sName_Egg, "N : le Pokemon N devient un oeuf pret a eclore (EventScript_EggHatch, VAR_0x8004 = N)", 1, Cmd_Egg},
+    {"joueur.lettre", DEBUG_TOOLS_PLAYER, sName_Mail, "N OBJET [1] : lettre ITEM_*_MAIL a 9 mots au Pokemon N ; 1 = la lire (sur la carte)", 2, Cmd_Mail},
     {"combat.etat", DEBUG_TOOLS_BATTLE, sName_Battle, "type, combattants, controleurs", 0, Cmd_Battle},
     {"gfx.sprites", DEBUG_TOOLS_GFX, sName_Sprites, "sprites utilises : position, tile, palette, animation", 0, Cmd_Sprites},
     {"gfx.palette", DEBUG_TOOLS_GFX, sName_Palette, "TYPE BANQUE (0 BG, 1 OBJ) : couleurs non fondues, fondues, a l'ecran", 2, Cmd_Palette},

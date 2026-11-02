@@ -669,3 +669,44 @@ Task_YesNoMenu_HandleInput équivalente Task_HandleYesNoInput (script_menu.c d'�
 CreatePCMenuWindow équivalente CreatePCMultichoice (script_menu.c de la fusion : PC de LÉO/LANETTE, du joueur, du PROF. CHEN, Panthéon de la région) ; police et lignes de RF avec MENUS = KANTO
 MultiChoicePrintHelpDescription équivalente DrawLinkServicesMultichoiceMenu (script_menu.c d'Émeraude) : aide des menus link
 QL_DestroyAbortedDisplay écartée journal de RF
+# pokemon_storage_system_*.c : le PC de stockage de RF = celui d'Émeraude (gStorage = sStorage, JOY_REPT = JOY_REPEAT,
+# sInMultiMoveMode = sAutoActionOn, CURSOR_AREA_IN_HAND = CURSOR_AREA_BOX_TITLE = 2, MultiMove_*Bg = MultiMove_*Move)
+Item_FromMonToMoving équivalente TakeItemFromMon (pokemon_storage_system.c d'Émeraude), même code
+Item_GiveMovingToMon équivalente GiveItemToMon (pokemon_storage_system.c d'Émeraude), même code
+Item_TakeMons équivalente MoveItemFromMonToBag (pokemon_storage_system.c d'Émeraude), même code
+MultiMove_Function_ChangeSelection équivalente MultiMove_ChangeSelection (pokemon_storage_system.c d'Émeraude), même code
+MultiMove_Function_PlaceMons équivalente MultiMove_PlaceMons (pokemon_storage_system.c d'Émeraude), même code (Q_8_8(-1) = -256)
+MultiMove_Function_Start équivalente MultiMove_Start (pokemon_storage_system.c d'Émeraude), même code
+HandleInput_BoxTitle équivalente HandleInput_OnBox (pokemon_storage_system.c d'Émeraude) : SELECT = ToggleCursorAutoAction (ToggleCursorMultiMoveMode de RF)
+HandleInput_InBox_GrabbingMultiple équivalente InBoxInput_SelectingMultiple (pokemon_storage_system.c d'Émeraude), même code
+HandleInput_InBox_MovingMultiple équivalente InBoxInput_MovingMultiple (pokemon_storage_system.c d'Émeraude), même code
+SetMovedMonData équivalente SetMovingMonData (pokemon_storage_system.c d'Émeraude), même code
+TrySetDisplayMonData équivalente TryRefreshDisplayMon (pokemon_storage_system.c d'Émeraude), même code
+DestroyAllIconsInColumn équivalente DestroyBoxMonIconsInColumn (pokemon_storage_system.c d'Émeraude), même code
+DoReleaseMonComeBackAnim équivalente ReshowReleaseMon (pokemon_storage_system.c d'Émeraude), même code
+SetBoxSpeciesAndPersonalities équivalente GetIncomingBoxMonData (pokemon_storage_system.c d'Émeraude), même code
+SpriteCB_BoxScrollArrow équivalente SpriteCB_Arrow (pokemon_storage_system.c d'Émeraude), même code
+SpriteCB_MovePartySpriteToNextSlot équivalente SpriteCB_MovePartyMonToNextSlot (pokemon_storage_system.c d'Émeraude), même code
+SeekToNextMonInBox équivalente StorageSystemGetNextMonIndex (pokemon_storage_system.c d'Émeraude), même code
+# text_window.c : chargements de cadres de RF = ceux d'Émeraude ; aide et journal de RF écartés
+LoadHelpMessageWindowGfx écartée aide de RF (help_system)
+LoadMenuMessageWindowGfx équivalente LoadKantoMenuMessageWindowGfx (text_window.c de la fusion), cadre de RF
+LoadUserWindowGfx équivalente LoadUserWindowBorderGfx (text_window.c d'Émeraude), même code
+LoadUserWindowGfx2 équivalente LoadUserWindowBorderGfx (text_window.c d'Émeraude), même code
+LoadUserWindowGfxByFrame équivalente LoadWindowGfx (text_window.c d'Émeraude) : gUserFrames = sWindowFrames (cadres des deux jeux)
+LoadQuestLogWindowTiles écartée journal de RF
+# daycare.c : l'éclosion de RF = egg_hatch.c d'Émeraude ; avec l'option POKéMON = KANTO, le cri seul et le placement de RF
+CB2_EggHatch_0 équivalente CB2_LoadEggHatch (egg_hatch.c d'Émeraude), même code
+CB2_EggHatch_1 équivalente CB2_EggHatch (egg_hatch.c d'Émeraude) ; sprites de RF : PlayCry_Normal puis IsCryFinished, comme RF (scénario egg_hatch_kanto)
+CreatedHatchedMon équivalente CreateHatchedMon (egg_hatch.c d'Émeraude) : Émeraude garde aussi la langue de l'œuf
+DayCare_GetBoxMonNickname équivalente GetBoxMonNickname (daycare.c d'Émeraude), même code
+DayCare_GetMonNickname équivalente GetMonNickname2 (daycare.c d'Émeraude), même code
+SpriteCB_Egg_0 équivalente SpriteCB_Egg_Shake1 (egg_hatch.c d'Émeraude), même code
+SpriteCB_Egg_1 équivalente SpriteCB_Egg_Shake2 (egg_hatch.c d'Émeraude), même code
+SpriteCB_Egg_2 équivalente SpriteCB_Egg_Shake3 (egg_hatch.c d'Émeraude) ; sprites de RF : y2 = y_offset, sprite en y 70, comme RF
+SpriteCB_Egg_3 équivalente SpriteCB_Egg_WaitHatch (egg_hatch.c d'Émeraude), même code
+SpriteCB_Egg_4 équivalente SpriteCB_Egg_Hatch (egg_hatch.c d'Émeraude), même code
+SpriteCB_Egg_5 équivalente SpriteCB_Egg_Reveal (egg_hatch.c d'Émeraude), même code
+# mail_data.c
+GiveMailToMon2 équivalente GiveMailToMon (mail_data.c d'Émeraude), même code
+TakeMailFromMon2 équivalente TakeMailFromMonAndSave (mail_data.c d'Émeraude), même code

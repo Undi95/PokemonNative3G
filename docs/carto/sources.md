@@ -204,7 +204,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | ereader_helpers.c | commun | 17 | 1 | 1 | 0 | 100 | 7 | 9 |  |
 | evolution_scene.c | commun | 23 | 1 | 1 | 0 | 100 | 13 | 9 |  |
 | fldeff_rocksmash.c | commun | 10 | 7 | 1 | 0 | 14 | 0 | 3 |  |
-| mail.c | commun | 10 | 9 | 1 | 0 | 11 | 0 | 1 |  |
 | mail_data.c | commun | 12 | 4 | 0 | 0 | 0 | 3 | 5 |  |
 | window.c | commun | 21 | 1 | 0 | 0 | 0 | 12 | 8 |  |
 | decompress.c | commun | 18 | 0 | 0 | 0 | 100 | 10 | 8 |  |
@@ -276,6 +275,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | image_processing_effects.c | commun | 38 | 0 | 0 | 0 | 100 | 37 | 1 |  |
 | librfu_sio32id.c | commun | 4 | 0 | 0 | 0 | 100 | 3 | 1 |  |
 | m4a.c | commun | 72 | 0 | 0 | 0 | 100 | 71 | 1 |  |
+| mail.c | commun | 10 | 9 | 0 | 9 | 100 | 0 | 1 | copie kanto_mail.c : 10/10 fonctions |
 | play_time.c | commun | 5 | 0 | 0 | 0 | 100 | 4 | 1 |  |
 | pokedex.c | commun | 8 | 0 | 0 | 0 | 100 | 7 | 1 |  |
 | agb_flash_1m.c | commun | 2 | 0 | 0 | 0 | 100 | 2 | 0 |  |
