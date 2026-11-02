@@ -95,6 +95,14 @@ def pieges():
     print('== Constantes de même nom, son différent ==')
     for c in traps:
         print(f'{c:28} RF = {rc[c][1]:16} fusion = {fc[c][1]:16} -> pour le son de RF : {same_song(rc[c][1], fjp)}')
+    # Même nom d'origine porté par un morceau d'Émeraude et par la copie de RF (MUS_NAMINORI : MUS_SURF de Hoenn et
+    # MUS_RG_SURF) : la constante de RF de ce nom (MUS_SURF) désigne la copie, celle de la fusion le morceau de Hoenn
+    same_name = sorted(c for jp, consts in fjp.items() if any('_RG_' in x for x in consts)
+                       for c in consts if '_RG_' not in c and c in rc and rc[c][1] == jp)
+    print('\n== Même nom d\'origine, morceaux différents (Émeraude / copie de RF) ==')
+    for c in same_name:
+        print(f'{c:28} RF = {same_song(rc[c][1], fjp)} ; {c} de la fusion = le morceau d\'Émeraude')
+    traps += same_name
     pattern = re.compile(r'\b(' + '|'.join(traps) + r')\b')
     print('\n== Leurs usages dans le code venu de RF (à vérifier un par un : un commentaire peut le justifier) ==')
     count = 0
@@ -125,6 +133,13 @@ def fichiers():
     fc, rc = songs_h(ROOT), songs_h(RF)
     fal = aliases(ROOT)
     fnames = {c: jp for c, (_, jp) in fc.items()}
+    # MUS_SURF de la fusion n'est pas MUS_SURF de RF (MUS_RG_SURF) : même nom d'origine, morceau d'Émeraude
+    fjp = by_origin(fc)
+    for jp, consts in fjp.items():
+        if any('_RG_' in c for c in consts):
+            for c in consts:
+                if '_RG_' not in c:
+                    fnames[c] = jp + "(Émeraude)"
     fnames.update({a: fnames[t] for a, t in fal.items() if t in fnames})
     rnames = {c: jp for c, (_, jp) in rc.items()}
 

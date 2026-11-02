@@ -42,3 +42,6 @@ def play(game):
     expect_text(game, "KADABRA utilise COUPE")
     expect_text(game, "Voulez-vous utiliser SURF")
     expect_text(game, "POKé MONTURE")
+    # Le Surf à Kanto : la musique de RF (MUS_SURF de RF = MUS_RG_SURF), pas celle de Hoenn de même nom d'origine
+    expect_song(game, "MUS_RG_SURF")
+    expect(game, "MUS_SURF" not in [name for f, name in game.songs], "pas la musique du Surf de Hoenn à Kanto")

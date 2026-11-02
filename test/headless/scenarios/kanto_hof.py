@@ -21,6 +21,6 @@ def play(game):
     # Vérifications
     expect_text(game, "Bienvenue au PANTHEON")
     expect_flag(game, "FLAG_KANTO_SYS_GAME_CLEAR")
-    expect_song(game, "MUS_HALL_OF_FAME")
+    expect_song(game, "MUS_RG_HALL_OF_FAME")    # MUS_HALL_OF_FAME de RF (celui d'Émeraude : le Panthéon de Hoenn)
     expect_song(game, "MUS_RG_CREDITS")
     expect_map(game, "PalletTown")

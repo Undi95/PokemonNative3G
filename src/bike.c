@@ -1035,8 +1035,12 @@ void GetOnOffBike(u8 transitionFlags)
     else
     {
         SetPlayerAvatarTransitionFlags(transitionFlags);
-        Overworld_SetSavedMusic(MUS_CYCLING);
-        Overworld_ChangeMusicTo(MUS_CYCLING);
+        // Rouge Feu (GetOnOffBike) : à Kanto, la musique du vélo de RF, sauf sur la Route Victoire et alentour
+        if (Overworld_MusicCanOverrideMapMusic(MUS_CYCLING))
+        {
+            Overworld_SetSavedMusic(Overworld_GetCyclingMusic());
+            Overworld_ChangeMusicTo(Overworld_GetCyclingMusic());
+        }
     }
 }
 

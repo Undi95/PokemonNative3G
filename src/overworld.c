@@ -1261,6 +1261,32 @@ void Overworld_ResetMapMusic(void)
     ResetMapMusic();
 }
 
+// Rouge Feu : le vélo et le Surf gardent la musique de la carte sur la Route Victoire, la Route 23 et au Plateau
+// Indigo (MUS_CYCLING ou MUS_SURF ; toujours vrai à Hoenn)
+bool32 Overworld_MusicCanOverrideMapMusic(u16 music)
+{
+    if (!Fusion_IsInKanto())
+        return TRUE;
+    if (music == MUS_CYCLING || music == MUS_SURF)
+    {
+        if (gMapHeader.regionMapSectionId == MAPSEC_KANTO_VICTORY_ROAD || gMapHeader.regionMapSectionId == MAPSEC_ROUTE_23 || gMapHeader.regionMapSectionId == MAPSEC_INDIGO_PLATEAU)
+            return FALSE;
+    }
+    return TRUE;
+}
+
+// La musique du Surf et du vélo de la région : MUS_SURF et MUS_CYCLING de RF sont MUS_RG_SURF et MUS_RG_CYCLING (MUS_SURF
+// et MUS_CYCLING d'Émeraude ont le même nom d'origine mais sont les morceaux de Hoenn)
+u16 Overworld_GetSurfMusic(void)
+{
+    return Fusion_IsInKanto() ? MUS_RG_SURF : MUS_SURF;
+}
+
+u16 Overworld_GetCyclingMusic(void)
+{
+    return Fusion_IsInKanto() ? MUS_RG_CYCLING : MUS_CYCLING;
+}
+
 void Overworld_PlaySpecialMapMusic(void)
 {
     u16 music = GetCurrLocationDefaultMusic();
@@ -1279,8 +1305,8 @@ void Overworld_PlaySpecialMapMusic(void)
             music = gSaveBlock1Ptr->savedMusic;
         else if (GetCurrentMapType() == MAP_TYPE_UNDERWATER)
             music = MUS_UNDERWATER;
-        else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-            music = MUS_SURF;
+        else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && Overworld_MusicCanOverrideMapMusic(MUS_SURF))
+            music = Overworld_GetSurfMusic();
     }
 
     if (music != GetCurrentMapMusic())
@@ -1312,10 +1338,10 @@ static void TransitionMapMusic(void)
         u16 currentMusic = GetCurrentMapMusic();
         if (newMusic != MUS_ABNORMAL_WEATHER && newMusic != MUS_NONE)
         {
-            if (currentMusic == MUS_UNDERWATER || currentMusic == MUS_SURF)
+            if (currentMusic == MUS_UNDERWATER || currentMusic == Overworld_GetSurfMusic())
                 return;
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-                newMusic = MUS_SURF;
+            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && Overworld_MusicCanOverrideMapMusic(MUS_SURF))
+                newMusic = Overworld_GetSurfMusic();
         }
         if (newMusic != currentMusic)
         {

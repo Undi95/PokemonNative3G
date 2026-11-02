@@ -123,13 +123,18 @@ sa constante : RF et Émeraude ont 17 constantes de même nom mais de son diffé
 sont `SE_RG_SHOP` et `SE_RG_DOOR` (ceux d'Émeraude sont `SE_RS_SHOP` et `SE_RS_DOOR` de RF) ; `MUS_GYM`, `MUS_VS_*`,
 `MUS_VICTORY_*`, `MUS_TITLE`… de RF sont les `MUS_RG_*`. Inversement Émeraude réutilise des noms d'origine pour ses
 propres morceaux (`MUS_AJITO` = repaire Aqua/Magma, `MUS_RG_AJITO` = repaire Rocket) : on prend la copie `RG_`
-d'abord. L'importeur des scripts (`tools/kanto/import_kanto.py`, `music` / `sound`) suit cette règle depuis le
+d'abord. Quatre constantes ont ainsi le même nom **et** le même nom d'origine dans les deux jeux, mais pas le même
+morceau : `MUS_SURF`, `MUS_CYCLING`, `MUS_HALL_OF_FAME`, `MUS_POKE_CENTER` de RF sont les `MUS_RG_*` de la fusion.
+Le code commun choisit selon la région : `Overworld_GetSurfMusic`, `Overworld_GetCyclingMusic`, et la règle de RF
+`Overworld_MusicCanOverrideMapMusic` (pas de musique de vélo ni de Surf sur la Route Victoire, la Route 23 et au
+Plateau Indigo ; toujours vrai à Hoenn). L'importeur des scripts (`tools/kanto/import_kanto.py`, `music` / `sound`) suit cette règle depuis le
 2026-11-02 ; avant, `MUS_X` devenait `MUS_RG_X` s'il existait et les `SE_` restaient tels quels.
 
 Corrigé le 2026-11-02 (scénario `kanto_sounds`) : toutes les portes de Kanto (porte d'Émeraude), la caisse des écrans
 de RF (boutique, vente au sac, boîte CT, sac à baies), du Casino de Céladopole, du Musée d'Argenta et de la photo de
 la carte de dresseur, la fanfare des soins hors Centre (toilettage de la sœur du rival, capitaine de l'Océane,
-`EventScript_OutOfCenterPartyHeal`).
+`EventScript_OutOfCenterPartyHeal`) ; puis (lecture des « à vérifier ») la musique du Surf, du vélo, de la Piste
+Cyclable et du Panthéon de Kanto (scénarios `poke_monture`, `redleaf_acro`).
 
 `python tools/audit_sons.py` (après `tools/audit_sons.sh`) :
 - **pieges** : il ne reste que des usages justifiés (machine à sous de Kanto : `SE_RS_SHOP` de RF ; Route Victoire

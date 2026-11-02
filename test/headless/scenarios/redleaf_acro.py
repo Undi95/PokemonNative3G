@@ -43,3 +43,6 @@ def play(game):
 
     # Vérifications
     expect_text(game, "VELO CROSS est sélectionné")
+    # Le vélo à Kanto (Bourg Palette) : la musique de RF (MUS_CYCLING de RF = MUS_RG_CYCLING), pas celle de Hoenn
+    expect_song(game, "MUS_RG_CYCLING")
+    expect(game, "MUS_CYCLING" not in [name for f, name in game.songs], "pas la musique du vélo de Hoenn à Kanto")

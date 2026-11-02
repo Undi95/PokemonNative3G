@@ -3114,7 +3114,9 @@ u8 FldEff_UseSurf(void)
     u8 taskId = CreateTask(Task_SurfFieldEffect, 0xff);
     gTasks[taskId].tMonId = gFieldEffectArguments[0];
     Overworld_ClearSavedMusic();
-    Overworld_ChangeMusicTo(MUS_SURF);
+    // Rouge Feu (FldEff_UseSurf) : à Kanto, la musique du Surf de RF, sauf sur la Route Victoire et alentour
+    if (Overworld_MusicCanOverrideMapMusic(MUS_SURF))
+        Overworld_ChangeMusicTo(Overworld_GetSurfMusic());
     return FALSE;
 }
 

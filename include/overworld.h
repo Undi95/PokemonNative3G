@@ -106,6 +106,9 @@ u16 GetLocationMusic(struct WarpData *warp);
 u16 GetCurrLocationDefaultMusic(void);
 u16 GetWarpDestinationMusic(void);
 void Overworld_ResetMapMusic(void);
+bool32 Overworld_MusicCanOverrideMapMusic(u16 music); // Rouge Feu
+u16 Overworld_GetSurfMusic(void);
+u16 Overworld_GetCyclingMusic(void);
 void Overworld_PlaySpecialMapMusic(void);
 void Overworld_SetSavedMusic(u16 songNum);
 void Overworld_ClearSavedMusic(void);

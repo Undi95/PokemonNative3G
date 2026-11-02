@@ -46,6 +46,11 @@
   envoyait à l'entrée du Parc Safari de la Route 121, à Hoenn).
 - Vieil homme de Jadielle : avec SAC = KANTO, sa démonstration de capture ouvre le sac de Rouge Feu (il passe à la
   poche des POKé BALLS et choisit la sienne), au lieu de celui d'Émeraude.
+- Musiques de Kanto : le Surf, le vélo, la Piste Cyclable et le Panthéon ont leurs musiques de Rouge Feu (ils jouaient
+  celles de Hoenn) ; comme dans Rouge Feu, la Route Victoire, la Route 23 et le Plateau Indigo gardent leur musique à
+  vélo ou en surfant.
+- Parmanie : le RAMOLOSS près de la Zone Safari erre lentement, comme dans Rouge Feu.
+- Carmin-sur-Mer : l'OCEANE qui part ne disparaît plus trop tôt sur la gauche de l'écran.
 - Sons de Kanto : les portes, la caisse (boutique, vente, Casino, Musée, photo) et la fanfare des soins hors Centre
   sont ceux de Rouge Feu (c'étaient des sons d'Émeraude de même nom, et pour les soins un morceau que Rouge Feu ne
   joue jamais).
