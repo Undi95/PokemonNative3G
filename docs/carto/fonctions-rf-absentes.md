@@ -29,7 +29,7 @@ PlayerThrowBall_AnimTranslateLinear_WithFollowup, SetGreyscaleOrOriginalPalette
 AnimShakeMonOrBattleTerrain, AnimShakeMonOrBattleTerrain_Step,
 AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled, AnimTask_ShakeBattleTerrain
 
-### battle_anim_special.c (RF seul, 33/42)
+### battle_anim_special.c (RF seul, 30/42)
 AnimTask_LevelUpHealthBox, AnimTask_IsBallBlockedByTrainerOrDodged, AnimTask_ThrowBall_WaitAnimObjComplete,
 AnimTask_ThrowBallSpecial, AnimTask_ThrowBallSpecial_PlaySfx, SpriteCB_ThrowBall_Init,
 SpriteCB_ThrowBall_ArcFlight, SpriteCB_ThrowBall_TenFrameDelay, SpriteCB_ThrowBall_ShrinkMon,
@@ -38,8 +38,8 @@ SpriteCB_ThrowBall_DoShake, SpriteCB_ThrowBall_DelayThenBreakOut, SpriteCB_Throw
 SpriteCB_ThrowBall_DoClick, SpriteCB_ThrowBall_FinishClick, BattleAnimObj_SignalEnd, CreateStarsWhenBallClicks,
 SpriteCB_ThrowBall_BeginBreakOut, SpriteCB_ThrowBall_RunBreakOut, TrainerBallBlock, TrainerBallBlock2,
 AnimTask_ShinySparkles, AnimTask_ShinySparkles_WaitSparkles, SpriteCB_ShinySparkles_1,
-SpriteCB_ShinySparkles_2, AnimTask_LoadBaitGfx, AnimTask_FreeBaitGfx, SpriteCB_SafariBaitOrRock_Init,
-SpriteCB_SafariBaitOrRock_WaitPlayerThrow, SpriteCB_SafariBaitOrRock_ArcFlight, AnimTask_SafariGetReaction
+SpriteCB_ShinySparkles_2, SpriteCB_SafariBaitOrRock_Init, SpriteCB_SafariBaitOrRock_WaitPlayerThrow,
+SpriteCB_SafariBaitOrRock_ArcFlight
 
 ### battle_anim_utility_funcs.c (commun, 1/1)
 AnimTask_GetBattleTerrain
@@ -105,11 +105,11 @@ GetReceivedValueInPixels
 ### battle_intro.c (commun, 1/1)
 CopyBattlerSpriteToBg
 
-### battle_main.c (commun, 13/18)
+### battle_main.c (commun, 11/18)
 LinkBattleComputeBattleTypeFlags, PrepareOwnMultiPartnerBuffer, SpriteCB_UnusedDebugSprite,
 SpriteCB_UnusedDebugSprite_Step, SpriteCB_AllyMon, SpriteCB_PlayerThrowInit, UpdatePlayerPosInThrowAnim,
 SpriteCB_PlayerThrowUpdate, BattleIntroOpponentSendsOutMonAnimation, BattleIntroPlayerSendsOutMonAnimation,
-UpdatePartyOwnerOnSwitch_NonMulti, HandleAction_ThrowBait, HandleAction_ThrowRock
+UpdatePartyOwnerOnSwitch_NonMulti
 
 ### battle_message.c (commun, 5/5)
 Localize_TrainerClass_SchoolKid, Localize_TrainerClass_PkmnTrainer, Localize_TrainerClass_Leader,
@@ -138,9 +138,8 @@ PopulateBravoTrainerBattleTowerLostData, DetermineBattleTowerPrize, GiveBattleTo
 Debug_FillEReaderTrainerWithPlayerData, CopyEReaderTrainerName5, BufferEReaderTrainerGreeting,
 PrintEReaderTrainerFarewellMessage, Dummy_TryEnableBravoTrainerBattleTower
 
-### battle_transition.c (commun, 10/10)
-Task_Spiral, Spiral_UpdateFrame, Spiral_Init, Spiral_End, VBlankCB_Spiral, Task_Lorelei, Task_Bruno,
-Task_Agatha, Task_Lance, Task_Blue
+### battle_transition.c (commun, 5/10)
+Task_Spiral, Spiral_UpdateFrame, Spiral_Init, Spiral_End, VBlankCB_Spiral
 
 ### battle_util.c (commun, 1/1)
 AtkCanceller_UnableToUseMove
@@ -759,17 +758,17 @@ SetBGMVolume_SuppressHelpSystemReduction, BGMVolumeMax_EnableHelpSystemReduction
 ### sprite.c (commun, 1/1)
 FreeSpriteTilesIfNotUsingSheet
 
-### start_menu.c (commun, 53/55)
+### start_menu.c (commun, 52/55)
 SetHasPokedexAndPokemon, SetUpStartMenu, AppendToStartMenuItems, SetUpStartMenu_NormalField,
-SetUpStartMenu_SafariZone, SetUpStartMenu_Link, SetUpStartMenu_UnionRoom, DrawSafariZoneStatsWindow,
-DestroySafariZoneStatsWindow, PrintStartMenuItems, DoDrawStartMenu, DrawStartMenuInOneGo, task50_startmenu,
-OpenStartMenuWithFollowupFunc, FieldCB2_DrawStartMenu, SetUpReturnToStartMenu, Task_StartMenuHandleInput,
-StartCB_HandleInput, StartMenu_FadeScreenIfLeavingOverworld, StartMenuPokedexSanityCheck,
-StartMenuPlayerCallback, StartCB_Save1, StartCB_Save2, StartMenu_PrepareForSave, RunSaveDialogCB,
-PrintSaveTextWithFollowupFunc, task50_save_game, CloseSaveMessageWindow, CloseSaveStatsWindow_,
-SetSaveDialogDelayTo60Frames, SaveDialog_Wait60FramesOrAButtonHeld,
-SaveDialog_Wait60FramesThenCheckAButtonHeld, SaveDialogCB_PrintAskSaveText, SaveDialogCB_AskSavePrintYesNoMenu,
-SaveDialogCB_AskSaveHandleInput, SaveDialogCB_PrintAskOverwriteText, SaveDialogCB_AskOverwritePrintYesNoMenu,
+SetUpStartMenu_SafariZone, SetUpStartMenu_Link, SetUpStartMenu_UnionRoom, DestroySafariZoneStatsWindow,
+PrintStartMenuItems, DoDrawStartMenu, DrawStartMenuInOneGo, task50_startmenu, OpenStartMenuWithFollowupFunc,
+FieldCB2_DrawStartMenu, SetUpReturnToStartMenu, Task_StartMenuHandleInput, StartCB_HandleInput,
+StartMenu_FadeScreenIfLeavingOverworld, StartMenuPokedexSanityCheck, StartMenuPlayerCallback, StartCB_Save1,
+StartCB_Save2, StartMenu_PrepareForSave, RunSaveDialogCB, PrintSaveTextWithFollowupFunc, task50_save_game,
+CloseSaveMessageWindow, CloseSaveStatsWindow_, SetSaveDialogDelayTo60Frames,
+SaveDialog_Wait60FramesOrAButtonHeld, SaveDialog_Wait60FramesThenCheckAButtonHeld,
+SaveDialogCB_PrintAskSaveText, SaveDialogCB_AskSavePrintYesNoMenu, SaveDialogCB_AskSaveHandleInput,
+SaveDialogCB_PrintAskOverwriteText, SaveDialogCB_AskOverwritePrintYesNoMenu,
 SaveDialogCB_AskReplacePreviousFilePrintYesNoMenu, SaveDialogCB_AskOverwriteOrReplacePreviousFileHandleInput,
 SaveDialogCB_PrintSavingDontTurnOffPower, SaveDialogCB_DoSave, SaveDialogCB_PrintSaveResult,
 SaveDialogCB_WaitPrintSuccessAndPlaySE, SaveDialogCB_ReturnSuccess, SaveDialogCB_WaitPrintErrorAndPlaySE,

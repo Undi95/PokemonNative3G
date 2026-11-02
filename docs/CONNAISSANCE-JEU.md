@@ -95,6 +95,22 @@ Vérifiés conformes : musique de combat et de victoire, table d'argent (`src/da
 combat (`kanto_battle_bg.c`), nom du rival (`battle_message.c`). Pour repérer les autres :
 `grep -n "TRAINER_CLASS_[A-Z_]*" src/*.c | grep "==\|case "` et comparer avec les mêmes tests dans RF.
 
+## Parc Safari : Hoenn (Émeraude) et Kanto (Rouge Feu)
+
+| | Hoenn | Kanto |
+|---|---|---|
+| Pas | 500 | 600 (`EnterSafariMode`) |
+| Menu START | SAFARI BALLS, Nb | pas restants / 600, BALLS (`DrawSafariZoneStatsWindow`) |
+| Menu de combat | BALL, POKéBLOC, SE RAP., FUITE | BALL, APPAT, PIERRE, FUITE (mêmes actions 6 et 7) |
+| Fuite de départ | 3 | `safariZoneFleeRate` de l'espèce × 100 / 1275 (2 au moins) |
+| Action 6 | POKéBLOC (choix dans la boîte) | APPAT : capture ÷ 2, fuite ÷ 4 tant que le Pokémon mange (2 à 6 tours) |
+| Action 7 | SE RAP. | PIERRE : capture × 2 (20 au plus), fuite × 2 tant qu'il est fâché |
+| Tour du Pokémon | « surveille attentivement » | « surveille », « se fâche », « mange » (`gSafariReactionStringIds`, animation `B_ANIM_SAFARI_REACTION`) |
+| Sortie | émission « Safari » de la télé de Hoenn | rien |
+
+Tout le Safari de Kanto passe par `Fusion_IsInKanto()` (battle_util.c, battle_main.c, battle_ai_script_commands.c,
+battle_controller_safari.c, safari_zone.c, start_menu.c). Scénario : `kanto_safari`.
+
 ## Comportements de la GBA que le PC doit refaire (UBFIX)
 
 Une lecture hors limites ou mal alignée ne plante pas une GBA : elle lit autre chose, toujours la même chose. Le PC

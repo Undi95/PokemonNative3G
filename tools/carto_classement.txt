@@ -3,3 +3,9 @@
 #   catégories : équivalente, morte, link, écartée, manquante
 #   preuve : où est l'équivalent dans la fusion, ou pourquoi la fonction n'a pas à y être
 # Ce classement passe avant le classement automatique (fichier écarté, link, morte dans RF, corps comparés).
+SpriteCB_SafariBaitOrRock_Init équivalente SpriteCB_PokeBlock_Throw (battle_anim_throw.c), même code ; gSafariBaitSpriteTemplate et gSafariRockTemplate l'utilisent
+SpriteCB_SafariBaitOrRock_WaitPlayerThrow équivalente SpriteCB_PokeBlock_LiftArm (battle_anim_throw.c), même code
+SpriteCB_SafariBaitOrRock_ArcFlight équivalente SpriteCB_PokeBlock_Arc (battle_anim_throw.c), même code
+SpriteCB_SafariBaitOrRock_Finish équivalente SpriteCB_ThrowPokeBlock_Free (battle_anim_throw.c), même code
+SpriteCB_PlayerThrowInit équivalente SpriteCB_TrainerThrowObject (battle_main.c), même code
+FieldCB_SafariZoneRanOutOfBalls équivalente FieldCB_ReturnToFieldNoScriptCheckMusic (field_screen_effect.c), même enchaînement

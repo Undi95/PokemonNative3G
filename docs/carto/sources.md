@@ -37,8 +37,8 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | help_system.c | RF seul | 41 | 41 | 0 | 6 | 14 | 0 | 0 | kanto_specials.c (6) |
 | cereader_tool.c | RF seul | 8 | 7 | 0 | 1 | 14 | 0 | 1 | kanto_trainer_tower.c (1) |
 | pokemon_storage_system_misc.c | RF seul | 70 | 15 | 3 | 0 | 20 | 16 | 39 |  |
-| battle_anim_special.c | RF seul | 81 | 42 | 4 | 5 | 21 | 15 | 24 | battle_anim_throw.c (3), kanto_battle_controller_pokedude.c (2) |
 | new_menu_helpers.c | RF seul | 54 | 19 | 3 | 2 | 26 | 11 | 24 | menu.c (2) |
+| battle_anim_special.c | RF seul | 81 | 42 | 4 | 8 | 28 | 15 | 24 | battle_anim_throw.c (6), kanto_battle_controller_pokedude.c (2) |
 | pokemon_storage_system_menu.c | RF seul | 29 | 6 | 2 | 0 | 33 | 10 | 13 |  |
 | field_fadetransition.c | RF seul | 59 | 30 | 2 | 12 | 46 | 5 | 24 | field_screen_effect.c (12) |
 | help_message.c | RF seul | 7 | 7 | 0 | 6 | 85 | 0 | 0 | copie kanto_help_message.c : 6/7 fonctions |
@@ -96,19 +96,19 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_script_commands.c | commun | 284 | 3 | 0 | 0 | 0 | 165 | 116 |  |
 | field_player_avatar.c | commun | 176 | 61 | 4 | 13 | 27 | 51 | 64 | field_player_avatar.c (13) |
 | battle_ai_script_commands.c | commun | 105 | 14 | 0 | 0 | 0 | 3 | 88 |  |
-| battle_transition.c | commun | 134 | 10 | 0 | 0 | 0 | 47 | 77 |  |
+| battle_transition.c | commun | 134 | 10 | 0 | 5 | 50 | 47 | 77 | battle_transition.c (5) |
 | battle_anim_effects_1.c | commun | 154 | 1 | 1 | 0 | 100 | 76 | 77 |  |
 | battle_anim_mons.c | commun | 128 | 12 | 5 | 1 | 50 | 47 | 69 | battle_anim_mons.c (1) |
 | battle_controller_player.c | commun | 123 | 15 | 7 | 2 | 60 | 39 | 69 | kanto_battle_controller_pokedude.c (2) |
 | pokemon.c | commun | 143 | 13 | 1 | 4 | 38 | 68 | 62 | pokemon.c (3), overworld.c (1) |
 | scrcmd.c | commun | 224 | 12 | 2 | 8 | 83 | 144 | 68 | copie kanto_scrcmd.c : 8/224 fonctions |
-| battle_main.c | commun | 106 | 18 | 4 | 1 | 27 | 32 | 56 | battle_main.c (1) |
 | link_rfu_2.c | commun | 149 | 4 | 1 | 0 | 25 | 79 | 66 |  |
+| battle_main.c | commun | 106 | 18 | 4 | 3 | 38 | 32 | 56 | battle_util.c (2), battle_main.c (1) |
 | union_room.c | commun | 110 | 2 | 0 | 0 | 0 | 43 | 65 |  |
 | field_effect_helpers.c | commun | 76 | 7 | 1 | 0 | 14 | 9 | 60 |  |
 | trainer_card.c | commun | 73 | 15 | 1 | 0 | 6 | 6 | 52 |  |
-| start_menu.c | commun | 65 | 55 | 1 | 1 | 3 | 0 | 10 | kanto_specials.c (1) |
 | berry_crush.c | commun | 73 | 4 | 0 | 0 | 0 | 11 | 58 |  |
+| start_menu.c | commun | 65 | 55 | 1 | 2 | 5 | 0 | 10 | start_menu.c (1), kanto_specials.c (1) |
 | link.c | commun | 114 | 2 | 1 | 0 | 50 | 56 | 56 |  |
 | item_use.c | commun | 73 | 58 | 2 | 14 | 27 | 1 | 14 | item_use.c (3), kanto_berry_pouch.c (3), kanto_tm_case.c (2) |
 | trade.c | commun | 66 | 2 | 0 | 0 | 0 | 17 | 47 |  |

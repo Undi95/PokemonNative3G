@@ -369,7 +369,7 @@ SetActionsAndBattlersTurnOrder, TurnValuesCleanUp, CheckFocusPunch_ClearVarsBefo
 RunTurnActionsFunctions, HandleEndTurn_BattleWon, HandleEndTurn_BattleLost, HandleEndTurn_RanFromBattle,
 HandleEndTurn_FinishBattle, FreeResetData_ReturnToOvOrDoEvolutions, TryEvolvePokemon,
 ReturnFromBattleToOverworld, HandleAction_UseMove, HandleAction_Switch, HandleAction_UseItem, TryRunFromBattle,
-HandleAction_Run, HandleAction_WatchesCarefully, HandleAction_SafariZoneBallThrow,
+HandleAction_Run, HandleAction_WatchesCarefully ✓, HandleAction_SafariZoneBallThrow,
 HandleAction_NothingIsFainted, HandleAction_ActionFinished
 
 ### battle_message.c

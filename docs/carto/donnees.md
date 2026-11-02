@@ -16,20 +16,21 @@ map_popup, picture_frame, pokeblock, pokenav, rayquaza_scene, reset_rtc_screen, 
 starter_choose, trainer_hill, types, wallclock
 
 **Communs** (contenu souvent différent ; les variantes RF importées sont sous `graphics/kanto/`) :
-battle_anims, battle_interface (kanto ✓), battle_transitions, berry_blender, berry_crush, berry_fix,
-cave_transition, contest, credits (kanto ✓), diploma (kanto ✓), dodrio_berry_picking, door_anims, easy_chat,
-evolution_scene, field_effects (kanto ✓), fonts (kanto ✓), interface (kanto ✓), intro (kanto ✓), items, link,
-mail, misc (kanto ✓), naming_screen (kanto ✓), object_events (kanto ✓), party_menu (kanto ✓),
+battle_anims (kanto ✓), battle_interface (kanto ✓), battle_transitions (kanto ✓), berry_blender, berry_crush,
+berry_fix, cave_transition, contest, credits (kanto ✓), diploma (kanto ✓), dodrio_berry_picking, door_anims,
+easy_chat, evolution_scene, field_effects (kanto ✓), fonts (kanto ✓), interface (kanto ✓), intro (kanto ✓),
+items, link, mail, misc (kanto ✓), naming_screen (kanto ✓), object_events (kanto ✓), party_menu (kanto ✓),
 pokedex (kanto ✓), pokemon (kanto ✓), pokemon_jump, pokemon_storage (kanto ✓), slot_machine (kanto ✓),
 summary_screen (kanto ✓), text_window (kanto ✓), title_screen (kanto ✓), trade, trainer_card,
 trainers (kanto ✓), union_room_chat, unused, weather, wireless_status_screen, wonder_card, wonder_news
 
 **Dans `graphics/kanto/` de la fusion** :
-battle_interface, battle_records, battle_terrain, berry_pouch, credits, diploma, fame_checker, field_effects,
-field_specials, fonts, hall_of_fame, help_system, interface, intro, item_menu, item_pc, itemfinder, learn_move,
-map_preview, misc, naming_screen, object_events, party_menu, pokedex, pokemon, pokemon_ghost,
-pokemon_special_anim, pokemon_storage, region_map, script_menu, seagallop, shop, shop_menu, slot_machine,
-ss_anne, summary_screen, teachy_tv, text_window, title_screen, tm_case, trainers
+battle_anims, battle_interface, battle_records, battle_terrain, battle_transitions, berry_pouch, credits,
+diploma, fame_checker, field_effects, field_specials, fonts, hall_of_fame, help_system, interface, intro,
+item_menu, item_pc, itemfinder, learn_move, map_preview, misc, naming_screen, object_events, party_menu,
+pokedex, pokemon, pokemon_ghost, pokemon_special_anim, pokemon_storage, region_map, script_menu, seagallop,
+shop, shop_menu, slot_machine, ss_anne, summary_screen, teachy_tv, text_window, title_screen, tm_case,
+trainers
 
 ## Sauvegarde (`include/global.h`)
 
