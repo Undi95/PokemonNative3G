@@ -6,24 +6,15 @@ Les 1658 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fon
 
 | Catégorie | Sens | Fonctions |
 |---|---|---|
-| manquante | rien de proche dans la fusion : à porter | 223 |
-| à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 22 |
-| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 598 |
-| triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 113 |
-| morte | jamais appelée ni référencée dans RF | 103 |
-| link | link / E-Reader : à porter, désactivé | 170 |
-| écartée | écartée par décision | 429 |
+| manquante | rien de proche dans la fusion : à porter | 201 |
+| à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 1 |
+| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 617 |
+| triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 112 |
+| morte | jamais appelée ni référencée dans RF | 101 |
+| link | link / E-Reader : à porter, désactivé | 196 |
+| écartée | écartée par décision | 430 |
 
-## Manquante (223) : rien de proche dans la fusion : à porter
-
-### battle_tower.c (22)
-AppendBattleTowerBannedSpeciesName, BattleTowerMapScript2, BattleTowerUtil, CB2_FinishEReaderBattle,
-CheckMonBattleTowerBanlist, CheckPartyBattleTowerBanlist, ChooseNextBattleTowerTrainer,
-DetermineBattleTowerPrize, Dummy_TryEnableBravoTrainerBattleTower, FillBattleTowerTrainerParty,
-GetBattleTowerTrainerClassNameId, GetBattleTowerTrainerFrontSpriteId, GetBattleTowerTrainerName,
-GiveBattleTowerPrize, PopulateBravoTrainerBattleTowerLostData, PrintBattleTowerTrainerGreeting,
-ResetBattleTowerStreak, SaveBattleTowerProgress, SetBattleTowerProperty, SetBattleTowerTrainerGfxId,
-ShouldBattleEReaderTrainer, StartSpecialBattle
+## Manquante (201) : rien de proche dans la fusion : à porter
 
 ### option_menu.c (14)
 BufferOptionMenuString, CB2_OptionMenu, CB2_OptionsMenuFromStartMenu, CloseAndSaveOptionMenu, DrawOptionMenuBg,
@@ -223,60 +214,13 @@ GetUserWindowGraphics
 TilemapUtil_SetTilemap
 
 
-## À vérifier (22) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
-
-### battle_anim_special.c (3)
-SpriteCB_ShinySparkles_2 ~ SpriteCB_ShinyStars_Diagonal (battle_anim_throw.c, 70 %)
-SpriteCB_ThrowBall_InitShake ~ SpriteCB_Ball_Wobble (battle_anim_throw.c, 63 %)
-SpriteCB_ThrowBall_TenFrameDelay ~ SpriteCB_Ball_MonShrink (battle_anim_throw.c, 60 %)
-
-### new_menu_helpers.c (3)
-GetTextSpeedSetting ~ GetPlayerTextSpeedDelay (menu.c, 63 %)
-MallocAndDecompress ~ malloc_and_decompress (menu.c, 76 %)
-TaskFreeBufAfterCopyingTileDataToVram ~ task_free_buf_after_copying_tile_data_to_vram (menu.c, 70 %)
-
-### pokemon.c (2)
-Battle_PrintStatBoosterEffectMessage ~ UseStatIncreaseItem (pokemon.c, 97 %)
-InitMonSpritesGfx_Mode0 ~ InitMonSpritesGfx_FullParty (pokemon.c, 89 %)
-
-### pokemon_icon.c (2)
-CreateMonIcon_HandleDeoxys ~ CreateMonIconNoPersonality (pokemon_icon.c, 98 %)
-MailSpeciesToIconSpecies ~ GetIconSpeciesNoPersonality (pokemon_icon.c, 94 %)
-
-### pokemon_storage_system_misc.c (2)
-Item_SwitchMonsWithMoving ~ SwapItemsWithMon (pokemon_storage_system.c, 78 %)
-MultiMove_Function_GrabSelection ~ MultiMove_GrabSelection (pokemon_storage_system.c, 78 %)
-
-### text.c (2)
-GetGlyphWidth_NormalCopy1 ~ GetGlyphWidth_Small (text.c, 94 %)
-GetGlyphWidth_NormalCopy2 ~ GetGlyphWidth_Small (text.c, 89 %)
-
-### battle_gfx_sfx_util.c (1)
-FreeTrainerFrontPicPaletteAndTile ~ FreeTrainerFrontPicPalette (battle_gfx_sfx_util.c, 71 %)
-
-### battle_tower.c (1)
-BufferBattleTowerTrainerMessage ~ FrontierSpeechToString2 (battle_tower.c, 66 %)
+## À vérifier (1) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
 
 ### option_menu.c (1)
 PrintOptionMenuHeader ~ PrintTradeMessage (trade.c, 100 %)
 
-### pokemon_storage_system_data.c (1)
-MonPlaceChange_MoveCursorUp ~ MonPlaceChange_CursorUp (pokemon_storage_system.c, 66 %)
 
-### pokemon_storage_system_tasks.c (1)
-StartDisplayMonMosaic ~ StartDisplayMonMosaicEffect (pokemon_storage_system.c, 68 %)
-
-### save_failed_screen.c (1)
-WipeDamagedSectors ~ WipeSectors (save_failed_screen.c, 84 %)
-
-### sprite.c (1)
-FreeSpriteTilesIfNotUsingSheet ~ DestroySprite (sprite.c, 79 %)
-
-### title_screen.c (1)
-CreateLeafSprite ~ CreateFlameSprite (kanto_title_screen.c, 63 %)
-
-
-## Équivalente (598) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
+## Équivalente (617) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
 
 ### field_effect.c (74)
 PokeballGlowEffect_FlashFirstThree (PokeballGlowEffect_Flash1 (field_effect.c), 0x1007 = FLDEFF_PAL_TAG_POKEBALL_GLOW, >= 3 = > 2)
@@ -629,6 +573,27 @@ UnlockedECMonOrMove (IsEasyChatIndexAndGroupUnlocked (easy_chat.c), un dictionna
 EC_IsDeoxys (IsRestrictedWordSpecies (easy_chat.c), un dictionnaire)
 IsWordUnlocked (IsEasyChatWordUnlocked (easy_chat.c), même code)
 
+### battle_anim_special.c (19)
+AnimTask_ThrowBallSpecial (AnimTask_ThrowBall_StandingTrainer (battle_anim_throw.c), vieil homme compris (IsOldManTutorialBattle))
+AnimTask_ThrowBallSpecial_PlaySfx (AnimTask_ThrowBall_StandingTrainer_Step (battle_anim_throw.c), même enchaînement)
+SpriteCB_ThrowBall_ArcFlight (SpriteCB_Ball_Arc (battle_anim_throw.c), même code)
+SpriteCB_ThrowBall_TenFrameDelay (SpriteCB_Ball_MonShrink (battle_anim_throw.c d'Émeraude), même code (sTimer = data[5] à cet endroit))
+SpriteCB_ThrowBall_ShrinkMon (SpriteCB_Ball_MonShrink_Step (battle_anim_throw.c), même code)
+SpriteCB_ThrowBall_InitShake (SpriteCB_Ball_Wobble (battle_anim_throw.c d'Émeraude), même code (sTimer = data[3] à cet endroit))
+SpriteCB_ThrowBall_DoClick (SpriteCB_Ball_Capture_Step (battle_anim_throw.c), même code)
+SpriteCB_ThrowBall_FinishClick (SpriteCB_Ball_FadeOut (battle_anim_throw.c), même code)
+CreateStarsWhenBallClicks (MakeCaptureStars (battle_anim_throw.c), même code (cases nommées))
+SpriteCB_ThrowBall_BeginBreakOut (SpriteCB_Ball_Release_Step (battle_anim_throw.c), BATTLER_AFFINE_EMERGE = 1)
+SpriteCB_ThrowBall_RunBreakOut (SpriteCB_Ball_Release_Wait (battle_anim_throw.c), même code)
+TrainerBallBlock (SpriteCB_Ball_Block (battle_anim_throw.c), même code)
+SpriteCB_ShinySparkles_2 (SpriteCB_ShinyStars_Diagonal (battle_anim_throw.c d'Émeraude), même code)
+SpriteCB_SafariBaitOrRock_Init (SpriteCB_PokeBlock_Throw (battle_anim_throw.c), même code ; gSafariBaitSpriteTemplate et gSafariRockTemplate l'utilisent)
+SpriteCB_SafariBaitOrRock_WaitPlayerThrow (SpriteCB_PokeBlock_LiftArm (battle_anim_throw.c), même code)
+SpriteCB_SafariBaitOrRock_ArcFlight (SpriteCB_PokeBlock_Arc (battle_anim_throw.c), même code)
+AnimTask_ShinySparkles_WaitSparkles → Task_ShinyStars_Wait (battle_anim_throw.c)
+AnimTask_ThrowBall_WaitAnimObjComplete → AnimTask_ThrowBall_Step (battle_anim_throw.c)
+BattleAnimObj_SignalEnd → DestroySpriteAfterOneFrame (battle_anim_throw.c)
+
 ### tileset_anims.c (17)
 QueueAnimTiles_General_Water_Current_LandWatersEdge (QueueAnimTiles_KantoGeneral_Water_Current_LandWatersEdge (tileset_anims.c), table Kanto)
 QueueAnimTiles_General_SandWatersEdge (QueueAnimTiles_KantoGeneral_SandWatersEdge (tileset_anims.c), table Kanto)
@@ -647,24 +612,6 @@ InitTilesetAnim_VermilionGym (InitTilesetAnim_KantoVermilionGym (tileset_anims.c
 QueueAnimTiles_CeladonGym_Flowers (QueueAnimTiles_KantoCeladonGym_Flowers (tileset_anims.c), table Kanto)
 TilesetAnim_CeladonGym (TilesetAnim_KantoCeladonGym (tileset_anims.c), même code)
 InitTilesetAnim_CeladonGym (InitTilesetAnim_KantoCeladonGym (tileset_anims.c), même code)
-
-### battle_anim_special.c (16)
-AnimTask_ThrowBallSpecial (AnimTask_ThrowBall_StandingTrainer (battle_anim_throw.c), vieil homme compris (IsOldManTutorialBattle))
-AnimTask_ThrowBallSpecial_PlaySfx (AnimTask_ThrowBall_StandingTrainer_Step (battle_anim_throw.c), même enchaînement)
-SpriteCB_ThrowBall_ArcFlight (SpriteCB_Ball_Arc (battle_anim_throw.c), même code)
-SpriteCB_ThrowBall_ShrinkMon (SpriteCB_Ball_MonShrink_Step (battle_anim_throw.c), même code)
-SpriteCB_ThrowBall_DoClick (SpriteCB_Ball_Capture_Step (battle_anim_throw.c), même code)
-SpriteCB_ThrowBall_FinishClick (SpriteCB_Ball_FadeOut (battle_anim_throw.c), même code)
-CreateStarsWhenBallClicks (MakeCaptureStars (battle_anim_throw.c), même code (cases nommées))
-SpriteCB_ThrowBall_BeginBreakOut (SpriteCB_Ball_Release_Step (battle_anim_throw.c), BATTLER_AFFINE_EMERGE = 1)
-SpriteCB_ThrowBall_RunBreakOut (SpriteCB_Ball_Release_Wait (battle_anim_throw.c), même code)
-TrainerBallBlock (SpriteCB_Ball_Block (battle_anim_throw.c), même code)
-SpriteCB_SafariBaitOrRock_Init (SpriteCB_PokeBlock_Throw (battle_anim_throw.c), même code ; gSafariBaitSpriteTemplate et gSafariRockTemplate l'utilisent)
-SpriteCB_SafariBaitOrRock_WaitPlayerThrow (SpriteCB_PokeBlock_LiftArm (battle_anim_throw.c), même code)
-SpriteCB_SafariBaitOrRock_ArcFlight (SpriteCB_PokeBlock_Arc (battle_anim_throw.c), même code)
-AnimTask_ShinySparkles_WaitSparkles → Task_ShinyStars_Wait (battle_anim_throw.c)
-AnimTask_ThrowBall_WaitAnimObjComplete → AnimTask_ThrowBall_Step (battle_anim_throw.c)
-BattleAnimObj_SignalEnd → DestroySpriteAfterOneFrame (battle_anim_throw.c)
 
 ### menu.c (15)
 Menu_InitCursorInternal (InitMenu (menu.c d'Émeraude), même code)
@@ -785,6 +732,16 @@ FadeSelectedPals (kanto_credits.c (macro FadeSelectedPals) et overworld.c (Begin
 ApplyWeatherGammaShiftToPal (ApplyWeatherColorMapToPal (field_weather.c), renommage)
 SetDroughtGamma (SetDroughtColorMap (field_weather.c), renommage)
 
+### pokemon_storage_system_misc.c (8)
+MultiMove_Function_Start (MultiMove_Start (pokemon_storage_system.c d'Émeraude), même code)
+MultiMove_Function_ChangeSelection (MultiMove_ChangeSelection (pokemon_storage_system.c d'Émeraude), même code)
+MultiMove_Function_GrabSelection (MultiMove_GrabSelection (pokemon_storage_system.c d'Émeraude), même code)
+MultiMove_Function_PlaceMons (MultiMove_PlaceMons (pokemon_storage_system.c d'Émeraude), même code (Q_8_8(-1) = -256))
+Item_FromMonToMoving (TakeItemFromMon (pokemon_storage_system.c d'Émeraude), même code)
+Item_SwitchMonsWithMoving (SwapItemsWithMon (pokemon_storage_system.c d'Émeraude), même code)
+Item_GiveMovingToMon (GiveItemToMon (pokemon_storage_system.c d'Émeraude), même code)
+Item_TakeMons (MoveItemFromMonToBag (pokemon_storage_system.c d'Émeraude), même code)
+
 ### script_menu.c (8)
 Task_MultichoiceMenu_HandleInput (Task_HandleMultichoiceInput (script_menu.c d'Émeraude) : sDelay de RF = sProcessInputDelay (0 avec MENUS = KANTO))
 MultiChoicePrintHelpDescription (DrawLinkServicesMultichoiceMenu (script_menu.c d'Émeraude) : aide des menus link)
@@ -820,6 +777,14 @@ Task_FieldEffectShowMon_WaitFldeff (Task_DoFieldMove_WaitForMon (fldeff_rocksmas
 Task_FieldEffectShowMon_Cleanup (Task_DoFieldMove_RunFunc (fldeff_rocksmash.c), pointeur (port 64 bits))
 FieldCallback_UseRockSmash (FieldCallback_RockSmash (fldeff_rocksmash.c), scripts équivalents)
 
+### pokemon_storage_system_data.c (6)
+MonPlaceChange_MoveCursorUp (MonPlaceChange_CursorUp (pokemon_storage_system.c d'Émeraude), même code)
+SetMovedMonData (SetMovingMonData (pokemon_storage_system.c d'Émeraude), même code)
+TrySetDisplayMonData (TryRefreshDisplayMon (pokemon_storage_system.c d'Émeraude), même code)
+HandleInput_InBox_GrabbingMultiple (InBoxInput_SelectingMultiple (pokemon_storage_system.c d'Émeraude), même code)
+HandleInput_InBox_MovingMultiple (InBoxInput_MovingMultiple (pokemon_storage_system.c d'Émeraude), même code)
+HandleInput_BoxTitle (HandleInput_OnBox (pokemon_storage_system.c d'Émeraude) : SELECT = ToggleCursorAutoAction (ToggleCursorMultiMoveMode de RF))
+
 ### pokemon_storage_system_graphics.c (6)
 DestroyAllIconsInColumn (DestroyBoxMonIconsInColumn (pokemon_storage_system.c d'Émeraude), même code)
 SetBoxSpeciesAndPersonalities (GetIncomingBoxMonData (pokemon_storage_system.c d'Émeraude), même code)
@@ -827,14 +792,6 @@ SpriteCB_MovePartySpriteToNextSlot (SpriteCB_MovePartyMonToNextSlot (pokemon_sto
 DoReleaseMonComeBackAnim (ReshowReleaseMon (pokemon_storage_system.c d'Émeraude), même code)
 SpriteCB_BoxScrollArrow (SpriteCB_Arrow (pokemon_storage_system.c d'Émeraude), même code)
 GetMonIconPriorityByCursorArea → GetMonIconPriorityByCursorPos (pokemon_storage_system.c)
-
-### pokemon_storage_system_misc.c (6)
-MultiMove_Function_Start (MultiMove_Start (pokemon_storage_system.c d'Émeraude), même code)
-MultiMove_Function_ChangeSelection (MultiMove_ChangeSelection (pokemon_storage_system.c d'Émeraude), même code)
-MultiMove_Function_PlaceMons (MultiMove_PlaceMons (pokemon_storage_system.c d'Émeraude), même code (Q_8_8(-1) = -256))
-Item_FromMonToMoving (TakeItemFromMon (pokemon_storage_system.c d'Émeraude), même code)
-Item_GiveMovingToMon (GiveItemToMon (pokemon_storage_system.c d'Émeraude), même code)
-Item_TakeMons (MoveItemFromMonToBag (pokemon_storage_system.c d'Émeraude), même code)
 
 ### battle_anim_mons.c (5)
 InitBattleAnimBg (ClearBattleAnimBg (battle_anim_mons.c), même code)
@@ -856,13 +813,6 @@ MetatileBehavior_IsWarpDoor_2 (MetatileBehavior_IsDoor (metatile_behavior.c), MB
 MetatileBehavior_IsSurfable (MetatileBehavior_IsSurfableWaterOrUnderwater (metatile_behavior.c), kanto_battle_bg.c)
 MetatileBehavior_IsDeepWaterTerrain (MetatileBehavior_IsDeepOrOceanWater (metatile_behavior.c), décor de combat de Kanto (kanto_battle_bg.c) ; MB_FAST_WATER importé en MB_OCEAN_WATER)
 TestMetatileAttributeBit (sTileBitAttributes (metatile_behavior.c), même table de bits)
-
-### pokemon_storage_system_data.c (5)
-SetMovedMonData (SetMovingMonData (pokemon_storage_system.c d'Émeraude), même code)
-TrySetDisplayMonData (TryRefreshDisplayMon (pokemon_storage_system.c d'Émeraude), même code)
-HandleInput_InBox_GrabbingMultiple (InBoxInput_SelectingMultiple (pokemon_storage_system.c d'Émeraude), même code)
-HandleInput_InBox_MovingMultiple (InBoxInput_MovingMultiple (pokemon_storage_system.c d'Émeraude), même code)
-HandleInput_BoxTitle (HandleInput_OnBox (pokemon_storage_system.c d'Émeraude) : SELECT = ToggleCursorAutoAction (ToggleCursorMultiMoveMode de RF))
 
 ### field_effect_helpers.c (4)
 SynchroniseSurfAnim (SynchronizeSurfAnim (field_effect_helpers.c), + diagonales d'Émeraude)
@@ -923,6 +873,16 @@ Task_WaitFadeAndCreateStartMenuTask (Task_WaitForFadeShowStartMenu (field_screen
 FieldCB_SafariZoneRanOutOfBalls (FieldCB_ReturnToFieldNoScriptCheckMusic (field_screen_effect.c), même enchaînement)
 Task_ContinueScriptUnionRoom → Task_WaitForUnionRoomFade (field_screen_effect.c)
 
+### new_menu_helpers.c (3)
+TaskFreeBufAfterCopyingTileDataToVram (task_free_buf_after_copying_tile_data_to_vram (menu.c d'Émeraude), WaitDma3Request = CheckForSpaceForDma3Request)
+MallocAndDecompress (malloc_and_decompress (menu.c d'Émeraude), même code)
+GetTextSpeedSetting (GetPlayerTextSpeedDelay (menu.c d'Émeraude) : + forceMidTextSpeed d'Émeraude)
+
+### pokemon.c (3)
+Battle_PrintStatBoosterEffectMessage (UseStatIncreaseItem (pokemon.c d'Émeraude) : mêmes messages (textes de combat d'Émeraude))
+InitMonSpritesGfx_Mode0 (InitMonSpritesGfx_FullParty (pokemon.c d'Émeraude), même code)
+GetSecretBaseTrainerNameIndex → GetSecretBaseTrainerClass (pokemon.c)
+
 ### battle_anim_mon_movement.c (2)
 AnimTask_ShakeMon2Step (AnimTask_ShakeMon2_Step (battle_anim_mon_movement.c), même code)
 AnimTask_SwayMon_Step (AnimTask_SwayMonStep (battle_anim_mon_movement.c), même code)
@@ -947,6 +907,14 @@ BtlController_EmitPlayFanfare (BtlController_EmitPlayFanfareOrBGM (battle_contro
 UpdateHappinessStepCounter (UpdateFriendshipStepCounter (field_control_avatar.c), VAR_HAPPINESS = VAR_FRIENDSHIP)
 Task_QuestLogPlayback_OpenStartMenu → Task_OpenStartMenuAfterSignpost (field_control_avatar.c)
 
+### pokemon_icon.c (2)
+CreateMonIcon_HandleDeoxys (CreateMonIconNoPersonality (pokemon_icon.c d'Émeraude), même code)
+MailSpeciesToIconSpecies (GetIconSpeciesNoPersonality (pokemon_icon.c d'Émeraude) : ne diffère que pour une espèce invalide)
+
+### text.c (2)
+GetGlyphWidth_NormalCopy1 (FONT_KANTO (text.c de la fusion : largeurs des lettres de RF))
+GetGlyphWidth_NormalCopy2 (FONT_KANTO (text.c de la fusion : largeurs des lettres de RF))
+
 ### wild_encounter.c (2)
 GenerateWildMon (CreateWildMon (wild_encounter.c), avec la lettre des ZARBI de Tanoby de RF)
 GenerateFishingEncounter (GenerateFishingWildMon (wild_encounter.c))
@@ -965,6 +933,9 @@ AirCutterProjectile_Step1 (AirCutterProjectileStep1 (battle_anim_effects_2.c), -
 ### battle_anim_utility_funcs.c (1)
 AnimTask_GetBattleTerrain (AnimTask_GetBattleEnvironment (battle_anim_utility_funcs.c), terrain = environment)
 
+### battle_gfx_sfx_util.c (1)
+FreeTrainerFrontPicPaletteAndTile (FreeTrainerFrontPicPalette (battle_gfx_sfx_util.c d'Émeraude) : Émeraude ne charge pas l'image du dresseur en feuille, DestroySprite libère)
+
 ### battle_intro.c (1)
 CopyBattlerSpriteToBg (DrawBattlerOnBg (battle_intro.c), même code)
 
@@ -980,11 +951,20 @@ GetHealLocationIndexFromMapGroupAndNum (GetHealLocationIndexByMap (heal_location
 ### pokemon_storage_system.c (1)
 SeekToNextMonInBox (StorageSystemGetNextMonIndex (pokemon_storage_system.c d'Émeraude), même code)
 
+### pokemon_storage_system_tasks.c (1)
+StartDisplayMonMosaic (StartDisplayMonMosaicEffect (pokemon_storage_system.c d'Émeraude), même code)
+
 ### reshow_battle_screen.c (1)
 ReshowBattleScreen_TurnOnDisplay (CB2_ReshowBattleScreenAfterMenu (reshow_battle_screen.c), écran de combat rétabli par celui d'Émeraude)
 
+### save_failed_screen.c (1)
+WipeDamagedSectors (WipeSectors (save_failed_screen.c d'Émeraude), même code)
+
 ### script.c (1)
 ValidateRamScript (ValidateSavedRamScript (script.c), LOCALID_PLAYER = 255)
+
+### sprite.c (1)
+FreeSpriteTilesIfNotUsingSheet (DestroySprite (sprite.c d'Émeraude), même libération)
 
 ### battle_anim_fight.c (1)
 AnimStompFootStep → AnimStompFoot_Step (battle_anim_fight.c)
@@ -1007,11 +987,8 @@ DecompressToBgTilemapBuffer → DrawBgTilemap (naming_screen.c)
 ### option_menu.c (1)
 OptionMenu_ResetSpriteData → DiplomaReset (kanto_diploma.c)
 
-### pokemon.c (1)
-GetSecretBaseTrainerNameIndex → GetSecretBaseTrainerClass (pokemon.c)
 
-
-## Triviale (113) : corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant
+## Triviale (112) : corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant
 
 ### battle_controller_oak_old_man.c (30)
 OakOldManDummy, OakOldManHandleGetRawMonData, OakOldManHandleSetRawMonData, OakOldManHandleLoadMonSprite,
@@ -1084,9 +1061,6 @@ DebugFunc_PrintPurchaseDetails, DebugFunc_PrintShopMenuHistoryBeforeClearMaybe
 ### battle_interface.c (1)
 GetBattleInterfaceGfxPtr
 
-### battle_tower.c (1)
-BattleTower_SoftReset
-
 ### bike.c (1)
 BikeTransition_FaceDirection
 
@@ -1139,7 +1113,7 @@ nullsub_8
 nullsub_9
 
 
-## Morte (103) : jamais appelée ni référencée dans RF
+## Morte (101) : jamais appelée ni référencée dans RF
 
 ### event_object_movement.c (30)
 GetReflectionEffectPaletteSlot, CameraObjectGetFollowedObjectId, GetAcroBunnyHopFrontWheelDirectionAnimNum,
@@ -1212,9 +1186,6 @@ CreateUnknownDebugSprite, GetBattleTerrainGfxPtrs
 SpriteCB_UnusedDebugSprite (jamais utilisé dans RF (debug)),
 SpriteCB_UnusedDebugSprite_Step (jamais utilisé dans RF (debug))
 
-### battle_tower.c (2)
-UpdateOrInsertReceivedBattleTowerRecord, Debug_FillEReaderTrainerWithPlayerData
-
 ### cable_car_util.c (2)
 CableCarUtil_FillWrapped, CableCarUtil_CopyWrapped
 
@@ -1285,7 +1256,7 @@ SetHasPokedexAndPokemon
 CopyGlyphToWindow_Parameterized
 
 
-## Link (170) : link / E-Reader : à porter, désactivé
+## Link (196) : link / E-Reader : à porter, désactivé
 
 ### union_room_chat_display.c (49)
 UnionRoomChat_TryAllocGraphicsWork, UnionRoomChat_RunDisplaySubtask0, UnionRoomChat_FreeGraphicsWork, InitWork,
@@ -1315,20 +1286,28 @@ UnionRoomChat_GetNumCharsInMessageEntryBuffer, UnionRoomChat_GetLastReceivedMess
 UnionRoomChat_GetReceivedPlayerIndex, UnionRoomChat_GetMessageEntryCursorPosition,
 UnionRoomChat_GetWhetherShouldShowCaseToggleIcon, UnionRoomChat_GetNameOfPlayerWhoDisbandedChat
 
+### battle_tower.c (33)
+BattleTowerMapScript2, ResetBattleTowerStreak, ShouldBattleEReaderTrainer, ChooseNextBattleTowerTrainer,
+SetBattleTowerTrainerGfxId, UpdateOrInsertReceivedBattleTowerRecord, GetBattleTowerTrainerFrontSpriteId,
+GetBattleTowerTrainerClassNameId, GetBattleTowerTrainerName, FillBattleTowerTrainerParty,
+AppendBattleTowerBannedSpeciesName, CheckMonBattleTowerBanlist, CheckPartyBattleTowerBanlist,
+BufferBattleTowerTrainerMessage (Tour de Combat de RF : dresseurs e-Reader et records mélangés),
+PrintBattleTowerTrainerGreeting, CB2_FinishEReaderBattle, Task_WaitBT (Tour de Combat de RF (e-Reader)),
+StartSpecialBattle, SetBattleTowerProperty, BattleTowerUtil,
+SetBattleTowerParty (Tour de Combat de RF (e-Reader)),
+SetPlayerBattleTowerRecord (Tour de Combat de RF (e-Reader)), SaveBattleTowerProgress, BattleTower_SoftReset,
+SetBattleTowerRecordChecksum (Tour de Combat de RF (e-Reader)), PopulateBravoTrainerBattleTowerLostData,
+DetermineBattleTowerPrize, GiveBattleTowerPrize, Debug_FillEReaderTrainerWithPlayerData,
+CopyEReaderTrainerName5 (Tour de Combat de RF (e-Reader)),
+BufferEReaderTrainerGreeting (Tour de Combat de RF (e-Reader)),
+PrintEReaderTrainerFarewellMessage (Tour de Combat de RF (e-Reader)), Dummy_TryEnableBravoTrainerBattleTower
+
 ### union_room_chat_objects.c (11)
 UnionRoomChat_TryAllocSpriteWork, UnionRoomChat_FreeSpriteWork, UnionRoomChat_CreateSelectorCursorObj,
 UnionRoomChat_ToggleSelectorCursorObjVisibility, UnionRoomChat_MoveSelectorCursorObj,
 UnionRoomChat_UpdateObjPalCycle, UnionRoomChat_SetSelectorCursorClosedImage,
 UnionRoomChat_AnimateSelectorCursorReopen, UnionRoomChat_SpawnTextEntryPointerSprites,
 CreatePageSwitchUISprites, UpdateVisibleUnionRoomChatIcon
-
-### battle_tower.c (7)
-Task_WaitBT (Tour de Combat de RF (e-Reader)), SetBattleTowerParty (Tour de Combat de RF (e-Reader)),
-SetPlayerBattleTowerRecord (Tour de Combat de RF (e-Reader)),
-SetBattleTowerRecordChecksum (Tour de Combat de RF (e-Reader)),
-CopyEReaderTrainerName5 (Tour de Combat de RF (e-Reader)),
-BufferEReaderTrainerGreeting (Tour de Combat de RF (e-Reader)),
-PrintEReaderTrainerFarewellMessage (Tour de Combat de RF (e-Reader))
 
 ### cereader_tool.c (6)
 ValidateTrainerTowerTrainer, ValidateTrainerTowerData, CEReaderTool_SaveTrainerTower_r,
@@ -1426,7 +1405,7 @@ MakeGroupAssemblyAreasPassable
 ExitWirelessCommunicationStatusScreen
 
 
-## Écartée (429) : écartée par décision
+## Écartée (430) : écartée par décision
 
 ### quest_log_events.c (117)
 — « Précédemment » de RF (Kanto = post-game, décision 2026-11-02), SetQuestLogEvent,
@@ -1652,6 +1631,9 @@ IsQuestLogInputDpad (journal de RF)
 
 ### script_menu.c (1)
 QL_DestroyAbortedDisplay (journal de RF)
+
+### title_screen.c (1)
+CreateLeafSprite (version Vert Feuille (la fusion est Rouge Feu))
 
 ### trainer_see.c (1)
 TrainerSeeFunc_PrepareToEngage (variante RF : Émeraude gardée (PlayerFaceApproachingTrainer : le joueur se tourne vers le dresseur ; RF non) ; docs/VARIANTES-RF.md)

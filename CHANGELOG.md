@@ -67,7 +67,8 @@
   le panneau d'Émeraude.
 - Options > TITRE = R.FEU : l'écran titre de Rouge Feu mène maintenant au menu principal de Rouge Feu (CONTINUER avec
   le joueur, la durée de jeu, le Pokédex et les badges de la région où reprend la partie, NOUVELLE PARTIE, CADEAU
-  MYST.). Comme dans Rouge Feu, il n'a pas d'entrée OPTIONS (elles restent dans le menu Start).
+  MYST.). Comme dans Rouge Feu, il n'a pas d'entrée OPTIONS (elles restent dans le menu Start). Haut + SELECT + B
+  sur cet écran titre ouvre aussi l'écran d'effacement de la sauvegarde de Rouge Feu.
 - Options > MENUS = KANTO : les choix proposés par les personnages (et leur grille), le choix du PC et les OUI / NON
   sont aussi ceux de Rouge Feu (police de RF, lignes plus serrées, OUI / NON plus large), ainsi que la lecture d'une
   lettre (message et signature placés comme dans Rouge Feu).

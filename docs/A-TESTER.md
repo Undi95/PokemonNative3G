@@ -116,6 +116,8 @@ réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, c
 - [ ] Menu principal de Rouge Feu (2026-11-02, après cet écran titre) : CONTINUER (joueur, durée, Pokédex, badges de
   la région de la partie), NOUVELLE PARTIE (intro du Prof. Seko), CADEAU MYST. s'il y a des cadeaux ; B → écran titre
   (vérifié en headless : `kanto_main_menu`)
+- [ ] Haut + SELECT + B sur l'écran titre de RF : écran d'effacement de RF (fond vert vif comme la cartouche),
+  NON garde la sauvegarde, OUI l'efface (vérifié en headless : `kanto_clear_save`)
 - [ ] Intro de Groudon/Kyogre (fonds 8bpp) toujours correcte après la correction du rendu 8bpp
 
 ## Fusion (options et contenus)

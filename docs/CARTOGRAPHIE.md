@@ -143,7 +143,14 @@ remplacés ; `NOM_RF=NOM_FUSION` corrige un mauvais appariement). Chaque fonctio
 `tools/carto_classement.txt` avec sa preuve. Règle (utilisateur, 2026-11-02) : une variante de détail de RF dans le
 code commun garde la version d'Émeraude et va dans [VARIANTES-RF.md](VARIANTES-RF.md) si elle se voit ; ce qui est
 propre à Kanto (contenu, mécaniques) est porté. La lecture du 2026-10-31 avait pris la pêche pour un renommage : celle
-de RF ferre toute seule (VARIANTES-RF.md).
+de RF ferre toute seule (VARIANTES-RF.md). Un écran de RF « de façade » suit l'option ou la région qui couvre déjà
+son voisin (menu principal et effacement : TITRE ; choix multiples, OUI/NON, lettre : MENUS ; panneau du lieu :
+région). `--tout` montre toutes les différences d'une fonction.
+
+Fin de la lecture des « à vérifier » le 2026-11-02 : il n'en reste qu'une (l'écran Options de RF, question posée).
+L'inventaire est stable d'une exécution à l'autre depuis ce jour (empreintes en crc32 ; `hash()` changeait à chaque
+lancement de Python). Reste : manquante 201 (dont l'écran Options de RF, terrain, polices, écran d'échec de
+sauvegarde, PC), link 196 (dont la Tour de Combat de RF : e-Reader).
 
 Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.md).
 

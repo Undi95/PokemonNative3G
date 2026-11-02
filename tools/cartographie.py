@@ -250,7 +250,9 @@ DECISION_FILES = [
 ]
 LINK_FILES = (r'^(link|link_rfu|union_room|cable_club|trade|berry_crush|dodrio_berry_picking|mystery_gift|'
               r'mystery_event|cereader_tool|ereader|battle_controller_link_|pokemon_jump|wireless_communication|'
-              r'record_mixing|berry_fix|librfu|rfu_|AgbRfu)')
+              r'record_mixing|berry_fix|librfu|rfu_|AgbRfu|'
+              # Tour de Combat de RF : reste de Rubis/Saphir, aucun script de RF ne l'appelle ; dresseurs e-Reader
+              r'battle_tower)')
 TEXT_EXT = ('.c', '.h', '.s', '.inc')
 
 

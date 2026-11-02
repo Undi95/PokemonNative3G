@@ -710,3 +710,25 @@ SpriteCB_Egg_5 équivalente SpriteCB_Egg_Reveal (egg_hatch.c d'Émeraude), même
 # mail_data.c
 GiveMailToMon2 équivalente GiveMailToMon (mail_data.c d'Émeraude), même code
 TakeMailFromMon2 équivalente TakeMailFromMonAndSave (mail_data.c d'Émeraude), même code
+# Lecture des derniers « à vérifier » (2026-11-02)
+SpriteCB_ThrowBall_InitShake équivalente SpriteCB_Ball_Wobble (battle_anim_throw.c d'Émeraude), même code (sTimer = data[3] à cet endroit)
+SpriteCB_ThrowBall_TenFrameDelay équivalente SpriteCB_Ball_MonShrink (battle_anim_throw.c d'Émeraude), même code (sTimer = data[5] à cet endroit)
+SpriteCB_ShinySparkles_2 équivalente SpriteCB_ShinyStars_Diagonal (battle_anim_throw.c d'Émeraude), même code
+GetTextSpeedSetting équivalente GetPlayerTextSpeedDelay (menu.c d'Émeraude) : + forceMidTextSpeed d'Émeraude
+MallocAndDecompress équivalente malloc_and_decompress (menu.c d'Émeraude), même code
+TaskFreeBufAfterCopyingTileDataToVram équivalente task_free_buf_after_copying_tile_data_to_vram (menu.c d'Émeraude), WaitDma3Request = CheckForSpaceForDma3Request
+Battle_PrintStatBoosterEffectMessage équivalente UseStatIncreaseItem (pokemon.c d'Émeraude) : mêmes messages (textes de combat d'Émeraude)
+InitMonSpritesGfx_Mode0 équivalente InitMonSpritesGfx_FullParty (pokemon.c d'Émeraude), même code
+CreateMonIcon_HandleDeoxys équivalente CreateMonIconNoPersonality (pokemon_icon.c d'Émeraude), même code
+MailSpeciesToIconSpecies équivalente GetIconSpeciesNoPersonality (pokemon_icon.c d'Émeraude) : ne diffère que pour une espèce invalide
+GetGlyphWidth_NormalCopy1 équivalente FONT_KANTO (text.c de la fusion : largeurs des lettres de RF)
+GetGlyphWidth_NormalCopy2 équivalente FONT_KANTO (text.c de la fusion : largeurs des lettres de RF)
+FreeTrainerFrontPicPaletteAndTile équivalente FreeTrainerFrontPicPalette (battle_gfx_sfx_util.c d'Émeraude) : Émeraude ne charge pas l'image du dresseur en feuille, DestroySprite libère
+FreeSpriteTilesIfNotUsingSheet équivalente DestroySprite (sprite.c d'Émeraude), même libération
+WipeDamagedSectors équivalente WipeSectors (save_failed_screen.c d'Émeraude), même code
+Item_SwitchMonsWithMoving équivalente SwapItemsWithMon (pokemon_storage_system.c d'Émeraude), même code
+MultiMove_Function_GrabSelection équivalente MultiMove_GrabSelection (pokemon_storage_system.c d'Émeraude), même code
+MonPlaceChange_MoveCursorUp équivalente MonPlaceChange_CursorUp (pokemon_storage_system.c d'Émeraude), même code
+StartDisplayMonMosaic équivalente StartDisplayMonMosaicEffect (pokemon_storage_system.c d'Émeraude), même code
+BufferBattleTowerTrainerMessage link Tour de Combat de RF : dresseurs e-Reader et records mélangés
+CreateLeafSprite écartée version Vert Feuille (la fusion est Rouge Feu)

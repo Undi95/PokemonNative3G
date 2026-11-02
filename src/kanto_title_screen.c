@@ -841,7 +841,7 @@ static void LoadMainTitleScreenPalsAndResetBgs(void)
 static void CB2_FadeOutTransitionToSaveClearScreen(void)
 {
     if (!UpdatePaletteFade())
-        SetMainCallback2(CB2_InitClearSaveDataScreen);
+        SetMainCallback2(CB2_SaveClearScreen_Init); // l'écran de RF (kanto_clear_save_data_screen.c)
 }
 
 static void CB2_FadeOutTransitionToBerryFix(void)
