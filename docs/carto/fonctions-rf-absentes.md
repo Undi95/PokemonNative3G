@@ -81,9 +81,8 @@ OakOldManHandleCmd55, OakOldManCmdEnd, BtlCtrl_OakOldMan_TestState2Flag, BtlCtrl
 OpponentHandleBallThrowAnim, OpponentHandleUnknownYesNoBox, OpponentHandleCmd42, OpponentHandlePlayFanfare,
 OpponentHandleCmd55
 
-### battle_controller_player.c (commun, 6/15)
-Task_CreateLevelUpVerticalStripes, PlayerHandleUnknownYesNoBox, PlayerHandleCmd42, PlayerHandlePlayFanfare,
-PlayerHandleCmd55, PreviewDeterminativeMoveTargets
+### battle_controller_player.c (commun, 4/15)
+PlayerHandleUnknownYesNoBox, PlayerHandleCmd42, PlayerHandlePlayFanfare, PlayerHandleCmd55
 
 ### battle_controller_safari.c (commun, 8/9)
 SafariDummy, SafariHandleUnknownYesNoBox, SafariHandleCmd37, SafariHandleCmd38, SafariHandleCmd39,

@@ -99,7 +99,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_transition.c | commun | 134 | 10 | 0 | 5 | 50 | 47 | 77 | battle_transition.c (5) |
 | battle_anim_effects_1.c | commun | 154 | 1 | 1 | 0 | 100 | 76 | 77 |  |
 | battle_anim_mons.c | commun | 128 | 12 | 5 | 1 | 50 | 47 | 69 | battle_anim_mons.c (1) |
-| battle_controller_player.c | commun | 123 | 15 | 7 | 2 | 60 | 39 | 69 | kanto_battle_controller_pokedude.c (2) |
+| battle_controller_player.c | commun | 123 | 15 | 7 | 4 | 73 | 39 | 69 | kanto_battle_controller_pokedude.c (2), battle_controller_player.c (2) |
 | pokemon.c | commun | 143 | 13 | 1 | 4 | 38 | 68 | 62 | pokemon.c (3), overworld.c (1) |
 | scrcmd.c | commun | 224 | 12 | 2 | 8 | 83 | 144 | 68 | copie kanto_scrcmd.c : 8/224 fonctions |
 | link_rfu_2.c | commun | 149 | 4 | 1 | 0 | 25 | 79 | 66 |  |
