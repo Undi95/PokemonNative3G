@@ -37,6 +37,7 @@
 #include "malloc.h"
 #include "m4a.h"
 #include "map_name_popup.h"
+#include "kanto_map_name_popup.h"
 #include "match_call.h"
 #include "menu.h"
 #include "metatile_behavior.h"
@@ -934,7 +935,12 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     ResetFieldTasksArgs();
     RunOnResumeMapScript();
 
-    if (gMapHeader.regionMapSectionId != MAPSEC_BATTLE_FRONTIER
+    if (Fusion_IsInKanto()) // PokemonNative3G : panneau de RF à Kanto (overworld.c de RF : si la section change)
+    {
+        if (GetLastUsedWarpMapSectionId() != gMapHeader.regionMapSectionId)
+            Kanto_ShowMapNamePopup(TRUE);
+    }
+    else if (gMapHeader.regionMapSectionId != MAPSEC_BATTLE_FRONTIER
      || gMapHeader.regionMapSectionId != sLastMapSectionId)
         ShowMapNamePopup();
 }
@@ -1888,7 +1894,12 @@ void CB2_ReturnToFieldFadeFromBlack(void)
 static void FieldCB_FadeTryShowMapPopup(void)
 {
     if (gMapHeader.showMapName == TRUE && SecretBaseMapPopupEnabled() == TRUE)
-        ShowMapNamePopup();
+    {
+        if (Fusion_IsInKanto()) // PokemonNative3G : panneau de RF à Kanto (FieldCB_ShowMapNameOnContinue de RF)
+            Kanto_ShowMapNamePopup(FALSE);
+        else
+            ShowMapNamePopup();
+    }
     FieldCB_WarpExitFadeFromBlack();
 }
 
@@ -2153,7 +2164,12 @@ static bool32 LoadMapInStepsLocal(u8 *state, bool32 a2)
             MapPreview_StartForestTransition(gMapHeader.regionMapSectionId);
         }
         else if (gMapHeader.showMapName == TRUE && SecretBaseMapPopupEnabled() == TRUE)
-            ShowMapNamePopup();
+        {
+            if (Fusion_IsInKanto()) // PokemonNative3G : panneau de RF à Kanto (overworld.c de RF)
+                Kanto_ShowMapNamePopup(FALSE);
+            else
+                ShowMapNamePopup();
+        }
         (*state)++;
         break;
     case 12:

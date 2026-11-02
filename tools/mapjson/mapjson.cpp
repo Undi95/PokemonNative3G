@@ -167,7 +167,12 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
          << "\t.byte "  << json_to_string(map_data, "weather") << "\n"
          << "\t.byte "  << json_to_string(map_data, "map_type") << "\n";
 
-    if (version != "firered")
+    // PokemonNative3G : l'étage de RF (floor_number) dans le 1er octet libre d'Émeraude (struct MapHeader : floorNum),
+    // pour le panneau du nom de lieu de Kanto ; 0 sans « floor_number »
+    if (version == "emerald")
+        text << "\t.byte " << (map_data["floor_number"] == Json() ? string("0") : json_to_string(map_data, "floor_number"))
+             << "\n\t.byte 0\n";
+    else if (version != "firered")
         text << "\t.2byte 0\n";
 
     if (version == "ruby")

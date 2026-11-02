@@ -1051,7 +1051,7 @@ CB2_InitMainMenu, HandleMenuInput
 PutMemBlockHeader, AllocInternal, FreeInternal, CheckMemBlockInternal
 
 ### map_name_popup.c
-ShowMapNamePopup
+ShowMapNamePopup ✓
 
 ### menu.c
 WindowFunc_DrawDialogFrameWithCustomTileAndPalette, WindowFunc_ClearDialogWindowAndFrameNullPalette,

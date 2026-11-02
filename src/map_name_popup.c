@@ -8,6 +8,7 @@
 #include "map_name_popup.h"
 #include "palette.h"
 #include "region_map.h"
+#include "kanto_map_name_popup.h"
 #include "start_menu.h"
 #include "string_util.h"
 #include "task.h"
@@ -318,6 +319,7 @@ static void Task_MapNamePopUpWindow(u8 taskId)
 
 void HideMapNamePopUpWindow(void)
 {
+    Kanto_DismissMapNamePopup(); // PokemonNative3G : le panneau de RF à Kanto (DismissMapNamePopup de RF, mêmes appels)
     if (FuncIsActiveTask(Task_MapNamePopUpWindow))
     {
     #ifdef UBFIX

@@ -62,6 +62,9 @@
   Rouge Feu (Panthéon, Pokédex de Kanto, Pokédex national, 200 baies et 200 sauts), et le Pokédex compte ceux de Kanto.
 
 ### Nouveautés
+- Kanto : en entrant dans un lieu, le panneau du nom est celui de Rouge Feu (boîte blanche en haut à gauche), avec
+  l'étage comme dans Rouge Feu (« SYLPHE SARL 4ᵉ », « REPAIRE ROCKET 2 SS », « CELADOPOLE TOIT »). Hoenn garde
+  le panneau d'Émeraude.
 - Options > TITRE = R.FEU : l'écran titre de Rouge Feu mène maintenant au menu principal de Rouge Feu (CONTINUER avec
   le joueur, la durée de jeu, le Pokédex et les badges de la région où reprend la partie, NOUVELLE PARTIE, CADEAU
   MYST.). Comme dans Rouge Feu, il n'a pas d'entrée OPTIONS (elles restent dans le menu Start).

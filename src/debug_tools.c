@@ -381,6 +381,18 @@ static void Cmd_Roamers(const s32 *args, u32 argCount, struct DebugToolsOutput *
     }
 }
 
+// Hasard : gRngValue et gRng2Value ; avec GRAINE, les deux la prennent : la suite d'un scénario (rencontre, combat) ne
+// dépend plus du minutage d'avant (le hasard avance à chaque image)
+static void Cmd_Random(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (argCount >= 1)
+    {
+        gRngValue = (u32)args[0];
+        gRng2Value = (u32)args[0];
+    }
+    DebugTools_Print(out, "hasard %#x, hasard 2 %#x\n", gRngValue, gRng2Value);
+}
+
 // Statistique de jeu N (GAME_STAT_*), mise à V si donné (entrées au Panthéon, œufs éclos, victoires en link...)
 static void Cmd_GameStatistic(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
@@ -410,9 +422,9 @@ static void Cmd_MapInfo(const s32 *args, u32 argCount, struct DebugToolsOutput *
     DebugTools_Print(out, "carte %d.%d (%s, section %d), %s\n", gSaveBlock1Ptr->location.mapGroup,
                      gSaveBlock1Ptr->location.mapNum, text, gMapHeader.regionMapSectionId,
                      Fusion_IsInKanto() ? "Kanto" : "Hoenn");
-    DebugTools_Print(out, "disposition %d (%dx%d), type %d, meteo %d, musique %d\n", gMapHeader.mapLayoutId,
+    DebugTools_Print(out, "disposition %d (%dx%d), type %d, meteo %d, musique %d, etage %d\n", gMapHeader.mapLayoutId,
                      gMapHeader.mapLayout->width, gMapHeader.mapLayout->height, gMapHeader.mapType,
-                     gMapHeader.weather, gMapHeader.music);
+                     gMapHeader.weather, gMapHeader.music, gMapHeader.floorNum);
     DebugTools_Print(out, "joueur %d,%d niveau %d, regarde %d, avatar %#x, case %#x\n",
                      player->currentCoords.x - MAP_OFFSET, player->currentCoords.y - MAP_OFFSET,
                      player->currentElevation, player->facingDirection, gPlayerAvatar.flags,
@@ -807,6 +819,23 @@ static void Cmd_Mail(const s32 *args, u32 argCount, struct DebugToolsOutput *out
     }
 }
 
+// PV du Pokémon N de l'équipe (au plus ses PV max) : un K.O. qui ne dépend plus du hasard (scénario kanto_whiteout)
+static void Cmd_SetHp(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    struct Pokemon *mon;
+    u16 hp;
+
+    if ((u32)args[0] >= PARTY_SIZE || GetMonData(&gPlayerParty[args[0]], MON_DATA_SPECIES) == SPECIES_NONE || args[1] < 0)
+    {
+        DebugTools_Print(out, "refuse : pas de Pokemon en %d (equipe 0-5), ou PV negatifs\n", args[0]);
+        return;
+    }
+    mon = &gPlayerParty[args[0]];
+    hp = min(args[1], (s32)GetMonData(mon, MON_DATA_MAX_HP));
+    SetMonData(mon, MON_DATA_HP, &hp);
+    DebugTools_Print(out, "Pokemon %d : %d / %d PV\n", args[0], GetMonData(mon, MON_DATA_HP), GetMonData(mon, MON_DATA_MAX_HP));
+}
+
 // Le Pokémon N de l'équipe devient un œuf prêt à éclore (MON_DATA_IS_EGG, 0 cycle d'éclosion dans l'amitié) ; le script
 // EventScript_EggHatch avec VAR_0x8004 = N le fait éclore (scénario egg_hatch_kanto)
 static void Cmd_Egg(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
@@ -1089,6 +1118,7 @@ static const u8 sName_Encounters[] = _("Rencontres sauvages");
 static const u8 sName_Safari[] = _("Parc Safari");
 static const u8 sName_Roamers[] = _("Pokémon errants");
 static const u8 sName_GameStatistic[] = _("Statistique de jeu");
+static const u8 sName_Random[] = _("Hasard");
 static const u8 sName_StartMenu[] = _("Menu Start");
 static const u8 sName_DebugAction[] = _("Actions du menu DEBUG");
 static const u8 sName_MapInfo[] = _("Carte");
@@ -1105,6 +1135,7 @@ static const u8 sName_Bag[] = _("Sac et argent");
 static const u8 sName_SetMove[] = _("Donner une capacité");
 static const u8 sName_Mail[] = _("Lettre");
 static const u8 sName_Egg[] = _("Oeuf à faire éclore");
+static const u8 sName_SetHp[] = _("PV d'un Pokémon");
 static const u8 sName_Battle[] = _("Combat");
 static const u8 sName_Sprites[] = _("Sprites");
 static const u8 sName_Palette[] = _("Palette");
@@ -1127,6 +1158,7 @@ const struct DebugTool gDebugTools[] =
     {"jeu.rencontres", DEBUG_TOOLS_GAME, sName_Encounters, "[1|0] : Pokemon sauvages oui / non", 0, Cmd_Encounters},
     {"jeu.safari", DEBUG_TOOLS_GAME, sName_Safari, "[PAS [BALLS]] : pas restants et SAFARI BALLS du Parc Safari", 0, Cmd_Safari},
     {"jeu.errants", DEBUG_TOOLS_GAME, sName_Roamers, "[1|2] : vagabonds de la region ; 1 les lache, 2 les met sur cette carte", 0, Cmd_Roamers},
+    {"jeu.hasard", DEBUG_TOOLS_GAME, sName_Random, "[GRAINE] : etat du hasard ; GRAINE le fixe (scenarios : suite independante du minutage)", 0, Cmd_Random},
     {"jeu.stat", DEBUG_TOOLS_GAME, sName_GameStatistic, "N [V] : statistique de jeu GAME_STAT_* (Pantheon, oeufs...), mise a V", 1, Cmd_GameStatistic},
     {"jeu.menustart", DEBUG_TOOLS_GAME, sName_StartMenu, "entrees du menu Start et curseur", 0, Cmd_StartMenu},
     {"jeu.debug", DEBUG_TOOLS_GAME, sName_DebugAction, "actions du menu DEBUG ; [N] fait l'action N", 0, Cmd_DebugAction},
@@ -1142,6 +1174,7 @@ const struct DebugTool gDebugTools[] =
     {"joueur.equipe", DEBUG_TOOLS_PLAYER, sName_Party, "equipe : espece, PV, dresseur d'origine, lieu de rencontre", 0, Cmd_Party},
     {"joueur.sac", DEBUG_TOOLS_PLAYER, sName_Bag, "argent et poches du sac", 0, Cmd_Bag},
     {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE : donne la capacite (et ses PP)", 3, Cmd_SetMove},
+    {"joueur.pv", DEBUG_TOOLS_PLAYER, sName_SetHp, "N PV : PV du Pokemon N (au plus ses PV max)", 2, Cmd_SetHp},
     {"joueur.oeuf", DEBUG_TOOLS_PLAYER, sName_Egg, "N : le Pokemon N devient un oeuf pret a eclore (EventScript_EggHatch, VAR_0x8004 = N)", 1, Cmd_Egg},
     {"joueur.lettre", DEBUG_TOOLS_PLAYER, sName_Mail, "N OBJET [1] : lettre ITEM_*_MAIL a 9 mots au Pokemon N ; 1 = la lire (sur la carte)", 2, Cmd_Mail},
     {"combat.etat", DEBUG_TOOLS_BATTLE, sName_Battle, "type, combattants, controleurs", 0, Cmd_Battle},

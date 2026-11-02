@@ -2,19 +2,19 @@
 
 > Généré par `tools/cartographie.py` — ne pas éditer à la main.
 
-Les 1671 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
+Les 1658 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
 
 | Catégorie | Sens | Fonctions |
 |---|---|---|
-| manquante | rien de proche dans la fusion : à porter | 233 |
-| à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 24 |
+| manquante | rien de proche dans la fusion : à porter | 223 |
+| à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 22 |
 | équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 598 |
 | triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 113 |
-| morte | jamais appelée ni référencée dans RF | 104 |
+| morte | jamais appelée ni référencée dans RF | 103 |
 | link | link / E-Reader : à porter, désactivé | 170 |
 | écartée | écartée par décision | 429 |
 
-## Manquante (233) : rien de proche dans la fusion : à porter
+## Manquante (223) : rien de proche dans la fusion : à porter
 
 ### battle_tower.c (22)
 AppendBattleTowerBannedSpeciesName, BattleTowerMapScript2, BattleTowerUtil, CB2_FinishEReaderBattle,
@@ -87,18 +87,11 @@ ToggleCursorMultiMoveMode
 GetPlayerAvatarVsSeekerGfxId, MetatileAtCoordsIsWaterTile, PlayerAvatarTransition_Bike,
 QL_TryRecordNPCStepWithDuration32, QL_TryRecordPlayerStepWithDuration0
 
-### map_name_popup.c (5)
-DismissMapNamePopup, MapNamePopupAppendFloorNum, MapNamePopupCreateWindow, MapNamePopupPrintMapNameOnWindow,
-Task_MapNamePopup
-
 ### pokemon.c (5)
 InitMonSpritesGfx_Mode1, Localize_BattleStrings, SetMonExpWithMaxLevelCheck, es_sub_8044D1C, es_sub_8044D64
 
 ### battle_transition.c (4)
 Spiral_End, Spiral_Init, Spiral_UpdateFrame, VBlankCB_Spiral
-
-### clear_save_data_screen.c (4)
-CB2_SaveClearScreen_Init, Task_CleanUpAndSoftReset, Task_DrawClearSaveDataScreen, Task_HandleYesNoMenu
 
 ### event_data.c (4)
 EnableNationalPokedex_RSE, GetFlagAddr, IsFlagOrVarStoredInQuestLog, ResetSpecialVars
@@ -223,9 +216,6 @@ SaveStatToString
 ### script_pokemon_util.c (1)
 ChooseBattleTowerPlayerParty
 
-### text_window.c (1)
-LoadStdWindowTiles
-
 ### text_window_graphics.c (1)
 GetUserWindowGraphics
 
@@ -233,7 +223,7 @@ GetUserWindowGraphics
 TilemapUtil_SetTilemap
 
 
-## À vérifier (24) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
+## À vérifier (22) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
 
 ### battle_anim_special.c (3)
 SpriteCB_ShinySparkles_2 ~ SpriteCB_ShinyStars_Diagonal (battle_anim_throw.c, 70 %)
@@ -244,10 +234,6 @@ SpriteCB_ThrowBall_TenFrameDelay ~ SpriteCB_Ball_MonShrink (battle_anim_throw.c,
 GetTextSpeedSetting ~ GetPlayerTextSpeedDelay (menu.c, 63 %)
 MallocAndDecompress ~ malloc_and_decompress (menu.c, 76 %)
 TaskFreeBufAfterCopyingTileDataToVram ~ task_free_buf_after_copying_tile_data_to_vram (menu.c, 70 %)
-
-### clear_save_data_screen.c (2)
-CB2_Sub_SaveClearScreen_Init ~ DiplomaReset (kanto_diploma.c, 75 %)
-SaveClearScreen_GpuInit ~ PokeSum_Setup_InitGpu (kanto_summary_screen.c, 76 %)
 
 ### pokemon.c (2)
 Battle_PrintStatBoosterEffectMessage ~ UseStatIncreaseItem (pokemon.c, 97 %)
@@ -1153,7 +1139,7 @@ nullsub_8
 nullsub_9
 
 
-## Morte (104) : jamais appelée ni référencée dans RF
+## Morte (103) : jamais appelée ni référencée dans RF
 
 ### event_object_movement.c (30)
 GetReflectionEffectPaletteSlot, CameraObjectGetFollowedObjectId, GetAcroBunnyHopFrontWheelDirectionAnimNum,
@@ -1285,9 +1271,6 @@ BattleUseFunc_SacredAsh
 
 ### mailbox_pc.c (1)
 MailboxPC_GetWindowId
-
-### map_name_popup.c (1)
-IsMapNamePopupTaskActive
 
 ### naming_screen.c (1)
 Debug_NamingScreenRival

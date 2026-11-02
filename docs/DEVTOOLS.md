@@ -25,11 +25,13 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `jeu.safari [PAS [BALLS]]` | Parc Safari : en mode Safari ou non, pas restants, SAFARI BALLS ; les met (fin du temps ou des balls en un pas, scénario `kanto_safari_exit`) |
 | | `joueur.lettre N OBJET [1]` | lettre `ITEM_*_MAIL` à 9 mots (Easy Chat) signée du joueur, donnée au Pokémon `N` de l'équipe ; `1` ouvre l'écran de lecture (`ReadMail`, retour sur la carte), comme LIRE dans le menu de l'équipe (scénario `kanto_mail`) |
 | | `joueur.oeuf N` | le Pokémon `N` de l'équipe devient un œuf prêt à éclore ; `scripts.lancer EventScript_EggHatch` avec `VAR_0x8004 = N` le fait éclore (scénario `egg_hatch_kanto`) |
+| | `jeu.hasard [GRAINE]` | état du hasard (`gRngValue`, `gRng2Value`) ; `GRAINE` les fixe : la suite d'un scénario (rencontre, combat) ne dépend plus du minutage d'avant, le hasard avançant à chaque image (scénarios `kanto_rival`, `kanto_bag_battle` : graine 4) |
+| | `joueur.pv N PV` | PV du Pokémon `N` de l'équipe (au plus ses PV max) ; à régler **avant** un combat, ses PV y sont copiés (scénario `kanto_whiteout` : 1 PV, K.O. au premier coup) |
 | | `jeu.stat N [V]` | statistique de jeu `GAME_STAT_*` (nombre d'entrées au Panthéon, date de la première, œufs éclos, victoires en link…), mise à `V` si donné (scénario `kanto_card_stickers`) |
 | | `jeu.errants [1\|2]` | Pokémon errants de la région (espèce, niveau, actif, carte, PV) ; `1` les lâche (`InitRoamer`, comme leur script), `2` les met sur la carte du joueur jusqu'au prochain changement de carte (scénario `kanto_roamer`) |
 | | `jeu.menustart` | entrées du menu Start (`MENU_ACTION_*`) et curseur (`game.start_menu()` dans le banc) |
 | | `jeu.debug [N]` | les actions du menu DEBUG ; `N` fait l'action N (celles sans écran : soins, objets, Pokédex, passes, « Deux Ligues finies », POKé MONTURE + badges…), le même code que le menu (`DebugMenu_ApplyAction`) |
-| Carte | `carte.info` | carte, section, région, disposition, météo, musique, joueur, connexions |
+| Carte | `carte.info` | carte, section, région, disposition, météo, musique, étage (`floorNum` : panneau de RF), joueur, connexions |
 | | `carte.objets` | objets actifs : id, sprite, position, mouvement |
 | | `carte.grille` | **la carte telle qu'elle est en jeu**, avec les lettres de `test/headless/maps.py` (`#` bloqué, `g` herbe, `~` eau, `<>^v` rebord) : les étages générés (Mont Combat, Pyramide) et les cases changées par les scripts (`setmetatile`), que les fichiers de la carte ne montrent pas. Dans le banc : `live_map(game)` (un `maps.GridMap`), `walk_to(..., live=True)` |
 | Scripts | `scripts.contexte` | contextes global et immédiat : script en cours (label), pile |

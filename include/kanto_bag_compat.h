@@ -77,5 +77,7 @@ void ResetAllBgsCoordinatesAndBgCntRegs(void);
 void SetBackdropFromPalette(const u16 *palette);
 void LoadStdWindowGfx(u8 windowId, u16 destOffset, u8 palOffset);
 void LoadStdWindowGfxOnBg(u8 bgId, u16 destOffset, u8 palOffset);
+void LoadStdWindowTiles(u8 windowId, u16 destOffset);
+const u16 *Kanto_GetStdTextWindowPalette(void);
 
 #endif // GUARD_KANTO_BAG_COMPAT_H

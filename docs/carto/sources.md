@@ -182,11 +182,11 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | field_message_box.c | commun | 14 | 6 | 0 | 0 | 0 | 0 | 8 |  |
 | pokemon_icon.c | commun | 23 | 5 | 1 | 0 | 20 | 8 | 10 |  |
 | save_failed_screen.c | commun | 14 | 11 | 0 | 0 | 0 | 0 | 3 |  |
-| text_window.c | commun | 19 | 15 | 0 | 3 | 20 | 2 | 2 | kanto_bag.c (2), text_window.c (1) |
 | battle_ai_switch_items.c | commun | 13 | 0 | 0 | 0 | 100 | 0 | 13 |  |
 | battle_anim_rock.c | commun | 22 | 0 | 0 | 0 | 100 | 9 | 13 |  |
 | battle_bg.c | commun | 17 | 7 | 0 | 4 | 57 | 0 | 10 | copie kanto_battle_bg.c : 7/17 fonctions |
 | item_menu.c | commun | 116 | 100 | 0 | 100 | 100 | 3 | 13 | copie kanto_item_menu.c : 113/116 fonctions |
+| text_window.c | commun | 19 | 15 | 0 | 4 | 26 | 2 | 2 | kanto_bag.c (3), text_window.c (1) |
 | battle_message.c | commun | 14 | 5 | 0 | 0 | 0 | 2 | 7 |  |
 | battle_records.c | commun | 31 | 21 | 0 | 16 | 76 | 3 | 7 | kanto_trainer_tower.c (15), kanto_seagallop.c (1) |
 | main.c | commun | 28 | 2 | 0 | 0 | 0 | 16 | 10 |  |
@@ -218,9 +218,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | ereader_screen.c | commun | 11 | 1 | 1 | 0 | 100 | 3 | 7 |  |
 | intro.c | commun | 79 | 71 | 1 | 69 | 98 | 2 | 6 | copie kanto_intro.c : 72/79 fonctions |
 | load_save.c | commun | 21 | 2 | 0 | 0 | 0 | 14 | 5 |  |
-| map_name_popup.c | commun | 7 | 6 | 0 | 0 | 0 | 0 | 1 |  |
 | AgbRfu_LinkManager.c | commun | 33 | 0 | 0 | 0 | 100 | 27 | 6 |  |
-| clear_save_data_screen.c | commun | 8 | 8 | 2 | 0 | 25 | 0 | 0 |  |
 | field_special_scene.c | commun | 6 | 4 | 0 | 0 | 0 | 0 | 2 |  |
 | field_tasks.c | commun | 12 | 2 | 0 | 2 | 100 | 4 | 6 | field_tasks.c (2) |
 | minigame_countdown.c | commun | 10 | 1 | 1 | 0 | 100 | 3 | 6 |  |
@@ -276,12 +274,14 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | librfu_sio32id.c | commun | 4 | 0 | 0 | 0 | 100 | 3 | 1 |  |
 | m4a.c | commun | 72 | 0 | 0 | 0 | 100 | 71 | 1 |  |
 | mail.c | commun | 10 | 9 | 0 | 9 | 100 | 0 | 1 | copie kanto_mail.c : 10/10 fonctions |
+| map_name_popup.c | commun | 7 | 6 | 0 | 6 | 100 | 0 | 1 | copie kanto_map_name_popup.c : 7/7 fonctions |
 | play_time.c | commun | 5 | 0 | 0 | 0 | 100 | 4 | 1 |  |
 | pokedex.c | commun | 8 | 0 | 0 | 0 | 100 | 7 | 1 |  |
 | agb_flash_1m.c | commun | 2 | 0 | 0 | 0 | 100 | 2 | 0 |  |
 | agb_flash_le.c | commun | 0 | 0 | 0 | 0 | 100 | 0 | 0 |  |
 | agb_flash_mx.c | commun | 5 | 0 | 0 | 0 | 100 | 5 | 0 |  |
 | battle_anim_smokescreen.c | commun | 3 | 0 | 0 | 0 | 100 | 3 | 0 |  |
+| clear_save_data_screen.c | commun | 8 | 8 | 0 | 8 | 100 | 0 | 0 | copie kanto_clear_save_data_screen.c : 8/8 fonctions |
 | data.c | commun | 0 | 0 | 0 | 0 | 100 | 0 | 0 |  |
 | decoration.c | commun | 0 | 0 | 0 | 0 | 100 | 0 | 0 |  |
 | gpu_regs.c | commun | 11 | 0 | 0 | 0 | 100 | 11 | 0 |  |

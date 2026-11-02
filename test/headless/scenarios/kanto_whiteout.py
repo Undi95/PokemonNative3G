@@ -21,6 +21,7 @@ SPECIAL_RESPAWNS = (("EverGrandeCity_PokemonLeague_1F", 3, 4),
 def lose_wild_battle(game, map_name, x, y):
     """Va et vient sur (x, y) - (x + 1, y) jusqu'à une rencontre, perdue avec Magicarpe (Trempette)."""
     game.warp(map_name, x, y); game.wait(30)
+    game.dev("joueur.pv", 0, 1)   # 1 PV : le premier coup met K.O. (le combat ne dépend plus des tirages)
     for _ in range(150):
         game.press("RIGHT", 16); game.wait(4)
         game.press("LEFT", 16); game.wait(4)

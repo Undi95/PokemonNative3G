@@ -174,10 +174,6 @@ GetSeeingLinkPlayerCardMsg
 ValidateTrainerTowerTrainer, ValidateTrainerTowerData, CEReaderTool_SaveTrainerTower_r,
 CEReaderTool_SaveTrainerTower, CEReaderTool_LoadTrainerTower_r, CEReaderTool_LoadTrainerTower
 
-### clear_save_data_screen.c (commun, 6/8)
-CB2_SaveClearScreen_Init, Task_DrawClearSaveDataScreen, Task_HandleYesNoMenu, Task_CleanUpAndSoftReset,
-CB2_Sub_SaveClearScreen_Init, SaveClearScreen_GpuInit
-
 ### coins.c (commun, 2/2)
 PrintCoinsString_Parameterized, ShowCoinsWindow_Parameterized
 
@@ -429,10 +425,6 @@ MailboxPC_InitListMenu, MoveCursorFunc, MailboxPC_AddScrollIndicatorArrows, Mail
 
 ### main.c (commun, 2/2)
 SetVBlankCounter1Ptr, DisableVBlankCounter1
-
-### map_name_popup.c (commun, 6/6)
-Task_MapNamePopup, DismissMapNamePopup, IsMapNamePopupTaskActive, MapNamePopupCreateWindow,
-MapNamePopupPrintMapNameOnWindow, MapNamePopupAppendFloorNum
 
 ### math_util.c (commun, 5/9)
 Q_8_8_div, Q_N_S_div, Q_8_8_inv, Q_N_S_inv, Q_24_8_inv
@@ -722,11 +714,10 @@ GetGlyphWidth_Male, DecompressGlyph_Female, GetGlyphWidth_Female
 ### text_printer.c (RF seul, 1/1)
 CopyGlyphToWindow_Parameterized
 
-### text_window.c (commun, 12/15)
+### text_window.c (commun, 11/15)
 LoadHelpMessageWindowGfxOnBg, LoadMenuMessageWindowGfxOnBg, LoadSignpostWindowGfxOnBg,
 LoadQuestLogWindowTilesOnBg, LoadUserWindowGfxByFrameOnBg, LoadUserWindowGfx2, LoadHelpMessageWindowGfx,
-LoadMenuMessageWindowGfx, LoadStdWindowTiles, LoadQuestLogWindowTiles, LoadUserWindowGfxByFrame,
-LoadUserWindowGfx
+LoadMenuMessageWindowGfx, LoadQuestLogWindowTiles, LoadUserWindowGfxByFrame, LoadUserWindowGfx
 
 ### text_window_graphics.c (RF seul, 1/1)
 GetUserWindowGraphics

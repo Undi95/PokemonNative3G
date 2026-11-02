@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
 from driver import fight_battle, finish_dialog, wait_until, walk_to
 from kanto_tour import log
 
+SEED = int(os.environ.get("KANTO_RIVAL_SEED", "4"))   # une graine où CARAPUCE gagne (jeu.hasard ; 3 et 5 perdent)
 
 def play(game):
     game.wait(300); game.tap("START"); game.wait(120); game.tap("START"); game.wait(90); game.tap("A")
@@ -24,6 +25,8 @@ def play(game):
             break
         game.tap("B"); game.wait(10)
     log(game, "starter choisi")
+    # Le combat CARAPUCE / BULBIZARRE niveau 5 dépend du hasard : graine fixée, la suite ne dépend plus du minutage d'avant
+    game.dev("jeu.hasard", SEED)
     walk_to(game, 6, 8, on_battle=fight_battle); log(game, "déclencheur")
     finish_dialog(game); log(game, "après le combat")
 

@@ -9,6 +9,7 @@ from kanto_tour import debug_warp, give_mewtwo, log
 from kanto_wild import Battle, stop_at_battle
 from redleaf_acro import close_menus
 
+SEED = int(os.environ.get("KANTO_BAG_BATTLE_SEED", "4"))   # une graine où la rencontre est un RATTATA (jeu.hasard ; 1, 2, 5 : ROUCOOL)
 
 def play(game):
     game.wait(300); game.tap("START"); game.wait(120); game.tap("START"); game.wait(90); game.tap("A")
@@ -23,6 +24,7 @@ def play(game):
     close_menus(game)
     debug_warp(game, 1); log(game, "Jadielle")
     walk_to(game, 23, 39); leave_map(game, "DOWN"); log(game, "Route 1")
+    game.dev("jeu.hasard", SEED)   # la rencontre (RATTATA) ne dépend plus du minutage d'avant
     try:
         walk_to(game, 12, 9, on_battle=stop_at_battle)
     except Battle:

@@ -398,6 +398,18 @@ void LoadStdWindowGfx(u8 windowId, u16 destOffset, u8 palOffset)
     LoadPalette(sStdTextWindow_Pal, palOffset, PLTT_SIZE_4BPP);
 }
 
+// Rouge Feu (text_window.c) : LoadStdWindowTiles, et GetTextWindowPalette(3) (le cadre standard) : panneau du nom de
+// lieu de RF (kanto_map_name_popup.c)
+void LoadStdWindowTiles(u8 windowId, u16 destOffset)
+{
+    LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), sStdTextWindow_Gfx, 0x120, destOffset);
+}
+
+const u16 *Kanto_GetStdTextWindowPalette(void)
+{
+    return sStdTextWindow_Pal;
+}
+
 // Rouge Feu (text_window.c) : LoadStdWindowGfxOnBg (machine à sous de RF)
 void LoadStdWindowGfxOnBg(u8 bgId, u16 destOffset, u8 palOffset)
 {
