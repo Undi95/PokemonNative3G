@@ -596,7 +596,8 @@ bool16 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, Tex
         sTempTextPrinter.subStructFields[i] = 0;
 
 #ifdef PORTABLE
-    TestState_OnText(printerTemplate->windowId, printerTemplate->fgColor, printerTemplate->currentChar);
+    TestState_OnText(printerTemplate->windowId, printerTemplate->fontId, printerTemplate->fgColor,
+                     printerTemplate->currentChar);
 #endif
     sTempTextPrinter.printerTemplate = *printerTemplate;
     sTempTextPrinter.printerTemplate.currentChar = WrapTextToWindow(printerTemplate, speed);

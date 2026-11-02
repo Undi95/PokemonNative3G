@@ -369,6 +369,19 @@ static void AddStartMenuAction(u8 action)
     AppendToList(sCurrentStartMenuActions, &sNumStartMenuActions, action);
 }
 
+// PokemonNative3G : pour les outils de debug (debug_tools.c, menu.start)
+u8 StartMenu_GetActions(const u8 **actions, u8 *cursorPos)
+{
+    *actions = sCurrentStartMenuActions;
+    *cursorPos = sStartMenuCursorPos;
+    return sNumStartMenuActions;
+}
+
+const u8 *StartMenu_GetActionText(u8 action)
+{
+    return action < ARRAY_COUNT(sStartMenuItems) ? sStartMenuItems[action].text : NULL;
+}
+
 static void BuildNormalStartMenu(void)
 {
 #ifdef KANTO_DEBUG_START

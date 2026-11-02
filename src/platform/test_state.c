@@ -80,7 +80,7 @@ static void AddEvent(const char *format, ...)
 
 // Called when a text printer starts, with the text in the game's charset, as
 // hex: the tests decode it with charmap.txt
-void TestState_OnText(u8 windowId, u8 fgColor, const u8 *text)
+void TestState_OnText(u8 windowId, u8 fontId, u8 fgColor, const u8 *text)
 {
     char hex[2 * 400 + 1];
     int i;
@@ -90,7 +90,8 @@ void TestState_OnText(u8 windowId, u8 fgColor, const u8 *text)
     for (i = 0; i < 400 && text[i] != 0xFF; i++)
         sprintf(hex + 2 * i, "%02x", text[i]);
     hex[2 * i] = '\0';
-    AddEvent("{\"t\": \"text\", \"win\": %d, \"fg\": %d, \"hex\": \"%s\"}", windowId, fgColor, hex);
+    AddEvent("{\"t\": \"text\", \"win\": %d, \"font\": %d, \"fg\": %d, \"hex\": \"%s\"}", windowId, fontId, fgColor,
+             hex);
 }
 
 // Text as the inside of a JSON string
@@ -295,6 +296,20 @@ void WriteTestState(FILE *file, u32 frame)
             continue;
         fprintf(file, "%s[%d, %d]", first ? "" : ", ", object->currentCoords.x - MAP_OFFSET,
                 object->currentCoords.y - MAP_OFFSET);
+        first = FALSE;
+    }
+    fprintf(file, "]");
+
+    // Qui ils sont, dans le même ordre : leur localId (leur rang dans les object_events de la carte, à partir de 1)
+    fprintf(file, ", \"object_ids\": [");
+    first = TRUE;
+    for (int i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        const struct ObjectEvent *object = &gObjectEvents[i];
+
+        if (!object->active || object->isPlayer || object->invisible)
+            continue;
+        fprintf(file, "%s%d", first ? "" : ", ", object->localId);
         first = FALSE;
     }
     fprintf(file, "]");

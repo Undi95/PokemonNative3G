@@ -37,10 +37,13 @@
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
+#include "start_menu.h"
+#include "string_util.h"
 #include "task.h"
 #include "text.h"
 #include "window.h"
 #include "constants/characters.h"
+#include "constants/moves.h"
 
 extern void AgbMain(void);
 
@@ -376,6 +379,19 @@ static void Cmd_ScriptContext(const s32 *args, u32 argCount, struct DebugToolsOu
     PrintScriptContext(out, "immediat", GetImmediateScriptContext());
 }
 
+// Lance un script de carte (son adresse : distance à AgbMain, que les symboles de la build donnent par son nom),
+// comme si le joueur avait parlé à quelqu'un ; seulement quand il est libre sur la carte
+static void Cmd_RunScript(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (gMain.callback2 != CB2_Overworld || ScriptContext_IsEnabled() || ArePlayerFieldControlsLocked())
+    {
+        DebugTools_Print(out, "refuse : le joueur n'est pas libre sur la carte\n");
+        return;
+    }
+    ScriptContext_SetupScript((const u8 *)((uintptr_t)AgbMain + (intptr_t)args[0]));
+    DebugTools_Print(out, "script @%d lance\n", args[0]);
+}
+
 static void Cmd_Flag(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
     if (argCount >= 2)
@@ -418,6 +434,27 @@ static void Cmd_Party(const s32 *args, u32 argCount, struct DebugToolsOutput *ou
                          GetMonData(mon, MON_DATA_MET_LEVEL), GetMonData(mon, MON_DATA_IS_EGG),
                          GetMonData(mon, MON_DATA_PERSONALITY));
     }
+}
+
+// Donne une capacité (avec ses PP) au Pokémon N de l'équipe, à la place P (0 à 3)
+static void Cmd_SetMove(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    struct Pokemon *mon;
+
+    if ((u32)args[0] >= PARTY_SIZE || (u32)args[1] >= MAX_MON_MOVES || (u32)args[2] >= MOVES_COUNT)
+    {
+        DebugTools_Print(out, "refuse : equipe 0-5, place 0-3, capacite < %d\n", MOVES_COUNT);
+        return;
+    }
+    mon = &gPlayerParty[args[0]];
+    if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
+    {
+        DebugTools_Print(out, "refuse : pas de Pokemon en %d\n", args[0]);
+        return;
+    }
+    SetMonMoveSlot(mon, args[2], args[1]);
+    DebugTools_Print(out, "Pokemon %d : capacite %d en place %d, PP %d\n", args[0], GetMonData(mon, MON_DATA_MOVE1 + args[1]),
+                     args[1], GetMonData(mon, MON_DATA_PP1 + args[1]));
 }
 
 static void Cmd_Bag(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
@@ -571,6 +608,33 @@ static void Cmd_TextPrinters(const s32 *args, u32 argCount, struct DebugToolsOut
     }
 }
 
+// Le menu Start : ses entrées (MENU_ACTION_* de start_menu.c) et le curseur, pour y aller sans compter
+static void Cmd_StartMenu(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    const u8 *actions;
+    u8 cursor, count, i;
+    u8 text[64];
+    char utf8[96];
+
+    count = StartMenu_GetActions(&actions, &cursor);
+    DebugTools_Print(out, "%u entrees, curseur %u\n", count, cursor);
+    for (i = 0; i < count; i++)
+    {
+        const u8 *name = StartMenu_GetActionText(actions[i]);
+
+        if (name != NULL)
+        {
+            StringExpandPlaceholders(text, name);
+            DebugTools_GameTextToUtf8(utf8, text, sizeof(utf8));
+        }
+        else
+        {
+            strcpy(utf8, "?");
+        }
+        DebugTools_Print(out, "%u action %u %s\n", i, actions[i], utf8);
+    }
+}
+
 // --- Son ------------------------------------------------------------------------------------------------------
 
 static void Cmd_Sound(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
@@ -629,13 +693,16 @@ static const u8 sName_GameState[] = _("État du moteur");
 static const u8 sName_Options[] = _("Options");
 static const u8 sName_NoClip[] = _("Traverser les murs");
 static const u8 sName_Encounters[] = _("Rencontres sauvages");
+static const u8 sName_StartMenu[] = _("Menu Start");
 static const u8 sName_MapInfo[] = _("Carte");
 static const u8 sName_MapObjects[] = _("Objets de la carte");
 static const u8 sName_ScriptContext[] = _("Scripts en cours");
+static const u8 sName_RunScript[] = _("Lancer un script");
 static const u8 sName_Flag[] = _("Flag");
 static const u8 sName_Var[] = _("Variable");
 static const u8 sName_Party[] = _("Équipe");
 static const u8 sName_Bag[] = _("Sac et argent");
+static const u8 sName_SetMove[] = _("Donner une capacité");
 static const u8 sName_Battle[] = _("Combat");
 static const u8 sName_Sprites[] = _("Sprites");
 static const u8 sName_Palette[] = _("Palette");
@@ -656,13 +723,16 @@ const struct DebugTool gDebugTools[] =
     {"jeu.options", DEBUG_TOOLS_GAME, sName_Options, "toutes les options ; [N V] met l'option N a V", 0, Cmd_Options},
     {"jeu.murs", DEBUG_TOOLS_GAME, sName_NoClip, "[1|0] : traverser les murs (comme le menu DEBUG)", 0, Cmd_NoClip},
     {"jeu.rencontres", DEBUG_TOOLS_GAME, sName_Encounters, "[1|0] : Pokemon sauvages oui / non", 0, Cmd_Encounters},
+    {"jeu.menustart", DEBUG_TOOLS_GAME, sName_StartMenu, "entrees du menu Start et curseur", 0, Cmd_StartMenu},
     {"carte.info", DEBUG_TOOLS_MAP, sName_MapInfo, "carte, region, joueur, connexions", 0, Cmd_MapInfo},
     {"carte.objets", DEBUG_TOOLS_MAP, sName_MapObjects, "objets actifs de la carte", 0, Cmd_MapObjects},
     {"scripts.contexte", DEBUG_TOOLS_SCRIPT, sName_ScriptContext, "contextes de script global et immediat", 0, Cmd_ScriptContext},
+    {"scripts.lancer", DEBUG_TOOLS_SCRIPT, sName_RunScript, "@ADRESSE : lance ce script (game.script(NOM) dans le banc)", 1, Cmd_RunScript},
     {"scripts.flag", DEBUG_TOOLS_SCRIPT, sName_Flag, "FLAG [VALEUR] : lit ou met un flag", 1, Cmd_Flag},
     {"scripts.var", DEBUG_TOOLS_SCRIPT, sName_Var, "VAR [VALEUR] : lit ou met une variable", 1, Cmd_Var},
     {"joueur.equipe", DEBUG_TOOLS_PLAYER, sName_Party, "equipe : espece, PV, dresseur d'origine, lieu de rencontre", 0, Cmd_Party},
     {"joueur.sac", DEBUG_TOOLS_PLAYER, sName_Bag, "argent et poches du sac", 0, Cmd_Bag},
+    {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE : donne la capacite (et ses PP)", 3, Cmd_SetMove},
     {"combat.etat", DEBUG_TOOLS_BATTLE, sName_Battle, "type, combattants, controleurs", 0, Cmd_Battle},
     {"gfx.sprites", DEBUG_TOOLS_GFX, sName_Sprites, "sprites utilises : position, tile, palette, animation", 0, Cmd_Sprites},
     {"gfx.palette", DEBUG_TOOLS_GFX, sName_Palette, "TYPE BANQUE (0 BG, 1 OBJ) : couleurs non fondues, fondues, a l'ecran", 2, Cmd_Palette},

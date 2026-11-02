@@ -46,6 +46,7 @@ class State:
         self.__dict__.update(data)
         self.pos = tuple(self.pos)
         self.objects = [tuple(o) for o in self.objects]
+        self.object_ids = data.get("object_ids", [])   # leur localId, dans le même ordre
         self.party = [tuple(m) for m in data.get("party", [])]
         self.foe = [tuple(m) for m in data.get("foe", [])]
         self.events = data.get("events", [])
@@ -220,7 +221,8 @@ class Game:
             self.events.append((self.frames, event))
             kind = event["t"]
             if kind == "text":
-                text = names.decode(event["hex"])
+                # FONT_BRAILLE (6, include/text.h) : des cellules de braille, pas des lettres
+                text = names.decode_braille(event["hex"]) if event.get("font") == 6 else names.decode(event["hex"])
                 self.texts.append((self.frames, event["win"], text))
                 self.text_colors.append(event.get("fg"))
                 if text.strip() not in ("", "▶"):
@@ -294,6 +296,24 @@ class Game:
         """Runs a debug tool (src/debug_tools.c, "aide" lists them) and returns its
         text, with the functions and data named."""
         return self.symbols.expand(self.command("dev", *words))
+
+    def script(self, label):
+        """Lance un script de carte par son nom (« EventScript_PC »), comme si le joueur avait parlé à quelqu'un :
+        le joueur doit être libre sur la carte."""
+        reply = self.dev("scripts.lancer", self.symbols.offset(label))
+        if "refuse" in reply:
+            raise GameError(f"script {label} : {reply.strip()}")
+        return wait_until(self, lambda s: not s.free, limit=60)
+
+    def start_menu(self):
+        """Le menu Start (ouvert ou dernier ouvert) : ([(action MENU_ACTION_*, nom)], curseur)."""
+        lines = self.dev("jeu.menustart").splitlines()
+        cursor = int(lines[0].split()[-1])
+        entries = []
+        for line in lines[1:]:
+            _, _, action, name = line.split(" ", 3)
+            entries.append((int(action), name))
+        return entries, cursor
 
     def flag(self, flag, set_to=None):
         """Reads a flag (a name like "FLAG_BADGE01_GET" or a number), or sets it."""

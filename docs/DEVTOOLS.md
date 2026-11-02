@@ -21,9 +21,12 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 |---|---|---|
 | Jeu | `jeu.etat` | callbacks (cb1, cb2, VBlank, HBlank), fondu, verrous, tâches actives |
 | | `jeu.options [N V]` | toutes les options (bits de la sauvegarde) ; `N V` met l'option N à V |
+| | `jeu.murs [1\|0]`, `jeu.rencontres [1\|0]` | traverser les murs, Pokémon sauvages (les réglages du menu DEBUG) |
+| | `jeu.menustart` | entrées du menu Start (`MENU_ACTION_*`) et curseur (`game.start_menu()` dans le banc) |
 | Carte | `carte.info` | carte, section, région, disposition, météo, musique, joueur, connexions |
 | | `carte.objets` | objets actifs : id, sprite, position, mouvement |
 | Scripts | `scripts.contexte` | contextes global et immédiat : script en cours (label), pile |
+| | `scripts.lancer @ADRESSE` | lance un script de carte, joueur libre (`game.script("EventScript_PC")` : le banc donne l'adresse par le nom) |
 | | `scripts.flag N [V]`, `scripts.var N [V]` | lit ou met un flag, une variable |
 | Joueur | `joueur.equipe` | équipe : espèce, PV, objet, dresseur d'origine, lieu et jeu de rencontre |
 | | `joueur.sac` | argent, poches |
@@ -81,6 +84,13 @@ la connaît pas).
 Chaque détecteur a été validé sur son bug avant la correction (2026-11-02 : boîte de l'intro avec DIALOGUE =
 KANTO, sprite figé dans la fiche de RF, flèche hors de la boîte de RF, teinte coupée pendant la transition vers un
 combat).
+
+## Explorateur et grille (connaître tout le jeu)
+
+| Outil | Ce qu'il fait |
+|---|---|
+| `python test/headless/crawl.py BINAIRE [--cartes REGEX] [--jobs N]` | **Explorateur** : chaque carte (914), depuis la sauvegarde de début de partie de sa région ; arrivée sur son premier warp et capture, puis téléport à côté de chaque PNJ (visé par son localId : l'état du banc donne `object_ids`), de chaque panneau (du bon côté) et de chaque objet caché, A jusqu'au bout (B pour sortir d'un menu), combats faits avec un MEWTWO N.100 aux 4 attaques (`joueur.capacite`), texte rapide et sans animations de combat. Salles de défi, de concours et de link listées à part (on n'y entre que pendant un défi). 20 000 images au plus par interaction (un script sans fin est une erreur, pas un gel du banc) ; un jeu qui plante est relancé. `build/headless/crawl/atlas.json` (textes, combats, anomalies, erreurs par carte et par interaction) et `rapport.txt` : anomalies, erreurs, PNJ muets ou inaccessibles, **textes suspects** (octet sans lettre `�`, code `{XX}` non remplacé, reste d'anglais). `--rapport-seul` refait le rapport depuis l'atlas. |
+| `python test/headless/matrix.py BINAIRE [--ecrans REGEX] [--regions kanto,hoenn]` | **Grille options × écrans** : les 9 options d'affichage (PERSO, DIALOGUE, POLICE, POKéDEX, MENUS, BOITES COMBAT, SAC, POKéMON, JOUR/NUIT) en 9 combinaisons qui montrent chaque paire de valeurs, le cadre des fenêtres changé à chaque fois, dans les deux régions ; écrans : menu Start, équipe, résumé, sac, Pokédex, carte de dresseur, sauvegarde, options, panneau, PNJ, boutique, PC, combat sauvage, combat de dresseur. Une planche par écran (`build/headless/matrix/planches/`, une ligne par jeu), anomalies et erreurs dans `rapport.txt`. |
 
 ## Architecture
 

@@ -115,6 +115,13 @@ class Symbols:
             return f"?{offset:+#x}"
         return self.names[i] if offset == self.addresses[i] else f"{self.names[i]}+{offset - self.addresses[i]:#x}"
 
+    def offset(self, name):
+        """The offset from AgbMain of a function or data (a script...), for the debug tools that take an address."""
+        try:
+            return self.addresses[self.names.index(name)]
+        except ValueError:
+            raise KeyError(f"{name} n'est pas dans les symboles de la build") from None
+
     def expand(self, text):
         """The debug tools' text (src/debug_tools.c) with each "@N" replaced by its symbol."""
         return re.sub(r"@(-?\d+)", lambda m: self(int(m.group(1))) or "NULL", text)
@@ -142,7 +149,37 @@ def _charmap():
                 char = match.group(1).replace("\\'", "'").replace('\\"', '"')
                 chars.setdefault(int(match.group(2), 16), char)
     chars[0x00] = " "
+    chars[0x77] = " "     # CHAR_SPACER, the space that aligns numbers (money...)
+    # The glyphs with a name in charmap.txt (SUPER_E = 84...): superscripts of the French floors (9ᵉ, 1ᵉʳ), arrows
+    chars.update({0x2C: "ᵉʳ", 0x34: "N.", 0x64: "PCo", 0x79: "↑", 0x7A: "↓", 0x7B: "←", 0x7C: "→", 0x84: "ᵉ",
+                  0xA0: "ʳᵉ"})
     return chars
+
+
+@functools.lru_cache(None)
+def _braille():
+    """Braille cells to letters, from the encoder of .braille strings (tools/preproc/asm_file.cpp) and the cells'
+    values (BRAILLE_CHAR_* in include/constants/characters.h). The digits share the cells of A to J."""
+    cells = {}
+    with open(os.path.join(REPO_DIR, "tools", "preproc", "asm_file.cpp"), encoding="utf-8") as f:
+        for char, name in re.findall(r"\{ '(\\?.)', (BRAILLE_CHAR_\w+) \}", f.read()):
+            number = value(name)
+            if number is not None and not char.isdigit():
+                cells.setdefault(number, char.replace("\\", "").upper())
+    return cells
+
+
+def decode_braille(data):
+    """Text in the braille font (FONT_BRAILLE), as "⠿ " and its letters: the number sign stays "#"."""
+    if isinstance(data, str):
+        data = bytes.fromhex(data)
+    cells = _braille()
+    out = []
+    for byte in data:
+        if byte == 0xFF:
+            break
+        out.append("\n" if byte == 0xFE else cells.get(byte, "�"))
+    return "⠿ " + "".join(out)
 
 
 def decode(data):
@@ -172,6 +209,6 @@ def decode(data):
         elif byte in (0xF7, 0xF8, 0xF9):
             i += 1
         else:
-            out.append(chars.get(byte, "?"))
+            out.append(chars.get(byte, "�"))   # un octet sans lettre : un texte mal encodé
         i += 1
     return "".join(out)
