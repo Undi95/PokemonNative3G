@@ -11,6 +11,11 @@
 - Boîte de dialogue de Rouge Feu : la flèche rouge n'est plus coupée ou cachée en bout de ligne.
 - Cycle jour/nuit : l'animation qui lance un combat garde la teinte (le terrain repassait en couleurs de jour).
 - Le fichier de réglages du PC ne grossit plus d'une ligne à chaque lancement.
+- Listes de Rouge Feu (badges de la maison d'Azuria, étages de l'ascenseur de Sylphe SARL, échange de Poudre Baie) :
+  la 4ᵉ ligne n'est plus coupée par le bas de la fenêtre.
+- Options : avec la police KANTO, le titre de la page (« L R 2/2 : HOENN/KANTO ») ne recouvre plus « OPTIONS ».
+- Dôme de Combat : le tableau du tournoi précédent (panneau du hall) ne fait plus planter le jeu en ouvrant la fiche
+  d'un dresseur ou d'un match, ni en y revenant.
 
 ## Version 1.1 (1er novembre 2026)
 

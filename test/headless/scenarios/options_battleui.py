@@ -44,5 +44,5 @@ def play(game):
     log(game, "après le combat")
 
     # Vérifications
-    expect_text(game, "PAGE 2/2 : HOENN/KANTO")
+    expect_text(game, "2/2 : HOENN/KANTO")
     expect_battle(game, foe="SPECIES_PIDGEY", outcome="WON")

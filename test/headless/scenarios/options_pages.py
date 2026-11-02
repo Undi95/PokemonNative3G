@@ -22,4 +22,4 @@ def play(game):
     game.tap("B"); game.wait(120)
 
     # Vérifications
-    expect_text(game, "PAGE 2/2 : HOENN/KANTO")
+    expect_text(game, "2/2 : HOENN/KANTO")

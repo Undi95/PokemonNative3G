@@ -150,7 +150,7 @@ Choix HOENN / KANTO :
 - [x] Machine à sous (2026-10-24) : PAS d'option, chacune dans sa région (celle de RF au Casino de Céladopole, `kanto_slot_machine.c` ; celle d'Émeraude à Lavandia)
 - [x] Menu Start de RF : déjà par MENUS = KANTO (police, espacement, curseur, descriptions de RF) ; nom du joueur
   en police de RF aussi (`Menu_PrintFormatIntlPlayerName` de RF, 2026-10-31)
-- [x] Menu Options en pages (2026-10-23, L/R ; titre « {L}{R} PAGE 1/2 : JEU » / « PAGE 2/2 : HOENN/KANTO » ; page 2 : PERSO, POKéMON, DIALOGUE, BOITES COMBAT, MENUS, SAC, POKéDEX, TITRE, INTRO) : page 1 = réglages d'Émeraude, page 2 (et suivantes) = choix HOENN/KANTO ; indiquer clairement qu'il y a d'autres pages (ex. « PAGE 1/2 » et flèches L/R dans le titre)
+- [x] Menu Options en pages (2026-10-23, L/R ; titre « {L}{R} 1/2 : JEU » / « {L}{R} 2/2 : HOENN/KANTO », sans « PAGE » depuis le 2026-11-02 : avec la police de RF, le titre recouvrait « OPTIONS » ; page 2 : PERSO, POKéMON, DIALOGUE, BOITES COMBAT, MENUS, SAC, POKéDEX, TITRE, INTRO) : page 1 = réglages d'Émeraude, page 2 (et suivantes) = choix HOENN/KANTO ; indiquer clairement qu'il y a d'autres pages (ex. « PAGE 1/2 » et flèches L/R dans le titre)
 
 ## Notes
 - Piste (utilisateur) : Émeraude a été construit à partir de Rouge Feu ; il garde des fonctions vidées et des entrées inutilisées de RF (ex. BgTileAllocOp « Dummied out », LoadMonPicInWindow UNUSED). Les rétablir avec le code de RF avant de réinventer.

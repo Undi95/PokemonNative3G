@@ -825,8 +825,9 @@ static void ButtonMode_DrawChoices(u8 selection)
     DrawOptionMenuChoice(gText_ButtonTypeLEqualsA, GetStringRightAlignXOffset(FONT_NORMAL, gText_ButtonTypeLEqualsA, 198), YPOS_BUTTONMODE, styles[2]);
 }
 
-static const u8 sText_OptionPage1[] = _("{L_BUTTON}{R_BUTTON} PAGE 1/2 : JEU");
-static const u8 sText_OptionPage2[] = _("{L_BUTTON}{R_BUTTON} PAGE 2/2 : HOENN/KANTO");
+// Sans « PAGE » : avec les espaces de la police de RF (POLICE = KANTO), le titre recouvrait « OPTIONS »
+static const u8 sText_OptionPage1[] = _("{L_BUTTON}{R_BUTTON} 1/2 : JEU");
+static const u8 sText_OptionPage2[] = _("{L_BUTTON}{R_BUTTON} 2/2 : HOENN/KANTO");
 
 static void DrawHeaderText(void)
 {

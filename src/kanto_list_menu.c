@@ -465,10 +465,10 @@ void DrawElevatorCurrentFloorWindow(void)
     sElevatorCurrentFloorWindowId = AddWindow(&sElevatorCurrentFloorWindowTemplate);
     LoadUserWindowBorderGfx(sElevatorCurrentFloorWindowId, 0x21D, BG_PLTT_ID(13)); // LoadStdWindowGfx de RF
     DrawStdFrameWithCustomTileAndPalette(sElevatorCurrentFloorWindowId, FALSE, 0x21D, 13);
-    AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_NORMAL, sText_NowOn, 0, 2, 0xFF, NULL);
+    AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_KANTO, sText_NowOn, 0, 2, 0xFF, NULL);
     floorname = sFloorNamePointers[gSpecialVar_0x8005];
-    strwidth = GetStringWidth(FONT_NORMAL, floorname, 0);
-    AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_NORMAL, floorname, 56 - strwidth, 16, 0xFF, NULL);
+    strwidth = GetStringWidth(FONT_KANTO, floorname, 0);
+    AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_KANTO, floorname, 56 - strwidth, 16, 0xFF, NULL);
     PutWindowTilemap(sElevatorCurrentFloorWindowId);
     CopyWindowToVram(sElevatorCurrentFloorWindowId, COPYWIN_FULL);
 }
@@ -708,7 +708,7 @@ static void Task_CreateScriptListMenu(u8 taskId)
     {
         sListMenuItems[i].name = sListMenuLabels[gSpecialVar_0x8004][i];
         sListMenuItems[i].id = i;
-        width = GetStringWidth(FONT_NORMAL, sListMenuItems[i].name, 0);
+        width = GetStringWidth(FONT_KANTO, sListMenuItems[i].name, 0);
         if (width > mwidth)
             mwidth = width;
     }
@@ -746,7 +746,7 @@ static void CreateScriptListMenu(void)
     sFieldSpecialsListMenuTemplate.lettersSpacing = 1;
     sFieldSpecialsListMenuTemplate.itemVerticalPadding = 0;
     sFieldSpecialsListMenuTemplate.scrollMultiple = 0;
-    sFieldSpecialsListMenuTemplate.fontId = FONT_NORMAL;
+    sFieldSpecialsListMenuTemplate.fontId = FONT_KANTO; // FONT_NORMAL de RF : lignes de 14 px (4 dans 7 tiles)
     sFieldSpecialsListMenuTemplate.cursorKind = 0;
 }
 

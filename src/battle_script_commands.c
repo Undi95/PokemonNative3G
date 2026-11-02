@@ -1511,7 +1511,13 @@ static void CheckWonderGuardAndLevitate(void)
 // Same as ModulateDmgByType except different arguments
 static void ModulateDmgByType2(u8 multiplier, u16 move, u8 *flags)
 {
+#ifdef UBFIX
+    // AI_TypeCalc never resets gBattleMoveDamage (only its flags matter): called again and again (the Battle Dome's
+    // GetWinningMove), the product overflows. The GBA wraps it around: the same, without signed overflow
+    gBattleMoveDamage = (s32)((u32)gBattleMoveDamage * multiplier) / 10;
+#else
     gBattleMoveDamage = gBattleMoveDamage * multiplier / 10;
+#endif
     if (gBattleMoveDamage == 0 && multiplier != 0)
         gBattleMoveDamage = 1;
 

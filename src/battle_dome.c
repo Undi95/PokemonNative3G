@@ -3351,8 +3351,20 @@ static void SpriteCB_MonIconCardScrollRight(struct Sprite *sprite)
 static void SpriteCB_HorizontalScrollArrow(struct Sprite *sprite)
 {
     int taskId1 = sprite->data[0];
+#ifdef UBFIX
+    // Back from the info card to the tree, the arrows live one more frame after sInfoCard and its task are freed:
+    // the GBA read its BIOS and a stale task there
+    if (sInfoCard == NULL)
+        return;
+#endif
     int arrId = gTasks[gTasks[taskId1].data[4]].data[1];
+#ifdef UBFIX
+    // On a match's card, arrId is a match (DOME_TOURNAMENT_TRAINERS_COUNT and up): the trainer read past the array
+    // is only used on a trainer's card (INFOCARD_TRAINER)
+    int tournmanetTrainerId = arrId < DOME_TOURNAMENT_TRAINERS_COUNT ? sTourneyTreeTrainerIds[arrId] : 0;
+#else
     int tournmanetTrainerId = sTourneyTreeTrainerIds[arrId];
+#endif
     int roundId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
 
     if (gTasks[taskId1].data[3] == 1)
@@ -3421,6 +3433,11 @@ static void SpriteCB_VerticalScrollArrow(struct Sprite *sprite)
 {
     int taskId1 = sprite->data[0];
 
+#ifdef UBFIX
+    // As in SpriteCB_HorizontalScrollArrow
+    if (sInfoCard == NULL)
+        return;
+#endif
     if (gTasks[taskId1].data[3] == 1)
     {
         if (sInfoCard->pos != 0)
@@ -4194,7 +4211,12 @@ static u8 Task_GetInfoCardInput(u8 taskId)
     u8 input = INFOCARD_INPUT_NONE;
     int taskId2 = gTasks[taskId].data[4];
     int position = gTasks[taskId2].data[1];
+#ifdef UBFIX
+    // On a match's card, position is a match: as in SpriteCB_HorizontalScrollArrow
+    u8 tourneyId = position < DOME_TOURNAMENT_TRAINERS_COUNT ? sTourneyTreeTrainerIds[position] : 0;
+#else
     u8 tourneyId = sTourneyTreeTrainerIds[position];
+#endif
     u16 roundId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
 
     if (JOY_NEW(A_BUTTON | B_BUTTON))
@@ -5074,6 +5096,11 @@ static void Task_HandleTourneyTreeInput(u8 taskId)
             gTasks[newTaskId].tPrevTaskId = taskId;
 
             gTasks[taskId].tState = STATE_SHOW_INFOCARD_TRAINER + 1;
+        #ifdef UBFIX
+            // sInfoCard is only allocated by Task_ShowTourneyInfoCard, on the next frame: on the GBA this wrote
+            // to address 0x10 and did nothing (AllocZeroed sets pos to 0 anyway)
+            if (sInfoCard != NULL)
+        #endif
             sInfoCard->pos = 0;
         }
         break;
