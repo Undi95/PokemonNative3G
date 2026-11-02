@@ -6327,7 +6327,11 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
                 return;
             if (!(gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_LEADER
                 || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_ELITE_FOUR
-                || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_CHAMPION))
+                || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_CHAMPION
+                // Rouge Feu (AdjustFriendship) : les champions, le Conseil 4 et le maître de Kanto
+                || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_KANTO_LEADER
+                || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_KANTO_ELITE_FOUR
+                || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_KANTO_CHAMPION))
                 return;
         }
 
