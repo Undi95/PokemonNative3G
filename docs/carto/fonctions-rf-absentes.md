@@ -395,9 +395,6 @@ SetPcItemQuantity, SetBagPocketsPointers, BagPocketGetFirstEmptySlot, IsPocketNo
 CountItemsInPC, ItemPcCompaction, BagPocketCompaction, SortAndCompactBagPocket, BagGetQuantityByItemId,
 TrySetObtainedItemQuestLogEvent
 
-### item_menu.c (commun, 2/100)
-InitOldManBag, Task_Bag_OldManTutorial
-
 ### item_use.c (commun, 42/58)
 FieldCB_FadeInFromBlack, Task_WaitFadeIn_CallItemUseOnFieldCB, DisplayItemMessageInCurrentContext,
 PrintNotTheTimeToUseThat, Task_ItemUse_CloseMessageBoxAndReturnToField, SetFieldCallback2ForItemUse,

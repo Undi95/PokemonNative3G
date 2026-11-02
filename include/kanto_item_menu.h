@@ -12,5 +12,7 @@ void KantoBag_DisplayItemMessage(u8 taskId, u8 fontId, const u8 *str, TaskFunc c
 void KantoBag_CloseItemMessage(u8 taskId);
 void KantoBag_FadeAndClose(u8 taskId);
 void KantoBag_SetNewScreenCallback(MainCallback callback);
+// Rouge Feu : le sac de la démonstration du vieil homme de Jadielle (option SAC = KANTO ; sinon celui de Wally)
+void InitOldManBag(void);
 
 #endif // GUARD_KANTO_ITEM_MENU_H

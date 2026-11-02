@@ -176,7 +176,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | field_door.c | commun | 21 | 2 | 0 | 2 | 100 | 3 | 16 | copie kanto_field_door.c : 21/21 fonctions |
 | librfu_rfu.c | commun | 86 | 0 | 0 | 0 | 100 | 70 | 16 |  |
 | mystery_gift.c | commun | 45 | 1 | 1 | 0 | 100 | 28 | 16 |  |
-| item_menu.c | commun | 116 | 100 | 0 | 98 | 98 | 3 | 13 | copie kanto_item_menu.c : 111/116 fonctions |
 | battle_anim_fight.c | commun | 31 | 2 | 1 | 0 | 50 | 16 | 13 |  |
 | battle_anim_fire.c | commun | 35 | 0 | 0 | 0 | 100 | 21 | 14 |  |
 | battle_anim_water.c | commun | 48 | 0 | 0 | 0 | 100 | 34 | 14 |  |
@@ -188,6 +187,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_ai_switch_items.c | commun | 13 | 0 | 0 | 0 | 100 | 0 | 13 |  |
 | battle_anim_rock.c | commun | 22 | 0 | 0 | 0 | 100 | 9 | 13 |  |
 | battle_bg.c | commun | 17 | 7 | 0 | 4 | 57 | 0 | 10 | copie kanto_battle_bg.c : 7/17 fonctions |
+| item_menu.c | commun | 116 | 100 | 0 | 100 | 100 | 3 | 13 | copie kanto_item_menu.c : 113/116 fonctions |
 | battle_message.c | commun | 14 | 5 | 0 | 0 | 0 | 2 | 7 |  |
 | battle_records.c | commun | 31 | 21 | 0 | 16 | 76 | 3 | 7 | kanto_trainer_tower.c (15), kanto_seagallop.c (1) |
 | main.c | commun | 28 | 2 | 0 | 0 | 0 | 16 | 10 |  |

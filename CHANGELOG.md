@@ -44,6 +44,8 @@
 - Club Événement Mystère de Kanto : un profil écrit à Kanto ne compte plus toujours comme la phrase secrète.
 - Parc Safari de Kanto : à la fin du temps, des SAFARI BALLS ou avec PARTIR, on revient à l'entrée de Parmanie (le jeu
   envoyait à l'entrée du Parc Safari de la Route 121, à Hoenn).
+- Vieil homme de Jadielle : avec SAC = KANTO, sa démonstration de capture ouvre le sac de Rouge Feu (il passe à la
+  poche des POKé BALLS et choisit la sienne), au lieu de celui d'Émeraude.
 - Sons de Kanto : les portes, la caisse (boutique, vente, Casino, Musée, photo) et la fanfare des soins hors Centre
   sont ceux de Rouge Feu (c'étaient des sons d'Émeraude de même nom, et pour les soins un morceau que Rouge Feu ne
   joue jamais).

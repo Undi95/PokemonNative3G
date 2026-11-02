@@ -21,7 +21,7 @@ struct BagPocket;
 #define GetDialogBoxFontId()     FONT_KANTO
 #define FONT_NORMAL_COPY_1       FONT_KANTO
 
-// Le Vieil Homme de RF ouvre le sac de démonstration, mais ici il garde celui d'Émeraude : jamais utilisé.
+// Le sac de démonstration du vieil homme de RF (InitOldManBag, option SAC = KANTO ; sinon le sac de Wally d'Émeraude).
 // Les emplacements de la Télé Pokémon (ITEMMENULOCATION_TTVSCR_*) sont dans item_menu.h.
 #define ITEMMENULOCATION_OLD_MAN          0xF0
 

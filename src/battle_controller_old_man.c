@@ -17,6 +17,7 @@
 #include "data.h"
 #include "item.h"
 #include "item_menu.h"
+#include "kanto_item_menu.h"
 #include "link.h"
 #include "main.h"
 #include "m4a.h"
@@ -247,7 +248,11 @@ static void OpenBagAfterPaletteFade(void)
         gBattlerControllerFuncs[gActiveBattler] = CompleteOnChosenItem;
         ReshowBattleScreenDummy();
         FreeAllWindowBuffers();
-        DoWallyTutorialBagMenu() /* sac d'Émeraude (graphismes des deux jeux : choix plus tard) */;
+        // Option SAC : le sac de démonstration de RF (InitOldManBag, OpenBagAndChooseItem de RF) ou celui de Wally
+        if (gSaveBlock2Ptr->optionsBagStyle)
+            InitOldManBag();
+        else
+            DoWallyTutorialBagMenu();
     }
 }
 

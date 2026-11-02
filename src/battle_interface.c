@@ -2473,6 +2473,12 @@ static u8 CalcBarFilledPixels(s32 maxValue, s32 oldValue, s32 receivedValue, s32
     for (i = 0; i < scale; i++)
         pixelsArray[i] = 0;
 
+#ifdef UBFIX
+    // GBA : une division par zéro donne 0 (barre d'un Pokémon sans PV max : équipe vide, menu DEBUG) ; le PC planterait
+    if (maxValue == 0)
+        pixels = 0;
+    else
+#endif
     if (maxValue < totalPixels)
         pixels = (*currValue * totalPixels / maxValue) >> 8;
     else

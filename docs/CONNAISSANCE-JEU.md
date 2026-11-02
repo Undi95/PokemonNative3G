@@ -18,7 +18,7 @@ Toutes à deux valeurs, 0 = HOENN (Émeraude), 1 = KANTO (RF). Index de `jeu.opt
 | POKéDEX (10) | le Pokédex : écran d'Émeraude ou de RF (sommaire, habitats) | — |
 | MENUS (11) | menu Start (police RF, entrées tous les 15 px, aide en bas), équipe (palette RF), résumé (écran de RF : 3 pages), boutique (écran d'achat de RF), PC (menus), écran des noms, maître des capacités | la carte de dresseur (voir plus bas) |
 | BOITES COMBAT (12) | les boîtes de combat (action, capacités, PV) | — |
-| SAC (13) | le sac : Émeraude (5 poches, CT & CS, BAIES) ou RF (3 poches ; BOITE CT et SAC A BAIES en OBJ. RARES) | — |
+| SAC (13) | le sac : Émeraude (5 poches, CT & CS, BAIES) ou RF (3 poches ; BOITE CT et SAC A BAIES en OBJ. RARES) ; aussi le sac de la démonstration du vieil homme de Jadielle (Wally d'Émeraude ou `InitOldManBag` de RF, scénario `kanto_old_man_bag`) | — |
 | POKéMON (14) | les sprites des Pokémon (Émeraude animés, RF) | — |
 | JOUR/NUIT (16) | la teinte du terrain, qui tient pendant la transition vers un combat (`CB2_OverworldBasic`) jusqu'au fondu ; pas de teinte dans l'écran de combat | — |
 
@@ -137,8 +137,7 @@ la carte de dresseur, la fanfare des soins hors Centre (toilettage de la sœur d
 - **fichiers** : 501 fichiers de RF ont les mêmes sons que leur copie ; les autres sont des cartes communes gardées
   d'Émeraude (Colisée, Centre d'échange, Union : link), du code déplacé (ascenseurs dans `kanto_list_menu.c`,
   Deoxys et trou de la Coupe dans `field_effect.c` / `fldeff_cut.c`), des choix de la fusion (POKé MONTURE au lieu de
-  la CS du capitaine, chute d'Émeraude) ou la démonstration du vieil homme, qui ouvre encore le sac d'Émeraude
-  (`Task_Bag_OldManTutorial` de RF, à porter) ;
+  la CS du capitaine, chute d'Émeraude) ;
 - **chansons** : 335 chansons de RF sur 346 sont identiques (octets joués) à leur équivalent dans la fusion. Les 11
   autres : fin de piste plus tardive (`MUS_LEVEL_UP`, `MUS_OBTAIN_ITEM` : inaudible, la fanfare s'arrête au bout de
   sa durée dans `sFanfares`, la même), priorité sur le lecteur de musique (sans effet), mini-jeu link

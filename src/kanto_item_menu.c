@@ -209,6 +209,7 @@ static void Task_SelectQuantityToDeposit(u8 taskId);
 static void Task_TryDoItemDeposit(u8 taskId);
 static bool8 BagIsTutorial(void);
 static bool8 sKantoBagActive;
+static void Task_Bag_OldManTutorial(u8 taskId);
 static void Task_Pokedude_FadeFromBag(u8 taskId);
 static void Task_Pokedude_WaitFadeAndExitBag(u8 taskId);
 static void Task_Bag_TeachyTvRegister(u8 taskId);
@@ -649,6 +650,8 @@ static u8 CreateBagInputHandlerTask(u8 location)
 {
     switch (location)
     {
+    case ITEMMENULOCATION_OLD_MAN:
+        return CreateTask(Task_Bag_OldManTutorial, 0);
     case ITEMMENULOCATION_TTVSCR_REGISTER: // PokemonNative3G : Télé Pokémon (RF)
         return CreateTask(Task_Bag_TeachyTvRegister, 0);
     case ITEMMENULOCATION_TTVSCR_TMS:
@@ -2079,8 +2082,9 @@ static void Task_TryDoItemDeposit(u8 taskId)
 
 static bool8 BagIsTutorial(void)
 {
-    // PokemonNative3G : Télé Pokémon (démonstrations du Pokédude) ; le Vieil Homme garde le sac d'Émeraude
-    if (gBagMenuState.location == ITEMMENULOCATION_TTVSCR_CATCHING
+    if (
+        gBagMenuState.location == ITEMMENULOCATION_OLD_MAN
+     || gBagMenuState.location == ITEMMENULOCATION_TTVSCR_CATCHING
      || gBagMenuState.location == ITEMMENULOCATION_TTVSCR_STATUS
      || gBagMenuState.location == ITEMMENULOCATION_TTVSCR_REGISTER
      || gBagMenuState.location == ITEMMENULOCATION_TTVSCR_TMS)
@@ -2128,6 +2132,51 @@ static void RestorePlayerBag(void)
         gBagMenuState.cursorPos[i] = sBackupPlayerBag->cursorPos[i];
     }
     Free(sBackupPlayerBag);
+}
+
+void InitOldManBag(void)
+{
+    BackUpPlayerBag();
+    sKantoBagActive = TRUE; // PokemonNative3G : sac de RF
+    AddBagItem(ITEM_POTION, 1);
+    AddBagItem(ITEM_POKE_BALL, 1);
+    GoToBagMenu(ITEMMENULOCATION_OLD_MAN, OPEN_BAG_ITEMS, CB2_SetUpReshowBattleScreenAfterMenu2);
+}
+
+static void Task_Bag_OldManTutorial(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    if (!gPaletteFade.active)
+    {
+        switch (data[8])
+        {
+        case 102:
+        case 204:
+            PlaySE(SE_BAG_POCKET);
+            SwitchPockets(taskId, 1, FALSE);
+            break;
+        case 306:
+            PlaySE(SE_SELECT);
+            bag_menu_print_cursor_(data[0], 2);
+            Bag_FillMessageBoxWithPalette(1);
+            gSpecialVar_ItemId = ITEM_POKE_BALL;
+            OpenContextMenu(taskId);
+            break;
+        case 408:
+            PlaySE(SE_SELECT);
+            HideBagWindow(10);
+            HideBagWindow(6);
+            PutWindowTilemap(0);
+            PutWindowTilemap(1);
+            CopyWindowToVram(0, COPYWIN_MAP);
+            DestroyListMenuTask(data[0], NULL, NULL);
+            RestorePlayerBag();
+            Bag_BeginCloseWin0Animation();
+            gTasks[taskId].func = Task_Pokedude_FadeFromBag;
+            return;
+        }
+        data[8]++;
+    }
 }
 
 static void Task_Pokedude_FadeFromBag(u8 taskId)
