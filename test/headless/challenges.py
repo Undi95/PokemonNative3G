@@ -79,7 +79,7 @@ def attendant(map_name, words="Attendant"):
 
 
 def run(game, map_name, words="Attendant", party=3, battles=2, level=50, frames=120000, rentals=False, trigger=None,
-        flags=(), walking=False, reach=None, team=TEAM):
+        flags=(), walking=False, reach=None, team=TEAM, watch=None):
     """Un scénario de défi : la sauvegarde de Hoenn, l'équipe au niveau voulu, le style de combat DÉFINI, puis le
     défi jusqu'à `battles` combats gagnés. Avec des Pokémon loués (rentals : Usine, Tente de Poivressel), tirés au
     hasard, un combat peut être perdu : il suffit qu'il soit joué jusqu'au bout ; de même pour les défis où l'on
@@ -96,7 +96,7 @@ def run(game, map_name, words="Attendant", party=3, battles=2, level=50, frames=
         game.flag(flag, 1)
     route = [reach] if isinstance(reach, str) else list(reach or ())
     played = play_challenge(game, map_name, words, party, battles and (1 if rentals or walking else battles), frames,
-                            trigger, route)
+                            trigger, route, watch)
     if reach:
         expect(game, not route, f"{map_name} : {' puis '.join([reach] if isinstance(reach, str) else reach)} "
                                 f"atteint après les combats (reste {route} ; {played})")
@@ -176,9 +176,11 @@ def wander(game, step, entry=None, talked=None):
         game.press(direction, 16)
 
 
-def play_challenge(game, map_name, words="Attendant", party=3, battles=2, frames=60000, trigger=None, route=None):
+def play_challenge(game, map_name, words="Attendant", party=3, battles=2, frames=60000, trigger=None, route=None,
+                   watch=None):
     """Parle au préposé et joue le défi jusqu'à `battles` combats finis, et l'arrivée sur chacune des cartes de route
-    dans l'ordre (la liste se vide au fur et à mesure), ou `frames` images. Renvoie les combats."""
+    dans l'ordre (la liste se vide au fur et à mesure), ou `frames` images. Renvoie les combats. watch : passé à
+    fight_battle."""
     route = [] if route is None else route
     start = len(game.battles)
     if trigger:
@@ -218,7 +220,7 @@ def play_challenge(game, map_name, words="Attendant", party=3, battles=2, frames
             break
         screen = game.function(game.state.cb2)
         if game.state.battle:
-            fight_battle(game, limit=6000)      # Pokémon loués peu efficaces : un combat peut être long
+            fight_battle(game, limit=6000, watch=watch)     # Pokémon loués peu efficaces : un combat peut être long
         elif "PartyMenu" in screen and not chose_party:
             # Le nombre demandé (« choisir les deux POKéMON » : chaque match du Dôme), sinon celui du défi
             dialogue = " ".join(text for _, window, text in game.texts[-30:] if window == 0).lower()

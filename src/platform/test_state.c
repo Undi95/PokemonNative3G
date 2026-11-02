@@ -80,6 +80,15 @@ static void AddEvent(const char *format, ...)
 
 // Called when a text printer starts, with the text in the game's charset, as
 // hex: the tests decode it with charmap.txt
+// Un son lancé (m4aSongNumStart : PlaySE, sons des animations de combat, musiques) : le banc vérifie qu'un effet
+// a bien son son (expect_sound)
+void TestState_OnSong(u16 songNum)
+{
+    if (!gTestStateEnabled)
+        return;
+    AddEvent("{\"t\": \"song\", \"v\": %d}", songNum);
+}
+
 void TestState_OnText(u8 windowId, u8 fontId, u8 fgColor, const u8 *text)
 {
     char hex[2 * 400 + 1];

@@ -22,3 +22,4 @@ def play(game):
     expect(game, seen, "transition à portrait d'Olga (Task_Lorelei)")
     game.wait(60)                               # le bandeau, les deux portraits qui glissent
     check_screen(game, "kanto_league_mugshot-olga")
+    expect_sound(game, "SE_MUGSHOT")            # le bandeau qui s'ouvre (Mugshot_ShowBanner)

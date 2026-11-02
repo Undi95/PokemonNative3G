@@ -130,6 +130,7 @@ class Game:
         self.events = []          # (frame, event) of every event
         self.battles = []         # every battle: {"trainer", "foes", "outcome"}
         self.songs = []           # (frame, song) of every song that started
+        self.sounds = []          # (image, SE_…) : chaque effet sonore lancé (m4aSongNumStart)
         self.last_note = ""
         self.name = os.path.basename(os.path.normpath(out_dir))
         self.screens = False      # log() also checks the screen (a scenario's SCREENS)
@@ -245,6 +246,11 @@ class Game:
                 self.note(f"VAR {names.name('VAR_', event['id'])} = {event['v']}")
             elif kind == "item":
                 self.note(f"OBJET {names.name('ITEM_', event['id'])} : {event['n']} dans le sac")
+            elif kind == "song":
+                sound = names.name("SE_", event["v"])
+                if "0x" not in sound:   # les musiques ont leur événement « bgm »
+                    self.sounds.append((self.frames, sound))
+                    self.note(f"SON {sound}")
             elif kind == "bgm" and event["v"] >= 0:
                 self.note(f"MUSIQUE {names.name('MUS_', event['v'])}", event["f"])
                 self.songs.append((event["f"], names.name("MUS_", event["v"])))
@@ -448,6 +454,12 @@ def expect_battle_outcome(game, outcome):
     expect(game, actual == outcome, f"combat terminé par {outcome}" + ("" if actual == outcome else f" (pas {actual})"))
 
 
+def expect_sound(game, sound, since_frame=0):
+    """Un effet sonore (SE_...) a été joué, depuis une image."""
+    played = [name for frame, name in game.sounds if frame >= since_frame]
+    expect(game, sound in played, f"son {sound}" + ("" if sound in played else f" (joués : {played[-8:]})"))
+
+
 def expect_song(game, song, since_frame=0):
     """A song (MUS_...) started playing, since a frame."""
     played = [name for frame, name in game.songs if frame >= since_frame]
@@ -600,10 +612,11 @@ def finish_dialog(game, button="A", limit=400, on_battle=None, settle=20, answer
     raise GameError(f"still busy after {limit} presses: {game.describe()}")
 
 
-def fight_battle(game, limit=600):
+def fight_battle(game, limit=600, watch=None):
     """Fights with the first move until the battle ends, and the next one when
     it runs out of PP. A goes through everything else, like the text and
-    learning a move."""
+    learning a move. watch(game), s'il y en a un, est appelé à chaque tour de
+    boucle : un scénario y regarde ou capture un moment du combat."""
     seen = mark(game)
     change_move = False
     menu_opened = False     # le menu d'un Pokémon de l'équipe vient de s'ouvrir (K.O. : le remplaçant)
@@ -611,6 +624,10 @@ def fight_battle(game, limit=600):
     for _ in range(limit):
         if not game.state.battle:
             return wait_until(game, lambda s: not s.fade and s.overworld)
+        if watch:
+            watch(game)
+            if not game.state.battle:
+                continue
         screen = game.function(game.state.cb2)
         if "PartyMenu" in screen:
             # Le Pokémon au combat est K.O. : le suivant, jusqu'à un qui peut y aller. Selon la tâche du menu : le

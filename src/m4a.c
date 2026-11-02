@@ -3,6 +3,7 @@
 
 #ifdef PORTABLE
 #include "cgb_audio.h"
+#include "platform/test_state.h"
 void RunMixerFrame(void);
 #endif
 
@@ -153,6 +154,9 @@ void m4aSongNumStart(u16 n)
     const struct Song *song = &songTable[n];
     const struct MusicPlayer *mplay = &mplayTable[song->ms];
 
+#ifdef PORTABLE
+    TestState_OnSong(n);
+#endif
     MPlayStart(mplay->info, song->header);
 }
 

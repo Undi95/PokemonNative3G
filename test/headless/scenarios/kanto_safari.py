@@ -59,13 +59,16 @@ def play(game):
     expect_no_text(game, "SE RAP", since)
     check_screen(game, "kanto_safari-menu")
 
-    since = mark(game)
+    since, frame = mark(game), game.frames
     game.tap("RIGHT", gap=20)                   # APPAT (en haut à droite)
     game.tap("A", gap=20)
     wait_text(game, "lance", since, limit=600)
     expect_text(game, "un APPAT", since)
     game.wait(130)                              # le texte, son attente, puis l'APPAT en vol (General_BaitThrow)
     check_screen(game, "kanto_safari-appat")
+    game.wait(60)
+    expect_sound(game, "SE_M_JUMP_KICK", frame)     # le lancer (General_BaitThrow)
+    expect_sound(game, "SE_M_TAIL_WHIP", frame)     # le Pokémon se balance vers l'APPAT
 
     since = mark(game)
     for _ in range(200):                        # la réaction (« mange! ») ou la fuite
@@ -74,7 +77,8 @@ def play(game):
         game.tap("A", hold=2, gap=20)
     if game.state.battle:
         expect_text(game, "mange", since)
-        since = mark(game)
+        expect_sound(game, "SE_M_TAKE_DOWN", frame)  # il mange (SafariReaction_Eating)
+        since, frame = mark(game), game.frames
         game.wait(30)
         game.tap("LEFT", gap=20)                # PIERRE (en bas à gauche)
         game.tap("DOWN", gap=20)
@@ -86,3 +90,7 @@ def play(game):
                 break
             game.tap("A", hold=2, gap=20)
         expect(game, saw_text(game, "fâche", since) or not game.state.battle, "le Pokémon se fâche (ou s'enfuit)")
+        expect_sound(game, "SE_M_DOUBLE_SLAP", frame)    # la PIERRE touche (General_SafariRockThrow)
+        if saw_text(game, "fâche", since):
+            game.wait(90)
+            expect_sound(game, "SE_M_SWAGGER2", frame)   # la colère (SafariReaction_Angry)
