@@ -38,6 +38,10 @@
 - Combats (partout) : deux touches de Rouge Feu ajoutées. En combat double, la capacité sous le curseur fait
   blanchir les Pokémon qu'elle touchera ; un Pokémon qui monte de niveau est traversé de bandes lumineuses, avec
   leur son.
+- Easy Chat (profil, phrases de combat, LETTRE, questionnaire) : avec MENUS = KANTO, c'est l'écran de Rouge Feu. Les
+  deux écrans ont tous les mots des deux jeux : ROUGE, VERT, OR, ARGENT, FEUILLE et FLAMME (groupe DRESSEUR) sont
+  maintenant disponibles.
+- Club Événement Mystère de Kanto : un profil écrit à Kanto ne compte plus toujours comme la phrase secrète.
 - Combats : l'IA des dresseurs teste de nouveau les capacités connues exactement comme la cartouche (une lecture
   mal alignée la faisait « mieux » jouer sur PC et Android) ; plus de lecture hors limites à la fin d'un tour de
   combat double, ni dans l'animation de Métronome ; les confettis des résultats de concours ne lisent plus en dehors

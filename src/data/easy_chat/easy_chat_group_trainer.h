@@ -26,6 +26,9 @@ const u8 gEasyChatWord_Leaf[] = _("FEUILLE");
 const u8 gEasyChatWord_Silver[] = _("ARGENT");
 const u8 gEasyChatWord_Emerald[] = _("EMERAUDE");
 
+// Fusion (décision du 2026-11-02) : tous les mots des deux jeux, dans les deux écrans d'Easy Chat. Le groupe Dresseur
+// d'Émeraude désactive les noms des jeux de Kanto et de Johto (ROUGE, VERT, OR, ARGENT, FEUILLE, FLAMME), que RF
+// propose : ils sont actifs. Les autres mots de RF sont déjà ceux d'Émeraude (mêmes groupes, mêmes numéros).
 const struct EasyChatWordInfo gEasyChatGroup_Trainer[] = {
     [EC_INDEX(EC_WORD_I_CHOOSE_YOU)] =
     {
@@ -145,13 +148,13 @@ const struct EasyChatWordInfo gEasyChatGroup_Trainer[] = {
     {
         .text = gEasyChatWord_Red,
         .alphabeticalOrder = 14,
-        .enabled = FALSE,
+        .enabled = TRUE, // fusion : ROUGE, VERT, OR, ARGENT, FEUILLE, FLAMME, désactivés dans Émeraude, actifs dans RF
     },
     [EC_INDEX(EC_WORD_GREEN)] =
     {
         .text = gEasyChatWord_Green,
         .alphabeticalOrder = 13,
-        .enabled = FALSE,
+        .enabled = TRUE, // fusion : ROUGE, VERT, OR, ARGENT, FEUILLE, FLAMME, désactivés dans Émeraude, actifs dans RF
     },
     [EC_INDEX(EC_WORD_BAG)] =
     {
@@ -163,25 +166,25 @@ const struct EasyChatWordInfo gEasyChatGroup_Trainer[] = {
     {
         .text = gEasyChatWord_Flame,
         .alphabeticalOrder = 17,
-        .enabled = FALSE,
+        .enabled = TRUE, // fusion : ROUGE, VERT, OR, ARGENT, FEUILLE, FLAMME, désactivés dans Émeraude, actifs dans RF
     },
     [EC_INDEX(EC_WORD_GOLD)] =
     {
         .text = gEasyChatWord_Gold,
         .alphabeticalOrder = 21,
-        .enabled = FALSE,
+        .enabled = TRUE, // fusion : ROUGE, VERT, OR, ARGENT, FEUILLE, FLAMME, désactivés dans Émeraude, actifs dans RF
     },
     [EC_INDEX(EC_WORD_LEAF)] =
     {
         .text = gEasyChatWord_Leaf,
         .alphabeticalOrder = 3,
-        .enabled = FALSE,
+        .enabled = TRUE, // fusion : ROUGE, VERT, OR, ARGENT, FEUILLE, FLAMME, désactivés dans Émeraude, actifs dans RF
     },
     [EC_INDEX(EC_WORD_SILVER)] =
     {
         .text = gEasyChatWord_Silver,
         .alphabeticalOrder = 12,
-        .enabled = FALSE,
+        .enabled = TRUE, // fusion : ROUGE, VERT, OR, ARGENT, FEUILLE, FLAMME, désactivés dans Émeraude, actifs dans RF
     },
     [EC_INDEX(EC_WORD_EMERALD)] =
     {

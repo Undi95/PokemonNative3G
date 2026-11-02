@@ -1733,6 +1733,32 @@ void CreateYesNoMenu(const struct WindowTemplate *window, u16 baseTileNum, u8 pa
     InitMenuInUpperLeftCornerNormal(sYesNoWindowId, 2, initialCursorPos);
 }
 
+// Rouge Feu (menu.c : CreateYesNoMenu) : OUI / NON dans la police et à la place voulues (les écrans de RF, avec
+// FONT_KANTO) ; Menu_ProcessInputNoWrapClearOnChoose s'en sert comme du menu d'Émeraude
+void Kanto_CreateYesNoMenu(const struct WindowTemplate *window, u8 fontId, u8 left, u8 top, u16 baseTileNum, u8 paletteNum, u8 initialCursorPos)
+{
+    struct TextPrinterTemplate textSubPrinter;
+
+    sYesNoWindowId = AddWindow(window);
+    DrawStdFrameWithCustomTileAndPalette(sYesNoWindowId, 1, baseTileNum, paletteNum);
+    textSubPrinter.currentChar = gText_YesNo;
+    textSubPrinter.windowId = sYesNoWindowId;
+    textSubPrinter.fontId = fontId;
+    textSubPrinter.x = GetMenuCursorDimensionByFont(fontId, 0) + left;
+    textSubPrinter.y = top;
+    textSubPrinter.currentX = textSubPrinter.x;
+    textSubPrinter.currentY = textSubPrinter.y;
+    textSubPrinter.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
+    textSubPrinter.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
+    textSubPrinter.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
+    textSubPrinter.unk = GetFontAttribute(fontId, FONTATTR_UNKNOWN);
+    textSubPrinter.letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
+    textSubPrinter.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
+    AddTextPrinter(&textSubPrinter, 0xFF, NULL);
+    // Menu_InitCursor de RF = InitMenuNormal d'Émeraude (même code : InitMenu, A non muet)
+    InitMenuNormal(sYesNoWindowId, fontId, left, top, GetFontAttribute(fontId, FONTATTR_MAX_LETTER_HEIGHT) + textSubPrinter.lineSpacing, 2, initialCursorPos);
+}
+
 void PrintMenuGridTable(u8 windowId, u8 optionWidth, u8 columns, u8 rows, const struct MenuAction *menuActions)
 {
     u32 i, j;

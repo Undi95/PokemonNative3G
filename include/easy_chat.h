@@ -133,6 +133,12 @@ u16 UnlockRandomTrendySaying(void);
 u16 EasyChat_GetNumWordsInGroup(u8 groupId);
 u16 GetRandomEasyChatWordFromUnlockedGroup(u16 groupId);
 void DoEasyChatScreen(u8 type, u16 *words, MainCallback exitCallback, u8 displayedPersonType);
+
+// Rouge Feu : l'écran d'Easy Chat de RF (src/kanto_easy_chat_*.c), pour l'option MENUS = KANTO
+void KEC_DoEasyChatScreen(u8 type, u16 *words, MainCallback callback);
+// Fusion : les effets de fin d'écran suivent la région (scripts de RF à Kanto, d'Émeraude à Hoenn), pas l'écran
+void KEC_SetKantoResult(u8 type, const u16 *words);
+void EasyChat_SetHoennResult(u8 type, const u16 *words);
 void InitQuestionnaireWords(void);
 void UnlockTrendySaying(u8 wordIndex);
 

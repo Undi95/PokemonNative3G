@@ -111,6 +111,25 @@ combat (`kanto_battle_bg.c`), nom du rival (`battle_message.c`). Pour repérer l
 Tout le Safari de Kanto passe par `Fusion_IsInKanto()` (battle_util.c, battle_main.c, battle_ai_script_commands.c,
 battle_controller_safari.c, safari_zone.c, start_menu.c). Scénario : `kanto_safari`.
 
+## Easy Chat (messages en mots choisis)
+
+- **L'écran suit MENUS** : avec MENUS = KANTO, le profil, les phrases de combat (début, victoire, défaite), la LETTRE
+  et le questionnaire s'ouvrent dans l'écran de RF (`src/kanto_easy_chat_2.c`, `_3.c` : `KEC_DoEasyChatScreen`) ; les
+  autres types (Bard, interview, tendance, mot de passe de l'Antre…) n'existent qu'à Hoenn et gardent l'écran
+  d'Émeraude. `include/kanto_easy_chat_internal.h` renomme ce que RF partage de nom avec Émeraude (préfixe `KEC_`).
+- **Un seul dictionnaire** : les deux écrans lisent les mots d'Émeraude (`src/easy_chat.c`, `KEC_*` = enveloppes de
+  ses fonctions) ; les 6 mots de RF que le jeu d'Émeraude gardait cachés (ROUGE, VERT, OR, ARGENT, FEUILLE, FLAMME,
+  groupe DRESSEUR) sont activés. Les deux jeux ont les mêmes groupes et numéros de mots.
+- **Les effets de fin suivent la région** (les scripts qui lisent le résultat sont ceux de la région), pas l'écran :
+  | | Hoenn (Émeraude) | Kanto (RF) |
+  |---|---|---|
+  | Profil | `FLAG_SYS_CHAT_USED` | `FLAG_KANTO_SYS_SET_TRAINER_CARD_PROFILE` ; `VAR_0x8004` = 1 si la phrase n'est pas `EC_WORD_EVENT MYSTERY IS EXCITING` (club Événement Mystère de Kanto) |
+  | Questionnaire | `VAR_0x8004` = 2 si la phrase du Cadeau Mystère, sinon 0 | `VAR_0x8004` = 1 si la phrase n'est pas `EC_WORD_LINK WITH CASE TRAINER` |
+  Avant le 2026-11-02, le profil fait à Kanto laissait `VAR_0x8004` à 0 (son type d'écran) : le club répondait
+  toujours comme à la phrase secrète. Fonctions : `KEC_SetKantoResult`, `EasyChat_SetHoennResult`.
+- **Sur PC**, l'OAM n'est pas à `VRAM + 0x1000000` (adresse de la GBA) : `KEC_LoadEasyChatGraphics` vide `OAM`.
+- Scénarios : `kanto_easy_chat` (écrans de RF, LETTRE), `easy_chat_regions` (les 4 combinaisons région × écran).
+
 ## Comportements de la GBA que le PC doit refaire (UBFIX)
 
 Une lecture hors limites ou mal alignée ne plante pas une GBA : elle lit autre chose, toujours la même chose. Le PC

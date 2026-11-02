@@ -32,6 +32,7 @@
 #include "constants/mauville_old_man.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
+#include "fusion_region.h"
 
 static EWRAM_DATA struct EasyChatScreen *sEasyChatScreen = NULL;
 static EWRAM_DATA struct EasyChatScreenControl *sScreenControl = NULL;
@@ -1295,6 +1296,23 @@ void DoEasyChatScreen(u8 type, u16 *words, MainCallback exitCallback, u8 display
 {
     u8 taskId;
 
+    // Rouge Feu : avec MENUS = KANTO, l'écran de RF pour les types que RF demande (profil, combats, LETTRE,
+    // sondage) ; les autres (chanson de CAPELO, interviews, quiz…) n'existent qu'à Hoenn : écran d'Émeraude
+    if (gSaveBlock2Ptr->optionsMenuStyle)
+    {
+        switch (type)
+        {
+        case EASY_CHAT_TYPE_PROFILE:
+        case EASY_CHAT_TYPE_BATTLE_START:
+        case EASY_CHAT_TYPE_BATTLE_WON:
+        case EASY_CHAT_TYPE_BATTLE_LOST:
+        case EASY_CHAT_TYPE_MAIL:
+        case EASY_CHAT_TYPE_QUESTIONNAIRE:
+            KEC_DoEasyChatScreen(type, words, exitCallback);
+            return;
+        }
+    }
+
     ResetTasks();
     taskId = CreateTask(Task_InitEasyChatScreen, 0);
     gTasks[taskId].tType = type;
@@ -1446,6 +1464,9 @@ static bool8 InitEasyChatScreen(u8 taskId)
 
 static void ExitEasyChatScreen(MainCallback callback)
 {
+    // Fusion : à Kanto, les scripts de RF attendent les effets de son écran (kanto_easy_chat_2.c)
+    if (Fusion_IsInKanto() && sEasyChatScreen != NULL)
+        KEC_SetKantoResult(sEasyChatScreen->type, sEasyChatScreen->currentPhrase);
     FreeEasyChatScreenControl();
     FreeEasyChatScreenStruct();
     FreeEasyChatScreenWordData();
@@ -2967,9 +2988,12 @@ static void SetSpecialEasyChatResult(void)
     switch (sEasyChatScreen->type)
     {
     case EASY_CHAT_TYPE_PROFILE:
-        FlagSet(FLAG_SYS_CHAT_USED);
+        if (!Fusion_IsInKanto()) // Fusion : à Kanto, les effets de RF (ExitEasyChatScreen)
+            FlagSet(FLAG_SYS_CHAT_USED);
         break;
     case EASY_CHAT_TYPE_QUESTIONNAIRE:
+        if (Fusion_IsInKanto())
+            break;
         if (DidPlayerInputMysteryGiftPhrase())
             gSpecialVar_0x8004 = 2;
         else
@@ -5876,4 +5900,74 @@ bool32 IsEasyChatAnswerUnlocked(int easyChatWord)
         return FALSE;
     else
         return IsEasyChatIndexAndGroupUnlocked(index, groupId & mask);
+}
+
+// Fusion : à Hoenn, l'écran de RF (option MENUS = KANTO) laisse aux scripts d'Émeraude les effets de son écran
+// (SetSpecialEasyChatResult, à la confirmation), avec sa phrase
+void EasyChat_SetHoennResult(u8 type, const u16 *words)
+{
+    u32 i;
+
+    switch (type)
+    {
+    case EASY_CHAT_TYPE_PROFILE:
+        FlagSet(FLAG_SYS_CHAT_USED);
+        break;
+    case EASY_CHAT_TYPE_QUESTIONNAIRE:
+        for (i = 0; i < ARRAY_COUNT(sMysteryGiftPhrase); i++)
+        {
+            if (sMysteryGiftPhrase[i] != words[i])
+                break;
+        }
+        gSpecialVar_0x8004 = (i == ARRAY_COUNT(sMysteryGiftPhrase)) ? 2 : 0;
+        break;
+    }
+}
+
+// Rouge Feu : l'écran d'Easy Chat de RF (src/kanto_easy_chat_*.c, option MENUS = KANTO) lit les mots par les
+// fonctions de sélection de son easy_chat.c ; ce sont celles-ci sous leur nom de RF (mêmes rôles : RF en est
+// l'ancêtre), pour que les deux écrans proposent les mêmes mots (kanto_easy_chat_internal.h)
+bool8 KEC_InitEasyChatSelection(void)
+{
+    return InitEasyChatScreenWordData();
+}
+
+void KEC_DestroyEasyChatSelectionData(void)
+{
+    FreeEasyChatScreenWordData();
+}
+
+u8 KEC_GetNumDisplayableGroups(void)
+{
+    return GetNumUnlockedEasyChatGroups();
+}
+
+u8 KEC_GetSelectedGroupByIndex(u8 index)
+{
+    return GetUnlockedEasyChatGroupId(index);
+}
+
+const u8 *KEC_GetEasyChatWordGroupName(u8 groupId)
+{
+    return GetEasyChatWordGroupName(groupId);
+}
+
+u8 *KEC_CopyEasyChatWordPadded(u8 *dest, u16 easyChatWord, u16 totalChars)
+{
+    return CopyEasyChatWordPadded(dest, easyChatWord, totalChars);
+}
+
+void KEC_GetUnlockedECWords(bool32 isAlphabetical, u16 groupId)
+{
+    SetSelectedWordGroup(isAlphabetical, groupId);
+}
+
+u16 KEC_GetDisplayedWordByIndex(u16 index)
+{
+    return GetWordFromSelectedGroup(index);
+}
+
+u16 KEC_GetNumDisplayedWords(void)
+{
+    return GetNumWordsInSelectedGroup();
 }
