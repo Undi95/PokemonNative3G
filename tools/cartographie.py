@@ -8,6 +8,7 @@ Kanto<Nom>, Kanto_<Nom>, <Nom>_Kanto ; constantes : PREFIXE_KANTO_..., ..._FRLG)
 """
 import os
 import re
+import zlib
 from collections import Counter, defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -272,7 +273,9 @@ def identifier_counts(base):
 def shingles(body, k=6):
     """empreintes de k jetons consécutifs du corps (un quart d'entre elles : assez pour comparer)"""
     toks = re.findall(r'\w+|[^\w\s]', body)
-    return {h for h in (hash(tuple(toks[i:i + k])) for i in range(len(toks) - k + 1)) if h % 4 == 0}
+    # crc32 et pas hash() : hash() d'une chaîne change à chaque lancement de Python, le quart gardé aussi (inventaire
+    # instable d'une exécution à l'autre jusqu'au 2026-11-02)
+    return {h for h in (zlib.crc32('\x1f'.join(toks[i:i + k]).encode()) for i in range(len(toks) - k + 1)) if h % 4 == 0}
 
 
 def load_overrides():
@@ -437,11 +440,11 @@ def similar(f, n, a):
         return best, int(100 * score)
     sh = shingles(rF[f][n])
     hits = Counter()
-    for h in sh:
+    for h in sorted(sh):   # ensemble : ordre fixé, sinon l'inventaire change d'une exécution à l'autre
         post = f_index.get(h, ())
         if len(post) <= 200:
             hits.update(post)
-    for cand, k in hits.most_common(5):
+    for cand, k in sorted(hits.items(), key=lambda kv: (-kv[1], kv[0]))[:5]:   # ex aequo : par nom, pas par ordre d'arrivée
         if len(sh) >= 4 and k / len(sh) >= 0.6 and f_size[cand] <= 2.5 * len(sh):
             return cand, 100 * k // len(sh)
     return None, 0
