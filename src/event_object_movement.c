@@ -1367,6 +1367,65 @@ static bool8 TemplateIsObstacleAndWithinView(const struct ObjectEventTemplate *t
     return TRUE;
 }
 
+// Rouge Feu (event_object_movement.c) : le joueur sur la rangée ou la colonne du bord d'une carte d'extérieur (il
+// arrive par une connexion, ou la carte se recharge là) : un arbre à Couper ou un rocher à Éclater à moins de 7 cases
+// de ce bord n'est pas créé, son drapeau temporaire est mis (l'objet de la carte voisine, son clone, le remplace).
+// Seulement les obstacles de Kanto (graphismes de RF) : ceux de Hoenn gardent le comportement d'Émeraude.
+static void SetHideObstacleFlag(const struct ObjectEventTemplate *template)
+{
+    if (template->flagId >= FLAG_TEMP_11 && template->flagId <= FLAG_TEMP_1F)
+        FlagSet(template->flagId);
+}
+
+static bool8 TemplateIsObstacleAndVisibleFromConnectingMap(const struct ObjectEventTemplate *template, s16 unused1, s16 unused2)
+{
+    if (IsMapTypeOutdoors(GetCurrentMapType()))
+    {
+        // VMap de RF = gBackupMapLayout : sa largeur et sa hauteur comptent les bords (MAP_OFFSET_W / MAP_OFFSET_H)
+        s32 width = gBackupMapLayout.width - MAP_OFFSET_W - 1;
+        s32 height = gBackupMapLayout.height - MAP_OFFSET_H - 1;
+
+        if (template->graphicsId == OBJ_EVENT_GFX_KANTO_CUT_TREE || template->graphicsId == OBJ_EVENT_GFX_KANTO_ROCK_SMASH_ROCK)
+        {
+            if (gSaveBlock1Ptr->pos.x == 0 && template->x <= (MAP_OFFSET + 1))
+            {
+                SetHideObstacleFlag(template);
+                return FALSE;
+            }
+
+            if (gSaveBlock1Ptr->pos.x == width && template->x >= width - (MAP_OFFSET + 1))
+            {
+                SetHideObstacleFlag(template);
+                return FALSE;
+            }
+
+            if (gSaveBlock1Ptr->pos.y == 0 && template->y <= (MAP_OFFSET - 1))
+            {
+                SetHideObstacleFlag(template);
+                return FALSE;
+            }
+
+            if (gSaveBlock1Ptr->pos.y == height && template->y >= height - (MAP_OFFSET - 1))
+            {
+                SetHideObstacleFlag(template);
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
+static bool8 ShouldInitObjectEventStateFromTemplate(const struct ObjectEventTemplate *template, bool8 isClone, s16 x, s16 y)
+{
+    if (isClone && !TemplateIsObstacleAndWithinView(template, x, y))
+        return FALSE;
+
+    if (!TemplateIsObstacleAndVisibleFromConnectingMap(template, x, y))
+        return FALSE;
+
+    return TRUE;
+}
+
 static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *template, u8 mapNum, u8 mapGroup)
 {
     struct ObjectEvent *objectEvent;
@@ -1393,7 +1452,7 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
 
     if (GetAvailableObjectEventId(template->localId, mapNum, mapGroup, &objectEventId))
         return OBJECT_EVENTS_COUNT;
-    if (isClone && !TemplateIsObstacleAndWithinView(template, cloneX, cloneY))
+    if (!ShouldInitObjectEventStateFromTemplate(template, isClone, cloneX, cloneY))
         return OBJECT_EVENTS_COUNT;
     objectEvent = &gObjectEvents[objectEventId];
     ClearObjectEvent(objectEvent);

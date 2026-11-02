@@ -750,3 +750,12 @@ SpinObjectEvent écartée variante RF : Émeraude gardée (Corde Sortie, VARIANT
 WarpOutObjectEventUpwards écartée variante RF : Émeraude gardée (Corde Sortie, VARIANTES-RF.md)
 WarpInObjectEventDownwards écartée variante RF : Émeraude gardée (Corde Sortie, VARIANTES-RF.md)
 MetatileBehavior_IsSurfableInSeafoamIslands équivalente portée le 2026-11-02 (overworld.c) : eau des Îles Écume
+# event_object_movement.c (manquantes lues le 2026-11-02)
+MovementAction_FaceDownFast_Step0 morte jamais lancée dans RF (PlayerFaceDirectionFast n'est pas appelée, aucun script face_*_fast)
+MovementAction_FaceLeftFast_Step0 morte jamais lancée dans RF (PlayerFaceDirectionFast n'est pas appelée, aucun script face_*_fast)
+MovementAction_FaceRightFast_Step0 morte jamais lancée dans RF (PlayerFaceDirectionFast n'est pas appelée, aucun script face_*_fast)
+MovementAction_FaceUpFast_Step0 morte jamais lancée dans RF (PlayerFaceDirectionFast n'est pas appelée, aucun script face_*_fast)
+MovementAction_GlideDown_Step0 morte jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)
+MovementAction_GlideLeft_Step0 morte jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)
+MovementAction_GlideRight_Step0 morte jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)
+MovementAction_GlideUp_Step0 morte jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)

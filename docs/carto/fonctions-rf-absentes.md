@@ -202,8 +202,7 @@ IsFlagOrVarStoredInQuestLog, GetFlagAddr, ResetSpecialVars
 ### event_object_lock.c (commun, 3/4)
 walkrun_is_standing_still, Task_WaitPlayerStopMoving, Task_WaitPlayerAndTargetNPCStopMoving
 
-### event_object_movement.c (commun, 88/129)
-ShouldInitObjectEventStateFromTemplate, TemplateIsObstacleAndVisibleFromConnectingMap, SetHideObstacleFlag,
+### event_object_movement.c (commun, 85/129)
 MakeObjectTemplateFromObjectEventTemplate, TryLoadObjectPalette, GetReflectionEffectPaletteSlot,
 ObjectCB_CameraObject, CameraObject_0, CameraObject_1, CameraObject_2, FindCameraObject, CameraObjectReset1,
 CameraObjectSetFollowedObjectId, CameraObjectGetFollowedObjectId, CameraObjectReset2,

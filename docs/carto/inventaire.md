@@ -2,25 +2,19 @@
 
 > Généré par `tools/cartographie.py` — ne pas éditer à la main.
 
-Les 1640 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
+Les 1637 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
 
 | Catégorie | Sens | Fonctions |
 |---|---|---|
-| manquante | rien de proche dans la fusion : à porter | 173 |
+| manquante | rien de proche dans la fusion : à porter | 162 |
 | à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 0 |
 | équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 625 |
 | triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 111 |
-| morte | jamais appelée ni référencée dans RF | 101 |
+| morte | jamais appelée ni référencée dans RF | 109 |
 | link | link / E-Reader : à porter, désactivé | 196 |
 | écartée | écartée par décision | 434 |
 
-## Manquante (173) : rien de proche dans la fusion : à porter
-
-### event_object_movement.c (11)
-MovementAction_FaceDownFast_Step0, MovementAction_FaceLeftFast_Step0, MovementAction_FaceRightFast_Step0,
-MovementAction_FaceUpFast_Step0, MovementAction_GlideDown_Step0, MovementAction_GlideLeft_Step0,
-MovementAction_GlideRight_Step0, MovementAction_GlideUp_Step0, SetHideObstacleFlag,
-ShouldInitObjectEventStateFromTemplate, TemplateIsObstacleAndVisibleFromConnectingMap
+## Manquante (162) : rien de proche dans la fusion : à porter
 
 ### battle_anim_special.c (10)
 AnimTask_IsBallBlockedByTrainerOrDodged, AnimTask_ShinySparkles, SpriteCB_ShinySparkles_1,
@@ -1100,9 +1094,9 @@ nullsub_8
 nullsub_9
 
 
-## Morte (101) : jamais appelée ni référencée dans RF
+## Morte (109) : jamais appelée ni référencée dans RF
 
-### event_object_movement.c (30)
+### event_object_movement.c (38)
 GetReflectionEffectPaletteSlot, CameraObjectGetFollowedObjectId, GetAcroBunnyHopFrontWheelDirectionAnimNum,
 GetWalkSlowestMovementAction, UpdateWalkSlowest (walk_slowest_* jamais utilisé dans RF),
 MovementAction_WalkSlowestDown_Step0 (walk_slowest_* jamais utilisé dans RF),
@@ -1114,11 +1108,19 @@ MovementAction_WalkSlowestLeft_Step1 (walk_slowest_* jamais utilisé dans RF),
 MovementAction_WalkSlowestRight_Step0 (walk_slowest_* jamais utilisé dans RF),
 MovementAction_WalkSlowestRight_Step1 (walk_slowest_* jamais utilisé dans RF),
 UpdateMovementGlide (glide_* jamais utilisé dans RF),
+MovementAction_GlideDown_Step0 (jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)),
 MovementAction_GlideDown_Step1 (glide_down jamais utilisé dans RF),
+MovementAction_GlideUp_Step0 (jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)),
 MovementAction_GlideUp_Step1 (glide_up jamais utilisé dans RF),
+MovementAction_GlideLeft_Step0 (jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)),
 MovementAction_GlideLeft_Step1 (glide_left jamais utilisé dans RF),
+MovementAction_GlideRight_Step0 (jamais lancée dans RF (PlayerGlide n'est pas appelée, aucun script glide_*)),
 MovementAction_GlideRight_Step1 (glide_right jamais utilisé dans RF),
 FaceDirectionFast (face_*_fast : seul PlayerFaceDirectionFast de RF, jamais appelé),
+MovementAction_FaceDownFast_Step0 (jamais lancée dans RF (PlayerFaceDirectionFast n'est pas appelée, aucun script face_*_fast)),
+MovementAction_FaceUpFast_Step0 (jamais lancée dans RF (PlayerFaceDirectionFast n'est pas appelée, aucun script face_*_fast)),
+MovementAction_FaceLeftFast_Step0 (jamais lancée dans RF (PlayerFaceDirectionFast n'est pas appelée, aucun script face_*_fast)),
+MovementAction_FaceRightFast_Step0 (jamais lancée dans RF (PlayerFaceDirectionFast n'est pas appelée, aucun script face_*_fast)),
 MovementAction_JumpSpecialWithEffectDown_Step0 (jamais utilisé dans RF),
 MovementAction_JumpSpecialWithEffectDown_Step1 (jamais utilisé dans RF),
 MovementAction_JumpSpecialWithEffectUp_Step0 (jamais utilisé dans RF),
