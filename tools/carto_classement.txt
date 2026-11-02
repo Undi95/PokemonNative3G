@@ -541,3 +541,43 @@ Localize_ConvertEasyChatMessageToString équivalente OtherConvertEasyChatWordsTo
 PopulateAlphabeticalGroups équivalente SetUnlockedWordsByAlphabet (easy_chat.c), un dictionnaire
 UnlockedECMonOrMove équivalente IsEasyChatIndexAndGroupUnlocked (easy_chat.c), un dictionnaire
 EnableRareWord link seul l'Événement Mystère de RF (mystery_event_script.c) débloque des mots rares
+# player_pc.c : le PC du joueur d'Émeraude (objets, boîte aux lettres), mêmes rôles ; approximation assumée
+# (docs/KANTO-ETAT.md), style de RF par l'option MENUS
+CB2_ReturnToMailbox équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+CB2_ReturnToMailboxPc_UpdateScrollVariables équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_CreateItemStorageSubmenu équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_DrawMailSubmenu équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_DrawMailboxPcMenu équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_DrawPlayerPcTopMenu équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PlayerPcExitMailSubmenu équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PlayerPcMailbox équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PlayerPcTurnOff équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PlayerPcWithdrawItem équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PrintWhatToDoWithSelectedMail équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_ReturnToTopMenu équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_SetPageItemVars équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_TopMenu_ItemStorageSubmenu_HandleInput équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_TryPutMailInBag_DestroyMsgIfSuccessful équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+CB2_ReturnFromDepositMenu équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+CB2_SetCbToReturnToMailbox équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+CountPCMail équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+PCMailCompaction équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+PrintStringOnWindow0WithDialogueFrame équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_DepositItem_WaitFadeAndGoToBag équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_DestroyMailboxPcViewAndCancel équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_DrawYesNoMenuToConfirmMoveToBag équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_Error_NoPokemon équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_MailSubmenuHandleInput équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_MailboxPcHandleInput équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_MoveToBagYesNoMenuHandleInput équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PlayerPcCancel équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PlayerPcDepositItem équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PlayerPcGiveMailToMon équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PlayerPcItemStorage équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PlayerPcMoveMailToBag équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_PlayerPcReadMail équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_RedrawPlayerPcMailboxAndSetUpInputHandler équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_ReturnToItemStorageSubmenu équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_WaitFadeAndGoToPartyMenu équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_WaitFadeAndReadSelectedMail équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+Task_WaitFadeAndReturnToMailboxPcInputHandler équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
