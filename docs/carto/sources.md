@@ -157,7 +157,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | event_data.c | commun | 26 | 6 | 0 | 0 | 0 | 4 | 16 |  |
 | link_rfu_3.c | commun | 30 | 3 | 1 | 0 | 33 | 7 | 20 |  |
 | mystery_event_script.c | commun | 25 | 2 | 1 | 0 | 50 | 2 | 21 |  |
-| script_menu.c | commun | 29 | 21 | 0 | 7 | 33 | 0 | 8 | script_menu.c (6), kanto_specials.c (1) |
 | sprite.c | commun | 103 | 1 | 0 | 0 | 0 | 82 | 20 |  |
 | battle_controller_safari.c | commun | 72 | 9 | 1 | 0 | 11 | 51 | 12 |  |
 | script.c | commun | 55 | 17 | 0 | 10 | 58 | 25 | 13 | script.c (10) |
@@ -172,6 +171,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | battle_util.c | commun | 37 | 1 | 0 | 0 | 0 | 19 | 17 |  |
 | fldeff_flash.c | commun | 22 | 15 | 0 | 2 | 13 | 2 | 5 | fldeff_flash.c (2) |
 | option_menu.c | commun | 20 | 19 | 2 | 0 | 10 | 0 | 1 |  |
+| script_menu.c | commun | 29 | 21 | 0 | 12 | 57 | 0 | 8 | script_menu.c (11), kanto_specials.c (1) |
 | battle_anim_psychic.c | commun | 26 | 0 | 0 | 0 | 100 | 10 | 16 |  |
 | field_door.c | commun | 21 | 2 | 0 | 2 | 100 | 3 | 16 | copie kanto_field_door.c : 21/21 fonctions |
 | librfu_rfu.c | commun | 86 | 0 | 0 | 0 | 100 | 70 | 16 |  |

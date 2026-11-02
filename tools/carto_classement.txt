@@ -658,3 +658,14 @@ DmaClearOam équivalente ClearVramOamPlttRegs (trainer_card.c d'Émeraude) : OAM
 DmaClearPltt équivalente ClearVramOamPlttRegs (trainer_card.c d'Émeraude) : palettes vidées
 SetTrainerCardBgsAndPals équivalente SetCardBgsAndPals (trainer_card.c d'Émeraude) : palettes bleue/verte/bronze/argent/or de RF
 SetTrainerCardCB2 équivalente SetTrainerCardCb2 (trainer_card.c d'Émeraude), même code
+# script_menu.c : choix multiples d'Émeraude ; ceux de RF (DrawVerticalMultichoiceMenu, GetMCWindowHeight,
+# CreateMCMenuInputHandlerTask, GetMenuWidthFromList, GetStringTilesWide) avec Options > MENUS = KANTO (scénario kanto_menus_rf)
+DestroyScriptMenuWindow équivalente ClearToTransparentAndRemoveWindow (script_menu.c d'Émeraude) ; le ClearWindowTilemap de RF est fait par ClearStdWindowAndFrameToTransparent
+Hask_MultichoiceGridMenu_HandleInput équivalente Task_HandleMultichoiceGridInput (script_menu.c d'Émeraude) : SCR_MENU_CANCEL = MULTI_B_PRESSED (127)
+PicboxWait équivalente IsPicboxClosed (script_menu.c d'Émeraude), même code
+Task_MultichoiceMenu_HandleInput équivalente Task_HandleMultichoiceInput (script_menu.c d'Émeraude) : sDelay de RF = sProcessInputDelay (0 avec MENUS = KANTO)
+Task_ScriptShowMonPic équivalente Task_PokemonPicWindow (script_menu.c d'Émeraude), même code (fenêtre en data[6])
+Task_YesNoMenu_HandleInput équivalente Task_HandleYesNoInput (script_menu.c d'Émeraude), même code
+CreatePCMenuWindow équivalente CreatePCMultichoice (script_menu.c de la fusion : PC de LÉO/LANETTE, du joueur, du PROF. CHEN, Panthéon de la région) ; police et lignes de RF avec MENUS = KANTO
+MultiChoicePrintHelpDescription équivalente DrawLinkServicesMultichoiceMenu (script_menu.c d'Émeraude) : aide des menus link
+QL_DestroyAbortedDisplay écartée journal de RF

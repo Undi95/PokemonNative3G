@@ -108,6 +108,18 @@ static const struct WindowTemplate sYesNo_WindowTemplates =
     .baseBlock = 0x125
 };
 
+// PokemonNative3G : sYesNo_WindowTemplate de Rouge Feu (new_menu_helpers.c), option MENUS = KANTO : une colonne de plus
+static const struct WindowTemplate sKantoYesNo_WindowTemplate =
+{
+    .bg = 0,
+    .tilemapLeft = 21,
+    .tilemapTop = 9,
+    .width = 6,
+    .height = 4,
+    .paletteNum = 15,
+    .baseBlock = 0x125
+};
+
 static const u16 sHofPC_TopBar_Pal[] = INCGFX_U16("graphics/interface/hof_pc_topbar.pal", ".gbapal");
 static const u8 sTextColors[] = { TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY };
 
@@ -541,12 +553,18 @@ void DisplayItemMessageOnField(u8 taskId, const u8 *string, TaskFunc callback)
 
 void DisplayYesNoMenuDefaultYes(void)
 {
-    CreateYesNoMenu(&sYesNo_WindowTemplates, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, 0);
+    if (gSaveBlock2Ptr->optionsMenuStyle) // PokemonNative3G : MENUS = KANTO, OUI/NON de Rouge Feu (new_menu_helpers.c)
+        Kanto_CreateYesNoMenu(&sKantoYesNo_WindowTemplate, FONT_KANTO, 0, 2, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, 0);
+    else
+        CreateYesNoMenu(&sYesNo_WindowTemplates, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, 0);
 }
 
 void DisplayYesNoMenuWithDefault(u8 initialCursorPos)
 {
-    CreateYesNoMenu(&sYesNo_WindowTemplates, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, initialCursorPos);
+    if (gSaveBlock2Ptr->optionsMenuStyle) // PokemonNative3G : DisplayYesNoMenuDefaultYes / DefaultNo de RF
+        Kanto_CreateYesNoMenu(&sKantoYesNo_WindowTemplate, FONT_KANTO, 0, 2, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, initialCursorPos);
+    else
+        CreateYesNoMenu(&sYesNo_WindowTemplates, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, initialCursorPos);
 }
 
 u32 GetPlayerTextSpeed(void)
@@ -569,7 +587,9 @@ u8 AddStartMenuWindow(u8 numActions)
 {
     if (sStartMenuWindowId == WINDOW_NONE)
     {
-        if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu (CreateStartMenuWindow) : entrées tous les 15 px
+        if (gSaveBlock2Ptr->optionsMenuStyle) // Rouge Feu (CreateStartMenuWindow) : entrées tous les 15 px ; RF part de
+                                              // 0x13D (après son OUI/NON de 6 × 4), ici 0x139 : 13 lignes finissent à la
+                                              // boîte de message d'Émeraude (0x194) ; le OUI/NON vient menu Start fermé
             sStartMenuWindowId = AddWindowParameterized(0, 22, 1, 7, numActions > 7 ? 13 : numActions * 2 - 1, 15, 0x139);
         else
             sStartMenuWindowId = AddWindowParameterized(0, 22, 1, 7, (numActions * 2) + 2, 15, 0x139);
@@ -1194,7 +1214,8 @@ void PrintMenuActionTextsAtPos(u8 windowId, u8 fontId, u8 left, u8 top, u8 lineH
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
-static void UNUSED PrintMenuActionTextsWithSpacing(u8 windowId, u8 fontId, u8 left, u8 top, u8 lineHeight, u8 itemCount, const struct MenuAction *menuActions, u8 letterSpacing, u8 lineSpacing)
+// PokemonNative3G : MultichoiceList_PrintItems de RF (choix multiples des scripts avec MENUS = KANTO, script_menu.c)
+void PrintMenuActionTextsWithSpacing(u8 windowId, u8 fontId, u8 left, u8 top, u8 lineHeight, u8 itemCount, const struct MenuAction *menuActions, u8 letterSpacing, u8 lineSpacing)
 {
     u8 i;
     for (i = 0; i < itemCount; i++)
@@ -1363,7 +1384,8 @@ static void UNUSED PrintMenuActionGrid_TopLeft(u8 windowId, u8 fontId, u8 option
     PrintMenuActionGrid(windowId, fontId, GetFontAttribute(fontId, FONTATTR_MAX_LETTER_WIDTH), 0, optionWidth, horizontalCount, verticalCount, menuActions, actionIds);
 }
 
-static u8 InitMenuGrid(u8 windowId, u8 fontId, u8 left, u8 top, u8 optionWidth, u8 optionHeight, u8 columns, u8 rows, u8 numChoices, u8 cursorPos)
+// PokemonNative3G : MultichoiceGrid_InitCursorInternal de RF (grille des scripts avec MENUS = KANTO, script_menu.c)
+u8 InitMenuGrid(u8 windowId, u8 fontId, u8 left, u8 top, u8 optionWidth, u8 optionHeight, u8 columns, u8 rows, u8 numChoices, u8 cursorPos)
 {
     s32 pos;
 

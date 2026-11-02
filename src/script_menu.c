@@ -41,6 +41,12 @@ static void CreateLilycoveSSTidalMultichoice(void);
 static bool8 IsPicboxClosed(void);
 static void CreateStartMenuForPokenavTutorial(void);
 static void InitMultichoiceNoWrap(bool8 ignoreBPress, u8 unusedCount, u8 windowId, u8 multichoiceId);
+// PokemonNative3G : option MENUS = KANTO, choix multiples de Rouge Feu (script_menu.c de RF)
+static void DrawVerticalMultichoiceMenu(u8 left, u8 top, u8 mcId, u8 ignoreBpress, u8 initPos);
+static u8 GetMCWindowHeight(u8 count);
+static void CreateMCMenuInputHandlerTask(u8 ignoreBpress, u8 count, u8 windowId, u8 mcId);
+static u16 GetStringTilesWide(const u8 *str);
+static u8 GetMenuWidthFromList(const struct MenuAction * items, u8 count);
 
 bool8 ScriptMenu_Multichoice(u8 left, u8 top, u8 multichoiceId, bool8 ignoreBPress)
 {
@@ -104,6 +110,12 @@ static void DrawMultichoiceMenu(u8 left, u8 top, u8 multichoiceId, bool8 ignoreB
     int width = 0;
     u8 newWidth;
 
+    if (gSaveBlock2Ptr->optionsMenuStyle) // PokemonNative3G : MENUS = KANTO, choix multiples de Rouge Feu
+    {
+        DrawVerticalMultichoiceMenu(left, top, multichoiceId, ignoreBPress, cursorPos);
+        return;
+    }
+
     for (i = 0; i < count; i++)
     {
         width = DisplayTextAndGetWidth(actions[i].text, width);
@@ -155,6 +167,115 @@ static void InitMultichoiceCheckWrap(bool8 ignoreBPress, u8 count, u8 windowId, 
     gTasks[taskId].tMultichoiceId = multichoiceId;
 
     DrawLinkServicesMultichoiceMenu(multichoiceId);
+}
+
+// ---- Rouge Feu (script_menu.c) : choix multiples avec l'option MENUS = KANTO ----
+// FONT_NORMAL de RF = FONT_KANTO (mesures de RF : lignes de 14 px). Le journal de RF (QL_AvoidDisplay, le bit 2 de
+// ignoreBpress) est écarté.
+static void DrawVerticalMultichoiceMenu(u8 left, u8 top, u8 mcId, u8 ignoreBpress, u8 initPos)
+{
+    s32 i;
+    s32 strWidth;
+    s32 tmp;
+    u8 width;
+    u8 height;
+    u8 count;
+    u8 windowId;
+    const struct MenuAction * list;
+
+    count = sMultichoiceLists[mcId].count;
+    list = sMultichoiceLists[mcId].list;
+    strWidth = 0;
+    for (i = 0; i < count; i++)
+    {
+        tmp = GetStringWidth(FONT_KANTO, list[i].text, 0);
+        if (tmp > strWidth)
+            strWidth = tmp;
+    }
+    width = (strWidth + 9) / 8 + 1;
+    if (left + width > 28)
+        left = 28 - width;
+    height = GetMCWindowHeight(count);
+    windowId = CreateWindowFromRect(left, top, width, height);
+    SetStandardWindowBorderStyle(windowId, FALSE);
+    // MultichoiceList_PrintItems et Menu_InitCursor de RF = PrintMenuActionTextsWithSpacing et InitMenuNormal d'Émeraude
+    PrintMenuActionTextsWithSpacing(windowId, FONT_KANTO, 8, 2, 14, count, list, 0, 2);
+    InitMenuNormal(windowId, FONT_KANTO, 0, 2, 14, count, initPos);
+    CreateMCMenuInputHandlerTask(ignoreBpress, count, windowId, mcId);
+    ScheduleBgCopyTilemapToVram(0);
+}
+
+static u8 GetMCWindowHeight(u8 count)
+{
+    switch (count)
+    {
+    case 0:
+        return 1;
+    case 1:
+        return 2;
+    case 2:
+        return 4;
+    case 3:
+        return 6;
+    case 4:
+        return 7;
+    case 5:
+        return 9;
+    case 6:
+        return 11;
+    case 7:
+        return 13;
+    case 8:
+        return 14;
+    default:
+        return 1;
+    }
+}
+
+// Même tâche que InitMultichoiceCheckWrap ; RF lit les touches dès la première image (Émeraude attend 2 images), les
+// menus link attendent 12 images dans les deux jeux. MultiChoicePrintHelpDescription de RF = DrawLinkServicesMultichoiceMenu.
+static void CreateMCMenuInputHandlerTask(u8 ignoreBpress, u8 count, u8 windowId, u8 mcId)
+{
+    u8 i;
+    u8 taskId;
+
+    sProcessInputDelay = 0;
+    for (i = 0; i < ARRAY_COUNT(sLinkServicesMultichoiceIds); i++)
+    {
+        if (sLinkServicesMultichoiceIds[i] == mcId)
+            sProcessInputDelay = 12;
+    }
+
+    taskId = CreateTask(Task_HandleMultichoiceInput, 80);
+    gTasks[taskId].tIgnoreBPress = ignoreBpress;
+    if (count > 3)
+        gTasks[taskId].tDoWrap = TRUE;
+    else
+        gTasks[taskId].tDoWrap = FALSE;
+    gTasks[taskId].tWindowId = windowId;
+    gTasks[taskId].tMultichoiceId = mcId;
+    DrawLinkServicesMultichoiceMenu(mcId);
+}
+
+// FONT_NORMAL_COPY_1 de RF : mêmes lettres que FONT_NORMAL (FONT_KANTO ici)
+static u16 GetStringTilesWide(const u8 *str)
+{
+    return (GetStringWidth(FONT_KANTO, str, 0) + 7) / 8;
+}
+
+static u8 GetMenuWidthFromList(const struct MenuAction * items, u8 count)
+{
+    u16 i;
+    u8 width = GetStringTilesWide(items[0].text);
+    u8 tmp;
+
+    for (i = 1; i < count; i++)
+    {
+        tmp = GetStringTilesWide(items[i].text);
+        if (width < tmp)
+            width = tmp;
+    }
+    return width;
 }
 
 static void Task_HandleMultichoiceInput(u8 taskId)
@@ -268,6 +389,30 @@ bool8 ScriptMenu_MultichoiceGrid(u8 left, u8 top, u8 multichoiceId, bool8 ignore
         gSpecialVar_Result = 0xFF;
         width = 0;
 
+        if (gSaveBlock2Ptr->optionsMenuStyle) // PokemonNative3G : MENUS = KANTO, grille de Rouge Feu (ScriptMenu_MultichoiceGrid)
+        {
+            const struct MenuAction * list = sMultichoiceLists[multichoiceId].list;
+            u8 count = sMultichoiceLists[multichoiceId].count;
+            u8 j;
+
+            newWidth = GetMenuWidthFromList(list, count) + 1;
+            rowCount = count / columnCount;
+            taskId = CreateTask(Task_HandleMultichoiceGridInput, 80);
+            gTasks[taskId].tIgnoreBPress = ignoreBPress;
+            gTasks[taskId].tWindowId = CreateWindowFromRect(left, top, newWidth * columnCount, rowCount * 2);
+            SetStandardWindowBorderStyle(gTasks[taskId].tWindowId, FALSE);
+            // MultichoiceGrid_PrintItems de RF avec FONT_NORMAL_COPY_1 : x = sa largeur de lettre (8, new_menu_helpers.c
+            // de RF), y = (16 - 14) / 2 ; FONT_KANTO a les mêmes lettres (sa largeur déclarée, 6, n'est pas celle-là)
+            for (i = 0; i < rowCount; ++i)
+                for (j = 0; j < columnCount; ++j)
+                    AddTextPrinterParameterized(gTasks[taskId].tWindowId, FONT_KANTO, list[i * columnCount + j].text, newWidth * 8 * j + 8, (16 - GetFontAttribute(FONT_KANTO, FONTATTR_MAX_LETTER_HEIGHT)) / 2 + 16 * i, TEXT_SKIP_DRAW, NULL);
+            CopyWindowToVram(gTasks[taskId].tWindowId, COPYWIN_GFX);
+            // MultichoiceGrid_InitCursor de RF : curseur de 16 px de haut
+            InitMenuGrid(gTasks[taskId].tWindowId, FONT_KANTO, 0, 1, newWidth * 8, 16, columnCount, rowCount, columnCount * rowCount, 0);
+            ScheduleBgCopyTilemapToVram(0);
+            return TRUE;
+        }
+
         for (i = 0; i < sMultichoiceLists[multichoiceId].count; i++)
         {
             width = DisplayTextAndGetWidth(sMultichoiceLists[multichoiceId].list[i].text, width);
@@ -357,6 +502,7 @@ static void CreatePCMultichoice(void)
     u8 width;
     u8 numChoices = 0;
     u8 windowId;
+    u8 fontId, top;
     int i;
     bool8 profOak = Fusion_IsInKanto() && FlagGet(FLAG_KANTO_SYS_POKEDEX_GET);
 
@@ -385,6 +531,10 @@ static void CreatePCMultichoice(void)
 
     windowId = CreateWindowFromRect(0, 0, width, numChoices * 2);
     SetStandardWindowBorderStyle(windowId, FALSE);
+    // PokemonNative3G : MENUS = KANTO, police et lignes du menu PC de Rouge Feu (CreatePCMenuWindow : FONT_NORMAL de RF,
+    // textes à 2 + 16 * ligne, Menu_InitCursor(windowId, FONT_NORMAL, 0, 2, 16, ...), CreateMCMenuInputHandlerTask)
+    fontId = gSaveBlock2Ptr->optionsMenuStyle ? FONT_KANTO : FONT_NORMAL;
+    top = gSaveBlock2Ptr->optionsMenuStyle ? 2 : 1;
     for (i = 2; i < numChoices; i++)
     {
         const u8 *text = gText_LogOff;
@@ -393,18 +543,26 @@ static void CreatePCMultichoice(void)
             text = gText_ProfOakSPc;
         else if (sPCMenuActions[i] == PC_ACTION_HALL_OF_FAME)
             text = gText_HallOfFame;
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, text, x, 1 + i * 16, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, fontId, text, x, top + i * 16, TEXT_SKIP_DRAW, NULL);
     }
 
     // Change PC name if player has met Lanette
     if (Fusion_GetPCOwner() == PC_OWNER_BILL) // PokemonNative3G : LÉO à Kanto
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_BillsPC, x, 1, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, fontId, gText_BillsPC, x, top, TEXT_SKIP_DRAW, NULL);
     else if (Fusion_GetPCOwner() == PC_OWNER_LANETTE)
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_LanettesPC, x, 1, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, fontId, gText_LanettesPC, x, top, TEXT_SKIP_DRAW, NULL);
     else
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_SomeonesPC, x, 1, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, fontId, gText_SomeonesPC, x, top, TEXT_SKIP_DRAW, NULL);
 
     StringExpandPlaceholders(gStringVar4, gText_PlayersPC);
+    if (gSaveBlock2Ptr->optionsMenuStyle)
+    {
+        Menu_PrintFormatIntlPlayerName(windowId, gStringVar4, x, 18);
+        InitMenuNormal(windowId, FONT_KANTO, 0, 2, 16, numChoices, 0);
+        CopyWindowToVram(windowId, COPYWIN_FULL);
+        CreateMCMenuInputHandlerTask(FALSE, numChoices, windowId, MULTI_PC);
+        return;
+    }
     PrintPlayerNameOnWindow(windowId, gStringVar4, x, 17);
     InitMenuInUpperLeftCornerNormal(windowId, numChoices, 0);
     CopyWindowToVram(windowId, COPYWIN_FULL);

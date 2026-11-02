@@ -16,11 +16,16 @@ import names
 
 
 def press_until_text(game, words, since):
-    """A jusqu'au message (les pages du texte précédent défilent)."""
-    for _ in range(12):
+    """A jusqu'au message (les pages du texte précédent défilent) ; s'arrête dès qu'il s'écrit, pour ne pas répondre
+    au menu qui le suit. Une page longue s'écrit en plus de 60 images : un A sur deux ne fait que l'accélérer."""
+    for _ in range(30):
         if saw_text(game, words, since):
             break
-        game.wait(60); game.tap("A")
+        game.tap("A")
+        try:
+            wait_until(game, lambda s: saw_text(game, words, since), step=2, limit=60)
+        except GameError:
+            pass
     wait_text(game, words, since)
 
 

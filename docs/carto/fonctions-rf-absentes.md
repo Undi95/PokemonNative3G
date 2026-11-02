@@ -690,11 +690,10 @@ ScriptContext_NextCommandEndsScript, ScriptContext_GetQuestLogInput
 SetQuestLogInputIsDpadFlag, ClearQuestLogInputIsDpadFlag, IsQuestLogInputDpad, RegisterQuestLogInput,
 ClearQuestLogInput, GetRegisteredQuestLogInput, ValidateRamScript
 
-### script_menu.c (commun, 14/21)
-GetStringTilesWide, GetMenuWidthFromList, DrawVerticalMultichoiceMenu, GetMCWindowHeight,
-CreateMCMenuInputHandlerTask, Task_MultichoiceMenu_HandleInput, MultiChoicePrintHelpDescription,
-Task_YesNoMenu_HandleInput, Hask_MultichoiceGridMenu_HandleInput, CreatePCMenuWindow, Task_ScriptShowMonPic,
-PicboxWait, DestroyScriptMenuWindow, QL_DestroyAbortedDisplay
+### script_menu.c (commun, 9/21)
+Task_MultichoiceMenu_HandleInput, MultiChoicePrintHelpDescription, Task_YesNoMenu_HandleInput,
+Hask_MultichoiceGridMenu_HandleInput, CreatePCMenuWindow, Task_ScriptShowMonPic, PicboxWait,
+DestroyScriptMenuWindow, QL_DestroyAbortedDisplay
 
 ### script_pokemon_util.c (commun, 3/3)
 ChooseBattleTowerPlayerParty, CB2_ReturnFromChooseBattleTowerParty, ReducePlayerPartyToThree
