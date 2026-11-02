@@ -37,6 +37,7 @@
 #include "random.h"
 #include "region_map.h"
 #include "rtc.h"
+#include "safari_zone.h"
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
@@ -345,6 +346,16 @@ static void Cmd_Encounters(const s32 *args, u32 argCount, struct DebugToolsOutpu
     if (argCount >= 1)
         gDebugNoEncounters = args[0] == 0;
     DebugTools_Print(out, "rencontres sauvages : %d\n", !gDebugNoEncounters);
+}
+
+static void Cmd_Safari(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (argCount >= 1)
+        gSafariZoneStepCounter = args[0];
+    if (argCount >= 2)
+        gNumSafariBalls = args[1];
+    DebugTools_Print(out, "safari %d, pas restants %d, balls %d\n", GetSafariZoneFlag() != FALSE,
+                     gSafariZoneStepCounter, gNumSafariBalls);
 }
 
 // --- Carte ----------------------------------------------------------------------------------------------------
@@ -977,6 +988,7 @@ static const u8 sName_GameState[] = _("État du moteur");
 static const u8 sName_Options[] = _("Options");
 static const u8 sName_NoClip[] = _("Traverser les murs");
 static const u8 sName_Encounters[] = _("Rencontres sauvages");
+static const u8 sName_Safari[] = _("Parc Safari");
 static const u8 sName_StartMenu[] = _("Menu Start");
 static const u8 sName_DebugAction[] = _("Actions du menu DEBUG");
 static const u8 sName_MapInfo[] = _("Carte");
@@ -1011,6 +1023,7 @@ const struct DebugTool gDebugTools[] =
     {"jeu.options", DEBUG_TOOLS_GAME, sName_Options, "toutes les options ; [N V] met l'option N a V", 0, Cmd_Options},
     {"jeu.murs", DEBUG_TOOLS_GAME, sName_NoClip, "[1|0] : traverser les murs (comme le menu DEBUG)", 0, Cmd_NoClip},
     {"jeu.rencontres", DEBUG_TOOLS_GAME, sName_Encounters, "[1|0] : Pokemon sauvages oui / non", 0, Cmd_Encounters},
+    {"jeu.safari", DEBUG_TOOLS_GAME, sName_Safari, "[PAS [BALLS]] : pas restants et SAFARI BALLS du Parc Safari", 0, Cmd_Safari},
     {"jeu.menustart", DEBUG_TOOLS_GAME, sName_StartMenu, "entrees du menu Start et curseur", 0, Cmd_StartMenu},
     {"jeu.debug", DEBUG_TOOLS_GAME, sName_DebugAction, "actions du menu DEBUG ; [N] fait l'action N", 0, Cmd_DebugAction},
     {"carte.info", DEBUG_TOOLS_MAP, sName_MapInfo, "carte, region, joueur, connexions", 0, Cmd_MapInfo},

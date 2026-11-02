@@ -28,6 +28,11 @@ extern const u8 SafariZone_EventScript_TimesUp[];
 extern const u8 SafariZone_EventScript_RetirePrompt[];
 extern const u8 SafariZone_EventScript_OutOfBallsMidBattle[];
 extern const u8 SafariZone_EventScript_OutOfBalls[];
+// Rouge Feu : les mêmes à Kanto (data/kanto/data/scripts/safari_zone.inc), qui ramènent à l'entrée de Parmanie
+extern const u8 Kanto_SafariZone_EventScript_TimesUp[];
+extern const u8 Kanto_SafariZone_EventScript_RetirePrompt[];
+extern const u8 Kanto_SafariZone_EventScript_OutOfBallsMidBattle[];
+extern const u8 Kanto_SafariZone_EventScript_OutOfBalls[];
 
 EWRAM_DATA u8 gNumSafariBalls = 0;
 EWRAM_DATA u16 gSafariZoneStepCounter = 0; // Rouge Feu : global (le menu Start de RF affiche les pas restants)
@@ -86,7 +91,7 @@ bool8 SafariZoneTakeStep(void)
     gSafariZoneStepCounter--;
     if (gSafariZoneStepCounter == 0)
     {
-        ScriptContext_SetupScript(SafariZone_EventScript_TimesUp);
+        ScriptContext_SetupScript(Fusion_IsInKanto() ? Kanto_SafariZone_EventScript_TimesUp : SafariZone_EventScript_TimesUp);
         return TRUE;
     }
     return FALSE;
@@ -94,7 +99,7 @@ bool8 SafariZoneTakeStep(void)
 
 void SafariZoneRetirePrompt(void)
 {
-    ScriptContext_SetupScript(SafariZone_EventScript_RetirePrompt);
+    ScriptContext_SetupScript(Fusion_IsInKanto() ? Kanto_SafariZone_EventScript_RetirePrompt : SafariZone_EventScript_RetirePrompt);
 }
 
 void CB2_EndSafariBattle(void)
@@ -108,14 +113,15 @@ void CB2_EndSafariBattle(void)
     }
     else if (gBattleOutcome == B_OUTCOME_NO_SAFARI_BALLS)
     {
-        RunScriptImmediately(SafariZone_EventScript_OutOfBallsMidBattle);
+        RunScriptImmediately(Fusion_IsInKanto() ? Kanto_SafariZone_EventScript_OutOfBallsMidBattle : SafariZone_EventScript_OutOfBallsMidBattle);
         WarpIntoMap();
+        // RF : FieldCB_SafariZoneRanOutOfBalls, le même retour (avec l'aperçu de carte de RF en plus)
         gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
         SetMainCallback2(CB2_LoadMap);
     }
     else if (gBattleOutcome == B_OUTCOME_CAUGHT)
     {
-        ScriptContext_SetupScript(SafariZone_EventScript_OutOfBalls);
+        ScriptContext_SetupScript(Fusion_IsInKanto() ? Kanto_SafariZone_EventScript_OutOfBalls : SafariZone_EventScript_OutOfBalls);
         ScriptContext_Stop();
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
     }
