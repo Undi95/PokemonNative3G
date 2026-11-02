@@ -23,6 +23,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `jeu.options [N V]` | toutes les options (bits de la sauvegarde) ; `N V` met l'option N à V |
 | | `jeu.murs [1\|0]`, `jeu.rencontres [1\|0]` | traverser les murs, Pokémon sauvages (les réglages du menu DEBUG) |
 | | `jeu.safari [PAS [BALLS]]` | Parc Safari : en mode Safari ou non, pas restants, SAFARI BALLS ; les met (fin du temps ou des balls en un pas, scénario `kanto_safari_exit`) |
+| | `jeu.stat N [V]` | statistique de jeu `GAME_STAT_*` (nombre d'entrées au Panthéon, date de la première, œufs éclos, victoires en link…), mise à `V` si donné (scénario `kanto_card_stickers`) |
 | | `jeu.errants [1\|2]` | Pokémon errants de la région (espèce, niveau, actif, carte, PV) ; `1` les lâche (`InitRoamer`, comme leur script), `2` les met sur la carte du joueur jusqu'au prochain changement de carte (scénario `kanto_roamer`) |
 | | `jeu.menustart` | entrées du menu Start (`MENU_ACTION_*`) et curseur (`game.start_menu()` dans le banc) |
 | | `jeu.debug [N]` | les actions du menu DEBUG ; `N` fait l'action N (celles sans écran : soins, objets, Pokédex, passes, « Deux Ligues finies », POKé MONTURE + badges…), le même code que le menu (`DebugMenu_ApplyAction`) |

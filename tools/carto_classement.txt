@@ -619,3 +619,42 @@ Task_ReturnToItemStorageSubmenu équivalente player_pc.c d'Émeraude (PC du joue
 Task_WaitFadeAndGoToPartyMenu équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
 Task_WaitFadeAndReadSelectedMail équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
 Task_WaitFadeAndReturnToMailboxPcInputHandler équivalente player_pc.c d'Émeraude (PC du joueur), même rôle
+# menu.c : primitives de menus de RF = celles d'Émeraude (renommées) ; même flèche « ▶ » (gText_SelectorArrow2/3)
+AddItemMenuActionTextPrinters équivalente PrintMenuActionTexts (menu.c d'Émeraude), même code
+Menu_InitCursor équivalente InitMenuNormal (menu.c d'Émeraude), même code
+Menu_InitCursorInternal équivalente InitMenu (menu.c d'Émeraude), même code
+Menu_ProcessInputGridLayout équivalente Menu_ProcessGridInput (menu.c d'Émeraude), même code
+Menu_ProcessInputNoWrapAround équivalente Menu_ProcessInputNoWrap (menu.c d'Émeraude), même code
+Menu_ProcessInput_other équivalente ProcessMenuInput_other (menu.c d'Émeraude), même code
+Menu_RedrawCursor équivalente RedrawMenuCursor (menu.c d'Émeraude), même code
+MultichoiceGrid_InitCursor équivalente InitMenuGridDefaultCursorHeight (menu.c d'Émeraude) ; hauteur 16 = GetMenuCursorDimensionByFont
+MultichoiceGrid_InitCursorInternal équivalente InitMenuGrid (menu.c d'Émeraude), même code
+MultichoiceGrid_MoveCursor équivalente ChangeMenuGridCursorPosition (menu.c d'Émeraude), même code
+MultichoiceGrid_MoveCursorIfValid équivalente ChangeGridMenuCursorPosition (menu.c d'Émeraude), même code
+MultichoiceGrid_RedrawCursor équivalente MoveMenuGridCursor (menu.c d'Émeraude), même code
+MultichoiceList_PrintItems équivalente PrintMenuActionTextsWithSpacing (menu.c d'Émeraude), même code
+DestroyYesNoMenu équivalente EraseYesNoWindow (alias dans kanto_bag_compat.h) ; la garde 0xFF de RF est REVISION >= 0xA, absente des cartouches
+MultichoiceGrid_PrintItems équivalente PrintMenuGridTable (menu.c d'Émeraude) : police RF de 8 px → x 8, y 1, même rendu (scénario kanto_blackboard)
+# item.c : rangement du sac et du PC de RF = celui d'Émeraude (sac commun gSaveBlockBag)
+BagGetQuantityByItemId équivalente CountTotalItemQuantityInBag (item.c d'Émeraude) : additionne les piles de 99 du sac commun (magasin de Kanto)
+BagPocketCompaction équivalente CompactItemsInBagPocket (item.c d'Émeraude), même code
+BagPocketGetFirstEmptySlot équivalente IsBagPocketNonEmpty et les recherches de case libre d'item.c d'Émeraude
+ClearPCItemSlots équivalente ClearItemSlots (item.c d'Émeraude), même code
+CountItemsInPC équivalente CountUsedPCItemSlots (item.c d'Émeraude), même code
+ItemPcCompaction équivalente CompactPCItems (item.c d'Émeraude), même code
+SetBagPocketsPointers équivalente SetBagItemsPointers (item.c d'Émeraude) : sac commun gSaveBlockBag
+SortAndCompactBagPocket équivalente SortBerriesOrTMHMs (item.c d'Émeraude), même tri par numéro
+SetPcItemQuantity équivalente SetPCItemQuantity (item.c d'Émeraude), même code
+TrySetObtainedItemQuestLogEvent écartée journal de RF
+# trainer_card.c : la carte d'Émeraude dessine déjà la carte de RF (cartes reçues en link) ; la carte de Kanto du joueur
+# prend les données de RF depuis le 2026-11-02 (étoiles, autocollants de l'Île 4, photo du Casino ; scénario kanto_card_stickers)
+BufferTextForCardBack équivalente BufferTextsVarsForCardPage2 (trainer_card.c d'Émeraude) : mêmes lignes + celles d'Émeraude
+GetCardType équivalente GetSetCardType (trainer_card.c d'Émeraude) : carte de RF pour la version Rouge Feu (carte de Kanto)
+GetTrainerStarCount équivalente étoiles de RF dans TrainerCard_GenerateCardForPlayer (carte de Kanto) : Panthéon, Pokédex de Kanto, Pokédex national, 200 baies et 200 sauts
+HandleGpuRegs équivalente InitGpuRegs (trainer_card.c d'Émeraude), mêmes registres
+ResetBgRegs équivalente ResetGpuRegs et ClearVramOamPlttRegs d'Émeraude, mêmes registres
+VBlankCB_TrainerCard équivalente VblankCb_TrainerCard (trainer_card.c d'Émeraude), même code
+DmaClearOam équivalente ClearVramOamPlttRegs (trainer_card.c d'Émeraude) : OAM vidée
+DmaClearPltt équivalente ClearVramOamPlttRegs (trainer_card.c d'Émeraude) : palettes vidées
+SetTrainerCardBgsAndPals équivalente SetCardBgsAndPals (trainer_card.c d'Émeraude) : palettes bleue/verte/bronze/argent/or de RF
+SetTrainerCardCB2 équivalente SetTrainerCardCb2 (trainer_card.c d'Émeraude), même code

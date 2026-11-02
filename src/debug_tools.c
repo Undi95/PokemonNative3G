@@ -50,6 +50,7 @@
 #include "constants/characters.h"
 #include "constants/moves.h"
 #include "constants/flags.h"
+#include "constants/game_stat.h"
 #include "constants/vars.h"
 #include "constants/kanto.h"
 #include "constants/kanto_flags_vars.h"
@@ -375,6 +376,19 @@ static void Cmd_Roamers(const s32 *args, u32 argCount, struct DebugToolsOutput *
         DebugTools_Print(out, "errant %u espece %d niveau %d actif %d carte %d.%d PV %d\n", i, roamer->species,
                          roamer->level, roamer->active, group, num, roamer->hp);
     }
+}
+
+// Statistique de jeu N (GAME_STAT_*), mise à V si donné (entrées au Panthéon, œufs éclos, victoires en link...)
+static void Cmd_GameStatistic(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (args[0] < 0 || args[0] >= NUM_GAME_STATS)
+    {
+        DebugTools_Print(out, "statistique %d inconnue (0 a %d)\n", args[0], NUM_GAME_STATS - 1);
+        return;
+    }
+    if (argCount >= 2)
+        SetGameStat(args[0], args[1]);
+    DebugTools_Print(out, "statistique %d = %u\n", args[0], GetGameStat(args[0]));
 }
 
 // --- Carte ----------------------------------------------------------------------------------------------------
@@ -1009,6 +1023,7 @@ static const u8 sName_NoClip[] = _("Traverser les murs");
 static const u8 sName_Encounters[] = _("Rencontres sauvages");
 static const u8 sName_Safari[] = _("Parc Safari");
 static const u8 sName_Roamers[] = _("Pokémon errants");
+static const u8 sName_GameStatistic[] = _("Statistique de jeu");
 static const u8 sName_StartMenu[] = _("Menu Start");
 static const u8 sName_DebugAction[] = _("Actions du menu DEBUG");
 static const u8 sName_MapInfo[] = _("Carte");
@@ -1045,6 +1060,7 @@ const struct DebugTool gDebugTools[] =
     {"jeu.rencontres", DEBUG_TOOLS_GAME, sName_Encounters, "[1|0] : Pokemon sauvages oui / non", 0, Cmd_Encounters},
     {"jeu.safari", DEBUG_TOOLS_GAME, sName_Safari, "[PAS [BALLS]] : pas restants et SAFARI BALLS du Parc Safari", 0, Cmd_Safari},
     {"jeu.errants", DEBUG_TOOLS_GAME, sName_Roamers, "[1|2] : vagabonds de la region ; 1 les lache, 2 les met sur cette carte", 0, Cmd_Roamers},
+    {"jeu.stat", DEBUG_TOOLS_GAME, sName_GameStatistic, "N [V] : statistique de jeu GAME_STAT_* (Pantheon, oeufs...), mise a V", 1, Cmd_GameStatistic},
     {"jeu.menustart", DEBUG_TOOLS_GAME, sName_StartMenu, "entrees du menu Start et curseur", 0, Cmd_StartMenu},
     {"jeu.debug", DEBUG_TOOLS_GAME, sName_DebugAction, "actions du menu DEBUG ; [N] fait l'action N", 0, Cmd_DebugAction},
     {"carte.info", DEBUG_TOOLS_MAP, sName_MapInfo, "carte, region, joueur, connexions", 0, Cmd_MapInfo},

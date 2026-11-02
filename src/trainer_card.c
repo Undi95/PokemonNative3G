@@ -798,6 +798,56 @@ static void TrainerCard_GenerateCardForPlayer(struct TrainerCard *trainerCard)
     if (trainerCard->hasAllFrontierSymbols)
         trainerCard->stars++;
 
+    if (sOwnCardKanto)
+    {
+        // PokemonNative3G : la carte de Kanto est celle de RF (TrainerCard_GenerateCardForLinkPlayer et GetCaughtMonsCount
+        // de RF) : étoiles de RF, autocollants de l'homme de l'Île 4, icônes de la photo. Les champs de RF ont leur place
+        // dans la structure d'Émeraude (berryCrushPoints = linkPoints.berryCrush), comme une carte de RF reçue en link.
+        u32 berriesPicked, jumpsInRow;
+
+        if (IsNationalPokedexEnabled())
+            trainerCard->caughtMonsCount = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+        else
+            trainerCard->caughtMonsCount = GetKantoPokedexCount(FLAG_GET_CAUGHT);
+
+        trainerCard->hasAllFrontierSymbols = FALSE;
+        trainerCard->frontierBP = 0;
+        trainerCard->stars = 0;
+        if (trainerCard->hofDebutHours != 0 || trainerCard->hofDebutMinutes != 0 || trainerCard->hofDebutSeconds != 0)
+            trainerCard->stars = 1;
+
+        trainerCard->caughtAllHoenn = HasAllKantoMons();
+        berriesPicked = gSaveBlock2Ptr->berryPick.berriesPicked;
+        jumpsInRow = gSaveBlock2Ptr->pokeJump.jumpsInRow;
+
+        trainerCard->linkPoints.berryCrush = GetCappedGameStat(GAME_STAT_PLAYED_BERRY_CRUSH, 0xFFFF); // GAME_STAT_BERRY_CRUSH_POINTS de RF (51)
+        trainerCard->unionRoomNum = GetCappedGameStat(GAME_STAT_NUM_UNION_ROOM_BATTLES, 0xFFFF);
+        trainerCard->shouldDrawStickers = TRUE;
+
+        if (trainerCard->caughtAllHoenn)
+            trainerCard->stars++;
+
+        if (HasAllMons())
+            trainerCard->stars++;
+
+        if (berriesPicked >= 200 && jumpsInRow >= 200)
+            trainerCard->stars++;
+
+        trainerCard->stickers[0] = VarGet(VAR_KANTO_HOF_BRAG_STATE);
+        trainerCard->stickers[1] = VarGet(VAR_KANTO_EGG_BRAG_STATE);
+        trainerCard->stickers[2] = VarGet(VAR_KANTO_LINK_WIN_BRAG_STATE);
+
+        trainerCard->monIconTint = VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_TINT_IDX);
+
+        // MailSpeciesToIconSpecies de RF = GetIconSpeciesNoPersonality d'Émeraude
+        trainerCard->monSpecies[0] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_1));
+        trainerCard->monSpecies[1] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_2));
+        trainerCard->monSpecies[2] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_3));
+        trainerCard->monSpecies[3] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_4));
+        trainerCard->monSpecies[4] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_5));
+        trainerCard->monSpecies[5] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_6));
+    }
+
     if (trainerCard->gender == FEMALE)
         trainerCard->unionRoomClass = gUnionRoomFacilityClasses[(trainerCard->trainerId % NUM_UNION_ROOM_CLASSES) + NUM_UNION_ROOM_CLASSES];
     else
