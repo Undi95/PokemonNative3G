@@ -174,3 +174,70 @@ Task_TeleportWarpInPlayerAnim équivalente Task_DoPlayerSpinEntrance (field_play
 Task_TeleportWarpOutPlayerAnim équivalente Task_DoPlayerSpinExit (field_player_avatar.c), même code
 TeleportAnim_RotatePlayer équivalente TrySpinPlayerForWarp (field_player_avatar.c), même code
 player_step équivalente PlayerStep (field_player_avatar.c), dalles tournantes de RF déjà dedans ; + Vélo Cross d'Émeraude
+# tileset_anims.c : animations de tuiles de Kanto portées sous le nom Kanto* (même code, tables Kanto*)
+InitTilesetAnim_CeladonCity équivalente InitTilesetAnim_KantoCeladonCity (tileset_anims.c), même code
+InitTilesetAnim_CeladonGym équivalente InitTilesetAnim_KantoCeladonGym (tileset_anims.c), même code
+InitTilesetAnim_MtEmber équivalente InitTilesetAnim_KantoMtEmber (tileset_anims.c), même code
+InitTilesetAnim_SilphCo équivalente InitTilesetAnim_KantoSilphCo (tileset_anims.c), même code
+InitTilesetAnim_VermilionGym équivalente InitTilesetAnim_KantoVermilionGym (tileset_anims.c), même code
+QueueAnimTiles_CeladonCity_Fountain équivalente QueueAnimTiles_KantoCeladonCity_Fountain (tileset_anims.c), table Kanto
+QueueAnimTiles_CeladonGym_Flowers équivalente QueueAnimTiles_KantoCeladonGym_Flowers (tileset_anims.c), table Kanto
+QueueAnimTiles_General_SandWatersEdge équivalente QueueAnimTiles_KantoGeneral_SandWatersEdge (tileset_anims.c), table Kanto
+QueueAnimTiles_General_Water_Current_LandWatersEdge équivalente QueueAnimTiles_KantoGeneral_Water_Current_LandWatersEdge (tileset_anims.c), table Kanto
+QueueAnimTiles_MtEmber_Steam équivalente QueueAnimTiles_KantoMtEmber_Steam (tileset_anims.c), table Kanto
+QueueAnimTiles_SilphCo_Fountain équivalente QueueAnimTiles_KantoSilphCo_Fountain (tileset_anims.c), table Kanto
+QueueAnimTiles_VermilionGym_MotorizedDoor équivalente QueueAnimTiles_KantoVermilionGym_MotorizedDoor (tileset_anims.c), table Kanto
+TilesetAnim_CeladonCity équivalente TilesetAnim_KantoCeladonCity (tileset_anims.c), même code
+TilesetAnim_CeladonGym équivalente TilesetAnim_KantoCeladonGym (tileset_anims.c), même code
+TilesetAnim_MtEmber équivalente TilesetAnim_KantoMtEmber (tileset_anims.c), même code
+TilesetAnim_SilphCo équivalente TilesetAnim_KantoSilphCo (tileset_anims.c), même code
+TilesetAnim_VermilionGym équivalente TilesetAnim_KantoVermilionGym (tileset_anims.c), même code
+# fldeff_flash.c : transitions de grotte de RF = celles d'Émeraude (adresses VRAM et palettes écrites autrement)
+FlashTransition_Enter équivalente DoEnterCaveTransition (fldeff_flash.c), même code
+FlashTransition_Exit équivalente DoExitCaveTransition (fldeff_flash.c), même code
+MapTransitionIsEnter équivalente GetMapPairFadeToType (fldeff_flash.c), même boucle sur sTransitionTypes
+MapTransitionIsExit équivalente GetMapPairFadeFromType (fldeff_flash.c), même boucle sur sTransitionTypes
+Task_FlashTransition_Enter_0 équivalente Task_EnterCaveTransition1 (fldeff_flash.c), même code
+Task_FlashTransition_Enter_1 équivalente Task_EnterCaveTransition2 (fldeff_flash.c), BG_CHAR_ADDR(3) = VRAM + 0xC000, BG_SCREEN_ADDR(31) = VRAM + 0xF800
+Task_FlashTransition_Enter_2 équivalente Task_EnterCaveTransition3 (fldeff_flash.c), BLDALPHA_BLEND(16, 16)
+Task_FlashTransition_Enter_3 équivalente Task_EnterCaveTransition4 (fldeff_flash.c), (16 << 8) + n = n + 0x1000
+Task_FlashTransition_Exit_0 équivalente Task_ExitCaveTransition1 (fldeff_flash.c), même code
+Task_FlashTransition_Exit_1 équivalente Task_ExitCaveTransition2 (fldeff_flash.c), adresses VRAM, palette de sortie
+Task_FlashTransition_Exit_2 équivalente Task_ExitCaveTransition3 (fldeff_flash.c), (16 << 8) + n = n + 0x1000
+Task_FlashTransition_Exit_3 équivalente Task_ExitCaveTransition4 (fldeff_flash.c), BLDALPHA_BLEND
+Task_FlashTransition_Exit_4 équivalente Task_ExitCaveTransition5 (fldeff_flash.c), même code
+# overworld.c
+CB2_LoadMapForQLPlayback écartée journal de RF
+CB2_SetUpOverworldForQLPlaybackWithWarpExit écartée journal de RF
+DoLoadMap_QLPlayback écartée journal de RF
+LoadMap_QLPlayback écartée journal de RF
+CreateConfirmLeaveTradeRoomPrompt link Centre d'échange de RF (RunConfirmLeaveCableClubScript d'Émeraude)
+FieldCB_ShowMapNameOnContinue équivalente FieldCB_FadeTryShowMapPopup (overworld.c), + bases secrètes d'Émeraude
+InitOverworldBgs_NoResetHeap équivalente InitOverworldBgs (overworld.c), crédits de RF (MapLdr_Credits) = Overworld_DoScrollSceneForCredits
+Overworld_ResetStateOnContinue équivalente UpdateMiscOverworldStates (overworld.c), avec la scène du Safari de Kanto et la Piste Cyclable
+Overworld_TryMapConnectionMusicTransition équivalente TransitionMapMusic (overworld.c), règle de RF portée (Overworld_MusicCanOverrideMapMusic, MUS_RG_SURF)
+ReloadObjectsAndRunReturnToFieldMapScript équivalente InitObjectEventsReturnToField (overworld.c), + portiques tournants d'Émeraude
+SetInitialPlayerAvatarStateWithDirection équivalente SetInitialPlayerAvatarStateWithDirection (overworld.c), portée 2026-11-02 (K.O. : face à l'infirmière)
+SetUpScrollSceneForCredits équivalente Overworld_DoScrollSceneForCredits (overworld.c), WARP_ID_NONE = -1
+# metatile_behavior.c
+MetatileBehavior_IsDeepWaterTerrain équivalente MetatileBehavior_IsDeepOrOceanWater (metatile_behavior.c), décor de combat de Kanto (kanto_battle_bg.c) ; MB_FAST_WATER importé en MB_OCEAN_WATER
+MetatileBehavior_IsFastWater morte jamais appelée dans RF
+MetatileBehavior_IsImpressiveMachine morte MB_IMPRESSIVE_MACHINE dans aucun tileset de RF
+MetatileBehavior_IsSnacks morte MB_SNACKS dans aucun tileset de RF
+MetatileBehavior_IsVideoGame morte MB_VIDEO_GAME dans aucun tileset de RF
+MetatileBehavior_IsPlayerFacingBattleRecords link écran des records du Club Câble de RF
+MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor link moniteur sans fil de RF
+MetatileBehavior_IsSandOrShallowFlowingWater équivalente kanto_battle_bg.c (Kanto_BattleSetup_GetTerrainId), écrite en ligne
+MetatileBehavior_IsSurfable équivalente MetatileBehavior_IsSurfableWaterOrUnderwater (metatile_behavior.c), kanto_battle_bg.c
+MetatileBehavior_IsWarpDoor_2 équivalente MetatileBehavior_IsDoor (metatile_behavior.c), MB_WARP_DOOR importé en MB_ANIMATED_DOOR
+TestMetatileAttributeBit équivalente sTileBitAttributes (metatile_behavior.c), même table de bits
+# trainer_see.c : approche des dresseurs d'Émeraude (caméra de RF partout, emoticônes de Kanto)
+FldEff_ExclamationMarkIcon1 équivalente FldEff_ExclamationMarkIcon (trainer_see.c), sprite des émoticônes de Kanto
+Task_RevealTrainer_RunTrainerSeeFuncList équivalente Task_RunTrainerSeeFuncList (trainer_see.c), pointeur (port 64 bits)
+TrainerSeeFunc_BeginJumpOutOfAsh équivalente PopOutOfAshBuriedTrainer (trainer_see.c), FLDEFF_POP_OUT_OF_ASH = FLDEFF_ASH_PUFF
+TrainerSeeFunc_EndJumpOutOfAsh équivalente WaitRevealBuriedTrainer (trainer_see.c), même code
+TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveDown équivalente OffscreenAboveTrainerCameraObjMoveDown (trainer_see.c), même code
+TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveUp équivalente OffscreenAboveTrainerCameraObjMoveUp (trainer_see.c), même code
+TrainerSeeFunc_OffscreenAboveTrainerCreateCameraObj équivalente OffscreenAboveTrainerCreateCameraObj (trainer_see.c), MAP_OFFSET = 7
+TrainerSeeFunc_PrepareToEngage écartée variante RF : Émeraude gardée (PlayerFaceApproachingTrainer : le joueur se tourne vers le dresseur ; RF non) ; docs/VARIANTES-RF.md
+TrainerSeeFunc_StartExclMark équivalente TrainerExclamationMark (trainer_see.c), états nommés
