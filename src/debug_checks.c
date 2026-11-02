@@ -3,6 +3,7 @@
 // DebugChecks_Report ; ceux qui regardent l'état à chaque image sont ici (DebugChecks_OnFrame).
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "global.h"
 #include "debug_tools.h"
@@ -13,6 +14,7 @@
 #include "gpu_regs.h"
 #include "main.h"
 #include "sprite.h"
+#include "window.h"
 #ifdef PORTABLE
 #include "platform/test_state.h"
 #endif
@@ -277,6 +279,70 @@ void DebugChecks_OnFrame(void)
 {
     CheckMonPics();
     CheckMessageBoxFrames();
+}
+
+// --- Texte superposé ----------------------------------------------------------------------------------------------
+// Un tableau par fenêtre (malloc du PC : rien dans le tas du jeu), à la taille de la fenêtre
+
+static u32 *sTextOwners[WINDOWS_MAX];
+static u32 sTextOwnerSizes[WINDOWS_MAX];
+
+static u32 GetWindowPixelCount(u8 windowId)
+{
+    return gWindows[windowId].window.width * gWindows[windowId].window.height * 64;
+}
+
+u32 *DebugChecks_GetTextOwners(u8 windowId)
+{
+    u32 size;
+
+    if (windowId >= WINDOWS_MAX || gWindows[windowId].tileData == NULL)
+        return NULL;
+    size = GetWindowPixelCount(windowId);
+    if (size == 0)
+        return NULL;
+    if (sTextOwnerSizes[windowId] != size)
+    {
+        free(sTextOwners[windowId]);
+        sTextOwners[windowId] = malloc(size * sizeof(u32));
+        sTextOwnerSizes[windowId] = sTextOwners[windowId] != NULL ? size : 0;
+        if (sTextOwners[windowId] != NULL)
+            memset(sTextOwners[windowId], 0xFF, size * sizeof(u32));
+    }
+    return sTextOwners[windowId];
+}
+
+void DebugChecks_ClearTextOwners(u8 windowId, s32 x, s32 y, s32 width, s32 height)
+{
+    s32 windowWidth, windowHeight, row;
+
+    if (windowId >= WINDOWS_MAX || sTextOwners[windowId] == NULL)
+        return;
+    if (sTextOwnerSizes[windowId] != GetWindowPixelCount(windowId))
+    {
+        free(sTextOwners[windowId]);
+        sTextOwners[windowId] = NULL;
+        sTextOwnerSizes[windowId] = 0;
+        return;
+    }
+    if (width < 0)
+    {
+        memset(sTextOwners[windowId], 0xFF, sTextOwnerSizes[windowId] * sizeof(u32));
+        return;
+    }
+    windowWidth = gWindows[windowId].window.width * 8;
+    windowHeight = gWindows[windowId].window.height * 8;
+    if (x < 0)
+        width += x, x = 0;
+    if (y < 0)
+        height += y, y = 0;
+    if (x + width > windowWidth)
+        width = windowWidth - x;
+    for (row = y; row < y + height && row < windowHeight; row++)
+    {
+        if (width > 0)
+            memset(&sTextOwners[windowId][row * windowWidth + x], 0xFF, width * sizeof(u32));
+    }
 }
 
 #endif // KANTO_DEBUG_START

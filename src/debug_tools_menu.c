@@ -56,6 +56,9 @@ static u16 sLineCount;
 static u16 sCategoryRow, sToolRow;
 
 static const u8 sHeaderColors[] = {TEXT_COLOR_WHITE, TEXT_COLOR_BLUE, TEXT_COLOR_LIGHT_BLUE};
+// Les lignes du résultat, sur fond transparent : espacées de 12 px, les jambages (g, p, y) de la police SMALL
+// descendent dans la ligne suivante, dont le fond les effaçait (détecteur « texte superposé »)
+static const u8 sLineColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
 
 static void Task_DebugToolsMenu(u8 taskId);
 
@@ -253,8 +256,8 @@ static void DrawResult(u8 taskId)
     DebugTools_ToGameText(gameText, header, sizeof(gameText));
     AddTextPrinterParameterized3(task->tWindowId, FONT_SMALL, 2, 0, sHeaderColors, TEXT_SKIP_DRAW, gameText);
     for (i = 0; i < RESULT_LINES_SHOWN && task->tScroll + i < sLineCount; i++)
-        AddTextPrinterParameterized(task->tWindowId, FONT_SMALL, sLines[task->tScroll + i], 2,
-                                    RESULT_LINE_HEIGHT + 1 + i * RESULT_LINE_HEIGHT, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized3(task->tWindowId, FONT_SMALL, 2, RESULT_LINE_HEIGHT + 1 + i * RESULT_LINE_HEIGHT,
+                                     sLineColors, TEXT_SKIP_DRAW, sLines[task->tScroll + i]);
     CopyWindowToVram(task->tWindowId, COPYWIN_FULL);
 }
 

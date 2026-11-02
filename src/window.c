@@ -1,5 +1,6 @@
 #include "global.h"
 #include "window.h"
+#include "debug_checks.h"
 #include "malloc.h"
 #include "bg.h"
 #include "blit.h"
@@ -103,6 +104,11 @@ bool16 InitWindows(const struct WindowTemplate *templates)
     }
 
     gTransparentTileNumber = 0;
+#ifdef KANTO_DEBUG_START
+    // Détecteur « texte superposé » : des fenêtres neuves
+    for (i = 0; i < WINDOWS_MAX; i++)
+        DebugChecks_ClearTextOwners(i, 0, 0, -1, 0);
+#endif
     return TRUE;
 }
 
@@ -175,6 +181,7 @@ u16 AddWindow(const struct WindowTemplate *template)
         BgTileAllocOp(bgLayer, allocatedBaseBlock, gWindows[win].window.width * gWindows[win].window.height, 1);
     }
 
+    DebugChecks_ClearTextOwners(win, 0, 0, -1, 0);
     return win;
 }
 
@@ -238,12 +245,17 @@ void RemoveWindow(u8 windowId)
         Free(gWindows[windowId].tileData);
         gWindows[windowId].tileData = NULL;
     }
+    DebugChecks_ClearTextOwners(windowId, 0, 0, -1, 0);
 }
 
 void FreeAllWindowBuffers(void)
 {
     int i;
 
+#ifdef KANTO_DEBUG_START
+    for (i = 0; i < WINDOWS_MAX; i++)
+        DebugChecks_ClearTextOwners(i, 0, 0, -1, 0);
+#endif
     for (i = 0; i < NUM_BACKGROUNDS; ++i)
     {
         if (gWindowBgTilemapBuffers[i] != NULL && gWindowBgTilemapBuffers[i] != DummyWindowBgTilemap)
@@ -409,6 +421,7 @@ void BlitBitmapRectToWindow(u8 windowId, const u8 *pixels, u16 srcX, u16 srcY, u
     destRect.height = 8 * gWindows[windowId].window.height;
 
     BlitBitmapRect4Bit(&sourceRect, &destRect, srcX, srcY, destX, destY, rectWidth, rectHeight, 0);
+    DebugChecks_ClearTextOwners(windowId, destX, destY, rectWidth, rectHeight);
 }
 
 static void UNUSED BlitBitmapRectToWindowWithColorKey(u8 windowId, const u8 *pixels, u16 srcX, u16 srcY, u16 srcWidth, int srcHeight, u16 destX, u16 destY, u16 rectWidth, u16 rectHeight, u8 colorKey)
@@ -436,6 +449,7 @@ void FillWindowPixelRect(u8 windowId, u8 fillValue, u16 x, u16 y, u16 width, u16
     pixelRect.height = 8 * gWindows[windowId].window.height;
 
     FillBitmapRect4Bit(&pixelRect, x, y, width, height, fillValue);
+    DebugChecks_ClearTextOwners(windowId, x, y, width, height);
 }
 
 void CopyToWindowPixelBuffer(u8 windowId, const void *src, u16 size, u16 tileOffset)
@@ -444,6 +458,7 @@ void CopyToWindowPixelBuffer(u8 windowId, const void *src, u16 size, u16 tileOff
         CpuCopy16(src, gWindows[windowId].tileData + (32 * tileOffset), size);
     else
         LZ77UnCompWram(src, gWindows[windowId].tileData + (32 * tileOffset));
+    DebugChecks_ClearTextOwners(windowId, 0, 0, -1, 0);
 }
 
 // Sets all pixels within the window to the fillValue color.
@@ -451,6 +466,7 @@ void FillWindowPixelBuffer(u8 windowId, u8 fillValue)
 {
     int fillSize = gWindows[windowId].window.width * gWindows[windowId].window.height;
     CpuFastFill8(fillValue, gWindows[windowId].tileData, 32 * fillSize);
+    DebugChecks_ClearTextOwners(windowId, 0, 0, -1, 0);
 }
 
 #define MOVE_TILES_DOWN(a)                                                      \
@@ -482,6 +498,8 @@ void ScrollWindow(u8 windowId, u8 direction, u8 distance, u8 fillValue)
     u32 fillValue32 = (fillValue << 24) | (fillValue << 16) | (fillValue << 8) | fillValue;
     s32 size = window.height * window.width * 32;
     u32 width = window.width;
+
+    DebugChecks_ClearTextOwners(windowId, 0, 0, -1, 0);     // le texte bouge : il ne recouvre plus rien
     s32 i;
     s32 srcOffset, destOffset;
     u32 distanceLoop;

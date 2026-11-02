@@ -32,6 +32,7 @@ from headless import BUILD_DIR, fixture  # noqa: E402
 OPTIONS = [("PERSO", 6), ("DIALOGUE", 8), ("POLICE", 9), ("POKEDEX", 10), ("MENUS", 11), ("BOITES", 12),
            ("SAC", 13), ("POKEMON", 14), ("JOURNUIT", 16)]
 OPTION_FRAME = 1        # le cadre des fenêtres (0 à 19), changé à chaque combinaison
+OPTION_BATTLE_STYLE = 3
 
 # Les entrées du menu Start (MENU_ACTION_*, src/start_menu.c)
 MENU_POKEDEX, MENU_POKEMON, MENU_BAG, MENU_POKENAV, MENU_PLAYER, MENU_SAVE, MENU_OPTION = range(7)
@@ -179,6 +180,29 @@ class Screens:
         game.tap("A")
         game.wait(90)
         self.shot("fiche")
+        back_to_free(game)
+
+    def pokenav(self):
+        game = self.game
+        open_start_entry(game, MENU_POKENAV)
+        game.wait(180)
+        for item in range(5):           # chaque entrée et sa description ; la 5e revient à la première
+            self.shot(f"menu{item + 1}")
+            game.tap("DOWN")
+            game.wait(40)
+        game.tap("A")                   # CARTE DE HOENN
+        game.wait(150)
+        self.shot("carte")
+        game.tap("B")
+        game.wait(120)
+        game.tap("DOWN", 2, gap=20)     # MATCH CALL
+        game.tap("A")
+        game.wait(150)
+        self.shot("match-call")
+        game.tap("B")
+        game.wait(120)
+        game.tap("B")
+        game.wait(150)
         back_to_free(game)
 
     def trainer_card(self):
@@ -336,8 +360,8 @@ class Screens:
         finish_dialog(game, answers={"surnom": "B"})
 
 
-SCREENS = ["start_menu", "party", "summary", "bag", "pokedex", "trainer_card", "save", "options", "dialog_sign",
-           "dialog_npc", "shop", "pc", "wild_battle", "trainer_battle"]
+SCREENS = ["start_menu", "party", "summary", "bag", "pokedex", "pokenav", "trainer_card", "save", "options",
+           "dialog_sign", "dialog_npc", "shop", "pc", "wild_battle", "trainer_battle"]
 
 
 def run_one(binary, region, index, row, out_dir, screens):
@@ -349,12 +373,20 @@ def run_one(binary, region, index, row, out_dir, screens):
     try:
         continue_game(game)
         crawl.give_mewtwo(game)     # 4 attaques : les combats finissent
+        # De quoi remplir les écrans : un 2e Pokémon qui tient un objet, un objet de chaque poche
+        game.give_mon("SPECIES_PIKACHU", 25, "ITEM_ORAN_BERRY")
+        for item, count in (("ITEM_POTION", 5), ("ITEM_SUPER_POTION", 3), ("ITEM_POKE_BALL", 10),
+                            ("ITEM_GREAT_BALL", 2), ("ITEM_TM01", 1), ("ITEM_ORAN_BERRY", 4), ("ITEM_MACH_BIKE", 1)):
+            game.item(item, count)
         game.dev("jeu.rencontres", 0)
-        for flag in ("FLAG_SYS_POKEDEX_GET", "FLAG_KANTO_SYS_POKEDEX_GET", "FLAG_SYS_POKEMON_GET"):
+        for flag in ("FLAG_SYS_POKEDEX_GET", "FLAG_KANTO_SYS_POKEDEX_GET", "FLAG_SYS_POKEMON_GET",
+                     "FLAG_SYS_POKENAV_GET", "FLAG_ADDED_MATCH_CALL_TO_POKENAV"):
             game.flag(flag, 1)
         for (_, option), value in zip(OPTIONS, row):
             game.dev("jeu.options", option, value)
         game.dev("jeu.options", OPTION_FRAME, (index * 7) % 20)
+        # STYLE COMBAT : DEFINI, sans la question « changer de POKéMON ? » (fight_battle y répondrait OUI)
+        game.dev("jeu.options", OPTION_BATTLE_STYLE, 1)
         home = REGIONS[region]["home"]
         spawn = crawl.spawn_point(home)
         for screen in screens:

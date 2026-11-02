@@ -144,8 +144,28 @@ void DebugTools_GameTextToUtf8(char *dest, const u8 *src, u32 destSize)
             dest[n++] = 'A' + (*src - CHAR_A);
         else if (*src >= CHAR_a && *src <= CHAR_z)
             dest[n++] = 'a' + (*src - CHAR_a);
-        else if (*src == CHAR_NEWLINE)
+        else if (*src == CHAR_NEWLINE || *src == CHAR_PROMPT_SCROLL || *src == CHAR_PROMPT_CLEAR)
             dest[n++] = ' ';
+        else if (*src == CHAR_KEYPAD_ICON && src[1] != EOS)
+        {
+            static const char *const sButtons[] = {"A", "B", "L", "R", "START", "SELECT"};
+
+            src++;
+            n += snprintf(dest + n, destSize - n, "[%s]", *src < ARRAY_COUNT(sButtons) ? sButtons[*src] : "+");
+        }
+        else if (*src == EXT_CTRL_CODE_BEGIN && src[1] != EOS)
+        {
+            // Couleur, police, pause… : rien à lire, ses arguments sont sautés
+            u32 length = GetExtCtrlCodeLength(src[1]);
+
+            for (i = 0; i < length && src[1] != EOS; i++)
+                src++;
+        }
+        else if ((*src == PLACEHOLDER_BEGIN || *src == CHAR_EXTRA_SYMBOL) && src[1] != EOS)
+        {
+            src++;
+            n += snprintf(dest + n, destSize - n, "{%02X}", *src);
+        }
         else
         {
             for (i = 0; i < ARRAY_COUNT(sTextChars); i++)
@@ -160,6 +180,8 @@ void DebugTools_GameTextToUtf8(char *dest, const u8 *src, u32 destSize)
                 dest[n++] = '?';
         }
     }
+    if (n >= destSize)      // snprintf a tronqué : n compte ce qu'il aurait écrit
+        n = destSize - 1;
     dest[n] = '\0';
 }
 

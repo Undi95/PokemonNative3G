@@ -324,6 +324,7 @@ const u8 *GetTextPrinterText(u8 windowId)
 #ifdef KANTO_DEBUG_START
 // Détecteurs d'anomalies (debug_checks.c) : signalé une fois par texte
 static bool8 sClippedTextReported[WINDOWS_MAX];
+static bool8 sOverlapReported[WINDOWS_MAX];
 #endif
 
 // Les polices dont les lettres sont celles de l'option POLICE (DecompressGlyph_Kanto)
@@ -471,10 +472,12 @@ static const u8 *WrapTextToWindow(const struct TextPrinterTemplate *printer, u8 
     lineY = printer->currentY;
 
     // Texte écrit d'un coup qui a plus de lignes que sa fenêtre (description d'Émeraude dans un écran de RF) :
-    // ses lignes sont remises bout à bout puis recoupées à la largeur de la fenêtre
+    // ses lignes sont remises bout à bout puis recoupées à la largeur de la fenêtre. Seules comptent les lignes
+    // jusqu'à la dernière qui a quelque chose : les crédits de RF placent leurs noms par des lignes vides, avant et
+    // après (« \n\n\nJunichi Masuda\n\n\n »), remis bout à bout ils s'écrivaient sur la même ligne que le titre
     if (!typed && hasBreaks)
     {
-        u32 lines = 1;
+        u32 lines = 1, usedLines = 0;
 
         for (i = 0; src[i] != EOS; i += TextCharLength(&src[i]))
         {
@@ -482,8 +485,10 @@ static const u8 *WrapTextToWindow(const struct TextPrinterTemplate *printer, u8 
                 break;
             if (src[i] == CHAR_NEWLINE)
                 lines++;
+            else
+                usedLines = lines;
         }
-        if (src[i] == EOS && lineY + (s32)lines * lineHeight > windowHeight + 2)
+        if (src[i] == EOS && lineY + (s32)usedLines * lineHeight > windowHeight + 2)
         {
             for (length = 0, i = 0; src[i] != EOS; i += TextCharLength(&src[i]))
             {
@@ -604,6 +609,7 @@ bool16 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, Tex
     sPrinterTexts[printerTemplate->windowId] = sTempTextPrinter.printerTemplate.currentChar;
 #ifdef KANTO_DEBUG_START
     sClippedTextReported[printerTemplate->windowId] = FALSE;
+    sOverlapReported[printerTemplate->windowId] = FALSE;
 #endif
     sTempTextPrinter.callback = callback;
     sTempTextPrinter.minLetterSpacing = 0;
@@ -945,6 +951,92 @@ static bool32 IsGlyphInkOutsideWindow(struct TextPrinter *textPrinter)
     }
     return FALSE;
 }
+
+// Détecteur « texte superposé » : la case d'une lettre (ou d'une icône) écrase l'encre d'un autre texte. Chaque pixel
+// d'encre retient son texte (où il commence) et sa case (où elle est) : un autre texte, commencé ailleurs, qui
+// l'écrase avec une case placée ailleurs le recouvre. Redessiner un texte au même endroit (menus, choix des options)
+// n'est pas une anomalie ; tout ce qui efface la fenêtre (window.c) libère ses pixels.
+#define TEXT_POS(x, y) ((u32)((x) & 0xFF) | ((u32)((y) & 0xFF) << 8))
+
+static u32 GetWindowPixel(u8 windowId, s32 x, s32 y)
+{
+    const struct Window *window = &gWindows[windowId];
+    const u8 *pixels = window->tileData + (x / 8) * 32 + (x % 8) / 2 + (y / 8) * window->window.width * 32 + (y % 8) * 4;
+
+    return (*pixels >> ((x & 1) * 4)) & 0xF;
+}
+
+// Le pixel (x, y) de la lettre en cours est écrit dans la fenêtre (GLYPH_COPY n'écrit pas les pixels à 0)
+static bool32 IsGlyphPixelWritten(s32 x, s32 y)
+{
+    return x < 16 && ((((y < 8 ? gCurGlyph.gfxBufferTop : gCurGlyph.gfxBufferBottom)[(x >= 8 ? 8 : 0) + y % 8]
+                        >> ((x % 8) * 4)) & 0xF) != 0);
+}
+
+// Le pixel (x, y) de l'icône est écrit dans la fenêtre (DrawKeypadIcon : BlitBitmapRectToWindow ne copie pas les
+// pixels à 0 ; les icônes sont dans une image de 0x80 pixels de large)
+static bool32 IsKeypadIconPixelWritten(u8 keypadIconId, s32 x, s32 y)
+{
+    const u8 *pixels = sKeypadIconTiles + sKeypadIcons[keypadIconId].tileOffset * 0x20
+                     + (x / 8) * 32 + (x % 8) / 2 + (y / 8) * (0x80 / 8) * 32 + (y % 8) * 4;
+
+    return ((*pixels >> ((x & 1) * 4)) & 0xF) != 0;
+}
+
+// mark FALSE : avant d'écrire la case (x0, y0, width, height), vérifie ce qu'elle écrase ; TRUE : après, son encre
+// appartient à ce texte. keypadIcon : l'icône écrite, ou -1 pour la lettre en cours
+static void CheckTextOverlap(struct TextPrinter *textPrinter, s32 x0, s32 y0, s32 width, s32 height, s32 keypadIcon,
+                             bool32 mark)
+{
+    u8 windowId = textPrinter->printerTemplate.windowId;
+    u32 *owners = DebugChecks_GetTextOwners(windowId);
+    s32 windowWidth = gWindows[windowId].window.width * 8;
+    s32 windowHeight = gWindows[windowId].window.height * 8;
+    u32 print = TEXT_POS(textPrinter->printerTemplate.x, textPrinter->printerTemplate.y);
+    u32 key = (print << 16) | TEXT_POS(x0, y0);
+    s32 x, y;
+
+    if (owners == NULL)
+        return;
+    for (y = 0; y < height && y0 + y < windowHeight; y++)
+    {
+        for (x = 0; x < width && x0 + x < windowWidth; x++)
+        {
+            u32 *owner = &owners[(y0 + y) * windowWidth + x0 + x];
+            u32 pixel;
+
+            if (keypadIcon < 0 ? !IsGlyphPixelWritten(x, y) : !IsKeypadIconPixelWritten(keypadIcon, x, y))
+                continue;
+            if (!mark)
+            {
+                // Une case à 2 pixels près de l'ancienne la remplace (curseur de RF redessiné en gris un pixel à
+                // gauche, kanto_item_pc.c) : ce n'est pas un recouvrement
+                s32 dx = (s32)(*owner & 0xFF) - x0;
+                s32 dy = (s32)((*owner >> 8) & 0xFF) - y0;
+
+                if (*owner != TEXT_OWNER_NONE && (*owner >> 16) != print && (dx < -2 || dx > 2 || dy < -2 || dy > 2)
+                 && !sOverlapReported[windowId])
+                {
+                    static const u8 sNoText[] = {EOS};
+                    char text[80];
+
+                    sOverlapReported[windowId] = TRUE;
+                    DebugTools_GameTextToUtf8(text, sPrinterTexts[windowId] != NULL ? sPrinterTexts[windowId] : sNoText,
+                                              sizeof(text));
+                    // Le pixel touché, la lettre qui écrit et celle qui y était (son texte commence en ...)
+                    DebugChecks_Report("texte superposé", windowId,
+                                       "fenetre %d : %s (pixel %d,%d : lettre en %d,%d sur une lettre en %d,%d d'un texte en %d,%d)",
+                                       windowId, text, x0 + x, y0 + y, x0, y0, (int)(*owner & 0xFF),
+                                       (int)((*owner >> 8) & 0xFF), (int)((*owner >> 16) & 0xFF),
+                                       (int)((*owner >> 24) & 0xFF));
+                }
+                continue;
+            }
+            pixel = GetWindowPixel(windowId, x0 + x, y0 + y);
+            *owner = (pixel != 0 && pixel != textPrinter->printerTemplate.bgColor) ? key : TEXT_OWNER_NONE;
+        }
+    }
+}
 #endif
 
 void CopyGlyphToWindow(struct TextPrinter *textPrinter)
@@ -1024,6 +1116,8 @@ void ClearTextSpan(struct TextPrinter *textPrinter, u32 width)
             width,
             *glyphHeight,
             sLastTextBgColor);
+        DebugChecks_ClearTextOwners(textPrinter->printerTemplate.windowId, textPrinter->printerTemplate.currentX,
+                                    textPrinter->printerTemplate.currentY, width, *glyphHeight);
     }
 }
 
@@ -1484,7 +1578,15 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             break;
         case CHAR_KEYPAD_ICON:
             currChar = *textPrinter->printerTemplate.currentChar++;
+#ifdef KANTO_DEBUG_START
+            CheckTextOverlap(textPrinter, textPrinter->printerTemplate.currentX, textPrinter->printerTemplate.currentY,
+                             sKeypadIcons[currChar].width, sKeypadIcons[currChar].height, currChar, FALSE);
+#endif
             gCurGlyph.width = DrawKeypadIcon(textPrinter->printerTemplate.windowId, currChar, textPrinter->printerTemplate.currentX, textPrinter->printerTemplate.currentY);
+#ifdef KANTO_DEBUG_START
+            CheckTextOverlap(textPrinter, textPrinter->printerTemplate.currentX, textPrinter->printerTemplate.currentY,
+                             sKeypadIcons[currChar].width, sKeypadIcons[currChar].height, currChar, TRUE);
+#endif
             textPrinter->printerTemplate.currentX += gCurGlyph.width + textPrinter->printerTemplate.letterSpacing;
             return RENDER_PRINT;
         case EOS:
@@ -1526,8 +1628,14 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             sClippedTextReported[textPrinter->printerTemplate.windowId] = TRUE;
             ReportTextAnomaly("texte coupé", textPrinter->printerTemplate.windowId);
         }
+        CheckTextOverlap(textPrinter, textPrinter->printerTemplate.currentX, textPrinter->printerTemplate.currentY,
+                         gCurGlyph.width, gCurGlyph.height, -1, FALSE);
 #endif
         CopyGlyphToWindow(textPrinter);
+#ifdef KANTO_DEBUG_START
+        CheckTextOverlap(textPrinter, textPrinter->printerTemplate.currentX, textPrinter->printerTemplate.currentY,
+                         gCurGlyph.width, gCurGlyph.height, -1, TRUE);
+#endif
 
         if (textPrinter->minLetterSpacing)
         {

@@ -65,10 +65,18 @@ def number(name_or_number):
     return name_or_number if isinstance(name_or_number, int) else value(name_or_number)
 
 
+# Other kinds of constants that share a prefix: a trainer is TRAINER_ROXANNE_1, not TRAINER_PIC_...
+_OTHER_KINDS = {"TRAINER_": ("TRAINER_PIC_", "TRAINER_BACK_PIC_", "TRAINER_CLASS_", "TRAINER_ENCOUNTER_MUSIC_",
+                             "TRAINER_TYPE_", "TRAINER_PARTY_", "TRAINER_ITEM", "TRAINER_SIGHT_", "TRAINER_FLAG",
+                             "TRAINER_BATTLE_", "TRAINER_HILL_", "TRAINER_SLIDE_")}
+
+
 @functools.lru_cache(None)
 def _reverse(prefix):
     names = {}
     for name in _defines():
+        if name.startswith(_OTHER_KINDS.get(prefix, ())):
+            continue
         if name.startswith(prefix) and not name.endswith(("_COUNT", "_START", "_END")):
             number = _evaluate(name)
             if number is not None:

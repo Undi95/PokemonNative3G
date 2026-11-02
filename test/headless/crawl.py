@@ -34,6 +34,10 @@ FRAMES_PER_STEP = 20000
 MAX_FRAMES = 50_000_000
 # Ce que dit une interaction, gardé dans l'atlas (les textes de plus servent rarement)
 MAX_TEXTS = 40
+# Les écrans qui durent (Panthéon, crédits) : on les laisse aller au bout
+LONG_SCREENS = re.compile(r"HallOfFame|Hof|Credits")
+# Les écrans d'un défi lancé par un PNJ (Zone de Combat, Tentes, concours) : ils ne se quittent qu'en jouant le défi
+CHALLENGE_SCREENS = re.compile(r"SelectScreen|Swap_|Contest|PyramidBag|DomeTourney|ArenaFunction|Factory")
 # Les attaques du MEWTWO des combats (Explorer.give_mewtwo)
 STRONG_MOVES = ("MOVE_PSYCHIC", "MOVE_ICE_BEAM", "MOVE_THUNDERBOLT", "MOVE_FLAMETHROWER")
 # Les salles où l'on n'entre que pendant un défi (Zone de Combat, Tentes, Mont Combat), un concours, un link ou avec
@@ -41,7 +45,8 @@ STRONG_MOVES = ("MOVE_PSYCHIC", "MOVE_ICE_BEAM", "MOVE_THUNDERBOLT", "MOVE_FLAME
 # arriver par téléport, hors défi, n'a pas de sens (combat sans données, plantage). Elles sont à tester par un vrai
 # défi ; l'explorateur les liste à part.
 CHALLENGE_ROOMS = re.compile(r"BattleTent(Corridor|BattleRoom)$|^BattleColosseum|^TradeCenter$|^RecordCorner$|"
-                             r"^UnionRoom$|^(Unused)?ContestHall|^SevenIsland_House_Room2$|^BattlePyramidSquare|^TrainerHill_(\dF|Roof|Elevator)$|"
+                             r"^UnionRoom$|^(Unused)?ContestHall|^SevenIsland_House_Room2$|"
+                             r"^SootopolisCity_MysteryEventsHouse_B1F$|^BattlePyramidSquare|^TrainerHill_(\dF|Roof|Elevator)$|"
                              r"^BattleFrontier_Battle\w*(Elevator|Corridor|BattleRoom|PartnerRoom|Floor|Top|"
                              r"ThreePathRoom|Room(Normal|Final|WildMons))$")
 
@@ -169,6 +174,9 @@ class Explorer:
         # la Ligue tiennent dans le budget
         self.game.dev("jeu.options", 0, 2)
         self.game.dev("jeu.options", 4, 1)
+        # STYLE COMBAT : DEFINI, sans la question « changer de POKéMON ? » (fight_battle y répondrait OUI : la
+        # sauvegarde de Hoenn a son starter)
+        self.game.dev("jeu.options", 3, 1)
 
     def give_mewtwo(self):
         """Le MEWTWO N.100 des combats, en dernier de l'équipe, avec 4 attaques (50 PP) : de lui-même, il n'en a
@@ -197,6 +205,9 @@ class Explorer:
         """Jusqu'au bout de ce qui se passe : A ; puis B pour sortir d'un menu où A ne mène nulle part ; puis B, A, A
         ou B, HAUT, A, A (quitter ? OUI : Easy Chat, horloge) ; puis START, A, A (écran des noms : OK)."""
         error = None
+        # Panthéon et crédits (après la Ligue) : des milliers d'images, A de temps en temps
+        while LONG_SCREENS.search(game.function(game.state.cb2)):
+            game.tap("A", hold=2, gap=60)
         for buttons, limit in ((("A",), 150), (("B",), 60), (("B", "A", "A"), 45), (("B", "UP", "A", "A"), 40),
                                (("START", "A", "A"), 30)):
             try:
@@ -298,6 +309,14 @@ class Explorer:
         record["anomalies"] = [f"{kind} : {text}" for _, kind, text in game.anomalies[anomalies:]]
         record["combats"] = game.battles[battles:]
         if not self.alive():
+            return record
+        where = game.state.map_name or ""
+        if "erreur" in record and (CHALLENGE_ROOMS.search(where)
+                                   or CHALLENGE_SCREENS.search(game.function(game.state.cb2))):
+            # Le PNJ a lancé un défi : à tester par un vrai défi (le jeu est relancé pour la suite)
+            record["defi"] = f"{where} {game.function(game.state.cb2)}"
+            del record["erreur"]
+            self.stop()
             return record
         # Retour au calme, sur la carte, avec l'équipe soignée
         try:
@@ -431,6 +450,10 @@ def summary(results):
     if challenge_rooms:
         lines.append(f"\nSalles de défi, de concours ou de link, à tester par un vrai défi ({len(challenge_rooms)}) :")
         lines.append("  " + ", ".join(challenge_rooms))
+    challenges = [(r["carte"], i) for r in results for i in r.get("interactions", []) if i.get("defi")]
+    if challenges:
+        lines.append("\nDéfis lancés par un PNJ, à tester par un vrai défi :")
+        lines += [f"  {name} {i['genre']} {i['x']},{i['y']} ({i['script']}) -> {i['defi']}" for name, i in challenges]
     return "\n".join(lines)
 
 

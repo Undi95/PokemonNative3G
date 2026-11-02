@@ -211,6 +211,12 @@ class Game:
             self.note(f"COMBAT début ({trainer}) : {foes}")
             self.battles.append({"trainer": names.name("TRAINER_", new.trainer) if is_trainer else None,
                                  "foes": [names.name("SPECIES_", m[0]) for m in new.foe], "outcome": None})
+            self._battle_start = self.frames
+        elif (new.battle and old.battle and self.battles and self.frames - self._battle_start < 300
+              and [m[:2] for m in new.foe] != [m[:2] for m in old.foe]):
+            # À la première image du combat, l'équipe adverse peut être encore celle du combat d'avant : la voici
+            self.note("COMBAT équipe adverse : " + ", ".join(mon_text(m) for m in new.foe))
+            self.battles[-1]["foes"] = [names.name("SPECIES_", m[0]) for m in new.foe]
         if old.battle and not new.battle:
             self.note(f"COMBAT fin : {BATTLE_OUTCOMES.get(new.outcome, new.outcome)}")
             if self.battles:
@@ -606,7 +612,8 @@ def fight_battle(game, limit=600):
             return wait_until(game, lambda s: not s.fade and s.overworld)
         new_texts = [text for _, _, text in game.texts[seen:]]
         seen = mark(game)
-        if any("plus de PP" in t or "affecte pas" in t for t in new_texts):
+        # Plus de PP, sans effet, ou refusée (TOURMENTE « empêche », ENTRAVE, PROVOC « ne peut pas ») : une autre
+        if any(words in t for t in new_texts for words in ("plus de PP", "affecte pas", "empêche", "ne peut pas")):
             change_move = True
         # The moves are on screen: their type was just printed
         if change_move and any(t.startswith("TYPE/") for t in new_texts):

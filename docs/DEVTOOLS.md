@@ -76,6 +76,7 @@ la connaît pas).
 |---|---|---|
 | texte coupé | une lettre d'une police de l'option POLICE dont des pixels tombent hors de sa fenêtre | `text.c`, `IsGlyphInkOutsideWindow` |
 | flèche hors fenêtre | la flèche d'attente (après `\l`, `\p`) dépasse du bord droit de sa fenêtre | `text.c`, `TextPrinterDrawDownArrow` |
+| texte superposé | une lettre ou une icône (L, R…) d'un texte écrase l'encre d'un autre texte de la même fenêtre, commencé ailleurs, avec une lettre placée ailleurs (à plus de 2 pixels) ; redessiner un texte au même endroit n'en est pas un. Le message donne le pixel touché et les deux lettres | `text.c`, `CheckTextOverlap` ; ce que chaque pixel d'encre a écrit : `DebugChecks_GetTextOwners`, libéré par tout ce qui efface la fenêtre (`window.c`) |
 | cadre de boîte | un cadre de boîte de dialogue dessiné avec une tile que le style chargé (Émeraude ou RF) ne place jamais | `DebugChecks_OnMessageBoxGfx` (chargement) + carte du BG en VRAM toutes les 8 images |
 | Pokémon figé | un sprite de Pokémon (animations de face) qui garde son image 1 pendant 2 s | à chaque image |
 | teinte jour/nuit coupée | la teinte cesse (option active) alors que les couleurs du terrain sont toujours à l'écran | `day_night.c` |
@@ -83,13 +84,14 @@ la connaît pas).
 
 Chaque détecteur a été validé sur son bug avant la correction (2026-11-02 : boîte de l'intro avec DIALOGUE =
 KANTO, sprite figé dans la fiche de RF, flèche hors de la boîte de RF, teinte coupée pendant la transition vers un
-combat).
+combat ; texte superposé : le titre des Options « L R PAGE 2/2 » sur « OPTIONS » en police KANTO, puis il a trouvé les
+crédits de Kanto écrits sur une seule ligne).
 
 ## Explorateur et grille (connaître tout le jeu)
 
 | Outil | Ce qu'il fait |
 |---|---|
-| `python test/headless/crawl.py BINAIRE [--cartes REGEX] [--jobs N]` | **Explorateur** : chaque carte (914), depuis la sauvegarde de début de partie de sa région ; arrivée sur son premier warp et capture, puis téléport à côté de chaque PNJ (visé par son localId : l'état du banc donne `object_ids`), de chaque panneau (du bon côté) et de chaque objet caché, A jusqu'au bout (B pour sortir d'un menu), combats faits avec un MEWTWO N.100 aux 4 attaques (`joueur.capacite`), texte rapide et sans animations de combat. Salles de défi, de concours et de link listées à part (on n'y entre que pendant un défi). 20 000 images au plus par interaction (un script sans fin est une erreur, pas un gel du banc) ; un jeu qui plante est relancé. `build/headless/crawl/atlas.json` (textes, combats, anomalies, erreurs par carte et par interaction) et `rapport.txt` : anomalies, erreurs, PNJ muets ou inaccessibles, **textes suspects** (octet sans lettre `�`, code `{XX}` non remplacé, reste d'anglais). `--rapport-seul` refait le rapport depuis l'atlas. |
+| `python test/headless/crawl.py BINAIRE [--cartes REGEX] [--jobs N]` | **Explorateur** : chaque carte (914), depuis la sauvegarde de début de partie de sa région ; arrivée sur son premier warp et capture, puis téléport à côté de chaque PNJ (visé par son localId : l'état du banc donne `object_ids`), de chaque panneau (du bon côté) et de chaque objet caché, A jusqu'au bout (B pour sortir d'un menu), combats faits avec un MEWTWO N.100 aux 4 attaques (`joueur.capacite`), texte rapide et sans animations de combat. Style de combat DÉFINI (pas de « changer de POKéMON ? »). Salles de défi, de concours, de link et d'E-Reader listées à part (on n'y entre que pendant un défi) ; un PNJ qui lance un défi (écran de choix de la Zone de Combat, concours) est noté « défi lancé » ; Panthéon et crédits vont au bout. 20 000 images au plus par interaction (un script sans fin est une erreur, pas un gel du banc) ; un jeu qui plante est relancé. `build/headless/crawl/atlas.json` (textes, combats, anomalies, erreurs par carte et par interaction) et `rapport.txt` : anomalies, erreurs, PNJ muets ou inaccessibles, **textes suspects** (octet sans lettre `�`, code `{XX}` non remplacé, reste d'anglais). `--rapport-seul` refait le rapport depuis l'atlas. |
 | `python test/headless/matrix.py BINAIRE [--ecrans REGEX] [--regions kanto,hoenn]` | **Grille options × écrans** : les 9 options d'affichage (PERSO, DIALOGUE, POLICE, POKéDEX, MENUS, BOITES COMBAT, SAC, POKéMON, JOUR/NUIT) en 9 combinaisons qui montrent chaque paire de valeurs, le cadre des fenêtres changé à chaque fois, dans les deux régions ; écrans : menu Start, équipe, résumé, sac, Pokédex, carte de dresseur, sauvegarde, options, panneau, PNJ, boutique, PC, combat sauvage, combat de dresseur. Une planche par écran (`build/headless/matrix/planches/`, une ligne par jeu), anomalies et erreurs dans `rapport.txt`. |
 
 ## Architecture
