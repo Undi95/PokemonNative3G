@@ -27,8 +27,14 @@ contenu dans un seul jeu.
   mots passent à la ligne suivante du paragraphe (un mot coupé par un tiret s'y recolle), ou sur une nouvelle ligne (\n
   s'il reste de la place, \l si le texte s'écrit lettre par lettre) ; dernier recours, espaces de 2 pixels. Petite police
   (FONT_SMALL) et police étroite (FONT_NARROW) : celles d'Émeraude dans les deux cas. Vérification : scénario `fonts`
-  (début d'Hoenn en POLICE = KANTO) ; le banc signale toute lettre coupée par le bord de sa fenêtre (`TEXTE COUPÉ`,
-  `TEST_FONT=1` pour toute la suite en KANTO) : aucune dans les deux polices.
+  (début d'Hoenn en POLICE = KANTO) ; le banc signale toute lettre coupée par le bord de sa fenêtre et toute flèche
+  d'attente hors de sa boîte (anomalies, `TEST_FONT=1` pour toute la suite en KANTO) : aucune dans les deux polices.
+  La flèche se dessine après la dernière lettre : la dernière ligne avant `\l` / `\p` lui garde 8 pixels.
+- [x] Nouvelle partie par-dessus une sauvegarde (2026-11-02, décision) : les options d'affichage restent, PERSO est
+  remis à BRICE/FLORA au début de l'intro (Task_NewGameBirchSpeech_Init). L'intro du Prof. Seko suit l'option
+  DIALOGUE (boîte de RF de 26 colonnes) ; le texte des PNJ en bleu/rouge n'est que dans la boîte du terrain
+  (`AddTextPrinterDiffStyle` de RF, field_message_box.c), l'intro et les écrans restent en gris. Scénario
+  `new_game_over_save`.
 
 - [x] Interface de combat : boîtes de PV/EXP et boîte de texte de combat HOENN / KANTO (option BOITES COMBAT), barre de l'équipe (Poké Balls) de RF comprise (2026-10-30, `options_partybar`)
 - [x] Pokédex HOENN / KANTO (option POKéDEX) : écran complet de RF (pokedex_screen.c porté, textes/descriptions de RF, zones de Kanto)

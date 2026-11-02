@@ -105,7 +105,7 @@ class Game:
             cmd += ["--test-shot-every", str(shot_every)]
         if audio:
             cmd += ["--test-audio", os.path.join(out_dir, "audio.wav")]
-        # TEST_FONT=0 ou 1 : l'option POLICE imposée (textes coupés : TEXTE COUPÉ dans le journal)
+        # TEST_FONT=0 ou 1 : l'option POLICE imposée (textes coupés : ANOMALIE texte coupé dans le journal)
         if os.environ.get("TEST_FONT"):
             cmd += ["--test-font", os.environ["TEST_FONT"]]
         self.stderr = open(os.path.join(out_dir, "stderr.txt"), "w")
@@ -120,8 +120,9 @@ class Game:
         self.steps = []
         self.frames = 0
         self.texts = []           # (frame, window, text) of every text printed
-        self.clipped = []         # (frame, window, text) of every text cut by the edge of its window
-        self._clip_shots = []     # CLIP_SHOTS=1: a screenshot after each text cut (shots/coupe_FRAME_WINDOW)
+        self.text_colors = []     # the text color (TEXT_COLOR_*) of each of self.texts
+        self.anomalies = []       # (frame, kind, text) of every anomaly the game's checks found (src/debug_checks.c)
+        self._anomaly_shots = []  # ANOMALY_SHOTS=1: a screenshot after each one (shots/anomalie_FRAME)
         self.events = []          # (frame, event) of every event
         self.battles = []         # every battle: {"trainer", "foes", "outcome"}
         self.songs = []           # (frame, song) of every song that started
@@ -218,14 +219,15 @@ class Game:
             if kind == "text":
                 text = names.decode(event["hex"])
                 self.texts.append((self.frames, event["win"], text))
+                self.text_colors.append(event.get("fg"))
                 if text.strip() not in ("", "▶"):
                     self.note(f"TEXTE[{event['win']}] " + text.replace("\n", " / "))
-            elif kind == "clipped":
-                last = next((t for _, w, t in reversed(self.texts) if w == event["win"]), "")
-                self.clipped.append((self.frames, event["win"], last))
-                self.note(f"TEXTE COUPÉ[{event['win']}] " + last.replace("\n", " / "))
-                if os.environ.get("CLIP_SHOTS"):
-                    self._clip_shots.append(f"coupe_{self.frames}_{event['win']}")
+            elif kind == "anomaly":
+                text = self.symbols.expand(event["text"])
+                self.anomalies.append((self.frames, event["kind"], text))
+                self.note(f"ANOMALIE {event['kind']} : {text}")
+                if os.environ.get("ANOMALY_SHOTS"):
+                    self._anomaly_shots.append(f"anomalie_{self.frames}_{len(self.anomalies)}")
             elif kind == "flag":
                 self.note(f"FLAG {names.name('FLAG_', event['id'])} = {event['v']}")
             elif kind == "var" and not names.name('VAR_', event['id']).endswith(NOISY_VARS):
@@ -256,8 +258,8 @@ class Game:
         self.steps.append((frames, buttons))
         self.frames += frames
         state = self._read_state()
-        while self._clip_shots:
-            self.shot(self._clip_shots.pop(0))
+        while self._anomaly_shots:
+            self.shot(self._anomaly_shots.pop(0))
         return state
 
     def wait(self, frames):

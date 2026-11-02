@@ -36,6 +36,27 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | Texte | `texte.imprimantes` | textes en train de s'écrire : police, couleurs, position |
 | Son | `son.etat` | musique et effets en cours |
 | Système | `sys.etat` | RNG, heure du jeu, teinte jour/nuit |
+| | `sys.anomalies` | anomalies vues par les détecteurs depuis le lancement |
+
+## Anomalies (`src/debug_checks.c`)
+
+Des détecteurs regardent le jeu pendant qu'il tourne (builds DEBUG) et signalent une fois par cause ce qui est
+anormal : liste `sys.anomalies` (menu DEBUG > Outils > Système > Anomalies vues), console (`ANOMALIE …` sur stderr),
+banc headless (journal `ANOMALIE détecteur : texte` ; le scénario échoue si `test/headless/anomalies_known.txt` ne
+la connaît pas).
+
+| Détecteur | Ce qu'il voit | Où |
+|---|---|---|
+| texte coupé | une lettre d'une police de l'option POLICE dont des pixels tombent hors de sa fenêtre | `text.c`, `IsGlyphInkOutsideWindow` |
+| flèche hors fenêtre | la flèche d'attente (après `\l`, `\p`) dépasse du bord droit de sa fenêtre | `text.c`, `TextPrinterDrawDownArrow` |
+| cadre de boîte | un cadre de boîte de dialogue dessiné avec une tile que le style chargé (Émeraude ou RF) ne place jamais | `DebugChecks_OnMessageBoxGfx` (chargement) + carte du BG en VRAM toutes les 8 images |
+| Pokémon figé | un sprite de Pokémon (animations de face) qui garde son image 1 pendant 2 s | à chaque image |
+| teinte jour/nuit coupée | la teinte cesse (option active) alors que les couleurs du terrain sont toujours à l'écran | `day_night.c` |
+| special non porté | un special encore en stub est appelé | `kanto_specials_stubs.c` |
+
+Chaque détecteur a été validé sur son bug avant la correction (2026-11-02 : boîte de l'intro avec DIALOGUE =
+KANTO, sprite figé dans la fiche de RF, flèche hors de la boîte de RF, teinte coupée pendant la transition vers un
+combat).
 
 ## Architecture
 
@@ -43,6 +64,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 |---|---|
 | `include/debug_tools.h`, `src/debug_tools.c` | Registre (`gDebugTools`) et commandes. Le texte est en UTF-8 ; une adresse s'écrit `@N` (distance à `AgbMain`). |
 | `src/debug_tools_menu.c` | Écran du menu DEBUG (listes, saisie des nombres, résultat défilant, police petite). |
+| `include/debug_checks.h`, `src/debug_checks.c` | Détecteurs d'anomalies (signalement, détecteurs par image). |
 | `src/platform/devtools.c` | Noms des adresses (fichier `.syms` à côté du jeu, posé par `docker/build.sh` : fonctions et données) et console TCP. |
 | `src/platform/test_state.c` | Commande `!dev` du banc. |
 | `test/headless/names.py` | `Symbols.expand` : `@N` → nom, côté banc. |

@@ -5,7 +5,7 @@ from driver import *  # les vérifications (expect...)
 import os, sys
 import driver
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
-from kanto_tour import log, give_mewtwo, debug_warp
+from kanto_tour import log, give_mewtwo, debug_warp, ferry_to_kanto
 from redleaf_acro import close_menus
 from driver import wait_until, talk_to
 
@@ -18,9 +18,10 @@ def play(game):
     wait_until(game, lambda s: s.free); game.wait(30)
     game.tap("START"); game.wait(30); game.tap("A"); game.wait(30); game.tap("DOWN", 13, gap=10); game.tap("A")
     game.wait(60); close_menus(game)
-    debug_warp(game, 35)
-    talk_to(game, "UP")
+    debug_warp(game, 35)                            # port de Poivressel
+    ferry_to_kanto(game)                            # premier voyage : départ de Bourg Palette
     game.wait(60); log(game, "arrivée")
+    expect_map(game, "PalletTown")
     give_mewtwo(game)
     wait_until(game, lambda s: s.free); game.wait(30)
     game.tap("START"); game.wait(40); game.tap("DOWN", 3, gap=15); game.tap("A"); game.wait(200); log(game, "POKéNAV")

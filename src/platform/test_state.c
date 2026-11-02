@@ -80,7 +80,7 @@ static void AddEvent(const char *format, ...)
 
 // Called when a text printer starts, with the text in the game's charset, as
 // hex: the tests decode it with charmap.txt
-void TestState_OnText(u8 windowId, const u8 *text)
+void TestState_OnText(u8 windowId, u8 fgColor, const u8 *text)
 {
     char hex[2 * 400 + 1];
     int i;
@@ -90,14 +90,43 @@ void TestState_OnText(u8 windowId, const u8 *text)
     for (i = 0; i < 400 && text[i] != 0xFF; i++)
         sprintf(hex + 2 * i, "%02x", text[i]);
     hex[2 * i] = '\0';
-    AddEvent("{\"t\": \"text\", \"win\": %d, \"hex\": \"%s\"}", windowId, hex);
+    AddEvent("{\"t\": \"text\", \"win\": %d, \"fg\": %d, \"hex\": \"%s\"}", windowId, fgColor, hex);
 }
 
-// Une lettre du dernier texte de la fenêtre est coupée par son bord (text.c)
-void TestState_OnTextClipped(u8 windowId)
+// Text as the inside of a JSON string
+static void EscapeJson(char *dest, size_t size, const char *src)
 {
-    if (gTestStateEnabled)
-        AddEvent("{\"t\": \"clipped\", \"win\": %d}", windowId);
+    size_t n = 0;
+
+    for (; *src != '\0' && n + 7 < size; src++)
+    {
+        if (*src == '"' || *src == '\\')
+        {
+            dest[n++] = '\\';
+            dest[n++] = *src;
+        }
+        else if ((unsigned char)*src < 0x20)
+        {
+            n += snprintf(dest + n, size - n, "\\u%04x", (unsigned char)*src);
+        }
+        else
+        {
+            dest[n++] = *src;
+        }
+    }
+    dest[n] = '\0';
+}
+
+// Une anomalie trouvée par les détecteurs (src/debug_checks.c) ; windowId : la fenêtre concernée, ou -1
+void TestState_OnAnomaly(const char *kind, s32 windowId, const char *text)
+{
+    char kindJson[64], textJson[512];
+
+    if (!gTestStateEnabled)
+        return;
+    EscapeJson(kindJson, sizeof(kindJson), kind);
+    EscapeJson(textJson, sizeof(textJson), text);
+    AddEvent("{\"t\": \"anomaly\", \"kind\": \"%s\", \"win\": %d, \"text\": \"%s\"}", kindJson, (int)windowId, textJson);
 }
 
 static void ReadItems(u16 *items)

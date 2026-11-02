@@ -189,6 +189,7 @@ static void Task_HandleMainMenuInput(u8);
 static void Task_HandleMainMenuAPressed(u8);
 static void Task_HandleMainMenuBPressed(u8);
 static void Task_NewGameBirchSpeech_Init(u8);
+static void NewGameBirchSpeech_InitWindows(void);
 static void Task_DisplayMainMenuInvalidActionError(u8);
 static void AddBirchSpeechObjects(u8);
 static void Task_NewGameBirchSpeech_WaitToShowBirch(u8);
@@ -1275,8 +1276,23 @@ static void HighlightSelectedMainMenuItem(u8 menuType, u8 selectedMenuItem, s16 
 #define tBrendanSpriteId data[10]
 #define tMaySpriteId data[11]
 
+// PokemonNative3G : la boîte de RF (option DIALOGUE = KANTO) a 26 colonnes, comme celle du terrain
+// (InitStandardTextBoxWindows) : son cadre est plus large que celui d'Émeraude
+static void NewGameBirchSpeech_InitWindows(void)
+{
+    struct WindowTemplate templates[ARRAY_COUNT(sNewGameBirchSpeechTextWindows)];
+
+    memcpy(templates, sNewGameBirchSpeechTextWindows, sizeof(templates));
+    if (gSaveBlock2Ptr->optionsDialogStyle)
+        templates[0].width = 26;
+    InitWindows(templates);
+}
+
 static void Task_NewGameBirchSpeech_Init(u8 taskId)
 {
+    // PokemonNative3G : nouvelle partie par-dessus une sauvegarde : les options d'affichage restent, le personnage
+    // est celui que l'intro fait choisir (Brice ou Flora)
+    gSaveBlock2Ptr->optionsPlayerCharacter = 0;
     SetGpuReg(REG_OFFSET_DISPCNT, 0);
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
     InitBgFromTemplate(&sBirchBgTemplate);
@@ -1341,7 +1357,7 @@ static void Task_NewGameBirchSpeech_WaitForSpriteFadeInWelcome(u8 taskId)
         }
         else
         {
-            InitWindows(sNewGameBirchSpeechTextWindows);
+            NewGameBirchSpeech_InitWindows();
             LoadMainMenuWindowFrameTiles(0, 0xF3);
             LoadMessageBoxGfx(0, BIRCH_DLG_BASE_TILE_NUM, BG_PLTT_ID(15));
             NewGameBirchSpeech_ShowDialogueWindow(0, 1);
@@ -1863,7 +1879,7 @@ static void CB2_NewGameBirchSpeech_ReturnFromNamingScreen(void)
     IntrEnable(INTR_FLAG_VBLANK);
     SetVBlankCallback(VBlankCB_MainMenu);
     SetMainCallback2(CB2_MainMenu);
-    InitWindows(sNewGameBirchSpeechTextWindows);
+    NewGameBirchSpeech_InitWindows();
     LoadMainMenuWindowFrameTiles(0, 0xF3);
     LoadMessageBoxGfx(0, BIRCH_DLG_BASE_TILE_NUM, BG_PLTT_ID(15));
     PutWindowTilemap(0);
@@ -2272,8 +2288,9 @@ static void NewGameBirchSpeech_WaitForThisIsPokemonText(struct TextPrinterTempla
     // Wait for Birch's "This is a Pokémon" text to reach the pause
     // Then start the PokéBall release (if it hasn't been started already)
 #ifdef UBFIX
-    // After the first character, currentChar - 2 is before the start of the text
-    if (printer->currentChar < gStringVar4 + 2)
+    // After the first character, currentChar - 2 is before the start of the text (PokemonNative3G : the text printed,
+    // which can be a copy of gStringVar4 with other line breaks, see WrapTextToWindow)
+    if (printer->currentChar < GetTextPrinterText(printer->windowId) + 2)
         return;
 #endif
     if (*(printer->currentChar - 2) == EXT_CTRL_CODE_PAUSE && !sStartedPokeBallTask)
@@ -2300,6 +2317,12 @@ static void NewGameBirchSpeech_ShowDialogueWindow(u8 windowId, u8 copyToVram)
 
 static void NewGameBirchSpeech_CreateDialogueWindowBorder(u8 bg, u8 x, u8 y, u8 width, u8 height, u8 palNum)
 {
+    // PokemonNative3G : option DIALOGUE = KANTO, LoadMessageBoxGfx a chargé la boîte de RF : son cadre
+    if (gSaveBlock2Ptr->optionsDialogStyle)
+    {
+        DrawKantoDialogueFrame(bg, x, y, width, BIRCH_DLG_BASE_TILE_NUM, palNum);
+        return;
+    }
     FillBgTilemapBufferRect(bg, BIRCH_DLG_BASE_TILE_NUM +  1, x-2,       y-1, 1,       1, palNum);
     FillBgTilemapBufferRect(bg, BIRCH_DLG_BASE_TILE_NUM +  3, x-1,       y-1, 1,       1, palNum);
     FillBgTilemapBufferRect(bg, BIRCH_DLG_BASE_TILE_NUM +  4, x,         y-1, width,   1, palNum);

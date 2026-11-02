@@ -49,6 +49,8 @@ const struct DebugTool *DebugTools_Find(const char *id);
 bool8 DebugTools_RunLine(const char *line, struct DebugToolsOutput *out);
 // Texte UTF-8 -> texte du jeu (lettres, chiffres, ponctuation, accents français ; le reste devient « ? »)
 void DebugTools_ToGameText(u8 *dest, const char *src, u32 destSize);
+// Texte du jeu -> UTF-8 (fin de ligne -> espace, autres codes et caractères sans équivalent -> « ? »)
+void DebugTools_GameTextToUtf8(char *dest, const u8 *src, u32 destSize);
 // Écran des outils dans le menu DEBUG (src/debug_tools_menu.c) ; B le ferme et rouvre le menu DEBUG
 void DebugToolsMenu_Open(void);
 // Une adresse de fonction ou de donnée en distance à AgbMain (écrite « @N » ; les symboles de la build donnent son nom)

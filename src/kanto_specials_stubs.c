@@ -1,10 +1,15 @@
 // Généré par tools/kanto/import_scripts.py — PROVISOIRE : specials de Rouge Feu
-// pas encore portés. Chaque appel est signalé dans la console.
+// pas encore portés. Chaque appel est signalé dans la console et est une anomalie (src/debug_checks.c).
 #include "global.h"
+#include "debug_checks.h"
 
 #ifdef PORTABLE
 #include <stdio.h>
-static void KantoSpecialStub(const char *name) { fprintf(stderr, "[Kanto] special RF non porte : %s\n", name); }
+static void KantoSpecialStub(const char *name)
+{
+    fprintf(stderr, "[Kanto] special RF non porte : %s\n", name);
+    DebugChecks_Report("special non porté", -1, "%s", name);
+}
 #else
 static void KantoSpecialStub(const char *name) { }
 #endif

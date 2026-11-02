@@ -13,6 +13,7 @@
 #include "gba/m4a_internal.h"
 #include "battle.h"
 #include "day_night.h"
+#include "debug_checks.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
@@ -123,8 +124,8 @@ void DebugTools_ToGameText(u8 *dest, const char *src, u32 destSize)
     dest[n] = EOS;
 }
 
-// Texte du jeu -> UTF-8 (noms, surnoms) ; les caractères sans équivalent deviennent « ? »
-static void GameTextToUtf8(char *dest, const u8 *src, u32 destSize)
+// Texte du jeu -> UTF-8 (noms, surnoms, textes des anomalies) ; les caractères sans équivalent deviennent « ? »
+void DebugTools_GameTextToUtf8(char *dest, const u8 *src, u32 destSize)
 {
     u32 n = 0, i;
 
@@ -291,7 +292,7 @@ static void Cmd_MapInfo(const s32 *args, u32 argCount, struct DebugToolsOutput *
     s32 i;
 
     GetMapName(name, gMapHeader.regionMapSectionId, 0);
-    GameTextToUtf8(text, name, sizeof(text));
+    DebugTools_GameTextToUtf8(text, name, sizeof(text));
     DebugTools_Print(out, "carte %d.%d (%s, section %d), %s\n", gSaveBlock1Ptr->location.mapGroup,
                      gSaveBlock1Ptr->location.mapNum, text, gMapHeader.regionMapSectionId,
                      Fusion_IsInKanto() ? "Kanto" : "Hoenn");
@@ -385,7 +386,7 @@ static void Cmd_Party(const s32 *args, u32 argCount, struct DebugToolsOutput *ou
         if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
             continue;
         GetMonData(mon, MON_DATA_NICKNAME, nickname);
-        GameTextToUtf8(text, nickname, sizeof(text));
+        DebugTools_GameTextToUtf8(text, nickname, sizeof(text));
         DebugTools_Print(out, "%u %s espece %d N.%d PV %d/%d statut %#x objet %d\n", i, text,
                          GetMonData(mon, MON_DATA_SPECIES), GetMonData(mon, MON_DATA_LEVEL),
                          GetMonData(mon, MON_DATA_HP), GetMonData(mon, MON_DATA_MAX_HP),
@@ -575,6 +576,11 @@ static void Cmd_System(const s32 *args, u32 argCount, struct DebugToolsOutput *o
                      gSaveBlock2Ptr->optionsDayNight, r, g, b, gray, light, gDayNightRender.active);
 }
 
+static void Cmd_Anomalies(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    DebugChecks_Print(out);
+}
+
 static void Cmd_Help(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
     u32 i;
@@ -604,6 +610,7 @@ static const u8 sName_Windows[] = _("Fenêtres");
 static const u8 sName_TextPrinters[] = _("Textes en cours");
 static const u8 sName_Sound[] = _("Musique et effets");
 static const u8 sName_System[] = _("RNG, heure, jour/nuit");
+static const u8 sName_Anomalies[] = _("Anomalies vues");
 static const u8 sName_Help[] = _("Liste des commandes");
 
 const struct DebugTool gDebugTools[] =
@@ -627,6 +634,7 @@ const struct DebugTool gDebugTools[] =
     {"texte.imprimantes", DEBUG_TOOLS_TEXT, sName_TextPrinters, "textes en train de s'ecrire", 0, Cmd_TextPrinters},
     {"son.etat", DEBUG_TOOLS_SOUND, sName_Sound, "musique et effets en cours", 0, Cmd_Sound},
     {"sys.etat", DEBUG_TOOLS_SYSTEM, sName_System, "RNG, heure du jeu, teinte jour/nuit", 0, Cmd_System},
+    {"sys.anomalies", DEBUG_TOOLS_SYSTEM, sName_Anomalies, "anomalies vues par les detecteurs (src/debug_checks.c)", 0, Cmd_Anomalies},
     {"aide", DEBUG_TOOLS_SYSTEM, sName_Help, "liste des commandes", 0, Cmd_Help},
 };
 

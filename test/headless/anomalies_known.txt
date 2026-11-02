@@ -1,0 +1,4 @@
+# Anomalies déjà connues, trouvées par les détecteurs du jeu (src/debug_checks.c, docs/DEVTOOLS.md) : elles ne font
+# pas échouer la suite, qui les liste à la fin de son rapport. Une anomalie qui n'est pas ici fait échouer son
+# scénario. Une ligne par anomalie : « détecteur : début du texte » (comme dans le journal, après « ANOMALIE »),
+# puis # pourquoi elle est acceptée. Corriger une anomalie = retirer sa ligne. Vide = aucune anomalie connue.

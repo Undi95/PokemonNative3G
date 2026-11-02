@@ -4201,6 +4201,9 @@ static void PokeSum_SetMonPicSpriteCallback(u16 spriteId)
     if (!MON_PICS_KANTO && sMonSummaryScreen->isEgg != TRUE)
     {
         gSprites[spriteId].data[7] = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES);
+        // CreateMonPicSprite donne gAnims_MonPic (une image fixe par animation) : l'animation de l'espèce revient à
+        // l'image de repos, comme dans le résumé d'Émeraude (SetMultiuseSpriteTemplateToPokemon)
+        gSprites[spriteId].anims = gMonFrontAnimsPtrTable[gSprites[spriteId].data[7]];
         gSprites[spriteId].callback = SpriteCB_PokeSum_EmeraldAnimAfterFade;
         return;
     }
@@ -5383,9 +5386,12 @@ static bool32 CurrentMonIsFromGBA(void)
     return FALSE;
 }
 
+// PokemonNative3G : dans la fusion, un lieu de Hoenn est aussi un lieu du jeu (RF ne nommait que Kanto et les îles
+// Sevii : un Pokémon attrapé à Hoenn était « rencontré à un échange ») ; au-delà de MAPSEC_NONE : œuf, échange
+// dans le jeu, rencontre fatidique
 static bool32 MapSecIsInKantoOrSevii(u8 mapSec)
 {
-    if (mapSec >= KANTO_MAPSEC_START && mapSec < MAPSEC_NONE)
+    if (mapSec < MAPSEC_NONE)
         return TRUE;
     return FALSE;
 }

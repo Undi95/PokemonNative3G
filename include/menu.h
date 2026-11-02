@@ -89,6 +89,9 @@ void *malloc_and_decompress(const void *src, u32 *size);
 u16 copy_decompressed_tile_data_to_vram(u8 bgId, const void *src, u16 size, u16 offset, u8 mode);
 u8 GetDialogueFontId(void);
 void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress);
+void AddTextPrinterDiffStyle(bool8 allowSkippingDelayWithButtonPress);
+// PokemonNative3G : cadre de la boîte de dialogue de RF (tiles de LoadMessageBoxGfx avec DIALOGUE = KANTO)
+void DrawKantoDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u16 t, u8 p);
 void PrintMenuActionTexts(u8 windowId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineHeight, u8 itemCount, const struct MenuAction *menuActions, const u8 *actionIds);
 void PrintMenuActionGrid(u8 windowId, u8 fontId, u8 left, u8 top, u8 optionWidth, u8 horizontalCount, u8 verticalCount, const struct MenuAction *menuActions, const u8 *actionIds);
 u8 InitMenuActionGrid(u8 windowId, u8 optionWidth, u8 columns, u8 rows, u8 initialCursorPos);

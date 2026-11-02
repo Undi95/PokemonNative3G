@@ -64,12 +64,16 @@ The game writes these with its state (see `src/platform/test_state.c`); `cb1`, `
 `tasks` in the state name what it's running, which tells a menu and a freeze apart.
 `party` and `foe` list each Pokémon as `[species, level, hp, max hp, status, egg, personality]`
 (the personality gives, for example, an Unown's letter: see `scenarios/kanto_unown.py`).
-A letter of the normal fonts cut by the edge of its window shows as `TEXTE COUPÉ[window]`
-with that window's last text (`game.clipped`). `TEST_FONT=0` or `1` sets the POLICE option
-(Hoenn or Kanto letters) for the whole run: `TEST_FONT=1 suite.py BINARY --out DIR`, then
-look for `TEXTE COUPÉ` in the journals (the screen references are made with the default,
-Hoenn, so they don't match then). `CLIP_SHOTS=1` also takes a screenshot after each cut
-text (`shots/coupe_FRAME_WINDOW.ppm`).
+The game's own checks (`src/debug_checks.c`, `docs/DEVTOOLS.md`) report what looks wrong:
+a letter cut by the edge of its window, the wait arrow outside its window, a text box frame
+drawn with the tiles of the other style, a Pokémon's sprite stuck on its second frame, the
+day/night tint cut while the field is still shown, a special that isn't ported yet. Each
+shows once in the journal as `ANOMALIE kind : text` (`game.anomalies`), and fails its
+scenario unless `anomalies_known.txt` lists it. `ANOMALY_SHOTS=1` also takes a screenshot
+after each one (`shots/anomalie_FRAME_N.ppm`). `TEST_FONT=0` or `1` sets the POLICE option
+(Hoenn or Kanto letters) for the whole run: `TEST_FONT=1 suite.py BINARY --out DIR` checks
+for anomalies with the other font (the screen references are made with the default,
+Hoenn, so they don't match then). Each text event also has its color (`game.text_colors`).
 
 Between frames, a scenario can also run test commands (lines starting with `!` in the
 input, so a run can still be replayed from `input.txt`), to set a scenario up quickly or
@@ -88,6 +92,8 @@ seen is checked with `check_screen(game, name)`, against `refs/NAME.png`: a scen
 sets `SCREENS = True` checks the screen at each of its `log` steps. A missing reference
 is made from the screen, to look at once: `refs_sheet.py` puts the new ones (or `--all`)
 on one image. `suite.py --update-refs` replaces them, when the screens change on purpose.
+A reference that wasn't compared because the scenario played differently before it fails
+the scenario: a screen nobody compares can hide a regression.
 
 A scenario that sets `FIXTURE = "kanto"` starts from the save that
 `scenarios/fixture_kanto.py` ends with (a new game in Pallet Town), made once per build.

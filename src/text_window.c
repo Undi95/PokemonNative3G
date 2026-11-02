@@ -1,4 +1,5 @@
 #include "global.h"
+#include "debug_checks.h"
 #include "text.h"
 #include "text_window.h"
 #include "window.h"
@@ -142,6 +143,7 @@ void LoadKantoMenuMessageWindowGfx(u8 windowId, u16 destOffset, u8 palOffset)
     LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), sKantoMenuMessageWindow_Gfx, 0x280, destOffset);
 #endif
     LoadPalette(sKantoStdPal0, palOffset, PLTT_SIZE_4BPP);
+    DebugChecks_OnMessageBoxGfx(GetWindowAttribute(windowId, WINDOW_BG), destOffset, TRUE);
 }
 
 void LoadMessageBoxGfx(u8 windowId, u16 destOffset, u8 palOffset)
@@ -153,6 +155,7 @@ void LoadMessageBoxGfx(u8 windowId, u16 destOffset, u8 palOffset)
     }
     LoadBgTiles(GetWindowAttribute(windowId, WINDOW_BG), gMessageBox_Gfx, 0x1C0, destOffset);
     LoadPalette(GetOverworldTextboxPalettePtr(), palOffset, PLTT_SIZE_4BPP);
+    DebugChecks_OnMessageBoxGfx(GetWindowAttribute(windowId, WINDOW_BG), destOffset, FALSE);
 }
 
 void LoadUserWindowBorderGfx_(u8 windowId, u16 destOffset, u8 palOffset)

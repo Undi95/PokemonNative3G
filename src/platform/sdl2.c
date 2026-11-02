@@ -12,6 +12,7 @@
 #include <SDL2/SDL.h>
 
 #include "global.h"
+#include "debug_checks.h"
 #include "platform.h"
 #include "rtc.h"
 #include "gba/defines.h"
@@ -333,6 +334,9 @@ int main(int argc, char **argv)
                     accumulator -= fixedTimestep;
                     continue;
                 }
+#ifdef KANTO_DEBUG_START
+                DebugChecks_OnFrame();
+#endif
                 if (!isGameStepDrawn)
                 {
                     VDraw(sdlTexture);
@@ -1074,6 +1078,9 @@ static int RunTestMode(void)
         ENTER_VBLANK();
         ranFrame = RunMainLoop();
         TestState_OnFrame(sTestFrame);
+#ifdef KANTO_DEBUG_START
+        DebugChecks_OnFrame();
+#endif
         memset(image, 0, sizeof(image));
         DrawFrame(image);
         REG_VCOUNT = 161;

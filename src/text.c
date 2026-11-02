@@ -2,6 +2,8 @@
 #ifdef PORTABLE
 #include "platform/test_state.h"
 #endif
+#include "debug_checks.h"
+#include "debug_tools.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "main.h"
@@ -303,12 +305,24 @@ bool16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, 
 // - une ligne qui ne peut pas passer à la ligne resserre ses espaces jusqu'à 2 pixels ;
 // - un texte écrit d'un coup qui a plus de lignes que sa fenêtre est remis en un paragraphe, recoupé à sa largeur.
 #define WRAP_TEXT_MAX 1000
+#define DOWN_ARROW_WIDTH 8
 
 static u8 sWrappedTexts[WINDOWS_MAX][3 * WRAP_TEXT_MAX];
 static u8 sWrapLine[WRAP_TEXT_MAX + 1];
 static u8 sWrapPending[WRAP_TEXT_MAX + 1];
 static u8 sWrapFill[WRAP_TEXT_MAX + 1];
-#ifdef PORTABLE
+// Le texte que chaque fenêtre imprime (le texte donné, ou sa copie recoupée par WrapTextToWindow) : les callbacks
+// des imprimantes qui relisent ce qui précède la lettre en cours (GetTextPrinterText)
+static const u8 *sPrinterTexts[WINDOWS_MAX];
+
+// PokemonNative3G : le début du texte qu'imprime la fenêtre (une copie recoupée si WrapTextToWindow l'a recoupé)
+const u8 *GetTextPrinterText(u8 windowId)
+{
+    return sPrinterTexts[windowId];
+}
+
+#ifdef KANTO_DEBUG_START
+// Détecteurs d'anomalies (debug_checks.c) : signalé une fois par texte
 static bool8 sClippedTextReported[WINDOWS_MAX];
 #endif
 
@@ -436,7 +450,7 @@ static const u8 *WrapTextToWindow(const struct TextPrinterTemplate *printer, u8 
     const u8 *src = printer->currentChar;
     u8 *dst = sWrappedTexts[printer->windowId];
     struct Window *window = &gWindows[printer->windowId];
-    s32 maxWidth, lineHeight, windowHeight, lineY, spaceWidth;
+    s32 maxWidth, lineMaxWidth, cutMaxWidth, lineHeight, windowHeight, lineY, spaceWidth;
     u32 i, length, lineLength, pendingLength = 0, cut, dstLength = 0;
     bool32 changed = FALSE, typed = (speed != 0 && speed != TEXT_SKIP_DRAW), hasBreaks = FALSE, newLine, fits;
     u8 end;
@@ -514,15 +528,20 @@ static const u8 *WrapTextToWindow(const struct TextPrinterTemplate *printer, u8 
                 return src;
             // En fin de paragraphe, les mots en trop prennent une ligne de plus (ou font défiler le texte)
             newLine = (typed || hasBreaks) && lineY + 2 * lineHeight <= windowHeight + 2;
-            spaceWidth = GetFittedSpaceWidth(printer->fontId, sWrapLine, lineLength, maxWidth,
+            // Un texte qui s'écrit lettre par lettre attend un bouton après \l et \p : la flèche (TextPrinterDrawDownArrow)
+            // se dessine après la dernière lettre de la ligne, il lui faut sa place. Coupée en fin de paragraphe sans
+            // place pour une ligne de plus, la ligne finit par un \l ajouté.
+            lineMaxWidth = maxWidth - ((typed && (end == CHAR_PROMPT_SCROLL || end == CHAR_PROMPT_CLEAR)) ? DOWN_ARROW_WIDTH : 0);
+            cutMaxWidth = maxWidth - ((typed && (end == CHAR_PROMPT_SCROLL || (end != CHAR_NEWLINE && !newLine))) ? DOWN_ARROW_WIDTH : 0);
+            spaceWidth = GetFittedSpaceWidth(printer->fontId, sWrapLine, lineLength, lineMaxWidth,
                                              typed ? GetSpaceWidth(printer->fontId) : 3, &fits);
             cut = 0;
             if (!fits && (end == CHAR_NEWLINE || end == CHAR_PROMPT_SCROLL || newLine || typed))
-                cut = FindLineBreak(printer->fontId, sWrapLine, lineLength, maxWidth);
+                cut = FindLineBreak(printer->fontId, sWrapLine, lineLength, cutMaxWidth);
             if (cut == 0)
             {
                 if (!fits)
-                    spaceWidth = GetFittedSpaceWidth(printer->fontId, sWrapLine, lineLength, maxWidth, 2, &fits);
+                    spaceWidth = GetFittedSpaceWidth(printer->fontId, sWrapLine, lineLength, lineMaxWidth, 2, &fits);
                 dstLength += CopyLineWithSpaces(printer->fontId, &dst[dstLength], sWrapLine, lineLength, spaceWidth, &changed);
                 break;
             }
@@ -577,11 +596,14 @@ bool16 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, Tex
         sTempTextPrinter.subStructFields[i] = 0;
 
 #ifdef PORTABLE
-    TestState_OnText(printerTemplate->windowId, printerTemplate->currentChar);
-    sClippedTextReported[printerTemplate->windowId] = FALSE;
+    TestState_OnText(printerTemplate->windowId, printerTemplate->fgColor, printerTemplate->currentChar);
 #endif
     sTempTextPrinter.printerTemplate = *printerTemplate;
     sTempTextPrinter.printerTemplate.currentChar = WrapTextToWindow(printerTemplate, speed);
+    sPrinterTexts[printerTemplate->windowId] = sTempTextPrinter.printerTemplate.currentChar;
+#ifdef KANTO_DEBUG_START
+    sClippedTextReported[printerTemplate->windowId] = FALSE;
+#endif
     sTempTextPrinter.callback = callback;
     sTempTextPrinter.minLetterSpacing = 0;
     sTempTextPrinter.japanese = 0;
@@ -889,8 +911,18 @@ inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 j, u32 i, u3
     }
 }
 
-#ifdef PORTABLE
-// Banc de test : un pixel de la lettre (ni transparent ni du fond) tombe hors de la fenêtre (pixels lus comme GLYPH_COPY)
+#ifdef KANTO_DEBUG_START
+// Anomalie d'un texte : le détecteur, la fenêtre et le début du texte
+static void ReportTextAnomaly(const char *kind, u8 windowId)
+{
+    static const u8 sNoText[] = {EOS};
+    char text[80];
+
+    DebugTools_GameTextToUtf8(text, sPrinterTexts[windowId] != NULL ? sPrinterTexts[windowId] : sNoText, sizeof(text));
+    DebugChecks_Report(kind, windowId, "fenetre %d : %s", windowId, text);
+}
+
+// Un pixel de la lettre (ni transparent ni du fond) tombe hors de la fenêtre (pixels lus comme GLYPH_COPY)
 static bool32 IsGlyphInkOutsideWindow(struct TextPrinter *textPrinter)
 {
     const struct WindowTemplate *template = &gWindows[textPrinter->printerTemplate.windowId].window;
@@ -1130,6 +1162,11 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
         }
         else
         {
+#ifdef KANTO_DEBUG_START
+            // Anomalie : la flèche (7 pixels dessinés) dépasse du bord droit de sa fenêtre
+            if (textPrinter->printerTemplate.currentX + 7 > gWindows[textPrinter->printerTemplate.windowId].window.width * 8)
+                ReportTextAnomaly("flèche hors fenêtre", textPrinter->printerTemplate.windowId);
+#endif
             FillWindowPixelRect(
                 textPrinter->printerTemplate.windowId,
                 textPrinter->printerTemplate.bgColor << 4 | textPrinter->printerTemplate.bgColor,
@@ -1480,13 +1517,13 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             break;
         }
 
-#ifdef PORTABLE
-        // Banc de test : une lettre de la police de l'option POLICE coupée par le bord de sa fenêtre
+#ifdef KANTO_DEBUG_START
+        // Anomalie : une lettre de la police de l'option POLICE coupée par le bord de sa fenêtre
         if (IsOptionFont(subStruct->fontId) && !sClippedTextReported[textPrinter->printerTemplate.windowId]
          && IsGlyphInkOutsideWindow(textPrinter))
         {
             sClippedTextReported[textPrinter->printerTemplate.windowId] = TRUE;
-            TestState_OnTextClipped(textPrinter->printerTemplate.windowId);
+            ReportTextAnomaly("texte coupé", textPrinter->printerTemplate.windowId);
         }
 #endif
         CopyGlyphToWindow(textPrinter);

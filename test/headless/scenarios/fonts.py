@@ -90,6 +90,5 @@ def play(game):
     game.tap("A"); game.wait(240); game.shot("resume")
     close_menus(game)
 
-    for frame, win, text in game.clipped:
-        game.note(f"COUPÉ fenêtre {win} : {text}")
-    expect(game, not game.clipped, f"{len(game.clipped)} texte(s) coupé(s) par le bord de leur fenêtre")
+    clipped = [text for _, kind, text in game.anomalies if kind == "texte coupé"]
+    expect(game, not clipped, f"{len(clipped)} texte(s) coupé(s) par le bord de leur fenêtre")

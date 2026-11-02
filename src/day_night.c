@@ -1,8 +1,11 @@
 #include "global.h"
 #include "day_night.h"
+#include "debug_checks.h"
+#include "debug_tools.h"
 #include "fieldmap.h"
 #include "main.h"
 #include "overworld.h"
+#include "palette.h"
 #include "rtc.h"
 #include "tilesets.h"
 #include "constants/rgb.h"
@@ -293,14 +296,59 @@ static void TintColors(u16 *colors, u32 count)
         colors[i] = TintColor(colors[i]);
 }
 
+#ifdef KANTO_DEBUG_START
+// Détecteur d'anomalies : la teinte cesse alors que les couleurs du terrain sont toujours à l'écran (callback de
+// l'animation de transition vers un combat oublié, par exemple) : le terrain réapparaît en couleurs de jour
+static bool8 sWasTinted;
+static u32 sTintedPalettes;
+
+static u32 FieldPalettesChecksum(void)
+{
+    u32 sum = 0, i;
+
+    for (i = 0; i < NUM_PALS_TOTAL * 16; i++)
+        sum = sum * 31 + gPlttBufferFaded[i];
+    return sum;
+}
+
+static void CheckTintCut(void)
+{
+    u32 i;
+
+    if (!sWasTinted)
+        return;
+    sWasTinted = FALSE;
+    // L'option coupée, ou d'autres couleurs (autre carte, autre écran) : normal
+    if (!gSaveBlock2Ptr->optionsDayNight || FieldPalettesChecksum() != sTintedPalettes)
+        return;
+    for (i = 0; i < NUM_PALS_TOTAL * 16; i++)
+    {
+        if (gPlttBufferFaded[i] != RGB_BLACK)
+        {
+            DebugChecks_Report("teinte jour/nuit coupée", -1, "terrain encore a l'ecran sans teinte, ecran @%lld",
+                               DebugTools_Offset(gMain.callback2));
+            return;
+        }
+    }
+}
+#else
+#define CheckTintCut() ((void)0)
+#endif
+
 void DayNight_TintPltt(void)
 {
     u16 *pltt = (u16 *)PLTT;
     u32 pal, i;
 
     gDayNightRender.active = FALSE;
-    if (!gSaveBlock2Ptr->optionsDayNight || gMain.callback2 != CB2_Overworld || !IsMapTypeOutdoors(gMapHeader.mapType))
+    // Le terrain est affiché : CB2_Overworld, ou CB2_OverworldBasic pendant l'animation de transition vers un combat
+    // (BattleTransition_StartOnField)
+    if (!gSaveBlock2Ptr->optionsDayNight || (gMain.callback2 != CB2_Overworld && gMain.callback2 != CB2_OverworldBasic)
+     || !IsMapTypeOutdoors(gMapHeader.mapType))
+    {
+        CheckTintCut();
         return;
+    }
     // L'heure n'est relue qu'une fois par seconde
     if (gMain.vblankCounter1 / 60 != sLastUpdate)
     {
@@ -315,6 +363,10 @@ void DayNight_TintPltt(void)
     else
         memcpy(gDayNightRender.tiles[DOOR_ANIM_TILES], sMapDoorTiles, sizeof(sMapDoorTiles));
     gDayNightRender.active = sLight != 0 || sMarkLights;
+#ifdef KANTO_DEBUG_START
+    sWasTinted = TRUE;
+    sTintedPalettes = FieldPalettesChecksum();
+#endif
     for (pal = 0; pal < NUM_PALS_TOTAL; pal++)
     {
         for (i = 0; i < 16; i++, pltt++)

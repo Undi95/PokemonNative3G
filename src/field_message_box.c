@@ -122,13 +122,13 @@ bool8 ShowFieldMessageFromBuffer(void)
 static void ExpandStringAndStartDrawFieldMessage(const u8 *str, bool32 allowSkippingDelayWithButtonPress)
 {
     StringExpandPlaceholders(gStringVar4, str);
-    AddTextPrinterForMessage(allowSkippingDelayWithButtonPress);
+    AddTextPrinterDiffStyle(allowSkippingDelayWithButtonPress); // Rouge Feu : couleur des PNJ (option DIALOGUE)
     CreateTask_DrawFieldMessage();
 }
 
 static void StartDrawFieldMessage(void)
 {
-    AddTextPrinterForMessage(TRUE);
+    AddTextPrinterDiffStyle(TRUE); // Rouge Feu : couleur des PNJ (option DIALOGUE)
     CreateTask_DrawFieldMessage();
 }
 

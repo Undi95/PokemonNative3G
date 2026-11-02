@@ -8,7 +8,7 @@ FIXTURE = "kanto"
 # Ce que chaque commande doit dire de la partie de départ (Bourg Palette, équipe vide)
 EXPECTED = {
     "jeu.etat": "cb2 CB2_Overworld",
-    "jeu.options": "POLICE (1 = Kanto) = 0",
+    "jeu.options": "POLICE (1 = Kanto) =",
     "carte.info": "BOURG PALETTE",
     "carte.objets": "joueur",
     "scripts.contexte": "contexte global",

@@ -9,8 +9,8 @@ extern s8 gTestFont;
 
 void WriteTestState(FILE *file, u32 frame);
 void RunTestCommand(FILE *file, const char *line);
-void TestState_OnText(u8 windowId, const u8 *text);
-void TestState_OnTextClipped(u8 windowId);
+void TestState_OnText(u8 windowId, u8 fgColor, const u8 *text);
+void TestState_OnAnomaly(const char *kind, s32 windowId, const char *text);
 void TestState_OnFrame(u32 frame);
 
 #endif // GUARD_PLATFORM_TEST_STATE_H

@@ -1,5 +1,17 @@
 # PokemonNative3G — Changelog
 
+## Prochaine version
+
+### Corrections
+- Nouvelle partie par-dessus une sauvegarde avec la boîte de dialogue KANTO : l'intro du Prof. Seko avait un cadre
+  cassé et un texte bleu, et la partie démarrait avec le personnage de l'ancienne partie (Red à Hoenn). Les options
+  d'affichage sont gardées, le personnage est celui choisi dans l'intro.
+- Fiche du Pokémon de Rouge Feu (MENUS = KANTO) : le sprite animé ne reste plus figé sur sa dernière image, et un
+  Pokémon rencontré à Hoenn n'est plus « rencontré à un échange » (le lieu est affiché).
+- Boîte de dialogue de Rouge Feu : la flèche rouge n'est plus coupée ou cachée en bout de ligne.
+- Cycle jour/nuit : l'animation qui lance un combat garde la teinte (le terrain repassait en couleurs de jour).
+- Le fichier de réglages du PC ne grossit plus d'une ligne à chaque lancement.
+
 ## Version 1.1 (1er novembre 2026)
 
 ### Ajouts

@@ -231,9 +231,12 @@ class ScriptConverter:
               '/* Specials de Rouge Feu (tools/kanto/import_scripts.py) */\n'
               + ''.join(f'\tdef_special {n}\n' for n in new))
         c = ['// Généré par tools/kanto/import_scripts.py — PROVISOIRE : specials de Rouge Feu',
-             '// pas encore portés. Chaque appel est signalé dans la console.', '#include "global.h"', '',
+             '// pas encore portés. Chaque appel est signalé dans la console et est une anomalie (src/debug_checks.c).',
+             '#include "global.h"', '#include "debug_checks.h"', '',
              '#ifdef PORTABLE', '#include <stdio.h>',
-             'static void KantoSpecialStub(const char *name) { fprintf(stderr, "[Kanto] special RF non porte : %s\\n", name); }',
+             'static void KantoSpecialStub(const char *name)', '{',
+             '    fprintf(stderr, "[Kanto] special RF non porte : %s\\n", name);',
+             '    DebugChecks_Report("special non porté", -1, "%s", name);', '}',
              '#else', 'static void KantoSpecialStub(const char *name) { }', '#endif', '']
         c += [f'u16 {n}(void) {{ KantoSpecialStub("{n}"); return 0; }}' for n in stubs]
         write(f'{self.em}/src/kanto_specials_stubs.c', '\n'.join(c) + '\n')

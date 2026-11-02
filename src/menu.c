@@ -204,11 +204,19 @@ u8 GetDialogueFontId(void)
 
 void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
 {
-    TextPrinterCallback callback = NULL;
+    void (*callback)(struct TextPrinterTemplate *, u16) = NULL;
+    gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
+    AddTextPrinterParameterized2(0, GetDialogueFontId(), gStringVar4, GetPlayerTextSpeedDelay(), callback, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+}
+
+// PokemonNative3G : Rouge Feu (new_menu_helpers.c), la boîte de dialogue du terrain (field_message_box.c) : avec
+// l'option DIALOGUE = KANTO, le texte des PNJ est bleu (hommes) ou rouge (femmes). Les autres messages (intro,
+// écrans) restent gris : AddTextPrinterForMessage.
+void AddTextPrinterDiffStyle(bool8 allowSkippingDelayWithButtonPress)
+{
     u8 fgColor = TEXT_COLOR_DARK_GRAY;
 
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    // PokemonNative3G : AddTextPrinterDiffStyle de RF avec l'option DIALOGUE = KANTO (bleu = homme, rouge = femme)
     if (gSaveBlock2Ptr->optionsDialogStyle)
     {
         u8 color = ContextNpcGetTextColor();
@@ -217,7 +225,7 @@ void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
         else if (color == NPC_TEXT_COLOR_FEMALE)
             fgColor = TEXT_COLOR_RED;
     }
-    AddTextPrinterParameterized2(0, GetDialogueFontId(), gStringVar4, GetPlayerTextSpeedDelay(), callback, fgColor, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, GetDialogueFontId(), gStringVar4, GetPlayerTextSpeedDelay(), NULL, fgColor, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 void AddTextPrinterForMessage_2(bool8 allowSkippingDelayWithButtonPress)
@@ -351,7 +359,7 @@ static void WindowFunc_DrawStandardFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u
 // Rouge Feu (menu.c : WindowFunc_DrawDialogFrameWithCustomTileAndPalette, tuiles DLG_WINDOW_BASE_TILE_NUM).
 // Le cadre de RF déborde d'une colonne à droite de la fenêtre : la fenêtre d'Émeraude étant plus large
 // d'une colonne, l'intérieur est réduit d'une colonne (width - 1) pour rester dans l'écran.
-static void DrawKantoDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u16 t, u8 p)
+void DrawKantoDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u16 t, u8 p)
 {
     FillBgTilemapBufferRect(bg, t,                      tilemapLeft - 2,         tilemapTop - 1, 1,     1, p);
     FillBgTilemapBufferRect(bg, t + 1,                  tilemapLeft - 1,         tilemapTop - 1, 1,     1, p);

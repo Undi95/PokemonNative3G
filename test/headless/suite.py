@@ -24,6 +24,7 @@ from headless import BUILD_DIR, REPO_DIR, SCENARIO_DIR, run_scenario, scenario_v
 # Where the copies are made (BIOS, DMA, palettes, tiles): a report names who asked for the copy
 COPY_HELPERS = ("src/platform/bios.c", "src/platform/dma.c", "src/palette.c", "src/dma3_manager.c", "src/bg.c")
 KNOWN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sanitizer_known.txt")
+ANOMALIES_KNOWN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "anomalies_known.txt")
 
 
 def sanitizer_reports(stderr):
@@ -64,6 +65,19 @@ def known_reports():
     return known
 
 
+def known_anomalies():
+    """anomalies_known.txt : « détecteur : début du texte  # pourquoi », des anomalies des détecteurs du jeu
+    (src/debug_checks.c) déjà connues, qui ne font pas échouer le scénario."""
+    known = []
+    if os.path.exists(ANOMALIES_KNOWN_PATH):
+        with open(ANOMALIES_KNOWN_PATH, encoding="utf-8") as f:
+            for line in f:
+                entry, _, note = line.partition("#")
+                if entry.strip():
+                    known.append((entry.strip(), note.strip()))
+    return known
+
+
 def suite_scenarios():
     names = []
     for path in sorted(glob.glob(os.path.join(SCENARIO_DIR, "*.py"))):
@@ -91,6 +105,7 @@ class Result:
         self.tail = []
         self.known = []
         self.stale_refs = []
+        self.known_anomalies = []
 
 
 def run_one(binary, name, out_root):
@@ -115,6 +130,17 @@ def run_one(binary, name, out_root):
     result.stale_refs = [line.split("écran ", 1)[1].split(" ")[0] for line in journal if "RÉFÉRENCE À REVOIR" in line]
     result.tail = journal[-12:]
 
+    # Anomalies des détecteurs du jeu (journal : « ANOMALIE détecteur : texte »)
+    anomalies = [line.split("ANOMALIE ", 1)[1] for line in journal if " ANOMALIE " in line]
+    known_list = known_anomalies()
+    new_anomalies = []
+    for anomaly in anomalies:
+        match = next((entry for entry, _ in known_list if anomaly.startswith(entry)), None)
+        if match:
+            result.known_anomalies.append(match)
+        else:
+            new_anomalies.append(anomaly)
+
     stderr = run.stderr or ""
     wrong = re.search(r"went wrong: (.*)", stderr)
     known = known_reports()
@@ -131,6 +157,14 @@ def run_one(binary, name, out_root):
     elif not run.ok:
         result.status = "ERREUR"
         result.message = f"le jeu s'est arrêté (code {run.returncode & 0xFFFFFFFF:#x}) : {stderr.strip()[-300:]}"
+    elif new_anomalies:
+        result.status = "ÉCHEC"
+        result.message = f"{len(new_anomalies)} anomalie(s) : " + " | ".join(new_anomalies[:3])
+    elif result.stale_refs:
+        # Un écran pas comparé peut cacher une régression : les références se refont (--update-refs) et se regardent
+        result.status = "ÉCHEC"
+        result.message = (f"{len(result.stale_refs)} référence(s) à revoir (le scénario joue autrement) : "
+                          "suite.py --update-refs puis refs_sheet.py")
     else:
         result.status = "OK"
     return result
@@ -176,6 +210,11 @@ def main():
         notes = known_reports()
         lines.append(f"\nDéfauts connus vus par les sanitizers (sanitizer_known.txt) : {len(known)}")
         lines += [f"       {place}  {notes[place]}" for place in known]
+    known_seen = sorted({entry for r in results for entry in r.known_anomalies})
+    if known_seen:
+        notes = dict(known_anomalies())
+        lines.append(f"\nAnomalies connues (anomalies_known.txt) : {len(known_seen)}")
+        lines += [f"       {entry}  {notes[entry]}" for entry in known_seen]
     failed = [r for r in results if r.status != "OK"]
     lines.append(f"\n{len(results) - len(failed)}/{len(results)} OK en {time.time() - start:.0f} s"
                  + (f", {len(failed)} en échec : {' '.join(r.name for r in failed)}" if failed else ""))
