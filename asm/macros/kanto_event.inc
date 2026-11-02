@@ -77,8 +77,9 @@
 	trainerbattle TRAINER_BATTLE_EARLY_RIVAL, \trainer, \flags, \defeat_text, \victory_text
 	.endm
 
-	/* PROVISOIRE : mouvements « encore plus lents » de RF (MOVEMENT_ACTION_WALK_SLOWER_*) pas encore
-	   portés dans le moteur d'Émeraude ; en attendant, marche lente. */
+	/* MOVEMENT_ACTION_WALK_SLOWER_* de RF = MOVEMENT_ACTION_WALK_SLOW_* d'Émeraude : même vitesse (1 pixel toutes
+	   les 2 images, UpdateWalkSlowerAnim de RF = UpdateWalkSlowAnim d'Émeraude). Le WALK_SLOW de RF, plus rapide,
+	   est MOVEMENT_ACTION_KANTO_WALK_SLOW_* (escaliers de roche). */
 	.macro walk_slower_down
 	walk_slow_down
 	.endm

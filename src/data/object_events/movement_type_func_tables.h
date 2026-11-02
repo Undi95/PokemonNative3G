@@ -8,6 +8,17 @@ u8 (*const gMovementTypeFuncs_WanderAround[])(struct ObjectEvent *, struct Sprit
     MovementType_WanderAround_Step6,
 };
 
+// Rouge Feu (gMovementTypeFuncs_WanderAroundSlower)
+u8 (*const gMovementTypeFuncs_WanderAroundSlower[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementType_WanderAround_Step0,
+    MovementType_WanderAround_Step1,
+    MovementType_WanderAround_Step2,
+    MovementType_WanderAround_Step3,
+    MovementType_WanderAround_Step4,
+    MovementType_WanderAround_Step5Slower,
+    MovementType_WanderAround_Step6,
+};
+
 const u8 gStandardDirections[] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
 
 u8 (*const gGetVectorDirectionFuncs[])(s16, s16, s16, s16) = {

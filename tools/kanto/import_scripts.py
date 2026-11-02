@@ -209,7 +209,6 @@ class ScriptConverter:
         write(f'{self.em}/include/constants/kanto/script_aliases.h', '// Alias RF -> Émeraude (tools/kanto/import_scripts.py)\n'
               '#define NPC_TEXT_COLOR_MALE 0\n#define NPC_TEXT_COLOR_FEMALE 1\n#define NPC_TEXT_COLOR_MON 2\n#define NPC_TEXT_COLOR_NEUTRAL 3\n'
               '#define SE_RS_DOOR SE_DOOR\n#define SE_RS_SHOP SE_SHOP\n'
-              '#define MOVEMENT_TYPE_WANDER_AROUND_SLOWER MOVEMENT_TYPE_WANDER_AROUND\n'
               '#define STEP_CB_ICE STEP_CB_SOOTOPOLIS_ICE // glace de la Grotte Glacée : aiguillée vers IcefallCaveIcePerStepCallback à Kanto\n')
         em_std = set(re.findall(r'#define (STDSTRING_\w+)', read(f'{self.em}/include/constants/script_menu.h')))
         self.em_std = em_std

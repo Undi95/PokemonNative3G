@@ -86,7 +86,9 @@
 #define MOVEMENT_TYPE_RAISE_HAND_AND_STOP              0x51
 #define MOVEMENT_TYPE_RAISE_HAND_AND_JUMP              0x52
 #define MOVEMENT_TYPE_RAISE_HAND_AND_SWIM              0x53
-#define NUM_MOVEMENT_TYPES                             0x54
+// Rouge Feu : errer en marchant lentement (le RAMOLOSS de Parmanie)
+#define MOVEMENT_TYPE_WANDER_AROUND_SLOWER             0x54
+#define NUM_MOVEMENT_TYPES                             0x55
 
 #define MOVEMENT_ACTION_FACE_DOWN                       0x0
 #define MOVEMENT_ACTION_FACE_UP                         0x1

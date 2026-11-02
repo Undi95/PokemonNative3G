@@ -28,6 +28,8 @@
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
 #include "constants/items.h"
+#include "constants/map_event_ids.h"
+#include "constants/maps.h"
 #include "constants/mauville_old_man.h"
 #include "constants/trainer_types.h"
 #include "constants/union_room.h"
@@ -225,6 +227,7 @@ static void (*const sCameraObjectFuncs[])(struct Sprite *) = {
 static void MovementType_RaiseHandAndStop(struct Sprite *);
 static void MovementType_RaiseHandAndJump(struct Sprite *);
 static void MovementType_RaiseHandAndSwim(struct Sprite *);
+static void MovementType_WanderAroundSlower(struct Sprite *);
 
 static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
 {
@@ -312,6 +315,7 @@ static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
     [MOVEMENT_TYPE_RAISE_HAND_AND_STOP] = MovementType_RaiseHandAndStop,
     [MOVEMENT_TYPE_RAISE_HAND_AND_JUMP] = MovementType_RaiseHandAndJump,
     [MOVEMENT_TYPE_RAISE_HAND_AND_SWIM] = MovementType_RaiseHandAndSwim,
+    [MOVEMENT_TYPE_WANDER_AROUND_SLOWER] = MovementType_WanderAroundSlower,
 };
 
 static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
@@ -356,6 +360,7 @@ static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE_IN_GRASS] = TRUE,
     [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE_IN_GRASS] = TRUE,
     [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE_IN_GRASS] = TRUE,
+    [MOVEMENT_TYPE_WANDER_AROUND_SLOWER] = TRUE,
 };
 
 const u8 gInitialMovementTypeFacingDirections[] = {
@@ -443,6 +448,7 @@ const u8 gInitialMovementTypeFacingDirections[] = {
     [MOVEMENT_TYPE_RAISE_HAND_AND_STOP] = DIR_SOUTH,
     [MOVEMENT_TYPE_RAISE_HAND_AND_JUMP] = DIR_SOUTH,
     [MOVEMENT_TYPE_RAISE_HAND_AND_SWIM] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_AROUND_SLOWER] = DIR_SOUTH,
 };
 
 #define OBJ_EVENT_PAL_TAG_BRENDAN                 0x1100
@@ -2714,6 +2720,7 @@ u16 GetObjectPaletteTag(u8 palSlot)
 
 movement_type_empty_callback(MovementType_None)
 movement_type_def(MovementType_WanderAround, gMovementTypeFuncs_WanderAround)
+movement_type_def(MovementType_WanderAroundSlower, gMovementTypeFuncs_WanderAroundSlower)
 
 bool8 MovementType_WanderAround_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
@@ -2766,6 +2773,15 @@ bool8 MovementType_WanderAround_Step4(struct ObjectEvent *objectEvent, struct Sp
 bool8 MovementType_WanderAround_Step5(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkNormalMovementAction(objectEvent->movementDirection));
+    objectEvent->singleMovementActive = TRUE;
+    sprite->sTypeFuncId = 6;
+    return TRUE;
+}
+
+// Rouge Feu : GetWalkSlowerMovementAction de RF = GetWalkSlowMovementAction d'Émeraude (1 pixel toutes les 2 images)
+bool8 MovementType_WanderAround_Step5Slower(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkSlowMovementAction(objectEvent->movementDirection));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 6;
     return TRUE;
@@ -7530,6 +7546,16 @@ static void UpdateObjectEventOffscreen(struct ObjectEvent *objectEvent, struct S
     y2 = y;
     y2 += graphicsInfo->height;
 
+    // Rouge Feu (CalcWhetherObjectIsOffscreen) : l'OCEANE qui quitte Carmin-sur-Mer reste à l'écran 16 pixels de plus
+    // à gauche (sprite plus large que sa largeur déclarée)
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SSANNE_EXTERIOR)
+     && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SSANNE_EXTERIOR)
+     && objectEvent->localId == LOCALID_KANTO_SS_ANNE)
+    {
+        if ((s16)x >= DISPLAY_WIDTH + 16 || (s16)x2 < -32)
+            objectEvent->offScreen = TRUE;
+    }
+    else
     if ((s16)x >= DISPLAY_WIDTH + 16 || (s16)x2 < -16)
         objectEvent->offScreen = TRUE;
 

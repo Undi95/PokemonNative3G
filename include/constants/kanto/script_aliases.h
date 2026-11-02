@@ -5,5 +5,4 @@
 #define NPC_TEXT_COLOR_NEUTRAL 3
 #define SE_RS_DOOR SE_DOOR
 #define SE_RS_SHOP SE_SHOP
-#define MOVEMENT_TYPE_WANDER_AROUND_SLOWER MOVEMENT_TYPE_WANDER_AROUND
 #define STEP_CB_ICE STEP_CB_SOOTOPOLIS_ICE // glace de la Grotte Glacée : aiguillée vers IcefallCaveIcePerStepCallback à Kanto

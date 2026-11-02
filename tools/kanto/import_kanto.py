@@ -392,7 +392,7 @@ class Importer:
                 o = {k: v for k, v in o.items() if k != 'type'}
                 for k in ('local_id', 'graphics_id', 'flag', 'script', 'movement_type', 'trainer_type'):
                     if k in o:
-                        o[k] = tok(o[k]).replace('MOVEMENT_TYPE_WANDER_AROUND_SLOWER', 'MOVEMENT_TYPE_WANDER_AROUND')
+                        o[k] = tok(o[k])
                 objs.append(o)
             out['object_events'] = objs + clones
             warps = []
