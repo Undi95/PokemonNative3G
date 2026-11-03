@@ -180,8 +180,9 @@ def texts_since(game, before):
 
 
 class Explorer:
-    def __init__(self, binary, out_dir, save, state="debut"):
+    def __init__(self, binary, out_dir, save, state="debut", options=()):
         self.binary, self.out_dir, self.save, self.state = binary, out_dir, save, state
+        self.options = options      # [(N, V)] : jeu.options N V au départ de chaque jeu (--options)
         self.game = None
         self.starts = 0
 
@@ -205,6 +206,8 @@ class Explorer:
         # STYLE COMBAT : DEFINI, sans la question « changer de POKéMON ? » (fight_battle y répondrait OUI : la
         # sauvegarde de Hoenn a son starter)
         self.game.dev("jeu.options", 3, 1)
+        for option, value in self.options:
+            self.game.dev("jeu.options", option, value)
 
     def give_mewtwo(self):
         """Le MEWTWO N.100 des combats, en dernier de l'équipe, avec 4 attaques (50 PP) : de lui-même, il n'en a
@@ -415,8 +418,8 @@ class Explorer:
         return result
 
 
-def run_batch(binary, names, out_dir, save, talk, state="debut"):
-    explorer = Explorer(binary, out_dir, save, state)
+def run_batch(binary, names, out_dir, save, talk, state="debut", options=()):
+    explorer = Explorer(binary, out_dir, save, state, options)
     results = []
     for name in names:
         try:
@@ -516,7 +519,10 @@ def main():
                              "fin (les deux Ligues), histoire (et l'avancement des deux histoires, déduit des scripts)")
     parser.add_argument("--out", default=None, help="par défaut build/headless/crawl (crawl-ETAT hors debut)")
     parser.add_argument("--rapport-seul", action="store_true", help="refait rapport.txt depuis atlas.json")
+    parser.add_argument("--options", default="", help="N=V,... : options (jeu.options) au départ de chaque jeu, "
+                                                      "par exemple 8=1 pour DIALOGUE = KANTO")
     args = parser.parse_args()
+    options = [tuple(int(x) for x in pair.split("=")) for pair in args.options.split(",") if pair]
     if args.out is None:
         args.out = os.path.join(BUILD_DIR, "crawl" if args.etat == "debut" else f"crawl-{args.etat}")
 
@@ -546,7 +552,7 @@ def main():
     results = []
     with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
         futures = [pool.submit(run_batch, binary, batch, os.path.join(args.out, f"lot_{i:03}"), save,
-                               not args.sans_parler, args.etat) for i, (batch, save) in enumerate(batches)]
+                               not args.sans_parler, args.etat, options) for i, (batch, save) in enumerate(batches)]
         for done, future in enumerate(concurrent.futures.as_completed(futures), 1):
             results += future.result()
             print(f"  {done}/{len(batches)} lots, {len(results)} cartes, {time.time() - begin:.0f} s", flush=True)

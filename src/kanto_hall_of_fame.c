@@ -1321,7 +1321,7 @@ static void HallOfFame_PrintMonInfo(struct HallofFameMon* currMon, u8 unused1, u
     if (currMon->species != SPECIES_EGG)
     {
         StringCopy(text2, gText_Number);
-        dexNumber = SpeciesToPokedexNum(currMon->species);
+        dexNumber = Kanto_SpeciesToPokedexNum(currMon->species); // celui de RF
         if (dexNumber != 0xFFFF)
         {
             text[0] = (dexNumber / 100) + CHAR_0;

@@ -93,6 +93,8 @@
   disposition. Sur un clavier AZERTY, A = la touche Z (et non plus W), L = la touche A (et non plus Q) ; on peut aussi
   choisir une touche propre à son clavier (« key_a = ù »). La rangée des chiffres reste 1 à 0 sur tous les claviers.
 - POKéFLUTE en combat : le combat se bloquait après « La FLUTE réveille le POKéMON! ».
+- Résumé du Pokémon de Rouge Feu (MENUS = KANTO) et Panthéon de Kanto : le numéro de Pokédex des Pokémon de Kanto
+  s'affiche (« N° 150 » pour MEWTWO, au lieu de « ??? »), comme dans Rouge Feu.
 - Plus de lecture hors limites (vues par AddressSanitizer) : icône de DEOXYS forme Vitesse (Émeraude la prenait juste
   après l'icône normale dans la cartouche), palettes des aperçus de donjon de la carte de Kanto (RF en lisait une de
   trop).

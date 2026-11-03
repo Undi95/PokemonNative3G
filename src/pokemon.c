@@ -6762,6 +6762,17 @@ u16 SpeciesToPokedexNum(u16 species)
     }
 }
 
+// PokemonNative3G : SpeciesToPokedexNum de Rouge Feu, pour ses écrans (résumé, Panthéon de Kanto) : sans le POKéDEX
+// NATIONAL, le numéro des 151 de Kanto, « ??? » pour les autres
+u16 Kanto_SpeciesToPokedexNum(u16 species)
+{
+    species = SpeciesToNationalPokedexNum(species);
+
+    if (!IsNationalPokedexEnabled() && species > KANTO_DEX_COUNT)
+        return 0xFFFF;
+    return species;
+}
+
 bool32 IsSpeciesInHoennDex(u16 species)
 {
     if (SpeciesToHoennPokedexNum(species) > HOENN_DEX_COUNT)

@@ -2222,7 +2222,7 @@ static void BufferMonInfo(void)
     u16 heldItem;
     u32 otId;
 
-    dexNum = SpeciesToPokedexNum(GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES));
+    dexNum = Kanto_SpeciesToPokedexNum(GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES)); // celui de RF
     if (dexNum == 0xffff)
         StringCopy(sMonSummaryScreen->summary.dexNumStrBuf, sKText_Text_PokeSum_DexNoUnknown);
     else
