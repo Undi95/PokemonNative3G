@@ -416,7 +416,8 @@ static void Cmd_GameStatistic(const s32 *args, u32 argCount, struct DebugToolsOu
 
 // Le Pokédex : vus et attrapés dans chacun (Hoenn, Kanto, national : ce que comptent les cartes de dresseur des deux
 // régions, le PC du Prof. Chen, les diplômes), puis les numéros nationaux des Pokémon attrapés ; N marque les numéros
-// nationaux 1 à N vus et attrapés (386 : POKéDEX NATIONAL complet, pour les diplômes et les charmes)
+// nationaux 1 à N vus et attrapés (386 : POKéDEX NATIONAL complet, pour les diplômes et les charmes) ; un 2e argument 1
+// donne le POKéDEX NATIONAL (EnableNationalPokedex, comme le Prof. Seko ou le Prof. Chen)
 static void Cmd_Pokedex(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
     u32 i;
@@ -429,6 +430,8 @@ static void Cmd_Pokedex(const s32 *args, u32 argCount, struct DebugToolsOutput *
             GetSetPokedexFlag(i, FLAG_SET_CAUGHT);
         }
     }
+    if (argCount >= 2 && args[1] == 1)
+        EnableNationalPokedex();
 
     DebugTools_Print(out, "pokedex %d, national %d (Hoenn %d, Kanto %d)\n", FlagGet(FLAG_SYS_POKEDEX_GET),
                      IsNationalPokedexEnabled(), FlagGet(FLAG_SYS_NATIONAL_DEX), FlagGet(FLAG_KANTO_SYS_NATIONAL_DEX));
@@ -1429,7 +1432,7 @@ const struct DebugTool gDebugTools[] =
     {"jeu.errants", DEBUG_TOOLS_GAME, sName_Roamers, "[1|2] : vagabonds de la region ; 1 les lache, 2 les met sur cette carte", 0, Cmd_Roamers},
     {"jeu.hasard", DEBUG_TOOLS_GAME, sName_Random, "[GRAINE] : etat du hasard ; GRAINE le fixe (scenarios : suite independante du minutage)", 0, Cmd_Random},
     {"jeu.stat", DEBUG_TOOLS_GAME, sName_GameStatistic, "N [V] : statistique de jeu GAME_STAT_* (Pantheon, oeufs...), mise a V", 1, Cmd_GameStatistic},
-    {"jeu.pokedex", DEBUG_TOOLS_GAME, sName_Pokedex, "[N] : vus et attrapes (Hoenn, Kanto, national), numeros attrapes ; N marque 1 a N vus et attrapes", 0, Cmd_Pokedex},
+    {"jeu.pokedex", DEBUG_TOOLS_GAME, sName_Pokedex, "[N [1]] : vus et attrapes (Hoenn, Kanto, national), numeros attrapes ; N marque 1 a N vus et attrapes ; 1 : POKEDEX NATIONAL", 0, Cmd_Pokedex},
     {"jeu.menustart", DEBUG_TOOLS_GAME, sName_StartMenu, "entrees du menu Start et curseur", 0, Cmd_StartMenu},
     {"jeu.debug", DEBUG_TOOLS_GAME, sName_DebugAction, "actions du menu DEBUG ; [N] fait l'action N", 0, Cmd_DebugAction},
     {"carte.info", DEBUG_TOOLS_MAP, sName_MapInfo, "carte, region, joueur, connexions", 0, Cmd_MapInfo},
