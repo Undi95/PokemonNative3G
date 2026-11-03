@@ -1013,6 +1013,27 @@ static void Cmd_SetHp(const s32 *args, u32 argCount, struct DebugToolsOutput *ou
     DebugTools_Print(out, "Pokemon %d : %d / %d PV\n", args[0], GetMonData(mon, MON_DATA_HP), GetMonData(mon, MON_DATA_MAX_HP));
 }
 
+// Le statut du Pokémon N (STATUS1_* : 1 à 7 = endormi pour autant de tours, 8 poison, 16 brûlure, 32 gel,
+// 64 paralysie, 128 poison grave) ; à régler avant un combat, il y est copié (Poké Flûte, scénario kanto_poke_flute_wake)
+static void Cmd_SetStatus(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    struct Pokemon *mon;
+    u32 status;
+
+    if ((u32)args[0] >= PARTY_SIZE || GetMonData(&gPlayerParty[args[0]], MON_DATA_SPECIES) == SPECIES_NONE)
+    {
+        DebugTools_Print(out, "refuse : pas de Pokemon en %d (equipe 0-5)\n", args[0]);
+        return;
+    }
+    mon = &gPlayerParty[args[0]];
+    if (argCount >= 2)
+    {
+        status = (u32)args[1];
+        SetMonData(mon, MON_DATA_STATUS, &status);
+    }
+    DebugTools_Print(out, "Pokemon %d : statut %#x\n", args[0], GetMonData(mon, MON_DATA_STATUS));
+}
+
 // Le dresseur d'origine (ID) du Pokémon N : un autre que le joueur = un Pokémon échangé, soumis à l'obéissance
 // selon les badges (IsMonDisobedient), qui gagne plus d'expérience. Les données sont chiffrées avec l'ID : le Pokémon
 // est recréé (même espèce, niveau, personnalité, capacités et PP), pas modifié (il deviendrait un Mauvais Œuf)
@@ -1382,6 +1403,7 @@ static const u8 sName_Mail[] = _("Lettre");
 static const u8 sName_Egg[] = _("Oeuf à faire éclore");
 static const u8 sName_SetHp[] = _("PV d'un Pokémon");
 static const u8 sName_OriginalTrainer[] = _("Dresseur d'origine");
+static const u8 sName_SetStatus[] = _("Statut d'un Pokémon");
 static const u8 sName_Battle[] = _("Combat");
 static const u8 sName_Sprites[] = _("Sprites");
 static const u8 sName_Palette[] = _("Palette");
@@ -1430,6 +1452,7 @@ const struct DebugTool gDebugTools[] =
     {"joueur.amitie", DEBUG_TOOLS_PLAYER, sName_Friendship, "N [V] : amitie du Pokemon N ; V la met", 1, Cmd_Friendship},
     {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE [PP] : donne la capacite (et ses PP, ou PP restants)", 3, Cmd_SetMove},
     {"joueur.pv", DEBUG_TOOLS_PLAYER, sName_SetHp, "N PV : PV du Pokemon N (au plus ses PV max)", 2, Cmd_SetHp},
+    {"joueur.statut", DEBUG_TOOLS_PLAYER, sName_SetStatus, "N [STATUT] : statut du Pokemon N (1-7 sommeil, 8 poison, 16 brulure, 32 gel, 64 paralysie)", 1, Cmd_SetStatus},
     {"joueur.dresseur", DEBUG_TOOLS_PLAYER, sName_OriginalTrainer, "N ID : dresseur d'origine du Pokemon N (un autre = echange : obeissance)", 2, Cmd_OriginalTrainer},
     {"joueur.oeuf", DEBUG_TOOLS_PLAYER, sName_Egg, "N : le Pokemon N devient un oeuf pret a eclore (EventScript_EggHatch, VAR_0x8004 = N)", 1, Cmd_Egg},
     {"joueur.lettre", DEBUG_TOOLS_PLAYER, sName_Mail, "N OBJET [1|2] : lettre ITEM_*_MAIL a 9 mots au Pokemon N ; 1 = la lire (sur la carte), 2 = l'envoyer au PC", 2, Cmd_Mail},

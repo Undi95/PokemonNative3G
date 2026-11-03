@@ -7831,7 +7831,21 @@ static void Cmd_updatestatusicon(void)
     if (gBattleControllerExecFlags)
         return;
 
-    if (gBattlescriptCurrInstr[1] != BS_ATTACKER_WITH_PARTNER)
+    // PokemonNative3G : BS_PLAYER2 = tous les combattants présents, comme dans RF (seul BattleScript_UsePokeFlute s'en
+    // sert) ; avec la version d'Émeraude, le 2e combattant du joueur, absent en combat simple, bloquait le combat
+    if (gBattlescriptCurrInstr[1] == BS_PLAYER2)
+    {
+        for (gActiveBattler = gBattleControllerExecFlags; gActiveBattler < gBattlersCount; gActiveBattler++)
+        {
+            if (!(gAbsentBattlerFlags & gBitTable[gActiveBattler]))
+            {
+                BtlController_EmitStatusIconUpdate(B_COMM_TO_CONTROLLER, gBattleMons[gActiveBattler].status1, gBattleMons[gActiveBattler].status2);
+                MarkBattlerForControllerExec(gActiveBattler);
+            }
+        }
+        gBattlescriptCurrInstr += 2;
+    }
+    else if (gBattlescriptCurrInstr[1] != BS_ATTACKER_WITH_PARTNER)
     {
         gActiveBattler = GetBattlerForBattleScript(gBattlescriptCurrInstr[1]);
         BtlController_EmitStatusIconUpdate(B_COMM_TO_CONTROLLER, gBattleMons[gActiveBattler].status1, gBattleMons[gActiveBattler].status2);
