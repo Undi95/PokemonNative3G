@@ -93,6 +93,9 @@
   disposition. Sur un clavier AZERTY, A = la touche Z (et non plus W), L = la touche A (et non plus Q) ; on peut aussi
   choisir une touche propre à son clavier (« key_a = ù »). La rangée des chiffres reste 1 à 0 sur tous les claviers.
 - POKéFLUTE en combat : le combat se bloquait après « La FLUTE réveille le POKéMON! ».
+- Plus de lecture hors limites (vues par AddressSanitizer) : icône de DEOXYS forme Vitesse (Émeraude la prenait juste
+  après l'icône normale dans la cartouche), palettes des aperçus de donjon de la carte de Kanto (RF en lisait une de
+  trop).
 - Carte de Kanto (objet CARTE) : refermer l'aperçu d'un donjon (A sur une grotte déjà visitée, comme le Mont
   Sélénite) faisait planter le jeu.
 - Carte de dresseur de Kanto : les badges sont dans leurs cases (ils étaient une rangée trop haut et cachaient le mot

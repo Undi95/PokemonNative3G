@@ -2640,7 +2640,12 @@ static bool8 LoadMapPreviewGfx(void)
         LoadBgTiles(2, sDungeonMapPreview->tiles, sizeof(sDungeonMapPreview->tiles), 0);
         break;
     case 3:
+#ifdef UBFIX
+        // Les images d'aperçu n'ont que 2 palettes (32 couleurs) : RF en lit 3, la 3e déborde sur les données suivantes
+        LoadPalette(sDungeonMapPreview->mapPreviewInfo->palptr, BG_PLTT_ID(13), 2 * PLTT_SIZE_4BPP);
+#else
         LoadPalette(sDungeonMapPreview->mapPreviewInfo->palptr, BG_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
+#endif
         break;
     default:
         return TRUE;
@@ -2742,9 +2747,16 @@ static void Task_DrawDungeonMapPreviewFlavorText(u8 taskId)
             sDungeonMapPreview->red -= 6;
             sDungeonMapPreview->green -= 5;
             sDungeonMapPreview->blue -= 5;
+#ifdef UBFIX
+            // 2 palettes, pas 3 (voir LoadMapPreviewGfx)
+            CpuCopy16(sDungeonMapPreview->mapPreviewInfo->palptr, sDungeonMapPreview->palette, 2 * PLTT_SIZE_4BPP);
+            TintPalette_CustomTone(sDungeonMapPreview->palette, 32, sDungeonMapPreview->red, sDungeonMapPreview->green, sDungeonMapPreview->blue);
+            LoadPalette(sDungeonMapPreview->palette, BG_PLTT_ID(13), 2 * PLTT_SIZE_4BPP);
+#else
             CpuCopy16(sDungeonMapPreview->mapPreviewInfo->palptr, sDungeonMapPreview->palette, 0x60);
             TintPalette_CustomTone(sDungeonMapPreview->palette, 48, sDungeonMapPreview->red, sDungeonMapPreview->green, sDungeonMapPreview->blue);
             LoadPalette(sDungeonMapPreview->palette, BG_PLTT_ID(13), sizeof(sDungeonMapPreview->palette));
+#endif
         }
         sDungeonMapPreview->timer++;
         break;

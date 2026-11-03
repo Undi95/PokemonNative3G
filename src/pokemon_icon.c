@@ -1197,7 +1197,13 @@ const u8 *GetMonIconTiles(u16 species, bool32 handleDeoxys)
     const u8 *iconSprite = gMonIconTable[species];
     if (species == SPECIES_DEOXYS && handleDeoxys == TRUE)
     {
+#ifdef UBFIX
+        // L'icône de la forme Vitesse suit gMonIcon_Deoxys dans la ROM ; sur PC, rien ne garantit qu'elle la suive
+        extern const u8 gMonIcon_DeoxysSpeed[];
+        iconSprite = gMonIcon_DeoxysSpeed;
+#else
         iconSprite = (const u8 *)(0x400 + iconSprite); // use the specific Deoxys form icon (Speed in this case)
+#endif
     }
     return iconSprite;
 }
