@@ -883,6 +883,10 @@ static void Cmd_Party(const s32 *args, u32 argCount, struct DebugToolsOutput *ou
                          GetMonData(mon, MON_DATA_MOVE2), GetMonData(mon, MON_DATA_PP2),
                          GetMonData(mon, MON_DATA_MOVE3), GetMonData(mon, MON_DATA_PP3),
                          GetMonData(mon, MON_DATA_MOVE4), GetMonData(mon, MON_DATA_PP4));
+        // les stats lues par le jeu (GetMonData : celles de la forme choisie pour Deoxys, GetDeoxysStat)
+        DebugTools_Print(out, "  stats ATQ %d DEF %d VIT %d ATS %d DFS %d\n", GetMonData(mon, MON_DATA_ATK),
+                         GetMonData(mon, MON_DATA_DEF), GetMonData(mon, MON_DATA_SPEED),
+                         GetMonData(mon, MON_DATA_SPATK), GetMonData(mon, MON_DATA_SPDEF));
     }
 }
 
