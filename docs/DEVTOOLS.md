@@ -10,7 +10,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 |---|---|
 | **En jeu** | Menu Start > DEBUG > **Outils (sondes)** : catégorie, commande, nombres (HAUT/BAS change le chiffre, GAUCHE/DROITE choisit le chiffre, A valide), puis le résultat : HAUT/BAS une ligne, GAUCHE/DROITE une page, **A relance** (état en direct), B revient. |
 | **Banc headless** | `game.dev("gfx.sprites")` dans un scénario (texte, fonctions et données nommées) ; ligne d'entrée `!dev ID ARGS`. |
-| **Partie en cours (PC)** | La build DEBUG écoute sur `127.0.0.1:7777` (`--devtools PORT`, `0` = sans). `python test/headless/dev.py jeu.etat`, `dev.py capture image.png` (dernière image), `dev.py touche A+UP 10` (appuie 10 images, en plus du joueur), `dev.py` seul = une commande par ligne. |
+| **Partie en cours (PC)** | La build DEBUG écoute sur `127.0.0.1:7777` (`--devtools PORT`, `0` = sans). `python test/headless/dev.py jeu.etat`, `dev.py capture image.png` (dernière image), `dev.py touche A+UP 10` (appuie 10 images, en plus du joueur), `dev.py touches 20` (les 20 dernières plages de touches **reçues par le jeu** : clavier, manette, écran tactile, console ; 1re ligne `image I`, puis `DÉBUT IMAGES BOUTONS`), `dev.py` seul = une commande par ligne. Bancs Windows, Linux et Android qui s'en servent : `tools/env/README.md`. |
 | **Partie en cours (téléphone)** | APK debug branché en USB : `adb forward tcp:7777 tcp:7777`, puis les mêmes `dev.py`. |
 
 `aide` donne la liste à jour (c'est elle qui fait foi, pas ce fichier).
@@ -28,7 +28,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `jeu.hasard [GRAINE]` | état du hasard (`gRngValue`, `gRng2Value`) ; `GRAINE` les fixe : la suite d'un scénario (rencontre, combat) ne dépend plus du minutage d'avant, le hasard avançant à chaque image (scénarios `kanto_rival`, `kanto_bag_battle` : graine 4) |
 | | `joueur.pv N PV` | PV du Pokémon `N` de l'équipe (au plus ses PV max) ; à régler **avant** un combat, ses PV y sont copiés (scénario `kanto_whiteout` : 1 PV, K.O. au premier coup) |
 | | `jeu.stat N [V]` | statistique de jeu `GAME_STAT_*` (nombre d'entrées au Panthéon, date de la première, œufs éclos, victoires en link…), mise à `V` si donné (scénario `kanto_card_stickers`) |
-| | `jeu.errants [1\|2]` | Pokémon errants de la région (espèce, niveau, actif, carte, PV) ; `1` les lâche (`InitRoamer`, comme leur script), `2` les met sur la carte du joueur jusqu'au prochain changement de carte (scénario `kanto_roamer`) |
+| | `jeu.errants [1\|2]` | Pokémon errants de la région (espèce, niveau, actif, carte, PV, statut, IV) ; `1` les lâche (`InitRoamer`, comme leur script), `2` les met sur la carte du joueur jusqu'au prochain changement de carte (scénario `kanto_roamer`) |
 | | `jeu.peche` | chaîne de pêche : POKéMON remontés d'affilée au même endroit, canne, tirages chromatiques en plus pour la prise en cours, cannes améliorées (scénario `fishing_chain_more`) |
 | | `jeu.menustart` | entrées du menu Start (`MENU_ACTION_*`) et curseur (`game.start_menu()` dans le banc) |
 | | `jeu.debug [N]` | les actions du menu DEBUG ; `N` fait l'action N (celles sans écran : soins, objets, Pokédex, passes, « Deux Ligues finies », POKé MONTURE + badges…), le même code que le menu (`DebugMenu_ApplyAction`) |
@@ -58,8 +58,14 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `gfx.fenetres` | fenêtres ouvertes |
 | Texte | `texte.imprimantes` | textes en train de s'écrire : police, couleurs, position |
 | Son | `son.etat` | musique et effets en cours |
-| Système | `sys.etat` | RNG, heure du jeu, teinte jour/nuit |
+| Système | `sys.etat` | RNG, ID dresseur (public, secret), drapeaux d'après-Ligue (`specialSaveWarpFlags`, `gcnLinkFlags`), heure du jeu, teinte jour/nuit |
 | | `sys.anomalies` | anomalies vues par les détecteurs depuis le lancement |
+| | `sys.sauvegarde` | tailles des blocs dans cette build (SaveBlock2, SaveBlock1 au format GBA, PC) et chaque secteur des deux emplacements du fichier : vide, id, compteur, checksum OK / FAUX pour cette build (« ancien format Windows » : sauvegarde Windows 1.0-1.1, convertie au chargement) ; compteur et état chargés |
+
+Avant le chargement de la sauvegarde (écran de copyright), les outils qui lisent SaveBlock1 (carte, scripts, joueur,
+la plupart de « jeu ») répondent « pas encore de sauvegarde chargée », et ceux de la carte « pas de carte chargée »
+tant qu'aucune carte n'est chargée (intro, menu principal, discours de Birch) : ils faisaient planter le jeu. Le
+banc Windows (`test/desktop/run.py outils`) les lance tous à chaque étape.
 | | `sys.rapport` | rapport de bug rejouable (voir plus bas) |
 
 Partout (banc, console, menu), un argument peut être un **nom** de drapeau, de variable ou de dresseur au lieu d'un

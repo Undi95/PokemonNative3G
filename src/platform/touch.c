@@ -1,6 +1,6 @@
 #ifdef PORTABLE
 // Touch controls: a D-pad and the GBA's buttons drawn over the screen's sides,
-// plus a soft reset button between SELECT and START (held for a second).
+// plus a soft reset button between SELECT and START (held for RESET_HOLD_MS : a short press, not a tap).
 // Always shown on Android; elsewhere, once the screen has been touched.
 #include <math.h>
 #include <SDL2/SDL.h>

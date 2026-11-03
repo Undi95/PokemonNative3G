@@ -679,6 +679,33 @@ static void HandleLine(const char *line)
         Send(ok ? "{\"reply\": 1}\n" : "{\"reply\": 0, \"error\": \"capture impossible\"}\n");
         return;
     }
+    // « touches N » : les N dernières plages de touches reçues par le jeu, clavier, manette, écran tactile et console
+    // confondus (bancs : test/android/android.py, test/desktop/). 1re ligne « image I » (images depuis le lancement),
+    // puis « DÉBUT IMAGES BOUTONS » par plage, la plus récente en dernier
+    if (strncmp(line, "touches", 7) == 0 && (line[7] == '\0' || line[7] == ' '))
+    {
+        struct Text keys = {0};
+        unsigned count = 20, first, i;
+        unsigned long start = sSessionFrames;
+
+        sscanf(line + 7, "%u", &count);
+        first = sKeyRunCount > count ? sKeyRunCount - count : 0;
+        for (i = first; i < sKeyRunCount; i++)
+            start -= sKeyRuns[i].frames;
+        TextAdd(&keys, "image %lu\n", sSessionFrames);
+        for (i = first; i < sKeyRunCount; i++)
+        {
+            TextAdd(&keys, "%lu %u ", start, sKeyRuns[i].frames);
+            AddButtons(&keys, sKeyRuns[i].keys);
+            TextAdd(&keys, "\n");
+            start += sKeyRuns[i].frames;
+        }
+        Send("{\"reply\": ");
+        SendJsonString(keys.data != NULL ? keys.data : "");
+        Send("}\n");
+        free(keys.data);
+        return;
+    }
     ok = DebugTools_RunLine(line, &out);
     DevTools_NameAddresses(sNamed, sText, sizeof(sNamed));
     Send("{\"reply\": ");

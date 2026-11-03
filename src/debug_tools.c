@@ -35,6 +35,7 @@
 #include "main.h"
 #include "metatile_behavior.h"
 #include "money.h"
+#include "new_game.h"
 #include "overworld.h"
 #include "palette.h"
 #include "pokemon.h"
@@ -43,6 +44,7 @@
 #include "roamer.h"
 #include "rtc.h"
 #include "safari_zone.h"
+#include "save.h"
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
@@ -380,8 +382,9 @@ static void Cmd_Roamers(const s32 *args, u32 argCount, struct DebugToolsOutput *
     {
         u8 group, num;
         const struct Roamer *roamer = Roamer_DebugGet(i, &group, &num);
-        DebugTools_Print(out, "errant %u espece %d niveau %d actif %d carte %d.%d PV %d\n", i, roamer->species,
-                         roamer->level, roamer->active, group, num, roamer->hp);
+        DebugTools_Print(out, "errant %u espece %d niveau %d actif %d carte %d.%d PV %d statut %#x ivs %#x\n", i,
+                         roamer->species, roamer->level, roamer->active, group, num, roamer->hp, roamer->status,
+                         roamer->ivs);
     }
 }
 
@@ -414,6 +417,16 @@ static void Cmd_GameStatistic(const s32 *args, u32 argCount, struct DebugToolsOu
 
 static const char *const sDirectionNames[] = {"", "sud", "nord", "ouest", "est", "plongee", "emersion"};
 
+// Avant la première carte (intro, menu principal, discours de Birch), pas de disposition ni de grille : les outils
+// de carte s'arrêtent là (sinon pointeur nul, le jeu plantait)
+static bool8 NoMapLoaded(struct DebugToolsOutput *out)
+{
+    if (gMapHeader.mapLayout != NULL && gBackupMapLayout.map != NULL)
+        return FALSE;
+    DebugTools_Print(out, "pas de carte chargee\n");
+    return TRUE;
+}
+
 static void Cmd_MapInfo(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
     const struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -421,6 +434,8 @@ static void Cmd_MapInfo(const s32 *args, u32 argCount, struct DebugToolsOutput *
     char text[48];
     s32 i;
 
+    if (NoMapLoaded(out))
+        return;
     GetMapName(name, gMapHeader.regionMapSectionId, 0);
     DebugTools_GameTextToUtf8(text, name, sizeof(text));
     DebugTools_Print(out, "carte %d.%d (%s, section %d), %s\n", gSaveBlock1Ptr->location.mapGroup,
@@ -494,9 +509,12 @@ static char GetGridTile(s32 x, s32 y)
 // par les scripts (setmetatile : portes, puzzles), que les fichiers de la carte ne montrent pas
 static void Cmd_MapGrid(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
-    s32 x, y;
-    s32 width = gMapHeader.mapLayout->width, height = gMapHeader.mapLayout->height;
+    s32 x, y, width, height;
 
+    if (NoMapLoaded(out))
+        return;
+    width = gMapHeader.mapLayout->width;
+    height = gMapHeader.mapLayout->height;
     DebugTools_Print(out, "grille %dx%d\n", width, height);
     for (y = 0; y < height; y++)
     {
@@ -519,6 +537,8 @@ static void Cmd_MapMetatiles(const s32 *args, u32 argCount, struct DebugToolsOut
     s32 left = argCount >= 4 ? args[0] : args[0] - 1, top = argCount >= 4 ? args[1] : args[1] - 1;
     s32 width = argCount >= 4 ? args[2] : 3, height = argCount >= 4 ? args[3] : 3;
 
+    if (NoMapLoaded(out))
+        return;
     if (width < 1 || height < 1 || width * height > 256)
     {
         DebugTools_Print(out, "refuse : 1 a 256 cases\n");
@@ -1210,6 +1230,12 @@ static void Cmd_System(const s32 *args, u32 argCount, struct DebugToolsOutput *o
     RtcCalcLocalTime();
     DayNight_GetTint(&r, &g, &b, &gray, &light);
     DebugTools_Print(out, "RNG %08x %08x\n", gRngValue, gRng2Value);
+    DebugTools_Print(out, "ID dresseur %u (public %05u, secret %05u)\n", GetTrainerId(gSaveBlock2Ptr->playerTrainerId),
+                     gSaveBlock2Ptr->playerTrainerId[0] | (gSaveBlock2Ptr->playerTrainerId[1] << 8),
+                     gSaveBlock2Ptr->playerTrainerId[2] | (gSaveBlock2Ptr->playerTrainerId[3] << 8));
+    // Drapeaux d'après-Ligue (SetPostgameFlags de RF) : retour à la salle du maître, liens GameCube
+    DebugTools_Print(out, "specialSaveWarpFlags %#x, gcnLinkFlags %#x\n", gSaveBlock2Ptr->specialSaveWarpFlags,
+                     gSaveBlock2Ptr->gcnLinkFlags);
     DebugTools_Print(out, "heure du jeu : jour %d, %02d:%02d:%02d\n", gLocalTime.days, gLocalTime.hours,
                      gLocalTime.minutes, gLocalTime.seconds);
     DebugTools_Print(out, "jour/nuit : option %d, teinte %d %d %d, gris %d, fenetres %d, rendu %d\n",
@@ -1219,6 +1245,12 @@ static void Cmd_System(const s32 *args, u32 argCount, struct DebugToolsOutput *o
 static void Cmd_Anomalies(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
     DebugChecks_Print(out);
+}
+
+// Les secteurs du fichier de sauvegarde, valides ou non pour cette build (src/save.c)
+static void Cmd_SaveInfo(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    Save_DebugDescribe(out);
 }
 
 // Rapport de bug rejouable (src/platform/devtools.c) : l'archive tar du dossier des rapports
@@ -1289,6 +1321,7 @@ static const u8 sName_TextPrinters[] = _("Textes en cours");
 static const u8 sName_Sound[] = _("Musique et effets");
 static const u8 sName_System[] = _("RNG, heure, jour/nuit");
 static const u8 sName_Anomalies[] = _("Anomalies vues");
+static const u8 sName_SaveInfo[] = _("Fichier de sauvegarde");
 static const u8 sName_Report[] = _("Rapport de bug");
 static const u8 sName_Help[] = _("Liste des commandes");
 
@@ -1335,8 +1368,9 @@ const struct DebugTool gDebugTools[] =
     {"gfx.fenetres", DEBUG_TOOLS_GFX, sName_Windows, "fenetres ouvertes", 0, Cmd_Windows},
     {"texte.imprimantes", DEBUG_TOOLS_TEXT, sName_TextPrinters, "textes en train de s'ecrire", 0, Cmd_TextPrinters},
     {"son.etat", DEBUG_TOOLS_SOUND, sName_Sound, "musique et effets en cours", 0, Cmd_Sound},
-    {"sys.etat", DEBUG_TOOLS_SYSTEM, sName_System, "RNG, heure du jeu, teinte jour/nuit", 0, Cmd_System},
+    {"sys.etat", DEBUG_TOOLS_SYSTEM, sName_System, "RNG, ID dresseur, heure du jeu, teinte jour/nuit", 0, Cmd_System},
     {"sys.anomalies", DEBUG_TOOLS_SYSTEM, sName_Anomalies, "anomalies vues par les detecteurs (src/debug_checks.c)", 0, Cmd_Anomalies},
+    {"sys.sauvegarde", DEBUG_TOOLS_SYSTEM, sName_SaveInfo, "tailles des blocs et secteurs du fichier : valides pour cette build ?", 0, Cmd_SaveInfo},
     {"sys.rapport", DEBUG_TOOLS_SYSTEM, sName_Report, "rapport de bug rejouable (sauvegarde, touches, etat, capture)", 0, Cmd_Report},
     {"aide", DEBUG_TOOLS_SYSTEM, sName_Help, "liste des commandes", 0, Cmd_Help},
 };
@@ -1378,6 +1412,23 @@ const struct DebugTool *DebugTools_Find(const char *id)
     return NULL;
 }
 
+static bool8 ToolWorksWithoutSaveBlock1(const struct DebugTool *tool)
+{
+    switch (tool->category)
+    {
+    case DEBUG_TOOLS_BATTLE:
+    case DEBUG_TOOLS_GFX:
+    case DEBUG_TOOLS_TEXT:
+    case DEBUG_TOOLS_SOUND:
+    case DEBUG_TOOLS_SYSTEM:
+        return TRUE;
+    case DEBUG_TOOLS_GAME:
+        return tool->run == Cmd_GameState || tool->run == Cmd_Options || tool->run == Cmd_Random;
+    default:
+        return FALSE;
+    }
+}
+
 bool8 DebugTools_RunLine(const char *line, struct DebugToolsOutput *out)
 {
     char id[32] = "";
@@ -1399,6 +1450,13 @@ bool8 DebugTools_RunLine(const char *line, struct DebugToolsOutput *out)
     {
         DebugTools_Print(out, "%s : %d argument(s) attendu(s) : %s", id, tool->argCount, tool->help);
         return FALSE;
+    }
+    // Les premières images (écran de copyright, avant SetSaveBlocksPointers) : pas encore de SaveBlock1 (flags,
+    // variables, carte, sac, statistiques) ; ces outils répondent sans le lire (le jeu plantait)
+    if (gSaveBlock1Ptr == NULL && !ToolWorksWithoutSaveBlock1(tool))
+    {
+        DebugTools_Print(out, "pas encore de sauvegarde chargee (ecran de copyright)\n");
+        return TRUE;
     }
     // Un argument est un nombre, ou le nom d'un drapeau, d'une variable ou d'un dresseur (FLAG_SYS_GAME_CLEAR)
     for (i = 0; i < count && i < DEBUG_TOOLS_MAX_ARGS; i++)

@@ -26,8 +26,11 @@ tools/agbcc
 tools/compresSmol/
 *.map
 *.bat
+!preparer-tests.bat
 *.dump
 *.sa*
+# Sauvegardes de référence du banc (anciennes versions : migrations au chargement)
+!test/headless/saves/*.sav
 Thumbs.db
 build/
 SDL2/
@@ -67,3 +70,8 @@ __pycache__/
 build/
 out/
 out-*.log
+# Environnement de test automatisé (JDK, SDK et émulateur Android, distribution WSL, venv Python) : tools/env/README.md
+tools/env/*
+!tools/env/README.md
+!tools/env/*.sh
+!tools/env/*.ps1
