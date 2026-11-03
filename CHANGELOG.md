@@ -104,6 +104,9 @@
   « BADGES »).
 
 ### Nouveautés
+- POKéDEX NATIONAL donné une seule fois : si le PROF. SEKO l'a déjà donné, le PROF. CHEN se contente de noter le
+  POKéDEX (sa scène est considérée comme faite) ; si c'est le PROF. CHEN, le PROF. SEKO le dit, et la suite (starters
+  de Johto, appel de SCOTT pour la Zone de Combat) reste la même.
 - Kanto : en entrant dans un lieu, le panneau du nom est celui de Rouge Feu (boîte blanche en haut à gauche), avec
   l'étage comme dans Rouge Feu (« SYLPHE SARL 4ᵉ », « REPAIRE ROCKET 2 SS », « CELADOPOLE TOIT »). Hoenn garde
   le panneau d'Émeraude.

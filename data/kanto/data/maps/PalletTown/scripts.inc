@@ -42,6 +42,9 @@ PalletTown_OnFrame::
 /* Oak approaches player after exiting their house post Elite Four to check if they should receieve the National Dex */
 PalletTown_EventScript_OakRatingScene::
 	lockall
+	@ PokemonNative3G : POKéDEX NATIONAL reçu entre-temps (PROF. SEKO, à Hoenn) : pas de scène, elle est finie
+	specialvar VAR_RESULT, IsNationalPokedexEnabled
+	goto_if_eq VAR_RESULT, TRUE, PalletTown_EventScript_NationalDexAlreadyReceived
 	textcolor NPC_TEXT_COLOR_MALE
 	setobjectxyperm LOCALID_KANTO_PALLET_PROF_OAK, 14, 14
 	setobjectmovementtype LOCALID_KANTO_PALLET_PROF_OAK, MOVEMENT_TYPE_FACE_LEFT
@@ -75,6 +78,12 @@ PalletTown_EventScript_OakRatingScene::
 	setflag FLAG_KANTO_HIDE_OAK_IN_PALLET_TOWN
 	warp MAP_PALLET_TOWN_PROFESSOR_OAKS_LAB, 6, 12
 	waitstate
+	releaseall
+	end
+
+PalletTown_EventScript_NationalDexAlreadyReceived::
+	setvar VAR_KANTO_MAP_SCENE_PALLET_TOWN_OAK, 3
+	setvar VAR_KANTO_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB, 9
 	releaseall
 	end
 

@@ -905,6 +905,9 @@ PalletTown_ProfessorOaksLab_Movement_VerticalPacing:
 PalletTown_ProfessorOaksLab_EventScript_TryStartNationalDexScene::
 	call PokedexRating_EventScript_RateInPerson
 	closemessage
+	@ PokemonNative3G : POKéDEX NATIONAL déjà reçu (PROF. SEKO, à Hoenn) : pas de 2e don, la scène est finie
+	specialvar VAR_RESULT, IsNationalPokedexEnabled
+	goto_if_eq VAR_RESULT, TRUE, PalletTown_ProfessorOaksLab_EventScript_NationalDexAlreadyReceived
 	goto_if_lt VAR_0x8009, 60, PalletTown_ProfessorOaksLab_EventScript_DontStartNationalDexScene
 	goto_if_unset FLAG_KANTO_WORLD_MAP_ONE_ISLAND, PalletTown_ProfessorOaksLab_EventScript_DontStartNationalDexScene
 	delay 30
@@ -913,6 +916,11 @@ PalletTown_ProfessorOaksLab_EventScript_TryStartNationalDexScene::
 	end
 
 PalletTown_ProfessorOaksLab_EventScript_DontStartNationalDexScene::
+	release
+	end
+
+PalletTown_ProfessorOaksLab_EventScript_NationalDexAlreadyReceived::
+	setvar VAR_KANTO_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB, 9
 	release
 	end
 

@@ -161,6 +161,9 @@ LittlerootTown_ProfessorBirchsLab_Movement_PlayerEnterLabForPokedex:
 LittlerootTown_ProfessorBirchsLab_EventScript_UpgradeToNationalDex::
 	lockall
 	delay 30
+	@ PokemonNative3G : POKéDEX NATIONAL déjà reçu (PROF. CHEN, à Kanto) : pas de 2e don, la suite reste la même
+	specialvar VAR_RESULT, IsNationalPokedexEnabled
+	goto_if_eq VAR_RESULT, TRUE, LittlerootTown_ProfessorBirchsLab_EventScript_NationalDexAlreadyReceived
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_OtherRegionsUpgradeToNational, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_BIRCHS_LAB_BIRCH, LittlerootTown_ProfessorBirchsLab_Movement_BirchRetrievePokedexes
@@ -204,6 +207,24 @@ LittlerootTown_ProfessorBirchsLab_EventScript_UpgradeToNationalDex::
 	setflag FLAG_SCOTT_CALL_BATTLE_FRONTIER
 	releaseall
 	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_NationalDexAlreadyReceived::
+	msgbox Fusion_Text_BirchNationalDexAlreadyReceived, MSGBOX_DEFAULT
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_GrassyPatchWaiting2, MSGBOX_DEFAULT
+	closemessage
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCH
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_RIVAL
+	setvar VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 2
+	setvar VAR_SCOTT_BF_CALL_STEP_COUNTER, 0
+	setflag FLAG_SCOTT_CALL_BATTLE_FRONTIER
+	releaseall
+	end
+
+Fusion_Text_BirchNationalDexAlreadyReceived:
+	.string "PROF. SEKO: Je voulais passer ton\n"
+	.string "POKéDEX en Mode NATIONAL…\p"
+	.string "Mais c'est déjà fait! Le PROF. CHEN\n"
+	.string "de KANTO m'a devancé!$"
 
 LittlerootTown_ProfessorBirchsLab_EventScript_MayUpgradeComment::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_MayUpgradeSoCool, MSGBOX_DEFAULT
