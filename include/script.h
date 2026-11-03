@@ -80,5 +80,6 @@ void InitRamScript_NoObjectEvent(u8 *script, u16 scriptSize);
 // srccmd.h
 void SetMovingNpcId(u16 npcId);
 bool8 IsBrailleInDialogueBox(void);
+bool8 Script_CallSpecial(u16 index, u16 *result);
 
 #endif // GUARD_SCRIPT_H

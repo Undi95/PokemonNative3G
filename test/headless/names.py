@@ -65,6 +65,28 @@ def number(name_or_number):
     return name_or_number if isinstance(name_or_number, int) else value(name_or_number)
 
 
+@functools.lru_cache(None)
+def _specials():
+    """Les specials dans l'ordre de gSpecials : les « def_special » de data/specials.inc, les .include à leur place."""
+    result = []
+
+    def read(path):
+        for line in open(os.path.join(REPO_DIR, path), encoding="utf-8"):
+            words = line.split("@")[0].split()
+            if words[:1] == ["def_special"]:
+                result.append(words[1].rstrip(","))
+            elif words[:1] == [".include"]:
+                read(words[1].strip('"'))
+
+    read(os.path.join("data", "specials.inc"))
+    return result
+
+
+def special_index(name):
+    """La place d'un special dans gSpecials (outil scripts.special)."""
+    return _specials().index(name)
+
+
 # Other kinds of constants that share a prefix: a trainer is TRAINER_ROXANNE_1, not TRAINER_PIC_...
 _OTHER_KINDS = {"TRAINER_": ("TRAINER_PIC_", "TRAINER_BACK_PIC_", "TRAINER_CLASS_", "TRAINER_ENCOUNTER_MUSIC_",
                              "TRAINER_TYPE_", "TRAINER_PARTY_", "TRAINER_ITEM", "TRAINER_SIGHT_", "TRAINER_FLAG",

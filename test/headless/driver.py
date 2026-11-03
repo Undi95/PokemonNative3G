@@ -326,6 +326,15 @@ class Game:
             raise GameError(f"script {label} : {reply.strip()}")
         return wait_until(self, lambda s: not s.free, limit=60)
 
+    def special(self, name, var_8004=None):
+        """Appelle un special par son nom (« Script_UpdateTrainerFanClubGameClear »), joueur libre sur la carte, avec
+        VAR_0x8004 = var_8004 si donné ; rend sa valeur de retour (comme specialvar)."""
+        words = ["scripts.special", names.special_index(name)] + ([var_8004] if var_8004 is not None else [])
+        reply = self.dev(*words)
+        if "retour" not in reply:
+            raise GameError(f"special {name} : {reply.strip()}")
+        return int(reply.split("retour")[1])
+
     def start_menu(self):
         """Le menu Start (ouvert ou dernier ouvert) : ([(action MENU_ACTION_*, nom)], curseur)."""
         lines = self.dev("jeu.menustart").splitlines()

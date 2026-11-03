@@ -414,6 +414,19 @@ static void Cmd_GameStatistic(const s32 *args, u32 argCount, struct DebugToolsOu
     DebugTools_Print(out, "statistique %d = %u\n", args[0], GetGameStat(args[0]));
 }
 
+// La durée de jeu (carte de dresseur, sauvegarde ; le Fan Club de Safrania perd des fans toutes les 12 h) ; H [M] la met
+static void Cmd_PlayTime(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (argCount >= 1)
+    {
+        gSaveBlock2Ptr->playTimeHours = min(max(args[0], 0), 999);
+        gSaveBlock2Ptr->playTimeMinutes = argCount >= 2 ? min(max(args[1], 0), 59) : 0;
+        gSaveBlock2Ptr->playTimeSeconds = 0;
+    }
+    DebugTools_Print(out, "duree de jeu %u:%02u:%02u\n", gSaveBlock2Ptr->playTimeHours,
+                     gSaveBlock2Ptr->playTimeMinutes, gSaveBlock2Ptr->playTimeSeconds);
+}
+
 // Le Pokédex : vus et attrapés dans chacun (Hoenn, Kanto, national : ce que comptent les cartes de dresseur des deux
 // régions, le PC du Prof. Chen, les diplômes), puis les numéros nationaux des Pokémon attrapés ; N marque les numéros
 // nationaux 1 à N vus et attrapés (386 : POKéDEX NATIONAL complet, pour les diplômes et les charmes) ; un 2e argument 1
@@ -631,6 +644,27 @@ static void Cmd_RunScript(const s32 *args, u32 argCount, struct DebugToolsOutput
     }
     ScriptContext_SetupScript((const u8 *)((uintptr_t)AgbMain + (intptr_t)args[0]));
     DebugTools_Print(out, "script @%d lance\n", args[0]);
+}
+
+// Appelle le special N (gSpecials, data/specials.inc ; game.special(NOM) dans le banc trouve N par son nom), avec
+// VAR_0x8004 = V si donné, et donne sa valeur de retour (comme specialvar) ; joueur libre sur la carte seulement
+static void Cmd_RunSpecial(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    u16 result;
+
+    if (gMain.callback2 != CB2_Overworld || ScriptContext_IsEnabled() || ArePlayerFieldControlsLocked())
+    {
+        DebugTools_Print(out, "refuse : le joueur n'est pas libre sur la carte\n");
+        return;
+    }
+    if (argCount >= 2)
+        gSpecialVar_0x8004 = args[1];
+    if (args[0] < 0 || !Script_CallSpecial(args[0], &result))
+    {
+        DebugTools_Print(out, "special %d inconnu\n", args[0]);
+        return;
+    }
+    DebugTools_Print(out, "special %d : retour %u\n", args[0], result);
 }
 
 // --- Drapeaux, variables et dresseurs, par nom et par catégorie ----------------------------------------------------
@@ -1380,6 +1414,7 @@ static const u8 sName_Safari[] = _("Parc Safari");
 static const u8 sName_Roamers[] = _("Pokémon errants");
 static const u8 sName_GameStatistic[] = _("Statistique de jeu");
 static const u8 sName_Pokedex[] = _("Pokédex");
+static const u8 sName_PlayTime[] = _("Durée de jeu");
 static const u8 sName_Random[] = _("Hasard");
 static const u8 sName_StartMenu[] = _("Menu Start");
 static const u8 sName_DebugAction[] = _("Actions du menu DEBUG");
@@ -1389,6 +1424,7 @@ static const u8 sName_MapGrid[] = _("Grille de la carte");
 static const u8 sName_MapMetatiles[] = _("Métatuiles");
 static const u8 sName_ScriptContext[] = _("Scripts en cours");
 static const u8 sName_RunScript[] = _("Lancer un script");
+static const u8 sName_RunSpecial[] = _("Appeler un special");
 static const u8 sName_Flag[] = _("Flag");
 static const u8 sName_Var[] = _("Variable");
 static const u8 sName_Names[] = _("Drapeaux et variables");
@@ -1432,6 +1468,7 @@ const struct DebugTool gDebugTools[] =
     {"jeu.errants", DEBUG_TOOLS_GAME, sName_Roamers, "[1|2] : vagabonds de la region ; 1 les lache, 2 les met sur cette carte", 0, Cmd_Roamers},
     {"jeu.hasard", DEBUG_TOOLS_GAME, sName_Random, "[GRAINE] : etat du hasard ; GRAINE le fixe (scenarios : suite independante du minutage)", 0, Cmd_Random},
     {"jeu.stat", DEBUG_TOOLS_GAME, sName_GameStatistic, "N [V] : statistique de jeu GAME_STAT_* (Pantheon, oeufs...), mise a V", 1, Cmd_GameStatistic},
+    {"jeu.duree", DEBUG_TOOLS_GAME, sName_PlayTime, "[H [M]] : duree de jeu ; H M la met (Fan Club : un fan perdu toutes les 12 h)", 0, Cmd_PlayTime},
     {"jeu.pokedex", DEBUG_TOOLS_GAME, sName_Pokedex, "[N [1]] : vus et attrapes (Hoenn, Kanto, national), numeros attrapes ; N marque 1 a N vus et attrapes ; 1 : POKEDEX NATIONAL", 0, Cmd_Pokedex},
     {"jeu.menustart", DEBUG_TOOLS_GAME, sName_StartMenu, "entrees du menu Start et curseur", 0, Cmd_StartMenu},
     {"jeu.debug", DEBUG_TOOLS_GAME, sName_DebugAction, "actions du menu DEBUG ; [N] fait l'action N", 0, Cmd_DebugAction},
@@ -1441,6 +1478,7 @@ const struct DebugTool gDebugTools[] =
     {"carte.metatuiles", DEBUG_TOOLS_MAP, sName_MapMetatiles, "X Y [L H] : metatuiles (numero, comportement, terrain et rencontre de RF) ; 3x3 autour de X Y, ou L x H depuis X Y", 2, Cmd_MapMetatiles},
     {"scripts.contexte", DEBUG_TOOLS_SCRIPT, sName_ScriptContext, "contextes de script global et immediat", 0, Cmd_ScriptContext},
     {"scripts.lancer", DEBUG_TOOLS_SCRIPT, sName_RunScript, "@ADRESSE : lance ce script (game.script(NOM) dans le banc)", 1, Cmd_RunScript},
+    {"scripts.special", DEBUG_TOOLS_SCRIPT, sName_RunSpecial, "N [V] : appelle le special N (VAR_0x8004 = V), donne son retour (game.special(NOM) dans le banc)", 1, Cmd_RunSpecial},
     {"scripts.flag", DEBUG_TOOLS_SCRIPT, sName_Flag, "FLAG [VALEUR] : lit ou met un flag", 1, Cmd_Flag},
     {"scripts.var", DEBUG_TOOLS_SCRIPT, sName_Var, "VAR [VALEUR] : lit ou met une variable", 1, Cmd_Var},
     {"scripts.histoire", DEBUG_TOOLS_SCRIPT, sName_Story, "[N] : histoire finie (0 Hoenn, 1 Kanto, 2 les deux), deduite des scripts", 0, Cmd_Story, Select_Story},

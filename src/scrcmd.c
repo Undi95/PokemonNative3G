@@ -136,6 +136,23 @@ bool8 ScrCmd_special(struct ScriptContext *ctx)
     return FALSE;
 }
 
+// PokemonNative3G : un special appelé hors d'un script (outil DEBUG scripts.special), avec la largeur de retour que lit
+// specialvar ; FALSE si index est hors de la table
+bool8 Script_CallSpecial(u16 index, u16 *result)
+{
+    extern const struct SpecialEntry gSpecialsEnd[];
+    const struct SpecialEntry *special = &gSpecials[index];
+
+    if (special >= gSpecialsEnd)
+        return FALSE;
+    *result = special->func();
+    if (special->ret == SPECIAL_RET_U8)
+        *result = (u8)*result;
+    else if (special->ret == SPECIAL_RET_S8)
+        *result = (s8)*result;
+    return TRUE;
+}
+
 bool8 ScrCmd_specialvar(struct ScriptContext *ctx)
 {
     u16 *var = GetVarPointer(ScriptReadHalfword(ctx));

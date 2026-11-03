@@ -558,3 +558,8 @@ gSpecials::
 	def_special ScriptHasBadgeForFieldMove, ret=SPECIAL_RET_U8
 
 	.include "data/kanto/kanto_specials.inc"
+
+	@ PokemonNative3G : la fin de la table (Script_CallSpecial, outil DEBUG scripts.special)
+.if ALLOCATE_SPECIAL_TABLE
+gSpecialsEnd::
+.endif
