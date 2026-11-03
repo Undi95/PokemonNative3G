@@ -448,6 +448,9 @@ static void Cmd_MapInfo(const s32 *args, u32 argCount, struct DebugToolsOutput *
                      player->currentCoords.x - MAP_OFFSET, player->currentCoords.y - MAP_OFFSET,
                      player->currentElevation, player->facingDirection, gPlayerAvatar.flags,
                      MapGridGetMetatileBehaviorAt(player->currentCoords.x, player->currentCoords.y));
+    DebugTools_Print(out, "deplacement : direction %d, etat %d, vitesse velo %d, compteur %d, mouvement tenu %d (fini %d)\n",
+                     player->movementDirection, gPlayerAvatar.runningState, gPlayerAvatar.bikeSpeed,
+                     gPlayerAvatar.bikeFrameCounter, player->heldMovementActive, player->heldMovementFinished);
     if (gMapHeader.connections != NULL)
     {
         for (i = 0; i < gMapHeader.connections->count; i++)
@@ -976,6 +979,39 @@ static void Cmd_SetHp(const s32 *args, u32 argCount, struct DebugToolsOutput *ou
     DebugTools_Print(out, "Pokemon %d : %d / %d PV\n", args[0], GetMonData(mon, MON_DATA_HP), GetMonData(mon, MON_DATA_MAX_HP));
 }
 
+// Le dresseur d'origine (ID) du Pokémon N : un autre que le joueur = un Pokémon échangé, soumis à l'obéissance
+// selon les badges (IsMonDisobedient), qui gagne plus d'expérience. Les données sont chiffrées avec l'ID : le Pokémon
+// est recréé (même espèce, niveau, personnalité, capacités et PP), pas modifié (il deviendrait un Mauvais Œuf)
+static void Cmd_OriginalTrainer(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    struct Pokemon *mon;
+    u16 species, moves[MAX_MON_MOVES];
+    u8 pp[MAX_MON_MOVES], level;
+    u32 personality, i;
+
+    if ((u32)args[0] >= PARTY_SIZE || GetMonData(&gPlayerParty[args[0]], MON_DATA_SPECIES) == SPECIES_NONE)
+    {
+        DebugTools_Print(out, "refuse : pas de Pokemon en %d (equipe 0-5)\n", args[0]);
+        return;
+    }
+    mon = &gPlayerParty[args[0]];
+    species = GetMonData(mon, MON_DATA_SPECIES);
+    level = GetMonData(mon, MON_DATA_LEVEL);
+    personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        moves[i] = GetMonData(mon, MON_DATA_MOVE1 + i);
+        pp[i] = GetMonData(mon, MON_DATA_PP1 + i);
+    }
+    CreateMon(mon, species, level, USE_RANDOM_IVS, TRUE, personality, OT_ID_PRESET, (u32)args[1]);
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        SetMonData(mon, MON_DATA_MOVE1 + i, &moves[i]);
+        SetMonData(mon, MON_DATA_PP1 + i, &pp[i]);
+    }
+    DebugTools_Print(out, "Pokemon %d : dresseur d'origine %u\n", args[0], GetMonData(mon, MON_DATA_OT_ID));
+}
+
 // Le Pokémon N de l'équipe devient un œuf prêt à éclore (MON_DATA_IS_EGG, 0 cycle d'éclosion dans l'amitié) ; le script
 // EventScript_EggHatch avec VAR_0x8004 = N le fait éclore (scénario egg_hatch_kanto)
 static void Cmd_Egg(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
@@ -1310,6 +1346,7 @@ static const u8 sName_SetMove[] = _("Donner une capacité");
 static const u8 sName_Mail[] = _("Lettre");
 static const u8 sName_Egg[] = _("Oeuf à faire éclore");
 static const u8 sName_SetHp[] = _("PV d'un Pokémon");
+static const u8 sName_OriginalTrainer[] = _("Dresseur d'origine");
 static const u8 sName_Battle[] = _("Combat");
 static const u8 sName_Sprites[] = _("Sprites");
 static const u8 sName_Palette[] = _("Palette");
@@ -1357,6 +1394,7 @@ const struct DebugTool gDebugTools[] =
     {"joueur.amitie", DEBUG_TOOLS_PLAYER, sName_Friendship, "N [V] : amitie du Pokemon N ; V la met", 1, Cmd_Friendship},
     {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE [PP] : donne la capacite (et ses PP, ou PP restants)", 3, Cmd_SetMove},
     {"joueur.pv", DEBUG_TOOLS_PLAYER, sName_SetHp, "N PV : PV du Pokemon N (au plus ses PV max)", 2, Cmd_SetHp},
+    {"joueur.dresseur", DEBUG_TOOLS_PLAYER, sName_OriginalTrainer, "N ID : dresseur d'origine du Pokemon N (un autre = echange : obeissance)", 2, Cmd_OriginalTrainer},
     {"joueur.oeuf", DEBUG_TOOLS_PLAYER, sName_Egg, "N : le Pokemon N devient un oeuf pret a eclore (EventScript_EggHatch, VAR_0x8004 = N)", 1, Cmd_Egg},
     {"joueur.lettre", DEBUG_TOOLS_PLAYER, sName_Mail, "N OBJET [1|2] : lettre ITEM_*_MAIL a 9 mots au Pokemon N ; 1 = la lire (sur la carte), 2 = l'envoyer au PC", 2, Cmd_Mail},
     {"combat.etat", DEBUG_TOOLS_BATTLE, sName_Battle, "type, combattants, controleurs", 0, Cmd_Battle},

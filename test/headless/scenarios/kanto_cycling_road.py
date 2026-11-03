@@ -2,7 +2,8 @@
 # - Route 16 avec la Piste en cours (VAR_KANTO_MAP_SCENE_ROUTE16 = 1, posée par le poste) : le joueur arrive à vélo
 #   (ForcePlayerOntoBike), FLAG_KANTO_SYS_ON_CYCLING_ROAD est posé, et SELECT (vélo enregistré) refuse qu'il descende ;
 # - après un TÉLÉPORT, puis après un K.O., il n'est plus considéré comme sur la Piste (Overworld_ResetKantoStateAfterWarp,
-#   le même que pour le Vol et la Corde Sortie).
+#   le même que pour le Vol et la Corde Sortie) ;
+# - portique nord de la Route 16 : sans vélo, le garde renvoie le joueur ; avec le vélo de Hoenn (FLAG_RECEIVED_BIKE), on passe.
 FIXTURE = "kanto"
 from driver import *  # les vérifications (expect...)
 import os, sys
@@ -69,3 +70,20 @@ def play(game):
     expect(game, game.battles and game.battles[-1]["outcome"] == "LOST", f"K.O. ({game.battles[-1:]})")
     expect_flag(game, "FLAG_KANTO_SYS_ON_CYCLING_ROAD", 0)
     expect_var(game, "VAR_KANTO_MAP_SCENE_ROUTE16", 0)
+
+    # Portique de la Route 16 : le garde arrête les piétons sans vélo ; le vélo de Hoenn (FLAG_RECEIVED_BIKE) suffit
+    for has_bike in (0, 1):
+        game.flag("FLAG_RECEIVED_BIKE", has_bike)
+        game.warp("Route16_NorthEntrance_1F", 10, 12); game.wait(40)
+        wait_until(game, lambda s: s.free)
+        since = mark(game)
+        game.press("LEFT", 16 * 6)
+        finish_dialog(game)
+        wait_until(game, lambda s: s.free)
+        said = " ".join(t for _, t in texts(game, since))
+        if has_bike:
+            expect(game, game.state.pos[0] <= 4 and "piétons" not in said,
+                   f"portique avec le vélo de Hoenn : passage libre ({game.state.pos}, {said[:60]})")
+        else:
+            expect(game, game.state.pos[0] >= 7 and "piétons" in said,
+                   f"portique sans vélo : le garde renvoie le joueur ({game.state.pos}, {said[:60]})")
