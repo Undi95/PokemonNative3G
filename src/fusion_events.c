@@ -174,6 +174,14 @@ void FishingChain_Start(u8 rod)
     sFishingRerolls = 0;
 }
 
+// outil jeu.peche (src/debug_tools.c) : la série en cours
+void FishingChain_GetState(u8 *count, u8 *rod, u8 *rerolls)
+{
+    *count = sFishingChain.count;
+    *rod = sFishingChain.rod;
+    *rerolls = sFishingRerolls;
+}
+
 // rien n'a mordu, ou il s'est échappé
 void FishingChain_Break(void)
 {

@@ -29,6 +29,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `joueur.pv N PV` | PV du Pokémon `N` de l'équipe (au plus ses PV max) ; à régler **avant** un combat, ses PV y sont copiés (scénario `kanto_whiteout` : 1 PV, K.O. au premier coup) |
 | | `jeu.stat N [V]` | statistique de jeu `GAME_STAT_*` (nombre d'entrées au Panthéon, date de la première, œufs éclos, victoires en link…), mise à `V` si donné (scénario `kanto_card_stickers`) |
 | | `jeu.errants [1\|2]` | Pokémon errants de la région (espèce, niveau, actif, carte, PV) ; `1` les lâche (`InitRoamer`, comme leur script), `2` les met sur la carte du joueur jusqu'au prochain changement de carte (scénario `kanto_roamer`) |
+| | `jeu.peche` | chaîne de pêche : POKéMON remontés d'affilée au même endroit, canne, tirages chromatiques en plus pour la prise en cours, cannes améliorées (scénario `fishing_chain_more`) |
 | | `jeu.menustart` | entrées du menu Start (`MENU_ACTION_*`) et curseur (`game.start_menu()` dans le banc) |
 | | `jeu.debug [N]` | les actions du menu DEBUG ; `N` fait l'action N (celles sans écran : soins, objets, Pokédex, passes, « Deux Ligues finies », POKé MONTURE + badges…), le même code que le menu (`DebugMenu_ApplyAction`) |
 | Carte | `carte.info` | carte, section, région, disposition, météo, musique, étage (`floorNum` : panneau de RF), joueur, connexions |
@@ -42,6 +43,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `scripts.histoire [N]` | **l'histoire finie sans sauvegarde** : `0` Hoenn, `1` Kanto, `2` les deux. Met chaque drapeau que les scripts mettent et ne retirent jamais (hors objets, cachés, temporaires, quotidiens), et chaque variable d'avancement à la dernière valeur que les scripts lui donnent (pas les variables remises à 0 : files d'attente, salles de défi). Déduit des scripts par `tools/debug_states.py` → `src/data/debug_states.h` (`--liste` les montre) |
 | Joueur | `joueur.equipe` | équipe : espèce, PV, objet, dresseur d'origine, lieu et jeu de rencontre, capacités et leurs PP |
 | | `joueur.sac` | argent, poches, objets du PC, objet enregistré sur SELECT |
+| | `joueur.enregistre OBJET` | l'objet enregistré sur SELECT (scénario `fishing_chain_more` : la canne) |
 | | `joueur.objetpc OBJET N` | dépose N objets au PC du joueur (`AddPCItem`), sans passer par le sac (scénario `kanto_item_pc_more`) |
 | | `joueur.jetons [N]` | jetons du Casino ; `N` les met (au plus 9 999) (scénario `kanto_money_coins_box`) |
 | | `joueur.capacite N PLACE CAPACITE [PP]` | donne une capacité (et ses PP) au Pokémon N, à la place 0-3 ; `PP` : PP restants, moins que le maximum (HUILE, scénario `kanto_item_use_scenes`) ; capacité `0` : place vide |

@@ -77,6 +77,8 @@
   Avec MENUS = HOENN, la boîte des jetons du Casino de Céladopole n'est plus à moitié hors de l'écran.
 - Télé Pokémon avec SAC = KANTO : allumée depuis le sac, après l'émission « Enregistrer un objet », on ne pouvait
   plus revenir sur la carte (fermer le sac ramenait à la télé, et fermer la télé au sac).
+- Jirachi (Chutes Météore) : après la POKé FLÛTE, JIRACHI apparaît tout de suite ; le joueur restait bloqué
+  43 secondes.
 
 ### Nouveautés
 - Kanto : en entrant dans un lieu, le panneau du nom est celui de Rouge Feu (boîte blanche en haut à gauche), avec

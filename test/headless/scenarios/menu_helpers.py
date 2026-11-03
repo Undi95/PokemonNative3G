@@ -20,26 +20,52 @@ def texts(game, since=0):
             if text.strip() not in ("▶", "")]
 
 
-def menu_index(game, since, label, first=None):
-    """Place de label dans le dernier menu écrit depuis since (bloc de textes d'une même fenêtre, ou depuis la
-    dernière entrée first quand un message a été écrit dans la même fenêtre juste avant le menu)."""
+def menu_block(game, since, label, first=None):
+    """(place de label, nombre d'entrées) dans le dernier menu écrit depuis since : bloc de textes d'une même
+    fenêtre, ou depuis la dernière entrée first quand un message a été écrit dans la même fenêtre juste avant."""
     shown = texts(game, since)
     last = max(i for i, (_, text) in enumerate(shown) if text == label)
-    if first is not None:
-        return last - max(i for i, (_, text) in enumerate(shown[:last + 1]) if text == first)
     window = shown[last][0]
-    start = last
-    while start > 0 and shown[start - 1][0] == window:
-        start -= 1
-    return last - start
+    if first is not None:
+        start = max(i for i, (_, text) in enumerate(shown[:last + 1]) if text == first)
+    else:
+        start = last
+        while start > 0 and shown[start - 1][0] == window:
+            start -= 1
+    end = last
+    while end + 1 < len(shown) and shown[end + 1][0] == window:
+        end += 1
+    return last - start, end - start + 1
 
 
-def pick(game, since, label, gap=12, first=None):
-    """Choisit label dans le menu qui vient de s'ouvrir (curseur sur la 1re entrée)."""
-    index = menu_index(game, since, label, first)
-    if index:
-        game.tap("DOWN", index, gap=gap); game.wait(10)
+def menu_index(game, since, label, first=None):
+    return menu_block(game, since, label, first)[0]
+
+
+def pick(game, since, label, gap=12, first=None, cursor=0):
+    """Choisit label dans le menu qui vient de s'ouvrir ; cursor : place de départ du curseur (0, ou "last" pour la
+    dernière entrée, comme le S.S. TIDAL)."""
+    index, count = menu_block(game, since, label, first)
+    start = count - 1 if cursor == "last" else cursor
+    if index > start:
+        game.tap("DOWN", index - start, gap=gap); game.wait(10)
+    elif index < start:
+        game.tap("UP", start - index, gap=gap); game.wait(10)
     game.tap("A")
+
+
+def printer_waits(game):
+    """Une imprimante de texte est arrêtée sur la flèche (RENDER_STATE_WAIT 1, RENDER_STATE_CLEAR 2 : fin de page ou
+    de message, RENDER_STATE_SCROLL_START 3 : ligne à faire défiler) : elle attend A ; la chaîne n'a pas toujours de ▼
+    à la fin."""
+    return any(f" etat {state} " in line for line in game.dev("texte.imprimantes").splitlines() for state in (1, 2, 3))
+
+
+def script_waits_button(game):
+    """Le jeu attend A ou B : waitbuttonpress (WaitForAorBPress), ou une imprimante arrêtée sur la flèche."""
+    if "WaitForAorBPress" in game.dev("scripts.contexte"):
+        return True
+    return printer_waits(game)
 
 
 def press_until_free(game, button="B", limit=12, gap=40):
@@ -78,10 +104,10 @@ def wait_action_menu(game, since=None, limit=3000):
         if not game.state.battle:
             raise GameError("combat fini avant le menu")
         box = [text for _, _, text in game.texts[since:] if text.strip() not in ("", "▶")]
-        if box and box[-1].rstrip().endswith("▼"):
+        if (box and box[-1].rstrip().endswith("▼")) or printer_waits(game):
             game.tap("A", gap=4)
         game.wait(26)
-    raise GameError(f"pas de menu de combat : {game.describe()}")
+    raise GameError(f"pas de menu de combat : {game.describe()} ; imprimantes : {game.dev('texte.imprimantes')}")
 
 
 def bag(game):

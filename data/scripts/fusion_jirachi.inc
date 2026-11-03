@@ -43,12 +43,13 @@ Fusion_EventScript_JirachiMeteorite::
 	playfanfare MUS_RG_POKE_FLUTE
 	waitfanfare
 	closemessage
+	@ pas de waitse : la mélodie de la POKé FLÛTE occupe le lecteur d'effets 2 pendant 51 s (piste du MIDI de RF,
+	@ qui finit bien après ses notes) ; RF n'attend jamais ce lecteur après elle (Ronflex). La clochette est finie
+	@ avant les deux fondus au blanc.
 	playse SE_M_HEAL_BELL
 	fadescreen FADE_TO_WHITE
 	fadescreen FADE_FROM_WHITE
-	waitse
 	message Fusion_Text_Jirachi
-	waitse
 	playmoncry SPECIES_JIRACHI, CRY_MODE_ENCOUNTER
 	delay 40
 	waitmoncry

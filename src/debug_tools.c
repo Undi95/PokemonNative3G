@@ -25,6 +25,7 @@
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
 #include "fieldmap.h"
+#include "fusion_events.h"
 #include "fusion_region.h"
 #include "gpu_regs.h"
 #include "item.h"
@@ -877,6 +878,29 @@ static void Cmd_Coins(const s32 *args, u32 argCount, struct DebugToolsOutput *ou
     DebugTools_Print(out, "jetons %u\n", GetCoins());
 }
 
+// Chaîne de pêche (fusion_events.c) : POKéMON remontés d'affilée au même endroit, canne, tirages chromatiques en
+// plus pour la prise en cours (scénario fishing_chain_more)
+static void Cmd_FishingChain(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    u8 count, rod, rerolls;
+
+    FishingChain_GetState(&count, &rod, &rerolls);
+    DebugTools_Print(out, "serie %u canne %u tirages %u ; ameliorees : canne %d super %d mega %d\n", count, rod, rerolls,
+                     FlagGet(FLAG_OLD_ROD_UPGRADED), FlagGet(FLAG_GOOD_ROD_UPGRADED), FlagGet(FLAG_SUPER_ROD_UPGRADED));
+}
+
+// Objet enregistré sur SELECT (scénario fishing_chain_more : la canne)
+static void Cmd_RegisterItem(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (args[0] < ITEM_NONE || args[0] >= ITEMS_COUNT)
+    {
+        DebugTools_Print(out, "refuse : objet 0-%d\n", ITEMS_COUNT - 1);
+        return;
+    }
+    gSaveBlock1Ptr->registeredItem = args[0];
+    DebugTools_Print(out, "enregistre (SELECT) %d\n", gSaveBlock1Ptr->registeredItem);
+}
+
 // Objet déposé au PC du joueur (AddPCItem), sans passer par le sac (scénario kanto_item_pc_more)
 static void Cmd_PcItem(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
@@ -1219,6 +1243,8 @@ static const u8 sName_Party[] = _("Équipe");
 static const u8 sName_Bag[] = _("Sac et argent");
 static const u8 sName_Coins[] = _("Jetons");
 static const u8 sName_PcItem[] = _("Objet au PC");
+static const u8 sName_FishingChain[] = _("Chaîne de pêche");
+static const u8 sName_RegisterItem[] = _("Objet sur SELECT");
 static const u8 sName_SetMove[] = _("Donner une capacité");
 static const u8 sName_Mail[] = _("Lettre");
 static const u8 sName_Egg[] = _("Oeuf à faire éclore");
@@ -1263,6 +1289,8 @@ const struct DebugTool gDebugTools[] =
     {"joueur.sac", DEBUG_TOOLS_PLAYER, sName_Bag, "argent et poches du sac", 0, Cmd_Bag},
     {"joueur.jetons", DEBUG_TOOLS_PLAYER, sName_Coins, "[N] : jetons du Casino ; N les met", 0, Cmd_Coins},
     {"joueur.objetpc", DEBUG_TOOLS_PLAYER, sName_PcItem, "OBJET N : depose N objets au PC du joueur", 2, Cmd_PcItem},
+    {"jeu.peche", DEBUG_TOOLS_GAME, sName_FishingChain, "serie de peche en cours, canne, cannes ameliorees", 0, Cmd_FishingChain},
+    {"joueur.enregistre", DEBUG_TOOLS_PLAYER, sName_RegisterItem, "OBJET : l'objet enregistre sur SELECT", 1, Cmd_RegisterItem},
     {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE [PP] : donne la capacite (et ses PP, ou PP restants)", 3, Cmd_SetMove},
     {"joueur.pv", DEBUG_TOOLS_PLAYER, sName_SetHp, "N PV : PV du Pokemon N (au plus ses PV max)", 2, Cmd_SetHp},
     {"joueur.oeuf", DEBUG_TOOLS_PLAYER, sName_Egg, "N : le Pokemon N devient un oeuf pret a eclore (EventScript_EggHatch, VAR_0x8004 = N)", 1, Cmd_Egg},
