@@ -81,6 +81,17 @@
   43 secondes.
 - Cap Falaise (Île 2) : le tuteur enseigne de nouveau VEGE-ATTAK, RAFALE FEU et HYDROBLAST à FLORIZARRE, DRACAUFEU
   et TORTANK (il proposait DYNAMOPOING, ROULADE ou BOOST, qu'ils ne peuvent pas apprendre).
+- Sauvegardes : celles de Windows se lisent enfin sur Android et sous Linux (et inversement). L'exe Windows rangeait
+  une partie des données autrement que les autres versions (et que la cartouche) : un téléphone voyait une sauvegarde
+  vide. Les sauvegardes Windows des versions 1.0 et 1.1 sont converties au chargement, rien à faire.
+- Sauvegardes : sur Android et Linux, une sauvegarde faite une seule fois (l'autre emplacement encore vide) pouvait
+  faire planter le jeu au démarrage, selon la place que le système lui donnait en mémoire.
+- Plus de lecture ou d'écriture hors limites (vues par AddressSanitizer) : fiche d'une capacité à apprendre (Maître
+  des capacités, MENUS = KANTO), portes et fenêtre d'étage des ascenseurs de Céladopole, Sylphe SARL, Repaire Rocket
+  et Tour des Dresseurs, sortie d'une grotte sombre éclairée par FLASH.
+- Clavier (PC) : les touches de pokeemerald.ini sont celles dont le nom est écrit sur le clavier, quelle que soit sa
+  disposition. Sur un clavier AZERTY, A = la touche Z (et non plus W), L = la touche A (et non plus Q) ; on peut aussi
+  choisir une touche propre à son clavier (« key_a = ù »). La rangée des chiffres reste 1 à 0 sur tous les claviers.
 
 ### Nouveautés
 - Kanto : en entrant dans un lieu, le panneau du nom est celui de Rouge Feu (boîte blanche en haut à gauche), avec
@@ -156,7 +167,8 @@ dialogue, boîtes de combat, menus, sac, Pokédex, sprites des Pokémon, écran 
 ### Confort
 - Courir partout, vitesse du texte, CHERCH'OBJET et K.O. de Rouge Feu partout (perte d'argent, retour devant
   l'infirmière).
-- Fenêtre redimensionnable, plein écran, écran tactile (téléphone : boutons à l'écran ; RESET à maintenir 1 s).
+- Fenêtre redimensionnable, plein écran, écran tactile (téléphone : boutons à l'écran ; RESET à maintenir un court
+  instant).
 - Avance rapide (touche dédiée).
 
 ### Technique

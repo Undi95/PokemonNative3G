@@ -107,6 +107,18 @@ the scenario: a screen nobody compares can hide a regression.
 
 A scenario that sets `FIXTURE = "kanto"` starts from the save that
 `scenarios/fixture_kanto.py` ends with (a new game in Pallet Town), made once per build.
+One that sets `SAVE = "windows-1.1-hoenn.sav"` starts from that file of `saves/`: saves
+kept as an older version wrote them, which the game has to keep loading (`save_old_windows`).
+
+`boulders.py` finds the pushes that take a STRENGTH boulder onto a tile (a hole, a
+switch) on the map as it is in the game, and plays them (`kanto_strength_puzzles`).
+
+`KANTO_START = 0` (the Hoenn intro, the truck) works for both kinds of scenarios; without
+it, a new game starts in Pallet Town (`--kanto-start 1`, or the `KANTO_START` environment
+variable). The `steps` scenarios of `compare.py` (`new_game`, then `continue_game`,
+`first_battle`, `soft_reset`, `rival_battle` from its save) were timed for an older game:
+they no longer reach the save, so the chain past `new_game` plays from no save (to redo
+with `play(game)`).
 
 ## Scenarios
 

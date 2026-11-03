@@ -10,7 +10,11 @@ roche (Plateau Indigo), dresseurs d'Argenta. Vérifiés par les tests headless (
 Kanto, trous des Îles Écume, glace de la Grotte de Glace (neuve en revenant, comme RF), objets cachés qui
 réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, cartes murales et POKéNAV.
 
-- [ ] F5 = reset du jeu (retour à l'écran titre) ; touche modifiable via `key_reset` dans pokeemerald.ini (ligne ajoutée automatiquement aux .ini existants)
+Bancs automatiques des plateformes (2026-11-03, `tools/env/README.md`) : vrai exe Windows (`test/desktop/run.py`),
+Linux en WSL (`test/desktop/linux_bench.py`), émulateur Android (`test/android/run.py`).
+
+- [x] F5 = reset du jeu (retour à l'écran titre) ; touche modifiable via `key_reset` dans pokeemerald.ini (ligne ajoutée automatiquement aux .ini existants) — banc Windows `reset` : F5 relance, ligne ajoutée à un ancien .ini, `key_reset = F6` (F5 ne fait plus rien)
+- [x] Clavier universel (2026-11-03) : une touche du .ini = la touche où ce nom est écrit, quelle que soit la disposition — banc Windows `clavier` (AZERTY : Z = A, `key_a = ù`)
 
 
 
@@ -37,11 +41,11 @@ réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, c
 - [x] Chaîne de pêche : chromatique quand les tirages gagnent (`fishing_chain.py`, build de test) ; avec la vraie build et des graines fixes (outil `jeu.peche`) : les trois gourous (Carmin, Parmanie, Route 12) disent où trouver la canne à Hoenn sans elle et l'améliorent avec ; la série s'allonge à chaque prise au même endroit, « Rien de rien… » la brise, un pas la remet à zéro (`fishing_chain_more.py`, 2026-11-03). Feebas : la chaîne recrée le POKéMON pêché avec la même espèce (code), les cases de Feebas ne changent pas
 ## Plateformes (docs/PLATEFORMES.md)
 - [ ] Vallée Ruine (Île 6, 2026-10-24) : textes braille de Kanto enfin affichés (en-tête attendu par le moteur d'Émeraude ; vérifié en headless, `kanto_dotted_hole.py`) ; porte du Trou Pointé : COUPE depuis le menu de l'équipe, face à la porte (24,25 regard nord), ouvre la porte (code de RF dans fldeff_cut.c ; vérifié en headless : KADABRA du debug connaît COUPE, on entre dans le Trou Pointé). Aussi : énigmes braille des chambres de Tanoby
-- [ ] Pension de l'Île 4 (2026-10-24) : le vieil homme se déplace quand un œuf attend (le script lisait un flag de Kanto jamais posé)
-- [ ] Android : touches tactiles (croix 8 directions, A/B, L/R, SELECT / RESET / START ; RESET maintenu 1 s = retour à l'écran titre), plusieurs doigts à la fois
-- [ ] Android : sauvegarder, quitter l'appli, relancer → la sauvegarde est là ; mettre en arrière-plan puis revenir
-- [ ] Android : manette Bluetooth
-- [ ] Linux : `out/linux/pokeemeraude64` sur une vraie machine Linux (SDL2 installé), fenêtre + son + manette
+- [x] Pension de l'Île 4 (2026-10-24) : le vieil homme se déplace quand un œuf attend (le script lisait un flag de Kanto jamais posé) — `kanto_four_island_daycare_man` : (16, 13) sans œuf, (16, 14) avec
+- [x] Android : touches tactiles (croix 8 directions, A/B, L/R, SELECT / RESET / START ; RESET maintenu 0,3 s = retour à l'écran titre), plusieurs doigts à la fois — banc Android `zones`, `doigts`, `reset` (émulateur Pixel 6 : la fenêtre évite l'encoche, zones recalculées dedans ; RESET effleuré / 0,15 s : rien, 0,6 s : intro ; A+RIGHT, B+UP+R, L+DOWN+LEFT ensemble)
+- [x] Android : sauvegarder, quitter l'appli, relancer → la sauvegarde est là ; mettre en arrière-plan puis revenir — banc Android `sauvegarde`, `arriereplan` : une sauvegarde faite sur PC se continue, SAUVER au menu Start réécrit le fichier, force-stop puis CONTINUER = même carte et même case ; accueil puis retour : même partie (pas de redémarrage, jeu en pause en arrière-plan), même musique
+- [x] Android : manette Bluetooth — banc Android `manette` : manette HID virtuelle sur le bus Bluetooth (outil `hid` d'Android, le chemin d'une vraie manette Bluetooth) : A, B, X (= B), START, SELECT, L1, R1, croix (4 directions et diagonale), stick
+- [x] Linux : `out/linux/pokeemeraude64` sur une vraie machine Linux (SDL2 installé), fenêtre + son + manette — banc Linux (Ubuntu 24.04 en WSL2, WSLg) : fenêtre X11, son (enregistré : crête 8980), clavier (xdotool), manette Xbox 360 virtuelle (uinput) : boutons, croix, stick. Sous le Wayland de WSLg, SDL 2.30.0 d'Ubuntu plante à la création du rendu (un programme SDL minimal aussi) : X11, le choix par défaut de SDL, n'est pas touché
 ## Option PERSO (RED / LEAF)
 - [ ] Sprites faits pour Red/Leaf (tools/redleaf_sprites.py, d'après Brendan/May) : Vélo Cross (roue arrière, sauts, plus de crash ; Red vérifié en headless, scénario `redleaf_acro.py`), arrosoir (baies), plongée (sous l'eau). Dire si une pose cloche
 - [ ] LEAF partout : carte, carte dresseur, dos en combat (et ses frames de lancer)
@@ -50,25 +54,25 @@ réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, c
 - [ ] Repasser en BRICE/FLORA : tout redevient Émeraude
 
 ## Combat
-- [ ] Perdre contre le rival de la Route 22 : texte du rival puis retour au Centre (plus de crash)
-- [ ] Légendaires de Kanto (Mewtwo, Électhor, Sulfura, Artikodin, Deoxys, Lugia, Ho-Oh) : musique RF
-- [ ] Îles du Sud (Latios/Latias via ticket) : combat lancé
+- [x] Perdre contre le rival de la Route 22 : texte du rival puis retour au Centre (plus de crash) — `kanto_rival_route22_loss` : « BLUE: Reviens, ROUCOOL! », « Je suis fort, hein? », 16¥ perdus, reprise à Jadielle, la scène reste à faire (comme RF)
+- [x] Légendaires de Kanto (Mewtwo, Électhor, Sulfura, Artikodin, Deoxys, Lugia, Ho-Oh) : musique RF — `kanto_legendaries_music` : chacun rencontré sur sa carte, MUS_RG_VS_MEWTWO / MUS_RG_VS_DEOXYS / MUS_RG_VS_LEGEND ; musiques des cartes identiques à RF
+- [x] Îles du Sud (Latios/Latias via ticket) : combat lancé — `southern_island_lati` : LATIOS ou LATIAS selon le choix à la télé, pas de combat sans le passe
 
 ## Warps et terrain de RF
-- [ ] Rocher de Force poussé dans un trou (Îles Écume) : il disparaît et réapparaît en dessous
-- [ ] Interrupteurs de la Route Victoire : un rocher dessus déclenche l'ouverture
-- [ ] Courir (Chaussures de Course) sur les escaliers de roche : course ralentie
-- [ ] Vélo Course sur les escaliers de roche : bridé à la 2e vitesse ; Vélo Cross normal
-- [ ] Courant des Îles Écume B4F : dépose le joueur sur la terre
+- [x] Rocher de Force poussé dans un trou (Îles Écume) : il disparaît et réapparaît en dessous — `kanto_strength_puzzles` (poussées trouvées par `test/headless/boulders.py`) : SE_FALL, rocher caché au 1F, rocher en (30, 8) au B1F
+- [x] Interrupteurs de la Route Victoire : un rocher dessus déclenche l'ouverture — même scénario : rocher (7, 18) jusqu'à l'interrupteur (20, 16), SE_ICE_BREAK, barrière (12, 14) ouverte
+- [x] Courir (Chaussures de Course) sur les escaliers de roche : course ralentie — `kanto_rock_stairs_speed` (Plateau Indigo, mesuré pas à pas) : marche 16 → 23 images par case, course 8 → 11, comme le code de RF
+- [x] Vélo Course sur les escaliers de roche : bridé à la 2e vitesse ; Vélo Cross normal — même scénario : Vélo Course 4 → 8 sur les marches, Vélo Cross 6 partout
+- [x] Courant des Îles Écume B4F : dépose le joueur sur la terre — `kanto_seafoam_b4f_current` : chute par les deux trous du B3F, le courant emporte, débarquement à pied en (12, 12)
 - [ ] Dalles tournantes (2026-10-31) : vérifié en headless avec Brice (`kanto_tiles.py` : Arène de Jadielle, glissade jusqu'à la dalle d'arrêt). Non testés : avec Red/Leaf, chaînes de dalles qui changent de direction, Repaire Rocket, dalle qui bute sur un mur ou un dresseur
 - [ ] Rencontres de Kanto selon le type de rencontre de RF (2026-10-31) : vérifié sur le sable du Mt. Moon 1F (`kanto_tiles.py`). Non testés : Mt. Ember, Route Victoire, Îles Écume, surf (eau de Kanto), Doux Parfum
 - [ ] Objets d'intérieur de RF (2026-10-31) : vérifiés placard, télé, lampes, machine et bibliothèque de Bourg Palette (`kanto_tiles.py`). Non testés : cuisine, commode, nourriture, plans, tableau, téléphone, affiche, poubelle, tasse, outils, rayon de boutique, maison cambriolée, moniteur de la Tour des Dresseurs ; eau de la Piste Cyclable (Surf) ; traces de pas sur le sable des grottes
 
 ## Specials de RF (scripts de Kanto)
-- [ ] PC qui s'allume / s'éteint (Centres Pokémon, chambre du joueur)
+- [x] PC qui s'allume / s'éteint (Centres Pokémon, chambre du joueur) — `kanto_pc_and_clerks` : métatuile du PC allumée menu ouvert puis éteinte (Jadielle 0x062/0x063, chambre 0x28f/0x28a), SE_PC_ON / SE_PC_OFF
 - [x] Ascenseurs : Centre Commercial de Céladopole (« Niveau: RC », curseur sur RC, « ding dong », sortie au 5F ; `kanto_specials_a.py`), Sylphe SARL (liste qui défile, sortie au 11F) et repaire Rocket (B1F → B4F) — `kanto_specials_b.py`, 2026-11-03
 - [x] Menus de liste RF : badges d'Azuria, étages de Sylphe SARL, Poudre Baie (`kanto_specials_b.py`)
-- [ ] Vendeurs des Boutiques Pokémon (bon PNJ qui parle)
+- [x] Vendeurs des Boutiques Pokémon (bon PNJ qui parle) — `kanto_pc_and_clerks` : les 12 Boutiques de Kanto et des îles, le grand magasin de Céladopole (2F ×2, 4F, 5F ×2), le Plateau Indigo, l'Île 2 et la Tour des Dresseurs
 - [x] Casino de Céladopole : machines à sous (`kanto_slots_wins.py`)
 - [x] Vérificateur de surnoms (Lavanville) : écran des noms, nom gardé (`kanto_specials_b.py`)
 - [x] Poubelles de Carmin : les deux interrupteurs ouvrent la porte (`kanto_specials_a.py`)
@@ -77,7 +81,7 @@ réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, c
 - [x] Massage de Daisy : amitié +3 (+1 pour un POKéMON rencontré à Bourg Palette, règle d'AdjustFriendship), attente remise à 0, puis seulement l'avis sur l'amitié (`kanto_specials_b.py`)
 - [x] Cap Falaise (Île 2) : VEGE-ATTAK apprise à FLORIZARRE (`kanto_specials_b.py`, 2026-11-03). **Bug trouvé et corrigé** : le tuteur essayait d'enseigner DYNAMOPOING (numéros de tuteur de RF lus dans la table d'Émeraude) ; les capacités ultimes ne pouvaient pas s'apprendre
 - [x] Pension de la Route 5 : PIKACHU déposé, 150 pas, sauvegarde et redémarrage, il a grandi, repris contre de l'argent (`kanto_specials_a.py`)
-- [ ] Pension de l'Île 4 : coût, courrier
+- [x] Pension de l'Île 4 : coût, courrier — `kanto_four_island_daycare` : ZIGZATON N.2 → N.6, 500¥ (100 + 4 × 100), revient avec sa LETTRE ORANGE
 - [x] Records de taille : MAGICARPE (FILET BALL) et SCARHINO (FAIBLO BALL) mesurés (`kanto_specials_a.py`)
 - [ ] Fan Club de Safrania : fans gagnés / perdus, noms
 - [x] Poudre Baie : échange (500 → 450, objet obtenu) (`kanto_specials_b.py`)
@@ -91,19 +95,19 @@ réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, c
 - [ ] Braille avec Options > DIALOGUE = KANTO (2026-10-31) : flèche rouge animée de RF au bout des messages braille de Kanto (Chemin Rubis du Mont Braise, Trou Pointé), textes braille de Hoenn en entier (Caveau Scellé, Ruines du Désert, Grotte de l'Île, Tombeau Ancien) ; vérifié en headless (`braille_dialog_kanto`). À voir en jeu : la flèche n'apparaît pas avec DIALOGUE = HOENN (comme dans Émeraude)
 - [ ] Départ pour Kanto (2026-10-31) : après la Ligue, PAPA parle du navire pour KANTO en donnant le PASSE BATEAU (non vérifié en headless) ; KANTO dans le menu du ferry de POIVRESSEL et de NÉNUCRIQUE, texte du marin au premier voyage, départ du ferry animé, arrivée à Bourg Palette, puis plus de KANTO dans le menu tant que les régions ne sont pas reliées ; ensuite « Cap sur CARMIN SUR MER » (vérifié en headless : `kanto_travel*`). menu défilant de Nénucrique avec toutes les destinations vérifié en headless (`ferry_kanto_scroll`)
 - [ ] Objets « clone » de RF (2026-10-31) : l'obstacle de la carte voisine est là avant de franchir la jonction, sans doublon après (vérifié en headless : `kanto_clone_tree`, Route 2 → Jadielle). À voir à l'écran : arbre de Céladopole depuis la Route 7 et la Route 16, arbres d'Azuria (Route 9), de la Route 14 (Route 15), de l'Île 5, gros homme de Bourg Palette depuis la Route 21 (en surfant), garde de la Grotte Azurée depuis la Route 4, maître de Danse-Lames (Île 7) depuis l'entrée du Canyon
-- [ ] Piste Cyclable (Route 16-18) : impossible de descendre du vélo ; après Vol / Téléport / K.O., plus considéré comme sur la Piste
-- [ ] Battements d'ailes (son), drapeaux d'après-Ligue
+- [x] Piste Cyclable (Route 16-18) : impossible de descendre du vélo ; après Vol / Téléport / K.O., plus considéré comme sur la Piste — `kanto_cycling_road` : arrivée à vélo d'office, SELECT refusé (« Impossible de descendre de VELO ici. »), état oublié après TÉLÉPORT et après K.O. (le Vol passe par la même remise à zéro)
+- [x] Battements d'ailes (son), drapeaux d'après-Ligue — HO-OH (`kanto_legendaries_music`) : 2 × 3 SE_M_WING_ATTACK à 35 images d'écart ; `kanto_celio_network` : la scène de CILEO pose CHAMPION_SAVEWARP, les liens GameCube (bits 1, 2, 3, 15) et FLAG_KANTO_SYS_CAN_LINK_WITH_RS
 
 ## Démarrage
-- [ ] Nouvelle partie : ID dresseur différent à chaque partie (avant : partie basse toujours 0 sur PC)
-- [ ] Rencontres / shiny : résultats différents d'un lancement à l'autre (graine aléatoire corrigée)
+- [x] Nouvelle partie : ID dresseur différent à chaque partie (avant : partie basse toujours 0 sur PC) — banc Windows `id` : deux nouvelles parties (discours de Birch jusqu'au camion), ID différents, parties publique et secrète non nulles
+- [x] Rencontres / shiny : résultats différents d'un lancement à l'autre (graine aléatoire corrigée) — banc Windows `hasard` : 3 lancements, 3 graines différentes
 
 ## Vagabonds
-- [ ] Île 1 (après le Réseau Sevii) : Raikou, Entei et Suicune lâchés tous les trois à Kanto, N.50
-- [ ] Les rencontrer sur les routes de Kanto ; ils changent de route ; PV/statut gardés entre deux combats
-- [ ] Un chien qui utilise Hurlement : il reste en liberté (avant : disparu pour toujours)
-- [ ] IV des chiens normaux (pas seulement PV/Attaque)
-- [ ] Hoenn : Latios ou Latias (choix à la TV) toujours là, indépendant des chiens
+- [x] Île 1 (après le Réseau Sevii) : Raikou, Entei et Suicune lâchés tous les trois à Kanto, N.50 — `kanto_celio_network` (la vraie scène de CILEO)
+- [x] Les rencontrer sur les routes de Kanto ; ils changent de route ; PV/statut gardés entre deux combats — `kanto_roamers_more` : routes différentes à chaque changement de carte, PV gardés après une fuite et repris à la rencontre suivante
+- [x] Un chien qui utilise Hurlement : il reste en liberté (avant : disparu pour toujours) — même scénario : piégé par REGARD NOIR, ENTEI ou RAIKOU finit par utiliser HURLEMENT, il reste actif
+- [x] IV des chiens normaux (pas seulement PV/Attaque) — même scénario : IV sur les 30 bits
+- [x] Hoenn : Latios ou Latias (choix à la TV) toujours là, indépendant des chiens — même scénario : LATIAS lâché à Hoenn, toujours actif après tout ça, et seul à Hoenn
 
 ## Carte dresseur
 - [ ] À Hoenn : carte d'Émeraude + badges de Hoenn ; SELECT → carte de Kanto + badges de Kanto
