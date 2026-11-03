@@ -47,7 +47,7 @@ struct PadInput
 
 struct Binding
 {
-    SDL_Scancode keys[MAX_BINDING_INPUTS];
+    SDL_Keycode keys[MAX_BINDING_INPUTS];
     struct PadInput pads[MAX_BINDING_INPUTS];
     u8 numKeys;
     u8 numPads;
@@ -70,8 +70,9 @@ static const char sDefaultSettings[] =
     "# Start in fullscreen. F11 or Alt+Enter switches while playing.\n"
     "fullscreen = false\n"
     "\n"
-    "# The keys for each button, separated by commas. Keys are named for where they\n"
-    "# are on a US keyboard: letters, digits, Return, Space, Backspace, Tab, Up,\n"
+    "# The keys for each button, separated by commas. Keys are named by what is\n"
+    "# written on them, whatever the keyboard (AZERTY, QWERTY...), except the row\n"
+    "# of digits, always 1 to 0: letters, digits, Return, Space, Backspace, Tab, Up,\n"
     "# Down, Left, Right, Left Shift, Right Ctrl, Keypad 8 and so on (SDL's names).\n"
     "key_a = Z\n"
     "key_b = X\n"
@@ -107,7 +108,8 @@ static const char sDefaultSettings[] =
 struct Settings gSettings;
 static struct Binding sBindings[NUM_BINDINGS];
 static SDL_GameController *sControllers[MAX_CONTROLLERS];
-static Uint8 sTestKeyboard[SDL_NUM_SCANCODES];
+static SDL_Keycode sTestKeys[MAX_BINDING_INPUTS * NUM_BINDINGS];
+static int sNumTestKeys;
 static struct PadState sTestPad;
 
 static char *Trim(char *text)
@@ -123,10 +125,30 @@ static char *Trim(char *text)
     return text;
 }
 
-static bool ParseKey(const char *name, SDL_Scancode *key)
+// A key by what is written on it (SDL key name: "Z", "é", "Return", "Keypad 8"): the binding follows the keyboard
+// layout, "Z" is the key marked Z on an AZERTY keyboard as on a QWERTY one
+static bool ParseKey(const char *name, SDL_Keycode *key)
 {
-    *key = SDL_GetScancodeFromName(name);
-    return *key != SDL_SCANCODE_UNKNOWN;
+    *key = SDL_GetKeyFromName(name);
+    return *key != SDLK_UNKNOWN;
+}
+
+// keyboard: SDL's state, by position; the key's position comes from the layout in use. NULL: the test mode's keys
+static bool KeyHeld(SDL_Keycode key, const Uint8 *keyboard)
+{
+    SDL_Scancode scancode;
+
+    if (keyboard == NULL)
+    {
+        for (int i = 0; i < sNumTestKeys; i++)
+        {
+            if (sTestKeys[i] == key)
+                return true;
+        }
+        return false;
+    }
+    scancode = SDL_GetScancodeFromKey(key);
+    return scancode != SDL_SCANCODE_UNKNOWN && keyboard[scancode];
 }
 
 // A button, a trigger, or a stick's direction, like "leftx-"
@@ -356,7 +378,7 @@ static u32 BindingsHeld(const Uint8 *keyboard, const struct PadState *pads, int 
 
         for (int j = 0; j < binding->numKeys; j++)
         {
-            if (keyboard[binding->keys[j]])
+            if (KeyHeld(binding->keys[j], keyboard))
                 held |= 1 << i;
         }
         for (int pad = 0; pad < numPads; pad++)
@@ -404,7 +426,7 @@ u16 Input_GetButtons(bool *speedUp)
 
 void Input_ReleaseTestInputs(void)
 {
-    memset(sTestKeyboard, 0, sizeof(sTestKeyboard));
+    sNumTestKeys = 0;
     memset(&sTestPad, 0, sizeof(sTestPad));
 }
 
@@ -412,11 +434,12 @@ bool Input_PressTestInput(const char *name)
 {
     if (strncmp(name, "key:", 4) == 0)
     {
-        SDL_Scancode key;
+        SDL_Keycode key;
 
         if (!ParseKey(name + 4, &key))
             return false;
-        sTestKeyboard[key] = 1;
+        if (sNumTestKeys < (int)ARRAY_COUNT(sTestKeys))
+            sTestKeys[sNumTestKeys++] = key;
         return true;
     }
     if (strncmp(name, "pad:", 4) == 0)
@@ -436,6 +459,6 @@ bool Input_PressTestInput(const char *name)
 
 u16 Input_GetTestButtons(void)
 {
-    return BindingsHeld(sTestKeyboard, &sTestPad, 1) & KEYS_MASK;
+    return BindingsHeld(NULL, &sTestPad, 1) & KEYS_MASK;
 }
 #endif // PORTABLE
