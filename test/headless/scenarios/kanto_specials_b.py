@@ -226,10 +226,10 @@ def resort(game):
 
 @part("poupees")
 def dolls(game):
-    game.dev("jeu.stat", names.number("GAME_STAT_ENTERED_HOF"), 0)
+    game.dev("jeu.stat", names.number("GAME_STAT_KANTO_ENTERED_HOF"), 0)     # (compteur de Kanto)
     game.warp("FourIsland_LoreleisHouse", 7, 6); game.wait(60)
     none = game.dev("carte.objets").count("\n")
-    game.dev("jeu.stat", names.number("GAME_STAT_ENTERED_HOF"), 200)
+    game.dev("jeu.stat", names.number("GAME_STAT_KANTO_ENTERED_HOF"), 200)
     game.warp("FourIsland_LoreleisHouse", 7, 6); game.wait(60)
     log(game, "poupees")
     return none, game.dev("carte.objets").count("\n")

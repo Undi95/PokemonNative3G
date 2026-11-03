@@ -247,7 +247,7 @@ u16 GetRandomSlotMachineId(void)
 
 void UpdateLoreleiDollCollection(void)
 {
-    u32 numHofClears = GetGameStat(GAME_STAT_ENTERED_HOF);
+    u32 numHofClears = GetGameStat(GAME_STAT_KANTO_ENTERED_HOF); // (compteur de Kanto)
     if (numHofClears >= 25)
     {
         FlagClear(FLAG_KANTO_HIDE_LORELEI_HOUSE_MEOWTH_DOLL);
@@ -272,7 +272,7 @@ u16 StickerManGetBragFlags(void)
 {
     u16 result = 0;
     u32 numEggs;
-    gSpecialVar_0x8004 = GetGameStat(GAME_STAT_ENTERED_HOF);
+    gSpecialVar_0x8004 = GetGameStat(GAME_STAT_KANTO_ENTERED_HOF); // (compteur de Kanto)
     numEggs = GetGameStat(GAME_STAT_HATCHED_EGGS);
     gSpecialVar_0x8006 = GetGameStat(GAME_STAT_LINK_BATTLE_WINS);
     if (numEggs > 0xFFFF)

@@ -417,7 +417,13 @@ static void LoadMapNamePopUpWindowBg(void)
     }
     popUpThemeId = sMapSectionToThemeId[regionMapSectionId];
 
+#ifdef UBFIX
+    // Émeraude copie 0x400 octets d'un cadre de 960 (30 tuiles, TILE_TOP_EDGE_START à TILE_BOT_EDGE_END) : pour le
+    // dernier thème (STONE2), lu après la fin du tableau
+    LoadBgTiles(GetWindowAttribute(popupWindowId, WINDOW_BG), sMapPopUp_OutlineTable[popUpThemeId], sizeof(sMapPopUp_OutlineTable[0]), 0x21D);
+#else
     LoadBgTiles(GetWindowAttribute(popupWindowId, WINDOW_BG), sMapPopUp_OutlineTable[popUpThemeId], 0x400, 0x21D);
+#endif
     CallWindowFunction(popupWindowId, DrawMapNamePopUpFrame);
     PutWindowTilemap(popupWindowId);
     if (gMapHeader.weather == WEATHER_UNDERWATER_BUBBLES)

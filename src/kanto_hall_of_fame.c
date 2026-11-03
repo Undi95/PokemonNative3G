@@ -775,7 +775,10 @@ static void Task_Hof_InitTeamSaveData(u8 taskId)
 static void Task_Hof_TrySaveData(u8 taskId)
 {
     gGameContinueCallback = KantoCB2_DoHallOfFameScreenDontSaveData;
-    // PokemonNative3G : Panthéon de Kanto dans le bloc annexe, puis la partie
+    // PokemonNative3G : Panthéon de Kanto dans le bloc annexe, puis la partie ; comme SaveGame(SAVE_HALL_OF_FAME) de RF,
+    // l'entrée au Panthéon est comptée (n° du Panthéon au PC, poupées d'OLGA, autocollant), dans le compteur de Kanto
+    if (GetGameStat(GAME_STAT_KANTO_ENTERED_HOF) < 999)
+        IncrementGameStat(GAME_STAT_KANTO_ENTERED_HOF);
     KantoHallOfFame_Write(gDecompressionBuffer, sizeof(struct HallofFameTeam) * HALL_OF_FAME_MAX_TEAMS);
     TrySavingData(SAVE_NORMAL);
     PlaySE(SE_SAVE);
@@ -1090,12 +1093,20 @@ static void Task_HofPC_CopySaveData(u8 taskId)
                 break;
         }
 
+        // PokemonNative3G : aucune équipe enregistrée (bloc annexe vide) : comme RF quand les secteurs du Panthéon
+        // sont vides (Save_LoadGameData ne rend pas SAVE_STATUS_OK), le message d'erreur ; sinon l'équipe -1 est lue
+        if (i == 0)
+        {
+            gTasks[taskId].func = Task_HofPC_PrintDataIsCorrupted;
+            return;
+        }
+
         if (i < HALL_OF_FAME_MAX_TEAMS)
             gTasks[taskId].data[0] = i - 1;
         else
             gTasks[taskId].data[0] = HALL_OF_FAME_MAX_TEAMS - 1;
 
-        gTasks[taskId].data[1] = GetGameStat(GAME_STAT_ENTERED_HOF);
+        gTasks[taskId].data[1] = GetGameStat(GAME_STAT_KANTO_ENTERED_HOF); // (compteur de Kanto)
 
         gTasks[taskId].func = Task_HofPC_DrawSpritesPrintText;
     }
@@ -1589,8 +1600,9 @@ bool8 EnterHallOfFame(void)
     HealPlayerParty();
     gKantoHasHallOfFameRecords = FlagGet(FLAG_KANTO_SYS_GAME_CLEAR);
     FlagSet(FLAG_KANTO_SYS_GAME_CLEAR);
-    if (GetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME) == 0)
-        SetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME, (gSaveBlock2Ptr->playTimeHours << 16) | (gSaveBlock2Ptr->playTimeMinutes << 8) | gSaveBlock2Ptr->playTimeSeconds);
+    // (compteur de Kanto : la date d'entrée au Panthéon de la carte de Kanto)
+    if (GetGameStat(GAME_STAT_KANTO_FIRST_HOF_PLAY_TIME) == 0)
+        SetGameStat(GAME_STAT_KANTO_FIRST_HOF_PLAY_TIME, (gSaveBlock2Ptr->playTimeHours << 16) | (gSaveBlock2Ptr->playTimeMinutes << 8) | gSaveBlock2Ptr->playTimeSeconds);
     SetContinueGameWarpStatus();
     SetContinueGameWarpToHealLocation(HEAL_LOCATION_PALLET_TOWN);
     for (i = 0; i < PARTY_SIZE; i++)

@@ -14,13 +14,19 @@
 #include "gba/m4a_internal.h"
 #include "battle.h"
 #include "battle_setup.h"
+#include "berry.h"
 #include "berry_powder.h"
 #include "coins.h"
+#include "contest_util.h"
+#include "trainer_card.h"
+#include "constants/contest.h"
 #include "day_night.h"
 #include "debug_menu.h"
 #include "debug_checks.h"
 #ifdef PORTABLE
 #include "platform/devtools.h"
+#include "platform/framedraw.h"
+#include "platform/dma.h"
 #endif
 #include "event_data.h"
 #include "event_object_movement.h"
@@ -28,6 +34,7 @@
 #include "fieldmap.h"
 #include "fusion_events.h"
 #include "fusion_region.h"
+#include "constants/heal_locations.h"
 #include "gpu_regs.h"
 #include "item.h"
 #include "m4a.h"
@@ -40,6 +47,7 @@
 #include "palette.h"
 #include "pokedex.h"
 #include "pokemon.h"
+#include "pokemon_storage_system.h"
 #include "random.h"
 #include "region_map.h"
 #include "roamer.h"
@@ -60,6 +68,7 @@
 #include "constants/easy_chat.h"
 #include "constants/flags.h"
 #include "constants/game_stat.h"
+#include "constants/berry.h"
 #include "constants/items.h"
 #include "constants/vars.h"
 #include "constants/kanto.h"
@@ -454,6 +463,9 @@ static void Cmd_Pokedex(const s32 *args, u32 argCount, struct DebugToolsOutput *
                      GetKantoPokedexCount(FLAG_GET_CAUGHT));
     DebugTools_Print(out, "national : vus %u, attrapes %u\n", GetNationalPokedexCount(FLAG_GET_SEEN),
                      GetNationalPokedexCount(FLAG_GET_CAUGHT));
+    // La forme affichée par les deux Pokédex : celle du premier ZARBI vu (0 = A … 25 = Z, 26 = !, 27 = ?)
+    DebugTools_Print(out, "zarbi : vu %d, lettre %u\n", GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_UNOWN),
+                     FLAG_GET_SEEN), GET_UNOWN_LETTER(gSaveBlock2Ptr->pokedex.unownPersonality));
     DebugTools_Print(out, "attrapes (numeros nationaux) :");
     for (i = 1; i <= NATIONAL_DEX_COUNT; i++)
     {
@@ -475,6 +487,35 @@ static bool8 NoMapLoaded(struct DebugToolsOutput *out)
         return FALSE;
     DebugTools_Print(out, "pas de carte chargee\n");
     return TRUE;
+}
+
+// L'arbre à baies ID (BERRY_TREE_*, champ trainer_sight_or_berry_tree_id de la carte) : BAIE et STADE le plantent
+// (PlantBerryTree ; stade 1 planté … 4 en fleurs, 5 baies) ; il change d'aspect au prochain chargement de la carte
+static void Cmd_BerryTree(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    struct BerryTree *tree;
+
+    if ((u32)args[0] >= BERRY_TREES_COUNT)
+    {
+        DebugTools_Print(out, "refuse : arbre 0-%d\n", BERRY_TREES_COUNT - 1);
+        return;
+    }
+    if (argCount >= 3 && args[1] >= 0 && args[1] <= ITEM_TO_BERRY(LAST_BERRY_INDEX) && args[2] >= 0 && args[2] <= BERRY_STAGE_BERRIES)
+        PlantBerryTree(args[0], args[1], args[2], TRUE);
+    tree = &gSaveBlock1Ptr->berryTrees[args[0]];
+    DebugTools_Print(out, "arbre %d : baie %d stade %d arrosages %d\n", args[0], tree->berry, tree->stage,
+                     tree->watered1 + tree->watered2 + tree->watered3 + tree->watered4);
+}
+
+// Le lieu de reprise après un K.O. (gSaveBlock1Ptr->lastHealLocation) ; ID le pose comme setrespawn (SetLastHealLocationWarp,
+// numéro de src/data/heal_locations.json compté à partir de 1)
+static void Cmd_Respawn(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    const struct WarpData *warp = &gSaveBlock1Ptr->lastHealLocation;
+
+    if (argCount >= 1 && args[0] > HEAL_LOCATION_NONE && args[0] < NUM_HEAL_LOCATIONS)
+        SetLastHealLocationWarp(args[0]);
+    DebugTools_Print(out, "reprise carte %d.%d case %d,%d\n", warp->mapGroup, warp->mapNum, warp->x, warp->y);
 }
 
 static void Cmd_MapInfo(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
@@ -1075,6 +1116,118 @@ static void Cmd_SetStatus(const s32 *args, u32 argCount, struct DebugToolsOutput
     DebugTools_Print(out, "Pokemon %d : statut %#x\n", args[0], GetMonData(mon, MON_DATA_STATUS));
 }
 
+// Le Pokérus du Pokémon N (MON_DATA_POKERUS : souche dans les 4 bits hauts, jours restants dans les 4 bas ; 0x01 =
+// infecté, 0x10 = guéri) ; l'infirmière l'annonce une fois (FLAG_POKERUS_EXPLAINED)
+static void Cmd_Pokerus(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    struct Pokemon *mon;
+    u8 pokerus;
+
+    if ((u32)args[0] >= PARTY_SIZE || GetMonData(&gPlayerParty[args[0]], MON_DATA_SPECIES) == SPECIES_NONE)
+    {
+        DebugTools_Print(out, "refuse : pas de Pokemon en %d (equipe 0-5)\n", args[0]);
+        return;
+    }
+    mon = &gPlayerParty[args[0]];
+    if (argCount >= 2)
+    {
+        pokerus = args[1];
+        SetMonData(mon, MON_DATA_POKERUS, &pokerus);
+    }
+    DebugTools_Print(out, "Pokemon %d : pokerus %#x\n", args[0], GetMonData(mon, MON_DATA_POKERUS));
+}
+
+// Le Pokémon N de l'équipe va au PC, à la première place libre des boîtes (comme STOCKER) ; l'équipe se resserre
+static void Cmd_DepositMon(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    u32 box, pos;
+
+    if ((u32)args[0] >= PARTY_SIZE || GetMonData(&gPlayerParty[args[0]], MON_DATA_SPECIES) == SPECIES_NONE
+     || CalculatePlayerPartyCount() < 2)
+    {
+        DebugTools_Print(out, "refuse : pas de Pokemon en %d, ou le dernier de l'equipe\n", args[0]);
+        return;
+    }
+    for (box = 0; box < TOTAL_BOXES_COUNT; box++)
+    {
+        for (pos = 0; pos < IN_BOX_COUNT; pos++)
+        {
+            if (GetBoxMonDataAt(box, pos, MON_DATA_SPECIES) == SPECIES_NONE)
+            {
+                SetBoxMonAt(box, pos, &gPlayerParty[args[0]].box);
+                ZeroMonData(&gPlayerParty[args[0]]);
+                CompactPartySlots();
+                CalculatePlayerPartyCount();
+                DebugTools_Print(out, "Pokemon %d depose : boite %u place %u\n", args[0], box, pos);
+                return;
+            }
+        }
+    }
+    DebugTools_Print(out, "refuse : les boites sont pleines\n");
+}
+
+// La marque « de Hoenn » (HOENN_MON_MARK, posée au premier départ pour Kanto) du POKéMON de la boîte B, place P ;
+// V (0 ou 1) la met ou l'enlève. Tant que le Vol entre les régions n'est pas ouvert, il reste au PC à Kanto
+// (Fusion_IsBoxMonLockedInHoenn : « Aucun lien avec HOENN! »)
+static void Cmd_HoennMark(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    struct BoxPokemon *mon;
+    u8 ribbons;
+
+    if ((u32)args[0] >= TOTAL_BOXES_COUNT || (u32)args[1] >= IN_BOX_COUNT)
+    {
+        DebugTools_Print(out, "refuse : boite 0-%d, place 0-%d\n", TOTAL_BOXES_COUNT - 1, IN_BOX_COUNT - 1);
+        return;
+    }
+    mon = GetBoxedMonPtr(args[0], args[1]);
+    if (argCount >= 3 && GetBoxMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE)
+    {
+        ribbons = GetBoxMonData(mon, MON_DATA_UNUSED_RIBBONS);
+        ribbons = args[2] ? (ribbons | HOENN_MON_MARK) : (ribbons & ~HOENN_MON_MARK);
+        SetBoxMonData(mon, MON_DATA_UNUSED_RIBBONS, &ribbons);
+    }
+    DebugTools_Print(out, "boite %d place %d espece %d marque %d, retenu au PC %d\n", args[0], args[1],
+                     GetBoxMonData(mon, MON_DATA_SPECIES), (GetBoxMonData(mon, MON_DATA_UNUSED_RIBBONS) & HOENN_MON_MARK) != 0,
+                     Fusion_IsBoxMonLockedInHoenn(mon));
+}
+
+// Les tableaux du musée de Nénucrique (gagnants de concours MUSEUM_CONTEST_WINNERS_START…) : N les remplit (un PIKACHU
+// chacun), comme 5 concours de rang MASTER gagnés (4e étoile de la carte de Hoenn, Carte Or de l'infirmière)
+static void Cmd_MuseumPaintings(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    u32 i;
+
+    if (argCount >= 1)
+    {
+        for (i = 0; i < NUM_CONTEST_WINNERS - MUSEUM_CONTEST_WINNERS_START; i++)
+            gSaveBlock1Ptr->contestWinners[MUSEUM_CONTEST_WINNERS_START + i].species = (i < (u32)args[0]) ? SPECIES_PIKACHU : SPECIES_NONE;
+    }
+    DebugTools_Print(out, "tableaux %u, etoiles de la carte de Hoenn %u\n", CountPlayerMuseumPaintings(),
+                     CountPlayerTrainerStars());
+}
+
+// Le personnage : genre (0 garçon, 1 fille : BRICE/FLORA, ou RED/LEAF avec Options > PERSO) ; G le change, le
+// sprite suit au prochain changement de carte
+static void Cmd_Gender(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (argCount >= 1 && (args[0] == MALE || args[0] == FEMALE))
+        gSaveBlock2Ptr->playerGender = args[0];
+    DebugTools_Print(out, "genre %d, perso %d\n", gSaveBlock2Ptr->playerGender, gSaveBlock2Ptr->optionsPlayerCharacter);
+}
+
+// L'avatar du joueur : 1 VÉLO COURSE, 2 VÉLO CROSS, 3 SURF, 4 sous l'eau (SetPlayerAvatarTransitionFlags, comme les
+// vélos et les capacités) ; le retour à pied se fait par un changement de carte
+static void Cmd_Avatar(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    static const u16 sTransitions[] = {0, PLAYER_AVATAR_FLAG_MACH_BIKE, PLAYER_AVATAR_FLAG_ACRO_BIKE,
+                                       PLAYER_AVATAR_FLAG_SURFING, PLAYER_AVATAR_FLAG_UNDERWATER};
+
+    if (argCount >= 1 && args[0] > 0 && args[0] < (s32)ARRAY_COUNT(sTransitions))
+        SetPlayerAvatarTransitionFlags(sTransitions[args[0]]);
+    DebugTools_Print(out, "avatar %#x, sprite %d\n", gPlayerAvatar.flags,
+                     gObjectEvents[gPlayerAvatar.objectEventId].graphicsId);
+}
+
 // Le dresseur d'origine (ID) du Pokémon N : un autre que le joueur = un Pokémon échangé, soumis à l'obéissance
 // selon les badges (IsMonDisobedient), qui gagne plus d'expérience. Les données sont chiffrées avec l'ID : le Pokémon
 // est recréé (même espèce, niveau, personnalité, capacités et PP), pas modifié (il deviendrait un Mauvais Œuf)
@@ -1127,6 +1280,24 @@ static void Cmd_Egg(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
     DebugTools_Print(out, "Pokemon %d : oeuf d'espece %d, pret a eclore\n", args[0], GetMonData(mon, MON_DATA_SPECIES));
 }
 
+// Les boîtes du PC : boîte courante, puis pour chaque boîte son nom, son fond (gPokemonStoragePtr->boxWallpapers,
+// sauvegardé ; WALLPAPER_KANTO_FOREST et suivants, de src/data/wallpapers.h : les fonds de Rouge Feu) et le nombre
+// de Pokémon
+static void Cmd_Boxes(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    u32 i;
+
+    DebugTools_Print(out, "boite courante %u\n", StorageGetCurrentBox());
+    for (i = 0; i < TOTAL_BOXES_COUNT; i++)
+    {
+        char name[BOX_NAME_LENGTH * 4 + 1];
+
+        DebugTools_GameTextToUtf8(name, GetBoxNamePtr(i), sizeof(name));
+        DebugTools_Print(out, "%u %s fond %u pokemon %u\n", i, name, gPokemonStoragePtr->boxWallpapers[i],
+                         CountMonsInBox(i));
+    }
+}
+
 static void PrintItem(struct DebugToolsOutput *out, u16 itemId, u16 quantity)
 {
     char name[32];
@@ -1171,6 +1342,9 @@ static void Cmd_Battle(const s32 *args, u32 argCount, struct DebugToolsOutput *o
                      gBattleTypeFlags, gBattlersCount, DebugTools_Offset(gBattleMainFunc));
     if (!gMain.inBattle)
         return;
+    // Les scripts de l'IA adverse (BattleAI_SetupFlags : AI_SCRIPT_*, dont les légendaires de Kanto de RF)
+    if (gBattleResources != NULL && gBattleResources->ai != NULL)
+        DebugTools_Print(out, "ia %#x\n", gBattleResources->ai->aiFlags);
     for (i = 0; i < gBattlersCount && i < MAX_BATTLERS_COUNT; i++)
         DebugTools_Print(out, "combattant %u position %d espece %d PV %d/%d controleur @%lld\n", i,
                          gBattlerPositions[i], gBattleMons[i].species, gBattleMons[i].hp, gBattleMons[i].maxHP,
@@ -1224,6 +1398,13 @@ static void Cmd_Backgrounds(const s32 *args, u32 argCount, struct DebugToolsOutp
                          ((cnt >> 8) & 0x1F) * 0x800, cnt >> 14, GetGpuReg(REG_OFFSET_BG0HOFS + 4 * bg),
                          GetGpuReg(REG_OFFSET_BG0VOFS + 4 * bg));
     }
+    // Ceux du dessus sont le tampon de gpu_regs.c (copié au VBlank) ; le rendu lit les vrais registres
+    DebugTools_Print(out, "registres reels : DISPCNT %04x BG0CNT %04x BG1CNT %04x BG2CNT %04x BG3CNT %04x BLDCNT %04x "
+                     "WININ %04x WINOUT %04x\n", REG_DISPCNT, REG_BG0CNT, REG_BG1CNT, REG_BG2CNT, REG_BG3CNT,
+                     REG_BLDCNT, REG_WININ, REG_WINOUT);
+    DebugTools_Print(out, "decalages reels : BG0 %d,%d BG1 %d,%d BG2 %d,%d BG3 %d,%d MOSAIC %04x\n", REG_BG0HOFS,
+                     REG_BG0VOFS, REG_BG1HOFS, REG_BG1VOFS, REG_BG2HOFS, REG_BG2VOFS, REG_BG3HOFS, REG_BG3VOFS,
+                     REG_MOSAIC);
 }
 
 // Une rangée de la carte d'un BG en VRAM : tile:palette (h/v = retourné)
@@ -1241,6 +1422,33 @@ static void Cmd_BackgroundRow(const s32 *args, u32 argCount, struct DebugToolsOu
                          (entry & 0x800) ? "v" : "");
     }
     DebugTools_Print(out, "\n");
+}
+
+// Le point (X, Y) de l'écran au rendu : couleur de chaque BG et des sprites de chaque priorité avant composition,
+// masque de fenêtre, couleur finale (« pourquoi ce BG n'est pas à l'écran ? »)
+static void Cmd_Pixel(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+#ifdef PORTABLE
+    char text[256];
+
+    DrawFrame_DescribePixel(args[0], args[1], text, sizeof(text));
+    DebugTools_Print(out, "%s", text);
+#else
+    DebugTools_Print(out, "seulement sur PC et Android\n");
+#endif
+}
+
+// Les 4 canaux DMA : un DMA HBlank resté actif écrit un registre à chaque ligne (effets de lignes)
+static void Cmd_Dma(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+#ifdef PORTABLE
+    char text[640];
+
+    Dma_Describe(text, sizeof(text));
+    DebugTools_Print(out, "%s", text);
+#else
+    DebugTools_Print(out, "seulement sur PC et Android\n");
+#endif
 }
 
 // Un tile 4bpp en VRAM : 8 rangées d'indices de couleur
@@ -1423,6 +1631,8 @@ static const u8 sName_Random[] = _("Hasard");
 static const u8 sName_StartMenu[] = _("Menu Start");
 static const u8 sName_DebugAction[] = _("Actions du menu DEBUG");
 static const u8 sName_MapInfo[] = _("Carte");
+static const u8 sName_Respawn[] = _("Reprise après K.O.");
+static const u8 sName_BerryTree[] = _("Arbre à baies");
 static const u8 sName_MapObjects[] = _("Objets de la carte");
 static const u8 sName_MapGrid[] = _("Grille de la carte");
 static const u8 sName_MapMetatiles[] = _("Métatuiles");
@@ -1434,6 +1644,7 @@ static const u8 sName_Var[] = _("Variable");
 static const u8 sName_Names[] = _("Drapeaux et variables");
 static const u8 sName_Story[] = _("Histoires finies");
 static const u8 sName_Party[] = _("Équipe");
+static const u8 sName_Boxes[] = _("Boîtes du PC");
 static const u8 sName_Bag[] = _("Sac et argent");
 static const u8 sName_Coins[] = _("Jetons");
 static const u8 sName_PcItem[] = _("Objet au PC");
@@ -1446,12 +1657,20 @@ static const u8 sName_Mail[] = _("Lettre");
 static const u8 sName_Egg[] = _("Oeuf à faire éclore");
 static const u8 sName_SetHp[] = _("PV d'un Pokémon");
 static const u8 sName_OriginalTrainer[] = _("Dresseur d'origine");
+static const u8 sName_Gender[] = _("Garçon / fille");
+static const u8 sName_Avatar[] = _("Vélo, surf, plongée");
 static const u8 sName_SetStatus[] = _("Statut d'un Pokémon");
+static const u8 sName_Pokerus[] = _("Pokérus d'un Pokémon");
+static const u8 sName_HoennMark[] = _("Marque de Hoenn");
+static const u8 sName_DepositMon[] = _("Déposer au PC");
+static const u8 sName_MuseumPaintings[] = _("Tableaux du musée");
 static const u8 sName_Battle[] = _("Combat");
 static const u8 sName_Sprites[] = _("Sprites");
 static const u8 sName_Palette[] = _("Palette");
 static const u8 sName_Backgrounds[] = _("BG et écran");
 static const u8 sName_BackgroundRow[] = _("Rangée de BG");
+static const u8 sName_Pixel[] = _("Point de l'écran");
+static const u8 sName_Dma[] = _("Canaux DMA");
 static const u8 sName_Tile[] = _("Tile");
 static const u8 sName_Windows[] = _("Fenêtres");
 static const u8 sName_TextPrinters[] = _("Textes en cours");
@@ -1477,6 +1696,8 @@ const struct DebugTool gDebugTools[] =
     {"jeu.menustart", DEBUG_TOOLS_GAME, sName_StartMenu, "entrees du menu Start et curseur", 0, Cmd_StartMenu},
     {"jeu.debug", DEBUG_TOOLS_GAME, sName_DebugAction, "actions du menu DEBUG ; [N] fait l'action N", 0, Cmd_DebugAction},
     {"carte.info", DEBUG_TOOLS_MAP, sName_MapInfo, "carte, region, joueur, connexions", 0, Cmd_MapInfo},
+    {"carte.reprise", DEBUG_TOOLS_MAP, sName_Respawn, "[ID] : lieu de reprise apres un K.O. ; ID le pose (setrespawn)", 0, Cmd_Respawn},
+    {"carte.baie", DEBUG_TOOLS_MAP, sName_BerryTree, "ID [BAIE STADE] : arbre a baies ID ; BAIE et STADE le plantent (1 plante ... 5 baies)", 1, Cmd_BerryTree},
     {"carte.objets", DEBUG_TOOLS_MAP, sName_MapObjects, "objets actifs de la carte", 0, Cmd_MapObjects},
     {"carte.grille", DEBUG_TOOLS_MAP, sName_MapGrid, "la carte en jeu : # bloque, g herbe, ~ eau, <>^v rebord", 0, Cmd_MapGrid},
     {"carte.metatuiles", DEBUG_TOOLS_MAP, sName_MapMetatiles, "X Y [L H] : metatuiles (numero, comportement, terrain et rencontre de RF) ; 3x3 autour de X Y, ou L x H depuis X Y", 2, Cmd_MapMetatiles},
@@ -1488,6 +1709,7 @@ const struct DebugTool gDebugTools[] =
     {"scripts.histoire", DEBUG_TOOLS_SCRIPT, sName_Story, "[N] : histoire finie (0 Hoenn, 1 Kanto, 2 les deux), deduite des scripts", 0, Cmd_Story, Select_Story},
     {"scripts.drapeaux", DEBUG_TOOLS_SCRIPT, sName_Names, "[CAT] : drapeaux, dresseurs, variables par categorie ; menu : A bascule, L/R -/+", 0, Cmd_Names, Select_Names},
     {"joueur.equipe", DEBUG_TOOLS_PLAYER, sName_Party, "equipe : espece, PV, dresseur d'origine, lieu de rencontre", 0, Cmd_Party},
+    {"joueur.boites", DEBUG_TOOLS_PLAYER, sName_Boxes, "boites du PC : courante, nom, fond (17 a 32 : Rouge Feu), nombre de Pokemon", 0, Cmd_Boxes},
     {"joueur.sac", DEBUG_TOOLS_PLAYER, sName_Bag, "argent et poches du sac", 0, Cmd_Bag},
     {"joueur.jetons", DEBUG_TOOLS_PLAYER, sName_Coins, "[N] : jetons du Casino ; N les met", 0, Cmd_Coins},
     {"joueur.objetpc", DEBUG_TOOLS_PLAYER, sName_PcItem, "OBJET N : depose N objets au PC du joueur", 2, Cmd_PcItem},
@@ -1498,7 +1720,13 @@ const struct DebugTool gDebugTools[] =
     {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE [PP] : donne la capacite (et ses PP, ou PP restants)", 3, Cmd_SetMove},
     {"joueur.pv", DEBUG_TOOLS_PLAYER, sName_SetHp, "N PV : PV du Pokemon N (au plus ses PV max)", 2, Cmd_SetHp},
     {"joueur.statut", DEBUG_TOOLS_PLAYER, sName_SetStatus, "N [STATUT] : statut du Pokemon N (1-7 sommeil, 8 poison, 16 brulure, 32 gel, 64 paralysie)", 1, Cmd_SetStatus},
+    {"joueur.pokerus", DEBUG_TOOLS_PLAYER, sName_Pokerus, "N [V] : Pokerus du Pokemon N (0x01 infecte, 0x10 gueri)", 1, Cmd_Pokerus},
+    {"joueur.pc", DEBUG_TOOLS_PLAYER, sName_DepositMon, "N : le Pokemon N de l'equipe va au PC (premiere place libre)", 1, Cmd_DepositMon},
+    {"joueur.hoenn", DEBUG_TOOLS_PLAYER, sName_HoennMark, "B P [0|1] : marque de Hoenn du Pokemon de la boite B, place P (retenu au PC a Kanto)", 2, Cmd_HoennMark},
+    {"joueur.tableaux", DEBUG_TOOLS_PLAYER, sName_MuseumPaintings, "[N] : tableaux du musee de Nenucrique (N remplis) et etoiles de la carte de Hoenn", 0, Cmd_MuseumPaintings},
     {"joueur.dresseur", DEBUG_TOOLS_PLAYER, sName_OriginalTrainer, "N ID : dresseur d'origine du Pokemon N (un autre = echange : obeissance)", 2, Cmd_OriginalTrainer},
+    {"joueur.genre", DEBUG_TOOLS_PLAYER, sName_Gender, "[0|1] : garcon / fille (le sprite suit au prochain changement de carte)", 0, Cmd_Gender},
+    {"joueur.avatar", DEBUG_TOOLS_PLAYER, sName_Avatar, "[1-4] : velo course, velo cross, surf, sous l'eau", 0, Cmd_Avatar},
     {"joueur.oeuf", DEBUG_TOOLS_PLAYER, sName_Egg, "N : le Pokemon N devient un oeuf pret a eclore (EventScript_EggHatch, VAR_0x8004 = N)", 1, Cmd_Egg},
     {"joueur.lettre", DEBUG_TOOLS_PLAYER, sName_Mail, "N OBJET [1|2] : lettre ITEM_*_MAIL a 9 mots au Pokemon N ; 1 = la lire (sur la carte), 2 = l'envoyer au PC", 2, Cmd_Mail},
     {"combat.etat", DEBUG_TOOLS_BATTLE, sName_Battle, "type, combattants, controleurs", 0, Cmd_Battle},
@@ -1507,6 +1735,8 @@ const struct DebugTool gDebugTools[] =
     {"gfx.bg", DEBUG_TOOLS_GFX, sName_Backgrounds, "registres d'affichage et des 4 BG", 0, Cmd_Backgrounds},
     {"gfx.bgligne", DEBUG_TOOLS_GFX, sName_BackgroundRow, "BG RANGEE : 32 cases tile:palette de la carte en VRAM", 2, Cmd_BackgroundRow},
     {"gfx.tile", DEBUG_TOOLS_GFX, sName_Tile, "BLOC TILE : indices de couleur d'un tile 4bpp", 2, Cmd_Tile},
+    {"gfx.pixel", DEBUG_TOOLS_GFX, sName_Pixel, "X Y : chaque BG et sprite a ce point au rendu, fenetre, couleur finale", 2, Cmd_Pixel},
+    {"gfx.dma", DEBUG_TOOLS_GFX, sName_Dma, "canaux DMA en cours (moment, source, destination)", 0, Cmd_Dma},
     {"gfx.fenetres", DEBUG_TOOLS_GFX, sName_Windows, "fenetres ouvertes", 0, Cmd_Windows},
     {"texte.imprimantes", DEBUG_TOOLS_TEXT, sName_TextPrinters, "textes en train de s'ecrire", 0, Cmd_TextPrinters},
     {"son.etat", DEBUG_TOOLS_SOUND, sName_Sound, "musique et effets en cours", 0, Cmd_Sound},

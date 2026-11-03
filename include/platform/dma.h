@@ -13,4 +13,6 @@ enum {
 };
 
 void RunDMAs(u32 type);
+// Sonde de debug (outil gfx.dma) : l'état des 4 canaux
+void Dma_Describe(char *out, size_t size);
 #endif

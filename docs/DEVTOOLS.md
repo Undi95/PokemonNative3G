@@ -28,15 +28,21 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `jeu.hasard [GRAINE]` | état du hasard (`gRngValue`, `gRng2Value`) ; `GRAINE` les fixe : la suite d'un scénario (rencontre, combat) ne dépend plus du minutage d'avant, le hasard avançant à chaque image (scénarios `kanto_rival`, `kanto_bag_battle` : graine 4) |
 | | `joueur.pv N PV` | PV du Pokémon `N` de l'équipe (au plus ses PV max) ; à régler **avant** un combat, ses PV y sont copiés (scénario `kanto_whiteout` : 1 PV, K.O. au premier coup) |
 | | `joueur.statut N [STATUT]` | statut du Pokémon `N` (`STATUS1_*` : 1 à 7 endormi pour autant de tours, 8 poison, 16 brûlure, 32 gel, 64 paralysie, 128 poison grave) ; à régler **avant** un combat, il y est copié (scénario `kanto_poke_flute_wake`) |
+| | `joueur.pokerus N [V]` | Pokérus du Pokémon `N` (`MON_DATA_POKERUS` : `0x01` infecté, `0x10` guéri ; scénario `common_scripts_more`) |
+| | `joueur.pc N` | le POKéMON `N` de l'équipe va au PC (première place libre des boîtes, comme STOCKER ; scénario `pc_hoenn_locked`) |
+| | `joueur.hoenn B P [0\|1]` | marque « de Hoenn » du POKéMON de la boîte `B` (0-13), place `P` (0-29) : `1` la met, `0` l'enlève ; « retenu au PC » tant que le Vol entre les régions n'est pas ouvert (scénario `pc_hoenn_locked`) |
+| | `joueur.tableaux [N]` | tableaux du musée de Nénucrique (`N` remplis, un PIKACHU chacun) et étoiles de la carte de Hoenn (5 tableaux = une étoile ; Carte Or de l'infirmière à 4 étoiles, scénario `common_scripts_more`) |
 | | `joueur.dresseur N ID` | dresseur d'origine (ID) du Pokémon `N` : un autre ID que celui du joueur = un Pokémon échangé (obéissance selon les badges, plus d'expérience). Le Pokémon est recréé (même espèce, niveau, personnalité, capacités, PP) : ses données sont chiffrées avec l'ID (scénario `obedience_regions`) |
 | | `jeu.stat N [V]` | statistique de jeu `GAME_STAT_*` (nombre d'entrées au Panthéon, date de la première, œufs éclos, victoires en link…), mise à `V` si donné (scénario `kanto_card_stickers`) |
 | | `jeu.duree [H [M]]` | durée de jeu ; `H M` la met (carte de dresseur, sauvegarde ; le Fan Club de Safrania perd un fan toutes les 12 h, scénario `kanto_fan_club`) |
-| | `jeu.pokedex [N [1]]` | Pokédex reçus (Hoenn, Kanto, national), vus et attrapés dans chaque Pokédex (ce que comptent les cartes de dresseur des deux régions, le PC du Prof. Chen), puis les numéros nationaux des Pokémon attrapés ; `N` marque les numéros 1 à `N` vus et attrapés (386 : POKéDEX NATIONAL complet, scénario `fusion_charms`) ; `1` en plus donne le POKéDEX NATIONAL (`EnableNationalPokedex`, scénario `kanto_oak_rating`) |
+| | `jeu.pokedex [N [1]]` | Pokédex reçus (Hoenn, Kanto, national), vus et attrapés dans chaque Pokédex (ce que comptent les cartes de dresseur des deux régions, le PC du Prof. Chen), la lettre du ZARBI des deux Pokédex (celle du premier vu, scénario `unown_sprites`), puis les numéros nationaux des Pokémon attrapés ; `N` marque les numéros 1 à `N` vus et attrapés (386 : POKéDEX NATIONAL complet, scénario `fusion_charms`) ; `1` en plus donne le POKéDEX NATIONAL (`EnableNationalPokedex`, scénario `kanto_oak_rating`) |
 | | `jeu.errants [1\|2]` | Pokémon errants de la région (espèce, niveau, actif, carte, PV, statut, IV) ; `1` les lâche (`InitRoamer`, comme leur script), `2` les met sur la carte du joueur jusqu'au prochain changement de carte (scénario `kanto_roamer`) |
 | | `jeu.peche` | chaîne de pêche : POKéMON remontés d'affilée au même endroit, canne, tirages chromatiques en plus pour la prise en cours, cannes améliorées (scénario `fishing_chain_more`) |
 | | `jeu.menustart` | entrées du menu Start (`MENU_ACTION_*`) et curseur (`game.start_menu()` dans le banc) |
 | | `jeu.debug [N]` | les actions du menu DEBUG ; `N` fait l'action N (celles sans écran : soins, objets, Pokédex, passes, « Deux Ligues finies », POKé MONTURE + badges…), le même code que le menu (`DebugMenu_ApplyAction`) |
 | Carte | `carte.info` | carte, section, région, disposition, météo, musique, étage (`floorNum` : panneau de RF), joueur, déplacement (direction, état de course, vitesse et compteur du vélo, mouvement en cours), connexions |
+| | `carte.baie ID [BAIE STADE]` | arbre à baies `ID` (`BERRY_TREE_*`, le champ `trainer_sight_or_berry_tree_id` de la carte) : baie, stade, arrosages ; `BAIE STADE` le plantent (`PlantBerryTree` ; 1 planté … 4 en fleurs, 5 baies ; scénario `redleaf_watering`) |
+| | `carte.reprise [ID]` | lieu de reprise après un K.O. (`lastHealLocation`) ; `ID` le pose comme `setrespawn` (numéro dans `src/data/heal_locations.json`, à partir de 1 ; scénario `whiteout_littleroot`) |
 | | `carte.objets` | objets actifs : id, sprite, position, mouvement |
 | | `carte.grille` | **la carte telle qu'elle est en jeu**, avec les lettres de `test/headless/maps.py` (`#` bloqué, `g` herbe, `~` eau, `o` trou où l'on tombe, `<>^v` rebord ; les chemins évitent les trous sauf s'ils sont le but) : les étages générés (Mont Combat, Pyramide) et les cases changées par les scripts (`setmetatile`), que les fichiers de la carte ne montrent pas. Dans le banc : `live_map(game)` (un `maps.GridMap`), `walk_to(..., live=True)` |
 | | `carte.metatuiles X Y [L H]` | les métatuiles en jeu (coordonnées de `carte.grille`) : numéro, comportement, et à Kanto le **terrain** (0 normal, 1 herbe, 2 eau, 3 cascade) et le **type de rencontre** de RF (0 aucune, 1 sol, 2 eau), élévation, collision ; 3 × 3 autour de X Y, ou L × H depuis X Y. Pour vérifier une case changée par un script ou un effet (COUPE : scénario `kanto_cut_surf`) |
@@ -47,6 +53,9 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `scripts.drapeaux [CAT]` | **tous les drapeaux, dresseurs et variables du jeu**, par région et catégorie (système, badges, personnages cachés, objets, cadeaux, combats, PokéNav, carte, temporaires, dresseurs, variables…) : sans argument les catégories (combien à ON), avec `CAT` chaque nom et son état. Dans le menu : un curseur, **A** ouvre une catégorie ou bascule ON/OFF (une variable : remise à 0), **L / R** variable -1 / +1, B revient. Les noms viennent de `tools/debug_names.py` → `src/data/debug_names.h` |
 | | `scripts.histoire [N]` | **l'histoire finie sans sauvegarde** : `0` Hoenn, `1` Kanto, `2` les deux. Met chaque drapeau que les scripts mettent et ne retirent jamais (hors objets, cachés, temporaires, quotidiens), et chaque variable d'avancement à la dernière valeur que les scripts lui donnent (pas les variables remises à 0 : files d'attente, salles de défi). Déduit des scripts par `tools/debug_states.py` → `src/data/debug_states.h` (`--liste` les montre) |
 | Joueur | `joueur.equipe` | équipe : espèce, PV, objet, dresseur d'origine, lieu et jeu de rencontre, amitié, capacités et leurs PP, stats lues par le jeu (celles de la forme choisie pour DEOXYS, scénario `deoxys_forms`) |
+| | `joueur.genre [0\|1]` | garçon / fille (BRICE/FLORA, ou RED/LEAF avec Options > PERSO) ; le sprite suit au prochain changement de carte (scénario `redleaf_visuals`) |
+| | `joueur.avatar [1-4]` | avatar du joueur et son sprite ; `1` VÉLO COURSE, `2` VÉLO CROSS, `3` SURF, `4` sous l'eau (`SetPlayerAvatarTransitionFlags`, comme les vélos et les capacités ; retour à pied par un changement de carte) |
+| | `joueur.boites` | boîtes du PC : boîte courante, nom, fond (0 à 16 : Émeraude, 17 à 32 : Rouge Feu), nombre de Pokémon (scénario `pc_wallpapers_kanto`) |
 | | `joueur.sac` | argent, poches, objets du PC, objet enregistré sur SELECT |
 | | `joueur.poudre [N]` | Poudre Baie ; `N` en ajoute (scénario `kanto_specials_b` : vendeur d'Azuria) |
 | | `joueur.amitie N [V]` | amitié du Pokémon N ; `V` la met (0-255 ; Daisy, tuteur du Cap Falaise) |
@@ -57,9 +66,11 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | Combat | `combat.etat` | type, combattants, contrôleurs |
 | Graphismes | `gfx.sprites` | sprites : position, tile, palette, priorité, animation (finie, en pause), callback |
 | | `gfx.palette TYPE BANQUE` | 16 couleurs (0 BG, 1 OBJ) : non fondues, fondues, à l'écran (après jour/nuit) |
-| | `gfx.bg` | registres d'affichage et des 4 BG |
+| | `gfx.bg` | registres d'affichage et des 4 BG : ceux du tampon de `gpu_regs.c` (copiés au VBlank), puis les vrais registres (contrôle, décalages, mosaïque) que lit le rendu |
 | | `gfx.bgligne BG RANGÉE` | 32 cases `tile:palette` de la carte du BG en VRAM |
 | | `gfx.tile BLOC TILE` | indices de couleur d'un tile 4bpp |
+| | `gfx.pixel X Y` | le point (X, Y) au rendu : couleur de chaque BG (et sa priorité) et des sprites de chaque priorité avant composition, masque de fenêtre, couleur finale (« pourquoi ce BG n'est pas à l'écran ? ») ; refait le rendu d'une image |
+| | `gfx.dma` | les 4 canaux DMA en cours : moment (0 tout de suite, 1 VBlank, 2 HBlank), répétition, source, destination (registres, VRAM, palettes, OAM) |
 | | `gfx.fenetres` | fenêtres ouvertes |
 | Texte | `texte.imprimantes` | textes en train de s'écrire : police, couleurs, position |
 | Son | `son.etat` | musique et effets en cours |

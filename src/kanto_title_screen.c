@@ -608,6 +608,11 @@ static void SetTitleScreenScene_Restart(s16 *data)
     case 2:
         if (IsNotWaitingForBGMStop() && !gPaletteFade.active)
         {
+#ifdef UBFIX
+            // la tâche du clignotement se détruit seule à la fin du fondu (data[14]) : selon l'ordre des tâches, elle
+            // n'existe déjà plus ici
+            if (FindTaskIdByFunc(Task_TitleScreen_BlinkPressStart) != TASK_NONE)
+#endif
             DestroyTask(FindTaskIdByFunc(Task_TitleScreen_BlinkPressStart));
             data[2] = 0;
             tState++;
@@ -617,6 +622,10 @@ static void SetTitleScreenScene_Restart(s16 *data)
         data[2]++;
         if (data[2] >= 20)
         {
+#ifdef UBFIX
+            // RF détruit deux fois la tâche du clignotement : la 2e fois, FindTaskIdByFunc rend TASK_NONE (gTasks[255])
+            if (FindTaskIdByFunc(Task_TitleScreen_BlinkPressStart) != TASK_NONE)
+#endif
             DestroyTask(FindTaskIdByFunc(Task_TitleScreen_BlinkPressStart));
             tState++;
         }

@@ -297,7 +297,7 @@ ifeq ($(PORTABLE),1)
   else
     ASFLAGS := --$(BIT_WIDTH) $(ASFLAGS64)
   endif
-  ASFLAGS += --defsym VER_64BIT=$(IS64BIT) --defsym MODERN=$(MODERN) --defsym PORTABLE=1 --defsym UBFIX=1
+  ASFLAGS += --defsym VER_64BIT=$(IS64BIT) --defsym MODERN=$(MODERN) --defsym PORTABLE=1 --defsym UBFIX=1 --defsym FIRERED=1
   ifeq ($(TARGET_OS),MACOS)
     # x86_64-elf-as takes / as the start of a comment, like SVR4, which would
     # quietly cut short the songs' expressions. The Linux one doesn't.
@@ -312,7 +312,9 @@ INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
 INCLUDE_SCANINC_ARGS := $(INCLUDE_DIRS:%=-I %)
 
 O_LEVEL ?= 2
-CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=$(MODERN)
+# PokemonNative3G : Kanto est celui de Rouge Feu (les données de RF qui changent avec Vert Feuille : lots du Casino,
+# échanges, etc.)
+CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=$(MODERN) -DFIRERED
 ifeq ($(MODERN),0)
   CPPFLAGS += -std=gnu99 -I tools/agbcc/include -I tools/agbcc -nostdinc -undef -std=gnu89
   CC1 := tools/agbcc/bin/agbcc$(EXE)

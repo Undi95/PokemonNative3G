@@ -1273,7 +1273,7 @@ HoennPokedexNumToSpecies, NationalPokedexNumToSpecies, NationalToHoennOrder, Spe
 DrawSpindaSpotsUnused, GetTrainerEncounterMusicId, ModifyStatByNature, AdjustFriendship, MonGainEVs,
 GetMonEVCount, RandomlyGivePartyPokerus, CheckPartyPokerus, CheckPartyHasHadPokerus, UpdatePartyPokerusTime,
 PartySpreadPokerus, TryIncrementMonLevel, CanMonLearnTMHM, GetMoveRelearnerMoves, GetNumberOfRelearnableMoves,
-SpeciesToPokedexNum, GetBattleBGM, GetMonFrontSpritePal, GetMonSpritePalFromSpeciesAndPersonality,
+SpeciesToPokedexNum ✓, GetBattleBGM, GetMonFrontSpritePal, GetMonSpritePalFromSpeciesAndPersonality,
 GetMonSpritePalStruct, GetMonFlavorRelation, GetFlavorRelationByPersonality, IsTradedMon, SetWildMonHeldItem,
 IsMonShiny, GetTrainerPartnerName, ShouldIgnoreDeoxysForm, GetUnionRoomTrainerPic, GetUnionRoomTrainerClass,
 CreateMonSpritesGfxManager, DestroyMonSpritesGfxManager, MonSpritesGfxManager_GetSpritePtr

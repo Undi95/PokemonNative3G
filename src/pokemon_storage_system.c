@@ -8232,8 +8232,17 @@ static s16 HandleMenuInput(void)
 
 static void RemoveMenu(void)
 {
+#ifdef UBFIX
+    // Le choix d'une catégorie de fonds retire le menu deux fois (HandleMenuInput, puis Task_HandleWallpapers) : la
+    // 2e fois, la fenêtre n'existe plus (fond 0xFF, lu hors du tableau des BG)
+    if (sStorage->menuWindowId == WINDOW_NONE)
+        return;
+#endif
     ClearStdWindowAndFrameToTransparent(sStorage->menuWindowId, TRUE);
     RemoveWindow(sStorage->menuWindowId);
+#ifdef UBFIX
+    sStorage->menuWindowId = WINDOW_NONE;
+#endif
 }
 
 

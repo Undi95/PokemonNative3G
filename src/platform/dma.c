@@ -91,6 +91,46 @@ void RunDMAs(u32 type)
     }
 }
 
+// Sonde de debug (outil gfx.dma) : pour chaque canal en cours, le moment (0 tout de suite, 1 VBlank, 2 HBlank,
+// 3 spécial), la répétition, la source et la destination actuelles (décalage dans les registres, la VRAM...), la taille
+void Dma_Describe(char *out, size_t size)
+{
+    static const struct { const char *name; uintptr_t start, end; } areas[] = {
+        {"registres", (uintptr_t)REG_BASE, (uintptr_t)REG_BASE + 0x400},
+        {"VRAM", (uintptr_t)VRAM, (uintptr_t)VRAM + 0x18000},
+        {"palettes", (uintptr_t)PLTT, (uintptr_t)PLTT + 0x400},
+        {"OAM", (uintptr_t)OAM, (uintptr_t)OAM + 0x400},
+    };
+    size_t len = 0;
+    int dmaNum, i;
+
+    for (dmaNum = 0; dmaNum < DMA_COUNT && len < size; dmaNum++)
+    {
+        struct DMATransfer *dma = &DMAList[dmaNum];
+        uintptr_t dst = (uintptr_t)dma->dst;
+        const char *where = "memoire";
+        uintptr_t offset = dst;
+
+        if (!(dma->control & DMA_ENABLE))
+        {
+            len += snprintf(out + len, size - len, "DMA%d arrete\n", dmaNum);
+            continue;
+        }
+        for (i = 0; i < (int)ARRAY_COUNT(areas); i++)
+        {
+            if (dst >= areas[i].start && dst < areas[i].end)
+            {
+                where = areas[i].name;
+                offset = dst - areas[i].start;
+                break;
+            }
+        }
+        len += snprintf(out + len, size - len, "DMA%d moment %d%s, source %p (depart %p), destination %s %#lx, taille %u, controle %04x\n",
+                        dmaNum, (dma->control & DMA_START_MASK) >> 12, (dma->control & DMA_REPEAT) ? " repete" : "",
+                        dma->src, DMASet[dmaNum].src, where, (unsigned long)offset, (unsigned)dma->size, dma->control);
+    }
+}
+
 void DmaSet(int dmaNum, const void *src, volatile void *dest, u32 control)
 {
     if (dmaNum >= DMA_COUNT)

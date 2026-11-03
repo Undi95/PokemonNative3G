@@ -43,8 +43,9 @@ def play(game):
     close_menus(game)                       # la carte fermée, le menu Start revient
 
     # 3 entrées au Panthéon (autocollant le plus bas), la première à 12:34:56 : 1 étoile, carte verte de RF
-    game.dev("jeu.stat", names.number("GAME_STAT_ENTERED_HOF"), 3)
-    game.dev("jeu.stat", names.number("GAME_STAT_FIRST_HOF_PLAY_TIME"), (12 << 16) | (34 << 8) | 56)
+    # (compteurs du Panthéon de Kanto, séparés de ceux de Hoenn depuis le 2026-11-03)
+    game.dev("jeu.stat", names.number("GAME_STAT_KANTO_ENTERED_HOF"), 3)
+    game.dev("jeu.stat", names.number("GAME_STAT_KANTO_FIRST_HOF_PLAY_TIME"), (12 << 16) | (34 << 8) | 56)
 
     # Casino de Céladopole : l'imprimante photo (50 $), impression normale
     game.warp("CeladonCity_GameCorner", 16, 13); game.wait(30)

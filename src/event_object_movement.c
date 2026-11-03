@@ -565,10 +565,20 @@ static const u16 sReflectionPaletteTags_PlayerUnderwater[] = {
     OBJ_EVENT_PAL_TAG_PLAYER_UNDERWATER,
 };
 
+// Rouge Feu (sPlayerReflectionPaletteTags) : le reflet de RED et de LEAF (Options > PERSO)
+static const u16 sReflectionPaletteTags_KantoPlayer[] = {
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_RED_REFLECTION,
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_RED_REFLECTION,
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_RED_REFLECTION,
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_RED_REFLECTION,
+};
+
 static const struct PairedPalettes sPlayerReflectionPaletteSets[] = {
     {OBJ_EVENT_PAL_TAG_BRENDAN,           sReflectionPaletteTags_Brendan},
     {OBJ_EVENT_PAL_TAG_MAY,               sReflectionPaletteTags_May},
     {OBJ_EVENT_PAL_TAG_PLAYER_UNDERWATER, sReflectionPaletteTags_PlayerUnderwater},
+    {OBJ_EVENT_PAL_TAG_KANTO_PLAYER_RED,   sReflectionPaletteTags_KantoPlayer}, // PokemonNative3G : RF
+    {OBJ_EVENT_PAL_TAG_KANTO_PLAYER_GREEN, sReflectionPaletteTags_KantoPlayer},
     {OBJ_EVENT_PAL_TAG_NONE,              NULL},
 };
 

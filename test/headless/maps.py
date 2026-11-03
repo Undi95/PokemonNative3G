@@ -87,12 +87,16 @@ class Map:
         with open(os.path.join(REPO_DIR, layout["blockdata_filepath"]), "rb") as f:
             blocks = f.read()
         self.tiles = []
+        self.behaviors = []     # le nom du comportement de chaque case (MB_...), par ligne
         for y in range(self.height):
             row = ""
+            self.behaviors.append([])
             for x in range(self.width):
                 block = struct.unpack_from("<H", blocks, (y * self.width + x) * 2)[0]
                 metatile = block & 0x3FF
-                kind = _tile_kind(behaviors[metatile] if metatile < len(behaviors) else 0)
+                behavior = behaviors[metatile] if metatile < len(behaviors) else 0
+                self.behaviors[-1].append(_BEHAVIORS[behavior] if behavior < len(_BEHAVIORS) else "")
+                kind = _tile_kind(behavior)
                 # Un rebord se saute même avec le bit de collision (CheckForObjectEventCollision teste
                 # ShouldJumpLedge avant) : beaucoup de routes de Kanto
                 row += kind if kind in LEDGE_DIRECTIONS else "#" if block & 0xC00 else kind

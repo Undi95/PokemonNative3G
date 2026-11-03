@@ -53,8 +53,13 @@
 #define GAME_STAT_ENTERED_HOT_SPRINGS         49
 #define GAME_STAT_NUM_UNION_ROOM_BATTLES      50
 #define GAME_STAT_PLAYED_BERRY_CRUSH          51
+// PokemonNative3G : le Panthéon de Kanto a ses propres compteurs (décision du 2026-11-03) ; ceux du dessus restent ceux
+// de Hoenn. Ces emplacements, jamais écrits avant, valent 0 dans les anciennes sauvegardes (ApplyNewEncryptionKeyToGameStats
+// change la clé des NUM_GAME_STATS emplacements)
+#define GAME_STAT_KANTO_ENTERED_HOF           52
+#define GAME_STAT_KANTO_FIRST_HOF_PLAY_TIME   53
 
-#define NUM_USED_GAME_STATS                   52
+#define NUM_USED_GAME_STATS                   54
 #define NUM_GAME_STATS                        64
 
 #endif // GUARD_CONSTANTS_GAME_STAT_H

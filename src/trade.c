@@ -2725,6 +2725,12 @@ static void SetTradeGpuRegs(void)
 {
     u16 dispcnt;
 
+#ifdef UBFIX
+    // Fin de l'échange : sTradeAnim est libéré une image avant que CB2_ReturnToField ne change le VBlank (sur GBA, une
+    // lecture à l'adresse 0 sans effet ; sur PC, le jeu plante)
+    if (sTradeAnim == NULL)
+        return;
+#endif
     SetGpuReg(REG_OFFSET_BG1VOFS, sTradeAnim->bg1vofs);
     SetGpuReg(REG_OFFSET_BG1HOFS, sTradeAnim->bg1hofs);
 
@@ -3174,7 +3180,13 @@ static void SetTradeSequenceBgGpuRegs(u8 state)
                                      BGCNT_SCREENBASE(18) |
                                      BGCNT_TXT512x256);
         LoadPalette(gTradeGba2_Pal, BG_PLTT_ID(1), 3 * PLTT_SIZE_4BPP);
+#ifdef UBFIX
+        // PokemonNative3G : l'image n'a que 0x1400 octets (160 tiles) ; la GBA en copiait un de plus (le 161e, lu dans
+        // ce qui la suit en ROM), qu'aucune carte de l'échange n'utilise (plateforme : tiles 0 à 150 ; cf. egg_hatch.c)
+        DmaCopyLarge16(3, gTradeGba_Gfx, (void *) BG_CHAR_ADDR(1), 0x1400, 0x1000);
+#else
         DmaCopyLarge16(3, gTradeGba_Gfx, (void *) BG_CHAR_ADDR(1), 0x1420, 0x1000);
+#endif
         DmaCopy16Defvars(3, gTradePlatform_Tilemap, (void *) BG_SCREEN_ADDR(18), 0x1000);
         break;
     case 1:
@@ -3201,7 +3213,12 @@ static void SetTradeSequenceBgGpuRegs(u8 state)
             DmaCopy16Defvars(3, sGbaMapWireless, (void *) BG_SCREEN_ADDR(5), 0x1000);
         }
 
+#ifdef UBFIX
+        // (le 161e tile, hors de l'image : les cartes de la GBA s'arrêtent au tile 159)
+        DmaCopyLarge16(3, gTradeGba_Gfx, (void *) BG_CHAR_ADDR(0), 0x1400, 0x1000);
+#else
         DmaCopyLarge16(3, gTradeGba_Gfx, (void *) BG_CHAR_ADDR(0), 0x1420, 0x1000);
+#endif
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0 |
                                       DISPCNT_OBJ_1D_MAP |
                                       DISPCNT_BG1_ON |
@@ -3256,7 +3273,14 @@ static void SetTradeSequenceBgGpuRegs(u8 state)
         sTradeAnim->gbaScale = 1024;
         sTradeAnim->alpha = 0;
 
+#ifdef UBFIX
+        // PokemonNative3G : l'image n'a que 0x2800 octets (160 tiles 8bpp) ; la GBA copiait aussi le 161e, lu dans
+        // sEmptyGfx qui la suit en ROM (src/data/trade.h) : la même VRAM sans lire hors de l'image
+        DmaCopyLarge16(3, sGbaAffine_Gfx, (void *) BG_CHAR_ADDR(1), sizeof(sGbaAffine_Gfx), 0x1000);
+        DmaCopy16Defvars(3, sEmptyGfx, (void *) (BG_CHAR_ADDR(1) + sizeof(sGbaAffine_Gfx)), sizeof(sEmptyGfx));
+#else
         DmaCopyLarge16(3, sGbaAffine_Gfx, (void *) BG_CHAR_ADDR(1), 0x2840, 0x1000);
+#endif
 
         if (sTradeAnim->isCableTrade)
         {
@@ -3289,7 +3313,14 @@ static void SetTradeSequenceBgGpuRegs(u8 state)
         sTradeAnim->scrY = 80;
         sTradeAnim->alpha = 0;
 
+#ifdef UBFIX
+        // PokemonNative3G : l'image n'a que 0x2800 octets (160 tiles 8bpp) ; la GBA copiait aussi le 161e, lu dans
+        // sEmptyGfx qui la suit en ROM (src/data/trade.h) : la même VRAM sans lire hors de l'image
+        DmaCopyLarge16(3, sGbaAffine_Gfx, (void *) BG_CHAR_ADDR(1), sizeof(sGbaAffine_Gfx), 0x1000);
+        DmaCopy16Defvars(3, sEmptyGfx, (void *) (BG_CHAR_ADDR(1) + sizeof(sGbaAffine_Gfx)), sizeof(sEmptyGfx));
+#else
         DmaCopyLarge16(3, sGbaAffine_Gfx, (void *) BG_CHAR_ADDR(1), 0x2840, 0x1000);
+#endif
 
         if (sTradeAnim->isCableTrade)
         {
@@ -3310,7 +3341,12 @@ static void SetTradeSequenceBgGpuRegs(u8 state)
                                      BGCNT_SCREENBASE(18) |
                                      BGCNT_TXT512x256);
         LoadPalette(gTradeGba2_Pal, BG_PLTT_ID(1), 3 * PLTT_SIZE_4BPP);
+#ifdef UBFIX
+        // (le 161e tile, hors de l'image, comme plus haut)
+        DmaCopyLarge16(3, gTradeGba_Gfx, (void *) BG_CHAR_ADDR(1), 0x1400, 0x1000);
+#else
         DmaCopyLarge16(3, gTradeGba_Gfx, (void *) BG_CHAR_ADDR(1), 0x1420, 0x1000);
+#endif
         DmaCopy16Defvars(3, gTradePlatform_Tilemap, (void *) BG_SCREEN_ADDR(18), 0x1000);
         break;
     }

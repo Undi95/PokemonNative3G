@@ -1,7 +1,9 @@
 #ifdef PORTABLE
 #include "global.h"
 #include <stdbool.h>
+#include <stdio.h>
 #include "platform/dma.h"
+#include "platform/framedraw.h"
 #include "day_night.h"
 
 #define mosaicBGEffectX (REG_MOSAIC & 0xF)
@@ -650,6 +652,10 @@ static void DrawSprites(struct scanlineData* scanline, uint16_t vcount, bool win
     }
 }
 
+// Sonde de debug (outil gfx.pixel, DrawFrame_DescribePixel) : la ligne dont on garde les couches avant composition
+static int sProbeLine = -1;
+static struct scanlineData sProbeData;
+
 static void DrawScanline(uint16_t *pixels, uint16_t vcount)
 {
     unsigned int mode = REG_DISPCNT & 3;
@@ -787,6 +793,8 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
 
     if (REG_DISPCNT & DISPCNT_OBJ_ON)
         DrawSprites(&scanline, vcount, windowsEnabled);
+    if (vcount == sProbeLine)
+        sProbeData = scanline;
 
     //iterate trough every priority in order
     for (prnum = 3; prnum >= 0; prnum--)
@@ -859,6 +867,43 @@ static void DrawScanline(uint16_t *pixels, uint16_t vcount)
             }
         }
     }
+}
+
+// Sonde de debug (outil gfx.pixel) : rend l'image actuelle et décrit le point (x, y) : la couleur de chaque BG et de
+// chaque priorité de sprites avant composition (« - » = transparent), le masque de fenêtre, la couleur finale.
+// Refait les interruptions et DMA HBlank d'une image (comme DrawFrame).
+void DrawFrame_DescribePixel(int x, int y, char *out, size_t size)
+{
+    static uint16_t image[DISPLAY_WIDTH * DISPLAY_HEIGHT];
+    size_t len = 0;
+    int i;
+
+    if (x < 0 || x >= DISPLAY_WIDTH || y < 0 || y >= DISPLAY_HEIGHT)
+    {
+        snprintf(out, size, "hors de l'ecran (0-%d, 0-%d)\n", DISPLAY_WIDTH - 1, DISPLAY_HEIGHT - 1);
+        return;
+    }
+    sProbeLine = y;
+    DrawFrame(image);
+    sProbeLine = -1;
+    REG_VCOUNT = 161;
+
+    for (i = 0; i < 4 && len < size; i++)
+    {
+        uint16_t c = sProbeData.layers[i][x];
+        if (getAlphaBit(c))
+            len += snprintf(out + len, size - len, "BG%d %04x (prio %d) ", i, c & 0x7FFF, sProbeData.bgtoprio[i]);
+        else
+            len += snprintf(out + len, size - len, "BG%d - (prio %d) ", i, sProbeData.bgtoprio[i]);
+    }
+    for (i = 0; i < 4 && len < size; i++)
+    {
+        uint16_t c = sProbeData.spriteLayers[i][x];
+        if (getAlphaBit(c))
+            len += snprintf(out + len, size - len, "OBJ prio %d %04x ", i, c & 0x7FFF);
+    }
+    if (len < size)
+        snprintf(out + len, size - len, "fenetre %02x, final %04x\n", sProbeData.winMask[x], image[y * DISPLAY_WIDTH + x] & 0x7FFF);
 }
 
 uint16_t *memsetu16(uint16_t *dst, uint16_t fill, size_t count)

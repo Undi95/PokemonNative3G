@@ -991,7 +991,21 @@ static bool ReadTestInput(u16 *outKeys)
             FILE *out = sTestState != NULL ? sTestState : stderr;
             char shotName[128];
 
-            if (sscanf(line, "!shot %127s", shotName) == 1)
+            // Diagnostic : l'état ACTUEL rendu à la demande (après le VBlank de la dernière image, alors que !shot
+            // montre le rendu fait avant). Une différence = quelque chose écrit l'écran entre la logique et le VBlank.
+            // Refait aussi les interruptions et DMA HBlank d'une image : pour comparer, pas pour un scénario rejoué.
+            // (Avant « !shot %s », qui lirait « now » comme nom)
+            if (sscanf(line, "!shotnow %127s", shotName) == 1)
+            {
+                static uint16_t nowImage[DISPLAY_WIDTH * DISPLAY_HEIGHT];
+
+                DrawFrame(nowImage);
+                REG_VCOUNT = 161;
+                WriteTestScreenshot(nowImage, shotName);
+                fprintf(out, "{\"reply\": 1}\n");
+                fflush(out);
+            }
+            else if (sscanf(line, "!shot %127s", shotName) == 1)
             {
                 WriteTestScreenshot(sTestImage, shotName);
                 fprintf(out, "{\"reply\": 1}\n");

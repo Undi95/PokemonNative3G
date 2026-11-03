@@ -372,6 +372,16 @@ static u16 GetCurrentMapWildMonHeaderId(void)
 
                 i += alteringCaveId;
             }
+            // PokemonNative3G : Grotte Métamo de l'Île 6 (RF), avec sa variable de RF
+            if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SIX_ISLAND_ALTERING_CAVE) &&
+                gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SIX_ISLAND_ALTERING_CAVE))
+            {
+                u16 alteringCaveId = VarGet(VAR_KANTO_ALTERING_CAVE_WILD_SET);
+                if (alteringCaveId >= NUM_ALTERING_CAVE_TABLES)
+                    alteringCaveId = 0;
+
+                i += alteringCaveId;
+            }
 
             if (!UnlockedTanobyOrAreNotInTanoby()) // PokemonNative3G : RF
                 break;

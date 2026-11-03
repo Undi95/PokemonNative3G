@@ -803,7 +803,22 @@ static void TrainerCard_GenerateCardForPlayer(struct TrainerCard *trainerCard)
         // PokemonNative3G : la carte de Kanto est celle de RF (TrainerCard_GenerateCardForLinkPlayer et GetCaughtMonsCount
         // de RF) : étoiles de RF, autocollants de l'homme de l'Île 4, icônes de la photo. Les champs de RF ont leur place
         // dans la structure d'Émeraude (berryCrushPoints = linkPoints.berryCrush), comme une carte de RF reçue en link.
-        u32 berriesPicked, jumpsInRow;
+        u32 berriesPicked, jumpsInRow, playTime;
+
+        // Compteurs du Panthéon de Kanto (séparés de ceux de Hoenn, décision du 2026-11-03) : la date d'entrée au
+        // Panthéon de Kanto, comme SetPlayerCardData le fait avec ceux de Hoenn
+        playTime = GetGameStat(GAME_STAT_KANTO_FIRST_HOF_PLAY_TIME);
+        if (!GetGameStat(GAME_STAT_KANTO_ENTERED_HOF))
+            playTime = 0;
+        trainerCard->hofDebutHours = playTime >> 16;
+        trainerCard->hofDebutMinutes = (playTime >> 8) & 0xFF;
+        trainerCard->hofDebutSeconds = playTime & 0xFF;
+        if ((playTime >> 16) > 999)
+        {
+            trainerCard->hofDebutHours = 999;
+            trainerCard->hofDebutMinutes = 59;
+            trainerCard->hofDebutSeconds = 59;
+        }
 
         if (IsNationalPokedexEnabled())
             trainerCard->caughtMonsCount = GetNationalPokedexCount(FLAG_GET_CAUGHT);

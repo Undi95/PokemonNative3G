@@ -388,6 +388,13 @@ class Game:
         self.command("shot", name)
         return os.path.join(self.shots_dir, name + ".ppm")
 
+    def shot_now(self, name):
+        """Diagnostic : l'état actuel (après le VBlank de la dernière image) rendu à la demande, dans shots/NAME.ppm.
+        Différent de shot() (rendu d'avant le VBlank) = l'écran change entre la logique de l'image et son VBlank.
+        Refait les effets HBlank d'une image : pas dans un scénario dont on compare les écrans."""
+        self.command("shotnow", name)
+        return os.path.join(self.shots_dir, name + ".ppm")
+
     def finish(self):
         """Ends the game and writes input.txt. Returns the exit code."""
         with open(os.path.join(self.out_dir, "input.txt"), "w") as f:

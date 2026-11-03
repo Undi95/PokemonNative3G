@@ -6763,14 +6763,16 @@ u16 SpeciesToPokedexNum(u16 species)
 }
 
 // PokemonNative3G : SpeciesToPokedexNum de Rouge Feu, pour ses écrans (résumé, Panthéon de Kanto) : sans le POKéDEX
-// NATIONAL, le numéro des 151 de Kanto, « ??? » pour les autres
+// NATIONAL, le numéro des 151 de Kanto, « ??? » pour les autres. Fusion (décision du 2026-11-03) : les POKéMON du
+// POKéDEX de HOENN, qu'on a déjà, gardent aussi leur numéro (le national, comme RF avec le national) ; seuls les
+// autres (Johto…) restent « ??? »
 u16 Kanto_SpeciesToPokedexNum(u16 species)
 {
-    species = SpeciesToNationalPokedexNum(species);
+    u16 dexNum = SpeciesToNationalPokedexNum(species);
 
-    if (!IsNationalPokedexEnabled() && species > KANTO_DEX_COUNT)
+    if (!IsNationalPokedexEnabled() && dexNum > KANTO_DEX_COUNT && !IsSpeciesInHoennDex(species))
         return 0xFFFF;
-    return species;
+    return dexNum;
 }
 
 bool32 IsSpeciesInHoennDex(u16 species)

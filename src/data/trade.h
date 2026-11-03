@@ -632,7 +632,12 @@ static const u16 sUnusedPal2[] = INCGFX_U16("graphics/trade/unused2.pal", ".gbap
 static const u16 sWirelessSignalNone_Pal_Unused[] = INCGFX_U16("graphics/trade/wireless_signal_none.pal", ".gbapal");
 static const u16 sLinkMon_Pal[] = INCGFX_U16("graphics/trade/link_mon.pal", ".gbapal");
 static const u8 sLinkMonGlow_Gfx[] = INCGFX_U8("graphics/trade/link_mon_glow.png", ".4bpp");
+#ifdef UBFIX
+// La feuille de sprites en charge 0x300 octets (sSpriteSheet_LinkMonShadow), le dessin en a 0x200 : le reste à zéro
+static const u8 sLinkMonShadow_Gfx[0x300] = INCGFX_U8("graphics/trade/link_mon_shadow.png", ".4bpp");
+#else
 static const u8 sLinkMonShadow_Gfx[] = INCGFX_U8("graphics/trade/link_mon_shadow.png", ".4bpp");
+#endif
 static const u8 sCableEnd_Gfx[] = INCGFX_U8("graphics/trade/cable_end.png", ".4bpp");
 static const u8 sGbaScreen_Gfx[] = INCGFX_U8("graphics/trade/gba_screen.png", ".4bpp");
 const u16 gTradePlatform_Tilemap[] = INCBIN_U16("graphics/trade/platform.bin");

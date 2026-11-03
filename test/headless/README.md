@@ -82,6 +82,10 @@ input, so a run can still be replayed from `input.txt`), to set a scenario up qu
 check what it did: `game.flag(name, value)`, `game.var`, `game.item(name, add)`,
 `game.money`, `game.give_mon(species, level)`, `game.heal()`, `game.warp(map, x, y)`,
 `save(game)` and `game.shot(name)`. Names are the constants of `include/constants`.
+`game.shot(name)` writes the last frame as it was drawn, before its VBlank; a name used twice keeps
+only the last screenshot (give each call its own name). For a diagnosis, `game.shot_now(name)` draws
+the current state (after the VBlank) on demand, and `game.dev("gfx.pixel", x, y)` tells what each
+background and sprite gives at one point of the screen.
 `game.dev("gfx.sprites")` runs one of the debug tools (`docs/DEVTOOLS.md`, `aide` lists them) and
 returns its text, with functions and data named; `dev.py` sends the same commands to a DEBUG game
 that runs on the PC. A bug report made in a DEBUG game (DEBUG > Rapport de bug: the save at launch, the

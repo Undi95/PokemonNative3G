@@ -102,6 +102,26 @@
   Sélénite) faisait planter le jeu.
 - Carte de dresseur de Kanto : les badges sont dans leurs cases (ils étaient une rangée trop haut et cachaient le mot
   « BADGES »).
+- Kanto prend les données de la version Rouge Feu là où Rouge Feu et Vert Feuille diffèrent : l'échange du NIDORAN
+  (souterrain, entrée nord) était vide, l'EXCELANGUE de la Route 18 demandait un POKéMON vide, et la salle des lots
+  du Casino de Céladopole ne proposait aucun POKéMON (« ??????????? »).
+- Échanges avec les PNJ (Hoenn et Kanto) : le jeu plantait à la fin de l'animation, au retour sur la carte.
+- Plus de lectures hors limites (vues par AddressSanitizer) : écran titre de Kanto qui repart sur l'intro (deux
+  endroits), choix d'un fond de boîte au PC, panneau du nom de la carte à Hoenn, ombre des POKéMON et image de la GBA
+  pendant un échange.
+- PC de Kanto > PANTHEON sans équipe enregistrée : message d'erreur comme dans Rouge Feu (au lieu d'une équipe vide
+  lue hors limites).
+- Panthéon de Kanto : l'entrée est comptée comme dans Rouge Feu, dans un compteur à part (celui de Hoenn ne bouge
+  plus). Le PC affichait « PANTHEON Nº 0 », la carte de dresseur de Kanto prenait l'étoile et la date du Panthéon de
+  Hoenn, et les poupées de la maison d'OLGA (Île 4) ne pouvaient pas apparaître.
+- Résumé du Pokémon de Rouge Feu (MENUS = KANTO) sans Pokédex national : les Pokémon du Pokédex de Hoenn ont leur
+  numéro (« N° 255 » pour POUSSIFEU) ; seuls les autres (Johto) restent « ??? ».
+- Grotte Métamo (Île 6) : ses rencontres et la page ZONE du Pokédex de Rouge Feu suivent de nouveau sa propre table
+  (elles lisaient la Caverne Altérée de Hoenn).
+- Avec Options > PERSO = Red/Leaf, le reflet du joueur dans l'eau est pâle comme dans Rouge Feu (il gardait les
+  couleurs normales).
+- Options > INTRO = HOENN : le jeu démarre de nouveau sur l'intro d'Émeraude (au lancement, c'était toujours celle de
+  Rouge Feu ; l'option ne comptait qu'après un passage par l'écran titre).
 
 ### Nouveautés
 - POKéDEX NATIONAL donné une seule fois : si le PROF. SEKO l'a déjà donné, le PROF. CHEN se contente de noter le
