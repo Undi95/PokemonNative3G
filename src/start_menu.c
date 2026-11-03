@@ -34,6 +34,7 @@
 #include "pokenav.h"
 #include "safari_zone.h"
 #include "fusion_region.h"
+#include "kanto_save_menu_util.h"
 #include "save.h"
 #include "scanline_effect.h"
 #include "script.h"
@@ -1489,6 +1490,12 @@ static void ShowSaveInfoWindow(void)
     u8 color;
     u32 xOffset;
     u32 yOffset;
+
+    if (gSaveBlock2Ptr->optionsMenuStyle) // PokemonNative3G : MENUS = KANTO, PrintSaveStats de RF
+    {
+        sSaveInfoWindowId = Kanto_PrintSaveStats();
+        return;
+    }
 
     if (!FlagGet(FLAG_SYS_POKEDEX_GET))
     {

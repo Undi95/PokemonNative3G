@@ -652,9 +652,6 @@ SetNotInSaveFailedScreen, RunSaveFailedScreen, BlankPalettes, RequestDmaCopyFrom
 RequestDmaCopyFromCharBuffer, FillBgMapBufferRect, UpdateMapBufferWithText, ClearMapBuffer,
 PrintTextOnSaveFailedScreen, TryWipeDamagedSectors, WipeDamagedSectors
 
-### save_menu_util.c (RF seul, 1/1)
-SaveStatToString
-
 ### scrcmd.c (commun, 2/12)
 ScriptContext_NextCommandEndsScript, ScriptContext_GetQuestLogInput
 
@@ -680,7 +677,7 @@ SetBGMVolume_SuppressHelpSystemReduction, BGMVolumeMax_EnableHelpSystemReduction
 ### sprite.c (commun, 1/1)
 FreeSpriteTilesIfNotUsingSheet
 
-### start_menu.c (commun, 52/55)
+### start_menu.c (commun, 51/55)
 SetHasPokedexAndPokemon, SetUpStartMenu, AppendToStartMenuItems, SetUpStartMenu_NormalField,
 SetUpStartMenu_SafariZone, SetUpStartMenu_Link, SetUpStartMenu_UnionRoom, DestroySafariZoneStatsWindow,
 PrintStartMenuItems, DoDrawStartMenu, DrawStartMenuInOneGo, task50_startmenu, OpenStartMenuWithFollowupFunc,
@@ -695,8 +692,7 @@ SaveDialogCB_AskReplacePreviousFilePrintYesNoMenu, SaveDialogCB_AskOverwriteOrRe
 SaveDialogCB_PrintSavingDontTurnOffPower, SaveDialogCB_DoSave, SaveDialogCB_PrintSaveResult,
 SaveDialogCB_WaitPrintSuccessAndPlaySE, SaveDialogCB_ReturnSuccess, SaveDialogCB_WaitPrintErrorAndPlaySE,
 SaveDialogCB_ReturnError, VBlankCB_WhileSavingAfterLinkBattle, DoSetUpSaveAfterLinkBattle,
-CB2_WhileSavingAfterLinkBattle, task50_after_link_battle_save, PrintSaveStats, CloseSaveStatsWindow,
-CloseStartMenu
+CB2_WhileSavingAfterLinkBattle, task50_after_link_battle_save, CloseSaveStatsWindow, CloseStartMenu
 
 ### text.c (commun, 12/15)
 FontFunc_NormalCopy1, FontFunc_NormalCopy2, FontFunc_Male, FontFunc_Female, DecompressGlyph_NormalCopy1,

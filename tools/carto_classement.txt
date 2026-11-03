@@ -451,7 +451,8 @@ StartMenu_PrepareForSave équivalente InitSave (start_menu.c), même code
 Task_StartMenuHandleInput équivalente Task_ShowStartMenu (start_menu.c), même code
 task50_startmenu équivalente StartMenuTask (start_menu.c), même code
 DoDrawStartMenu équivalente InitStartMenuStep (start_menu.c), même enchaînement
-PrintSaveStats équivalente ShowSaveInfoWindow (start_menu.c), même fenêtre
+PrintSaveStats équivalente Kanto_PrintSaveStats (kanto_save_menu_util.c, 2026-11-03), appelée par ShowSaveInfoWindow avec MENUS = KANTO (avant : la fenêtre d'Émeraude, 14 × 10, autres polices)
+BattleInterfaceSetWindowPals équivalente FillAroundBattleWindows (battle_gfx_sfx_util.c), 1re boucle ; la 2e (18 tiles à 0x600, voix off du Pokédude) ajoutée le 2026-11-03 avec BOITES COMBAT = KANTO
 PrintStartMenuItems équivalente PrintStartMenuActions (start_menu.c), même code
 DestroySafariZoneStatsWindow équivalente RemoveExtraStartMenuWindows (start_menu.c), fenêtre du Safari de Kanto comprise
 SetUpStartMenu équivalente BuildStartMenuActions (start_menu.c), même aiguillage

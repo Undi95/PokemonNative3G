@@ -20,7 +20,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | blend_palette.c | RF seul | 2 | 1 | 0 | 0 | 0 | 0 | 1 |  |
 | field_weather_effects.c | RF seul | 93 | 1 | 0 | 0 | 0 | 54 | 38 |  |
 | field_weather_util.c | RF seul | 10 | 1 | 0 | 0 | 0 | 3 | 6 |  |
-| save_menu_util.c | RF seul | 1 | 1 | 0 | 0 | 0 | 0 | 0 |  |
 | text_printer.c | RF seul | 15 | 1 | 0 | 0 | 0 | 6 | 8 |  |
 | text_window_graphics.c | RF seul | 1 | 1 | 0 | 0 | 0 | 0 | 0 |  |
 | tilemap_util.c | RF seul | 11 | 1 | 0 | 0 | 0 | 1 | 9 |  |
@@ -69,6 +68,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | buy_menu_helpers.c | RF seul | 7 | 3 | 0 | 3 | 100 | 0 | 4 | kanto_shop.c (3) |
 | prof_pc.c | RF seul | 3 | 3 | 0 | 3 | 100 | 0 | 0 | kanto_field_specials.c (3) |
 | party_menu_specials.c | RF seul | 9 | 1 | 0 | 1 | 100 | 3 | 5 | kanto_specials.c (1) |
+| save_menu_util.c | RF seul | 1 | 1 | 0 | 1 | 100 | 0 | 0 | copie kanto_save_menu_util.c : 1/1 fonctions |
 | bg_regs.c | RF seul | 0 | 0 | 0 | 0 | 100 | 0 | 0 |  |
 | braille_text.c | RF seul | 3 | 0 | 0 | 0 | 100 | 1 | 2 |  |
 | dodrio_berry_picking_comm.c | RF seul | 8 | 0 | 0 | 0 | 100 | 8 | 0 |  |
@@ -108,7 +108,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | field_effect_helpers.c | commun | 76 | 7 | 1 | 0 | 14 | 9 | 60 |  |
 | trainer_card.c | commun | 73 | 15 | 1 | 0 | 6 | 6 | 52 |  |
 | berry_crush.c | commun | 73 | 4 | 0 | 0 | 0 | 11 | 58 |  |
-| start_menu.c | commun | 65 | 55 | 1 | 2 | 5 | 0 | 10 | start_menu.c (1), kanto_specials.c (1) |
+| start_menu.c | commun | 65 | 55 | 1 | 3 | 7 | 0 | 10 | start_menu.c (1), kanto_specials.c (1), kanto_save_menu_util.c (1) |
 | link.c | commun | 114 | 2 | 1 | 0 | 50 | 56 | 56 |  |
 | item_use.c | commun | 73 | 58 | 2 | 14 | 27 | 1 | 14 | item_use.c (3), kanto_berry_pouch.c (3), kanto_tm_case.c (2) |
 | trade.c | commun | 66 | 2 | 0 | 0 | 0 | 17 | 47 |  |

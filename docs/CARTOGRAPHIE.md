@@ -158,9 +158,14 @@ COUPE ; voir CONNAISSANCE-JEU), échange « SBIRE TEAM ROCKET » de la version f
 lettres de RF, boîtes d'argent et de jetons de RF (MENUS = KANTO). Les polices MALE / FEMALE / NORMAL_COPY de RF sont
 sa police normale en français (FONT_KANTO) ; le vélo de RF est écarté (un seul vélo, celui de Hoenn), l'interface du
 stockage PC aussi (choix du 2026-10-23) ; l'écran d'échec de sauvegarde et la mosaïque du poison de RF restent des
-variantes (Émeraude gardé) ; la Spirale et les feuilles de l'écran titre (Vert Feuille) sont mortes. Restent à lire :
-`BattleInterfaceSetWindowPals` (couleur 0 des tuiles de la boîte de texte de combat de RF, BOITES COMBAT = KANTO) et
-`SaveStatToString` (fenêtre d'infos de la sauvegarde de RF).
+variantes (Émeraude gardé) ; la Spirale et les feuilles de l'écran titre (Vert Feuille) sont mortes.
+
+Les deux dernières (2026-11-03) : **manquante 0, à vérifier 0**. `BattleInterfaceSetWindowPals` est la
+`FillAroundBattleWindows` d'Émeraude plus une 2ᵉ boucle (couleur 6 dans les 18 tuiles à 0x600, où le Pokédude charge
+sa fenêtre de voix off), ajoutée avec BOITES COMBAT = KANTO ; `SaveStatToString` et `PrintSaveStats` sont dans
+`kanto_save_menu_util.c` : la fenêtre d'infos de la sauvegarde de RF avec MENUS = KANTO (scénario
+`kanto_save_window`). Restent : link 202 (à porter, désactivé), et les fonctions de même nom au corps différent,
+que l'inventaire ne voit pas (« divergentes ») ; la plupart sont des variantes du code commun (Émeraude gardé).
 
 Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.md).
 

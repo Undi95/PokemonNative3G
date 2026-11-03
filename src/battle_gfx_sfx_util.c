@@ -1336,6 +1336,28 @@ void FillAroundBattleWindows(void)
             vramPtr++;
         }
     }
+
+    // PokemonNative3G : Rouge Feu (BattleInterfaceSetWindowPals) colore aussi les 18 tiles à 0x600, là où son
+    // LoadBattleMenuWindowGfx charge la fenêtre de la voix off (Pokédude) ; avec les boîtes de combat de RF
+    if (KANTO_BATTLE_UI)
+    {
+        vramPtr = (u16 *)(VRAM + 0x600);
+        for (i = 0; i < 18; i++)
+        {
+            for (j = 0; j < 16; j++)
+            {
+                if (!(*vramPtr & 0xF000))
+                    *vramPtr |= 0x6000;
+                if (!(*vramPtr & 0x0F00))
+                    *vramPtr |= 0x0600;
+                if (!(*vramPtr & 0x00F0))
+                    *vramPtr |= 0x0060;
+                if (!(*vramPtr & 0x000F))
+                    *vramPtr |= 0x0006;
+                vramPtr++;
+            }
+        }
+    }
 }
 
 void ClearTemporarySpeciesSpriteData(u8 battler, bool8 dontClearSubstitute)

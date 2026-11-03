@@ -2,11 +2,11 @@
 
 > Généré par `tools/cartographie.py` — ne pas éditer à la main.
 
-Les 1634 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
+Les 1632 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
 
 | Catégorie | Sens | Fonctions |
 |---|---|---|
-| manquante | rien de proche dans la fusion : à porter | 2 |
+| manquante | rien de proche dans la fusion : à porter | 0 |
 | à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 0 |
 | équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 707 |
 | triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 111 |
@@ -14,13 +14,7 @@ Les 1634 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fon
 | link | link / E-Reader : à porter, désactivé | 202 |
 | écartée | écartée par décision | 492 |
 
-## Manquante (2) : rien de proche dans la fusion : à porter
-
-### battle_gfx_sfx_util.c (1)
-BattleInterfaceSetWindowPals
-
-### save_menu_util.c (1)
-SaveStatToString
+## Manquante (0) : rien de proche dans la fusion : à porter
 
 
 ## À vérifier (0) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
@@ -113,7 +107,7 @@ TeleportInFieldEffectTask2 → TeleportWarpInFieldEffect_SpinEnter (field_effect
 UseSurfEffect_1 → SurfFieldEffect_Init (field_effect.c)
 waterfall_0_setup → WaterfallFieldEffect_Init (field_effect.c)
 
-### start_menu.c (44)
+### start_menu.c (43)
 SetUpStartMenu (BuildStartMenuActions (start_menu.c), même aiguillage)
 AppendToStartMenuItems (AddStartMenuAction (start_menu.c), même code)
 SetUpStartMenu_NormalField (BuildNormalStartMenu (start_menu.c), mêmes entrées)
@@ -153,7 +147,6 @@ SaveDialogCB_WaitPrintSuccessAndPlaySE (SaveSuccessCallback (start_menu.c), mêm
 SaveDialogCB_ReturnSuccess (SaveReturnSuccessCallback (start_menu.c), même code)
 SaveDialogCB_WaitPrintErrorAndPlaySE (SaveErrorCallback (start_menu.c), même code)
 SaveDialogCB_ReturnError (SaveReturnErrorCallback (start_menu.c), même code)
-PrintSaveStats (ShowSaveInfoWindow (start_menu.c), même fenêtre)
 CloseSaveStatsWindow (RemoveSaveInfoWindow (start_menu.c), même code)
 CloseStartMenu (HideStartMenu (start_menu.c), SE_SELECT puis HideStartMenuWindow)
 CB2_WhileSavingAfterLinkBattle → MainCB (clear_save_data_screen.c)
@@ -762,6 +755,11 @@ LoadMenuMessageWindowGfx (LoadKantoMenuMessageWindowGfx (text_window.c de la fus
 LoadUserWindowGfxByFrame (LoadWindowGfx (text_window.c d'Émeraude) : gUserFrames = sWindowFrames (cadres des deux jeux))
 LoadUserWindowGfx (LoadUserWindowBorderGfx (text_window.c d'Émeraude), même code)
 
+### battle_gfx_sfx_util.c (3)
+DecompressTrainerBackPalette (DecompressTrainerBackPic (battle_gfx_sfx_util.c), qui charge aussi la palette)
+FreeTrainerFrontPicPaletteAndTile (FreeTrainerFrontPicPalette (battle_gfx_sfx_util.c d'Émeraude) : Émeraude ne charge pas l'image du dresseur en feuille, DestroySprite libère)
+BattleInterfaceSetWindowPals (FillAroundBattleWindows (battle_gfx_sfx_util.c), 1re boucle ; la 2e (18 tiles à 0x600, voix off du Pokédude) ajoutée le 2026-11-03 avec BOITES COMBAT = KANTO)
+
 ### battle_script_commands.c (3)
 Cmd_callterrainattack (Cmd_callenvironmentattack (battle_script_commands.c), terrain = environment)
 Cmd_cureifburnedparalysedorpoisoned (Cmd_cureifburnedparalyzedorpoisoned (battle_script_commands.c), tailles d'arguments du port 64 bits)
@@ -797,10 +795,6 @@ PlayerHandleCmd55 (PlayerHandleEndLinkBattle (battle_controller_player.c), + com
 ### battle_controllers.c (2)
 SetUpBattleVars (SetUpBattleVarsAndBirchZigzagoon (battle_controllers.c), sans le ZIGZATON de Seko)
 BtlController_EmitPlayFanfare (BtlController_EmitPlayFanfareOrBGM (battle_controllers.c), même transfert)
-
-### battle_gfx_sfx_util.c (2)
-DecompressTrainerBackPalette (DecompressTrainerBackPic (battle_gfx_sfx_util.c), qui charge aussi la palette)
-FreeTrainerFrontPicPaletteAndTile (FreeTrainerFrontPicPalette (battle_gfx_sfx_util.c d'Émeraude) : Émeraude ne charge pas l'image du dresseur en feuille, DestroySprite libère)
 
 ### battle_message.c (2)
 Localize_TrainerClass_Names (GetTrainerClassNameGenderSpecific (international_string_util.c) : en français, ses Localize_TrainerClass_* rendent le nom normal)
