@@ -82,9 +82,12 @@ def run_scenario(binary, scenario, out_dir, save=None, shot_every=0, params=None
     driver (see driver.py), and one that defines steps is played from those."""
     variables = scenario_variables(scenario, **(params or {}))
     config = os.path.join(TEST_DIR, variables["CONFIG"]) if variables["CONFIG"] else None
-    # A scenario that sets FIXTURE starts from the save its fixture scenario makes
+    # A scenario that sets FIXTURE starts from the save its fixture scenario makes, one that sets SAVE from that file
+    # (test/headless/saves/: saves kept as they were, like those of older versions)
     if variables["FIXTURE"] and not save:
         save = fixture(binary, variables["FIXTURE"])
+    if variables.get("SAVE") and not save:
+        save = os.path.join(TEST_DIR, "saves", variables["SAVE"])
     os.makedirs(out_dir, exist_ok=True)
     for old in glob.glob(os.path.join(out_dir, "frame_*.ppm")):
         os.remove(old)
@@ -120,7 +123,9 @@ def run_scenario(binary, scenario, out_dir, save=None, shot_every=0, params=None
     if save:
         shutil.copyfile(save, run.save_path)
 
-    cmd = [os.path.abspath(binary), "--kanto-start", os.environ.get("KANTO_START", "1"), "--save", run.save_path, "--test-input", input_path,
+    # KANTO_START du scénario (0 : l'intro de Hoenn), comme pour les scénarios du driver ; sinon celui de l'environnement
+    kanto_start = variables["KANTO_START"] if variables["KANTO_START"] is not None else os.environ.get("KANTO_START", "1")
+    cmd = [os.path.abspath(binary), "--kanto-start", str(kanto_start), "--save", run.save_path, "--test-input", input_path,
            "--test-hashes", run.hashes_path]
     if config:
         cmd += ["--config", config]

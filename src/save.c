@@ -14,6 +14,9 @@
 #include "link.h"
 #include "constants/characters.h"
 #include "constants/game_stat.h"
+#ifdef KANTO_DEBUG_START
+#include "debug_tools.h"
+#endif
 
 static u16 CalculateChecksum(void *, u16);
 static bool8 ReadFlashSector(u8, struct SaveSector *);
@@ -134,7 +137,23 @@ STATIC_ASSERT(sizeof(struct SavedEnigmaBerry) == 0x34, SavedEnigmaBerrySize);
 
 STATIC_ASSERT(SB1_TEMPLATES_END <= SB1_ENIGMA_OFFSET, SaveBlock1ConvertedPartsInOrder);
 
-EWRAM_DATA static u8 sSaveBlock1Saved[SAVEBLOCK1_SAVE_SIZE] ALIGNED(4) = {0};
+/*
+ * The Windows builds up to PokemonNative3G 1.1 laid bitfields out like Microsoft's compiler (MinGW's default, now
+ * -mno-ms-bitfields): ObjectEvent's u16 facingDirection:4 and movementDirection:4 took 2 bytes, pushing the rest of
+ * the struct one byte further, so it was 40 bytes instead of the GBA's 36. Their SaveBlock1 is 64 bytes longer, so
+ * only its last sector is longer: its checksum over these 64 more bytes gives such a save away, and it's converted
+ * when loaded (SaveBlock1FromOldWindows).
+ */
+#define OLD_WINDOWS_OBJECT_EVENT_SIZE 40
+#define OLD_WINDOWS_SAVEBLOCK1_EXTRA (OBJECT_EVENTS_COUNT * (OLD_WINDOWS_OBJECT_EVENT_SIZE - sizeof(struct ObjectEvent)))
+
+STATIC_ASSERT(sizeof(struct ObjectEvent) == 0x24, ObjectEventHasTheGbaLayout);
+STATIC_ASSERT(SAVEBLOCK1_SAVE_SIZE + OLD_WINDOWS_SAVEBLOCK1_EXTRA <= 4 * SECTOR_DATA_SIZE, OldWindowsSaveBlock1FitsInItsSectors);
+
+// Room for an old Windows SaveBlock1 too
+EWRAM_DATA static u8 sSaveBlock1Saved[SAVEBLOCK1_SAVE_SIZE + OLD_WINDOWS_SAVEBLOCK1_EXTRA] ALIGNED(4) = {0};
+// Each save slot's SaveBlock1, as GetSaveValidStatus found it: in the old Windows layout or not
+static bool8 sOldWindowsSlot[NUM_SAVE_SLOTS];
 
 /*
  * Before saves used the GBA layout, 64-bit builds saved SaveBlock1 as it is in
@@ -151,6 +170,8 @@ static void SaveBlock1ToSaved(void);
 static void SaveBlock1FromSaved(void);
 static bool32 IsOld64BitSaveBlock1(const struct SaveSectorLocation *locations);
 static void SaveBlock1FromOld64Bit(void);
+static bool8 IsOldWindowsSaveBlock1End(struct SaveSector *sector);
+static void SaveBlock1FromOldWindows(void);
 
 // Called right before a sector's data is copied out to be written. SaveBlock1
 // is converted as late as possible, since the game copies things like the
@@ -606,7 +627,7 @@ static u8 CopySaveSlotData(u16 sectorId, struct SaveSectorLocation *locations)
     u16 i;
     u16 checksum;
     u16 slotOffset = NUM_SECTORS_PER_SLOT * (gSaveCounter % NUM_SAVE_SLOTS);
-    u16 id;
+    u16 id, size;
 
     for (i = 0; i < NUM_SECTORS_PER_SLOT; i++)
     {
@@ -616,13 +637,24 @@ static u8 CopySaveSlotData(u16 sectorId, struct SaveSectorLocation *locations)
         if (id == 0)
             gLastWrittenSector = i;
 
-        checksum = CalculateChecksum(gReadWriteSector->data, locations[id].size);
+        // PokemonNative3G : un secteur jamais écrit (id 0xFFFF) ou abîmé n'est pas dans locations. Sur GBA, la lecture
+        // hors du tableau ne prêtait pas à conséquence ; sur PC, elle tombe 1 Mo plus loin et plante selon où le
+        // système a placé la mémoire (Linux, Android : emplacement vide d'une sauvegarde faite une seule fois)
+        if (id >= NUM_SECTORS_PER_SLOT)
+            continue;
+        size = locations[id].size;
+#ifdef VER_64BIT
+        // An old Windows SaveBlock1 (see OLD_WINDOWS_SAVEBLOCK1_EXTRA) ends 64 bytes further
+        if (id == SECTOR_ID_SAVEBLOCK1_END && sOldWindowsSlot[gSaveCounter % NUM_SAVE_SLOTS])
+            size += OLD_WINDOWS_SAVEBLOCK1_EXTRA;
+#endif
+        checksum = CalculateChecksum(gReadWriteSector->data, size);
 
         // Only copy data for sectors whose signature and checksum fields are correct
         if (gReadWriteSector->signature == SECTOR_SIGNATURE && gReadWriteSector->checksum == checksum)
         {
             u16 j;
-            for (j = 0; j < locations[id].size; j++)
+            for (j = 0; j < size; j++)
                 ((u8 *)locations[id].data)[j] = gReadWriteSector->data[j];
         }
     }
@@ -642,13 +674,26 @@ static u8 GetSaveValidStatus(const struct SaveSectorLocation *locations)
     u8 saveSlot2Status;
 
     // Check save slot 1
+#ifdef VER_64BIT
+    sOldWindowsSlot[0] = sOldWindowsSlot[1] = FALSE;
+#endif
     for (i = 0; i < NUM_SECTORS_PER_SLOT; i++)
     {
         ReadFlashSector(i, gReadWriteSector);
         if (gReadWriteSector->signature == SECTOR_SIGNATURE)
         {
             signatureValid = TRUE;
+            // PokemonNative3G : id hors de l'emplacement = secteur abîmé (voir CopySaveSlotData)
+            if (gReadWriteSector->id >= NUM_SECTORS_PER_SLOT)
+                continue;
             checksum = CalculateChecksum(gReadWriteSector->data, locations[gReadWriteSector->id].size);
+#ifdef VER_64BIT
+            if (gReadWriteSector->checksum != checksum && IsOldWindowsSaveBlock1End(gReadWriteSector))
+            {
+                sOldWindowsSlot[0] = TRUE;
+                checksum = gReadWriteSector->checksum;
+            }
+#endif
             if (gReadWriteSector->checksum == checksum)
             {
                 saveSlot1Counter = gReadWriteSector->counter;
@@ -680,7 +725,16 @@ static u8 GetSaveValidStatus(const struct SaveSectorLocation *locations)
         if (gReadWriteSector->signature == SECTOR_SIGNATURE)
         {
             signatureValid = TRUE;
+            if (gReadWriteSector->id >= NUM_SECTORS_PER_SLOT)
+                continue;
             checksum = CalculateChecksum(gReadWriteSector->data, locations[gReadWriteSector->id].size);
+#ifdef VER_64BIT
+            if (gReadWriteSector->checksum != checksum && IsOldWindowsSaveBlock1End(gReadWriteSector))
+            {
+                sOldWindowsSlot[1] = TRUE;
+                checksum = gReadWriteSector->checksum;
+            }
+#endif
             if (gReadWriteSector->checksum == checksum)
             {
                 saveSlot2Counter = gReadWriteSector->counter;
@@ -972,6 +1026,80 @@ static void SaveBlock1FromOld64Bit(void)
     gSaveBlock1Ptr->enigmaBerry.berry.description1 = NULL;
     gSaveBlock1Ptr->enigmaBerry.berry.description2 = NULL;
 }
+
+// The last SaveBlock1 sector of an old Windows save (see OLD_WINDOWS_SAVEBLOCK1_EXTRA): its checksum covers 64 more
+// bytes than this build's SaveBlock1 leaves in it
+static bool8 IsOldWindowsSaveBlock1End(struct SaveSector *sector)
+{
+    u16 size = sSaveSlotLayout[SECTOR_ID_SAVEBLOCK1_END].size + OLD_WINDOWS_SAVEBLOCK1_EXTRA;
+
+    return sector->id == SECTOR_ID_SAVEBLOCK1_END && size <= SECTOR_DATA_SIZE
+        && sector->checksum == CalculateChecksum(sector->data, size);
+}
+
+// sSaveBlock1Saved has an old Windows SaveBlock1: its object events take 40 bytes. Each one loses the byte its
+// facingDirection/movementDirection bitfields didn't use (offset 0x19) and its 3 bytes of padding, and what comes
+// after them moves 64 bytes back, to the GBA layout SaveBlock1FromSaved reads
+static void SaveBlock1FromOldWindows(void)
+{
+    static u8 sOldObjectEvents[OBJECT_EVENTS_COUNT * OLD_WINDOWS_OBJECT_EVENT_SIZE];
+    size_t start = offsetof(struct SaveBlock1, objectEvents);
+    size_t newEnd = start + OBJECT_EVENTS_COUNT * sizeof(struct ObjectEvent);
+    size_t oldEnd = start + sizeof(sOldObjectEvents);
+    s32 i;
+
+    memcpy(sOldObjectEvents, &sSaveBlock1Saved[start], sizeof(sOldObjectEvents));
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        const u8 *old = &sOldObjectEvents[i * OLD_WINDOWS_OBJECT_EVENT_SIZE];
+        u8 *new = &sSaveBlock1Saved[start + i * sizeof(struct ObjectEvent)];
+
+        memcpy(new, old, 0x19);
+        memcpy(new + 0x19, old + 0x1A, sizeof(struct ObjectEvent) - 0x19);
+    }
+    memmove(&sSaveBlock1Saved[newEnd], &sSaveBlock1Saved[oldEnd], SAVEBLOCK1_SAVE_SIZE - newEnd);
+}
+#endif
+
+#ifdef KANTO_DEBUG_START
+// PokemonNative3G, outil de debug sys.sauvegarde (src/debug_tools.c) : la taille des données de chaque secteur dans
+// cette build, et l'état de chaque secteur des deux emplacements du fichier (une sauvegarde d'une autre plateforme
+// dont les structures n'ont pas la même taille n'a plus les bons checksums)
+void Save_DebugDescribe(struct DebugToolsOutput *out)
+{
+    static struct SaveSector sector;
+    u16 i;
+
+    DebugTools_Print(out, "tailles : SaveBlock2 %u, SaveBlock1 (format GBA) %u, PokemonStorage %u\n",
+                     (unsigned)sizeof(struct SaveBlock2), (unsigned)SAVEBLOCK1_SAVE_SIZE,
+                     (unsigned)sizeof(struct PokemonStorage));
+    for (i = 0; i < NUM_SECTORS_PER_SLOT * NUM_SAVE_SLOTS; i++)
+    {
+        ReadFlash(i, 0, (u8 *)&sector, SECTOR_SIZE);
+        if (sector.signature != SECTOR_SIGNATURE)
+        {
+            DebugTools_Print(out, "secteur %2u : vide\n", i);
+        }
+        else if (sector.id >= NUM_SECTORS_PER_SLOT)
+        {
+            DebugTools_Print(out, "secteur %2u : id %u invalide\n", i, sector.id);
+        }
+        else
+        {
+            u16 size = sSaveSlotLayout[sector.id].size;
+            u16 checksum = CalculateChecksum(sector.data, size);
+            const char *verdict = checksum == sector.checksum ? "OK" : "FAUX";
+
+#ifdef VER_64BIT
+            if (checksum != sector.checksum && IsOldWindowsSaveBlock1End(&sector))
+                verdict = "OK (ancien format Windows, converti au chargement)";
+#endif
+            DebugTools_Print(out, "secteur %2u : id %2u, compteur %u, taille %u, checksum %#06x %s\n", i, sector.id,
+                             (unsigned)sector.counter, size, sector.checksum, verdict);
+        }
+    }
+    DebugTools_Print(out, "compteur %u, etat %u\n", (unsigned)gSaveCounter, gSaveFileStatus);
+}
 #endif
 
 static void UpdateSaveAddresses(void)
@@ -1195,10 +1323,19 @@ u8 LoadGameSave(u8 saveType)
 #endif
         status = TryLoadSaveSlot(FULL_SAVE_SLOT, gRamSaveSectorLocations);
 #ifdef VER_64BIT
-        if (IsOld64BitSaveBlock1(gRamSaveSectorLocations))
-            SaveBlock1FromOld64Bit();
-        else
+        if (sOldWindowsSlot[gSaveCounter % NUM_SAVE_SLOTS])
+        {
+            SaveBlock1FromOldWindows();
             SaveBlock1FromSaved();
+        }
+        else if (IsOld64BitSaveBlock1(gRamSaveSectorLocations))
+        {
+            SaveBlock1FromOld64Bit();
+        }
+        else
+        {
+            SaveBlock1FromSaved();
+        }
 #endif
         CopyPartyAndObjectsFromSave();
         KantoSave_Read();

@@ -66,8 +66,25 @@ MSYS_NO_PATHCONV=1 docker run --rm -v "$P:/repo:ro" -v pn3g-work:/work -v "$P/ou
 $env:PN3G_FPS = '1'; .\pokeemeraude64.exe 2> fps.txt
 ```
 
+## Sauvegardes : un seul format
+
+Le fichier est le même sur Windows, Linux et Android (format de la cartouche, `src/save.c`) : une sauvegarde passe
+de l'un à l'autre telle quelle. Pour que les structures aient la même disposition partout, l'exe Windows est compilé
+avec `-mno-ms-bitfields` (MinGW range par défaut les champs de bits comme Microsoft : `struct ObjectEvent` faisait
+40 octets au lieu de 36). Les sauvegardes Windows de la 1.0 et de la 1.1 (ancien format) sont reconnues au checksum
+de leur dernier secteur de SaveBlock1 et converties au chargement (`SaveBlock1FromOldWindows`, scénario
+`save_old_windows`). Vérifié : la même partie sauvegardée par l'exe Windows et par le binaire Linux donne le même
+fichier, octet pour octet. `sys.sauvegarde` (outils de debug) montre l'état de chaque secteur.
+
+## Clavier (`src/platform/settings.c`)
+
+Les touches de `pokeemerald.ini` sont nommées par ce qui est écrit dessus (noms de touches de SDL), quelle que soit
+la disposition du clavier : `key_a = Z` est la touche Z d'un AZERTY comme d'un QWERTY, `key_a = ù` marche sur un
+clavier français. Exception de SDL : la rangée des chiffres est toujours 1 à 0 (sur AZERTY, la touche é s'appelle 2).
+
 ## Touches tactiles (`src/platform/touch.c`)
 
 Toujours affichées sur Android ; sur PC, dès qu'on touche un écran tactile. Croix à gauche,
 A/B à droite, L/R en haut, SELECT / RESET / START en bas au centre. RESET = reset du jeu,
-à maintenir 1 seconde.
+à maintenir un court instant (0,3 s, `RESET_HOLD_MS` dans `src/platform/touch.c`), pour qu'un effleurement ne
+relance pas la partie.

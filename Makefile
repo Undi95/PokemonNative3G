@@ -161,7 +161,10 @@ ifeq ($(PORTABLE),1)
   OS_LFLAGS :=
 
   ifeq ($(TARGET_OS),WINDOWS)
-    OS_CFLAGS :=
+    # Champs de bits rangés comme gcc partout ailleurs (GBA, Linux, Android) et pas comme Microsoft (défaut de MinGW) :
+    # sinon struct ObjectEvent fait 40 octets au lieu de 36 et les sauvegardes Windows ne se lisent pas ailleurs
+    # (migration des anciennes : src/save.c, OLD_WINDOWS_*)
+    OS_CFLAGS := -mno-ms-bitfields
     # xinput9_1_0.dll comes with every Windows since Vista; -lxinput would need
     # xinput1_3.dll from the old DirectX redistributable
     # ws2_32 : console des outils de debug (src/platform/devtools.c, builds KANTO_DEBUG=1)
