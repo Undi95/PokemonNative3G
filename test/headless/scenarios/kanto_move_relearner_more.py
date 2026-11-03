@@ -18,7 +18,7 @@ from menu_helpers import press_until_free, bag, texts
 
 def moves(game):
     line = next(l for l in game.dev("joueur.equipe").splitlines() if "capacites" in l)
-    return [int(m.split("/")[0]) for m in line.split()[1:]]
+    return [int(m.split("/")[0]) for m in line.split("capacites")[1].split()]
 
 
 def relearn(game, place, x, y, what):

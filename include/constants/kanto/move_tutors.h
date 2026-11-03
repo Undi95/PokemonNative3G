@@ -1,4 +1,5 @@
 // Copié de Rouge Feu
+#include "constants/party_menu.h"
 #define MOVETUTOR_MEGA_PUNCH    0
 #define MOVETUTOR_SWORDS_DANCE  1
 #define MOVETUTOR_MEGA_KICK     2
@@ -14,9 +15,11 @@
 #define MOVETUTOR_EXPLOSION    12
 #define MOVETUTOR_ROCK_SLIDE   13
 #define MOVETUTOR_SUBSTITUTE   14
-#define MOVETUTOR_FRENZY_PLANT 15
-#define MOVETUTOR_BLAST_BURN   16
-#define MOVETUTOR_HYDRO_CANNON 17
+// RF : 15 à 17 ; dans la fusion, 15 à 17 sont des tuteurs d'Émeraude (DYNAMOPOING, ROULADE, BOOST) : les capacités
+// ultimes passent après (TUTOR_MOVE_FRENZY_PLANT… de constants/party_menu.h)
+#define MOVETUTOR_FRENZY_PLANT TUTOR_MOVE_FRENZY_PLANT
+#define MOVETUTOR_BLAST_BURN   TUTOR_MOVE_BLAST_BURN
+#define MOVETUTOR_HYDRO_CANNON TUTOR_MOVE_HYDRO_CANNON
 // Poche de CT de RF = poche CT/CS d'Émeraude
 #define POCKET_TM_CASE POCKET_TM_HM
 #define POCKET_BERRY_POUCH POCKET_BERRIES

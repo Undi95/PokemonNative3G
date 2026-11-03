@@ -41,8 +41,10 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `scripts.flag N [V]`, `scripts.var N [V]` | lit ou met un flag, une variable (avec son nom) |
 | | `scripts.drapeaux [CAT]` | **tous les drapeaux, dresseurs et variables du jeu**, par région et catégorie (système, badges, personnages cachés, objets, cadeaux, combats, PokéNav, carte, temporaires, dresseurs, variables…) : sans argument les catégories (combien à ON), avec `CAT` chaque nom et son état. Dans le menu : un curseur, **A** ouvre une catégorie ou bascule ON/OFF (une variable : remise à 0), **L / R** variable -1 / +1, B revient. Les noms viennent de `tools/debug_names.py` → `src/data/debug_names.h` |
 | | `scripts.histoire [N]` | **l'histoire finie sans sauvegarde** : `0` Hoenn, `1` Kanto, `2` les deux. Met chaque drapeau que les scripts mettent et ne retirent jamais (hors objets, cachés, temporaires, quotidiens), et chaque variable d'avancement à la dernière valeur que les scripts lui donnent (pas les variables remises à 0 : files d'attente, salles de défi). Déduit des scripts par `tools/debug_states.py` → `src/data/debug_states.h` (`--liste` les montre) |
-| Joueur | `joueur.equipe` | équipe : espèce, PV, objet, dresseur d'origine, lieu et jeu de rencontre, capacités et leurs PP |
+| Joueur | `joueur.equipe` | équipe : espèce, PV, objet, dresseur d'origine, lieu et jeu de rencontre, amitié, capacités et leurs PP |
 | | `joueur.sac` | argent, poches, objets du PC, objet enregistré sur SELECT |
+| | `joueur.poudre [N]` | Poudre Baie ; `N` en ajoute (scénario `kanto_specials_b` : vendeur d'Azuria) |
+| | `joueur.amitie N [V]` | amitié du Pokémon N ; `V` la met (0-255 ; Daisy, tuteur du Cap Falaise) |
 | | `joueur.enregistre OBJET` | l'objet enregistré sur SELECT (scénario `fishing_chain_more` : la canne) |
 | | `joueur.objetpc OBJET N` | dépose N objets au PC du joueur (`AddPCItem`), sans passer par le sac (scénario `kanto_item_pc_more`) |
 | | `joueur.jetons [N]` | jetons du Casino ; `N` les met (au plus 9 999) (scénario `kanto_money_coins_box`) |

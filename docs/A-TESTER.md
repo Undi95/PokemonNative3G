@@ -66,22 +66,22 @@ réapparaissent (`kanto_signposts`, `kanto_terrain`), passage Hoenn <-> Kanto, c
 
 ## Specials de RF (scripts de Kanto)
 - [ ] PC qui s'allume / s'éteint (Centres Pokémon, chambre du joueur)
-- [ ] Ascenseurs : Centre Commercial de Céladopole, Sylphe SARL, repaire Rocket (fenêtre « Niveau: », secousse, vue)
-- [ ] Menus de liste RF (badges, étages de Sylphe SARL, poudre de baies)
+- [x] Ascenseurs : Centre Commercial de Céladopole (« Niveau: RC », curseur sur RC, « ding dong », sortie au 5F ; `kanto_specials_a.py`), Sylphe SARL (liste qui défile, sortie au 11F) et repaire Rocket (B1F → B4F) — `kanto_specials_b.py`, 2026-11-03
+- [x] Menus de liste RF : badges d'Azuria, étages de Sylphe SARL, Poudre Baie (`kanto_specials_b.py`)
 - [ ] Vendeurs des Boutiques Pokémon (bon PNJ qui parle)
-- [ ] Casino de Céladopole : machines à sous
-- [ ] Vérificateur de surnoms (Lavanville)
-- [ ] Poubelles de Carmin (arène du Major Bob)
-- [ ] Poupées de Lorelei (Île 4), Homme aux stickers, icônes de la carte dresseur (photo)
-- [ ] Resort Gorgeous (Île 5) : Pokémon demandé et récompense
-- [ ] Massage de Daisy (Bourg Palette) : amitié +3, attente de 500 pas
-- [ ] Cap Falaise (Île 2) : Végé-Attaque / Rafale Feu / Hydroblast
-- [ ] Pension de la Route 5 : déposer, gagner des niveaux en marchant, reprendre (et après sauvegarde)
+- [x] Casino de Céladopole : machines à sous (`kanto_slots_wins.py`)
+- [x] Vérificateur de surnoms (Lavanville) : écran des noms, nom gardé (`kanto_specials_b.py`)
+- [x] Poubelles de Carmin : les deux interrupteurs ouvrent la porte (`kanto_specials_a.py`)
+- [x] Poupées de Lorelei : 8 de plus avec 200 entrées au Panthéon (`kanto_specials_b.py`) ; homme aux stickers et photo de la carte dresseur (`kanto_card_stickers.py`, `kanto_photo_flash.py`)
+- [x] Resort Gorgeous (Île 5) : POKéMON demandé, LUXE BALL reçue (`kanto_specials_b.py`)
+- [x] Massage de Daisy : amitié +3 (+1 pour un POKéMON rencontré à Bourg Palette, règle d'AdjustFriendship), attente remise à 0, puis seulement l'avis sur l'amitié (`kanto_specials_b.py`)
+- [x] Cap Falaise (Île 2) : VEGE-ATTAK apprise à FLORIZARRE (`kanto_specials_b.py`, 2026-11-03). **Bug trouvé et corrigé** : le tuteur essayait d'enseigner DYNAMOPOING (numéros de tuteur de RF lus dans la table d'Émeraude) ; les capacités ultimes ne pouvaient pas s'apprendre
+- [x] Pension de la Route 5 : PIKACHU déposé, 150 pas, sauvegarde et redémarrage, il a grandi, repris contre de l'argent (`kanto_specials_a.py`)
 - [ ] Pension de l'Île 4 : coût, courrier
-- [ ] Records de taille : Scarabrute et Magicarpe
+- [x] Records de taille : MAGICARPE (FILET BALL) et SCARHINO (FAIBLO BALL) mesurés (`kanto_specials_a.py`)
 - [ ] Fan Club de Safrania : fans gagnés / perdus, noms
-- [ ] Poudre de baies (échange contre objets)
-- [ ] Effaceur de capacités, menu du PC, sauvegarde demandée par un script, PC du Panthéon (version Émeraude)
+- [x] Poudre Baie : échange (500 → 450, objet obtenu) (`kanto_specials_b.py`)
+- [ ] Effaceur de capacités (fait : `kanto_specials_b.py`, la 1re capacité oubliée), menu du PC, sauvegarde demandée par un script, PC du Panthéon (version Émeraude)
 - [ ] K.O. de RF à Hoenn et à Kanto (2026-10-31) : vérifié en headless (`kanto_whiteout.py` : défaites contre un sauvage sur la Route 102 et au Mt. Moon, « panique et perd X¥ » = argent réellement retiré, reprise devant l'infirmière de Clémenti-Ville et de Jadielle, message sur fond noir puis soins, Ligue et Piste Cyclable remises à zéro ; cases de reprise de la Ligue de Hoenn et du Plateau Indigo face à l'infirmière). Non testés : défaite contre un dresseur (« paye X¥ comme récompense »), sans argent, K.O. par le poison hors combat (montant affiché = montant retiré), avec des badges (montant plus élevé, conseils courts de l'infirmière), Centre de l'Île 1, K.O. avant tout Centre (maison de Bourg-en-Vol), K.O. au Mt. Cheminée (retour à Vermilava), K.O. pendant un défi de la Tour des Dresseurs (reprise dans le hall)
 - [ ] Caverne Altérée de l'Île 6 (2026-10-31, section de carte corrigée : elle avait celle de la Caverne Altérée de Hoenn) : nom affiché à l'entrée, aperçu de la carte de RF, lieu de capture dans le résumé (« CAVERNE ALTEREE » de Kanto), joueur visible sur la carte de Kanto (objet CARTE, Vol)
 - [ ] Régions après homogénéisation (2026-10-31, `Fusion_IsInKanto`) : carte de Vol depuis l'équipe, le sac et le DEBUG dans chaque région, vagabonds, carte de dresseur, obéissance et CS selon les badges de la région

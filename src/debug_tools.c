@@ -14,6 +14,7 @@
 #include "gba/m4a_internal.h"
 #include "battle.h"
 #include "battle_setup.h"
+#include "berry_powder.h"
 #include "coins.h"
 #include "day_night.h"
 #include "debug_menu.h"
@@ -783,7 +784,7 @@ static void Cmd_Party(const s32 *args, u32 argCount, struct DebugToolsOutput *ou
                          GetMonData(mon, MON_DATA_MET_LOCATION), GetMonData(mon, MON_DATA_MET_GAME),
                          GetMonData(mon, MON_DATA_MET_LEVEL), GetMonData(mon, MON_DATA_IS_EGG),
                          GetMonData(mon, MON_DATA_PERSONALITY));
-        DebugTools_Print(out, "  capacites %d/%d %d/%d %d/%d %d/%d\n",
+        DebugTools_Print(out, "  amitie %d, capacites %d/%d %d/%d %d/%d %d/%d\n", GetMonData(mon, MON_DATA_FRIENDSHIP),
                          GetMonData(mon, MON_DATA_MOVE1), GetMonData(mon, MON_DATA_PP1),
                          GetMonData(mon, MON_DATA_MOVE2), GetMonData(mon, MON_DATA_PP2),
                          GetMonData(mon, MON_DATA_MOVE3), GetMonData(mon, MON_DATA_PP3),
@@ -887,6 +888,32 @@ static void Cmd_FishingChain(const s32 *args, u32 argCount, struct DebugToolsOut
     FishingChain_GetState(&count, &rod, &rerolls);
     DebugTools_Print(out, "serie %u canne %u tirages %u ; ameliorees : canne %d super %d mega %d\n", count, rod, rerolls,
                      FlagGet(FLAG_OLD_ROD_UPGRADED), FlagGet(FLAG_GOOD_ROD_UPGRADED), FlagGet(FLAG_SUPER_ROD_UPGRADED));
+}
+
+// Poudre Baie (GiveBerryPowder) : [N] en ajoute N ; affiche le total (scénario kanto_specials_b : vendeur d'Azuria)
+static void Cmd_BerryPowder(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (argCount >= 1 && args[0] > 0)
+        GiveBerryPowder(args[0]);
+    DebugTools_Print(out, "poudre %u\n", GetBerryPowder());
+}
+
+// Amitié du Pokémon N de l'équipe (0-255) (scénario kanto_specials_b : Daisy, tuteur du Cap Falaise)
+static void Cmd_Friendship(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    u8 friendship;
+
+    if ((u32)args[0] >= PARTY_SIZE || GetMonData(&gPlayerParty[args[0]], MON_DATA_SPECIES) == SPECIES_NONE)
+    {
+        DebugTools_Print(out, "refuse : pas de Pokemon en %d\n", args[0]);
+        return;
+    }
+    if (argCount >= 2)
+    {
+        friendship = min(max(args[1], 0), 255);
+        SetMonData(&gPlayerParty[args[0]], MON_DATA_FRIENDSHIP, &friendship);
+    }
+    DebugTools_Print(out, "Pokemon %d : amitie %d\n", args[0], GetMonData(&gPlayerParty[args[0]], MON_DATA_FRIENDSHIP));
 }
 
 // Objet enregistré sur SELECT (scénario fishing_chain_more : la canne)
@@ -1245,6 +1272,8 @@ static const u8 sName_Coins[] = _("Jetons");
 static const u8 sName_PcItem[] = _("Objet au PC");
 static const u8 sName_FishingChain[] = _("Chaîne de pêche");
 static const u8 sName_RegisterItem[] = _("Objet sur SELECT");
+static const u8 sName_BerryPowder[] = _("Poudre Baie");
+static const u8 sName_Friendship[] = _("Amitié d'un Pokémon");
 static const u8 sName_SetMove[] = _("Donner une capacité");
 static const u8 sName_Mail[] = _("Lettre");
 static const u8 sName_Egg[] = _("Oeuf à faire éclore");
@@ -1291,6 +1320,8 @@ const struct DebugTool gDebugTools[] =
     {"joueur.objetpc", DEBUG_TOOLS_PLAYER, sName_PcItem, "OBJET N : depose N objets au PC du joueur", 2, Cmd_PcItem},
     {"jeu.peche", DEBUG_TOOLS_GAME, sName_FishingChain, "serie de peche en cours, canne, cannes ameliorees", 0, Cmd_FishingChain},
     {"joueur.enregistre", DEBUG_TOOLS_PLAYER, sName_RegisterItem, "OBJET : l'objet enregistre sur SELECT", 1, Cmd_RegisterItem},
+    {"joueur.poudre", DEBUG_TOOLS_PLAYER, sName_BerryPowder, "[N] : Poudre Baie ; N en ajoute", 0, Cmd_BerryPowder},
+    {"joueur.amitie", DEBUG_TOOLS_PLAYER, sName_Friendship, "N [V] : amitie du Pokemon N ; V la met", 1, Cmd_Friendship},
     {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE [PP] : donne la capacite (et ses PP, ou PP restants)", 3, Cmd_SetMove},
     {"joueur.pv", DEBUG_TOOLS_PLAYER, sName_SetHp, "N PV : PV du Pokemon N (au plus ses PV max)", 2, Cmd_SetHp},
     {"joueur.oeuf", DEBUG_TOOLS_PLAYER, sName_Egg, "N : le Pokemon N devient un oeuf pret a eclore (EventScript_EggHatch, VAR_0x8004 = N)", 1, Cmd_Egg},

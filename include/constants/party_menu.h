@@ -43,6 +43,11 @@
 #define TUTOR_MOVE_FIRE_PUNCH      28
 #define TUTOR_MOVE_FURY_CUTTER     29
 #define TUTOR_MOVE_COUNT           30
+// PokemonNative3G : capacités ultimes du tuteur du Cap Falaise (Rouge Feu : 15 à 17, ici après ceux d'Émeraude ;
+// GetTutorMove et CanLearnTutorMove les traitent à part, comme RF)
+#define TUTOR_MOVE_FRENZY_PLANT    30
+#define TUTOR_MOVE_BLAST_BURN      31
+#define TUTOR_MOVE_HYDRO_CANNON    32
 
 #define PARTY_LAYOUT_SINGLE          0
 #define PARTY_LAYOUT_DOUBLE          1

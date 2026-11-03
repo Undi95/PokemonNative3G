@@ -79,6 +79,8 @@
   plus revenir sur la carte (fermer le sac ramenait à la télé, et fermer la télé au sac).
 - Jirachi (Chutes Météore) : après la POKé FLÛTE, JIRACHI apparaît tout de suite ; le joueur restait bloqué
   43 secondes.
+- Cap Falaise (Île 2) : le tuteur enseigne de nouveau VEGE-ATTAK, RAFALE FEU et HYDROBLAST à FLORIZARRE, DRACAUFEU
+  et TORTANK (il proposait DYNAMOPOING, ROULADE ou BOOST, qu'ils ne peuvent pas apprendre).
 
 ### Nouveautés
 - Kanto : en entrant dans un lieu, le panneau du nom est celui de Rouge Feu (boîte blanche en haut à gauche), avec

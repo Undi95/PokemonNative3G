@@ -44,7 +44,7 @@ def wait_task(game, name, limit=60):
 
 def moves(game):
     line = next(l for l in game.dev("joueur.equipe").splitlines() if "capacites" in l)
-    return [tuple(int(x) for x in m.split("/")) for m in line.split()[1:]]
+    return [tuple(int(x) for x in m.split("/")) for m in line.split("capacites")[1].split()]
 
 
 def first_mon(game):
