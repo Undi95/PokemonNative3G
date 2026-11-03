@@ -2671,7 +2671,14 @@ static void PokeSum_PrintMoveName(u8 i)
     u8 curPP = GetMonPpByMoveSlot(&sMonSummaryScreen->currentMon, i);
     u16 move = sMonSummaryScreen->moveIds[i];
     u8 ppBonuses = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_PP_BONUSES);
-    u8 maxPP = CalculatePPWithBonus(move, ppBonuses, i);
+    u8 maxPP;
+
+    // PokemonNative3G : la capacité à apprendre (i == 4) n'a pas de PP Plus. RF appelait CalculatePPWithBonus(move,
+    // ppBonuses, 4), qui lit gPPUpGetMask[4], hors du tableau (sur GBA l'octet suivant, décalé de 8 bits : bonus 0)
+    if (i == 4)
+        maxPP = gBattleMoves[move].pp;
+    else
+        maxPP = CalculatePPWithBonus(move, ppBonuses, i);
 
     if (i == 4)
         curPP = maxPP;

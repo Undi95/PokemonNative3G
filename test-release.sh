@@ -6,6 +6,9 @@
 # Rapports : build/headless/suite/report.txt et out/asan-suite/suite/report.txt. Code de sortie 0 = tout est OK.
 # Usage : bash test-release.sh [--no-asan] [SCÉNARIO ...]
 cd "$(dirname "$0")"
+# Le code de retour d'une commande filtrée (suite.py | grep) est celui de la suite, pas du grep : sans ça, une suite
+# en échec passait pour « RELEASE OK »
+set -o pipefail
 ASAN=1; [ "$1" = "--no-asan" ] && { ASAN=0; shift; }
 P="$(pwd -W 2>/dev/null || pwd)"; FAIL=0
 echo "== noms des drapeaux, variables et dresseurs des outils de debug (src/data/debug_names.h)"

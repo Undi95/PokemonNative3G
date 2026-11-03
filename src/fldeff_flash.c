@@ -11,6 +11,7 @@
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
+#include "scanline_effect.h"
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
@@ -148,6 +149,11 @@ static void VBC_ChangeMapVBlank(void)
 void CB2_DoChangeMap(void)
 {
     SetVBlankCallback(NULL);
+    // PokemonNative3G : en sortant d'une grotte sombre, le DMA d'HBlank du cercle de FLASH restait armé (DMA_REPEAT)
+    // sans que VBC_ChangeMapVBlank le réarme : il lisait au-delà de gScanlineEffectRegBuffers pendant la transition
+    // (sur GBA, n'importe quoi dans WIN0H, invisible : DISPCNT est à 0). La carte suivante remet l'effet si elle est
+    // sombre (InitCurrentFlashLevelScanlineEffect)
+    ScanlineEffect_Stop();
     SetGpuReg(REG_OFFSET_DISPCNT, 0);
     SetGpuReg(REG_OFFSET_BG2CNT, 0);
     SetGpuReg(REG_OFFSET_BG1CNT, 0);

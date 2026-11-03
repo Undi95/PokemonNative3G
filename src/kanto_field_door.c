@@ -366,7 +366,13 @@ static void BuildDoorTiles(u16 *tiles, u16 tileNum, const u8 *paletteNums)
     // The remaining tiles (top layer) always use tile 0 (with the same palette)
     for (; i < 8; i++)
     {
+#ifdef UBFIX
+        // Comme field_door.c d'Émeraude : pour la case du bas d'une porte de 2 cases (&paletteNums[4]), ces palettes
+        // seraient lues après la fin du tableau (ascenseurs de Céladopole et de Sylphe SARL)
+        tile = tiles[i - 4] & 0xF000;
+#else
         tile = *(paletteNums++) << 12;
+#endif
         tiles[i] = tile;
     }
 }

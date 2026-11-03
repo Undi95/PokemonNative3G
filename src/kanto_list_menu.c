@@ -475,8 +475,13 @@ void DrawElevatorCurrentFloorWindow(void)
 
 void CloseElevatorCurrentFloorWindow(void)
 {
+    // PokemonNative3G : quand l'ascenseur part, les scripts de RF la ferment deux fois (MoveElevator, puis
+    // ExitFloorSelect) ; la 2e fois, la fenêtre n'existait plus (BG 0xFF, lecture et copie hors des tableaux)
+    if (sElevatorCurrentFloorWindowId == WINDOW_NONE)
+        return;
     ClearStdWindowAndFrameToTransparent(sElevatorCurrentFloorWindowId, TRUE);
     RemoveWindow(sElevatorCurrentFloorWindowId);
+    sElevatorCurrentFloorWindowId = WINDOW_NONE;
 }
 
 static void AnimateElevatorWindowView(u16 nfloors, u8 direction)
