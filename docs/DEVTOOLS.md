@@ -40,10 +40,11 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `scripts.flag N [V]`, `scripts.var N [V]` | lit ou met un flag, une variable (avec son nom) |
 | | `scripts.drapeaux [CAT]` | **tous les drapeaux, dresseurs et variables du jeu**, par région et catégorie (système, badges, personnages cachés, objets, cadeaux, combats, PokéNav, carte, temporaires, dresseurs, variables…) : sans argument les catégories (combien à ON), avec `CAT` chaque nom et son état. Dans le menu : un curseur, **A** ouvre une catégorie ou bascule ON/OFF (une variable : remise à 0), **L / R** variable -1 / +1, B revient. Les noms viennent de `tools/debug_names.py` → `src/data/debug_names.h` |
 | | `scripts.histoire [N]` | **l'histoire finie sans sauvegarde** : `0` Hoenn, `1` Kanto, `2` les deux. Met chaque drapeau que les scripts mettent et ne retirent jamais (hors objets, cachés, temporaires, quotidiens), et chaque variable d'avancement à la dernière valeur que les scripts lui donnent (pas les variables remises à 0 : files d'attente, salles de défi). Déduit des scripts par `tools/debug_states.py` → `src/data/debug_states.h` (`--liste` les montre) |
-| Joueur | `joueur.equipe` | équipe : espèce, PV, objet, dresseur d'origine, lieu et jeu de rencontre |
-| | `joueur.sac` | argent, poches |
+| Joueur | `joueur.equipe` | équipe : espèce, PV, objet, dresseur d'origine, lieu et jeu de rencontre, capacités et leurs PP |
+| | `joueur.sac` | argent, poches, objets du PC, objet enregistré sur SELECT |
+| | `joueur.objetpc OBJET N` | dépose N objets au PC du joueur (`AddPCItem`), sans passer par le sac (scénario `kanto_item_pc_more`) |
 | | `joueur.jetons [N]` | jetons du Casino ; `N` les met (au plus 9 999) (scénario `kanto_money_coins_box`) |
-| | `joueur.capacite N PLACE CAPACITE` | donne une capacité (et ses PP) au Pokémon N, à la place 0-3 |
+| | `joueur.capacite N PLACE CAPACITE [PP]` | donne une capacité (et ses PP) au Pokémon N, à la place 0-3 ; `PP` : PP restants, moins que le maximum (HUILE, scénario `kanto_item_use_scenes`) ; capacité `0` : place vide |
 | Combat | `combat.etat` | type, combattants, contrôleurs |
 | Graphismes | `gfx.sprites` | sprites : position, tile, palette, priorité, animation (finie, en pause), callback |
 | | `gfx.palette TYPE BANQUE` | 16 couleurs (0 BG, 1 OBJ) : non fondues, fondues, à l'écran (après jour/nuit) |

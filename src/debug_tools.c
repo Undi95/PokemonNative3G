@@ -782,6 +782,11 @@ static void Cmd_Party(const s32 *args, u32 argCount, struct DebugToolsOutput *ou
                          GetMonData(mon, MON_DATA_MET_LOCATION), GetMonData(mon, MON_DATA_MET_GAME),
                          GetMonData(mon, MON_DATA_MET_LEVEL), GetMonData(mon, MON_DATA_IS_EGG),
                          GetMonData(mon, MON_DATA_PERSONALITY));
+        DebugTools_Print(out, "  capacites %d/%d %d/%d %d/%d %d/%d\n",
+                         GetMonData(mon, MON_DATA_MOVE1), GetMonData(mon, MON_DATA_PP1),
+                         GetMonData(mon, MON_DATA_MOVE2), GetMonData(mon, MON_DATA_PP2),
+                         GetMonData(mon, MON_DATA_MOVE3), GetMonData(mon, MON_DATA_PP3),
+                         GetMonData(mon, MON_DATA_MOVE4), GetMonData(mon, MON_DATA_PP4));
     }
 }
 
@@ -802,6 +807,11 @@ static void Cmd_SetMove(const s32 *args, u32 argCount, struct DebugToolsOutput *
         return;
     }
     SetMonMoveSlot(mon, args[2], args[1]);
+    if (argCount > 3 && args[3] >= 0 && args[3] < GetMonData(mon, MON_DATA_PP1 + args[1])) // PP restants (HUILE…)
+    {
+        u8 pp = args[3];
+        SetMonData(mon, MON_DATA_PP1 + args[1], &pp);
+    }
     DebugTools_Print(out, "Pokemon %d : capacite %d en place %d, PP %d\n", args[0], GetMonData(mon, MON_DATA_MOVE1 + args[1]),
                      args[1], GetMonData(mon, MON_DATA_PP1 + args[1]));
 }
@@ -867,6 +877,17 @@ static void Cmd_Coins(const s32 *args, u32 argCount, struct DebugToolsOutput *ou
     DebugTools_Print(out, "jetons %u\n", GetCoins());
 }
 
+// Objet déposé au PC du joueur (AddPCItem), sans passer par le sac (scénario kanto_item_pc_more)
+static void Cmd_PcItem(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    if (args[0] <= ITEM_NONE || args[0] >= ITEMS_COUNT || args[1] <= 0 || !AddPCItem(args[0], args[1]))
+    {
+        DebugTools_Print(out, "refuse : objet 1-%d, quantite > 0, PC plein\n", ITEMS_COUNT - 1);
+        return;
+    }
+    DebugTools_Print(out, "objet %d x%d depose au PC\n", args[0], args[1]);
+}
+
 // PV du Pokémon N de l'équipe (au plus ses PV max) : un K.O. qui ne dépend plus du hasard (scénario kanto_whiteout)
 static void Cmd_SetHp(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
@@ -903,6 +924,14 @@ static void Cmd_Egg(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
     DebugTools_Print(out, "Pokemon %d : oeuf d'espece %d, pret a eclore\n", args[0], GetMonData(mon, MON_DATA_SPECIES));
 }
 
+static void PrintItem(struct DebugToolsOutput *out, u16 itemId, u16 quantity)
+{
+    char name[32];
+
+    DebugTools_GameTextToUtf8(name, GetItemName(itemId), sizeof(name));
+    DebugTools_Print(out, " %d %s x%d,", itemId, name, quantity);
+}
+
 static void Cmd_Bag(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
     u32 pocket, i;
@@ -916,10 +945,17 @@ static void Cmd_Bag(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
             const struct ItemSlot *slot = &gBagPockets[pocket].itemSlots[i];
 
             if (slot->itemId != ITEM_NONE)
-                DebugTools_Print(out, " %d x%d", slot->itemId, gSaveBlock2Ptr->encryptionKey ^ slot->quantity);
+                PrintItem(out, slot->itemId, (u16)(gSaveBlock2Ptr->encryptionKey ^ slot->quantity));
         }
         DebugTools_Print(out, "\n");
     }
+    DebugTools_Print(out, "pc :");
+    for (i = 0; i < PC_ITEMS_COUNT; i++)
+    {
+        if (gSaveBlock1Ptr->pcItems[i].itemId != ITEM_NONE)
+            PrintItem(out, gSaveBlock1Ptr->pcItems[i].itemId, gSaveBlock1Ptr->pcItems[i].quantity);
+    }
+    DebugTools_Print(out, "\nenregistre (SELECT) %d\n", gSaveBlock1Ptr->registeredItem);
 }
 
 // --- Combat ---------------------------------------------------------------------------------------------------
@@ -1182,6 +1218,7 @@ static const u8 sName_Story[] = _("Histoires finies");
 static const u8 sName_Party[] = _("Équipe");
 static const u8 sName_Bag[] = _("Sac et argent");
 static const u8 sName_Coins[] = _("Jetons");
+static const u8 sName_PcItem[] = _("Objet au PC");
 static const u8 sName_SetMove[] = _("Donner une capacité");
 static const u8 sName_Mail[] = _("Lettre");
 static const u8 sName_Egg[] = _("Oeuf à faire éclore");
@@ -1225,7 +1262,8 @@ const struct DebugTool gDebugTools[] =
     {"joueur.equipe", DEBUG_TOOLS_PLAYER, sName_Party, "equipe : espece, PV, dresseur d'origine, lieu de rencontre", 0, Cmd_Party},
     {"joueur.sac", DEBUG_TOOLS_PLAYER, sName_Bag, "argent et poches du sac", 0, Cmd_Bag},
     {"joueur.jetons", DEBUG_TOOLS_PLAYER, sName_Coins, "[N] : jetons du Casino ; N les met", 0, Cmd_Coins},
-    {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE : donne la capacite (et ses PP)", 3, Cmd_SetMove},
+    {"joueur.objetpc", DEBUG_TOOLS_PLAYER, sName_PcItem, "OBJET N : depose N objets au PC du joueur", 2, Cmd_PcItem},
+    {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE [PP] : donne la capacite (et ses PP, ou PP restants)", 3, Cmd_SetMove},
     {"joueur.pv", DEBUG_TOOLS_PLAYER, sName_SetHp, "N PV : PV du Pokemon N (au plus ses PV max)", 2, Cmd_SetHp},
     {"joueur.oeuf", DEBUG_TOOLS_PLAYER, sName_Egg, "N : le Pokemon N devient un oeuf pret a eclore (EventScript_EggHatch, VAR_0x8004 = N)", 1, Cmd_Egg},
     {"joueur.lettre", DEBUG_TOOLS_PLAYER, sName_Mail, "N OBJET [1|2] : lettre ITEM_*_MAIL a 9 mots au Pokemon N ; 1 = la lire (sur la carte), 2 = l'envoyer au PC", 2, Cmd_Mail},

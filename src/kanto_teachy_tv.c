@@ -766,7 +766,7 @@ static void TeachyTvOptionListController(u8 taskId)
     {
         input = ListMenu_ProcessInput(data[0]);
         ListMenuGetScrollAndRow(data[0], &sStaticResources.scrollOffset, &sStaticResources.selectedRow);
-        if ((JOY_NEW(SELECT_BUTTON) && sStaticResources.callback != CB2_ReturnToBagMenuPocket)) // RF : CB2_BagMenuFromStartMenu
+        if ((JOY_NEW(SELECT_BUTTON) && sStaticResources.callback != CB2_BagMenuFromStartMenu))
         {
             PlaySE(SE_SELECT);
             TeachyTvQuitBeginFade(taskId);
@@ -1457,7 +1457,9 @@ void StopPokemonLeagueLightingEffectTask(void);
 
 static void InitTeachyTvFromBag(void)
 {
-    InitTeachyTvController(0, CB2_ReturnToBagMenuPocket); // RF : CB2_BagMenuFromStartMenu
+    // RF : le sac se rouvre par CB2_BagMenuFromStartMenu, qui remet son retour sur la carte (CB2_ReturnToBagMenuPocket
+    // gardait celui du sac de démonstration de l'émission 6 : le sac de RF renvoyait alors à la télé, sans fin)
+    InitTeachyTvController(0, CB2_BagMenuFromStartMenu);
 }
 
 static void Task_InitTeachyTvFromField(u8 taskId)

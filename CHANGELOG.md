@@ -75,6 +75,8 @@
 - Avec MENUS = KANTO, les boîtes d'argent et de jetons des PNJ (Casino, distributeurs, Musée, Parc Safari, pension…)
   sont celles de Rouge Feu (« ARGENT » / « JETONS » écrits au-dessus du montant), comme les choix et le OUI/NON.
   Avec MENUS = HOENN, la boîte des jetons du Casino de Céladopole n'est plus à moitié hors de l'écran.
+- Télé Pokémon avec SAC = KANTO : allumée depuis le sac, après l'émission « Enregistrer un objet », on ne pouvait
+  plus revenir sur la carte (fermer le sac ramenait à la télé, et fermer la télé au sac).
 
 ### Nouveautés
 - Kanto : en entrant dans un lieu, le panneau du nom est celui de Rouge Feu (boîte blanche en haut à gauche), avec

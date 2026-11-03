@@ -132,6 +132,7 @@ class Game:
         self.battles = []         # every battle: {"trainer", "foes", "outcome"}
         self.songs = []           # (frame, song) of every song that started
         self.sounds = []          # (image, SE_…) : chaque effet sonore lancé (m4aSongNumStart)
+        self.cb2s = []            # (image, nom) : chaque écran (callback 2) traversé
         self.last_note = ""
         self.name = os.path.basename(os.path.normpath(out_dir))
         self.screens = False      # log() also checks the screen (a scenario's SCREENS)
@@ -262,6 +263,7 @@ class Game:
                 screen = self.function(event["v"])
                 if any(word in screen for word in ("Copyright", "TitleScreen", "MainMenu", "Intro")):
                     self._in_game = False   # back to the title: the map is the last save's
+                self.cb2s.append((event["f"], screen))
                 self.note(f"ÉCRAN {screen}", event["f"])
             elif kind == "bulk":
                 self.note(f"({event['n']} flags/variables/objets changés : chargement ou nouvelle partie)")
