@@ -213,6 +213,14 @@ class Screens:
         game.tap("A")
         game.wait(90)
         self.shot("verso")
+        game.tap("B")                   # au verso, B retourne la carte ; SELECT au recto : la carte de l'autre région
+        game.wait(90)
+        game.tap("SELECT")
+        game.wait(180)
+        self.shot("autre-recto")
+        game.tap("A")
+        game.wait(90)
+        self.shot("autre-verso")
         back_to_free(game)
 
     def save(self):

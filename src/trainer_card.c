@@ -1594,10 +1594,14 @@ static void DrawCardFrontOrBack(u16 *ptr)
 static void DrawStarsAndBadgesOnCard(void)
 {
     static const u8 yOffsets[] = {7, 7};
+    // PokemonNative3G : la carte de Kanto (images de RF) a ses cases de badges une rangée plus bas que celle
+    // d'Émeraude ; RF y dessine les badges en 16-17 (DrawStarsAndBadgesOnCard de RF), Émeraude en 15-16
+    static const u8 badgeYOffsets[] = {16, 15};
 
     s16 i, x;
     u16 tileNum = 192;
     u8 palNum = 3;
+    u8 badgeY = badgeYOffsets[sData->isHoenn];
 
     FillBgTilemapBufferRect(3, 143, 15, yOffsets[sData->isHoenn], sData->trainerCard.stars, 1, 4);
     if (!sData->isLink)
@@ -1607,10 +1611,10 @@ static void DrawStarsAndBadgesOnCard(void)
         {
             if (sData->badgeCount[i])
             {
-                FillBgTilemapBufferRect(3, tileNum, x, 15, 1, 1, palNum);
-                FillBgTilemapBufferRect(3, tileNum + 1, x + 1, 15, 1, 1, palNum);
-                FillBgTilemapBufferRect(3, tileNum + 16, x, 16, 1, 1, palNum);
-                FillBgTilemapBufferRect(3, tileNum + 17, x + 1, 16, 1, 1, palNum);
+                FillBgTilemapBufferRect(3, tileNum, x, badgeY, 1, 1, palNum);
+                FillBgTilemapBufferRect(3, tileNum + 1, x + 1, badgeY, 1, 1, palNum);
+                FillBgTilemapBufferRect(3, tileNum + 16, x, badgeY + 1, 1, 1, palNum);
+                FillBgTilemapBufferRect(3, tileNum + 17, x + 1, badgeY + 1, 1, 1, palNum);
             }
         }
     }

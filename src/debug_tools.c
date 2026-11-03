@@ -38,6 +38,7 @@
 #include "new_game.h"
 #include "overworld.h"
 #include "palette.h"
+#include "pokedex.h"
 #include "pokemon.h"
 #include "random.h"
 #include "region_map.h"
@@ -411,6 +412,29 @@ static void Cmd_GameStatistic(const s32 *args, u32 argCount, struct DebugToolsOu
     if (argCount >= 2)
         SetGameStat(args[0], args[1]);
     DebugTools_Print(out, "statistique %d = %u\n", args[0], GetGameStat(args[0]));
+}
+
+// Le Pokédex : vus et attrapés dans chacun (Hoenn, Kanto, national : ce que comptent les cartes de dresseur des deux
+// régions, le PC du Prof. Chen, les diplômes), puis les numéros nationaux des Pokémon attrapés
+static void Cmd_Pokedex(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    u32 i;
+
+    DebugTools_Print(out, "pokedex %d, national %d (Hoenn %d, Kanto %d)\n", FlagGet(FLAG_SYS_POKEDEX_GET),
+                     IsNationalPokedexEnabled(), FlagGet(FLAG_SYS_NATIONAL_DEX), FlagGet(FLAG_KANTO_SYS_NATIONAL_DEX));
+    DebugTools_Print(out, "hoenn : vus %u, attrapes %u\n", GetHoennPokedexCount(FLAG_GET_SEEN),
+                     GetHoennPokedexCount(FLAG_GET_CAUGHT));
+    DebugTools_Print(out, "kanto : vus %u, attrapes %u\n", GetKantoPokedexCount(FLAG_GET_SEEN),
+                     GetKantoPokedexCount(FLAG_GET_CAUGHT));
+    DebugTools_Print(out, "national : vus %u, attrapes %u\n", GetNationalPokedexCount(FLAG_GET_SEEN),
+                     GetNationalPokedexCount(FLAG_GET_CAUGHT));
+    DebugTools_Print(out, "attrapes (numeros nationaux) :");
+    for (i = 1; i <= NATIONAL_DEX_COUNT; i++)
+    {
+        if (GetSetPokedexFlag(i, FLAG_GET_CAUGHT))
+            DebugTools_Print(out, " %u", i);
+    }
+    DebugTools_Print(out, "\n");
 }
 
 // --- Carte ----------------------------------------------------------------------------------------------------
@@ -1321,6 +1345,7 @@ static const u8 sName_Encounters[] = _("Rencontres sauvages");
 static const u8 sName_Safari[] = _("Parc Safari");
 static const u8 sName_Roamers[] = _("Pokémon errants");
 static const u8 sName_GameStatistic[] = _("Statistique de jeu");
+static const u8 sName_Pokedex[] = _("Pokédex");
 static const u8 sName_Random[] = _("Hasard");
 static const u8 sName_StartMenu[] = _("Menu Start");
 static const u8 sName_DebugAction[] = _("Actions du menu DEBUG");
@@ -1372,6 +1397,7 @@ const struct DebugTool gDebugTools[] =
     {"jeu.errants", DEBUG_TOOLS_GAME, sName_Roamers, "[1|2] : vagabonds de la region ; 1 les lache, 2 les met sur cette carte", 0, Cmd_Roamers},
     {"jeu.hasard", DEBUG_TOOLS_GAME, sName_Random, "[GRAINE] : etat du hasard ; GRAINE le fixe (scenarios : suite independante du minutage)", 0, Cmd_Random},
     {"jeu.stat", DEBUG_TOOLS_GAME, sName_GameStatistic, "N [V] : statistique de jeu GAME_STAT_* (Pantheon, oeufs...), mise a V", 1, Cmd_GameStatistic},
+    {"jeu.pokedex", DEBUG_TOOLS_GAME, sName_Pokedex, "vus et attrapes (Hoenn, Kanto, national), numeros attrapes", 0, Cmd_Pokedex},
     {"jeu.menustart", DEBUG_TOOLS_GAME, sName_StartMenu, "entrees du menu Start et curseur", 0, Cmd_StartMenu},
     {"jeu.debug", DEBUG_TOOLS_GAME, sName_DebugAction, "actions du menu DEBUG ; [N] fait l'action N", 0, Cmd_DebugAction},
     {"carte.info", DEBUG_TOOLS_MAP, sName_MapInfo, "carte, region, joueur, connexions", 0, Cmd_MapInfo},

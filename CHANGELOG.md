@@ -92,6 +92,10 @@
 - Clavier (PC) : les touches de pokeemerald.ini sont celles dont le nom est écrit sur le clavier, quelle que soit sa
   disposition. Sur un clavier AZERTY, A = la touche Z (et non plus W), L = la touche A (et non plus Q) ; on peut aussi
   choisir une touche propre à son clavier (« key_a = ù »). La rangée des chiffres reste 1 à 0 sur tous les claviers.
+- Carte de Kanto (objet CARTE) : refermer l'aperçu d'un donjon (A sur une grotte déjà visitée, comme le Mont
+  Sélénite) faisait planter le jeu.
+- Carte de dresseur de Kanto : les badges sont dans leurs cases (ils étaient une rangée trop haut et cachaient le mot
+  « BADGES »).
 
 ### Nouveautés
 - Kanto : en entrant dans un lieu, le panneau du nom est celui de Rouge Feu (boîte blanche en haut à gauche), avec

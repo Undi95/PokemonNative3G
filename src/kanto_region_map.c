@@ -2694,7 +2694,10 @@ static void Task_DungeonMapPreview(u8 taskId)
         break;
     case 9:
         FreeDungeonMapPreview(taskId);
+#ifndef UBFIX
+        // sDungeonMapPreview vient d'être libéré (NULL) : sur GBA, écriture perdue près de l'adresse 0 ; sur PC, plantage
         sDungeonMapPreview->mainState++;
+#endif
         break;
     }
 }
