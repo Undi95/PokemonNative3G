@@ -89,6 +89,14 @@ void TestState_OnSong(u16 songNum)
     AddEvent("{\"t\": \"song\", \"v\": %d}", songNum);
 }
 
+// Un cri de POKéMON (PlayCryInternal : il ne passe pas par m4aSongNumStart) : espèce et mode (CRY_MODE_*)
+void TestState_OnCry(u16 species, u8 mode)
+{
+    if (!gTestStateEnabled)
+        return;
+    AddEvent("{\"t\": \"cry\", \"v\": %d, \"mode\": %d}", species, mode);
+}
+
 void TestState_OnText(u8 windowId, u8 fontId, u8 fgColor, const u8 *text)
 {
     char hex[2 * 400 + 1];

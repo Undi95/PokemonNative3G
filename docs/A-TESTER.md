@@ -115,13 +115,13 @@ Linux en WSL (`test/desktop/linux_bench.py`), émulateur Android (`test/android/
 - [x] Verso des deux cartes (A) — les trois vérifiés en headless (2026-11-03, `trainer_card_regions`, écrans regardés : 3 badges de Hoenn / 5 de Kanto, BRICE puis RED sur les deux cartes, versos ; et `matrix.py --ecrans trainer_card` : les 18 combinaisons d'options, carte de l'autre région comprise). Corrigé au passage : sur la carte de Kanto, les badges étaient une rangée trop haut (RF les dessine en 16-17)
 
 ## Écran titre
-- [ ] Options → TITRE = R.FEU, sauvegarder, relancer : écran titre de Rouge Feu (Dracaufeu, flammes, cri)
-- [ ] Depuis cet écran : START → menu principal ; Haut+Select+B → effacer la sauvegarde ; attente → intro
-- [ ] Menu principal de Rouge Feu (2026-11-02, après cet écran titre) : CONTINUER (joueur, durée, Pokédex, badges de
+- [x] Options → TITRE = R.FEU, sauvegarder, relancer : écran titre de Rouge Feu (Dracaufeu, flammes, cri) — vérifié en headless (2026-11-03, `kanto_title_screen`, écrans regardés : silhouette de DRACAUFEU, logo « VERSION ROUGE FEU », flammes, MUS_RG_TITLE ; cri de DRACAUFEU à START, entendu par le banc : événement `CRI`)
+- [x] Depuis cet écran : START → menu principal ; Haut+Select+B → effacer la sauvegarde ; attente → intro — `kanto_title_screen` (START → menu de RF ; sans toucher, l'intro de RF au bout de 2 700 images), `kanto_clear_save`
+- [x] Menu principal de Rouge Feu (2026-11-02, après cet écran titre) : CONTINUER (joueur, durée, Pokédex, badges de
   la région de la partie), NOUVELLE PARTIE (intro du Prof. Seko), CADEAU MYST. s'il y a des cadeaux ; B → écran titre
-  (vérifié en headless : `kanto_main_menu`)
-- [ ] Haut + SELECT + B sur l'écran titre de RF : écran d'effacement de RF (fond vert vif comme la cartouche),
-  NON garde la sauvegarde, OUI l'efface (vérifié en headless : `kanto_clear_save`)
+  (vérifié en headless : `kanto_main_menu`, écrans regardés le 2026-11-03)
+- [x] Haut + SELECT + B sur l'écran titre de RF : écran d'effacement de RF (fond vert vif comme la cartouche),
+  NON garde la sauvegarde, OUI l'efface (vérifié en headless : `kanto_clear_save`, écrans regardés le 2026-11-03)
 - [ ] Intro de Groudon/Kyogre (fonds 8bpp) toujours correcte après la correction du rendu 8bpp
 
 ## Fusion (options et contenus)

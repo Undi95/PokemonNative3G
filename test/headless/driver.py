@@ -132,6 +132,7 @@ class Game:
         self.battles = []         # every battle: {"trainer", "foes", "outcome"}
         self.songs = []           # (frame, song) of every song that started
         self.sounds = []          # (image, SE_…) : chaque effet sonore lancé (m4aSongNumStart)
+        self.cries = []           # (image, SPECIES_…) : chaque cri de POKéMON (PlayCryInternal)
         self.cb2s = []            # (image, nom) : chaque écran (callback 2) traversé
         self.last_note = ""
         self.name = os.path.basename(os.path.normpath(out_dir))
@@ -256,6 +257,11 @@ class Game:
                     sound = names.name("MUS_", event["v"])
                 self.sounds.append((self.frames, sound))
                 self.note(f"SON {sound}")
+            elif kind == "cry":
+                # Un cri de POKéMON (PlayCryInternal, hors m4aSongNumStart) : espèce, mode CRY_MODE_*
+                species = names.name("SPECIES_", event["v"])
+                self.cries.append((self.frames, species))
+                self.note(f"CRI {species} (mode {event['mode']})")
             elif kind == "bgm" and event["v"] >= 0:
                 self.note(f"MUSIQUE {names.name('MUS_', event['v'])}", event["f"])
                 self.songs.append((event["f"], names.name("MUS_", event["v"])))

@@ -58,8 +58,10 @@ writes out of bounds that don't show.
 
 What a scenario did can be read in its `journal.txt`, without screenshots: the text the
 game printed (decoded with `charmap.txt`), flags, variables and items that changed,
-maps, screens (the main callback, by name, from the build's symbols), music, battles with
-their Pokémon and outcome, and the party, each with the frame and where the player was.
+maps, screens (the main callback, by name, from the build's symbols), music, sounds
+(`SON`, `game.sounds`), Pokémon cries (`CRI`, `game.cries`: `PlayCryInternal`, which doesn't
+go through `m4aSongNumStart`), battles with their Pokémon and outcome, and the party, each
+with the frame and where the player was.
 The game writes these with its state (see `src/platform/test_state.c`); `cb1`, `cb2` and
 `tasks` in the state name what it's running, which tells a menu and a freeze apart.
 `party` and `foe` list each Pokémon as `[species, level, hp, max hp, status, egg, personality]`

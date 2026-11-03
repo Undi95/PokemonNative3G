@@ -7,6 +7,9 @@
 #include "pokemon.h"
 #include "constants/songs.h"
 #include "task.h"
+#ifdef PORTABLE
+#include "platform/test_state.h"
+#endif
 
 struct Fanfare
 {
@@ -393,6 +396,9 @@ void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
     u32 index;
     u8 table;
 
+#ifdef PORTABLE
+    TestState_OnCry(species, mode); // PokemonNative3G : le banc de test suit les cris (comme TestState_OnSong)
+#endif
     species--;
 
     // Set default values
