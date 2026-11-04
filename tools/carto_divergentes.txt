@@ -217,3 +217,216 @@ FldEff_MoveDeoxysRock même noms des variables
 FldEff_DestroyDeoxysRock même FLDEFF_DESTROY_DEOXYS_ROCK (numérotés autrement)
 Task_DeoxysRockCameraShake même != 0
 Task_DestroyDeoxysRock même index
+#
+# scrcmd.c (2026-11-04)
+ScrCmd_gotonative même ScriptReadPointer (pointeurs 64 bits du portage)
+ScrCmd_special même table des specials avec leur type de retour (gSpecials[].func)
+ScrCmd_specialvar même table des specials avec leur type de retour ; même borne
+ScrCmd_callnative même ScriptReadPointer
+ScrCmd_goto même ScriptReadPointer
+ScrCmd_call même ScriptReadPointer
+ScrCmd_goto_if même ScriptReadPointer ; enum ComparisonOperators
+ScrCmd_call_if même ScriptReadPointer ; enum ComparisonOperators
+ScrCmd_vgoto même ScriptReadPointer moins gVScriptOffset
+ScrCmd_vcall même ScriptReadPointer moins gVScriptOffset
+ScrCmd_vgoto_if même ScriptReadPointer moins gVScriptOffset
+ScrCmd_vcall_if même ScriptReadPointer moins gVScriptOffset
+ScrCmd_gotostd même noms
+ScrCmd_callstd même noms
+ScrCmd_gotostd_if même noms
+ScrCmd_callstd_if même noms
+ScrCmd_setmysteryeventstatus même variable intermédiaire
+ScrCmd_trywondercardscript même != 0
+ScrCmd_copybyte même ScriptReadPointer
+ScrCmd_copyvar même lecture de la variable source (#ifdef PORTABLE)
+Compare même return / else
+ScrCmd_additem journal TrySetObtainedItemQuestLogEvent
+ScrCmd_adddecoration émeraude décorations des bases secrètes (vide dans RF)
+ScrCmd_removedecoration émeraude décorations des bases secrètes
+ScrCmd_checkdecorspace émeraude décorations des bases secrètes
+ScrCmd_checkdecor émeraude décorations des bases secrètes
+ScrCmd_initclock émeraude horloge (vide dans RF)
+ScrCmd_dotimebasedevents émeraude horloge (vide dans RF)
+ScrCmd_gettime émeraude horloge (RF rend 0 h 0 min 0 s)
+ScrCmd_warpteleport même DoTeleportWarp de RF jamais utilisé par ses scripts ; DoTeleportTileWarp d'Émeraude
+ScrCmd_playbgm journal pas de musique en lecture du journal
+ScrCmd_fadedefaultbgm journal pas de musique en lecture du journal
+ScrCmd_fadenewbgm journal pas de musique en lecture du journal
+ScrCmd_fadeoutbgm journal pas de musique en lecture du journal
+ScrCmd_fadeinbgm journal pas de musique en lecture du journal
+ScrCmd_lockall link IsOverworldLinkActive = IsUpdateLinkStateCBActive
+ScrCmd_lock link IsOverworldLinkActive = IsUpdateLinkStateCBActive
+ScrCmd_messageautoscroll même gTextFlags posés ici (Émeraude) ou par la boîte de message (RF, field_message_box.c)
+WaitForAorBPress journal entrées du journal
+ScrCmd_waitbuttonpress journal entrées du journal
+ScrCmd_drawboxtext même arguments lus et ignorés
+ScrCmd_showmonpic porter FAIT 2026-11-04 : à Kanto, le Pokémon crie (PlayCry_Script) ; scénario kanto_showmonpic_cry
+ScrCmd_showcontestpainting émeraude tableaux des Concours (vide dans RF)
+ScrCmd_braillemessage kanto braille dans la boîte de dialogue avec DIALOGUE = KANTO (comme RF) ; textes de Kanto avec brailleformat (scénarios braille_dialog_*)
+ScrCmd_bufferitemnameplural émeraude pluriel des objets
+ScrCmd_bufferdecorationname émeraude décorations des bases secrètes
+ScrCmd_givemon émeraude svc_SetStarter de RF = télémétrie de l'émulateur Sloop (REVISION >= 0xA), rien dans le jeu
+ScrCmd_checkpartymove kanto + POKé MONTURE (FIELD_MOVE_HELPER_SLOT)
+ScrCmd_showmoneybox kanto boîte d'argent de RF à Kanto (Kanto_DrawMoneyBox) ; QL_AvoidDisplay = journal
+ScrCmd_showcoinsbox kanto boîte de jetons de RF à Kanto (Kanto_ShowCoinsWindow) ; QL_AvoidDisplay = journal
+ScrCmd_playslotmachine kanto machine à sous de RF à Kanto (KantoPlaySlotMachine)
+ScrCmd_setberrytree émeraude arbres à baies (vide dans RF)
+ScrCmd_getpokenewsactive émeraude Poké Nouvelles (vide dans RF)
+ScrCmd_choosecontestmon émeraude Concours (vide dans RF)
+ScrCmd_startcontest émeraude Concours (vide dans RF)
+ScrCmd_showcontestresults émeraude Concours (vide dans RF)
+ScrCmd_contestlinktransfer émeraude Concours (vide dans RF)
+ScrCmd_setmetatile même MAPGRID_COLLISION_MASK (collision 3) / MAPGRID_IMPASSABLE (1) : toute collision non nulle bloque
+ScrCmd_addelevmenuitem même arguments lus et ignorés
+#
+# field_effect_helpers.c (2026-11-04) : les macros sData des deux jeux numérotent data[] autrement ; lu fonction par
+# fonction, chaque champ garde le même index partout dans son jeu
+LoadObjectReflectionPalette même tableau écrit avec ses index
+LoadObjectRegularReflectionPalette même déclarations
+LoadObjectHighBridgeReflectionPalette même déclarations
+UpdateObjectReflectionSprite émeraude + reflet caché (hideReflection)
+CreateWarpArrowSprite kanto palette blanche de Brice quand PERSO = Red/Leaf (GetPlayerIconPaletteNum, option PERSO)
+ShowWarpArrowSprite même index data[]
+FldEff_Shadow même déclarations, index data[]
+UpdateShadowFieldEffect même index data[]
+FldEff_TallGrass même déclarations, u8 / s16
+UpdateTallGrassFieldEffect même index data[]
+FldEff_JumpTallGrass même déclarations
+FindTallGrassFieldEffectSpriteId même index data[], parenthèses
+FldEff_LongGrass même déclarations, u8 / s16
+UpdateLongGrassFieldEffect même index data[]
+FldEff_JumpLongGrass même déclarations
+FldEff_ShortGrass même déclarations
+UpdateShortGrassFieldEffect même index data[]
+FldEff_SandFootprints même index data[]
+FldEff_DeepSandFootprints même index data[]
+FldEff_BikeTireTracks même index data[]
+UpdateFootprintsTireTracksFieldEffect même index data[]
+FadeFootprintsTireTracks_Step0 même index data[]
+FadeFootprintsTireTracks_Step1 même index data[]
+FldEff_Splash même déclarations
+UpdateSplashFieldEffect même index data[]
+FldEff_JumpSmallSplash même déclarations
+FldEff_JumpBigSplash même déclarations
+FldEff_FeetInFlowingWater même déclarations
+UpdateFeetInFlowingWaterFieldEffect même index data[]
+FldEff_Ripple même déclarations
+FldEff_HotSpringsWater même déclarations
+UpdateHotSpringsWaterFieldEffect même index data[]
+FldEff_UnusedGrass même déclarations
+FldEff_UnusedGrass2 même déclarations
+FldEff_UnusedSand même déclarations
+FldEff_Ash même déclarations, u8 / s16
+UpdateAshFieldEffect même index data[]
+FldEff_SurfBlob variante Surf : le Pokémon part vers le haut (Émeraude, vitesse -1) ou sans élan (RF) ; même famille que CreateBobbingEffect (docs/VARIANTES-RF.md)
+UpdateSurfBlobFieldEffect même noms
+StartUnderwaterSurfBlobBobbing même déclarations
+SpriteCB_UnderwaterSurfBlob même index data[]
+FldEff_Dust même déclarations
+FldEff_SandPile même déclarations
+UpdateSandPileFieldEffect même index data[]
+FldEff_Bubbles même déclarations
+UpdateBubblesFieldEffect même 128 = 256 / 2
+FldEff_BerryTreeGrowthSparkle émeraude arbres à baies (vide dans RF)
+ShowDisguiseFieldEffect même déclarations
+UpdateDisguiseFieldEffect même index data[]
+StartRevealDisguise même index data[]
+UpdateRevealDisguise même index data[]
+UpdateSparkleFieldEffect même conditions écrites autrement
+UpdateGrassFieldEffectSubpriority même déclarations
+#
+# trainer_card.c (2026-11-04) : la carte de Kanto était la branche « carte de RF » d'Émeraude (argent aligné à 144 au
+# lieu de 134, ID centré sur 80 px, nom 1 px plus haut, « NOM » sans « / », DrawCardBackStats vidée dans l'Émeraude
+# française). Portée FAIT : kanto_trainer_card.c = trainer_card.c de RF copié tel quel, ouvert à Kanto (scénarios
+# kanto_card_stickers, trainer_card_regions)
+CloseTrainerCard kanto FAIT kanto_trainer_card.c (+ SELECT vers la carte de Hoenn)
+Task_TrainerCard kanto FAIT kanto_trainer_card.c (aide L/R écartée)
+LoadCardGfx kanto FAIT kanto_trainer_card.c
+CB2_InitTrainerCard kanto FAIT kanto_trainer_card.c
+SetPlayerCardData kanto FAIT kanto_trainer_card.c (Panthéon et POKéDEX de Kanto)
+TrainerCard_GenerateCardForLinkPlayer kanto FAIT kanto_trainer_card.c (variables de Kanto)
+SetDataFromTrainerCard kanto FAIT kanto_trainer_card.c (badges de Kanto)
+UpdateCardFlipRegs kanto FAIT kanto_trainer_card.c
+ResetGpuRegs kanto FAIT kanto_trainer_card.c
+InitBgsAndWindows kanto FAIT kanto_trainer_card.c
+PrintAllOnCardFront kanto FAIT kanto_trainer_card.c
+PrintAllOnCardBack kanto FAIT kanto_trainer_card.c
+PrintNameOnCardFront kanto FAIT kanto_trainer_card.c
+PrintIdOnCard kanto FAIT kanto_trainer_card.c
+PrintMoneyOnCard kanto FAIT kanto_trainer_card.c
+GetCaughtMonsCount kanto FAIT kanto_trainer_card.c
+PrintPokedexOnCard kanto FAIT kanto_trainer_card.c
+PrintTimeOnCard kanto FAIT kanto_trainer_card.c
+PrintProfilePhraseOnCard kanto FAIT kanto_trainer_card.c
+BufferNameForCardBack kanto FAIT kanto_trainer_card.c
+PrintNameOnCardBack kanto FAIT kanto_trainer_card.c
+BufferHofDebutTime kanto FAIT kanto_trainer_card.c
+PrintHofDebutTimeOnCard kanto FAIT kanto_trainer_card.c
+BufferLinkBattleResults kanto FAIT kanto_trainer_card.c
+PrintLinkBattleResultsOnCard kanto FAIT kanto_trainer_card.c
+BufferNumTrades kanto FAIT kanto_trainer_card.c
+PrintTradesStringOnCard kanto FAIT kanto_trainer_card.c
+BufferBerryCrushPoints kanto FAIT kanto_trainer_card.c
+PrintBerryCrushStringOnCard kanto FAIT kanto_trainer_card.c
+BufferUnionRoomStats kanto FAIT kanto_trainer_card.c
+PrintUnionStringOnCard kanto FAIT kanto_trainer_card.c
+PrintPokemonIconsOnCard kanto FAIT kanto_trainer_card.c
+LoadMonIconGfx kanto FAIT kanto_trainer_card.c
+PrintStickersOnCard kanto FAIT kanto_trainer_card.c
+LoadStickerGfx kanto FAIT kanto_trainer_card.c
+DrawCardScreenBackground kanto FAIT kanto_trainer_card.c
+DrawCardFrontOrBack kanto FAIT kanto_trainer_card.c
+DrawStarsAndBadgesOnCard kanto FAIT kanto_trainer_card.c
+DrawCardBackStats kanto FAIT kanto_trainer_card.c (pas vidée dans RF français)
+BlinkTimeColon kanto FAIT kanto_trainer_card.c
+GetTrainerCardStars kanto FAIT kanto_trainer_card.c (Kanto_GetTrainerCardStars ; le link garde celle d'Émeraude)
+IsCardFlipTaskActive kanto FAIT kanto_trainer_card.c
+Task_AnimateCardFlipDown kanto FAIT kanto_trainer_card.c
+Task_DrawFlippedCardSide kanto FAIT kanto_trainer_card.c
+Task_SetCardFlipped kanto FAIT kanto_trainer_card.c
+Task_AnimateCardFlipUp kanto FAIT kanto_trainer_card.c
+ShowPlayerTrainerCard kanto FAIT Kanto_ShowPlayerTrainerCard, appelée par celle d'Émeraude à Kanto
+InitTrainerCardData kanto FAIT kanto_trainer_card.c
+CreateTrainerCardTrainerPic kanto FAIT kanto_trainer_card.c (photo selon l'option PERSO)
+ShowTrainerCardInLink link carte d'un joueur en link : celle d'Émeraude dans les deux régions
+#
+# pokemon.c (2026-11-04)
+CreateBattleTowerMon émeraude + surnoms japonais (Tour de Combat d'Émeraude)
+ConvertPokemonToBattleTowerPokemon même ITEM_NONE = 0
+GiveMoveToBoxMon même !move = move == MOVE_NONE
+GiveMoveToBattleMon même !move = move == MOVE_NONE
+CalculateBaseDamage émeraude BATTLE_TYPE_FRONTIER ; boosts des badges de Hoenn (RF : ceux de Kanto ; Kanto est post-game, les 8 badges de Hoenn sont déjà là)
+GetDefaultMoveTarget même GetBattlerPosition & BIT_SIDE = GET_BATTLER_SIDE
+SetMultiuseSpriteTemplateToPokemon émeraude deux gestionnaires de sprites (gMonSpritesGfxManagers) ; mêmes bornes
+GetBoxMonData3 link surnom japonais sur 6 lettres (RF) ou 5 (Émeraude) : Pokémon reçus d'un jeu japonais
+SetMonData même cas en plus qui tombent dans SetBoxMonData (numérotation de RF)
+SetBoxMonData même SET_BY_WIDTH ; BUGFIX non défini
+GetMonsStateToDoubles même conditions dans un autre ordre
+CreateSecretBaseEnemyParty émeraude reste de RS chez RF (type de combat posé ailleurs dans Émeraude)
+GetSpeciesName même <= POKEMON_NAME_LENGTH (EOS dans la limite)
+CopyPlayerPartyMonToBattleData même types[0] / type1
+PokemonUseItemEffects émeraude + baies qui baissent les EV (sans effet dans RF, corrigé dans Émeraude), PLUS PP refusé sous 5 PP (GRIBOUILLE)
+GetEvolutionTargetSpecies émeraude évolutions de jour / de nuit (RF n'a pas d'horloge) ; RF bloque l'évolution par échange vers > 151 sans POKéDEX national : link, à décider avec le multijoueur
+HoennPokedexNumToSpecies même parenthèses
+NationalPokedexNumToSpecies même parenthèses
+NationalToHoennOrder même parenthèses
+SpeciesToCryId émeraude espèces d'Émeraude (Zarbi en formes, cris dans l'ordre d'Émeraude)
+DrawSpindaSpotsUnused même .ptr
+GetTrainerEncounterMusicId émeraude + Pyramide et Colline
+AdjustFriendship kanto + champions, Conseil 4 et maître de Kanto ; + Zone de Combat (ShouldSkipFriendshipChange) ; > 99 = >= 100
+MonGainEVs même déclarations
+RandomlyGivePartyPokerus émeraude vide dans RF (pas d'horloge) : POKéRUS d'Émeraude dans les deux régions
+UpdatePartyPokerusTime émeraude vide dans RF (pas d'horloge)
+PartySpreadPokerus émeraude vide dans RF (pas d'horloge)
+TryIncrementMonLevel variante RF monte d'un niveau si EXP > seuil, Émeraude si EXP >= seuil (le SUPER BONBON passe par CalculateMonStats dans les deux)
+CanMonLearnTMHM même .as_u32s
+SpeciesToPokedexNum kanto numéros de Kanto avec le POKéDEX de Kanto (décision du 2026-11-04)
+GetBattleBGM kanto musiques de RF contre les dresseurs de Kanto et les sauvages à Kanto
+GetMonSpritePalFromSpeciesAndPersonality émeraude + palettes de DEOXYS ; borne NUM_SPECIES
+SetWildMonHeldItem kanto POKéDUDE (gBattlePokedudeFrlg) ; + OEIL COMPOSE, Pyramide et Pic (Émeraude)
+GetTrainerPartnerName émeraude + MARC en partenaire
+GetUnionRoomTrainerPic link combats enregistrés
+GetUnionRoomTrainerClass link combats enregistrés
+CreateMonSpritesGfxManager émeraude deux gestionnaires de sprites
+DestroyMonSpritesGfxManager émeraude deux gestionnaires de sprites
+MonSpritesGfxManager_GetSpritePtr émeraude deux gestionnaires de sprites

@@ -13,10 +13,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | Fichier RF | Divergentes | Même code une fois normalisé | Par règle de famille | Classées | À lire | Corps introuvable |
 |---|---|---|---|---|---|---|
 | party_menu.c | 145 | 36 | 0 | 0 | 109 | 0 |
-| scrcmd.c | 68 | 9 | 0 | 0 | 59 | 0 |
-| field_effect_helpers.c | 60 | 7 | 0 | 0 | 53 | 0 |
-| trainer_card.c | 52 | 2 | 0 | 0 | 50 | 0 |
-| pokemon.c | 62 | 23 | 0 | 0 | 39 | 0 |
 | field_player_avatar.c | 64 | 26 | 0 | 0 | 38 | 0 |
 | fieldmap.c | 34 | 3 | 0 | 0 | 31 | 0 |
 | naming_screen.c | 37 | 8 | 0 | 0 | 29 | 0 |
@@ -89,7 +85,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | roamer.c | 3 | 0 | 0 | 0 | 3 | 0 |
 | save_failed_screen.c | 3 | 0 | 0 | 0 | 3 | 0 |
 | tileset_anims.c | 3 | 0 | 0 | 0 | 3 | 0 |
-| title_screen.c | 3 | 0 | 0 | 0 | 3 | 0 |
 | trainer_tower.c | 3 | 0 | 0 | 0 | 3 | 0 |
 | battle_ai_script_commands.c | 88 | 3 | 81 | 0 | 2 | 2 |
 | battle_bg.c | 10 | 1 | 7 | 0 | 2 | 0 |
@@ -108,6 +103,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | palette_util.c | 4 | 2 | 0 | 0 | 2 | 0 |
 | pokeball.c | 11 | 4 | 5 | 0 | 2 | 0 |
 | region_map.c | 10 | 8 | 0 | 0 | 2 | 0 |
+| title_screen.c | 3 | 0 | 0 | 1 | 2 | 0 |
 | wonder_news.c | 2 | 0 | 0 | 0 | 2 | 0 |
 | battle_controller_pokedude.c | 30 | 29 | 0 | 0 | 1 | 0 |
 | battle_controller_safari.c | 12 | 5 | 6 | 0 | 1 | 0 |
@@ -183,6 +179,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | event_object_lock.c | 5 | 5 | 0 | 0 | 0 | 0 |
 | event_object_movement.c | 378 | 301 | 0 | 77 | 0 | 0 |
 | field_effect.c | 94 | 34 | 0 | 60 | 0 | 0 |
+| field_effect_helpers.c | 60 | 7 | 0 | 53 | 0 | 0 |
 | isagbprn.c | 7 | 0 | 7 | 0 | 0 | 0 |
 | item_menu_icons.c | 8 | 8 | 0 | 0 | 0 | 0 |
 | librfu_intr.c | 2 | 0 | 2 | 0 | 0 | 0 |
@@ -211,6 +208,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | overworld.c | 92 | 27 | 0 | 65 | 0 | 0 |
 | palette.c | 23 | 7 | 14 | 0 | 0 | 2 |
 | play_time.c | 1 | 0 | 1 | 0 | 0 | 0 |
+| pokemon.c | 62 | 23 | 0 | 39 | 0 | 0 |
 | pokemon_jump.c | 26 | 8 | 18 | 0 | 0 | 0 |
 | pokemon_special_anim.c | 1 | 1 | 0 | 0 | 0 | 0 |
 | pokemon_storage_system.c | 1 | 0 | 0 | 0 | 0 | 1 |
@@ -221,6 +219,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | random.c | 2 | 0 | 2 | 0 | 0 | 0 |
 | save.c | 26 | 11 | 15 | 0 | 0 | 0 |
 | scanline_effect.c | 3 | 0 | 3 | 0 | 0 | 0 |
+| scrcmd.c | 68 | 9 | 0 | 59 | 0 | 0 |
 | slot_machine.c | 2 | 2 | 0 | 0 | 0 | 0 |
 | sound.c | 4 | 0 | 4 | 0 | 0 | 0 |
 | sprite.c | 20 | 9 | 11 | 0 | 0 | 0 |
@@ -230,6 +229,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | text_window.c | 2 | 2 | 0 | 0 | 0 | 0 |
 | tilemap_util.c | 9 | 0 | 9 | 0 | 0 | 0 |
 | trade_scene.c | 32 | 7 | 25 | 0 | 0 | 0 |
+| trainer_card.c | 52 | 31 | 0 | 21 | 0 | 0 |
 | union_room_battle.c | 1 | 0 | 1 | 0 | 0 | 0 |
 | union_room_chat.c | 15 | 2 | 13 | 0 | 0 | 0 |
 | union_room_chat_display.c | 8 | 2 | 6 | 0 | 0 | 0 |
@@ -240,7 +240,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | window.c | 8 | 1 | 7 | 0 | 0 | 0 |
 | window_8bpp.c | 3 | 3 | 0 | 0 | 0 | 0 |
 | wireless_communication_status_screen.c | 7 | 0 | 7 | 0 | 0 | 0 |
-| **total** | 4254 | 1335 | 1707 | 202 | 1001 | 9 |
+| **total** | 4254 | 1364 | 1707 | 375 | 799 | 9 |
 
 ## À lire
 
@@ -474,59 +474,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `field_door.c` **FieldAnimateDoorClose** ✓ : 1 différence(s)
 - `field_door.c` **FieldAnimateDoorOpen** ✓ : 1 différence(s)
 - `field_door.c` **GetDoorSoundEffect** ✓ : 1 différence(s) ; marqueurs de RF absents de la fusion : SE_DOOR
-- `field_effect_helpers.c` **LoadObjectReflectionPalette** : 3 différence(s)
-- `field_effect_helpers.c` **LoadObjectRegularReflectionPalette** : 1 différence(s)
-- `field_effect_helpers.c` **LoadObjectHighBridgeReflectionPalette** : 1 différence(s)
-- `field_effect_helpers.c` **UpdateObjectReflectionSprite** : 3 différence(s)
-- `field_effect_helpers.c` **CreateWarpArrowSprite** : 3 différence(s)
-- `field_effect_helpers.c` **ShowWarpArrowSprite** : 9 différence(s)
-- `field_effect_helpers.c` **FldEff_Shadow** : 6 différence(s)
-- `field_effect_helpers.c` **UpdateShadowFieldEffect** : 6 différence(s)
-- `field_effect_helpers.c` **FldEff_TallGrass** : 5 différence(s)
-- `field_effect_helpers.c` **UpdateTallGrassFieldEffect** : 9 différence(s)
-- `field_effect_helpers.c` **FldEff_JumpTallGrass** : 2 différence(s)
-- `field_effect_helpers.c` **FindTallGrassFieldEffectSpriteId** : 8 différence(s)
-- `field_effect_helpers.c` **FldEff_LongGrass** : 5 différence(s)
-- `field_effect_helpers.c` **UpdateLongGrassFieldEffect** : 9 différence(s)
-- `field_effect_helpers.c` **FldEff_JumpLongGrass** : 2 différence(s)
-- `field_effect_helpers.c` **FldEff_ShortGrass** : 7 différence(s)
-- `field_effect_helpers.c` **UpdateShortGrassFieldEffect** : 12 différence(s)
-- `field_effect_helpers.c` **FldEff_SandFootprints** : 3 différence(s)
-- `field_effect_helpers.c` **FldEff_DeepSandFootprints** : 3 différence(s)
-- `field_effect_helpers.c` **FldEff_BikeTireTracks** : 3 différence(s)
-- `field_effect_helpers.c` **UpdateFootprintsTireTracksFieldEffect** : 1 différence(s)
-- `field_effect_helpers.c` **FadeFootprintsTireTracks_Step0** : 2 différence(s)
-- `field_effect_helpers.c` **FadeFootprintsTireTracks_Step1** : 3 différence(s)
-- `field_effect_helpers.c` **FldEff_Splash** : 8 différence(s)
-- `field_effect_helpers.c` **UpdateSplashFieldEffect** : 3 différence(s)
-- `field_effect_helpers.c` **FldEff_JumpSmallSplash** : 2 différence(s)
-- `field_effect_helpers.c` **FldEff_JumpBigSplash** : 2 différence(s)
-- `field_effect_helpers.c` **FldEff_FeetInFlowingWater** : 8 différence(s)
-- `field_effect_helpers.c` **UpdateFeetInFlowingWaterFieldEffect** : 6 différence(s)
-- `field_effect_helpers.c` **FldEff_Ripple** : 2 différence(s)
-- `field_effect_helpers.c` **FldEff_HotSpringsWater** : 7 différence(s)
-- `field_effect_helpers.c` **UpdateHotSpringsWaterFieldEffect** : 6 différence(s)
-- `field_effect_helpers.c` **FldEff_UnusedGrass** : 2 différence(s)
-- `field_effect_helpers.c` **FldEff_UnusedGrass2** : 2 différence(s)
-- `field_effect_helpers.c` **FldEff_UnusedSand** : 2 différence(s)
-- `field_effect_helpers.c` **FldEff_Ash** : 5 différence(s)
-- `field_effect_helpers.c` **UpdateAshFieldEffect** : 1 différence(s)
-- `field_effect_helpers.c` **FldEff_SurfBlob** : 5 différence(s)
-- `field_effect_helpers.c` **UpdateSurfBlobFieldEffect** : 6 différence(s)
-- `field_effect_helpers.c` **StartUnderwaterSurfBlobBobbing** : 2 différence(s)
-- `field_effect_helpers.c` **SpriteCB_UnderwaterSurfBlob** : 3 différence(s)
-- `field_effect_helpers.c` **FldEff_Dust** : 2 différence(s)
-- `field_effect_helpers.c` **FldEff_SandPile** : 8 différence(s)
-- `field_effect_helpers.c` **UpdateSandPileFieldEffect** : 10 différence(s)
-- `field_effect_helpers.c` **FldEff_Bubbles** : 2 différence(s)
-- `field_effect_helpers.c` **UpdateBubblesFieldEffect** : 1 différence(s)
-- `field_effect_helpers.c` **FldEff_BerryTreeGrowthSparkle** : 1 différence(s)
-- `field_effect_helpers.c` **ShowDisguiseFieldEffect** : 2 différence(s)
-- `field_effect_helpers.c` **UpdateDisguiseFieldEffect** : 4 différence(s)
-- `field_effect_helpers.c` **StartRevealDisguise** : 1 différence(s)
-- `field_effect_helpers.c` **UpdateRevealDisguise** : 1 différence(s)
-- `field_effect_helpers.c` **UpdateSparkleFieldEffect** : 3 différence(s)
-- `field_effect_helpers.c` **UpdateGrassFieldEffectSubpriority** : 7 différence(s)
 - `field_fadetransition.c` **WarpFadeInScreen** : 4 différence(s)
 - `field_fadetransition.c` **FadeInFromBlack** : 1 différence(s)
 - `field_fadetransition.c` **WarpFadeOutScreen** : 5 différence(s)
@@ -963,45 +910,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `pokeball.c` **Task_DoPokeballSendOutAnim** : 9 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE
 - `pokeball.c` **SpriteCB_BallThrow_CaptureMon** : 1 différence(s) ; marqueurs de RF absents de la fusion : MUS_CAUGHT_INTRO
 - `pokedex.c` **GetSetPokedexFlag** : 6 différence(s)
-- `pokemon.c` **CreateBattleTowerMon** : 7 différence(s)
-- `pokemon.c` **ConvertPokemonToBattleTowerPokemon** : 1 différence(s)
-- `pokemon.c` **GiveMoveToBoxMon** : 2 différence(s)
-- `pokemon.c` **GiveMoveToBattleMon** : 2 différence(s)
-- `pokemon.c` **CalculateBaseDamage** : 6 différence(s)
-- `pokemon.c` **GetDefaultMoveTarget** : 2 différence(s)
-- `pokemon.c` **SetMultiuseSpriteTemplateToPokemon** : 9 différence(s)
-- `pokemon.c` **GetBoxMonData3** : 1 différence(s)
-- `pokemon.c` **SetMonData** : 6 différence(s)
-- `pokemon.c` **SetBoxMonData** : 3 différence(s)
-- `pokemon.c` **GetMonsStateToDoubles** : 2 différence(s)
-- `pokemon.c` **CreateSecretBaseEnemyParty** : 1 différence(s)
-- `pokemon.c` **GetSpeciesName** : 2 différence(s)
-- `pokemon.c` **CopyPlayerPartyMonToBattleData** : 3 différence(s)
-- `pokemon.c` **PokemonUseItemEffects** : 58 différence(s)
-- `pokemon.c` **GetEvolutionTargetSpecies** : 4 différence(s)
-- `pokemon.c` **HoennPokedexNumToSpecies** : 2 différence(s)
-- `pokemon.c` **NationalPokedexNumToSpecies** : 2 différence(s)
-- `pokemon.c` **NationalToHoennOrder** : 2 différence(s)
-- `pokemon.c` **SpeciesToCryId** : 3 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_OLD_UNOWN_B, SPECIES_OLD_UNOWN_Z
-- `pokemon.c` **DrawSpindaSpotsUnused** : 2 différence(s)
-- `pokemon.c` **GetTrainerEncounterMusicId** : 1 différence(s)
-- `pokemon.c` **AdjustFriendship** : 9 différence(s)
-- `pokemon.c` **MonGainEVs** : 12 différence(s)
-- `pokemon.c` **RandomlyGivePartyPokerus** : 3 différence(s)
-- `pokemon.c` **UpdatePartyPokerusTime** : 4 différence(s)
-- `pokemon.c` **PartySpreadPokerus** : 4 différence(s)
-- `pokemon.c` **TryIncrementMonLevel** : 8 différence(s)
-- `pokemon.c` **CanMonLearnTMHM** : 2 différence(s)
-- `pokemon.c` **SpeciesToPokedexNum** ✓ : 2 différence(s)
-- `pokemon.c` **GetBattleBGM** : 19 différence(s) ; marqueurs de RF absents de la fusion : MUS_RS_VS_TRAINER, TRAINER_CLASS_COOLTRAINER, TRAINER_CLASS_GENTLEMAN
-- `pokemon.c` **GetMonSpritePalFromSpeciesAndPersonality** : 3 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_EGG
-- `pokemon.c` **SetWildMonHeldItem** : 17 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE
-- `pokemon.c` **GetTrainerPartnerName** : 1 différence(s)
-- `pokemon.c` **GetUnionRoomTrainerPic** : 2 différence(s)
-- `pokemon.c` **GetUnionRoomTrainerClass** : 2 différence(s)
-- `pokemon.c` **CreateMonSpritesGfxManager** : 71 différence(s)
-- `pokemon.c` **DestroyMonSpritesGfxManager** : 15 différence(s)
-- `pokemon.c` **MonSpritesGfxManager_GetSpritePtr** : 4 différence(s)
 - `pokemon_icon.c` **CreateMonIcon** : 2 différence(s)
 - `pokemon_icon.c` **GetIconSpecies** : 1 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_NONE
 - `pokemon_icon.c` **GetUnownLetterByPersonality** : 3 différence(s)
@@ -1043,65 +951,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `save_location.c` **TrySetReloadWarpStatus** : 2 différence(s)
 - `save_location.c` **TrySetUnknownWarpStatus** : 2 différence(s)
 - `save_location.c` **SetUnlockedPokedexFlags** : 3 différence(s)
-- `scrcmd.c` **ScrCmd_gotonative** : 3 différence(s)
-- `scrcmd.c` **ScrCmd_special** : 5 différence(s)
-- `scrcmd.c` **ScrCmd_specialvar** : 6 différence(s)
-- `scrcmd.c` **ScrCmd_callnative** : 5 différence(s)
-- `scrcmd.c` **ScrCmd_goto** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_call** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_goto_if** : 3 différence(s)
-- `scrcmd.c` **ScrCmd_call_if** : 3 différence(s)
-- `scrcmd.c` **ScrCmd_vgoto** : 4 différence(s)
-- `scrcmd.c` **ScrCmd_vcall** : 4 différence(s)
-- `scrcmd.c` **ScrCmd_vgoto_if** : 4 différence(s)
-- `scrcmd.c` **ScrCmd_vcall_if** : 4 différence(s)
-- `scrcmd.c` **ScrCmd_gotostd** : 4 différence(s)
-- `scrcmd.c` **ScrCmd_callstd** : 4 différence(s)
-- `scrcmd.c` **ScrCmd_gotostd_if** : 7 différence(s)
-- `scrcmd.c` **ScrCmd_callstd_if** : 7 différence(s)
-- `scrcmd.c` **ScrCmd_setmysteryeventstatus** : 2 différence(s)
-- `scrcmd.c` **ScrCmd_trywondercardscript** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_copybyte** : 2 différence(s)
-- `scrcmd.c` **ScrCmd_copyvar** : 6 différence(s)
-- `scrcmd.c` **Compare** : 2 différence(s)
-- `scrcmd.c` **ScrCmd_additem** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_adddecoration** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_removedecoration** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_checkdecorspace** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_checkdecor** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_initclock** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_dotimebasedevents** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_gettime** : 4 différence(s)
-- `scrcmd.c` **ScrCmd_warpteleport** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_playbgm** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_fadedefaultbgm** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_fadenewbgm** : 2 différence(s)
-- `scrcmd.c` **ScrCmd_fadeoutbgm** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_fadeinbgm** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_lockall** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_lock** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_messageautoscroll** : 2 différence(s)
-- `scrcmd.c` **WaitForAorBPress** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_waitbuttonpress** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_drawboxtext** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_showmonpic** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_showcontestpainting** : 2 différence(s)
-- `scrcmd.c` **ScrCmd_braillemessage** : 11 différence(s)
-- `scrcmd.c` **ScrCmd_bufferitemnameplural** : 2 différence(s)
-- `scrcmd.c` **ScrCmd_bufferdecorationname** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_givemon** : 6 différence(s)
-- `scrcmd.c` **ScrCmd_checkpartymove** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_showmoneybox** : 4 différence(s)
-- `scrcmd.c` **ScrCmd_showcoinsbox** : 4 différence(s)
-- `scrcmd.c` **ScrCmd_playslotmachine** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_setberrytree** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_getpokenewsactive** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_choosecontestmon** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_startcontest** : 2 différence(s)
-- `scrcmd.c` **ScrCmd_showcontestresults** : 2 différence(s)
-- `scrcmd.c` **ScrCmd_contestlinktransfer** : 2 différence(s)
-- `scrcmd.c` **ScrCmd_setmetatile** : 1 différence(s)
-- `scrcmd.c` **ScrCmd_addelevmenuitem** : 1 différence(s)
 - `script.c` **RunScriptCommand** : 9 différence(s)
 - `script.c` **ScriptContext_SetupScript** : 1 différence(s)
 - `script.c` **RunScriptImmediately** : 2 différence(s)
@@ -1170,66 +1019,15 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `tileset_anims.c` **TilesetAnim_General** : 6 différence(s)
 - `tileset_anims.c` **InitTilesetAnim_General** : 1 différence(s)
 - `title_screen.c` **CB2_InitTitleScreen** : 52 différence(s)
-- `title_screen.c` **ResetGpuRegs** : 8 différence(s)
 - `title_screen.c` **VBlankCB** : 1 différence(s)
 - `tm_case.c` **PrintTitle** : 2 différence(s)
 - `trade.c` **CB2_CreateTradeMenu** : 29 différence(s) ; marqueurs de RF absents de la fusion : MUS_GAME_CORNER
-- `trainer_card.c` **CloseTrainerCard** : 4 différence(s)
-- `trainer_card.c` **Task_TrainerCard** : 43 différence(s)
-- `trainer_card.c` **LoadCardGfx** : 28 différence(s)
-- `trainer_card.c` **CB2_InitTrainerCard** : 13 différence(s)
-- `trainer_card.c` **SetPlayerCardData** : 27 différence(s)
-- `trainer_card.c` **TrainerCard_GenerateCardForLinkPlayer** : 18 différence(s) ; marqueurs de RF absents de la fusion : VAR_EGG_BRAG_STATE, VAR_HOF_BRAG_STATE, VAR_LINK_WIN_BRAG_STATE, VAR_TRAINER_CARD_MON_ICON_1, VAR_TRAINER_CARD_MON_ICON_2, VAR_TRAINER_CARD_MON_ICON_3, VAR_TRAINER_CARD_MON_ICON_4, VAR_TRAINER_CARD_MON_ICON_5, VAR_TRAINER_CARD_MON_ICON_6, VAR_TRAINER_CARD_MON_ICON_TINT_IDX
-- `trainer_card.c` **SetDataFromTrainerCard** : 38 différence(s) ; marqueurs de RF absents de la fusion : FLAG_BADGE08_GET
-- `trainer_card.c` **UpdateCardFlipRegs** : 4 différence(s)
-- `trainer_card.c` **ResetGpuRegs** : 5 différence(s)
-- `trainer_card.c` **InitBgsAndWindows** : 2 différence(s)
-- `trainer_card.c` **PrintAllOnCardFront** : 3 différence(s)
-- `trainer_card.c` **PrintAllOnCardBack** : 6 différence(s)
-- `trainer_card.c` **PrintNameOnCardFront** : 16 différence(s)
-- `trainer_card.c` **PrintIdOnCard** : 18 différence(s)
-- `trainer_card.c` **PrintMoneyOnCard** : 15 différence(s)
-- `trainer_card.c` **GetCaughtMonsCount** : 1 différence(s)
-- `trainer_card.c` **PrintPokedexOnCard** : 17 différence(s)
-- `trainer_card.c` **PrintTimeOnCard** : 28 différence(s)
-- `trainer_card.c` **PrintProfilePhraseOnCard** : 30 différence(s)
-- `trainer_card.c` **BufferNameForCardBack** : 13 différence(s)
-- `trainer_card.c` **PrintNameOnCardBack** : 17 différence(s)
-- `trainer_card.c` **BufferHofDebutTime** : 17 différence(s)
-- `trainer_card.c` **PrintHofDebutTimeOnCard** : 5 différence(s)
-- `trainer_card.c` **BufferLinkBattleResults** : 14 différence(s)
-- `trainer_card.c` **PrintLinkBattleResultsOnCard** : 6 différence(s)
-- `trainer_card.c` **BufferNumTrades** : 6 différence(s)
-- `trainer_card.c` **PrintTradesStringOnCard** : 8 différence(s)
-- `trainer_card.c` **BufferBerryCrushPoints** : 3 différence(s)
-- `trainer_card.c` **PrintBerryCrushStringOnCard** : 11 différence(s)
-- `trainer_card.c` **BufferUnionRoomStats** : 6 différence(s)
-- `trainer_card.c` **PrintUnionStringOnCard** : 10 différence(s)
-- `trainer_card.c` **PrintPokemonIconsOnCard** : 10 différence(s)
-- `trainer_card.c` **LoadMonIconGfx** : 15 différence(s)
-- `trainer_card.c` **PrintStickersOnCard** : 7 différence(s)
-- `trainer_card.c` **LoadStickerGfx** : 5 différence(s)
-- `trainer_card.c` **DrawCardScreenBackground** : 1 différence(s)
-- `trainer_card.c` **DrawCardFrontOrBack** : 1 différence(s)
-- `trainer_card.c` **DrawStarsAndBadgesOnCard** : 13 différence(s)
-- `trainer_card.c` **DrawCardBackStats** : 1 différence(s)
-- `trainer_card.c` **BlinkTimeColon** : 4 différence(s)
-- `trainer_card.c` **GetTrainerCardStars** : 3 différence(s)
-- `trainer_card.c` **IsCardFlipTaskActive** : 1 différence(s)
-- `trainer_card.c` **Task_AnimateCardFlipDown** : 17 différence(s)
-- `trainer_card.c` **Task_DrawFlippedCardSide** : 13 différence(s)
-- `trainer_card.c` **Task_SetCardFlipped** : 6 différence(s)
-- `trainer_card.c` **Task_AnimateCardFlipUp** : 14 différence(s)
-- `trainer_card.c` **ShowPlayerTrainerCard** : 6 différence(s)
-- `trainer_card.c` **ShowTrainerCardInLink** : 6 différence(s)
-- `trainer_card.c` **InitTrainerCardData** : 10 différence(s)
-- `trainer_card.c` **CreateTrainerCardTrainerPic** : 24 différence(s)
 - `trainer_fan_club.c` **BufferFanClubTrainerName** : 2 différence(s)
 - `trainer_pokemon_sprites.c` **DecompressPic** : 4 différence(s)
 - `trainer_pokemon_sprites.c` **LoadPicPaletteBySlot** : 2 différence(s)
 - `trainer_pokemon_sprites.c` **CreatePicSprite** : 8 différence(s)
 - `trainer_pokemon_sprites.c` **CreateTrainerCardSprite** : 6 différence(s)
-- `trainer_pokemon_sprites.c` **PlayerGenderToFrontTrainerPicId** : 6 différence(s)
+- `trainer_pokemon_sprites.c` **PlayerGenderToFrontTrainerPicId** : 2 différence(s)
 - `trainer_see.c` **CheckForTrainersWantingBattle** : 11 différence(s)
 - `trainer_see.c` **CheckTrainer** : 11 différence(s)
 - `trainer_see.c` **GetTrainerApproachDistance** : 1 différence(s)
