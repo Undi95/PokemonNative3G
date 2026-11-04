@@ -39,9 +39,12 @@ MENU_POKEDEX, MENU_POKEMON, MENU_BAG, MENU_POKENAV, MENU_PLAYER, MENU_SAVE, MENU
 
 # Par région : où se mettre entre deux écrans, l'herbe, une boutique, un dresseur
 REGIONS = {
-    "kanto": {"home": "PalletTown", "grass": "Route1", "mart": "PewterCity_Mart", "trainer": ("Route3", 32, 6)},
+    "kanto": {"home": "PalletTown", "grass": "Route1", "mart": "PewterCity_Mart", "trainer": ("Route3", 32, 6),
+              "double": ("KantoVictoryRoad_3F", 38, 13), "safari": "KantoSafariZone_Center",
+              "ghost": "PokemonTower_3F"},
     "hoenn": {"home": "LittlerootTown", "grass": "Route101", "mart": "OldaleTown_Mart",
-              "trainer": ("Route102", 33, 14)},
+              "trainer": ("Route102", 33, 14), "double": ("Route103", 64, 12), "safari": "SafariZone_Southwest",
+              "ghost": None},
 }
 
 
@@ -110,6 +113,23 @@ def tap_until_text(game, words, button="A", limit=30):
     raise GameError(f"pas de texte « {words} » : {game.describe()}")
 
 
+def crawl_bag(game):
+    """joueur.sac : {« poche N » : [(id, nom, quantité)]} (comme menu_helpers.bag des scénarios)."""
+    result = {}
+    for line in game.dev("joueur.sac").splitlines():
+        if line.startswith("poche"):
+            key, _, rest = line.partition(":")
+            items = []
+            for part in rest.split(","):
+                part = part.strip()
+                if part:
+                    head, _, qty = part.rpartition(" x")
+                    num, _, name = head.partition(" ")
+                    items.append((int(num), name, int(qty)))
+            result[key.strip()] = items
+    return result
+
+
 def talk_at(game, map_name, x, y):
     """Va à côté de ce qui est en (x, y) sur la carte et lui parle (sans aller au bout)."""
     places = crawl.spots(map_name, x, y)
@@ -123,8 +143,10 @@ def talk_at(game, map_name, x, y):
 class Screens:
     """Chaque écran : de la carte (joueur libre) à la carte, en appelant shot(nom) à chaque étape."""
 
-    def __init__(self, game, region, shot):
+    def __init__(self, game, region, shot, row=None):
         self.game, self.region, self.shot = game, REGIONS[region], shot
+        # Les options de ce jeu (OPTIONS, 0 Hoenn / 1 Kanto) : le sac en combat dépend de SAC
+        self.options = {name: value for (name, _), value in zip(OPTIONS, row or (0,) * len(OPTIONS))}
 
     def start_menu(self):
         game = self.game
@@ -307,23 +329,282 @@ class Screens:
         back_to_free(game)
 
     def wild_battle(self):
+        self.force_encounter(self.region["grass"])
+        self.battle_shots()
+
+    def force_encounter(self, map_name, kind="g"):
+        """Une rencontre sauvage sur cette carte : deux cases de ce type l'une sur l'autre, loin des PNJ (dresseurs),
+        des allers-retours avec les rencontres forcées."""
         game = self.game
-        grass = self.region["grass"]
-        the_map = crawl.maps.load(grass)
-        tile = next((x, y) for y in range(the_map.height) for x in range(the_map.width)
-                    if the_map.tile(x, y) == "g" and the_map.tile(x, y + 1) == "g")
-        game.warp(grass, *tile)
+        the_map = crawl.maps.load(map_name)
+        npcs = [(t["x"], t["y"]) for t in crawl.targets(map_name) if t["genre"] == "pnj"]
+        pairs = [(x, y) for y in range(the_map.height) for x in range(the_map.width)
+                 if the_map.tile(x, y) == kind and the_map.tile(x, y + 1) == kind]
+        if not pairs:
+            raise GameError(f"pas deux cases « {kind} » l'une sur l'autre sur {map_name}")
+        tile = max(pairs, key=lambda p: min((abs(p[0] - x) + abs(p[1] - y) for x, y in npcs), default=99))
+        game.warp(map_name, *tile)
         game.dev("jeu.rencontres", 1)
         try:
             for step in range(200):
                 if self.in_transition():
                     break
-                game.press("DOWN" if step % 2 == 0 else "UP", 16)
+                # 32 images : à chaque changement de sens, un appui court ne fait que tourner le joueur sur place
+                game.press("DOWN" if step % 2 == 0 else "UP", 32)
             else:
-                raise GameError("pas de Pokémon sauvage en 200 pas")
+                raise GameError(f"pas de Pokémon sauvage en 200 pas sur {map_name}")
         finally:
             game.dev("jeu.rencontres", 0)
+
+    def wait_action_menu(self, limit=60):
+        """A jusqu'au menu d'action du combat (« Que doit faire ... ? »)."""
+        game = self.game
+        wait_until(game, lambda s: s.battle, step=4, limit=600)
+        texts = mark(game)
+        for _ in range(limit):
+            if any("Que doit faire" in " ".join(t.split()) for _, _, t in game.texts[texts:]):
+                break
+            game.tap("A", gap=30)
+        game.wait(60)
+
+    def run_away(self):
+        """FUITE (en bas à droite du menu d'action), puis A jusqu'à la carte."""
+        game = self.game
+        game.tap("DOWN")
+        game.tap("RIGHT")
+        game.tap("A")
+        for _ in range(60):
+            if not game.state.battle:
+                break
+            game.tap("A", gap=30)
+        wait_until(game, lambda s: s.free, limit=900)
+
+    def double_battle(self):
+        """Un combat double (jumelles de la Route 103 ; RAY et TYRA, Route Victoire 3F)."""
+        game = self.game
+        map_name, x, y = self.region["double"]
+        try:
+            talk_at(game, map_name, x, y)
+        except GameError:
+            if game.state.free:
+                raise
+            # RAY et TYRA (portée 2) voient le joueur dès l'arrivée : ils viennent d'eux-mêmes
+        for _ in range(200):            # A dans ce qu'ils disent (RAY et TYRA parlent longtemps)
+            if self.in_transition():
+                break
+            game.tap("A", hold=2, gap=4)
+        else:
+            raise GameError(f"le combat double ne commence pas : {game.describe()}")
         self.battle_shots()
+
+    def safari(self):
+        """Un combat du Parc Safari (son menu : BALL, appât…), puis la fuite."""
+        game = self.game
+        game.special("EnterSafariMode")
+        try:
+            self.force_encounter(self.region["safari"])
+            for step in range(2):
+                game.wait(20)
+                self.shot(f"transition{step + 1}")
+            self.wait_action_menu()
+            self.shot("action")
+            self.run_away()
+        finally:
+            back_to_free(game)
+            game.special("ExitSafariMode")
+
+    def ghost_battle(self):
+        """Kanto : un SPECTRE de la Tour POKéMON (sans le SCOPE SYLPHE), puis la fuite."""
+        game = self.game
+        if not self.region["ghost"]:
+            return
+        self.force_encounter(self.region["ghost"], ".")
+        for step in range(2):
+            game.wait(20)
+            self.shot(f"transition{step + 1}")
+        self.wait_action_menu()
+        self.shot("action")
+        game.tap("A")
+        game.wait(40)
+        self.shot("capacites")
+        game.tap("B")
+        game.wait(20)
+        self.run_away()
+
+    def capture(self):
+        """Une capture à la MASTER BALL (le sac en combat, de l'option SAC), l'entrée au POKéDEX, le surnom."""
+        game = self.game
+        game.item("ITEM_MASTER_BALL", 1)
+        self.force_encounter(self.region["grass"])
+        self.wait_action_menu()
+        game.tap("RIGHT")               # SAC
+        game.tap("A")
+        game.wait(240)
+        if self.options["SAC"]:         # sac de RF : OBJETS, OBJ. RARES, BALLS
+            game.tap("LEFT", 3, gap=40)
+            game.tap("RIGHT", 2, gap=60)
+        else:                           # sac d'Émeraude : OBJETS, BALLS…
+            game.tap("LEFT", 5, gap=40)
+            game.tap("RIGHT", 1, gap=60)
+        game.wait(60)
+        balls = [n for n, _, _ in crawl_bag(game).get("poche 2", [])]
+        index = balls.index(driver.names.number("ITEM_MASTER_BALL"))
+        game.tap("UP", 20, gap=8)
+        if index:
+            game.tap("DOWN", index, gap=20)
+        game.wait(30)
+        self.shot("balls")
+        game.tap("A")
+        game.wait(60)
+        game.tap("A")                   # UTILISER
+        since = mark(game)
+        done = set()
+        for _ in range(300):
+            if game.state.free:
+                break
+            cb2 = game.function(game.state.cb2)
+            if "Naming" in cb2 and "nommage" not in done:
+                game.wait(90)
+                self.shot("nommage")
+                done.add("nommage")
+                game.tap("START")       # le curseur sur OK, puis A : le nom de l'espèce
+                game.wait(20)
+                game.tap("A")
+                game.wait(60)
+                continue
+            if saw_text(game, "attrapé", since) and "attrape" not in done:
+                game.wait(60)
+                self.shot("attrape")
+                done.add("attrape")
+            if saw_text(game, "POKéDEX", since) and "pokedex" not in done:
+                game.wait(150)
+                self.shot("pokedex")
+                done.add("pokedex")
+            if saw_text(game, "surnom", since) and "question" not in done:
+                game.wait(60)
+                self.shot("question")
+                done.add("question")
+            game.tap("A", gap=40)       # OUI au surnom (curseur sur OUI)
+        finish_dialog(game)
+
+    def evolution(self):
+        """RATTATA N.20 évolue en RATTATAC (joueur.evolution), qui veut apprendre GRIMACE avec déjà 4 capacités :
+        la question, l'écran du résumé pour en oublier une (MENUS), puis l'abandon."""
+        game = self.game
+        game.give_mon("SPECIES_RATTATA", 20)
+        game.wait(2)                    # l'état de l'équipe, à jour
+        slot = len(game.state.party) - 1
+        screens = len(game.cb2s)
+        reply = game.dev("joueur.evolution", slot)
+        if "refuse" in reply or "evolution en 0" in reply:
+            raise GameError(f"pas d'évolution : {reply.strip()}")
+        wait_until(game, lambda s: any("Evolution" in n or "EvoScene" in n for _, n in game.cb2s[screens:]), limit=600)
+        game.wait(150)
+        self.shot("debut")
+        since = mark(game)
+        evo_screens = len(game.cb2s)
+        done = set()
+        try:
+            for _ in range(300):
+                if game.state.free:
+                    break
+                # Le résumé d'Émeraude tourne sous « MainCB2 » une fois ouvert (CB2_InitSummaryScreen) : son ouverture
+                # se voit dans l'historique des écrans
+                opened = [n for _, n in game.cb2s[evo_screens:] if "Summary" in n or "PSS" in n]
+                if opened and "resume" not in done:
+                    game.wait(120)
+                    self.shot("resume")
+                    done.add("resume")
+                    game.tap("B")       # pas de capacité oubliée : « Arrêter d'apprendre … ? »
+                    game.wait(90)
+                    continue
+                if saw_text(game, "Félicitations", since) and "fin" not in done:
+                    game.wait(30)
+                    self.shot("fin")
+                    done.add("fin")
+                if saw_text(game, "Effacer une ancienne", since) and "question" not in done:
+                    game.wait(60)
+                    self.shot("question")
+                    done.add("question")
+                if saw_text(game, "Arrêter d'apprendre", since) and "abandon" not in done:
+                    game.wait(60)
+                    self.shot("abandon")
+                    done.add("abandon")
+                game.tap("A", gap=40)   # OUI à « Effacer… ? », puis OUI à « Arrêter d'apprendre… ? »
+            wait_until(game, lambda s: s.free, limit=900)
+        finally:
+            if game.state.free:
+                game.dev("joueur.pc", slot)     # l'équipe reste petite pour les écrans suivants
+
+    def pc_items(self):
+        """Le PC du joueur : son menu, les objets, la liste à retirer (MENUS)."""
+        game = self.game
+        game.script("EventScript_PC")
+        game.wait(90)
+        game.tap("A")
+        game.wait(60)
+        game.tap("DOWN")                # PC de <joueur> (2e entrée, dans les deux régions)
+        game.tap("A")
+        game.wait(120)
+        self.shot("menu")
+        game.tap("A")                   # les objets
+        game.wait(90)
+        self.shot("objets")
+        game.tap("A")                   # RETIRER
+        game.wait(150)
+        self.shot("retirer")
+        back_to_free(game)
+
+    def mailbox(self):
+        """La boîte aux lettres du PC du joueur, avec une lettre déposée (MENUS)."""
+        game = self.game
+        game.dev("joueur.lettre", 1, driver.names.number("ITEM_ORANGE_MAIL"), 2)   # une lettre de PIKACHU, au PC
+        game.script("EventScript_PC")
+        game.wait(90)
+        game.tap("A")
+        game.wait(60)
+        game.tap("DOWN")
+        game.tap("A")
+        game.wait(120)
+        game.tap("DOWN")                # BOITE AUX LETTRES (2e entrée)
+        game.tap("A")
+        game.wait(150)
+        self.shot("boite")
+        game.tap("A")
+        game.wait(60)
+        self.shot("lettre")
+        back_to_free(game)
+
+    def region_map(self):
+        """La carte de la région (FieldShowRegionMap, comme une carte murale)."""
+        game = self.game
+        game.special("FieldShowRegionMap")
+        game.wait(200)
+        self.shot("carte")
+        game.tap("RIGHT", 3, gap=20)
+        game.wait(30)
+        self.shot("curseur")
+        back_to_free(game)
+
+    def new_game(self):
+        """En dernier : sauvegarde, redémarrage, NOUVELLE PARTIE par-dessus la sauvegarde (les options d'affichage
+        sont gardées, PERSO non) ; l'intro du Prof. Seko jusqu'au choix du personnage."""
+        game = self.game
+        driver.save(game)
+        game.press("A+B+START+SELECT", 2)
+        game.wait(400)
+        for _ in range(20):             # l'intro, l'écran titre, jusqu'au menu principal
+            if "MainMenu" in game.function(game.state.cb2):
+                break
+            game.tap("START", gap=60)
+        game.wait(90)
+        self.shot("menu")
+        game.tap("DOWN")                # NOUVELLE PARTIE
+        game.tap("A")
+        for i in range(8):
+            game.wait(240)
+            self.shot(f"intro{i + 1}")
+            game.tap("A", gap=30)
 
     def trainer_battle(self):
         game = self.game
@@ -369,7 +650,10 @@ class Screens:
 
 
 SCREENS = ["start_menu", "party", "summary", "bag", "pokedex", "pokenav", "trainer_card", "save", "options",
-           "dialog_sign", "dialog_npc", "shop", "pc", "wild_battle", "trainer_battle"]
+           "dialog_sign", "dialog_npc", "shop", "pc", "wild_battle", "trainer_battle",
+           # 2026-11-04 (phase 4 : le reste de la liste du plan)
+           "evolution", "capture", "double_battle", "safari", "ghost_battle", "pc_items", "mailbox", "region_map",
+           "new_game"]                  # toujours le dernier : il quitte la partie
 
 
 def run_one(binary, region, index, row, out_dir, screens):
@@ -407,7 +691,7 @@ def run_one(binary, region, index, row, out_dir, screens):
             try:
                 game.warp(home, *spawn)
                 finish_dialog(game, limit=100)
-                getattr(Screens(game, region, shot), screen)()
+                getattr(Screens(game, region, shot, row), screen)()
             except Exception as e:      # GameError, ou une erreur de la grille elle-même
                 result["erreurs"].append(f"{screen} : {type(e).__name__}: {str(e)[:300]}")
                 if game.proc.poll() is not None:
@@ -435,6 +719,8 @@ def sheets(results, out_dir):
     screens = sorted({screen for r in results for screen in r["captures"]})
     for screen in screens:
         rows = [r for r in results if r["captures"].get(screen)]
+        if not rows:                    # un écran d'une seule région (le SPECTRE de Kanto), pas joué ici
+            continue
         columns = max(len(r["captures"][screen]) for r in rows)
         sheet = Image.new("RGB", (label_width + columns * (width + gap), len(rows) * (height + gap)), (40, 40, 40))
         draw = ImageDraw.Draw(sheet)

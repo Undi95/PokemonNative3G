@@ -43,6 +43,7 @@
 #include "pokenav.h"
 #include "menu_specialized.h"
 #include "data.h"
+#include "trainer_pokemon_sprites.h"
 #include "constants/abilities.h"
 #include "constants/battle_anim.h"
 #include "constants/battle_move_effects.h"
@@ -10271,7 +10272,11 @@ static void Cmd_displaydexinfo(void)
     switch (gBattleCommunication[0])
     {
     case 0:
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        // PokemonNative3G : avec le POKéDEX de RF, le fondu de RF (en blanc)
+        if (gSaveBlock2Ptr->optionsPokedexStyle && FlagGet(FLAG_KANTO_SYS_POKEDEX_GET)) // Rouge Feu
+            BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_WHITE);
+        else
+            BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
         gBattleCommunication[0]++;
         break;
     case 1:
@@ -10307,7 +10312,25 @@ static void Cmd_displaydexinfo(void)
     case 4:
         if (!IsDma3ManagerBusyWithBgCopy())
         {
-            BeginNormalPaletteFade(PALETTES_BG, 0, 16, 0, RGB_BLACK);
+            // PokemonNative3G : le POKéDEX de RF ne laisse pas l'image du POKéMON (celui d'Émeraude la fait glisser au
+            // centre et la garde) : RF la crée ici, sous la question du surnom (Cmd_displaydexinfo de RF)
+            if (gSaveBlock2Ptr->optionsPokedexStyle && FlagGet(FLAG_KANTO_SYS_POKEDEX_GET)) // Rouge Feu
+            {
+                CreateMonPicSprite_HandleDeoxys(species,
+                                                gBattleMons[B_POSITION_OPPONENT_LEFT].otId,
+                                                gBattleMons[B_POSITION_OPPONENT_LEFT].personality,
+                                                TRUE,
+                                                120,
+                                                64,
+                                                0,
+                                                0xFFFF);
+                CpuFill32(0, gPlttBufferFaded, BG_PLTT_SIZE);
+                BeginNormalPaletteFade(0x1FFFF, 0, 16, 0, RGB_BLACK);
+            }
+            else
+            {
+                BeginNormalPaletteFade(PALETTES_BG, 0, 16, 0, RGB_BLACK);
+            }
             ShowBg(0);
             ShowBg(3);
             gBattleCommunication[0]++;
