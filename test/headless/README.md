@@ -107,7 +107,10 @@ against a trainer or a species, and how it ended) and `expect_song`. What can on
 seen is checked with `check_screen(game, name)`, against `refs/NAME.png`: a scenario that
 sets `SCREENS = True` checks the screen at each of its `log` steps. A missing reference
 is made from the screen, to look at once: `refs_sheet.py` puts the new ones (or `--all`)
-on one image. `suite.py --update-refs` replaces them, when the screens change on purpose.
+on one image. `suite.py --update-refs` replaces them, when the screens change on purpose;
+`refs_sheet.py --changed [REV]` then shows each replaced one as old | new | difference
+(changed pixels in red), to check them all before committing (a change that moves the
+random number generator changes trainer IDs, natures, wild Pokémon, NPC steps...).
 A reference that wasn't compared because the scenario played differently before it fails
 the scenario: a screen nobody compares can hide a regression.
 
