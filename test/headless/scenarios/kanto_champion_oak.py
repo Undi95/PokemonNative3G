@@ -2,6 +2,8 @@
 # le starter choisi à KANTO (« Tu as tant changé depuis ton départ avec SALAMECHE. »), pas celui de Hoenn : special
 # GetStarterSpecies lit VAR_KANTO_STARTER_MON (VAR_STARTER_MON = celui de Hoenn). Le rival a le starter fort contre
 # celui du joueur (CARAPUCE contre SALAMECHE).
+# Au retour du combat, la musique de victoire continue (Overworld_PlaySpecialMapMusic de RF, 2026-11-04) : lancée une
+# seule fois, par le combat, et non relancée depuis le début par le savebgm du script.
 FIXTURE = "kanto"
 from driver import *  # les vérifications (expect...)
 import os, sys
@@ -18,6 +20,7 @@ def play(game):
     game.var("VAR_KANTO_STARTER_MON", 2)              # SALAMECHE à Kanto (sStarterSpecies de RF)
     game.var("VAR_STARTER_MON", 0)                    # GRIKO à Hoenn ; lu par erreur dans RF, ce serait BULBIZARRE
     since = mark(game)
+    sounds = len(game.sounds)
     group, num = maps.find_map("PokemonLeague_ChampionsRoom")
     game.command("warp", group, num, 6, 18)
     for _ in range(600):
@@ -34,3 +37,5 @@ def play(game):
            f"le rival a le starter fort contre SALAMECHE ({foes})")
     expect(game, saw_text(game, "départ avec SALAMECHE", since),
            "CHEN : « ton départ avec SALAMECHE » (starter de Kanto)")
+    victory = [frame for frame, sound in game.sounds[sounds:] if sound == "MUS_RG_VICTORY_GYM_LEADER"]
+    expect(game, len(victory) == 1, f"musique de victoire lancée une seule fois, pas relancée au retour ({victory})")

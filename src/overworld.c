@@ -789,8 +789,19 @@ void UpdateEscapeWarp(s16 x, s16 y)
 {
     u8 currMapType = GetCurrentMapType();
     u8 destMapType = GetMapTypeByGroupAndId(sWarpDestination.mapGroup, sWarpDestination.mapNum);
-    if (IsMapTypeOutdoors(currMapType) && IsMapTypeOutdoors(destMapType) != TRUE)
-        SetEscapeWarp(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, WARP_ID_NONE, x - MAP_OFFSET, y - MAP_OFFSET + 1);
+    u8 delta = 1;
+
+    // PokemonNative3G : à Kanto, UpdateEscapeWarp de RF. Pas depuis la FORÊT DE JADE (une route, d'où l'on sort par
+    // ses postes de garde) : la CORDE SORTIE y ramène toujours là où l'on y est entré. Et un joueur entré en marchant
+    // vers le bas (porte au bas d'un bâtiment, comme le poste nord de la forêt sur la Route 2) revient sur la case
+    // d'entrée, pas sur celle d'en dessous, qui est dans le mur.
+    if (IsMapTypeOutdoors(currMapType) && IsMapTypeOutdoors(destMapType) != TRUE
+     && !(gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_VIRIDIAN_FOREST) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_VIRIDIAN_FOREST)))
+    {
+        if (Fusion_IsInKanto())
+            delta = GetPlayerFacingDirection() != DIR_SOUTH;
+        SetEscapeWarp(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, WARP_ID_NONE, x - MAP_OFFSET, y - MAP_OFFSET + delta);
+    }
 }
 
 void SetEscapeWarp(s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y)
@@ -1325,6 +1336,7 @@ u16 Overworld_GetCyclingMusic(void)
 void Overworld_PlaySpecialMapMusic(void)
 {
     u16 music = GetCurrLocationDefaultMusic();
+    s16 x, y;
 
     if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_STOP)
     {
@@ -1333,6 +1345,19 @@ void Overworld_PlaySpecialMapMusic(void)
     }
     if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_KEEP)
         return;
+
+    // PokemonNative3G : salle du Champion de Kanto (Overworld_PlaySpecialMapMusic de RF) : au retour du combat, la
+    // musique de victoire du combat continue (savebgm du script) au lieu de repartir du début. RF compare l'en-tête
+    // du morceau (&mus_victory_gym_leader), comme m4aSongNumStop (m4a.c) par la table des morceaux.
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM))
+    {
+        PlayerGetDestCoords(&x, &y);
+        if (y - MAP_OFFSET < 11 && gMPlayInfo_BGM.songHeader == gSongTable[MUS_RG_VICTORY_GYM_LEADER].header)
+        {
+            FadeInBGM(4);
+            return;
+        }
+    }
 
     if (music != MUS_ABNORMAL_WEATHER && music != MUS_NONE)
     {
@@ -1452,6 +1477,17 @@ static void PlayAmbientCry(void)
         return;
     pan = (Random() % 88) + 212;
     volume = (Random() % 30) + 50;
+
+    // PokemonNative3G : PlayAmbientCry de RF : pas de cri quand la musique des cartes est figée (Panthéon et
+    // générique de Kanto, qui survolent les cartes ; gDisableMapMusicChangeOnMapLoad n'est posé qu'à Kanto)
+    if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_STOP)
+    {
+        StopMapMusic();
+        return;
+    }
+    if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_KEEP)
+        return;
+
     PlayCry_NormalNoDucking(sAmbientCrySpecies, pan, volume, CRY_PRIORITY_AMBIENT);
 }
 
