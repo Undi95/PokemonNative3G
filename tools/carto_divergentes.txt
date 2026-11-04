@@ -1078,3 +1078,110 @@ GetTrainerApproachDistanceSouth émeraude garde de RF : table des objets pleine 
 CheckPathBetweenTrainerAndPlayer même RF teste aussi la case du dresseur (toujours libre)
 Task_RunTrainerSeeFuncList même TaskGetTrainerObj = &gObjectEvents[data[7]]
 FldEff_QuestionMarkIcon même numéro d'animation de chaque table ; palette du joueur (PERSO)
+#
+# battle_controller_opponent.c (2026-11-04)
+OpponentHandleLoadMonSprite même IS_BATTLE_TYPE_GHOST = BattleTypeFlags & BATTLE_TYPE_GHOST
+OpponentHandleDrawTrainerPic kanto Tour des Dresseurs : GetTrainerHillTrainerFrontSpriteId → GetTrainerTowerTrainerFrontSpriteId (gBattleTrainerTowerFrlg) ; + Base secrète, Frontière, Colline
+OpponentHandleTrainerSlide kanto idem
+OpponentHandlePrintString même police PNJ de RF (BattleStringShouldBeColored) : mêmes glyphes et couleurs en combat (cf. POKéDUDE) ; conseils de CHEN (BATTLE_TYPE_FIRST_BATTLE) écartés (décision 2026-10-30) ; + Arène de Combat
+#
+# evolution_graphics.c (2026-11-04)
+SetEvoSparklesMatrices même 20 + i = i + 20
+LoadEvoSparkleSpriteAndPal même &EvoSparkleSpriteSheets[0]
+EvolutionSparkles_ArcDown même retour direct
+EvolutionSparkles_CircleInward même retour direct
+EvolutionSparkles_SprayAndFlash_Trade émeraude tâche propre à l'échange (fondu adapté à l'écran d'échange d'Émeraude)
+CycleEvolutionMonSprite même MON_MAX_SCALE, MATRIX_PRE_EVO, CpuSet = CpuCopy16
+#
+# field_message_box.c (2026-11-04)
+InitFieldMessageBox émeraude + forceMidTextSpeed
+ShowFieldMessage même allowSkipping 1 (RF : TRUE dans ExpandStringAndStartDrawFieldMessageBox)
+ShowFieldAutoScrollMessage variante A/B n'accélèrent pas un message qui défile seul (RF : oui) ; à Kanto, seulement au Club Link (link)
+ForceShowFieldAutoScrollMessage variante idem (inutilisé)
+IsFieldMessageBoxHidden même else
+#
+# field_poison.c (2026-11-04) : poison sur le terrain, variante listée (UpdatePoisonStepCounter)
+AllMonsFainted même != 0
+FaintFromFieldPoison même FRIENDSHIP_EVENT_FAINT_FIELD_PSN (7 / 8 : numérotation)
+MonFaintedFromPoison même == 0
+Task_TryFieldPoisonWhiteOut émeraude + Pyramide, Pic, Colline
+DoPoisonFieldEffect même != 0
+#
+# field_tasks.c (2026-11-04)
+Task_RunTimeBasedEvents émeraude + RunTimeBasedEvents (horloge) ; QL_IS_PLAYBACK_STATE (journal)
+SetUpFieldTasks émeraude + Task_MuddySlope
+MarkIcePuzzleCoordVisited kanto glace de la Grotte Glacée : MarkIcefallCaveIceCoordVisited (field_tasks.c) ; Émeraude : arène d'Atalanopolis
+AshGrassPerStepCallback émeraude + SAC SUIE
+SetCrackedFloorHoleMetatile même variable intermédiaire
+CrackedFloorPerStepCallback émeraude + VAR_ICE_STEP_COUNT sur un trou
+#
+# new_game.c (2026-11-04)
+CopyTrainerId même PORTABLE (TRAINER_ID_LENGTH)
+InitPlayerTrainerId même PORTABLE
+SetDefaultOptions journal optionsButtonMode = HELP (aide L/R de RF écartée)
+ClearPokedexFlags même + gUnusedPokedexU8
+ResetMenuAndMonGlobals porter FAIT 2026-11-04 : curseurs du sac, de la BOITE CT et de la BOITE BAIES de RF (KantoBag_ResetCursorPositions) ; ResetQuestLog (journal) ; SeedWildEncounterRng et ResetSpecialVars : moteur d'Émeraude
+NewGameInitData kanto KantoSave_Clear, Kanto_EventScript_ResetAllMapFlags, SetAllRenewableItemFlags, ResetFameChecker, ResetTrainerTowerResults, records de RF ; EnableNationalPokedex_RSE (compatibilité link RS) inutile
+#
+# start_menu.c (2026-11-04)
+ShowStartMenu même IsOverworldLinkActive, PlayerFreeze
+StartMenuPokedexCallback kanto POKéDEX de RF avec l'option POKéDEX
+StartMenuSaveCallback émeraude + Pyramide
+StartMenuOptionCallback émeraude Options de la fusion (pages HOENN/KANTO)
+StartMenuExitCallback kanto fenêtre d'aide de RF fermée dans RemoveExtraStartMenuWindows (MENUS = KANTO)
+StartMenuSafariZoneRetireCallback kanto idem
+#
+# easy_chat.c (2026-11-04)
+EasyChat_GetNumWordsInGroup même groupes numérotés autrement (EC_GROUP_POKEMON 21 / 0)
+GetEasyChatWord même idem
+InitEasyChatPhrases émeraude phrases de victoire et de défaite par défaut (RF : vides) ; link et Tour de Combat seulement
+InitQuestionnaireWords même s32 = int
+#
+# minigame_countdown.c (2026-11-04) : décompte des mini-jeux link
+RunMinigameCountdownDigitsAnim link data[1] / data[2]
+SpriteCB_Start link
+Load321StartGfx link g321Start_Gfx
+CreateNumberSprite link
+CreateStartSprite link
+#
+# mon_markings.c (2026-11-04) : marques des POKéMON (PC, résumé d'Émeraude)
+BufferMenuWindowTiles même TilesPal = TextWindowGraphics
+FreeMonMarkingsMenu émeraude palettes allouées autrement (2 / 3)
+CreateMonMarkingAllCombosSprite même !x = x == 0
+CreateMonMarkingComboSprite même idem
+UpdateMonMarkingTiles même 128 * i, 16 = 64 * 2 * i, 1 (taille en mots)
+#
+# party_menu_specials.c (2026-11-04)
+ChoosePartyMon variante fondu : FadeScreen d'Émeraude / BeginNormalPaletteFade de RF (même noir)
+ChooseMonForMoveRelearner variante idem ; tâche propre à Émeraude (Task_ChooseMonForMoveRelearner)
+Task_ChoosePartyMon variante InitPartyMenu = ChoosePartyMonByMenuType
+GetNumMovesSelectedMonHas même ++ placé autrement
+MoveDeleterForgetMove même idem
+#
+# save_location.c (2026-11-04)
+IsCurMapInLocationList même MAP_UNDEFINED = 0xFFFF
+TrySetPokeCenterWarpStatus même parenthèses
+TrySetReloadWarpStatus même idem
+TrySetUnknownWarpStatus même idem
+SetUnlockedPokedexFlags émeraude + drapeaux GameCube
+#
+# script_pokemon_util.c (2026-11-04)
+ScriptGiveMon même USE_RANDOM_IVS = 32 ; struct sur la pile
+ScriptGiveEgg même idem
+CreateScriptedWildMon même USE_RANDOM_IVS
+ScriptSetMonMoveSlot émeraude BUGFIX
+ChooseHalfPartyForBattle kanto VAR_FRONTIER_FACILITY = FACILITY_MULTI_OR_EREADER : règles de RF à l'Île 7 (aucun interdit, POKéMON non K.O.)
+#
+# special_field_anim.c (2026-11-04) : escalator (fldeff_escalator.c d'Émeraude) ; aucun à Kanto
+SetEscalatorMetatile même variables déclarées autrement
+Task_DrawEscalator même MAPGRID_IMPASSABLE = MAPGRID_COLLISION_MASK ici
+CreateEscalatorTask même idem
+StartEscalator même
+IsEscalatorMoving même même test écrit autrement
+#
+# trainer_pokemon_sprites.c (2026-11-04)
+DecompressPic émeraude BUGFIX
+LoadPicPaletteBySlot même PLTT_ID = BG_PLTT_ID
+CreatePicSprite même tailles par constantes
+CreateTrainerCardSprite même TRAINER_PIC_SIZE, TRAINER_PIC_WIDTH
+PlayerGenderToFrontTrainerPicId kanto RED / LEAF avec PERSO (PlayerGenderToFrontTrainerPicId de pokemon.c) ; celle-ci est _Debug dans Émeraude
