@@ -16,6 +16,13 @@ u16 Random2(void);
 #define ISO_RANDOMIZE1(val) (1103515245 * (val) + 24691)
 #define ISO_RANDOMIZE2(val) (1103515245 * (val) + 12345)
 
+#ifdef KANTO_DEBUG_START
+// PokemonNative3G : les derniers appelants de Random() (src/random.c, outil jeu.hasard.appels)
+#define RANDOM_CALLERS_COUNT 256
+extern const void *gRandomCallers[RANDOM_CALLERS_COUNT];
+extern u32 gRandomCallCount;
+#endif
+
 //Sets the initial seed value of the pseudorandom number generator
 void SeedRng(u16 seed);
 void SeedRng2(u16 seed);

@@ -413,6 +413,23 @@ static void Cmd_Random(const s32 *args, u32 argCount, struct DebugToolsOutput *o
     DebugTools_Print(out, "hasard %#x, hasard 2 %#x\n", gRngValue, gRng2Value);
 }
 
+// Qui consomme le hasard : le nombre d'appels à Random() depuis le lancement, puis les N derniers appelants (32 par
+// défaut, 256 au plus), du plus ancien au plus récent ; un appel par image vient de VBlankIntr
+static void Cmd_RandomCallers(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+#ifdef KANTO_DEBUG_START
+    u32 count = argCount >= 1 && args[0] > 0 ? min((u32)args[0], RANDOM_CALLERS_COUNT) : 32;
+    u32 i;
+
+    count = min(count, gRandomCallCount);
+    DebugTools_Print(out, "appels %u\n", gRandomCallCount);
+    for (i = gRandomCallCount - count; i < gRandomCallCount; i++)
+        DebugTools_Print(out, "%u @%lld\n", i, DebugTools_Offset(gRandomCallers[i % RANDOM_CALLERS_COUNT]));
+#else
+    DebugTools_Print(out, "seulement dans les builds de debug\n");
+#endif
+}
+
 // Statistique de jeu N (GAME_STAT_*), mise à V si donné (entrées au Panthéon, œufs éclos, victoires en link...)
 static void Cmd_GameStatistic(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
@@ -1682,6 +1699,7 @@ static const u8 sName_GameStatistic[] = _("Statistique de jeu");
 static const u8 sName_Pokedex[] = _("Pokédex");
 static const u8 sName_PlayTime[] = _("Durée de jeu");
 static const u8 sName_Random[] = _("Hasard");
+static const u8 sName_RandomCallers[] = _("Qui tire le hasard");
 static const u8 sName_StartMenu[] = _("Menu Start");
 static const u8 sName_DebugAction[] = _("Actions du menu DEBUG");
 static const u8 sName_MapInfo[] = _("Carte");
@@ -1746,6 +1764,7 @@ const struct DebugTool gDebugTools[] =
     {"jeu.safari", DEBUG_TOOLS_GAME, sName_Safari, "[PAS [BALLS]] : pas restants et SAFARI BALLS du Parc Safari", 0, Cmd_Safari},
     {"jeu.errants", DEBUG_TOOLS_GAME, sName_Roamers, "[1|2] : vagabonds de la region ; 1 les lache, 2 les met sur cette carte", 0, Cmd_Roamers},
     {"jeu.hasard", DEBUG_TOOLS_GAME, sName_Random, "[GRAINE] : etat du hasard ; GRAINE le fixe (scenarios : suite independante du minutage)", 0, Cmd_Random},
+    {"jeu.hasard.appels", DEBUG_TOOLS_GAME, sName_RandomCallers, "[N] : nombre d'appels a Random() et les N derniers appelants", 0, Cmd_RandomCallers},
     {"jeu.stat", DEBUG_TOOLS_GAME, sName_GameStatistic, "N [V] : statistique de jeu GAME_STAT_* (Pantheon, oeufs...), mise a V", 1, Cmd_GameStatistic},
     {"jeu.duree", DEBUG_TOOLS_GAME, sName_PlayTime, "[H [M]] : duree de jeu ; H M la met (Fan Club : un fan perdu toutes les 12 h)", 0, Cmd_PlayTime},
     {"jeu.pokedex", DEBUG_TOOLS_GAME, sName_Pokedex, "[N [1]] : vus et attrapes (Hoenn, Kanto, national), numeros attrapes ; N marque 1 a N vus et attrapes ; 1 : POKEDEX NATIONAL", 0, Cmd_Pokedex},
