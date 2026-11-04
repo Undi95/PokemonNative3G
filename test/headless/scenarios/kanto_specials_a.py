@@ -3,7 +3,7 @@
 #   l'ascenseur tremble, on sort au 5F ;
 # - poubelles de l'arène de Carmin : les deux interrupteurs (VAR_TEMP_0 / VAR_TEMP_1 tirés à l'arrivée) ouvrent la porte ;
 # - pension de la Route 5 : PIKACHU déposé, des pas, sauvegarde et redémarrage, il a grandi, repris contre de l'argent ;
-# - records de taille : MAGICARPE (Route 12) et SCARABRUTE (Île 6, Chemin des Eaux).
+# - records de taille : MAGICARPE (Route 12 : record, même taille, plus petit) et SCARABRUTE (Île 6, Chemin des Eaux).
 # Chaque partie est isolée : une erreur est notée et la suite continue.
 SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
 FIXTURE = "kanto"
@@ -117,11 +117,7 @@ def daycare(game):
     return before, deposited, joined(game, since), party(game), money - game.money()
 
 
-@part("magicarpe")
-def magikarp(game):
-    game.give_mon("SPECIES_MAGIKARP", 10)
-    game.flag("FLAG_KANTO_GOT_SUPER_ROD", 1)
-    slot = len(party(game)) - 1
+def show_magikarp(game, slot):
     since = talk(game, "Route12_FishingHouse", (4, 5), "UP")
     for _ in range(40):                                # A jusqu'au menu d'équipe, puis le MAGICARPE
         if "PartyMenu" in game.function(game.state.cb2):
@@ -131,6 +127,21 @@ def magikarp(game):
     game.tap("DOWN", slot, gap=20); game.wait(20); game.tap("A"); game.wait(60)
     finish_dialog(game)
     return joined(game, since)
+
+
+@part("magicarpe")
+def magikarp(game):
+    # Kanto_CompareMonSize (CompareMonSize de RF, 2026-11-04) : le même MAGICARPE une 2e fois = « même taille » (4) ;
+    # un plus petit que le record = « Rien à voir avec celui de {STR_VAR_3} cm » (le record)
+    game.give_mon("SPECIES_MAGIKARP", 10)
+    game.give_mon("SPECIES_MAGIKARP", 10)
+    game.flag("FLAG_KANTO_GOT_SUPER_ROD", 1)
+    a = len(party(game)) - 2
+    first = show_magikarp(game, a)
+    tie = show_magikarp(game, a)
+    other = show_magikarp(game, a + 1)                 # plus grand (nouveau record) ou plus petit
+    smaller = other if "Rien à voir" in other else show_magikarp(game, a)
+    return first, tie, other, smaller
 
 
 @part("scarabrute")
@@ -166,7 +177,14 @@ def play(game):
     ok = isinstance(r, tuple)
     expect(game, ok and len(r[1][1]) == len(r[0]) - 1 and r[3][-1][0] == names.number("SPECIES_PIKACHU")
            and r[3][-1][1] > 5 and r[4] > 0, f"pension : déposé, sauvegarde, il a grandi, repris contre de l'argent ({r})")
-    for name in ("magicarpe", "scarabrute"):
-        r = RESULTS[name]
-        expect(game, isinstance(r, str) and not r.startswith("ERREUR") and ("record" in r.lower() or "cm" in r),
-               f"{name} : mesuré ({str(r)[-120:]})")
+    r = RESULTS["scarabrute"]
+    expect(game, isinstance(r, str) and not r.startswith("ERREUR") and ("record" in r.lower() or "cm" in r),
+           f"scarabrute : mesuré ({str(r)[-120:]})")
+    r = RESULTS["magicarpe"]
+    ok = isinstance(r, tuple)
+    expect(game, ok and "Waouh" in r[0], f"magicarpe : 1er record ({str(r)[:160]})")
+    expect(game, ok and "même taille" in r[1], f"magicarpe : le même une 2e fois, « même taille » ({str(r[1] if ok else r)[-120:]})")
+    records = re.findall(r"Waouh! ?(\d+[,.]\d+) ?cm", " ".join(r[:3])) if ok else []
+    small = re.search(r"celui de (\d+[,.]\d+) cm", r[3]) if ok else None
+    expect(game, small is not None and records and small.group(1) == records[-1],
+           f"magicarpe : plus petit, le record dans {{STR_VAR_3}} ({records}, {str(r[3] if ok else r)[-140:]})")

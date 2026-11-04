@@ -1,6 +1,7 @@
 #include "global.h"
 #include "kanto_save.h"
 #include "constants/kanto/trainer_tower.h"
+#include "constants/kanto_flags_vars.h"
 #include "platform.h"
 #include "save.h"
 #include "string_util.h"
@@ -40,6 +41,20 @@ static void KantoSave_InitTrainerTowerTimes(void)
     }
 }
 
+// Records de taille de SCARHINO et MAGICARPE : RF les met à 0 à la nouvelle partie ; jusqu'au 2026-11-04, la fusion y
+// mettait 0x8000 (la valeur d'Émeraude : un record de 90 cm pour MAGICARPE). Un vrai record de 0x8000 tout juste est
+// une chance sur 65 536 : pris pour l'ancienne valeur par défaut
+static void KantoSave_FixSizeRecords(void)
+{
+    u16 *heracross = &gSaveBlockKanto.vars[VAR_KANTO_HERACROSS_SIZE_RECORD - KANTO_VARS_START];
+    u16 *magikarp = &gSaveBlockKanto.vars[VAR_KANTO_MAGIKARP_SIZE_RECORD - KANTO_VARS_START];
+
+    if (*heracross == 0x8000)
+        *heracross = 0;
+    if (*magikarp == 0x8000)
+        *magikarp = 0;
+}
+
 void KantoSave_Write(void)
 {
 #ifdef PORTABLE
@@ -59,6 +74,7 @@ void KantoSave_Read(void)
      || gSaveBlockKanto.checksum != KantoSave_Checksum())
         KantoSave_Clear();
     KantoSave_InitTrainerTowerTimes();
+    KantoSave_FixSizeRecords();
 #endif
 }
 

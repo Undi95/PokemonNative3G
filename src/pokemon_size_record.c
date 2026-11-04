@@ -10,6 +10,9 @@
 #include "constants/pokemon_size_record.h"
 
 #define DEFAULT_MAX_SIZE 0x8000 // was 0x8100 in Ruby/Sapphire
+// Rouge Feu : DEFAULT_MAX_SIZE de RF, pour les records de Kanto (« was 0x8100 in Ruby/Sapphire, 0x8000 in Emerald ») ;
+// avec 0x8000, le record par défaut du MAGICARPE est de 90 cm, presque imbattable (sauvegardes réparées : kanto_save.c)
+#define KANTO_DEFAULT_MAX_SIZE 0
 
 struct UnknownStruct
 {
@@ -194,9 +197,55 @@ void CompareLotadSize(void)
 }
 
 // Rouge Feu (pokemon_size_record.c) : records de Scarabrute et de Magicarpe (Kanto)
+
+// CompareMonSize de RF, pour ces deux records : leurs scripts (Route 12, Île 6) attendent 4 quand la taille égale
+// le record (« C'est la même taille que la dernière fois »), et {STR_VAR_3} = le record (« Rien à voir avec celui de
+// {STR_VAR_3} cm ») ; celle d'Émeraude rend 2 sur une égalité et ne remplit pas {STR_VAR_3}
+static u8 Kanto_CompareMonSize(u16 species, u16 *sizeRecord)
+{
+    if (gSpecialVar_Result >= PARTY_SIZE)
+    {
+        return 0;
+    }
+    else
+    {
+        struct Pokemon * pkmn = &gPlayerParty[gSpecialVar_Result];
+
+        if (GetMonData(pkmn, MON_DATA_IS_EGG) == TRUE || GetMonData(pkmn, MON_DATA_SPECIES) != species)
+        {
+            return 1;
+        }
+        else
+        {
+            u32 oldSize;
+            u32 newSize;
+            u16 sizeParams;
+
+            *(&sizeParams) = GetMonSizeHash(pkmn);
+            newSize = GetMonSize(species, sizeParams);
+            oldSize = GetMonSize(species, *sizeRecord);
+            FormatMonSizeRecord(gStringVar3, oldSize);
+            FormatMonSizeRecord(gStringVar2, newSize);
+            if (newSize == oldSize)
+            {
+                return 4;
+            }
+            else if (newSize < oldSize)
+            {
+                return 2;
+            }
+            else
+            {
+                *sizeRecord = sizeParams;
+                return 3;
+            }
+        }
+    }
+}
+
 void InitHeracrossSizeRecord(void)
 {
-    VarSet(VAR_KANTO_HERACROSS_SIZE_RECORD, DEFAULT_MAX_SIZE);
+    VarSet(VAR_KANTO_HERACROSS_SIZE_RECORD, KANTO_DEFAULT_MAX_SIZE);
 }
 
 void GetHeracrossSizeRecordInfo(void)
@@ -210,12 +259,12 @@ void CompareHeracrossSize(void)
 {
     u16 *sizeRecord = GetVarPointer(VAR_KANTO_HERACROSS_SIZE_RECORD);
 
-    gSpecialVar_Result = CompareMonSize(SPECIES_HERACROSS, sizeRecord);
+    gSpecialVar_Result = Kanto_CompareMonSize(SPECIES_HERACROSS, sizeRecord);
 }
 
 void InitMagikarpSizeRecord(void)
 {
-    VarSet(VAR_KANTO_MAGIKARP_SIZE_RECORD, DEFAULT_MAX_SIZE);
+    VarSet(VAR_KANTO_MAGIKARP_SIZE_RECORD, KANTO_DEFAULT_MAX_SIZE);
 }
 
 void GetMagikarpSizeRecordInfo(void)
@@ -229,5 +278,5 @@ void CompareMagikarpSize(void)
 {
     u16 *sizeRecord = GetVarPointer(VAR_KANTO_MAGIKARP_SIZE_RECORD);
 
-    gSpecialVar_Result = CompareMonSize(SPECIES_MAGIKARP, sizeRecord);
+    gSpecialVar_Result = Kanto_CompareMonSize(SPECIES_MAGIKARP, sizeRecord);
 }
