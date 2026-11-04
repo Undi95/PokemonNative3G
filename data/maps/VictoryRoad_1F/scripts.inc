@@ -3,6 +3,7 @@ VictoryRoad_1F_MapScripts::
 	.byte 0
 
 VictoryRoad_1F_OnTransition:
+	setworldmapflag FLAG_HOENN_WORLD_MAP_VICTORY_ROAD_1F @ PokemonNative3G : lieu visité, pour l'aperçu de RF
 	call_if_eq VAR_VICTORY_ROAD_1F_STATE, 1, VictoryRoad_1F_EventScript_SetEntranceWallyPos1
 	call_if_eq VAR_VICTORY_ROAD_1F_STATE, 2, VictoryRoad_1F_EventScript_SetEntranceWallyPos2
 	end

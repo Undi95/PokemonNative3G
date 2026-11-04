@@ -22,12 +22,14 @@ OPTION_MENU_STYLE = 11
 TASKS = {"MPS_TYPE_CAVE": "Task_MapPreviewScreen_0", "MPS_TYPE_FOREST": "Task_RunMapPreviewScreenForest"}
 
 
-def previews():
-    """[(mapsec, type, drapeau)] dans l'ordre de sMapPreviewScreenData."""
+def previews(region="kanto"):
+    """[(mapsec, type, drapeau)] dans l'ordre de sMapPreviewScreenData, ceux de Kanto (drapeaux FLAG_KANTO_*) ou ceux
+    de Hoenn (v1.1 : FLAG_HOENN_WORLD_MAP_* et FLAG_LANDMARK_*, hoenn_map_previews.py)."""
     with open(os.path.join(REPO_DIR, "src", "kanto_map_preview_screen.c"), encoding="utf-8") as f:
         source = f.read()
     table = source[source.index("sMapPreviewScreenData[MPS_COUNT]"):]
-    return re.findall(r"\.mapsec = (\w+),\s*\.type = (\w+),\s*\.flagId = (\w+),", table)
+    entries = re.findall(r"\.mapsec = (\w+),\s*\.type = (\w+),\s*\.flagId = (\w+),", table)
+    return [e for e in entries if e[2].startswith("FLAG_KANTO_") == (region == "kanto")]
 
 
 def map_infos():

@@ -1,5 +1,11 @@
 GraniteCave_1F_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, GraniteCave_1F_OnTransition
 	.byte 0
+
+@ PokemonNative3G : lieu visité, pour l'aperçu de RF (kanto_map_preview_screen.c)
+GraniteCave_1F_OnTransition:
+	setworldmapflag FLAG_HOENN_WORLD_MAP_GRANITE_CAVE_1F
+	end
 
 GraniteCave_1F_EventScript_Hiker::
 	lock

@@ -57,15 +57,18 @@
 #define FLAG_GOT_OVAL_CHARM  0x2B // PokemonNative3G
 #define FLAG_PALLET_HOUSE_BOUGHT  0x2C // PokemonNative3G
 #define FLAG_FUSION_KANTO_VISITED 0x2D // PokemonNative3G
-#define FLAG_UNUSED_0x02E    0x2E // Unused Flag
-#define FLAG_UNUSED_0x02F    0x2F // Unused Flag
-#define FLAG_UNUSED_0x030    0x30 // Unused Flag
-#define FLAG_UNUSED_0x031    0x31 // Unused Flag
-#define FLAG_UNUSED_0x032    0x32 // Unused Flag
-#define FLAG_UNUSED_0x033    0x33 // Unused Flag
-#define FLAG_UNUSED_0x034    0x34 // Unused Flag
-#define FLAG_UNUSED_0x035    0x35 // Unused Flag
-#define FLAG_UNUSED_0x036    0x36 // Unused Flag
+// PokemonNative3G : lieux de Hoenn avec un aperçu de RF (kanto_map_preview_screen.c), visités = posés par
+// setworldmapflag dans le script de transition de la carte d'entrée, comme les FLAG_WORLD_MAP_* de RF. Les autres lieux
+// de Hoenn avec un aperçu ont déjà le leur (FLAG_LANDMARK_*, posé au même moment)
+#define FLAG_HOENN_WORLD_MAP_PETALBURG_WOODS                  0x2E // PokemonNative3G
+#define FLAG_HOENN_WORLD_MAP_RUSTURF_TUNNEL                   0x2F // PokemonNative3G
+#define FLAG_HOENN_WORLD_MAP_GRANITE_CAVE_1F                  0x30 // PokemonNative3G
+#define FLAG_HOENN_WORLD_MAP_METEOR_FALLS_1F_1R               0x31 // PokemonNative3G
+#define FLAG_HOENN_WORLD_MAP_SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM 0x32 // PokemonNative3G
+#define FLAG_HOENN_WORLD_MAP_CAVE_OF_ORIGIN_ENTRANCE          0x33 // PokemonNative3G
+#define FLAG_HOENN_WORLD_MAP_VICTORY_ROAD_1F                  0x34 // PokemonNative3G
+#define FLAG_HOENN_WORLD_MAP_TERRA_CAVE_ENTRANCE              0x35 // PokemonNative3G
+#define FLAG_HOENN_WORLD_MAP_SAFARI_ZONE_SOUTH                0x36 // PokemonNative3G
 #define FLAG_UNUSED_0x037    0x37 // Unused Flag
 #define FLAG_UNUSED_0x038    0x38 // Unused Flag
 #define FLAG_UNUSED_0x039    0x39 // Unused Flag

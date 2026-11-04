@@ -9,6 +9,7 @@ RusturfTunnel_OnFrame:
 	.short 0
 
 RusturfTunnel_OnTransition:
+	setworldmapflag FLAG_HOENN_WORLD_MAP_RUSTURF_TUNNEL @ PokemonNative3G : lieu visité, pour l'aperçu de RF
 	call_if_eq VAR_RUSTURF_TUNNEL_STATE, 2, RusturfTunnel_EventScript_SetAquaGruntAndPeekoPos
 	end
 

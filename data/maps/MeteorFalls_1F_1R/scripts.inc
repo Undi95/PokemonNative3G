@@ -1,6 +1,12 @@
 MeteorFalls_1F_1R_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, MeteorFalls_1F_1R_OnLoad
+	map_script MAP_SCRIPT_ON_TRANSITION, MeteorFalls_1F_1R_OnTransition
 	.byte 0
+
+@ PokemonNative3G : lieu visité, pour l'aperçu de RF (kanto_map_preview_screen.c)
+MeteorFalls_1F_1R_OnTransition:
+	setworldmapflag FLAG_HOENN_WORLD_MAP_METEOR_FALLS_1F_1R
+	end
 
 MeteorFalls_1F_1R_OnLoad:
 	call_if_set FLAG_SYS_GAME_CLEAR, MeteorFalls_1F_1R_EventScript_OpenStevensCave

@@ -1,5 +1,11 @@
 PetalburgWoods_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, PetalburgWoods_OnTransition
 	.byte 0
+
+@ PokemonNative3G : lieu visité, pour l'aperçu de RF (kanto_map_preview_screen.c)
+PetalburgWoods_OnTransition:
+	setworldmapflag FLAG_HOENN_WORLD_MAP_PETALBURG_WOODS
+	end
 
 PetalburgWoods_EventScript_DevonResearcherLeft::
 	lockall

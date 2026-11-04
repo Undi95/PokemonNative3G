@@ -3,6 +3,7 @@ ShoalCave_LowTideEntranceRoom_MapScripts::
 	.byte 0
 
 ShoalCave_LowTideEntranceRoom_OnTransition:
+	setworldmapflag FLAG_HOENN_WORLD_MAP_SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM @ PokemonNative3G : lieu visité, pour l'aperçu de RF
 	special UpdateShoalTideFlag
 	goto_if_set FLAG_SYS_SHOAL_TIDE, ShoalCave_LowTideEntranceRoom_EventScript_SetHighTide
 	goto ShoalCave_LowTideEntranceRoom_EventScript_SetLowTide

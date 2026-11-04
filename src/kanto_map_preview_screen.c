@@ -1,6 +1,7 @@
 // Rouge Feu : map_preview_screen.c (aperçu du lieu à l'entrée d'une grotte ou d'une forêt de Kanto).
 // Grottes : fldeff_flash.c (TryDoMapTransition) ; forêts : overworld.c (chargement de la carte) ; durée :
 // setworldmapflag (kanto_scrcmd.c). Les données servent aussi à la carte de Kanto (kanto_region_map.c).
+// PokemonNative3G (v1.1) : aussi à l'entrée de grottes et de forêts de Hoenn (MPS_HOENN_*, en fin de table).
 #include "global.h"
 #include "bg.h"
 #include "decompress.h"
@@ -14,6 +15,7 @@
 #include "menu.h"
 #include "overworld.h"
 #include "palette.h"
+#include "region_map.h" // PokemonNative3G : GetMapName (lieux de Hoenn)
 #include "script.h"
 #include "string_util.h"
 #include "task.h"
@@ -317,6 +319,115 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
         .tilesptr = sMoneanChamberMapPreviewTiles,
         .tilemapptr = sMoneanChamberMapPreviewTilemap,
         .palptr = sMoneanChamberMapPreviewPalette
+    },
+    // PokemonNative3G (v1.1, demande user) : l'aperçu à l'entrée des grottes et des forêts de Hoenn, avec les images de
+    // RF qui ne montrent pas un lieu unique (forêt, savane, entrées de grotte naturelles) ; comme RF le fait pour ses 7
+    // chambres de Tanoby. Pas d'image pour les lieux uniques de Hoenn (Mont Mémoria, Pilier Céleste, planques…) ni
+    // pour les grottes où l'on entre en plongée. Drapeau : le lieu visité, posé à la transition de la carte d'entrée
+    // (setworldmapflag FLAG_HOENN_WORLD_MAP_* ajoutés, ou FLAG_LANDMARK_* d'Émeraude, posés au même moment).
+    [MPS_HOENN_PETALBURG_WOODS] = {
+        .mapsec = MAPSEC_PETALBURG_WOODS,
+        .type = MPS_TYPE_FOREST,
+        .flagId = FLAG_HOENN_WORLD_MAP_PETALBURG_WOODS,
+        .tilesptr = sViridianForestMapPreviewTiles,
+        .tilemapptr = sViridianForestMapPreviewTilemap,
+        .palptr = sViridianForestMapPreviewPalette
+    },
+    [MPS_HOENN_SAFARI_ZONE] = {
+        .mapsec = MAPSEC_SAFARI_ZONE,
+        .type = MPS_TYPE_FOREST,
+        .flagId = FLAG_HOENN_WORLD_MAP_SAFARI_ZONE_SOUTH,
+        .tilesptr = sSafariZoneMapPreviewTiles,
+        .tilemapptr = sSafariZoneMapPreviewTilemap,
+        .palptr = sSafariZoneMapPreviewPalette
+    },
+    [MPS_HOENN_RUSTURF_TUNNEL] = {
+        .mapsec = MAPSEC_RUSTURF_TUNNEL,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_HOENN_WORLD_MAP_RUSTURF_TUNNEL,
+        .tilesptr = sRockTunnelMapPreviewTiles,
+        .tilemapptr = sRockTunnelMapPreviewTilemap,
+        .palptr = sRockTunnelMapPreviewPalette
+    },
+    [MPS_HOENN_GRANITE_CAVE] = {
+        .mapsec = MAPSEC_GRANITE_CAVE,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_HOENN_WORLD_MAP_GRANITE_CAVE_1F,
+        .tilesptr = sLostCaveMapPreviewTiles,
+        .tilemapptr = sLostCaveMapPreviewTilemap,
+        .palptr = sLostCaveMapPreviewPalette
+    },
+    [MPS_HOENN_METEOR_FALLS] = {
+        .mapsec = MAPSEC_METEOR_FALLS,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_HOENN_WORLD_MAP_METEOR_FALLS_1F_1R,
+        .tilesptr = sIcefallCaveMapPreviewTiles,
+        .tilemapptr = sIcefallCaveMapPreviewTilemap,
+        .palptr = sIcefallCaveMapPreviewPalette
+    },
+    [MPS_HOENN_FIERY_PATH] = {
+        .mapsec = MAPSEC_FIERY_PATH,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_LANDMARK_FIERY_PATH,
+        .tilesptr = sMtEmberMapPreviewTiles,
+        .tilemapptr = sMtEmberMapPreviewTilemap,
+        .palptr = sMtEmberMapPreviewPalette
+    },
+    [MPS_HOENN_SHOAL_CAVE] = {
+        .mapsec = MAPSEC_SHOAL_CAVE,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_HOENN_WORLD_MAP_SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM,
+        .tilesptr = sSeafoamIslandsMapPreviewTiles,
+        .tilemapptr = sSeafoamIslandsMapPreviewTilemap,
+        .palptr = sSeafoamIslandsMapPreviewPalette
+    },
+    [MPS_HOENN_CAVE_OF_ORIGIN] = {
+        .mapsec = MAPSEC_CAVE_OF_ORIGIN,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_HOENN_WORLD_MAP_CAVE_OF_ORIGIN_ENTRANCE,
+        .tilesptr = sCeruleanCaveMapPreviewTiles,
+        .tilemapptr = sCeruleanCaveMapPreviewTilemap,
+        .palptr = sCeruleanCaveMapPreviewPalette
+    },
+    [MPS_HOENN_VICTORY_ROAD] = {
+        .mapsec = MAPSEC_VICTORY_ROAD,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_HOENN_WORLD_MAP_VICTORY_ROAD_1F,
+        .tilesptr = sMtMoonMapPreviewTiles,
+        .tilemapptr = sMtMoonMapPreviewTilemap,
+        .palptr = sMtMoonMapPreviewPalette
+    },
+    [MPS_HOENN_SCORCHED_SLAB] = {
+        .mapsec = MAPSEC_SCORCHED_SLAB,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_LANDMARK_SCORCHED_SLAB,
+        .tilesptr = sRockTunnelMapPreviewTiles,
+        .tilemapptr = sRockTunnelMapPreviewTilemap,
+        .palptr = sRockTunnelMapPreviewPalette
+    },
+    [MPS_HOENN_ALTERING_CAVE] = {
+        .mapsec = MAPSEC_ALTERING_CAVE,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_LANDMARK_ALTERING_CAVE,
+        .tilesptr = sAlteringCaveMapPreviewTiles,
+        .tilemapptr = sAlteringCaveMapPreviewTilemap,
+        .palptr = sAlteringCaveMapPreviewPalette
+    },
+    [MPS_HOENN_ARTISAN_CAVE] = {
+        .mapsec = MAPSEC_ARTISAN_CAVE,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_LANDMARK_ARTISAN_CAVE,
+        .tilesptr = sLostCaveMapPreviewTiles,
+        .tilemapptr = sLostCaveMapPreviewTilemap,
+        .palptr = sLostCaveMapPreviewPalette
+    },
+    [MPS_HOENN_TERRA_CAVE] = {
+        .mapsec = MAPSEC_TERRA_CAVE,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_HOENN_WORLD_MAP_TERRA_CAVE_ENTRANCE,
+        .tilesptr = sDiglettsCaveMapPreviewTiles,
+        .tilemapptr = sDiglettsCaveMapPreviewTilemap,
+        .palptr = sDiglettsCaveMapPreviewPalette
     }
 };
 
@@ -483,7 +594,12 @@ u16 MapPreview_CreateMapNameWindow(u8 mapsec)
     color[0] = TEXT_COLOR_WHITE; // Access violation
     color[1] = TEXT_COLOR_RED; // Access violation
     color[2] = TEXT_COLOR_LIGHT_GRAY; // Access violation
-    KantoGetMapName(gStringVar4, mapsec, 0);
+    // PokemonNative3G : un lieu de Hoenn a son nom dans la table d'Émeraude (KantoGetMapName ne connaît que Kanto),
+    // comme le panneau de RF (kanto_map_name_popup.c)
+    if (GetMapPreviewScreenIdx(mapsec) >= MPS_HOENN_PETALBURG_WOODS)
+        GetMapName(gStringVar4, mapsec, 0);
+    else
+        KantoGetMapName(gStringVar4, mapsec, 0);
     xctr = 104 - GetStringWidth(FONT_NORMAL, gStringVar4, 0);
     AddTextPrinterParameterized4(windowId, FONT_NORMAL, xctr / 2, 2, 0, 0, color/* Access violation */, -1, gStringVar4);
     return windowId;

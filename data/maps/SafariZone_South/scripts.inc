@@ -19,6 +19,7 @@ SafariZone_South_EventScript_EnterSafariZone::
 	end
 
 SafariZone_South_OnTransition:
+	setworldmapflag FLAG_HOENN_WORLD_MAP_SAFARI_ZONE_SOUTH @ PokemonNative3G : lieu visité, pour l'aperçu de RF
 	call_if_eq VAR_SAFARI_ZONE_STATE, 2, SafariZone_South_EventScript_SetExitAttendantAside
 	end
 
