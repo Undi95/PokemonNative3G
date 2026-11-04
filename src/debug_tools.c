@@ -14,6 +14,7 @@
 #include "gba/m4a_internal.h"
 #include "battle.h"
 #include "battle_setup.h"
+#include "battle_tower.h"
 #include "berry.h"
 #include "berry_powder.h"
 #include "coins.h"
@@ -1351,6 +1352,28 @@ static void Cmd_Battle(const s32 *args, u32 argCount, struct DebugToolsOutput *o
                          DebugTools_Offset(gBattlerControllerFuncs[i]));
 }
 
+// Le dresseur e-Reader (maison de l'Île 7, salle de combat d'Émeraude) : 1 = celui du joueur (FillEReaderTrainerWithPlayerData,
+// fonction de debug d'Émeraude et de RF : son équipe, son message de la carte de dresseur), 0 = effacé ; puis valide ou non
+static void Cmd_EReaderTrainer(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    struct BattleTowerEReaderTrainer *trainer = &gSaveBlock2Ptr->frontier.ereaderTrainer;
+    u32 i;
+
+    if (argCount >= 1)
+    {
+        if (args[0])
+            FillEReaderTrainerWithPlayerData();
+        else
+            ClearEReaderTrainer(trainer);
+    }
+    ValidateEReaderTrainer();
+    DebugTools_Print(out, "dresseur e-Reader %s, classe %d, equipe", gSpecialVar_Result == 0 ? "valide" : "absent",
+                     trainer->facilityClass);
+    for (i = 0; i < ARRAY_COUNT(trainer->party); i++)
+        DebugTools_Print(out, " %d", trainer->party[i].species);
+    DebugTools_Print(out, "\n");
+}
+
 // --- Graphismes -----------------------------------------------------------------------------------------------
 
 static void Cmd_Sprites(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
@@ -1665,6 +1688,7 @@ static const u8 sName_HoennMark[] = _("Marque de Hoenn");
 static const u8 sName_DepositMon[] = _("Déposer au PC");
 static const u8 sName_MuseumPaintings[] = _("Tableaux du musée");
 static const u8 sName_Battle[] = _("Combat");
+static const u8 sName_EReader[] = _("Dresseur e-Reader");
 static const u8 sName_Sprites[] = _("Sprites");
 static const u8 sName_Palette[] = _("Palette");
 static const u8 sName_Backgrounds[] = _("BG et écran");
@@ -1730,6 +1754,7 @@ const struct DebugTool gDebugTools[] =
     {"joueur.oeuf", DEBUG_TOOLS_PLAYER, sName_Egg, "N : le Pokemon N devient un oeuf pret a eclore (EventScript_EggHatch, VAR_0x8004 = N)", 1, Cmd_Egg},
     {"joueur.lettre", DEBUG_TOOLS_PLAYER, sName_Mail, "N OBJET [1|2] : lettre ITEM_*_MAIL a 9 mots au Pokemon N ; 1 = la lire (sur la carte), 2 = l'envoyer au PC", 2, Cmd_Mail},
     {"combat.etat", DEBUG_TOOLS_BATTLE, sName_Battle, "type, combattants, controleurs", 0, Cmd_Battle},
+    {"combat.ereader", DEBUG_TOOLS_BATTLE, sName_EReader, "[1|0] : dresseur e-Reader (maison de l'Ile 7) : 1 = celui du joueur, 0 = efface", 0, Cmd_EReaderTrainer},
     {"gfx.sprites", DEBUG_TOOLS_GFX, sName_Sprites, "sprites utilises : position, tile, palette, animation", 0, Cmd_Sprites},
     {"gfx.palette", DEBUG_TOOLS_GFX, sName_Palette, "TYPE BANQUE (0 BG, 1 OBJ) : couleurs non fondues, fondues, a l'ecran", 2, Cmd_Palette},
     {"gfx.bg", DEBUG_TOOLS_GFX, sName_Backgrounds, "registres d'affichage et des 4 BG", 0, Cmd_Backgrounds},

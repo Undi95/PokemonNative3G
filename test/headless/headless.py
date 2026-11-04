@@ -6,6 +6,7 @@ The helpers below are available in scenario files without importing them.
 """
 
 import glob
+import hashlib
 import os
 import shutil
 import subprocess
@@ -150,6 +151,9 @@ def fixture(binary, name):
     folder = os.path.join(BUILD_DIR, "fixtures")
     # TEST_FONT (driver.py) changes the options in the save: a fixture of its own
     variant = f"-font{os.environ['TEST_FONT']}" if os.environ.get("TEST_FONT") else ""
+    # One fixture per binary folder: a run of another build (out-alt/) must not delete the fixture that a long run
+    # (crawl.py) of out/winwsl/ copies for each game (2026-11-04)
+    variant += "-" + hashlib.md5(os.path.abspath(os.path.dirname(binary)).encode()).hexdigest()[:6]
     path = os.path.join(folder, f"{name}{variant}-{int(info.st_mtime)}-{info.st_size}.sav")
     with _fixture_locks_lock:
         lock = _fixture_locks.setdefault(name, threading.Lock())

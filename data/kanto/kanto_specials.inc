@@ -1,14 +1,14 @@
-/* Specials de Rouge Feu (tools/kanto/import_scripts.py) */
+/* Specials de Rouge Feu (tools/kanto/import_scripts.py). Retirés le 2026-11-04 (docs/carto/inventaire.md, « morte ») :
+   ceux qu'aucun script de RF n'appelle (StartWiredCableClubTrade, CableClub_AskSaveTheGame, TryContestLinkup, la Tour de
+   Combat de Rubis/Saphir : BattleTowerMapScript2... Dummy_TryEnableBravoTrainerBattleTower), et ceux de l'Île Originelle
+   de RF (DoDeoxysTriangleInteraction, SetDeoxysTrianglePalette : la fusion garde l'île d'Émeraude) */
 	def_special NullFieldSpecial
 	def_special EnterColosseumPlayerSpot
 	def_special EnterTradeSeat
-	def_special StartWiredCableClubTrade
-	def_special CableClub_AskSaveTheGame
 	def_special Script_HasTrainerBeenFought
 	def_special EndTrainerApproach
 	def_special StartRematchBattle
 	def_special HasLeadMonBeenRenamed
-	def_special TryContestLinkup
 	def_special Field_AskSaveTheGame
 	def_special ShowEasyChatMessage
 	def_special GetHeracrossSizeRecordInfo
@@ -39,21 +39,8 @@
 	def_special GetElevatorFloor
 	def_special SelectMoveDeleterMove
 	def_special GetLeadMonFriendship
-	def_special BattleTowerMapScript2
-	def_special ChooseNextBattleTowerTrainer
-	def_special CheckPartyBattleTowerBanlist
-	def_special PrintBattleTowerTrainerGreeting
 	def_special BufferEReaderTrainerGreeting
 	def_special StartSpecialBattle
-	def_special SetBattleTowerProperty
-	def_special BattleTowerUtil
-	def_special SetBattleTowerParty
-	def_special SaveBattleTowerProgress
-	def_special BattleTower_SoftReset
-	def_special DetermineBattleTowerPrize
-	def_special GiveBattleTowerPrize
-	def_special AwardBattleTowerRibbons
-	def_special ChooseBattleTowerPlayerParty
 	def_special ReducePlayerPartyToThree
 	def_special ShowTownMap
 	def_special CreatePCMenu
@@ -75,7 +62,6 @@
 	def_special GetPartyMonSpecies
 	def_special HasAllKantoMons, ret=SPECIAL_RET_U8
 	def_special IsMonOTNameNotPlayers
-	def_special Dummy_TryEnableBravoTrainerBattleTower
 	def_special SetPostgameFlags
 	def_special StartMarowakBattle
 	def_special ForcePlayerOntoBike
@@ -133,8 +119,6 @@
 	def_special DrawSeagallopDestinationMenu
 	def_special GetSelectedSeagallopDestination
 	def_special GetSeagallopNumber
-	def_special DoDeoxysTriangleInteraction
-	def_special SetDeoxysTrianglePalette
 	def_special IsPlayerLeftOfVermilionSailor
 	def_special ReadTrainerTowerAndValidate
 	def_special HasAllMons

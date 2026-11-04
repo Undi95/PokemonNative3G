@@ -237,7 +237,19 @@ Limites connues, qui restent dans ses « interactions en erreur » sans être de
   sont joués par `challenges.py` (scénarios `challenge_*`, voir plus haut) ; restent les salles de link.
 - **Bases Secrètes** (`SecretBase_*`) : la salle se charge avec la base du joueur, ou une base reçue par Record Mixing
   (link). Par téléport, sans base chargée, le dresseur de la base lance un combat de Base Secrète sans données
-  (division par zéro dans son équipe) : à vérifier avec le Record Mixing, en phase 5 (link).
+  (division par zéro dans son équipe) : pas un chemin du jeu ; le Record Mixing est du link, caché (`LINK_ENABLED`).
 - **Dresseur E-Reader** de l'Île 7 (`SevenIsland_House_Room2`, où l'on n'entre par `SevenIsland_House_Room1` que si
-  un dresseur E-Reader est enregistré) : `BufferEReaderTrainerGreeting` et `StartSpecialBattle` sont encore des stubs
-  (link / E-Reader : à porter, désactivés).
+  un dresseur E-Reader est enregistré) : porté le 2026-11-04 (`kanto_battle_tower.c`) ; sans e-Reader, l'outil
+  `combat.ereader 1` enregistre l'équipe du joueur (scénario `kanto_ereader_house` : porte ouverte, choix de 3
+  POKéMON, sauvegarde, combat e-Reader, adieu, commentaire de la vieille dame).
+
+## Link (caché en jeu)
+
+Décision du 2026-11-02 : le link est codé et caché jusqu'à la phase multijoueur. `LINK_ENABLED` (`include/config.h`,
+FALSE) est lu par le special `Fusion_IsLinkEnabled` au début de chaque entrée : hôtesses de l'Union Room et du coin
+direct des 2ᵉ étages (les deux régions : « Le CLUB SANS FIL POKéMON est encore en préparation », le message d'avant
+le POKéDEX), guichet des concours en link et Mixeur à plusieurs de Nénucrique, combats multi en link de la Tour de
+Combat (« Ils sont en train d'effectuer des réglages… ») — scénario `link_disabled`. Le link est celui d'Émeraude dans
+les deux régions (règle des variantes du code commun) ; les salles de Kanto y mènent par `EnterTradeSeat` et
+`EnterColosseumPlayerSpot` de RF. Restent ouverts, comme dans les deux jeux : le moniteur sans fil (« L'adaptateur
+sans fil GBA n'est pas connecté correctement. ») et l'écran des records des 2ᵉ étages (scénario `kanto_center_2f`).

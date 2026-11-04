@@ -614,6 +614,8 @@ LilycoveCity_ContestLobby_EventScript_LinkContestReceptionist::
 	special ClearLinkContestFlags
 	lock
 	faceplayer
+	specialvar VAR_RESULT, Fusion_IsLinkEnabled  @ PokemonNative3G : link caché (LINK_ENABLED, config.h)
+	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_NotReadyYet
 	msgbox LilycoveCity_ContestLobby_Text_LinkContestReception, MSGBOX_DEFAULT
 	goto LilycoveCity_ContestLobby_EventScript_AskEnterLinkContest
 	end

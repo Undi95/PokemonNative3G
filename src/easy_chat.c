@@ -5379,6 +5379,13 @@ static bool8 CanPhraseFitInXRowsYCols(const u16 *easyChatWords, u8 numRows, u8 n
     return FALSE;
 }
 
+// PokemonNative3G : EC_DoesEasyChatStringFitOnLine de RF (easy_chat.c), même code que CanPhraseFitInXRowsYCols (les
+// noms de ses deux nombres sont inversés, pas leur rôle) : messages du dresseur e-Reader de l'Île 7 (kanto_battle_tower.c)
+bool8 EC_DoesEasyChatStringFitOnLine(const u16 *easyChatWords, u8 columns, u8 rows, u16 maxLength)
+{
+    return CanPhraseFitInXRowsYCols(easyChatWords, columns, rows, maxLength);
+}
+
 u16 GetRandomEasyChatWordFromGroup(u16 groupId)
 {
     u16 index = Random() % gEasyChatGroups[groupId].numWords;

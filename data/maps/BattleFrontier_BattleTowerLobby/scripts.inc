@@ -354,6 +354,8 @@ BattleFrontier_BattleTowerLobby_EventScript_ExplainMultisChallenge::
 BattleFrontier_BattleTowerLobby_EventScript_LinkMultisAttendant::
 	lock
 	faceplayer
+	specialvar VAR_RESULT, Fusion_IsLinkEnabled  @ PokemonNative3G : link caché (LINK_ENABLED, config.h)
+	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_NotReadyYet
 	setvar VAR_FRONTIER_FACILITY, FRONTIER_FACILITY_TOWER
 	special SavePlayerParty
 	msgbox BattleFrontier_BattleTowerLobby_Text_WelcomeLinkMultiBattle, MSGBOX_DEFAULT

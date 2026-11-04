@@ -30,8 +30,10 @@ les starters de Hoenn.
 
 ## Scripts et specials
 
-- Specials de RF encore en stub : 24 (`src/kanto_specials_stubs.c`), tous hors solo : link, Tour de Combat de RF
-  (salle e-Reader de l'Île 7), triangle de Deoxys de RF (l'Île Naissance est celle d'Émeraude).
+- Specials de RF en stub : plus aucun (2026-11-04, `src/kanto_specials_stubs.c` supprimé). Portés : places du
+  Colisée et du Centre Troc de Kanto (`cable_club.c`), salle e-Reader de l'Île 7 (`kanto_battle_tower.c`) ; retirés
+  de la table : ceux qu'aucun script de RF n'appelle (Tour de Combat de Rubis/Saphir…) et le triangle de Deoxys de
+  RF (l'Île Naissance est celle d'Émeraude).
 - Scripts morts et doublons RF/Émeraude : nettoyés (2026-10-31, `docs/CARTOGRAPHIE.md`) ; restent les doublons
   du link (hors solo).
 - Aucune erreur ni stub signalé par le jeu sur les 83 scénarios headless (sortie d'erreur vide), ASan propre.

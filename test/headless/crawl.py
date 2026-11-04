@@ -143,7 +143,7 @@ def targets(name):
                           "cote": SIGN_FACING.get(bg.get("player_facing_dir"))})
         elif bg.get("type") == "hidden_item":
             found.append({"genre": "objet caché", "x": bg["x"], "y": bg["y"], "script": bg["item"], "portee": 0,
-                          "cote": None})
+                          "cote": None, "drapeau": bg.get("flag"), "sous_les_pieds": bool(bg.get("underfoot"))})
     return found
 
 
@@ -167,8 +167,8 @@ def spots(name, x, y, side=None):
 def give_mewtwo(game):
     """Un MEWTWO N.100 avec les 4 attaques de STRONG_MOVES, en dernier de l'équipe."""
     game.give_mon("SPECIES_MEWTWO", 100)
-    game.wait(1)                # l'équipe de l'état est celle de la dernière image
-    slot = len(game.state.party) - 1
+    # (l'équipe de game.state est celle de la dernière image : compter avec l'outil, à jour tout de suite)
+    slot = len(re.findall(r"(?m)^\d+ ", game.dev("joueur.equipe"))) - 1
     for place, move in enumerate(STRONG_MOVES):
         reply = game.dev("joueur.capacite", slot, place, names.number(move))
         if "refuse" in reply:
@@ -298,6 +298,13 @@ class Explorer:
             return mark(game) > said or game.state.map != start_map or game.battles[battles:]
 
         def talk(game):
+            if target["genre"] == "objet caché" and (target.get("sous_les_pieds")
+                                                     or (target.get("drapeau") and game.flag(target["drapeau"]))):
+                # Rien à trouver avec A : objet « sous les pieds » de RF (trouvé avec le CHERCH'OBJET), ou déjà pris ;
+                # au début d'une partie, RF marque pris ses objets renouvelables (SetAllRenewableItemFlags), qui
+                # reviennent avec les pas (kanto_renewable_hidden_items.c)
+                record["deja_pris"] = True
+                return
             # Téléporté à côté (le jeu ne charge que les PNJ près de la caméra), de chaque côté possible
             places = spots(name, target["x"], target["y"], target["cote"])
             if not places:
@@ -468,7 +475,9 @@ def summary(results):
     absent = sum(1 for r in results for i in r.get("interactions", []) if i.get("absent"))
     battles = sum(len(i.get("combats", [])) for r in results for i in r.get("interactions", []))
     explored = sum(1 for r in results if not r.get("salle_de_defi"))
-    lines.append(f"{explored} cartes, {talks} interactions ({absent} PNJ absents, {battles} combats), "
+    taken = sum(1 for r in results for i in r.get("interactions", []) if i.get("deja_pris"))
+    lines.append(f"{explored} cartes, {talks} interactions ({absent} PNJ absents, {battles} combats, "
+                 f"{taken} objets cachés déjà pris ou sous les pieds), "
                  f"{len(errors)} erreurs de carte, {len(talk_errors)} interactions en erreur, {len(mute)} muettes, "
                  f"{len(unreachable)} inaccessibles, {len(anomalies)} anomalies différentes, "
                  f"{len(suspects)} textes suspects")

@@ -33,7 +33,8 @@ reconnaît les corps identiques (187 fonctions) mais pas les corps voisins.
 - Cartes : Émeraude 518, RF 425, fusion 914 (518 + 396 de RF). Non importées : Nombril du Monde de RF
   (celui d'Émeraude est gardé), salles link et Île Aurore (mêmes cartes). Route Victoire et Parc Safari
   Nord de RF : `KantoVictoryRoad_*`, `KantoSafariZone_North*`.
-- Specials : RF en a 272. 147 lui sont propres : 104 portés, 43 stubs (`src/kanto_specials_stubs.c`).
+- Specials : RF en a 272. 147 lui sont propres : tous portés ou retirés de la table de Kanto (jamais appelés par
+  un script de RF, ou Île Naissance d'Émeraude) ; plus de stubs depuis le 2026-11-04.
 - Musiques de RF : déjà dans Émeraude sous `MUS_RG_*`, sauf `MUS_RS_VS_GYM_LEADER` et `MUS_RS_VS_TRAINER`.
 
 ## Propre à Rouge Feu

@@ -122,8 +122,17 @@
   couleurs normales).
 - Options > INTRO = HOENN : le jeu démarre de nouveau sur l'intro d'Émeraude (au lancement, c'était toujours celle de
   Rouge Feu ; l'option ne comptait qu'après un passage par l'écran titre).
+- Évolution : comme sur la cartouche, l'écran attend la fin du son puis du cri avant « Félicitations! » (le portage PC
+  sautait ces deux attentes).
+- 2ᵉ étage des Centres POKéMON de Kanto : le moniteur sans fil et l'écran des records répondent de nouveau, comme dans
+  Rouge Feu (les deux cases étaient muettes).
 
 ### Nouveautés
+- Link (échanges, combats, Union Room, mini-jeux, concours et combats multi en link) : il reste dans le jeu mais
+  fermé jusqu'à l'arrivée du multijoueur ; dans les deux régions, les hôtesses et guichets répondent que le club est
+  en préparation ou en réglage (avant, on pouvait lancer une connexion qui échouait).
+- Île 7 : la maison du dresseur e-Reader fonctionne (combat contre un dresseur e-Reader enregistré, comme dans Rouge
+  Feu). Sans e-Reader, on ne peut pas encore y enregistrer de dresseur.
 - POKéDEX NATIONAL donné une seule fois : si le PROF. SEKO l'a déjà donné, le PROF. CHEN se contente de noter le
   POKéDEX (sa scène est considérée comme faite) ; si c'est le PROF. CHEN, le PROF. SEKO le dit, et la suite (starters
   de Johto, appel de SCOTT pour la Zone de Combat) reste la même.

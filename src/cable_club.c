@@ -1187,6 +1187,25 @@ void ColosseumPlayerSpotTriggered(void)
         CreateTask_EnterCableClubSeat(Task_StartWiredCableClubBattle);
 }
 
+// PokemonNative3G : les mêmes sous leur nom de RF (cable_club.c), pour les salles de link de Kanto
+// (data/kanto/data/scripts/cable_club.inc : places du Colisée et du Centre Troc)
+void EnterTradeSeat(void)
+{
+    if (gWirelessCommType)
+        CreateTask_EnterCableClubSeat(Task_StartWirelessTrade);
+    else
+        CreateTask_EnterCableClubSeat(Task_StartWiredTrade);
+}
+
+void EnterColosseumPlayerSpot(void)
+{
+    gLinkType = LINKTYPE_BATTLE;
+    if (gWirelessCommType)
+        CreateTask_EnterCableClubSeat(Task_StartWirelessCableClubBattle);
+    else
+        CreateTask_EnterCableClubSeat(Task_StartWiredCableClubBattle);
+}
+
 static UNUSED void CreateTask_EnterCableClubSeatNoFollowup(void)
 {
     u8 UNUSED taskId = CreateTask(Task_EnterCableClubSeat, 80);

@@ -2,17 +2,17 @@
 
 > Généré par `tools/cartographie.py` — ne pas éditer à la main.
 
-Les 1632 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
+Les 1621 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fonctions-rf-absentes.md`), chacune dans une seule catégorie. « Équivalente » est une preuve (même suite de jetons ; seuls diffèrent des noms de fonctions déjà prouvées équivalentes, jusqu'au point fixe, ou une variante Kanto du même nom) ; « à vérifier » et « manquante » se lisent à la main, puis se classent dans `tools/carto_classement.txt` avec leur preuve.
 
 | Catégorie | Sens | Fonctions |
 |---|---|---|
 | manquante | rien de proche dans la fusion : à porter | 0 |
 | à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 0 |
-| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 707 |
+| équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 708 |
 | triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 111 |
-| morte | jamais appelée ni référencée dans RF | 120 |
-| link | link / E-Reader : à porter, désactivé | 202 |
-| écartée | écartée par décision | 492 |
+| morte | jamais appelée ni référencée dans RF | 149 |
+| link | link / E-Reader : à porter, désactivé | 0 |
+| écartée | écartée par décision | 653 |
 
 ## Manquante (0) : rien de proche dans la fusion : à porter
 
@@ -20,7 +20,7 @@ Les 1632 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fon
 ## À vérifier (0) : ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire
 
 
-## Équivalente (707) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
+## Équivalente (708) : prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents)
 
 ### field_effect.c (83)
 FieldEffectScript_LoadFadedPal (FieldEffectScript_LoadFadedPalette (field_effect.c d'Émeraude) : + teinte du journal de RF, écartée)
@@ -392,11 +392,10 @@ EvoTask_ShrinkOrExpandEvoSprites (Task_CycleEvolutionMonSprite_UpdateSize (evolu
 EvoTask_WaitForPre1SparklesToGoUp → Task_Sparkles_SpiralUpward_End (evolution_graphics.c)
 SpriteCB_PostEvoSparkleSet1 → SpriteCB_Sparkle_CircleInward (evolution_graphics.c)
 
-### easy_chat.c (21)
+### easy_chat.c (20)
 IsECGroupUnlocked (IsEasyChatGroupUnlocked (easy_chat.c), groupes débloqués d'Émeraude)
 IsECWordInvalid (IsEasyChatWordInvalid (easy_chat.c), un dictionnaire)
 Localize_ConvertEasyChatMessageToString (OtherConvertEasyChatWordsToString (easy_chat.c), un dictionnaire)
-EC_DoesEasyChatStringFitOnLine (CanPhraseFitInXRowsYCols (easy_chat.c), un dictionnaire)
 GetRandomWordFromGroup (GetRandomEasyChatWordFromGroup (easy_chat.c), un dictionnaire)
 GetRandomWordFromAnyGroup (GetRandomEasyChatWordFromUnlockedGroup (easy_chat.c), un dictionnaire)
 GetNumUnlockedTrendySayings (GetNumTrendySayingsUnlocked (easy_chat.c), un dictionnaire)
@@ -800,6 +799,10 @@ BtlController_EmitPlayFanfare (BtlController_EmitPlayFanfareOrBGM (battle_contro
 Localize_TrainerClass_Names (GetTrainerClassNameGenderSpecific (international_string_util.c) : en français, ses Localize_TrainerClass_* rendent le nom normal)
 BattleStringShouldBeColored (sans effet visible : police MALE / FEMALE des messages des dresseurs = police normale en français)
 
+### battle_tower.c (2)
+Debug_FillEReaderTrainerWithPlayerData (FillEReaderTrainerWithPlayerData (battle_tower.c), même code sur frontier.ereaderTrainer ; outil de debug combat.ereader)
+CopyEReaderTrainerName5 (GetEreaderTrainerName (battle_tower.c), même code (5 lettres + EOS) sur frontier.ereaderTrainer : nom du dresseur e-Reader de l'Île 7)
+
 ### event_data.c (2)
 GetFlagAddr (GetFlagPointer (event_data.c), + drapeaux de Kanto (gSaveBlockKanto) ; journal écarté)
 ResetSpecialVars (remise à zéro de la RAM au démarrage et au redémarrage (SoftReset, src/platform/system.c) : RF l'appelle avant le menu principal (ResetMenuAndMonGlobals), quand aucune variable spéciale n'a servi ; ses autres appels sont ceux du journal)
@@ -1012,7 +1015,7 @@ nullsub_8
 nullsub_9
 
 
-## Morte (120) : jamais appelée ni référencée dans RF
+## Morte (149) : jamais appelée ni référencée dans RF
 
 ### event_object_movement.c (38)
 GetReflectionEffectPaletteSlot, CameraObjectGetFollowedObjectId, GetAcroBunnyHopFrontWheelDirectionAnimNum,
@@ -1050,6 +1053,33 @@ MovementAction_JumpSpecialWithEffectRight_Step1 (jamais utilisé dans RF),
 MovementAction_EmoteSmile_Step0 (emote_smile jamais utilisé dans RF),
 MovementAction_ShakeHeadOrWalkInPlace_Step0 (seul PlayerShakeHeadOrWalkInPlace de RF, jamais appelé),
 UpdateWalkSlowestAnim (walk_slowest_* jamais utilisé dans RF)
+
+### battle_tower.c (25)
+BattleTowerMapScript2 (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+ResetBattleTowerStreak (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+ShouldBattleEReaderTrainer (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+ChooseNextBattleTowerTrainer (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+SetBattleTowerTrainerGfxId (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+UpdateOrInsertReceivedBattleTowerRecord (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+GetBattleTowerTrainerFrontSpriteId (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF (BATTLE_TYPE_BATTLE_TOWER n'est lancé que par elle)),
+GetBattleTowerTrainerClassNameId (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF (BATTLE_TYPE_BATTLE_TOWER n'est lancé que par elle)),
+GetBattleTowerTrainerName (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF (BATTLE_TYPE_BATTLE_TOWER n'est lancé que par elle)),
+FillBattleTowerTrainerParty (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+AppendBattleTowerBannedSpeciesName (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+CheckMonBattleTowerBanlist (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+CheckPartyBattleTowerBanlist (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+PrintBattleTowerTrainerGreeting (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+SetBattleTowerProperty (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+BattleTowerUtil (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+SetBattleTowerParty (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+SetPlayerBattleTowerRecord (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+SaveBattleTowerProgress (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+BattleTower_SoftReset (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+SetBattleTowerRecordChecksum (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+PopulateBravoTrainerBattleTowerLostData (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+DetermineBattleTowerPrize (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+GiveBattleTowerPrize (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+Dummy_TryEnableBravoTrainerBattleTower (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF)
 
 ### metatile_behavior.c (10)
 MetatileBehavior_IsFastWater (jamais appelée dans RF), MetatileBehavior_IsArrowWarp,
@@ -1113,6 +1143,10 @@ SpriteCB_UnusedDebugSprite_Step (jamais utilisé dans RF (debug))
 ### cable_car_util.c (2)
 CableCarUtil_FillWrapped, CableCarUtil_CopyWrapped
 
+### cable_club.c (2)
+CableClub_AskSaveTheGame (aucun script de RF ne l'appelle (special retiré de la table de Kanto le 2026-11-04)),
+StartWiredCableClubTrade (aucun script de RF ne l'appelle (special retiré de la table de Kanto le 2026-11-04))
+
 ### coins.c (2)
 PrintCoinsString_Parameterized (seul appelant ShowCoinsWindow_Parameterized, inutilisée (son commentaire)),
 ShowCoinsWindow_Parameterized
@@ -1122,6 +1156,10 @@ DisableNationalPokedex_RSE, IsNationalPokedexEnabled_RSE
 
 ### new_menu_helpers.c (2)
 GetStdMenuPalette, GetDlgWindowBaseTileNum
+
+### script_pokemon_util.c (2)
+ChooseBattleTowerPlayerParty (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF),
+CB2_ReturnFromChooseBattleTowerParty (Tour de Combat de Rubis/Saphir : aucune carte ni script de RF)
 
 ### battle_anim_special.c (1)
 AnimTask_LevelUpHealthBox
@@ -1178,166 +1216,10 @@ SetHasPokedexAndPokemon
 CopyGlyphToWindow_Parameterized
 
 
-## Link (202) : link / E-Reader : à porter, désactivé
-
-### union_room_chat_display.c (49)
-UnionRoomChat_TryAllocGraphicsWork, UnionRoomChat_RunDisplaySubtask0, UnionRoomChat_FreeGraphicsWork, InitWork,
-UnionRoomChat_ResetDisplaySubtasks, UnionRoomChat_RunDisplaySubtasks, UnionRoomChat_StartDisplaySubtask,
-RunDisplaySubtask, DisplaySubtask_LoadGfx, DisplaySubtask_PrintWin3, DisplaySubtask_HideWin3,
-DisplaySubtask_SwitchPages, DisplaySubtask_MoveSelectorCursorObj, DisplaySubtask_ShowQuitChattingDialog,
-DisplaySubtask_UpdateMessageBuffer, DisplaySubtask_PrintRegisterWhere, DisplaySubtask_CancelRegister,
-DisplaySubtask_ReturnToKeyboard, DisplaySubtask_ScrollChat, DisplaySubtask_AnimateSelectorCursorBlink,
-DisplaySubtask_PrintInputText, DisplaySubtask_PrintExitingChat, DisplaySubtask_PrintLeaderLeft,
-DisplaySubtask_AskSave, DisplaySubtask_AskOverwriteSave, DisplaySubtask_PrintSavingDontTurnOffPower,
-DisplaySubtask_PrintSavedTheGame, DisplaySubtask_ShowConfirmLeaderLeaveDialog, DisplaySubtaskDummy,
-PlaceYesNoMenuAt, UnionRoomChat_ProcessInput, PlaceStdMessageWindow, FillWin1Rect, PrintOnWin1Parameterized,
-AnimateMoveBg1Right, AnimateMoveBg1Left, PrintKeyboardSwapTextsOnWin3, ClearWin3, PrintTextOnWin0Colorized,
-SetBgTilemapWorkBuffers, LoadUnionRoomChatPanelGfx, LoadLinkMiscMenuGfx, LoadBg1Pal8, LoadWin0, LoadWin2,
-LoadWin1, LoadWin3, FillScanlineEffectWithValue1col, FillScanlineEffectWithValue2col
-
-### union_room_chat.c (34)
-InitChatWork, FreeChatWork, ChatEntryRoutine_Join, ChatEntryRoutine_HandleInput, ChatEntryRoutine_Switch,
-ChatEntryRoutine_AskQuitChatting, ChatEntryRoutine_ExitChat, ChatEntryRoutine_Drop, ChatEntryRoutine_Disbanded,
-ChatEntryRoutine_SendMessage, ChatEntryRoutine_Register, ChatEntryRoutine_SaveAndExit, GoToRoutine,
-TypeChatMessage_HandleDPad, AppendCharacterToChatMessageBuffer, DeleteLastCharacterOfChatMessageBuffer,
-ToggleCaseOfLastCharacterInChatMessageBuffer, ChatMsgHasAtLeastOneCharcter, SaveRegisteredTextsToSB1,
-UnionRoomChat_GetWorkRegisteredText, GetEndOfUnk1A, GetPtrToLastCharOfUnk1A, GetNumCharsInMessageEntryBuffer,
-UnionRoomChat_GetCursorColAndRow, UnionRoomChat_GetMessageEntryBuffer, UnionRoomChat_LenMessageEntryBuffer,
-UnionRoomChat_GetBufferSelectionRegion, UnionRoomChat_GetEndOfMessageEntryBuffer,
-UnionRoomChat_GetNumCharsInMessageEntryBuffer, UnionRoomChat_GetLastReceivedMessage,
-UnionRoomChat_GetReceivedPlayerIndex, UnionRoomChat_GetMessageEntryCursorPosition,
-UnionRoomChat_GetWhetherShouldShowCaseToggleIcon, UnionRoomChat_GetNameOfPlayerWhoDisbandedChat
-
-### battle_tower.c (33)
-BattleTowerMapScript2, ResetBattleTowerStreak, ShouldBattleEReaderTrainer, ChooseNextBattleTowerTrainer,
-SetBattleTowerTrainerGfxId, UpdateOrInsertReceivedBattleTowerRecord, GetBattleTowerTrainerFrontSpriteId,
-GetBattleTowerTrainerClassNameId, GetBattleTowerTrainerName, FillBattleTowerTrainerParty,
-AppendBattleTowerBannedSpeciesName, CheckMonBattleTowerBanlist, CheckPartyBattleTowerBanlist,
-BufferBattleTowerTrainerMessage (Tour de Combat de RF : dresseurs e-Reader et records mélangés),
-PrintBattleTowerTrainerGreeting, CB2_FinishEReaderBattle, Task_WaitBT (Tour de Combat de RF (e-Reader)),
-StartSpecialBattle, SetBattleTowerProperty, BattleTowerUtil,
-SetBattleTowerParty (Tour de Combat de RF (e-Reader)),
-SetPlayerBattleTowerRecord (Tour de Combat de RF (e-Reader)), SaveBattleTowerProgress, BattleTower_SoftReset,
-SetBattleTowerRecordChecksum (Tour de Combat de RF (e-Reader)), PopulateBravoTrainerBattleTowerLostData,
-DetermineBattleTowerPrize, GiveBattleTowerPrize, Debug_FillEReaderTrainerWithPlayerData,
-CopyEReaderTrainerName5 (Tour de Combat de RF (e-Reader)),
-BufferEReaderTrainerGreeting (Tour de Combat de RF (e-Reader)),
-PrintEReaderTrainerFarewellMessage (Tour de Combat de RF (e-Reader)), Dummy_TryEnableBravoTrainerBattleTower
-
-### union_room_chat_objects.c (11)
-UnionRoomChat_TryAllocSpriteWork, UnionRoomChat_FreeSpriteWork, UnionRoomChat_CreateSelectorCursorObj,
-UnionRoomChat_ToggleSelectorCursorObjVisibility, UnionRoomChat_MoveSelectorCursorObj,
-UnionRoomChat_UpdateObjPalCycle, UnionRoomChat_SetSelectorCursorClosedImage,
-UnionRoomChat_AnimateSelectorCursorReopen, UnionRoomChat_SpawnTextEntryPointerSprites,
-CreatePageSwitchUISprites, UpdateVisibleUnionRoomChatIcon
-
-### cereader_tool.c (6)
-ValidateTrainerTowerTrainer, ValidateTrainerTowerData, CEReaderTool_SaveTrainerTower_r,
-CEReaderTool_SaveTrainerTower, CEReaderTool_LoadTrainerTower_r, CEReaderTool_LoadTrainerTower
-
-### party_menu.c (6)
-DisplayPartyPokemonDataForChooseMultiple (choix de l'équipe des combats link / Tour de RF),
-CursorCB_Enter (choix de l'équipe des combats link / Tour de RF),
-CursorCB_NoEntry (choix de l'équipe des combats link / Tour de RF),
-InitChooseMonsForBattle (choix de l'équipe des combats link / Tour de RF),
-Task_ValidateChosenMonsForBattle (choix de l'équipe des combats link / Tour de RF),
-Task_ContinueChoosingMonsForBattle (choix de l'équipe des combats link / Tour de RF)
-
-### battle_records.c (5)
-IndexOfOpponentLinkBattleRecord (records du Club Câble de RF),
-AddOpponentLinkBattleRecord (records de combats link de RF),
-IncTrainerCardWinCount (records du Club Câble de RF), IncTrainerCardLossCount (records du Club Câble de RF),
-UpdateBattleOutcomeOnTrainerCards (records de combats link de RF)
-
-### cable_club.c (5)
-AnyConnectedPartnersPlayingRS, CableClub_AskSaveTheGame, EnterTradeSeat, StartWiredCableClubTrade,
-GetSeeingLinkPlayerCardMsg
-
-### berry_crush.c (4)
-BerryCrush_SetVBlankCallback, BerryCrush_BuildLocalState, printCrushingResults, Task_ShowBerryCrushRankings
-
-### field_fadetransition.c (4)
-DoTeleport2Warp (seul ScrCmd_warpspinenter de RF, pour l'Union Room (cable_club.inc)),
-DoUnionRoomWarp (Union Room de RF), Task_CableClubWarp (Club Câble de RF),
-Task_ReturnFromLinkRoomWarp (retour du Club Câble de RF)
-
-### mystery_gift_menu.c (4)
-PrintMysteryGiftOrEReaderTopMenu, AddTextPrinterToWindow1, ClearTextWindow, HandleMysteryGiftListMenu
-
-### start_menu.c (4)
-SetUpStartMenu_Link (menu Start des combats link de RF),
-SetUpStartMenu_UnionRoom (menu Start de l'Union Room de RF),
-DoSetUpSaveAfterLinkBattle (sauvegarde après un combat link),
-task50_after_link_battle_save (sauvegarde après un combat link)
-
-### battle_controller_link_partner.c (3)
-LinkPartnerDummy, LinkPartnerHandleUnknownYesNoBox, LinkPartnerHandlePlayFanfare
-
-### link_rfu_2.c (3)
-LinkRfu_ForceChangeSpParent, RfuGetErrorInfo, DestroyTask_RfuReconnectWithParent
-
-### script_pokemon_util.c (3)
-ChooseBattleTowerPlayerParty (Tour de Combat de RF (salle e-Reader de l'Île 7) ; stub inaccessible en solo (kanto_specials_stubs.c)),
-CB2_ReturnFromChooseBattleTowerParty (Tour de Combat de RF (salle e-Reader)),
-ReducePlayerPartyToThree (Tour de Combat de RF (salle e-Reader))
-
-### trade_scene.c (3)
-CheckLinkTimeout, LoadTradeGbaSpriteGfx, TradeBufferOTnameAndNicknames
-
-### union_room_battle.c (3)
-SetUpPartiesAndStartBattle, UnionRoomBattle_CreateTextPrinter, UnionRoomBattle_PrintTextOnWindow0
-
-### battle_controller_link_opponent.c (2)
-LinkOpponentHandleUnknownYesNoBox, LinkOpponentHandlePlayFanfare
-
-### battle_main.c (2)
-LinkBattleComputeBattleTypeFlags (combats link de RF), PrepareOwnMultiPartnerBuffer (combats multi de RF)
-
-### link_rfu_3.c (2)
-ZeroName, NameIsEmpty
-
-### metatile_behavior.c (2)
-MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor (moniteur sans fil de RF),
-MetatileBehavior_IsPlayerFacingBattleRecords (écran des records du Club Câble de RF)
-
-### trade.c (2)
-CB2_ReturnToTradeMenuFromSummary, CommunicateWhetherMonCanBeTraded
-
-### union_room.c (2)
-Leader_DisconnectOnState, ItemPrintFunc_Unused
-
-### berry.c (1)
-InitEnigmaBerry (Baie Enigma (e-Reader) ; sans elle, Émeraude prend la baie par défaut de la table (IsEnigmaBerryValid) : même affichage)
-
-### berry_fix_program.c (1)
-SetScene
-
-### dodrio_berry_picking.c (1)
-DBP_LoadStdWindowGfx
-
-### easy_chat.c (1)
-EnableRareWord (seul l'Événement Mystère de RF (mystery_event_script.c) débloque des mots rares)
-
-### link.c (1)
-SetLinkErrorFromRfu
-
-### mystery_event_script.c (1)
-MEventScript_Run
-
-### new_game.c (1)
-ClearBattleTower (Tour de Combat de RF (e-Reader))
-
-### overworld.c (1)
-CreateConfirmLeaveTradeRoomPrompt (Centre d'échange de RF (RunConfirmLeaveCableClubScript d'Émeraude))
-
-### union_room_player_avatar.c (1)
-MakeGroupAssemblyAreasPassable
-
-### wireless_communication_status_screen.c (1)
-ExitWirelessCommunicationStatusScreen
+## Link (0) : link / E-Reader : à porter, désactivé
 
 
-## Écartée (492) : écartée par décision
+## Écartée (653) : écartée par décision
 
 ### quest_log_events.c (117)
 — « Précédemment » de RF (Kanto = post-game, décision 2026-11-02), SetQuestLogEvent,
@@ -1426,6 +1308,57 @@ SpriteCB_Pikachu, CreatePikachuOrPlatformSprites, DestroyPikachuOrPlatformSprite
 ClearTrainerPic, Task_SlowFadeIn, CreateFadeInTask, Task_SlowFadeOut, CreateFadeOutTask,
 PrintNameChoiceOptions, GetDefaultName
 
+### union_room_chat_display.c (49)
+UnionRoomChat_TryAllocGraphicsWork (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_RunDisplaySubtask0 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_FreeGraphicsWork (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+InitWork (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_ResetDisplaySubtasks (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_RunDisplaySubtasks (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_StartDisplaySubtask (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+RunDisplaySubtask (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_LoadGfx (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_PrintWin3 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_HideWin3 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_SwitchPages (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_MoveSelectorCursorObj (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_ShowQuitChattingDialog (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_UpdateMessageBuffer (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_PrintRegisterWhere (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_CancelRegister (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_ReturnToKeyboard (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_ScrollChat (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_AnimateSelectorCursorBlink (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_PrintInputText (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_PrintExitingChat (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_PrintLeaderLeft (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_AskSave (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_AskOverwriteSave (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_PrintSavingDontTurnOffPower (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_PrintSavedTheGame (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtask_ShowConfirmLeaderLeaveDialog (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DisplaySubtaskDummy (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+PlaceYesNoMenuAt (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_ProcessInput (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+PlaceStdMessageWindow (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+FillWin1Rect (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+PrintOnWin1Parameterized (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+AnimateMoveBg1Right (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+AnimateMoveBg1Left (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+PrintKeyboardSwapTextsOnWin3 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ClearWin3 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+PrintTextOnWin0Colorized (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+SetBgTilemapWorkBuffers (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+LoadUnionRoomChatPanelGfx (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+LoadLinkMiscMenuGfx (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+LoadBg1Pal8 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+LoadWin0 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+LoadWin2 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+LoadWin1 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+LoadWin3 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+FillScanlineEffectWithValue1col (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+FillScanlineEffectWithValue2col (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions)
+
 ### help_system_util.c (39)
 — aide L/R de RF (Kanto = post-game, décision 2026-11-02), RunHelpSystemCallback, SaveCallbacks,
 SaveMapGPURegs, SaveMapTiles, SaveMapTextColors, RestoreCallbacks, RestoreGPURegs, RestoreMapTiles,
@@ -1454,7 +1387,44 @@ HelpSystem_PrintTopicLabel, HelpMenuSubroutine_HelpItemPrint, HelpMenuSubroutine
 HelpMenuSubroutine_HelpItemWaitButton, PrintWelcomeMessageOnPanel1, PrintTextOnPanel2Row52RightAlign,
 GetHelpSystemMenuLevel, ResetHelpSystemCursor, PrintHelpSystemTopicMouseoverDescription
 
-### party_menu.c (19)
+### union_room_chat.c (34)
+InitChatWork (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+FreeChatWork (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatEntryRoutine_Join (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatEntryRoutine_HandleInput (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatEntryRoutine_Switch (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatEntryRoutine_AskQuitChatting (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatEntryRoutine_ExitChat (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatEntryRoutine_Drop (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatEntryRoutine_Disbanded (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatEntryRoutine_SendMessage (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatEntryRoutine_Register (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatEntryRoutine_SaveAndExit (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+GoToRoutine (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+TypeChatMessage_HandleDPad (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+AppendCharacterToChatMessageBuffer (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+DeleteLastCharacterOfChatMessageBuffer (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ToggleCaseOfLastCharacterInChatMessageBuffer (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+ChatMsgHasAtLeastOneCharcter (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+SaveRegisteredTextsToSB1 (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetWorkRegisteredText (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+GetEndOfUnk1A (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+GetPtrToLastCharOfUnk1A (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+GetNumCharsInMessageEntryBuffer (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetCursorColAndRow (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetMessageEntryBuffer (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_LenMessageEntryBuffer (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetBufferSelectionRegion (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetEndOfMessageEntryBuffer (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetNumCharsInMessageEntryBuffer (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetLastReceivedMessage (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetReceivedPlayerIndex (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetMessageEntryCursorPosition (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetWhetherShouldShowCaseToggleIcon (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_GetNameOfPlayerWhoDisbandedChat (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions)
+
+### party_menu.c (25)
+DisplayPartyPokemonDataForChooseMultiple (choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7),
 Task_FirstBattleEnterParty_WaitFadeIn (tutoriel du premier combat avec CHEN),
 Task_FirstBattleEnterParty_DarkenScreen (tutoriel du premier combat avec CHEN),
 Task_FirstBattleEnterParty_WaitDarken (tutoriel du premier combat avec CHEN),
@@ -1469,8 +1439,14 @@ Task_FirstBattleEnterParty_WaitFadeNormal (tutoriel du premier combat avec CHEN)
 PartyMenu_Oak_PrintText (tutoriel du premier combat avec CHEN (Kanto = post-game)),
 FirstBattleEnterParty_CreateWindowAndMsg1Printer (tutoriel du premier combat avec CHEN),
 FirstBattleEnterParty_DestroyVoiceoverWindow (tutoriel du premier combat avec CHEN),
-SetSwitchedPartyOrderQuestLogEvent (journal de RF), SetSwappedHeldItemQuestLogEvent (journal de RF),
-SetUsedFieldMoveQuestLogEvent (journal de RF), SetUsedFlyQuestLogEvent (journal de RF),
+SetSwitchedPartyOrderQuestLogEvent (journal de RF),
+CursorCB_Enter (choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7),
+CursorCB_NoEntry (choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7),
+SetSwappedHeldItemQuestLogEvent (journal de RF), SetUsedFieldMoveQuestLogEvent (journal de RF),
+SetUsedFlyQuestLogEvent (journal de RF),
+InitChooseMonsForBattle (choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7),
+Task_ValidateChosenMonsForBattle (choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7),
+Task_ContinueChoosingMonsForBattle (choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7),
 OpenPartyMenuInTutorialBattle (tutoriel du premier combat avec CHEN (Kanto = post-game))
 
 ### quest_log_player.c (15)
@@ -1509,6 +1485,26 @@ OakHandleChooseMove_WaitDma3 (tutoriel du premier combat avec CHEN (Kanto = post
 BtlCtrl_OakOldMan_TestState2Flag (messages du tutoriel de CHEN (Kanto = post-game)),
 BtlCtrl_OakOldMan_SetState2Flag (messages du tutoriel de CHEN (Kanto = post-game))
 
+### union_room_chat_objects.c (11)
+UnionRoomChat_TryAllocSpriteWork (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_FreeSpriteWork (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_CreateSelectorCursorObj (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_ToggleSelectorCursorObjVisibility (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_MoveSelectorCursorObj (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_UpdateObjPalCycle (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_SetSelectorCursorClosedImage (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_AnimateSelectorCursorReopen (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UnionRoomChat_SpawnTextEntryPointerSprites (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+CreatePageSwitchUISprites (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions),
+UpdateVisibleUnionRoomChatIcon (Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions)
+
+### overworld.c (9)
+QL_LoadMapNormal (journal de RF), DoCB1_Overworld_QuestLogPlayback (journal de RF),
+CB2_SetUpOverworldForQLPlaybackWithWarpExit (journal de RF), CB2_SetUpOverworldForQLPlayback (journal de RF),
+CB2_LoadMapForQLPlayback (journal de RF), DoLoadMap_QLPlayback (journal de RF),
+LoadMap_QLPlayback (journal de RF), CB2_EnterFieldFromQuestLog (journal de RF),
+CreateConfirmLeaveTradeRoomPrompt (link d'Émeraude (RunConfirmLeaveCableClubScript, overworld.c) dans les deux régions)
+
 ### save_failed_screen.c (9)
 RunSaveFailedScreen (variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)),
 BlankPalettes (variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)),
@@ -1519,12 +1515,6 @@ UpdateMapBufferWithText (variante RF : écran d'échec de sauvegarde d'Émeraude
 ClearMapBuffer (variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)),
 PrintTextOnSaveFailedScreen (variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle)),
 TryWipeDamagedSectors (variante RF : écran d'échec de sauvegarde d'Émeraude gardé (DoSaveFailedScreen, même rôle))
-
-### overworld.c (8)
-QL_LoadMapNormal (journal de RF), DoCB1_Overworld_QuestLogPlayback (journal de RF),
-CB2_SetUpOverworldForQLPlaybackWithWarpExit (journal de RF), CB2_SetUpOverworldForQLPlayback (journal de RF),
-CB2_LoadMapForQLPlayback (journal de RF), DoLoadMap_QLPlayback (journal de RF),
-LoadMap_QLPlayback (journal de RF), CB2_EnterFieldFromQuestLog (journal de RF)
 
 ### field_specials.c (7)
 QuestLog_CheckDepartingIndoorsMap (journal de RF), QuestLog_TryRecordDepartedLocation (journal de RF),
@@ -1542,12 +1532,27 @@ BikeTransition_MoveDirection (vélo de RF : un seul vélo, celui de Hoenn ; esca
 BikeTransition_Downhill (vélo de RF : un seul vélo, celui de Hoenn ; même code dans MovePlayerOnCyclingRoadSlope (bike.c)),
 BikeTransition_Uphill (vélo de RF : un seul vélo, celui de Hoenn ; même code dans MovePlayerOnCyclingRoadSlope (bike.c))
 
+### cereader_tool.c (6)
+ValidateTrainerTowerTrainer (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)),
+ValidateTrainerTowerData (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)),
+CEReaderTool_SaveTrainerTower_r (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)),
+CEReaderTool_SaveTrainerTower (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)),
+CEReaderTool_LoadTrainerTower_r (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)),
+CEReaderTool_LoadTrainerTower (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF))
+
 ### field_player_avatar.c (6)
 QL_TryRecordPlayerStepWithDuration0 (journal de RF), QL_TryRecordNPCStepWithDuration32 (journal de RF),
 CreateStopSurfingTask_NoMusicChange (journal de RF (quest_log_player.c, seul appelant)),
 Fishing5 (variante RF : Émeraude gardée (Fishing_ShowDots : un point toutes les 8 images et A arrête ; RF 12 images, pas d'arrêt) ; docs/VARIANTES-RF.md),
 Fishing6 (variante RF : Émeraude gardée (Fishing_CheckForBite : VENTOUSE et GLUE aident à ferrer ; RF non) ; docs/VARIANTES-RF.md),
 Fishing7 (variante RF : Émeraude gardée (Fishing_GotBite : « Oh! Ça mord! » puis A à temps ; RF ferre tout seul) ; docs/VARIANTES-RF.md)
+
+### battle_records.c (5)
+IndexOfOpponentLinkBattleRecord (records link d'Émeraude (UpdatePlayerLinkBattleRecords), lus par ShowBattleRecords de RF),
+AddOpponentLinkBattleRecord (records link d'Émeraude (UpdatePlayerLinkBattleRecords), lus par ShowBattleRecords de RF),
+IncTrainerCardWinCount (records link d'Émeraude (UpdatePlayerLinkBattleRecords), lus par ShowBattleRecords de RF),
+IncTrainerCardLossCount (records link d'Émeraude (UpdatePlayerLinkBattleRecords), lus par ShowBattleRecords de RF),
+UpdateBattleOutcomeOnTrainerCards (records link d'Émeraude (UpdatePlayerLinkBattleRecords), lus par ShowBattleRecords de RF)
 
 ### field_effect.c (5)
 ApplyGlobalFieldPaletteTint (journal de RF (teintes grise et sépia des souvenirs)),
@@ -1556,12 +1561,31 @@ WarpOutObjectEventUpwards (variante RF : Émeraude gardée (Corde Sortie, VARIAN
 WarpInObjectEventDownwards (variante RF : Émeraude gardée (Corde Sortie, VARIANTES-RF.md)),
 SpriteCB_FlyBirdWithPlayer (variante RF : Émeraude gardée (SpriteCB_FlyBirdSwoopDown : arc 140, pas de 4 ; RF 180, pas de 2) ; docs/VARIANTES-RF.md)
 
+### field_fadetransition.c (5)
+WarpFadeInScreenWithDelay (variante RF : Émeraude gardée (seul le volet de grange de RF, Task_ExitDoor, l'appelle) ; docs/VARIANTES-RF.md),
+DoTeleport2Warp (link d'Émeraude (field_fadetransition.c : DoSpinEnterWarp de warpspinenter) dans les deux régions),
+DoUnionRoomWarp (link d'Émeraude (field_fadetransition.c) dans les deux régions),
+Task_CableClubWarp (link d'Émeraude (field_fadetransition.c) dans les deux régions),
+Task_ReturnFromLinkRoomWarp (link d'Émeraude (field_fadetransition.c) dans les deux régions)
+
 ### field_screen_effect.c (5)
 DoOutwardBarnDoorWipe (variante RF : Émeraude gardée (sortie d'un bâtiment : fondu d'Émeraude ; RF ouvre l'écran en portes de grange, Task_ExitDoor) ; docs/VARIANTES-RF.md),
 BarnDoorWipeSaveGpuRegs (variante RF : Émeraude gardée (volet de grange, DoOutwardBarnDoorWipe) ; docs/VARIANTES-RF.md),
 BarnDoorWipeLoadGpuRegs (variante RF : Émeraude gardée (volet de grange, DoOutwardBarnDoorWipe) ; docs/VARIANTES-RF.md),
 Task_BarnDoorWipe (variante RF : Émeraude gardée (volet de grange, DoOutwardBarnDoorWipe) ; docs/VARIANTES-RF.md),
 Task_BarnDoorWipeChild (variante RF : Émeraude gardée (volet de grange, DoOutwardBarnDoorWipe) ; docs/VARIANTES-RF.md)
+
+### berry_crush.c (4)
+BerryCrush_SetVBlankCallback (link d'Émeraude (berry_crush.c) dans les deux régions),
+BerryCrush_BuildLocalState (link d'Émeraude (berry_crush.c) dans les deux régions),
+printCrushingResults (link d'Émeraude (berry_crush.c) dans les deux régions),
+Task_ShowBerryCrushRankings (link d'Émeraude (berry_crush.c) dans les deux régions)
+
+### mystery_gift_menu.c (4)
+PrintMysteryGiftOrEReaderTopMenu (Cadeau Mystère d'Émeraude (mystery_gift_menu.c) dans les deux régions),
+AddTextPrinterToWindow1 (Cadeau Mystère d'Émeraude (mystery_gift_menu.c) dans les deux régions),
+ClearTextWindow (Cadeau Mystère d'Émeraude (mystery_gift_menu.c) dans les deux régions),
+HandleMysteryGiftListMenu (Cadeau Mystère d'Émeraude (mystery_gift_menu.c) dans les deux régions)
 
 ### pokemon_storage_system_menu.c (4)
 PrintStringToBufferCopyNow (interface du PC de RF : celle d'Émeraude (choix utilisateur 2026-10-23)),
@@ -1577,15 +1601,53 @@ TrySetQuestLogLinkBattleEvent, GetLinkMultiBattlePlayerIndexes
 — « Précédemment » de RF (Kanto = post-game, décision 2026-11-02), QL_RecordObjects, QL_LoadObjects,
 QL_TryStopSurfing
 
+### start_menu.c (4)
+SetUpStartMenu_Link (link d'Émeraude (start_menu.c) dans les deux régions),
+SetUpStartMenu_UnionRoom (link d'Émeraude (start_menu.c) dans les deux régions),
+DoSetUpSaveAfterLinkBattle (link d'Émeraude (start_menu.c) dans les deux régions),
+task50_after_link_battle_save (link d'Émeraude (start_menu.c) dans les deux régions)
+
+### battle_controller_link_partner.c (3)
+LinkPartnerDummy (link d'Émeraude (battle_controller_link_partner.c) dans les deux régions),
+LinkPartnerHandleUnknownYesNoBox (link d'Émeraude (battle_controller_link_partner.c) dans les deux régions),
+LinkPartnerHandlePlayFanfare (link d'Émeraude (battle_controller_link_partner.c) dans les deux régions)
+
 ### event_object_movement.c (3)
 QL_UpdateObjectEventCurrentMovement (journal de RF (quest_log.c)),
 QuestLogObjectEventExecHeldMovementAction (journal de RF (quest_log.c)),
 ObjectEventCheckForReflectiveSurface (variante RF : Émeraude gardée (ObjectEventGetNearbyReflectionType : zone selon la taille du sprite ; RF 1×2 cases, pareil pour le joueur) ; docs/VARIANTES-RF.md)
 
+### link_rfu_2.c (3)
+LinkRfu_ForceChangeSpParent (link d'Émeraude (link_rfu_2.c) dans les deux régions),
+RfuGetErrorInfo (link d'Émeraude (link_rfu_2.c) dans les deux régions),
+DestroyTask_RfuReconnectWithParent (link d'Émeraude (link_rfu_2.c) dans les deux régions)
+
 ### pokemon_storage_system_graphics.c (3)
 SetShiftMonSpritePtr (interface du PC de RF : celle d'Émeraude (SetShiftedMonData ; choix utilisateur 2026-10-23)),
 ShiftMons (interface du PC de RF : celle d'Émeraude (DoMonPlaceChange ; choix utilisateur 2026-10-23)),
 DoReleaseMonAnim (interface du PC de RF : celle d'Émeraude (TryHideReleaseMon ; choix utilisateur 2026-10-23))
+
+### trade_scene.c (3)
+CheckLinkTimeout (link d'Émeraude (trade.c) dans les deux régions),
+LoadTradeGbaSpriteGfx (link d'Émeraude (trade.c) dans les deux régions),
+TradeBufferOTnameAndNicknames (link d'Émeraude (trade.c) dans les deux régions)
+
+### union_room_battle.c (3)
+SetUpPartiesAndStartBattle (link d'Émeraude (union_room_battle.c) dans les deux régions),
+UnionRoomBattle_CreateTextPrinter (link d'Émeraude (union_room_battle.c) dans les deux régions),
+UnionRoomBattle_PrintTextOnWindow0 (link d'Émeraude (union_room_battle.c) dans les deux régions)
+
+### battle_controller_link_opponent.c (2)
+LinkOpponentHandleUnknownYesNoBox (link d'Émeraude (battle_controller_link_opponent.c) dans les deux régions),
+LinkOpponentHandlePlayFanfare (link d'Émeraude (battle_controller_link_opponent.c) dans les deux régions)
+
+### battle_main.c (2)
+LinkBattleComputeBattleTypeFlags (link d'Émeraude (battle_main.c) dans les deux régions),
+PrepareOwnMultiPartnerBuffer (link d'Émeraude (battle_main.c) dans les deux régions)
+
+### cable_club.c (2)
+AnyConnectedPartnersPlayingRS (link d'Émeraude (cable_club.c) dans les deux régions),
+GetSeeingLinkPlayerCardMsg (link d'Émeraude (cable_club.c) dans les deux régions)
 
 ### event_data.c (2)
 EnableNationalPokedex_RSE (effet nul : VAR_0x403C, pokedex.unused et FLAG_0x838 ne sont jamais lus dans RF (son commentaire)),
@@ -1593,6 +1655,14 @@ IsFlagOrVarStoredInQuestLog (journal de RF)
 
 ### help_message.c (1)
 — aide L/R de RF (Kanto = post-game, décision 2026-11-02), MapNamePopupWindowIdSetDummy
+
+### link_rfu_3.c (2)
+ZeroName (link d'Émeraude (link_rfu_3.c) dans les deux régions),
+NameIsEmpty (link d'Émeraude (link_rfu_3.c) dans les deux régions)
+
+### new_game.c (2)
+ClearBattleTower (Tour de Combat de Rubis/Saphir absente : rien à effacer),
+WarpToPlayersRoom (nouvelle partie de RF : la fusion commence à Hoenn (Kanto = post-game))
 
 ### pokemon_storage_system_tasks.c (2)
 PrintStorageMessage (interface du PC de RF : celle d'Émeraude (PrintMessage : police et fenêtre d'Émeraude ; choix utilisateur 2026-10-23)),
@@ -1613,20 +1683,37 @@ BGMVolumeMax_EnableHelpSystemReduction (aide de RF (volume baissé sous l'aide L
 ### text_window.c (2)
 LoadHelpMessageWindowGfx (aide de RF (help_system)), LoadQuestLogWindowTiles (journal de RF)
 
+### trade.c (2)
+CB2_ReturnToTradeMenuFromSummary (link d'Émeraude (trade.c) dans les deux régions),
+CommunicateWhetherMonCanBeTraded (link d'Émeraude (trade.c) dans les deux régions)
+
+### union_room.c (2)
+Leader_DisconnectOnState (link d'Émeraude (union_room.c) dans les deux régions),
+ItemPrintFunc_Unused (link d'Émeraude (union_room.c) dans les deux régions)
+
+### berry.c (1)
+InitEnigmaBerry (Baie Enigma (e-Reader) ; Émeraude prend la baie par défaut (IsEnigmaBerryValid), même affichage)
+
+### berry_fix_program.c (1)
+SetScene (link d'Émeraude (berry_fix_program.c) dans les deux régions)
+
 ### bg.c (1)
 AdjustBgMosaic (variante RF : mosaïque du poison sur le terrain d'Émeraude gardée (Task_FieldPoisonEffect, fldeff_misc.c) ; docs/VARIANTES-RF.md)
 
 ### blend_palette.c (1)
 BlendPalettesAt (journal de RF (seul appelant SlightlyDarkenPalsInWeather))
 
+### dodrio_berry_picking.c (1)
+DBP_LoadStdWindowGfx (link d'Émeraude (dodrio_berry_picking.c) dans les deux régions)
+
+### easy_chat.c (1)
+EnableRareWord (l'Événement Mystère d'Émeraude (mystery_event_script.c) sert aux deux régions ; un seul dictionnaire Easy Chat (décision 2026-11-02))
+
 ### field_control_avatar.c (1)
 QuestLogOverrideJoyVars (journal de RF)
 
 ### field_effect_helpers.c (1)
 CreateBobbingEffect (variante RF : Émeraude gardée (UpdateBobbingEffect : le Pokémon du Surf monte et descend 2× plus vite que dans RF) ; docs/VARIANTES-RF.md)
-
-### field_fadetransition.c (1)
-WarpFadeInScreenWithDelay (variante RF : Émeraude gardée (seul le volet de grange de RF, Task_ExitDoor, l'appelle) ; docs/VARIANTES-RF.md)
 
 ### field_weather.c (1)
 SlightlyDarkenPalsInWeather (journal de RF)
@@ -1637,11 +1724,14 @@ TrySetObtainedItemQuestLogEvent (journal de RF)
 ### item_use.c (1)
 ItemUse_SetQuestLogEvent (journal de RF)
 
+### link.c (1)
+SetLinkErrorFromRfu (link d'Émeraude (link.c) dans les deux régions)
+
+### mystery_event_script.c (1)
+MEventScript_Run (Événement Mystère d'Émeraude (mystery_event_script.c) dans les deux régions)
+
 ### naming_screen.c (1)
 NamingScreen_CreateRivalIcon (nom du rival : pas de choix du nom du rival (BLUE, décision 2026-10-30))
-
-### new_game.c (1)
-WarpToPlayersRoom (nouvelle partie de RF : la fusion commence à Hoenn (Kanto = post-game))
 
 ### new_menu_helpers.c (1)
 DrawHelpMessageWindowWithText (aide de RF : description du menu Start, seulement en mode BOUTONS = AIDE (aide L/R écartée) ; loadhelp n'est utilisée par aucun script)
@@ -1669,3 +1759,9 @@ CreateLeafSprite (version Vert Feuille (la fusion est Rouge Feu))
 
 ### trainer_see.c (1)
 TrainerSeeFunc_PrepareToEngage (variante RF : Émeraude gardée (PlayerFaceApproachingTrainer : le joueur se tourne vers le dresseur ; RF non) ; docs/VARIANTES-RF.md)
+
+### union_room_player_avatar.c (1)
+MakeGroupAssemblyAreasPassable (link d'Émeraude (union_room_player_avatar.c) dans les deux régions)
+
+### wireless_communication_status_screen.c (1)
+ExitWirelessCommunicationStatusScreen (écran sans fil d'Émeraude (wireless_communication_status_screen.c), ouvert aussi par le moniteur de Kanto)

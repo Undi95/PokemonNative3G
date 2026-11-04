@@ -64,6 +64,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `joueur.jetons [N]` | jetons du Casino ; `N` les met (au plus 9 999) (scénario `kanto_money_coins_box`) |
 | | `joueur.capacite N PLACE CAPACITE [PP]` | donne une capacité (et ses PP) au Pokémon N, à la place 0-3 ; `PP` : PP restants, moins que le maximum (HUILE, scénario `kanto_item_use_scenes`) ; capacité `0` : place vide |
 | Combat | `combat.etat` | type, combattants, contrôleurs |
+| | `combat.ereader [1\|0]` | le dresseur e-Reader (maison de l'Île 7) : `1` = celui du joueur (`FillEReaderTrainerWithPlayerData`, son équipe et sa phrase de combat), `0` = effacé ; puis valide ou non (scénario `kanto_ereader_house`) |
 | Graphismes | `gfx.sprites` | sprites : position, tile, palette, priorité, animation (finie, en pause), callback |
 | | `gfx.palette TYPE BANQUE` | 16 couleurs (0 BG, 1 OBJ) : non fondues, fondues, à l'écran (après jour/nuit) |
 | | `gfx.bg` | registres d'affichage et des 4 BG : ceux du tampon de `gpu_regs.c` (copiés au VBlank), puis les vrais registres (contrôle, décalages, mosaïque) que lit le rendu |
@@ -126,7 +127,7 @@ la connaît pas).
 | cadre de boîte | un cadre de boîte de dialogue dessiné avec une tile que le style chargé (Émeraude ou RF) ne place jamais | `DebugChecks_OnMessageBoxGfx` (chargement) + carte du BG en VRAM toutes les 8 images |
 | Pokémon figé | un sprite de Pokémon (animations de face) qui garde son image 1 pendant 2 s | à chaque image |
 | teinte jour/nuit coupée | la teinte cesse (option active) alors que les couleurs du terrain sont toujours à l'écran | `day_night.c` |
-| special non porté | un special encore en stub est appelé | `kanto_specials_stubs.c` |
+| special non porté | un special encore en stub est appelé (`DebugChecks_Report("special non porté")` ; plus aucun stub depuis le 2026-11-04) | `debug_checks.c` |
 
 Chaque détecteur a été validé sur son bug avant la correction (2026-11-02 : boîte de l'intro avec DIALOGUE =
 KANTO, sprite figé dans la fiche de RF, flèche hors de la boîte de RF, teinte coupée pendant la transition vers un

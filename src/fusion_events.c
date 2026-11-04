@@ -368,6 +368,13 @@ bool8 Fusion_CanTakeFerryToKanto(void)
     return !FlagGet(FLAG_FUSION_KANTO_VISITED) || CanFlyBetweenRegions();
 }
 
+// Le link est-il ouvert (LINK_ENABLED, config.h) ? Sinon, les hôtesses des Centres POKéMON des deux régions (Union
+// Room, coin direct : échanges, combats link, mini-jeux) disent que le club est en réglage, comme avant le POKéDEX
+bool8 Fusion_IsLinkEnabled(void)
+{
+    return LINK_ENABLED;
+}
+
 // Propriétaire du PC selon la région : LÉO à Kanto (une fois rencontré), ANNETTE à Hoenn (idem), sinon « ??? »
 u8 Fusion_GetPCOwner(void)
 {

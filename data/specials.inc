@@ -363,6 +363,7 @@ gSpecials::
 	def_special Fusion_GetPCOwner, ret=SPECIAL_RET_U8 @ PokemonNative3G
 	def_special Fusion_CanTakeFerryToKanto, ret=SPECIAL_RET_U8 @ PokemonNative3G
 	def_special Fusion_IsInKanto, ret=SPECIAL_RET_U8 @ PokemonNative3G
+	def_special Fusion_IsLinkEnabled, ret=SPECIAL_RET_U8 @ PokemonNative3G
 	def_special MonOTNameNotPlayer, ret=SPECIAL_RET_U8
 	def_special BufferLottoTicketNumber
 	def_special TryHideBattleTowerReporter

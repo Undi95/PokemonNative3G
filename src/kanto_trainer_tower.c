@@ -412,7 +412,8 @@ static u16 TT_GetSumOfPlayerPartyLevel(u8 numMons)
     return sum;
 }
 
-static u8 BattleSetup_GetBattleTowerBattleTransition(void)
+// (battle_setup.c de RF ; aussi pour le dresseur e-Reader de l'Île 7, kanto_battle_tower.c)
+u8 BattleSetup_GetBattleTowerBattleTransition(void)
 {
     u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
     u8 playerLevel = TT_GetSumOfPlayerPartyLevel(1);

@@ -115,23 +115,23 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | union_room_chat.c | commun | 51 | 35 | 1 | 0 | 2 | 1 | 15 |  |
 | battle_interface.c | commun | 52 | 11 | 0 | 0 | 0 | 6 | 35 |  |
 | daycare.c | commun | 93 | 18 | 0 | 7 | 38 | 40 | 35 | daycare.c (7) |
-| battle_tower.c | commun | 45 | 33 | 0 | 0 | 0 | 0 | 12 |  |
 | dodrio_berry_picking.c | commun | 147 | 1 | 0 | 0 | 0 | 102 | 44 |  |
 | bg.c | commun | 50 | 1 | 0 | 0 | 0 | 7 | 42 |  |
 | player_pc.c | commun | 47 | 43 | 0 | 4 | 9 | 0 | 4 | player_pc.c (3), kanto_fame_checker.c (1) |
 | shop.c | commun | 60 | 17 | 0 | 13 | 76 | 4 | 39 | copie kanto_shop.c : 53/60 fonctions |
-| metatile_behavior.c | commun | 115 | 58 | 2 | 39 | 70 | 34 | 23 | metatile_behavior.c (39) |
 | naming_screen.c | commun | 109 | 3 | 0 | 0 | 0 | 69 | 37 |  |
 | battle_controller_opponent.c | commun | 87 | 10 | 4 | 1 | 50 | 43 | 34 | kanto_battle_controller_pokedude.c (1) |
+| battle_tower.c | commun | 45 | 33 | 0 | 6 | 18 | 0 | 12 | copie kanto_battle_tower.c : 6/45 fonctions |
+| metatile_behavior.c | commun | 115 | 58 | 2 | 41 | 74 | 34 | 23 | metatile_behavior.c (41) |
 | fieldmap.c | commun | 54 | 3 | 0 | 0 | 0 | 17 | 34 |  |
 | battle_anim_effects_2.c | commun | 121 | 3 | 2 | 0 | 66 | 83 | 35 |  |
 | battle_anim_effects_3.c | commun | 140 | 1 | 1 | 0 | 100 | 104 | 35 |  |
-| easy_chat.c | commun | 40 | 27 | 0 | 2 | 7 | 3 | 10 | kanto_field_specials.c (2) |
 | menu.c | commun | 50 | 25 | 0 | 7 | 28 | 8 | 17 | kanto_hall_of_fame.c (6), kanto_item_pc.c (1) |
+| easy_chat.c | commun | 40 | 27 | 0 | 3 | 11 | 3 | 10 | kanto_field_specials.c (2), easy_chat.c (1) |
 | evolution_graphics.c | commun | 37 | 29 | 3 | 0 | 10 | 0 | 8 |  |
 | battle_gfx_sfx_util.c | commun | 48 | 6 | 1 | 1 | 33 | 13 | 29 | battle_gfx_sfx_util.c (1) |
-| cable_club.c | commun | 54 | 7 | 2 | 0 | 28 | 19 | 28 |  |
 | battle_setup.c | commun | 66 | 20 | 0 | 13 | 65 | 21 | 25 | battle_setup.c (11), kanto_battle_bg.c (1), kanto_trainer_tower.c (1) |
+| cable_club.c | commun | 54 | 7 | 1 | 2 | 42 | 19 | 28 | cable_club.c (2) |
 | item.c | commun | 49 | 29 | 15 | 3 | 62 | 0 | 20 | kanto_item_pc.c (1), kanto_specials.c (1), kanto_tm_case.c (1) |
 | battle_anim_utility_funcs.c | commun | 42 | 1 | 0 | 0 | 0 | 12 | 29 |  |
 | field_control_avatar.c | commun | 49 | 13 | 1 | 8 | 69 | 11 | 25 | field_control_avatar.c (8) |
@@ -209,7 +209,6 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | event_object_lock.c | commun | 11 | 4 | 0 | 1 | 25 | 2 | 5 | kanto_itemfinder.c (1) |
 | item_menu_icons.c | commun | 17 | 9 | 0 | 9 | 100 | 0 | 8 | copie kanto_item_menu_icons.c : 17/17 fonctions |
 | new_game.c | commun | 11 | 3 | 1 | 0 | 33 | 2 | 6 |  |
-| script_pokemon_util.c | commun | 13 | 3 | 0 | 0 | 0 | 5 | 5 |  |
 | title_screen.c | commun | 39 | 36 | 0 | 31 | 86 | 0 | 3 | copie kanto_title_screen.c : 33/39 fonctions |
 | wireless_communication_status_screen.c | commun | 12 | 1 | 0 | 0 | 0 | 4 | 7 |  |
 | battle_anim_sound_tasks.c | commun | 15 | 0 | 0 | 0 | 100 | 8 | 7 |  |
@@ -217,6 +216,7 @@ Légende : « Propres à RF » = noms de fonctions absents de tout `src/` d'Éme
 | ereader_screen.c | commun | 11 | 1 | 1 | 0 | 100 | 3 | 7 |  |
 | intro.c | commun | 79 | 71 | 1 | 69 | 98 | 2 | 6 | copie kanto_intro.c : 72/79 fonctions |
 | load_save.c | commun | 21 | 2 | 0 | 0 | 0 | 14 | 5 |  |
+| script_pokemon_util.c | commun | 13 | 3 | 0 | 1 | 33 | 5 | 5 | script_pokemon_util.c (1) |
 | AgbRfu_LinkManager.c | commun | 33 | 0 | 0 | 0 | 100 | 27 | 6 |  |
 | field_special_scene.c | commun | 6 | 4 | 0 | 0 | 0 | 0 | 2 |  |
 | field_tasks.c | commun | 12 | 2 | 0 | 2 | 100 | 4 | 6 | field_tasks.c (2) |

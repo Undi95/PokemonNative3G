@@ -143,8 +143,9 @@ eF, eN = all_functions(E)
 rF, rN = all_functions(R)
 fF, fN = all_functions(F)
 fusion_names = set(fN)
-stub_file = 'kanto_specials_stubs.c'
-stubbed = set(re.findall(r'^\w[\w \t*]*?\b(\w+)\([^)]*\)\s*\{', rd(os.path.join(F, 'src', stub_file)), re.M))
+stub_file = 'kanto_specials_stubs.c'   # (supprimé le 2026-11-04 : plus aucun special de RF en stub)
+stub_path = os.path.join(F, 'src', stub_file)
+stubbed = set(re.findall(r'^\w[\w \t*]*?\b(\w+)\([^)]*\)\s*\{', rd(stub_path), re.M)) if os.path.exists(stub_path) else set()
 fusion_names |= stubbed
 
 

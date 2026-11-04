@@ -30,6 +30,8 @@ extern const u8 EventScript_Cup[];
 extern const u8 EventScript_BlinkingLights[];
 extern const u8 EventScript_NeatlyLinedUpTools[];
 extern const u8 TrainerTower_EventScript_ShowTime[];
+extern const u8 CableClub_EventScript_ShowWirelessCommunicationScreen[];
+extern const u8 CableClub_EventScript_ShowBattleRecords[];
 #define SIGNPOST_POKECENTER 0
 #define SIGNPOST_POKEMART 1
 #define SIGNPOST_INDIGO_1 2
@@ -501,6 +503,11 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         return EventScript_Computer;
     if (MetatileBehavior_IsTrainerTowerMonitor(metatileBehavior) == TRUE)
         return TrainerTower_EventScript_ShowTime;
+    // Rouge Feu : le hall du 2ᵉ étage des Centres de Kanto (data/kanto/data/scripts/cable_club.inc)
+    if (MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor(metatileBehavior, direction) == TRUE)
+        return CableClub_EventScript_ShowWirelessCommunicationScreen;
+    if (MetatileBehavior_IsPlayerFacingBattleRecords(metatileBehavior, direction) == TRUE)
+        return CableClub_EventScript_ShowBattleRecords;
     if (MetatileBehavior_IsCabinet(metatileBehavior) == TRUE)
         return EventScript_Cabinet;
     if (MetatileBehavior_IsKitchen(metatileBehavior) == TRUE)

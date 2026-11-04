@@ -8,8 +8,9 @@
    - (2026-10-31) dalles tournantes de l'Arène de Jadielle et du Repaire Rocket (field_player_avatar.c), objets
      d'intérieur à examiner (armoire, cuisine, ordinateur…), eau de la Piste Cyclable (surfable), sable des grottes
      (traces de pas), moniteur de la Tour des Dresseurs.
-   Les tuiles de link de RF (moniteur sans fil, records, porte de l'Union Room) et celles sans effet dans RF
-   (MB_WINDOW, MB_PORTHOLE) restent MB_NORMAL.
+   (2026-11-04) moniteur sans fil et écran des records du hall du 2ᵉ étage des Centres (accessibles en solo dans RF,
+   comme leurs équivalents d'Émeraude). La porte de l'Union Room de RF et les tuiles sans effet dans RF (MB_WINDOW,
+   MB_PORTHOLE) restent MB_NORMAL.
 2. Type de rencontre de RF (bits 24-26 de ses attributs : aucune, sol, eau) : RF décide avec lui des rencontres
    sauvages de chaque case, Émeraude avec le comportement. Il est rangé dans les bits 8-9 de l'attribut d'Émeraude
    (inutilisés) et lu à Kanto par wild_encounter.c (MapGridGetMetatileEncounterTypeAt).
@@ -30,6 +31,8 @@ RESTORED = (
     'MB_TELEPHONE', 'MB_COMPUTER', 'MB_ADVERTISING_POSTER', 'MB_FOOD_SMELLS_TASTY', 'MB_TRASH_BIN', 'MB_CUP',
     'MB_BLINKING_LIGHTS', 'MB_NEATLY_LINED_UP_TOOLS', 'MB_BURGLARY', 'MB_POKEMART_SHELF', 'MB_TRAINER_TOWER_MONITOR',
     'MB_CYCLING_ROAD_WATER', 'MB_SAND_CAVE',
+    # (2026-11-04) le hall du 2ᵉ étage des Centres : moniteur sans fil et écran des records, accessibles en solo dans RF
+    'MB_CABLE_CLUB_WIRELESS_MONITOR', 'MB_BATTLE_RECORDS',
 )
 ENCOUNTER_SHIFT = 8      # METATILE_ATTR_ENCOUNTER_SHIFT (include/global.fieldmap.h)
 ENCOUNTER_MASK = 0x0300  # METATILE_ATTR_ENCOUNTER_MASK

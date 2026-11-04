@@ -97,7 +97,7 @@ enum {
     MB_UP_LEFT_STAIR_WARP,
     MB_DOWN_RIGHT_STAIR_WARP,
     MB_DOWN_LEFT_STAIR_WARP,
-    MB_UNUSED_5F,
+    MB_CABLE_CLUB_WIRELESS_MONITOR, // PokemonNative3G : RF, 2ᵉ étage des Centres de Kanto (tools/kanto_tile_attributes.py)
     MB_NON_ANIMATED_DOOR,
     MB_LADDER,
     MB_EAST_ARROW_WARP,
@@ -123,7 +123,7 @@ enum {
     MB_PACIFIDLOG_HORIZONTAL_LOG_LEFT,
     MB_PACIFIDLOG_HORIZONTAL_LOG_RIGHT,
     MB_FORTREE_BRIDGE,
-    MB_UNUSED_79,
+    MB_BATTLE_RECORDS, // PokemonNative3G : RF, 2ᵉ étage des Centres de Kanto (tools/kanto_tile_attributes.py)
     MB_BRIDGE_OVER_POND_MED_EDGE_1,
     MB_BRIDGE_OVER_POND_MED_EDGE_2,
     MB_BRIDGE_OVER_POND_HIGH_EDGE_1,

@@ -2873,7 +2873,8 @@ static void AwardBattleTowerRibbons(void)
 
 // This is a leftover debugging function that is used to populate the E-Reader
 // trainer with the player's current data.
-static void UNUSED FillEReaderTrainerWithPlayerData(void)
+// PokemonNative3G : appelée par l'outil de debug combat.ereader (maison de l'Île 7, sans e-Reader)
+void FillEReaderTrainerWithPlayerData(void)
 {
     struct BattleTowerEReaderTrainer *ereaderTrainer = &gSaveBlock2Ptr->frontier.ereaderTrainer;
     s32 i, j;

@@ -1647,6 +1647,27 @@ bool8 MetatileBehavior_IsTrainerTowerMonitor(u8 metatileBehavior)
         return FALSE;
 }
 
+// PokemonNative3G : Rouge Feu, le hall du 2ᵉ étage des Centres de Kanto (field_control_avatar.c)
+bool8 MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor(u8 metatileBehavior, u8 playerDirection)
+{
+    if (playerDirection != DIR_NORTH)
+        return FALSE;
+    else if (metatileBehavior == MB_CABLE_CLUB_WIRELESS_MONITOR)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsPlayerFacingBattleRecords(u8 metatileBehavior, u8 playerDirection)
+{
+    if (playerDirection != DIR_NORTH)
+        return FALSE;
+    else if (metatileBehavior == MB_BATTLE_RECORDS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
 bool8 MetatileBehavior_IsCabinet(u8 metatileBehavior)
 {
     if (metatileBehavior == MB_CABINET)

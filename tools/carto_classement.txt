@@ -211,7 +211,6 @@ CB2_LoadMapForQLPlayback écartée journal de RF
 CB2_SetUpOverworldForQLPlaybackWithWarpExit écartée journal de RF
 DoLoadMap_QLPlayback écartée journal de RF
 LoadMap_QLPlayback écartée journal de RF
-CreateConfirmLeaveTradeRoomPrompt link Centre d'échange de RF (RunConfirmLeaveCableClubScript d'Émeraude)
 FieldCB_ShowMapNameOnContinue équivalente FieldCB_FadeTryShowMapPopup (overworld.c), + bases secrètes d'Émeraude
 InitOverworldBgs_NoResetHeap équivalente InitOverworldBgs (overworld.c), crédits de RF (MapLdr_Credits) = Overworld_DoScrollSceneForCredits
 Overworld_ResetStateOnContinue équivalente UpdateMiscOverworldStates (overworld.c), avec la scène du Safari de Kanto et la Piste Cyclable
@@ -225,8 +224,6 @@ MetatileBehavior_IsFastWater morte jamais appelée dans RF
 MetatileBehavior_IsImpressiveMachine morte MB_IMPRESSIVE_MACHINE dans aucun tileset de RF
 MetatileBehavior_IsSnacks morte MB_SNACKS dans aucun tileset de RF
 MetatileBehavior_IsVideoGame morte MB_VIDEO_GAME dans aucun tileset de RF
-MetatileBehavior_IsPlayerFacingBattleRecords link écran des records du Club Câble de RF
-MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor link moniteur sans fil de RF
 MetatileBehavior_IsSandOrShallowFlowingWater équivalente kanto_battle_bg.c (Kanto_BattleSetup_GetTerrainId), écrite en ligne
 MetatileBehavior_IsSurfable équivalente MetatileBehavior_IsSurfableWaterOrUnderwater (metatile_behavior.c), kanto_battle_bg.c
 MetatileBehavior_IsWarpDoor_2 équivalente MetatileBehavior_IsDoor (metatile_behavior.c), MB_WARP_DOOR importé en MB_ANIMATED_DOOR
@@ -281,8 +278,6 @@ BikeTransition_TurnDirection équivalente AcroBikeTransition_TurnDirection (bike
 CanBikeFaceDirectionOnRail équivalente CanBikeFaceDirOnMetatile (bike.c), même code
 GetBikeTransitionId équivalente CheckMovementInputAcroBike (bike.c), même aiguillage
 # field_fadetransition.c, field_screen_effect.c
-DoTeleport2Warp link seul ScrCmd_warpspinenter de RF, pour l'Union Room (cable_club.inc)
-DoUnionRoomWarp link Union Room de RF
 Task_Teleport2Warp équivalente Task_WarpAndLoadMap (field_screen_effect.c), + effacement de la Tour Mirage (Hoenn) ; DoWarp, DoDiveWarp et Task_DoorWarp de RF l'utilisent aussi
 Task_WaitFadeAndCreateStartMenuTask équivalente Task_WaitForFadeShowStartMenu (field_screen_effect.c), même code
 DoOutwardBarnDoorWipe écartée variante RF : Émeraude gardée (sortie d'un bâtiment : fondu d'Émeraude ; RF ouvre l'écran en portes de grange, Task_ExitDoor) ; docs/VARIANTES-RF.md
@@ -293,8 +288,6 @@ Task_WaitDeoxysFieldEffect écartée Île Naissance de RF : celle d'Émeraude (W
 # script.c, script_pokemon_util.c, event_object_lock.c
 IsQuestLogInputDpad écartée journal de RF
 ValidateRamScript équivalente ValidateSavedRamScript (script.c), LOCALID_PLAYER = 255
-CB2_ReturnFromChooseBattleTowerParty link Tour de Combat de RF (salle e-Reader)
-ReducePlayerPartyToThree link Tour de Combat de RF (salle e-Reader)
 Task_WaitPlayerAndTargetNPCStopMoving équivalente Task_FreezeSelectedObjectAndPlayer (event_object_lock.c), HandleEnforcedLookDirectionOnPlayerStopMoving = PlayerFreeze (même code)
 # battle_controller_oak_old_man.c : contrôleur commun au tutoriel de CHEN (BATTLE_TYPE_FIRST_BATTLE, écarté : Kanto =
 # post-game, décision 2026-11-02) et au vieil homme de Jadielle (battle_controller_old_man.c, OldMan*). Les seules
@@ -382,8 +375,6 @@ SpriteCB_UnusedDebugSprite morte jamais utilisé dans RF (debug)
 SpriteCB_UnusedDebugSprite_Step morte jamais utilisé dans RF (debug)
 UpdatePartyOwnerOnSwitch_NonMulti équivalente SwitchPartyOrder (battle_main.c), même code
 UpdatePlayerPosInThrowAnim équivalente AnimSetCenterToCornerVecX (battle_main.c), même code
-LinkBattleComputeBattleTypeFlags link combats link de RF
-PrepareOwnMultiPartnerBuffer link combats multi de RF
 DrawHealthbarOntoScreen équivalente Debug_TestHealthBar_Helper (battle_interface.c), même dessin
 GetReceivedValueInPixels équivalente GetScaledExpFraction (battle_interface.c), même calcul
 SpriteCB_PartySummaryBall_Exit équivalente SpriteCB_StatusSummaryBalls_Exit (battle_interface.c), / 16 = >> 4, DISPLAY_WIDTH + 8 = 248
@@ -420,16 +411,6 @@ EndPokedudeBattle morte « Unused » dans RF (StartPokedudeBattle jamais appelé
 StartRoamerBattle équivalente BattleSetup_StartRoamerBattle (battle_setup.c), musique des légendaires de RF à Kanto (portée 2026-11-02)
 StartScriptedWildBattle équivalente BattleSetup_StartScriptedWildBattle (battle_setup.c), BATTLE_TYPE_WILD_SCRIPTED de RF (gBattleWildScriptedFrlg)
 # battle_tower.c, battle_records.c : Tour de Combat (salle e-Reader) et records du Club Câble de RF
-BufferEReaderTrainerGreeting link Tour de Combat de RF (e-Reader)
-CopyEReaderTrainerName5 link Tour de Combat de RF (e-Reader)
-PrintEReaderTrainerFarewellMessage link Tour de Combat de RF (e-Reader)
-SetBattleTowerParty link Tour de Combat de RF (e-Reader)
-SetBattleTowerRecordChecksum link Tour de Combat de RF (e-Reader)
-SetPlayerBattleTowerRecord link Tour de Combat de RF (e-Reader)
-Task_WaitBT link Tour de Combat de RF (e-Reader)
-IncTrainerCardLossCount link records du Club Câble de RF
-IncTrainerCardWinCount link records du Club Câble de RF
-IndexOfOpponentLinkBattleRecord link records du Club Câble de RF
 # start_menu.c : le menu Start et la sauvegarde d'Émeraude (style de RF par l'option MENUS) ; renommages
 AppendToStartMenuItems équivalente AddStartMenuAction (start_menu.c), même code
 CloseSaveStatsWindow équivalente RemoveSaveInfoWindow (start_menu.c), même code
@@ -458,10 +439,6 @@ DestroySafariZoneStatsWindow équivalente RemoveExtraStartMenuWindows (start_men
 SetUpStartMenu équivalente BuildStartMenuActions (start_menu.c), même aiguillage
 SetUpStartMenu_NormalField équivalente BuildNormalStartMenu (start_menu.c), mêmes entrées
 SetUpStartMenu_SafariZone équivalente BuildSafariZoneStartMenu (start_menu.c), mêmes entrées
-SetUpStartMenu_Link link menu Start des combats link de RF
-SetUpStartMenu_UnionRoom link menu Start de l'Union Room de RF
-task50_after_link_battle_save link sauvegarde après un combat link
-DoSetUpSaveAfterLinkBattle link sauvegarde après un combat link
 StartCB_HandleInput équivalente HandleStartMenuInput (start_menu.c), même code
 StartCB_Save1 équivalente StartMenuSaveCallback (start_menu.c), même code
 StartCB_Save2 équivalente SaveStartCallback (start_menu.c), même code
@@ -494,12 +471,6 @@ Task_HandleRestoreWhichMoveInput équivalente Task_HandleWhichMoveInput (party_m
 CB2_ReturnToBerryPouchMenu équivalente KantoBag_TryGoToBagMenu (kanto_item_menu.c), ITEMMENULOCATION_LAST revient au sac à baies
 CB2_ReturnToTMCaseMenu équivalente KantoBag_TryGoToBagMenu (kanto_item_menu.c), ITEMMENULOCATION_LAST revient à la boîte CT
 EnterPartyFromItemMenuInBattle équivalente ChooseMonForInBattleItem (party_menu.c), sans la branche de CHEN
-CursorCB_Enter link choix de l'équipe des combats link / Tour de RF
-CursorCB_NoEntry link choix de l'équipe des combats link / Tour de RF
-DisplayPartyPokemonDataForChooseMultiple link choix de l'équipe des combats link / Tour de RF
-InitChooseMonsForBattle link choix de l'équipe des combats link / Tour de RF
-Task_ContinueChoosingMonsForBattle link choix de l'équipe des combats link / Tour de RF
-Task_ValidateChosenMonsForBattle link choix de l'équipe des combats link / Tour de RF
 SetSwappedHeldItemQuestLogEvent écartée journal de RF
 SetSwitchedPartyOrderQuestLogEvent écartée journal de RF
 SetUsedFieldMoveQuestLogEvent écartée journal de RF
@@ -541,7 +512,6 @@ IsWordUnlocked équivalente IsEasyChatWordUnlocked (easy_chat.c), même code
 Localize_ConvertEasyChatMessageToString équivalente OtherConvertEasyChatWordsToString (easy_chat.c), un dictionnaire
 PopulateAlphabeticalGroups équivalente SetUnlockedWordsByAlphabet (easy_chat.c), un dictionnaire
 UnlockedECMonOrMove équivalente IsEasyChatIndexAndGroupUnlocked (easy_chat.c), un dictionnaire
-EnableRareWord link seul l'Événement Mystère de RF (mystery_event_script.c) débloque des mots rares
 # item_use.c : FieldUseFunc_X / BattleUseFunc_X de RF = ItemUseOutOfBattle_X / ItemUseInBattle_X d'Émeraude ; objets de
 # RF (MEMORYDEX, CARTE, TV ABC, BOITE CT, SAC A BAIES, POKé FLUTE, CHERCHE VS) déjà portés sous ces noms (items.h)
 BattleUseFunc_Ether équivalente ItemUseInBattle_PPRecovery (item_use.c), même aiguillage
@@ -731,7 +701,6 @@ Item_SwitchMonsWithMoving équivalente SwapItemsWithMon (pokemon_storage_system.
 MultiMove_Function_GrabSelection équivalente MultiMove_GrabSelection (pokemon_storage_system.c d'Émeraude), même code
 MonPlaceChange_MoveCursorUp équivalente MonPlaceChange_CursorUp (pokemon_storage_system.c d'Émeraude), même code
 StartDisplayMonMosaic équivalente StartDisplayMonMosaicEffect (pokemon_storage_system.c d'Émeraude), même code
-BufferBattleTowerTrainerMessage link Tour de Combat de RF : dresseurs e-Reader et records mélangés
 CreateLeafSprite écartée version Vert Feuille (la fusion est Rouge Feu)
 # option_menu.c : l'écran Options de RF (MENUS = KANTO) est dans option_menu.c ; son CB2 et sa VBlank ont le code d'Émeraude
 VBlankCB_OptionMenu équivalente VBlankCB (option_menu.c d'Émeraude), même code
@@ -767,8 +736,6 @@ Task_ContinueScript équivalente Task_WaitForFadeAndEnableScriptCtx (field_scree
 Task_DoorWarp équivalente Task_DoDoorWarp (field_screen_effect.c), même code (le cas 5 de RF n'est jamais atteint)
 Task_SafariZoneRanOutOfBalls équivalente Task_ReturnToFieldNoScript (field_screen_effect.c), ClearPlayerHeldMovementAndUnfreezeObjectEvents = ScriptUnfreezeObjectEvents (même code)
 WarpFadeInScreenWithDelay écartée variante RF : Émeraude gardée (seul le volet de grange de RF, Task_ExitDoor, l'appelle) ; docs/VARIANTES-RF.md
-Task_CableClubWarp link Club Câble de RF
-Task_ReturnFromLinkRoomWarp link retour du Club Câble de RF
 # bike.c : un seul vélo, celui de Hoenn (FUSION-OPTIONS, 2026-10-24)
 BikeInputHandler_Normal écartée vélo de RF : un seul vélo, celui de Hoenn ; ses pentes de la Piste Cyclable sont dans MovePlayerOnCyclingRoadSlope (bike.c)
 BikeInputHandler_Slope écartée vélo de RF : un seul vélo, celui de Hoenn ; repris dans MovePlayerOnCyclingRoadSlope (bike.c)
@@ -907,14 +874,11 @@ AnimTask_ShakeBattleTerrain équivalente AnimTask_ShakeBattlePlatforms (battle_a
 DecompressTrainerBackPalette équivalente DecompressTrainerBackPic (battle_gfx_sfx_util.c), qui charge aussi la palette
 BattleStringShouldBeColored équivalente sans effet visible : police MALE / FEMALE des messages des dresseurs = police normale en français
 Localize_TrainerClass_Names équivalente GetTrainerClassNameGenderSpecific (international_string_util.c) : en français, ses Localize_TrainerClass_* rendent le nom normal
-AddOpponentLinkBattleRecord link records de combats link de RF
-UpdateBattleOutcomeOnTrainerCards link records de combats link de RF
 Cmd_if_level_compare équivalente Cmd_if_level_cond (battle_ai_script_commands.c), gBattlerAttacker = sBattler_AI pendant l'IA
 GetBattleAnimBgDataByPriorityRank équivalente GetBgDataForTransform (battle_anim_mons.c), + Concours d'Émeraude
 BattleIntroOpponentSendsOutMonAnimation équivalente BattleIntroOpponent1SendsOutMonAnimation (battle_main.c), + doubles et combats enregistrés d'Émeraude
 StartTrainerBattle équivalente BattleSetup_StartTrainerBattle (battle_setup.c), + Pyramide, Colline d'Entraînement et doubles d'Émeraude ; combat-tutoriel du rival (CHEN) écarté
 # divers
-ClearBattleTower link Tour de Combat de RF (e-Reader)
 WarpToPlayersRoom écartée nouvelle partie de RF : la fusion commence à Hoenn (Kanto = post-game)
 ScriptContext_GetQuestLogInput écartée journal de RF
 ScriptContext_NextCommandEndsScript écartée journal de RF (seul appelant : le contexte de script du journal)
@@ -922,7 +886,6 @@ RecordItemTransaction écartée journal de RF (achats et ventes notés pour le j
 RecordTransactionForQuestLog écartée journal de RF
 BGMVolumeMax_EnableHelpSystemReduction écartée aide de RF (volume baissé sous l'aide L/R)
 SetBGMVolume_SuppressHelpSystemReduction écartée aide de RF (volume baissé sous l'aide L/R)
-InitEnigmaBerry link Baie Enigma (e-Reader) ; sans elle, Émeraude prend la baie par défaut de la table (IsEnigmaBerryValid) : même affichage
 AdjustBgMosaic écartée variante RF : mosaïque du poison sur le terrain d'Émeraude gardée (Task_FieldPoisonEffect, fldeff_misc.c) ; docs/VARIANTES-RF.md
 BlendPalettesAt écartée journal de RF (seul appelant SlightlyDarkenPalsInWeather)
 SlightlyDarkenPalsInWeather écartée journal de RF
@@ -938,4 +901,200 @@ NamingScreen_CreateRivalIcon écartée nom du rival : pas de choix du nom du riv
 CopyPaletteInvertedTint écartée journal de RF
 GetUserWindowGraphics équivalente GetWindowFrameTilesPal (text_window.c), ->tiles et ->pal
 PopulateECGroups équivalente SetUnlockedEasyChatGroups (easy_chat.c), même déblocage ; + PHRASES TENDANCE d'Émeraude (les deux écrans d'Easy Chat lisent ces groupes)
-ChooseBattleTowerPlayerParty link Tour de Combat de RF (salle e-Reader de l'Île 7) ; stub inaccessible en solo (kanto_specials_stubs.c)
+# Link et e-Reader (2026-11-04, phase 5). Le link est codé et caché en jeu (LINK_ENABLED, include/config.h ; décision
+# 2026-11-02) : c'est celui d'Émeraude, pour les deux régions (règle des variantes du code commun, 2026-11-02) ; les
+# salles de link de Kanto y mènent (EnterTradeSeat, EnterColosseumPlayerSpot de RF, cable_club.c). Portés : la maison
+# e-Reader de l'Île 7 (kanto_battle_tower.c, scénario kanto_ereader_house), le moniteur sans fil et les records du hall
+# du 2ᵉ étage (scénario kanto_center_2f). La Tour de Combat de RF est un reste de Rubis/Saphir sans carte ni script.
+UnionRoomChat_TryAllocGraphicsWork écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_RunDisplaySubtask0 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_FreeGraphicsWork écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+InitWork écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_ResetDisplaySubtasks écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_RunDisplaySubtasks écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_StartDisplaySubtask écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+RunDisplaySubtask écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_LoadGfx écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_PrintWin3 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_HideWin3 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_SwitchPages écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_MoveSelectorCursorObj écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_ShowQuitChattingDialog écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_UpdateMessageBuffer écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_PrintRegisterWhere écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_CancelRegister écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_ReturnToKeyboard écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_ScrollChat écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_AnimateSelectorCursorBlink écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_PrintInputText écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_PrintExitingChat écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_PrintLeaderLeft écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_AskSave écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_AskOverwriteSave écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_PrintSavingDontTurnOffPower écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_PrintSavedTheGame écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtask_ShowConfirmLeaderLeaveDialog écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DisplaySubtaskDummy écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+PlaceYesNoMenuAt écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_ProcessInput écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+PlaceStdMessageWindow écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+FillWin1Rect écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+PrintOnWin1Parameterized écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+AnimateMoveBg1Right écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+AnimateMoveBg1Left écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+PrintKeyboardSwapTextsOnWin3 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ClearWin3 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+PrintTextOnWin0Colorized écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+SetBgTilemapWorkBuffers écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+LoadUnionRoomChatPanelGfx écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+LoadLinkMiscMenuGfx écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+LoadBg1Pal8 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+LoadWin0 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+LoadWin2 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+LoadWin1 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+LoadWin3 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+FillScanlineEffectWithValue1col écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+FillScanlineEffectWithValue2col écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+InitChatWork écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+FreeChatWork écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatEntryRoutine_Join écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatEntryRoutine_HandleInput écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatEntryRoutine_Switch écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatEntryRoutine_AskQuitChatting écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatEntryRoutine_ExitChat écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatEntryRoutine_Drop écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatEntryRoutine_Disbanded écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatEntryRoutine_SendMessage écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatEntryRoutine_Register écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatEntryRoutine_SaveAndExit écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+GoToRoutine écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+TypeChatMessage_HandleDPad écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+AppendCharacterToChatMessageBuffer écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+DeleteLastCharacterOfChatMessageBuffer écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ToggleCaseOfLastCharacterInChatMessageBuffer écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ChatMsgHasAtLeastOneCharcter écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+SaveRegisteredTextsToSB1 écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetWorkRegisteredText écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+GetEndOfUnk1A écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+GetPtrToLastCharOfUnk1A écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+GetNumCharsInMessageEntryBuffer écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetCursorColAndRow écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetMessageEntryBuffer écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_LenMessageEntryBuffer écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetBufferSelectionRegion écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetEndOfMessageEntryBuffer écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetNumCharsInMessageEntryBuffer écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetLastReceivedMessage écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetReceivedPlayerIndex écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetMessageEntryCursorPosition écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetWhetherShouldShowCaseToggleIcon écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_GetNameOfPlayerWhoDisbandedChat écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+BattleTowerMapScript2 morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+ResetBattleTowerStreak morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+ShouldBattleEReaderTrainer morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+ChooseNextBattleTowerTrainer morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+SetBattleTowerTrainerGfxId morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+UpdateOrInsertReceivedBattleTowerRecord morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+GetBattleTowerTrainerFrontSpriteId morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF (BATTLE_TYPE_BATTLE_TOWER n'est lancé que par elle)
+GetBattleTowerTrainerClassNameId morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF (BATTLE_TYPE_BATTLE_TOWER n'est lancé que par elle)
+GetBattleTowerTrainerName morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF (BATTLE_TYPE_BATTLE_TOWER n'est lancé que par elle)
+FillBattleTowerTrainerParty morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+AppendBattleTowerBannedSpeciesName morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+CheckMonBattleTowerBanlist morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+CheckPartyBattleTowerBanlist morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+PrintBattleTowerTrainerGreeting morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+SetBattleTowerProperty morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+BattleTowerUtil morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+SetBattleTowerParty morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+SetPlayerBattleTowerRecord morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+SaveBattleTowerProgress morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+BattleTower_SoftReset morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+SetBattleTowerRecordChecksum morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+PopulateBravoTrainerBattleTowerLostData morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+DetermineBattleTowerPrize morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+GiveBattleTowerPrize morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+Debug_FillEReaderTrainerWithPlayerData équivalente FillEReaderTrainerWithPlayerData (battle_tower.c), même code sur frontier.ereaderTrainer ; outil de debug combat.ereader
+CopyEReaderTrainerName5 équivalente GetEreaderTrainerName (battle_tower.c), même code (5 lettres + EOS) sur frontier.ereaderTrainer : nom du dresseur e-Reader de l'Île 7
+Dummy_TryEnableBravoTrainerBattleTower morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+UnionRoomChat_TryAllocSpriteWork écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_FreeSpriteWork écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_CreateSelectorCursorObj écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_ToggleSelectorCursorObjVisibility écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_MoveSelectorCursorObj écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_UpdateObjPalCycle écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_SetSelectorCursorClosedImage écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_AnimateSelectorCursorReopen écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UnionRoomChat_SpawnTextEntryPointerSprites écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+CreatePageSwitchUISprites écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+UpdateVisibleUnionRoomChatIcon écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
+ValidateTrainerTowerTrainer écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
+ValidateTrainerTowerData écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
+CEReaderTool_SaveTrainerTower_r écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
+CEReaderTool_SaveTrainerTower écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
+CEReaderTool_LoadTrainerTower_r écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
+CEReaderTool_LoadTrainerTower écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
+DisplayPartyPokemonDataForChooseMultiple écartée choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7
+CursorCB_Enter écartée choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7
+CursorCB_NoEntry écartée choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7
+InitChooseMonsForBattle écartée choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7
+Task_ValidateChosenMonsForBattle écartée choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7
+Task_ContinueChoosingMonsForBattle écartée choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7
+IndexOfOpponentLinkBattleRecord écartée records link d'Émeraude (UpdatePlayerLinkBattleRecords), lus par ShowBattleRecords de RF
+AddOpponentLinkBattleRecord écartée records link d'Émeraude (UpdatePlayerLinkBattleRecords), lus par ShowBattleRecords de RF
+IncTrainerCardWinCount écartée records link d'Émeraude (UpdatePlayerLinkBattleRecords), lus par ShowBattleRecords de RF
+IncTrainerCardLossCount écartée records link d'Émeraude (UpdatePlayerLinkBattleRecords), lus par ShowBattleRecords de RF
+UpdateBattleOutcomeOnTrainerCards écartée records link d'Émeraude (UpdatePlayerLinkBattleRecords), lus par ShowBattleRecords de RF
+BerryCrush_SetVBlankCallback écartée link d'Émeraude (berry_crush.c) dans les deux régions
+BerryCrush_BuildLocalState écartée link d'Émeraude (berry_crush.c) dans les deux régions
+printCrushingResults écartée link d'Émeraude (berry_crush.c) dans les deux régions
+Task_ShowBerryCrushRankings écartée link d'Émeraude (berry_crush.c) dans les deux régions
+AnyConnectedPartnersPlayingRS écartée link d'Émeraude (cable_club.c) dans les deux régions
+CableClub_AskSaveTheGame morte aucun script de RF ne l'appelle (special retiré de la table de Kanto le 2026-11-04)
+StartWiredCableClubTrade morte aucun script de RF ne l'appelle (special retiré de la table de Kanto le 2026-11-04)
+GetSeeingLinkPlayerCardMsg écartée link d'Émeraude (cable_club.c) dans les deux régions
+DoTeleport2Warp écartée link d'Émeraude (field_fadetransition.c : DoSpinEnterWarp de warpspinenter) dans les deux régions
+DoUnionRoomWarp écartée link d'Émeraude (field_fadetransition.c) dans les deux régions
+Task_CableClubWarp écartée link d'Émeraude (field_fadetransition.c) dans les deux régions
+Task_ReturnFromLinkRoomWarp écartée link d'Émeraude (field_fadetransition.c) dans les deux régions
+PrintMysteryGiftOrEReaderTopMenu écartée Cadeau Mystère d'Émeraude (mystery_gift_menu.c) dans les deux régions
+AddTextPrinterToWindow1 écartée Cadeau Mystère d'Émeraude (mystery_gift_menu.c) dans les deux régions
+ClearTextWindow écartée Cadeau Mystère d'Émeraude (mystery_gift_menu.c) dans les deux régions
+HandleMysteryGiftListMenu écartée Cadeau Mystère d'Émeraude (mystery_gift_menu.c) dans les deux régions
+SetUpStartMenu_Link écartée link d'Émeraude (start_menu.c) dans les deux régions
+SetUpStartMenu_UnionRoom écartée link d'Émeraude (start_menu.c) dans les deux régions
+DoSetUpSaveAfterLinkBattle écartée link d'Émeraude (start_menu.c) dans les deux régions
+task50_after_link_battle_save écartée link d'Émeraude (start_menu.c) dans les deux régions
+LinkPartnerDummy écartée link d'Émeraude (battle_controller_link_partner.c) dans les deux régions
+LinkPartnerHandleUnknownYesNoBox écartée link d'Émeraude (battle_controller_link_partner.c) dans les deux régions
+LinkPartnerHandlePlayFanfare écartée link d'Émeraude (battle_controller_link_partner.c) dans les deux régions
+LinkRfu_ForceChangeSpParent écartée link d'Émeraude (link_rfu_2.c) dans les deux régions
+RfuGetErrorInfo écartée link d'Émeraude (link_rfu_2.c) dans les deux régions
+DestroyTask_RfuReconnectWithParent écartée link d'Émeraude (link_rfu_2.c) dans les deux régions
+CheckLinkTimeout écartée link d'Émeraude (trade.c) dans les deux régions
+LoadTradeGbaSpriteGfx écartée link d'Émeraude (trade.c) dans les deux régions
+TradeBufferOTnameAndNicknames écartée link d'Émeraude (trade.c) dans les deux régions
+SetUpPartiesAndStartBattle écartée link d'Émeraude (union_room_battle.c) dans les deux régions
+UnionRoomBattle_CreateTextPrinter écartée link d'Émeraude (union_room_battle.c) dans les deux régions
+UnionRoomBattle_PrintTextOnWindow0 écartée link d'Émeraude (union_room_battle.c) dans les deux régions
+LinkOpponentHandleUnknownYesNoBox écartée link d'Émeraude (battle_controller_link_opponent.c) dans les deux régions
+LinkOpponentHandlePlayFanfare écartée link d'Émeraude (battle_controller_link_opponent.c) dans les deux régions
+LinkBattleComputeBattleTypeFlags écartée link d'Émeraude (battle_main.c) dans les deux régions
+PrepareOwnMultiPartnerBuffer écartée link d'Émeraude (battle_main.c) dans les deux régions
+ZeroName écartée link d'Émeraude (link_rfu_3.c) dans les deux régions
+NameIsEmpty écartée link d'Émeraude (link_rfu_3.c) dans les deux régions
+ChooseBattleTowerPlayerParty morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+CB2_ReturnFromChooseBattleTowerParty morte Tour de Combat de Rubis/Saphir : aucune carte ni script de RF
+CB2_ReturnToTradeMenuFromSummary écartée link d'Émeraude (trade.c) dans les deux régions
+CommunicateWhetherMonCanBeTraded écartée link d'Émeraude (trade.c) dans les deux régions
+Leader_DisconnectOnState écartée link d'Émeraude (union_room.c) dans les deux régions
+ItemPrintFunc_Unused écartée link d'Émeraude (union_room.c) dans les deux régions
+InitEnigmaBerry écartée Baie Enigma (e-Reader) ; Émeraude prend la baie par défaut (IsEnigmaBerryValid), même affichage
+SetScene écartée link d'Émeraude (berry_fix_program.c) dans les deux régions
+DBP_LoadStdWindowGfx écartée link d'Émeraude (dodrio_berry_picking.c) dans les deux régions
+EnableRareWord écartée l'Événement Mystère d'Émeraude (mystery_event_script.c) sert aux deux régions ; un seul dictionnaire Easy Chat (décision 2026-11-02)
+SetLinkErrorFromRfu écartée link d'Émeraude (link.c) dans les deux régions
+MEventScript_Run écartée Événement Mystère d'Émeraude (mystery_event_script.c) dans les deux régions
+ClearBattleTower écartée Tour de Combat de Rubis/Saphir absente : rien à effacer
+CreateConfirmLeaveTradeRoomPrompt écartée link d'Émeraude (RunConfirmLeaveCableClubScript, overworld.c) dans les deux régions
+MakeGroupAssemblyAreasPassable écartée link d'Émeraude (union_room_player_avatar.c) dans les deux régions
+ExitWirelessCommunicationStatusScreen écartée écran sans fil d'Émeraude (wireless_communication_status_screen.c), ouvert aussi par le moniteur de Kanto

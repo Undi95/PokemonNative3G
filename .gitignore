@@ -69,6 +69,7 @@ __pycache__/
 !.claude/settings.json
 build/
 out/
+out-alt/
 out-*.log
 # Environnement de test automatisé (JDK, SDK et émulateur Android, distribution WSL, venv Python) : tools/env/README.md
 tools/env/*

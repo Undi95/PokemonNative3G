@@ -127,6 +127,7 @@ bool32 IsEasyChatAnswerUnlocked(int easyChatWord);
 void InitializeEasyChatWordArray(u16 *words, u16 length);
 u8 *ConvertEasyChatWordsToString(u8 *dest, const u16 *src, u16 columns, u16 rows);
 u8 *OtherConvertEasyChatWordsToString(u8 *dest, const u16 *src, u16 columns, u16 rows);
+bool8 EC_DoesEasyChatStringFitOnLine(const u16 *easyChatWords, u8 columns, u8 rows, u16 maxLength);
 bool8 IsBardWordInvalid(u16 easyChatWord);
 u16 GetRandomEasyChatWordFromGroup(u16 groupId);
 u16 UnlockRandomTrendySaying(void);

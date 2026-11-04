@@ -125,17 +125,15 @@ Cmd_callterrainattack, Cmd_cureifburnedparalysedorpoisoned, Cmd_settypetoterrain
 StartWildBattle, StartRoamerBattle, StartScriptedWildBattle, EndPokedudeBattle, StartPokedudeBattle,
 SetBattledTrainerFlag2, StartTrainerBattle
 
-### battle_tower.c (commun, 33/33)
+### battle_tower.c (commun, 27/33)
 BattleTowerMapScript2, ResetBattleTowerStreak, ShouldBattleEReaderTrainer, ChooseNextBattleTowerTrainer,
 SetBattleTowerTrainerGfxId, UpdateOrInsertReceivedBattleTowerRecord, GetBattleTowerTrainerFrontSpriteId,
 GetBattleTowerTrainerClassNameId, GetBattleTowerTrainerName, FillBattleTowerTrainerParty,
 AppendBattleTowerBannedSpeciesName, CheckMonBattleTowerBanlist, CheckPartyBattleTowerBanlist,
-BufferBattleTowerTrainerMessage, PrintBattleTowerTrainerGreeting, CB2_FinishEReaderBattle, Task_WaitBT,
-StartSpecialBattle, SetBattleTowerProperty, BattleTowerUtil, SetBattleTowerParty, SetPlayerBattleTowerRecord,
-SaveBattleTowerProgress, BattleTower_SoftReset, SetBattleTowerRecordChecksum,
+PrintBattleTowerTrainerGreeting, SetBattleTowerProperty, BattleTowerUtil, SetBattleTowerParty,
+SetPlayerBattleTowerRecord, SaveBattleTowerProgress, BattleTower_SoftReset, SetBattleTowerRecordChecksum,
 PopulateBravoTrainerBattleTowerLostData, DetermineBattleTowerPrize, GiveBattleTowerPrize,
-Debug_FillEReaderTrainerWithPlayerData, CopyEReaderTrainerName5, BufferEReaderTrainerGreeting,
-PrintEReaderTrainerFarewellMessage, Dummy_TryEnableBravoTrainerBattleTower
+Debug_FillEReaderTrainerWithPlayerData, CopyEReaderTrainerName5, Dummy_TryEnableBravoTrainerBattleTower
 
 ### battle_transition.c (commun, 5/10)
 Task_Spiral, Spiral_UpdateFrame, Spiral_Init, Spiral_End, VBlankCB_Spiral
@@ -166,9 +164,8 @@ BlendPalettesAt
 ### cable_car_util.c (RF seul, 2/2)
 CableCarUtil_FillWrapped, CableCarUtil_CopyWrapped
 
-### cable_club.c (commun, 5/7)
-AnyConnectedPartnersPlayingRS, CableClub_AskSaveTheGame, EnterTradeSeat, StartWiredCableClubTrade,
-GetSeeingLinkPlayerCardMsg
+### cable_club.c (commun, 4/7)
+AnyConnectedPartnersPlayingRS, CableClub_AskSaveTheGame, StartWiredCableClubTrade, GetSeeingLinkPlayerCardMsg
 
 ### cereader_tool.c (RF seul, 6/7)
 ValidateTrainerTowerTrainer, ValidateTrainerTowerData, CEReaderTool_SaveTrainerTower_r,
@@ -187,13 +184,13 @@ WaitDma3Request
 ### dodrio_berry_picking.c (commun, 1/1)
 DBP_LoadStdWindowGfx
 
-### easy_chat.c (commun, 25/27)
-IsECGroupUnlocked, IsECWordInvalid, Localize_ConvertEasyChatMessageToString, EC_DoesEasyChatStringFitOnLine,
-GetRandomWordFromGroup, GetRandomWordFromAnyGroup, EnableRareWord, GetNumUnlockedTrendySayings,
-EC_IsNationalPokedexEnabled, GetRandomECPokemon, InitEasyChatSelection, DestroyEasyChatSelectionData,
-PopulateECGroups, GetNumDisplayableGroups, GetSelectedGroupByIndex, PopulateAlphabeticalGroups,
-GetUnlockedECWords, GetDisplayedWordByIndex, GetNumDisplayedWords, GetUnlockedWordsInECGroup,
-GetUnlockedWordsInAlphabeticalGroup, IsGroupSelectable, UnlockedECMonOrMove, EC_IsDeoxys, IsWordUnlocked
+### easy_chat.c (commun, 24/27)
+IsECGroupUnlocked, IsECWordInvalid, Localize_ConvertEasyChatMessageToString, GetRandomWordFromGroup,
+GetRandomWordFromAnyGroup, EnableRareWord, GetNumUnlockedTrendySayings, EC_IsNationalPokedexEnabled,
+GetRandomECPokemon, InitEasyChatSelection, DestroyEasyChatSelectionData, PopulateECGroups,
+GetNumDisplayableGroups, GetSelectedGroupByIndex, PopulateAlphabeticalGroups, GetUnlockedECWords,
+GetDisplayedWordByIndex, GetNumDisplayedWords, GetUnlockedWordsInECGroup, GetUnlockedWordsInAlphabeticalGroup,
+IsGroupSelectable, UnlockedECMonOrMove, EC_IsDeoxys, IsWordUnlocked
 
 ### event_data.c (commun, 6/6)
 DisableNationalPokedex_RSE, EnableNationalPokedex_RSE, IsNationalPokedexEnabled_RSE,
@@ -439,14 +436,12 @@ Menu_ProcessInputGridLayout
 ### menu_helpers.c (commun, 1/3)
 GetDialogBoxFontId
 
-### metatile_behavior.c (commun, 17/58)
+### metatile_behavior.c (commun, 15/58)
 MetatileBehavior_IsSandOrShallowFlowingWater, MetatileBehavior_IsWarpDoor_2, MetatileBehavior_IsSurfable,
 MetatileBehavior_IsFastWater, MetatileBehavior_IsArrowWarp, MetatileBehavior_IsUnused01,
 MetatileBehavior_IsDeepWaterTerrain, MetatileBehavior_IsUnusedWater, MetatileBehavior_IsWater,
 MetatileBehavior_IsCyclingRoadPullDownTileGrass, TestMetatileAttributeBit, MetatileBehavior_IsSnacks,
-MetatileBehavior_IsStrengthButton, MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor,
-MetatileBehavior_IsPlayerFacingBattleRecords, MetatileBehavior_IsImpressiveMachine,
-MetatileBehavior_IsVideoGame
+MetatileBehavior_IsStrengthButton, MetatileBehavior_IsImpressiveMachine, MetatileBehavior_IsVideoGame
 
 ### mystery_event_script.c (commun, 1/2)
 MEventScript_Run
@@ -664,8 +659,8 @@ Task_MultichoiceMenu_HandleInput, MultiChoicePrintHelpDescription, Task_YesNoMen
 Hask_MultichoiceGridMenu_HandleInput, CreatePCMenuWindow, Task_ScriptShowMonPic, PicboxWait,
 DestroyScriptMenuWindow, QL_DestroyAbortedDisplay
 
-### script_pokemon_util.c (commun, 3/3)
-ChooseBattleTowerPlayerParty, CB2_ReturnFromChooseBattleTowerParty, ReducePlayerPartyToThree
+### script_pokemon_util.c (commun, 2/3)
+ChooseBattleTowerPlayerParty, CB2_ReturnFromChooseBattleTowerParty
 
 ### shop.c (commun, 4/17)
 DebugFunc_PrintPurchaseDetails, DebugFunc_PrintShopMenuHistoryBeforeClearMaybe, RecordItemTransaction,

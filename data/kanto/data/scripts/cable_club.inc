@@ -729,6 +729,8 @@ Kanto_CableClub_EventScript_UnionRoomAttendant::
 	lock
 	faceplayer
 	goto_if_unset FLAG_SYS_POKEDEX_GET, Kanto_CableClub_EventScript_WirelessClubAdjustements
+	specialvar VAR_RESULT, Fusion_IsLinkEnabled  @ PokemonNative3G : link caché (LINK_ENABLED, config.h)
+	goto_if_eq VAR_RESULT, FALSE, Kanto_CableClub_EventScript_WirelessClubAdjustements
 	specialvar VAR_RESULT, IsBadEggInParty
 	goto_if_eq VAR_RESULT, TRUE, Kanto_CableClub_EventScript_AbortLinkPlayerHasBadEgg
 	copyvar VAR_0x8007, VAR_LAST_TALKED
@@ -832,6 +834,8 @@ Kanto_CableClub_EventScript_DirectCornerAttendant::
 	lock
 	faceplayer
 	goto_if_unset FLAG_SYS_POKEDEX_GET, Kanto_CableClub_EventScript_WirelessClubAdjustements
+	specialvar VAR_RESULT, Fusion_IsLinkEnabled  @ PokemonNative3G : link caché (LINK_ENABLED, config.h)
+	goto_if_eq VAR_RESULT, FALSE, Kanto_CableClub_EventScript_WirelessClubAdjustements
 	specialvar VAR_RESULT, IsBadEggInParty
 	goto_if_eq VAR_RESULT, TRUE, Kanto_CableClub_EventScript_AbortLinkPlayerHasBadEgg
 	specialvar VAR_RESULT, IsWirelessAdapterConnected

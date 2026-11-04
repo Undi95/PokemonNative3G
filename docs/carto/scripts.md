@@ -6,17 +6,18 @@
 
 Émeraude 524, Rouge Feu 272, communs 125.
 
-**RF seul — portés (123)** :
-NullFieldSpecial, Script_HasTrainerBeenFought, EndTrainerApproach, StartRematchBattle, HasLeadMonBeenRenamed,
-Field_AskSaveTheGame, ShowEasyChatMessage, GetHeracrossSizeRecordInfo, CompareHeracrossSize,
-GetMagikarpSizeRecordInfo, CompareMagikarpSize, NameRaterWasNicknameChanged,
-BufferRandomHobbyOrLifestyleString, RegisteredItemHandleBikeSwap, GetPlayerXY, BufferBigGuyOrBigGirlString,
-BufferSonOrDaughterString, StartOldManTutorialBattle, Script_IsFanClubMemberFanOfPlayer,
-Script_GetNumFansOfPlayerInTrainerFanClub, Script_BufferFanClubTrainerName,
+**RF seul — portés (129)** :
+NullFieldSpecial, EnterColosseumPlayerSpot, EnterTradeSeat, Script_HasTrainerBeenFought, EndTrainerApproach,
+StartRematchBattle, HasLeadMonBeenRenamed, Field_AskSaveTheGame, ShowEasyChatMessage,
+GetHeracrossSizeRecordInfo, CompareHeracrossSize, GetMagikarpSizeRecordInfo, CompareMagikarpSize,
+NameRaterWasNicknameChanged, BufferRandomHobbyOrLifestyleString, RegisteredItemHandleBikeSwap, GetPlayerXY,
+BufferBigGuyOrBigGirlString, BufferSonOrDaughterString, StartOldManTutorialBattle,
+Script_IsFanClubMemberFanOfPlayer, Script_GetNumFansOfPlayerInTrainerFanClub, Script_BufferFanClubTrainerName,
 Script_TryLoseFansFromPlayTimeAfterLinkBattle, Script_TryLoseFansFromPlayTime, Script_SetPlayerGotFirstFans,
 Script_UpdateTrainerFanClubGameClear, DaycareMonReceivedMail, ShowBattleRecords, GetPokedexCount,
 GetProfOaksRatingMessage, AnimatePcTurnOn, AnimatePcTurnOff, GetElevatorFloor, SelectMoveDeleterMove,
-GetLeadMonFriendship, ShowTownMap, CreatePCMenu, HallOfFamePCBeginFade, ShowDiploma, EnterHallOfFame,
+GetLeadMonFriendship, BufferEReaderTrainerGreeting, StartSpecialBattle, AwardBattleTowerRibbons,
+ReducePlayerPartyToThree, ShowTownMap, CreatePCMenu, HallOfFamePCBeginFade, ShowDiploma, EnterHallOfFame,
 AnimateElevator, GetRandomSlotMachineId, AreLeadMonEVsMaxedOut, PlayerHasGrassPokemonInParty,
 IsStarterFirstStageInParty, IsThereRoomInAnyBoxForMorePokemon, DrawElevatorCurrentFloorWindow,
 SetIcefallCaveCrackedIceMetatiles, ShakeScreen, StartLegendaryBattle, SetUpTrainerMovement,
@@ -40,17 +41,15 @@ IsPlayerLeftOfVermilionSailor, ReadTrainerTowerAndValidate, HasAllMons, IsPlayer
 BrailleCursorToggle, PlayerPartyContainsSpeciesWithPlayerID, AnimateTeleporterHousing, AnimateTeleporterCable,
 InitElevatorFloorSelectMenuPos, UpdateLoreleiDollCollection, LoopWingFlapSound
 
-**RF seul — stubs (24)** (`src/kanto_specials_stubs.c`) :
-EnterColosseumPlayerSpot, EnterTradeSeat, StartWiredCableClubTrade, CableClub_AskSaveTheGame, TryContestLinkup,
-BattleTowerMapScript2, ChooseNextBattleTowerTrainer, CheckPartyBattleTowerBanlist,
-PrintBattleTowerTrainerGreeting, BufferEReaderTrainerGreeting, StartSpecialBattle, SetBattleTowerProperty,
-BattleTowerUtil, SetBattleTowerParty, SaveBattleTowerProgress, BattleTower_SoftReset,
-DetermineBattleTowerPrize, GiveBattleTowerPrize, AwardBattleTowerRibbons, ChooseBattleTowerPlayerParty,
-ReducePlayerPartyToThree, Dummy_TryEnableBravoTrainerBattleTower, DoDeoxysTriangleInteraction,
-SetDeoxysTrianglePalette
-
-**RF seul — absents (0)** :
+**RF seul — stubs (0)** (`src/kanto_specials_stubs.c`) :
 (aucun)
+
+**RF seul — absents (18)** :
+StartWiredCableClubTrade, CableClub_AskSaveTheGame, TryContestLinkup, BattleTowerMapScript2,
+ChooseNextBattleTowerTrainer, CheckPartyBattleTowerBanlist, PrintBattleTowerTrainerGreeting,
+SetBattleTowerProperty, BattleTowerUtil, SetBattleTowerParty, SaveBattleTowerProgress, BattleTower_SoftReset,
+DetermineBattleTowerPrize, GiveBattleTowerPrize, ChooseBattleTowerPlayerParty,
+Dummy_TryEnableBravoTrainerBattleTower, DoDeoxysTriangleInteraction, SetDeoxysTrianglePalette
 
 **Émeraude seul (399)** :
 SetPlayerSecretBase, CheckPlayerHasSecretBase, EnterSecretBase, ClearAndLeaveSecretBase, MoveOutOfSecretBase,

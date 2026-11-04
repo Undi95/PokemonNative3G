@@ -10,6 +10,7 @@
 #include "link.h"
 #include "link_rfu.h"
 #include "main.h"
+#include "malloc.h"
 #include "menu.h"
 #include "overworld.h"
 #include "palette.h"
@@ -225,4 +226,26 @@ void ReducePlayerPartyToSelectedMons(void)
         gPlayerParty[i] = party[i];
 
     CalculatePlayerPartyCount();
+}
+
+// PokemonNative3G : ReducePlayerPartyToThree de RF (script_pokemon_util.c), la même pour 3 POKéMON : combat contre le
+// dresseur e-Reader de la maison de l'Île 7 (SevenIsland_House_Room1, après ChooseHalfPartyForBattle)
+void ReducePlayerPartyToThree(void)
+{
+    struct Pokemon * party = AllocZeroed(3 * sizeof(struct Pokemon));
+    int i;
+
+    // copy the selected pokemon according to the order.
+    for (i = 0; i < 3; i++)
+        if (gSelectedOrderFromParty[i]) // as long as the order keeps going (did the player select 1 mon? 2? 3?), do not stop
+            party[i] = gPlayerParty[gSelectedOrderFromParty[i] - 1]; // index is 0 based, not literal
+
+    CpuFill32(0, gPlayerParty, sizeof gPlayerParty);
+
+    // overwrite the first 3 with the order copied to.
+    for (i = 0; i < 3; i++)
+        gPlayerParty[i] = party[i];
+
+    CalculatePlayerPartyCount();
+    Free(party);
 }

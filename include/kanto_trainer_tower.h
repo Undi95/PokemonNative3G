@@ -56,5 +56,6 @@ void GetTrainerTowerOpponentName(u8 *text);
 u8 GetTrainerTowerOpponentClass(void);
 u16 ReadTrainerTowerAndValidate(void);
 u16 ShowBattleRecords(void);
+u8 BattleSetup_GetBattleTowerBattleTransition(void);
 
 #endif // GUARD_KANTO_TRAINER_TOWER_H

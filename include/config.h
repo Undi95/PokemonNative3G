@@ -49,6 +49,11 @@
 #define CHAR_DEC_SEPARATOR CHAR_COMMA
 #endif
 
+// PokemonNative3G : le link (échanges, combats link, Union Room, Colisée, mini-jeux, e-Reader) est codé mais caché
+// en jeu jusqu'à la phase multijoueur (décision du 2026-11-02) : FALSE = les hôtesses des Centres POKéMON des deux
+// régions répondent que le club est en réglage (special Fusion_IsLinkEnabled)
+#define LINK_ENABLED FALSE
+
 // Uncomment to fix some identified minor bugs
 //#define BUGFIX
 

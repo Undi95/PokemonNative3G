@@ -532,6 +532,8 @@ BerryBlender_Movement_BlendLeaderWalkInPlace:
 
 BerryBlender_EventScript_BerryBlenderLink::
 	lockall
+	specialvar VAR_RESULT, Fusion_IsLinkEnabled  @ PokemonNative3G : link caché (LINK_ENABLED, config.h)
+	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_NotReadyYet
 	specialvar VAR_RESULT, PlayerHasBerries
 	goto_if_eq VAR_RESULT, FALSE, BerryBlender_EventScript_LinkBlenderNoBerries
 	checkitem ITEM_POKEBLOCK_CASE
