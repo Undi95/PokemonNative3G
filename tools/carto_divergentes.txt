@@ -1302,3 +1302,112 @@ InitTilesetAnim_General kanto idem (compteur 640 de RF)
 GetOwnerState kanto gSaveBlockKanto.trainerTower
 GiveChallengePrize kanto idem
 CheckFinalTime kanto idem
+#
+# battle_ai_script_commands.c (2026-11-04)
+BattleAI_HandleItemUseBeforeAISetup émeraude Tour des Dresseurs : adversaire 0 (aucun objet, comme l'exclusion de RF)
+BattleAI_SetupAIData kanto Tour des Dresseurs = BATTLE_TYPE_TRAINER_HILL (mêmes scripts d'IA que RF) ; gBattleWildScriptedFrlg, gBattleLegendaryFrlg
+Cmd_if_equal_ même corps dans la fusion (l'outil ne le voit pas : commentaire sur la ligne)
+Cmd_if_not_equal_ même idem
+#
+# battle_bg.c (2026-11-04)
+LoadBattleMenuWindowGfx kanto cadre de la voix off du POKéDUDE (gBattlePokedudeFrlg) ; combat de CHEN écarté
+DrawBattleEntryBackground kanto Kanto_DrawBattleEntryBackground (champions, Maître, Tour, POKéDUDE)
+#
+# battle_message.c (2026-11-04)
+BufferStringBattle kanto fantôme (IS_BATTLE_TYPE_GHOST), vieil homme, POKéDUDE dans la fusion ; + combats enregistrés
+BattleStringExpandPlaceholders kanto PC de LÉO / LANETTE (Fusion_GetPCOwner), rival de Kanto (gSaveBlockKanto.rivalName), Tour des Dresseurs par la Colline
+#
+# battle_setup.c (2026-11-04)
+StartGroudonKyogreBattle émeraude légendaires de Hoenn (RF : restes de RS)
+StartRegiBattle émeraude idem
+#
+# battle_util2.c (2026-11-04)
+AllocateBattleResources kanto Tour des Dresseurs par la Colline (gBattleTrainerTowerFrlg), gBattlePokedudeFrlg
+FreeBattleResources kanto idem
+#
+# braille_text.c (2026-11-04)
+FontFunc_Braille émeraude sous-structure nommée autrement
+DecompressGlyph_Braille émeraude idem
+#
+# cable_club.c (2026-11-04)
+Task_StartWiredCableClubBattle link musiques MUS_RS_* de RF = MUS_* d'Émeraude
+Task_StartWirelessCableClubBattle link idem
+#
+# coins.c (2026-11-04)
+AddCoins même test inversé
+ShowCoinsWindow kanto fenêtre des jetons de RF au Casino (MENUS = KANTO)
+#
+# digit_obj_util.c (2026-11-04)
+DigitObjUtil_CreatePrinter même union spriteSheet
+DrawNumObjsMinusInBack même bool32
+#
+# dodrio_berry_picking.c (2026-11-04)
+InitResults_Leader link
+InitResults_Member link
+ShowResults link
+#
+# field_screen_effect.c (2026-11-04)
+AnimateFlash même bool32, 2 / 1 (paramètre)
+WriteFlashScanlineEffectBuffer même 240 / 2, 160 / 2, CpuFastSet
+#
+# field_special_scene.c (2026-11-04)
+FieldCB_ShowPortholeView émeraude hublot de l'Aquarine (RF : vide)
+LookThroughPorthole émeraude idem
+#
+# itemfinder.c (2026-11-04)
+ItemUseOnFieldCB_Itemfinder kanto texte de RF (KText) à Kanto
+CreateStarSprite kanto palette du joueur (PERSO)
+#
+# palette_util.c (2026-11-04)
+RouletteFlash_FlashPalette même boucle
+UpdatePulseBlend même MODERN
+#
+# pokeball.c (2026-11-04)
+Task_DoPokeballSendOutAnim kanto POKéDUDE (gBattlePokedudeFrlg)
+SpriteCB_BallThrow_CaptureMon même la capture joue MUS_RG_CAUGHT_INTRO (le FAN6 de RF) par battle_anim_throw.c ; ce chemin ne sert pas
+#
+# region_map.c (2026-11-04)
+HandleRegionMapInput même JOY_REPEAT
+GetMapNameGeneric kanto KantoGetMapName
+#
+# title_screen.c (2026-11-04)
+CB2_InitTitleScreen kanto écran titre de RF avec l'option TITRE (CB2_InitKantoTitleScreen)
+VBlankCB kanto idem
+#
+# wonder_news.c (2026-11-04)
+WonderNews_GetRewardInfo link IsMysteryEventEnabled
+GetRewardType link AGB_ASSERT
+#
+# Derniers fichiers (2026-11-04)
+HandleMoveSwitching même maxPP ; combat de CHEN (BATTLE_TYPE_FIRST_BATTLE) écarté
+MoveSelectionDisplayPpNumber même MoveSelectionDisplayPPNumber dans la fusion
+TryAddPokeballIconToHealthbox kanto pas d'icône de Ball au combat du vieil homme (WALLY_TUTORIAL) ni du POKéDUDE (gBattlePokedudeFrlg)
+UpdatePlayerLinkBattleRecords link InUnionRoom
+IsMonDisobedient kanto badges de la région (OBEDIENCE_BADGE : Fusion_GetRegionBadgeFlag), POKéDUDE exclu
+Cmd_SignalReadyToBegin link MUS_GAME_CORNER de RF = MUS_RG_GAME_CORNER
+GetTrainerHillUnkVal link e-Reader (trainerTower[0].unk9 / trainerHill.unused)
+DoCoordEventWeather même func = callback
+CB2_Credits même FLAG_DONT_SHOW_MAP_NAME_POPUP = FLAG_HIDE_MAP_NAME_POPUP
+ShowEasyChatScreen même numéro du type d'écran
+GetHealLocation même else
+ReshowPCMenuAfterHallOfFamePC kanto CreatePCMenu de RF = ScriptMenu_CreatePCMultichoice (PC du PROF. CHEN à Kanto)
+ConvertColorToGrayscale même types
+PrintTextOnWindow kanto kanto_learn_move.c (Maître des Capacités de RF) ; police de RF
+GiveMailToMon même GiveMailToMonByItemId
+CB2_InitMainMenu kanto menu principal de RF : kanto_main_menu.c (option TITRE)
+ShowMapNamePopup kanto panneau de RF à Kanto (kanto_map_name_popup.c) ; QL_IS_PLAYBACK_STATE (journal)
+CB2_InitOptionMenu kanto Options de RF avec MENUS = KANTO (CB2_OptionsMenuFromStartMenu)
+GetSetPokedexFlag même RF passe par DexScreen_GetSetPokedexFlag (même calcul)
+TryLoadMonIconTiles même MAX_MON_ICONS
+ShowSelectMovePokemonSummaryScreen kanto KantoShowPokemonSummaryScreen
+ReloadSave même GetSaveBlocksPointersBaseOffset (PORTABLE)
+PrintTitle kanto BOITE CT de RF (FONT_NORMAL_COPY_1 = police de RF)
+CB2_CreateTradeMenu link
+BufferFanClubTrainerName kanto gSaveBlockKanto (Fan Club de Safrania)
+Task_RunUnionRoom link SE_NOTE_C / SE_PC_LOGIN
+#
+# « Corps introuvable » : présents dans la fusion, avec un commentaire ou UNUSED sur la ligne (l'outil ne les lit pas)
+GetAI_ItemType même battle_ai_switch_items.c (« NOTE: should take u16 »)
+IsBlendPalettesGraduallyTaskActive kanto palette.c, pour l'écran titre de RF (kanto_title_screen.c)
+DestroyBlendPalettesGraduallyTask kanto idem
+BackupPokemonStorage même UNUSED dans les deux jeux
