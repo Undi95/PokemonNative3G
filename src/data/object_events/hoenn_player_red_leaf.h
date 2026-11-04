@@ -142,7 +142,9 @@ const u32 gHoennObjectEventPic_RedUnderwater[] = INCGFX_U32("graphics/object_eve
 const u32 gHoennObjectEventPic_RedWatering[] = INCGFX_U32("graphics/object_events/pics/people/red/watering.png", ".4bpp", "-mwidth 4 -mheight 4");
 const u32 gHoennObjectEventPic_RedDecorating[] = INCGFX_U32("graphics/object_events/pics/people/red/decorating.png", ".4bpp");
 
-// ---- Leaf ---- (marche : gObjectEventPic_Leaf d'Émeraude)
+// ---- Leaf ---- (marche : leaf.png d'Émeraude sans les pointes rouges du bord du chapeau, un pixel isolé de chaque
+// côté ; la Leaf PNJ d'Émeraude garde gObjectEventPic_Leaf)
+const u32 gHoennObjectEventPic_LeafWalking[] = INCGFX_U32("graphics/object_events/pics/people/leaf/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gHoennObjectEventPic_LeafRunning[] = INCGFX_U32("graphics/object_events/pics/people/leaf/running.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gHoennObjectEventPic_LeafMachBike[] = INCGFX_U32("graphics/object_events/pics/people/leaf/mach_bike.png", ".4bpp", "-mwidth 4 -mheight 4");
 const u32 gHoennObjectEventPic_LeafAcroBike[] = INCGFX_U32("graphics/object_events/pics/people/leaf/acro_bike.png", ".4bpp", "-mwidth 4 -mheight 4");
@@ -154,7 +156,7 @@ const u32 gHoennObjectEventPic_LeafWatering[] = INCGFX_U32("graphics/object_even
 const u32 gHoennObjectEventPic_LeafDecorating[] = INCGFX_U32("graphics/object_events/pics/people/leaf/decorating.png", ".4bpp");
 
 HOENN_PLAYER_PIC_TABLES(Red, gObjectEventPic_Red)
-HOENN_PLAYER_PIC_TABLES(Leaf, gObjectEventPic_Leaf)
+HOENN_PLAYER_PIC_TABLES(Leaf, gHoennObjectEventPic_LeafWalking)
 
 HOENN_PLAYER_GFX_SET(Red, PALSLOT_PLAYER)
 HOENN_PLAYER_GFX_SET(Leaf, PALSLOT_NPC_SPECIAL)

@@ -6,6 +6,10 @@
 - À Kanto, le joueur a son sprite de style Rouge Feu, quel que soit le personnage : Brice et Flora y gardent leur
   tenue d'Émeraude, dessinés en style Rouge Feu par Poffin_Case (marche, course, vélos, figures du Vélo Cross, surf,
   pêche, Cherche VS…). Ils peuvent aussi lever le Cherche VS à Kanto.
+- À Hoenn, Red et Leaf (option PERSO) ont leur sprite de style Émeraude : tête et tenue de leur marche d'Émeraude,
+  dessinées à la main sur toutes les poses du joueur (course, vélos et figures du Vélo Cross, surf, Capacité, pêche,
+  plongée, arrosoir, décoration). La monture du SURF et l'oiseau du VOL gardent les couleurs d'Émeraude ; pas de
+  pose du Cherche VS à Hoenn, comme Brice et Flora.
 - Sac sans limite : les poches Objets, Objets rares et Balls ne sont plus jamais pleines (au-delà de 99, un objet
   continue sur une nouvelle ligne). Les CT et les baies gardent une seule ligne chacune (99 CT, 999 baies), pour la
   boîte à CT et le sac à baies de Rouge Feu. Les sauvegardes existantes sont reprises telles quelles.
