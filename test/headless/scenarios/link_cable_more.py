@@ -1,7 +1,8 @@
 # CÂBLE LINK, cas restants (2026-11-03, docs/A-TESTER.md), sauvegarde « kanto » :
 # - acheté à la boutique de Rosyères (2 100 ¥) ;
 # - sac d'Émeraude : PIKACHU (pas d'évolution par échange) et KADABRA avec une PIERRE STASE : « aucun effet », câble
-#   gardé ; ONIX avec une PEAU MÉTAL : évolution en STEELIX, la PEAU MÉTAL est consommée (comme un échange) ;
+#   gardé ; ONIX avec une PEAU MÉTAL : sans le POKéDEX NATIONAL, « aucun effet » (Kanto, 2026-11-04) ; avec, évolution
+#   en STEELIX, la PEAU MÉTAL est consommée (comme un échange) ;
 # - sac de RF (SAC = KANTO) : le second KADABRA évolue en ALAKAZAM.
 SCREENS = True   # chaque étape (log) est comparée à son écran de référence (refs/)
 FIXTURE = "kanto"
@@ -82,6 +83,11 @@ def play(game):
 
     pikachu = use_cable(game, 1, "pikachu")
     everstone = use_cable(game, 2, "pierre stase")
+    # Kanto sans le POKéDEX NATIONAL (2026-11-04, Kanto_IsEvolutionBlocked) : STEELIX, hors des POKéDEX de Kanto et de
+    # Hoenn, attend le national ; le câble et la PEAU MÉTAL sont gardés
+    onix_blocked = use_cable(game, 0, "onix sans national")
+    onix_blocked_party = party(game)
+    game.dev("jeu.pokedex", 0, 1)
     onix = use_cable(game, 0, "onix")
     after_hoenn = party(game)
     game.dev("jeu.options", 13, 1)                     # SAC = KANTO
@@ -94,6 +100,9 @@ def play(game):
            f"CÂBLE LINK acheté 2 100 ¥ ({game.money()}, {bought['poche 1']})")
     for what, (evolved, shown) in (("PIKACHU", pikachu), ("KADABRA + PIERRE STASE", everstone)):
         expect(game, not evolved and any("aucun effet" in t for _, t in shown), f"{what} : aucun effet ({shown[-3:]})")
+    expect(game, not onix_blocked[0] and any("aucun effet" in t for _, t in onix_blocked[1])
+           and onix_blocked_party[0] == (names.number("SPECIES_ONIX"), names.number("ITEM_METAL_COAT")),
+           f"Kanto sans le national : ONIX + PEAU MÉTAL sans effet, objet gardé ({onix_blocked_party[0]})")
     expect(game, onix[0] and after_hoenn[0] == (names.number("SPECIES_STEELIX"), 0),
            f"ONIX + PEAU MÉTAL : STEELIX, PEAU MÉTAL consommée ({after_hoenn[0]})")
     expect(game, kadabra[0] and final[3][0] == names.number("SPECIES_ALAKAZAM"), f"sac de RF : ALAKAZAM ({final[3]})")

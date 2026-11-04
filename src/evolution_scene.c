@@ -635,6 +635,20 @@ static void Task_EvolutionScene(u8 taskId)
     u32 var;
     struct Pokemon *mon = &gPlayerParty[gTasks[taskId].tPartyId];
 
+    // PokemonNative3G : Task_EvolutionScene de RF, à Kanto ; RF teste !IsNationalPokedexEnabled() && espèce > MEW, la
+    // fusion Kanto_IsEvolutionBlocked (demande du 2026-11-04 ; les POKéMON de HOENN évoluent toujours)
+    // Automatically cancel if the Pokemon would evolve into a species you have not
+    // yet unlocked, such as Crobat.
+    if (gTasks[taskId].tState == EVOSTATE_WAIT_CYCLE_MON_SPRITE
+        && Kanto_IsEvolutionBlocked(gTasks[taskId].tPostEvoSpecies))
+    {
+        gTasks[taskId].tState = EVOSTATE_CANCEL;
+        gTasks[taskId].tEvoWasStopped = TRUE;
+        gTasks[sEvoGraphicsTaskId].tEvoStopped = TRUE;
+        StopBgAnimation();
+        return;
+    }
+
     // check if B Button was held, so the evolution gets stopped
     if (gMain.heldKeys == B_BUTTON
         && gTasks[taskId].tState == EVOSTATE_WAIT_CYCLE_MON_SPRITE
@@ -1084,6 +1098,22 @@ static void Task_TradeEvolutionScene(u8 taskId)
 {
     u32 var = 0;
     struct Pokemon *mon = &gPlayerParty[gTasks[taskId].tPartyId];
+
+    // PokemonNative3G : Task_TradeEvolutionScene de RF, à Kanto (Kanto_IsEvolutionBlocked, demande du 2026-11-04). RF
+    // écrit EVOSTATE_TRY_LEARN_MOVE, qui vaut 15 = T_EVOSTATE_CANCEL dans cette tâche : l'évolution s'arrête sur « … ? »
+    // Automatically cancel if the Pokemon would evolve into a species you have not
+    // yet unlocked, such as Crobat.
+    if (gTasks[taskId].tState == T_EVOSTATE_WAIT_CYCLE_MON_SPRITE
+        && Kanto_IsEvolutionBlocked(gTasks[taskId].tPostEvoSpecies))
+    {
+        gTasks[taskId].tState = T_EVOSTATE_CANCEL;
+        gTasks[taskId].tEvoWasStopped = TRUE;
+        if (gTasks[sEvoGraphicsTaskId].isActive)
+        {
+            gTasks[sEvoGraphicsTaskId].tEvoStopped = TRUE;
+            StopBgAnimation();
+        }
+    }
 
     switch (gTasks[taskId].tState)
     {

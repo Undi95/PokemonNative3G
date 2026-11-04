@@ -5448,7 +5448,9 @@ void ItemUseCB_EvolutionStone(u8 taskId, TaskFunc task)
 {
     PlaySE(SE_SELECT);
     gCB2_AfterEvolution = gPartyMenu.exitCallback;
-    if (ExecuteTableBasedItemEffect_(gPartyMenu.slotId, gSpecialVar_ItemId, 0))
+    // PokemonNative3G : à Kanto sans le POKéDEX NATIONAL, la pierre est refusée et gardée, comme avec le sac de RF
+    // (MonCanEvolve, où RF joue sa scène « … ? ») ; ici, le message d'Émeraude
+    if (!MonCanEvolve() || ExecuteTableBasedItemEffect_(gPartyMenu.slotId, gSpecialVar_ItemId, 0))
     {
         gPartyMenuUseExitCallback = FALSE;
         DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
@@ -5702,11 +5704,14 @@ static void CB2_UseEvolutionStone(void)
     RemoveBagItem(gSpecialVar_ItemId, 1);
 }
 
-// RF : refuse une évolution hors du Pokédex de Kanto tant que le Pokédex national manque. La fusion garde la
-// règle d'Émeraude (pas de refus) : l'option SAC ne change que la présentation.
+// RF : refuse une évolution hors du Pokédex de Kanto tant que le Pokédex national manque. PokemonNative3G : à Kanto
+// (Kanto_IsEvolutionBlocked, demande du 2026-11-04) ; sert aussi au sac d'Émeraude (ItemUseCB_EvolutionStone)
 static bool8 MonCanEvolve(void)
 {
-    return TRUE;
+    if (Kanto_IsEvolutionBlocked(GetEvolutionTargetSpecies(&gPlayerParty[gPartyMenu.slotId], EVO_MODE_ITEM_USE, gSpecialVar_ItemId)))
+        return FALSE;
+    else
+        return TRUE;
 }
 
 // PokemonNative3G : CÂBLE LINK. Le Pokémon évolue comme s'il était échangé (EVO_TRADE, ou EVO_TRADE_ITEM avec l'objet
@@ -5725,7 +5730,8 @@ static bool8 LinkCableCanEvolve(struct Pokemon *mon)
     {
         if (gEvolutionTable[species][i].method == EVO_TRADE
          || (gEvolutionTable[species][i].method == EVO_TRADE_ITEM && gEvolutionTable[species][i].param == heldItem))
-            return TRUE;
+            // à Kanto sans le POKéDEX NATIONAL, pas d'évolution hors des POKéDEX régionaux (MonCanEvolve) : câble gardé
+            return !Kanto_IsEvolutionBlocked(gEvolutionTable[species][i].targetSpecies);
     }
     return FALSE;
 }

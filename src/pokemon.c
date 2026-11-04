@@ -5964,9 +5964,17 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 mode, u16 evolutionItem)
             case EVO_TRADE_ITEM:
                 if (gEvolutionTable[species][i].param == heldItem)
                 {
-                    heldItem = ITEM_NONE;
-                    SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
                     targetSpecies = gEvolutionTable[species][i].targetSpecies;
+
+                    // PokemonNative3G : la règle de RF, à Kanto (Kanto_IsEvolutionBlocked) : sans le POKéDEX NATIONAL,
+                    // l'objet reste tenu, et la scène d'évolution s'arrête d'elle-même (evolution_scene.c)
+                    // Prevent cross-generational evolutions like Scizor and Steelix until the National Pokedex is obtained
+                    if (!Kanto_IsEvolutionBlocked(targetSpecies))
+                    {
+                        heldItem = ITEM_NONE;
+                        SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
+                        targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                    }
                 }
                 break;
             }
@@ -6780,6 +6788,17 @@ u16 Kanto_SpeciesToPokedexNum(u16 species)
      && !(FlagGet(FLAG_SYS_POKEDEX_GET) && IsSpeciesInHoennDex(species)))
         return 0xFFFF;
     return dexNum;
+}
+
+// PokemonNative3G : la règle de RF « pas d'évolution hors du POKéDEX de Kanto sans le POKéDEX NATIONAL »
+// (Task_EvolutionScene, Task_TradeEvolutionScene, MonCanEvolve, GetEvolutionTargetSpecies), à Kanto seulement (demande
+// du 2026-11-04 ; à Hoenn, comme Émeraude). RF teste « espèce > MEW » ; la fusion teste le numéro du POKéDEX de RF
+// (Kanto_SpeciesToPokedexNum, décision du 2026-11-03), pour que les POKéMON du POKéDEX de HOENN évoluent toujours : seuls
+// ceux de Johto qui n'y sont pas (LEUPHORIE, MENTALI, NOCTALI, STEELIX, CIZAYOX, ROIGADA, TARPAUD, PORYGON2) attendent
+// le POKéDEX NATIONAL
+bool32 Kanto_IsEvolutionBlocked(u16 targetSpecies)
+{
+    return Fusion_IsInKanto() && Kanto_SpeciesToPokedexNum(targetSpecies) == 0xFFFF;
 }
 
 bool32 IsSpeciesInHoennDex(u16 species)

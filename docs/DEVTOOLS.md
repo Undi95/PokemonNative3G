@@ -59,6 +59,7 @@ console d'une partie qui tourne. Une commande ajoutée au registre apparaît par
 | | `joueur.sac` | argent, poches, objets du PC, objet enregistré sur SELECT |
 | | `joueur.poudre [N]` | Poudre Baie ; `N` en ajoute (scénario `kanto_specials_b` : vendeur d'Azuria) |
 | | `joueur.amitie N [V]` | amitié du Pokémon N ; `V` la met (0-255 ; Daisy, tuteur du Cap Falaise) |
+| | `joueur.evolution N` | le Pokémon N évolue comme après un combat (niveau, amitié… ; B l'arrête), joueur libre sur la carte (scénario `kanto_evolution_national`) |
 | | `joueur.enregistre OBJET` | l'objet enregistré sur SELECT (scénario `fishing_chain_more` : la canne) |
 | | `joueur.objetpc OBJET N` | dépose N objets au PC du joueur (`AddPCItem`), sans passer par le sac (scénario `kanto_item_pc_more`) |
 | | `joueur.jetons [N]` | jetons du Casino ; `N` les met (au plus 9 999) (scénario `kanto_money_coins_box`) |

@@ -31,6 +31,7 @@
 #endif
 #include "event_data.h"
 #include "event_object_movement.h"
+#include "evolution_scene.h"
 #include "field_player_avatar.h"
 #include "fieldmap.h"
 #include "fusion_events.h"
@@ -1056,6 +1057,32 @@ static void Cmd_Friendship(const s32 *args, u32 argCount, struct DebugToolsOutpu
     DebugTools_Print(out, "Pokemon %d : amitie %d\n", args[0], GetMonData(&gPlayerParty[args[0]], MON_DATA_FRIENDSHIP));
 }
 
+// Évolution du Pokémon N de l'équipe, comme après un combat (GetEvolutionTargetSpecies EVO_MODE_NORMAL : niveau, amitié… ;
+// BeginEvolutionScene, B l'arrête, puis le retour sur la carte) ; joueur libre sur la carte seulement (scénario
+// kanto_evolution_national : les évolutions arrêtées à Kanto sans le POKéDEX NATIONAL)
+static void Cmd_Evolution(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
+{
+    u16 target;
+
+    if ((u32)args[0] >= PARTY_SIZE || GetMonData(&gPlayerParty[args[0]], MON_DATA_SPECIES) == SPECIES_NONE)
+    {
+        DebugTools_Print(out, "refuse : pas de Pokemon en %d\n", args[0]);
+        return;
+    }
+    if (gMain.callback2 != CB2_Overworld || ScriptContext_IsEnabled() || ArePlayerFieldControlsLocked())
+    {
+        DebugTools_Print(out, "refuse : le joueur n'est pas libre sur la carte\n");
+        return;
+    }
+    target = GetEvolutionTargetSpecies(&gPlayerParty[args[0]], EVO_MODE_NORMAL, ITEM_NONE);
+    if (target != SPECIES_NONE)
+    {
+        gCB2_AfterEvolution = CB2_ReturnToField;
+        BeginEvolutionScene(&gPlayerParty[args[0]], target, TRUE, args[0]);
+    }
+    DebugTools_Print(out, "Pokemon %d : evolution en %d\n", args[0], target);
+}
+
 // Objet enregistré sur SELECT (scénario fishing_chain_more : la canne)
 static void Cmd_RegisterItem(const s32 *args, u32 argCount, struct DebugToolsOutput *out)
 {
@@ -1675,6 +1702,7 @@ static const u8 sName_FishingChain[] = _("Chaîne de pêche");
 static const u8 sName_RegisterItem[] = _("Objet sur SELECT");
 static const u8 sName_BerryPowder[] = _("Poudre Baie");
 static const u8 sName_Friendship[] = _("Amitié d'un Pokémon");
+static const u8 sName_Evolution[] = _("Faire évoluer");
 static const u8 sName_SetMove[] = _("Donner une capacité");
 static const u8 sName_Mail[] = _("Lettre");
 static const u8 sName_Egg[] = _("Oeuf à faire éclore");
@@ -1741,6 +1769,7 @@ const struct DebugTool gDebugTools[] =
     {"joueur.enregistre", DEBUG_TOOLS_PLAYER, sName_RegisterItem, "OBJET : l'objet enregistre sur SELECT", 1, Cmd_RegisterItem},
     {"joueur.poudre", DEBUG_TOOLS_PLAYER, sName_BerryPowder, "[N] : Poudre Baie ; N en ajoute", 0, Cmd_BerryPowder},
     {"joueur.amitie", DEBUG_TOOLS_PLAYER, sName_Friendship, "N [V] : amitie du Pokemon N ; V la met", 1, Cmd_Friendship},
+    {"joueur.evolution", DEBUG_TOOLS_PLAYER, sName_Evolution, "N : le Pokemon N evolue comme apres un combat (niveau, amitie...)", 1, Cmd_Evolution},
     {"joueur.capacite", DEBUG_TOOLS_PLAYER, sName_SetMove, "N PLACE CAPACITE [PP] : donne la capacite (et ses PP, ou PP restants)", 3, Cmd_SetMove},
     {"joueur.pv", DEBUG_TOOLS_PLAYER, sName_SetHp, "N PV : PV du Pokemon N (au plus ses PV max)", 2, Cmd_SetHp},
     {"joueur.statut", DEBUG_TOOLS_PLAYER, sName_SetStatus, "N [STATUT] : statut du Pokemon N (1-7 sommeil, 8 poison, 16 brulure, 32 gel, 64 paralysie)", 1, Cmd_SetStatus},
