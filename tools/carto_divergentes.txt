@@ -699,3 +699,382 @@ TryDoorWarp émeraude + bases secrètes ; WARP_ID_NONE
 GetWarpEventAtPosition même ELEVATION_TRANSITION = 0 ; WARP_ID_NONE
 GetCoordEventScriptAtPosition même ELEVATION_TRANSITION = 0
 GetBackgroundEventAtPosition même ELEVATION_TRANSITION = 0
+#
+# shop.c (2026-11-04) : la boutique de RF est kanto_shop.c (MENUS = KANTO), comparée ici ; noms préfixés KShop_ / KText_
+CreateShopMenu kanto kanto_shop.c : police de la boîte de dialogue (FONT_MALE / FONT_FEMALE de RF = FONT_KANTO, couleur du vendeur par DIALOGUE)
+Task_ShopMenu kanto kanto_shop.c ; Menu_ProcessInputNoWrapAround
+Task_HandleShopMenuBuy kanto kanto_shop.c ; uintptr_t (pointeurs 64 bits)
+Task_HandleShopMenuSell kanto kanto_shop.c ; KShop_CB2_GoToSellMenu
+CB2_GoToSellMenu kanto kanto_shop.c : vente par le sac de la fusion (KantoBag_TryGoToBagMenu), retour par CB2_ExitSellMenu
+Task_HandleShopMenuQuit kanto kanto_shop.c ; journal écarté
+Task_ReturnToShopMenu kanto kanto_shop.c ; textes de RF (KText_)
+BuyMenuBuildListMenuTemplate kanto kanto_shop.c ; ListMenuItem name / id
+BuyMenuPrintItemDescriptionAndShowItemIcon kanto kanto_shop.c ; LIST_CANCEL ; tag d'icône
+BuyMenuPrintPriceInList kanto kanto_shop.c ; LIST_CANCEL
+BuyMenuDrawMapBg kanto kanto_shop.c ; tilesets de Kanto au découpage d'Émeraude (512 métatuiles primaires)
+BuyMenuDrawMapMetatile kanto kanto_shop.c ; METATILE_LAYER_TYPE_* = 0, 1, 2
+BuyMenuPrintItemQuantityAndPrice kanto kanto_shop.c ; KShop_PrintMoneyAmount
+Task_BuyMenu kanto kanto_shop.c ; textes de RF
+Task_BuyHowManyDialogueInit kanto kanto_shop.c ; police
+Task_BuyHowManyDialogueHandleInput kanto kanto_shop.c ; textes de RF
+BuyMenuTryMakePurchase kanto kanto_shop.c ; journal et debug de RF écartés
+BuyMenuSubtractMoney kanto kanto_shop.c ; SE_SHOP de RF = SE_RG_SHOP
+CreatePokemartMenu kanto boutique de RF avec MENUS = KANTO (KantoCreatePokemartMenu) ; debug de RF écarté
+CreateDecorationShop1Menu émeraude décorations des bases secrètes
+CreateDecorationShop2Menu émeraude décorations des bases secrètes
+#
+# metatile_behavior.c (2026-11-04) : l'outil compare les numéros des MB_*, différents dans les deux jeux ; relu par nom
+MetatileBehavior_IsPokeGrass porter FAIT 2026-11-04 : + herbe de la Piste Cyclable de RF (Route 17, pas d'ombre de saut dessus)
+MetatileBehavior_IsReflective émeraude mêmes eaux et glace + eaux de Sootopolis et pont ; MB_CYCLING_ROAD_WATER de RF compris
+MetatileBehavior_IsEscalator même intervalle = deux égalités
+MetatileBehavior_IsNonAnimDoor émeraude + portes d'Émeraude
+MetatileBehavior_IsNorthArrowWarp émeraude + warp sur l'eau
+MetatileBehavior_IsSouthArrowWarp émeraude + warps sur l'eau
+MetatileBehavior_IsForcedMovementTile émeraude + pente boueuse, sol fissuré, tapis des bases secrètes
+MetatileBehavior_HasRipples émeraude + eau de Sootopolis
+MetatileBehavior_IsTallGrass kanto + herbe de la Piste Cyclable de RF
+MetatileBehavior_IsDiveable émeraude eaux de plongée d'Émeraude (pas de plongée à Kanto)
+MetatileBehavior_IsUnableToEmerge émeraude + algues
+MetatileBehavior_IsShallowFlowingWater émeraude + Épave, Grotte Tréfonds
+MetatileBehavior_IsSurfableAndNotWaterfall même !x = x == 0
+MetatileBehavior_IsEastBlocked émeraude + cases bloquées d'Émeraude
+MetatileBehavior_IsWestBlocked émeraude + cases bloquées d'Émeraude
+MetatileBehavior_IsNorthBlocked émeraude + cases bloquées d'Émeraude
+MetatileBehavior_IsSouthBlocked émeraude + cases bloquées d'Émeraude
+MetatileBehavior_IsUnionRoomWarp même MB_UNION_ROOM_WARP numéroté autrement
+MetatileBehavior_IsSeaweed émeraude + algues profondes
+MetatileBehavior_IsRunningDisallowed émeraude MB_RUNNING_DISALLOWED de RF n'est sur aucune carte ; + herbe haute, sources chaudes, rondins
+#
+# field_weather_effects.c (2026-11-04)
+Clouds_InitVars même !x = x == 0
+Clouds_InitAll même !x = x == 0
+CreateCloudSprites même graphismes des nuages compressés dans Émeraude (décompressés à part), mêmes sprites
+Drought_InitAll même !x = x == 0
+Drought_Main même !x = x == 0
+UpdateDroughtBlend même WIN_RANGE(63, 63) = WININ_WIN0_ALL | WININ_WIN1_ALL ; index data[]
+Snow_InitAll même !x = x == 0
+Thunderstorm_InitAll même !x = x == 0
+Downpour_InitAll même !x = x == 0
+FogHorizontal_InitVars même !x = x == 0
+FogHorizontal_InitAll même !x = x == 0
+FogHorizontalSpriteCallback même >= 272 = > 271
+CreateFogHorizontalSprites même sizeof = 2048
+Ash_InitAll même !x = x == 0
+UpdateAshSprite même >= 272 = > 271
+FogDiagonal_InitAll même !x = x == 0
+UpdateFogDiagonalSprite même >= 272 = > 271
+UpdateSandstormSprite même >= 272 = > 271
+DestroyBubbleSprites émeraude garde si aucune bulle
+#
+# field_specials.c (2026-11-04)
+ResetCyclingRoadChallengeData émeraude défi de la Piste Cyclable de Lavandia (vide dans RF)
+GetPlayerAvatarBike même return / else
+GetPlayerTrainerIdOnesDigit même expression
+SpawnCameraObject même objet invisible (YOUNGSTER de RF, BOY_1 d'Émeraude) ; ELEVATION_DEFAULT = 3
+LeadMonHasEffortRibbon même variable intermédiaire
+GiveLeadMonEffortRibbon même pointeur
+IsPokerusInParty même 63 = PARTY_SIZE bits
+GetLeadMonIndex même pointeur
+CountDigits même return / else
+ChangeBoxPokemonNickname même noms
+ChangePokemonNickname même rappel à part (ChangePokemonNickname_CB)
+IsMonOTIDNotPlayers même GetPlayerIDAsU32
+GetMysteryGiftCardStat même AGB_ASSERT de RF
+ShouldShowBoxWasFullMessage même conditions inversées
+IsDestinationBoxFull même ++ placé autrement
+UsedPokemonCenterWarp porter FAIT 2026-11-04 : + Centres de Kanto (link fermé en redescendant du 2ᵉ étage ; link caché)
+BufferTMHMMoveName émeraude STR_VAR_2 (Émeraude) ; aucun script de Kanto ne l'appelle
+IncrementBirthIslandRockStepCount même conditions dans l'autre ordre
+#
+# battle_controller_oak_old_man.c (2026-11-04) : dans la fusion, le vieil homme de Jadielle est
+# battle_controller_old_man.c (RF sans le tutoriel de CHEN) et le POKéDUDE battle_controller_pokedude.c ; l'outil compare
+# avec le second. Conseils de CHEN au combat du labo (BATTLE_TYPE_FIRST_BATTLE) écartés (décision du 2026-10-30)
+HandleInputChooseAction kanto POKéDUDE : choix simulé (PokedudeSimulateInputChooseAction) ; vieil homme : battle_controller_old_man.c
+CompleteOnBattlerSpriteCallbackDummy kanto PokedudeBufferExecCompleted
+CompleteOnInactiveTextPrinter kanto PokedudeBufferExecCompleted
+CompleteOnSpecialAnimDone kanto PokedudeBufferExecCompleted
+OpenPartyMenuToChooseMon kanto équipe du POKéDUDE (Pokedude_OpenPartyMenuInBattle)
+WaitForMonSelection kanto PokedudeBufferExecCompleted
+OpenBagAndChooseItem kanto sac du POKéDUDE (InitPokedudeBag) ; sac du combat de CHEN écarté
+CompleteWhenChoseItem kanto PokedudeBufferExecCompleted ; POTION du combat de CHEN écartée
+Intro_WaitForShinyAnimAndHealthbox kanto POKéDUDE ; texte de CHEN « Pour l'amour du ciel » écarté (combat du labo)
+FreeMonSpriteAfterFaintAnim kanto POKéDUDE ; + boîte de PV de l'adversaire cachée
+CompleteOnHealthbarDone kanto PokedudeBufferExecCompleted
+CompleteOnInactiveTextPrinter2 kanto PokedudeBufferExecCompleted
+DoHitAnimBlinkSpriteEffect kanto PokedudeBufferExecCompleted
+DoSwitchOutAnimation kanto PokedudeBufferExecCompleted
+CompleteOnFinishedBattleAnimation kanto PokedudeBufferExecCompleted
+CompleteOnFinishedStatusAnimation kanto PokedudeBufferExecCompleted
+HandleChooseActionAfterDma3 kanto POKéDUDE ; branche du combat de CHEN écartée
+#
+# battle_controllers.c (2026-11-04)
+InitBattleControllers émeraude + combats enregistrés, points de TV
+InitSinglePlayerBtlControllers kanto vieil homme (BATTLE_TYPE_WALLY_TUTORIAL = OLD_MAN_TUTORIAL de RF) et POKéDUDE (gBattlePokedudeFrlg) ; + partenaire, combats enregistrés
+InitLinkBtlControllers link
+SetBattlePartyIds émeraude + deux adversaires ; ++j
+PrepareBufferDataTransferLink link
+Task_HandleSendLinkBuffersData link
+TryReceiveLinkBattleData link
+Task_HandleCopyReceivedLinkBuffersData link
+BtlController_EmitMoveAnimation même gMultiHitCounter
+BtlController_EmitPrintString même 16 = TEXT_BUFF_ARRAY_COUNT
+BtlController_EmitPrintSelectionString même 16 = TEXT_BUFF_ARRAY_COUNT
+BtlController_EmitLinkStandbyMsg link combats enregistrés
+BtlController_EmitEndLinkBattle link combats enregistrés
+#
+# bike.c (2026-11-04) : les deux vélos d'Émeraude dans les deux régions
+MovePlayerOnBike émeraude + pentes de la Piste Cyclable d'Émeraude ; table de RF écrite en if
+GetBikeCollision même déclarations
+GetBikeCollisionAt émeraude + compteur de chocs de la Piste ; glace fissurée (Pilier Céleste, pas à Kanto)
+RS_IsRunningDisallowed même IsRunningDisallowedByMetatile = MetatileBehaviorForbidsBiking ; condition écrite autrement
+IsRunningDisallowed kanto décision de la fusion : on court partout, intérieurs compris (gMapHeader.allowRunning de RF ignoré, commentaire dans bike.c)
+IsBikingDisallowedByPlayer même drapeaux dans un autre ordre
+IsPlayerNotUsingAcroBikeOnBumpySlope même conditions écrites autrement
+GetOnOffBike kanto musique du vélo de Kanto (Overworld_GetCyclingMusic) ; deux vélos d'Émeraude
+BikeClearState même noms des champs ; lastSpinTile remis à zéro ailleurs
+Bike_UpdateBikeCounterSpeed même nom du champ
+GetPlayerSpeed même tableau copié
+#
+# event_data.c (2026-11-04)
+ClearTempFieldEventData même NUM_TEMP_FLAGS
+EnableNationalPokedex émeraude POKéDEX national d'Émeraude (valeurs magiques, mode et ordre)
+IsNationalPokedexEnabled émeraude valeurs magiques d'Émeraude
+ClearMysteryGiftVars même VAR_ALTERING_CAVE_WILD_SET remis à 0 à la nouvelle partie dans RF : déjà 0
+CanResetRTC même conditions écrites autrement
+GetVarPointer kanto variables de Kanto dans gSaveBlockKanto ; journal écarté
+VarGet même !x = x == 0
+VarSet même !x = x == 0
+FlagSet même != 0
+FlagClear même != 0
+FlagGet même expression écrite autrement
+#
+# item.c (2026-11-04)
+ApplyNewEncryptionKeyToBagItems même nom de variable
+ApplyNewEncryptionKeyToBagItems_ même appel direct de ApplyNewEncryptionKeyToBagItems
+CopyItemName même GetItemName
+CheckBagHasItem émeraude + sac de la Pyramide
+HasAtLeastOneBerry kanto SAC A BAIES du sac de RF (KantoBag) ; boucle sur les baies d'Émeraude
+CheckBagHasSpace émeraude + Pyramide ; 999 pour les baies
+AddBagItem kanto BOITE CT et SAC A BAIES gérés par le sac de RF (KantoBag_RemoveCases, rangés en tête des Objets rares) ; copie avant validation (Émeraude) ; Pyramide
+RemoveBagItem émeraude + Pyramide ; même retrait
+CheckPCHasItem émeraude 50 objets dans le PC (30 dans RF)
+AddPCItem émeraude 50 objets dans le PC ; copie avant validation
+RemovePCItem émeraude 50 objets dans le PC
+SwapItemSlots même SWAP
+SanitizeItemId même nombre d'objets de la fusion
+#
+# field_door.c (2026-11-04) : portes de Kanto dans kanto_field_door.c
+DrawDoor même taille de la porte passée en plus
+DrawClosedDoorTiles kanto + jour / nuit sur la porte (fusion)
+CopyDoorTilesToVram même UBFIX ; 32 = TILE_SIZE_4BPP
+DrawCurrentDoorAnimFrame kanto + jour / nuit sur la porte (fusion)
+Task_AnimateDoor même pointeurs 64 bits dans les données de la tâche
+StartDoorAnimationTask même pointeurs 64 bits dans les données de la tâche
+FieldSetDoorOpened kanto portes animées de Kanto (MB_WARP_DOOR de RF importé en MB_ANIMATED_DOOR)
+FieldSetDoorClosed kanto portes animées de Kanto
+FieldAnimateDoorClose kanto portes animées de Kanto
+FieldAnimateDoorOpen kanto portes animées de Kanto
+GetDoorSoundEffect kanto SE_DOOR de RF = SE_RG_DOOR
+#
+# field_fadetransition.c (2026-11-04) : field_screen_effect.c d'Émeraude dans la fusion
+WarpFadeInScreen même tampon de palettes noirci / blanchi par le fondu lui-même
+FadeInFromBlack même FillPalBufferBlack
+WarpFadeOutScreen même conditions dans un autre ordre
+Task_ReturnToFieldRecordMixing link
+FieldCB_ReturnToFieldWirelessLink link
+SetUpWarpExitTask variante sortie d'un bâtiment en portes de grange (RF), fondu d'Émeraude (docs/VARIANTES-RF.md)
+FieldCB_DefaultWarpExit même fondu dans SetUpWarpExitTask chez RF
+FieldCB_WarpExitFadeFromBlack émeraude + Colline e-Reader
+Task_ExitDoor variante portes de grange de RF (DoOutwardBarnDoorWipe) (docs/VARIANTES-RF.md)
+Task_ExitNonAnimDoor même IsPlayerStandingStill
+Task_TeleportWarpIn kanto téléporteurs de Kanto (scénario kanto_warp_pad) ; étapes en table
+#
+# wild_encounter.c (2026-11-04)
+ChooseWildMonLevel émeraude + talents qui montent le niveau (AGITATION, PRESSION, ESPRIT VITAL)
+GetCurrentMapWildMonHeaderId émeraude + Grotte Altérée d'Émeraude
+TryGenerateWildMon émeraude + talents (STATIK, MAGNEPIEGE)
+StandardWildEncounter kanto type de rencontre de RF à Kanto (IsLandWildEncounterAt, IsWaterWildEncounterAt) ; + Pic, DEBUG
+RockSmashWildEncounter même conditions écrites autrement
+SweetScentWildEncounter kanto type de rencontre de RF à Kanto (IsLandWildEncounterAt)
+DoesCurrentMapHaveFishingMons même conditions écrites autrement
+FishingWildEncounter émeraude + BARPAU, chaîne de pêche de la fusion, pêcheur de TV
+UpdateRepelCounter émeraude + Pic et Pyramide ; journal écarté
+ApplyFluteEncounterRateMod même FLAG_SYS_WHITE_FLUTE_ACTIVE de RF = FLAG_SYS_ENC_UP_ITEM d'Émeraude
+ApplyCleanseTagEncounterRateMod même IsLeadMonHoldingCleanseTag écrit en ligne
+#
+# battle_main.c (2026-11-04) : types de combat de RF dans la fusion : vieil homme = BATTLE_TYPE_WALLY_TUTORIAL,
+# POKéDUDE = gBattlePokedudeFrlg, fantôme = IS_BATTLE_TYPE_GHOST, Tour des Dresseurs = BATTLE_TYPE_TRAINER_HILL +
+# gBattleTrainerTowerFrlg
+CB2_InitBattle émeraude + combats enregistrés, partenaire ; aide L/R écartée
+BattleMainCB2 émeraude + combats enregistrés ; fin du POKéDUDE par gBattlePokedudeFrlg
+CreateNPCTrainerParty émeraude + bases secrètes, Zone de Combat ; Tour des Dresseurs par kanto_trainer_tower.c
+BattleStartClearSetData kanto POKéDUDE (gBattlePokedudeFrlg) ; + Palais, combats enregistrés
+BattleIntroDrawTrainersOrMonsSprites kanto vieil homme, POKéDUDE, fantôme ; légendaires : variante (ci-dessous)
+BattleIntroRecordMonsToDex variante RF ne marque jamais « vu » un légendaire (BATTLE_TYPE_LEGENDARY) au combat : seule la capture l'inscrit ; Émeraude oui (docs/VARIANTES-RF.md)
+HandleEndTurn_BattleWon porter FAIT 2026-11-04 : musique de victoire de RF à la Tour des Dresseurs ; dresseurs de Kanto (musiques de RF) déjà là
+HandleEndTurn_FinishBattle kanto vieil homme (WALLY_TUTORIAL), Tour (TRAINER_HILL) ; + Zone de Combat
+HandleAction_UseItem kanto POKé FLÛTE en combat par ItemUseInBattle_PokeFlute (scénario kanto_poke_flute_wake) ; LAST_BALL
+#
+# hall_of_fame.c (2026-11-04) : le Panthéon de RF est kanto_hall_of_fame.c, comparé ici
+InitHallOfFameScreen kanto kanto_hall_of_fame.c ; MUS_HALL_OF_FAME de RF = MUS_RG_HALL_OF_FAME ; aide L/R écartée
+Task_Hof_InitTeamSaveData kanto équipes du Panthéon de Kanto dans leur propre sauvegarde (KantoHallOfFame_Read) ; journal écarté
+Task_Hof_TrySaveData kanto + compteur du Panthéon de Kanto (GAME_STAT_KANTO_ENTERED_HOF)
+Task_Hof_WaitAndPrintPlayerInfo kanto FONT_NORMAL de RF = FONT_KANTO
+Task_HofPC_CopySaveData kanto sauvegarde du Panthéon de Kanto
+Task_HofPC_HandlePaletteOnExit même déclarations
+Task_HofPC_PrintDataIsCorrupted kanto FONT_KANTO
+HallOfFame_PrintWelcomeText kanto FONT_KANTO
+HallOfFame_PrintMonInfo kanto FONT_KANTO ; numéros de Kanto (Kanto_SpeciesToPokedexNum)
+HallOfFame_PrintPlayerInfo kanto FONT_KANTO
+#
+# item_use.c (2026-11-04)
+SetUpItemUseCallback kanto retour au sac de RF (KantoBag) ; + Pyramide
+CheckIfItemIsTMHMOrEvolutionStone même GetItemFieldFunc au lieu de la poche
+CB2_CheckMail émeraude retour à la poche du sac (CB2_ReturnToBagMenuPocket)
+Task_UseRepel émeraude + AUTO-REPOUSSE (fusion), Pyramide ; message par le sac ouvert (KantoBag_DisplayItemMessage) ; journal écarté
+RemoveUsedItem porter FAIT 2026-11-04 : listes du sac de RF (KantoBag_RemoveUsedItem)
+Task_UsedBlackWhiteFlute kanto message par le sac ouvert ; + Pyramide
+ItemUseOutOfBattle_EscapeRope journal
+ItemUseOnFieldCB_EscapeRope même police passée par RF
+ItemUseOutOfBattle_EnigmaBerry même ITEM_USE_PARTY_MENU = 1
+ItemUseInBattle_EnigmaBerry émeraude ordre des cas ; message d'Émeraude
+#
+# ereader_helpers.c, menu_helpers.c, pokemon_icon.c, script.c (2026-11-04)
+EReader_Send link e-Reader
+EReader_Recv link e-Reader
+OpenSerial32 link e-Reader
+EReaderHandleTransfer link e-Reader
+DetermineSendRecvState link e-Reader
+SetUpTransferManager link e-Reader
+EReaderHelper_SerialCallback link e-Reader
+DisableTm3 link e-Reader
+GetKeyInput link e-Reader
+Task_ContinueTaskAfterMessagePrints même RunTextPrintersRetIsActive
+Task_CallYesOrNoCallback même rappel appelé directement au lieu d'être mis dans la tâche
+CreateYesNoMenuWithCallbacks même arguments de RF (police, cadre) donnés par CreateYesNoMenu d'Émeraude
+GetLRKeysPressedAndHeld même JOY_REPEAT
+IsWritingMailAllowed link IsOverworldLinkActive
+MenuHelpers_IsLinkActive link IsOverworldLinkActive
+IsActiveOverworldLinkBusy link Overworld_IsRecvQueueAtMax
+ResetVramOamAndBgCntRegs même ResetAllBgsCoordinatesAndBgCntRegs écrit registre par registre
+AdjustQuantityAccordingToDPadInput même noms (relu ligne à ligne)
+CreateMonIcon même champ callback
+GetIconSpecies émeraude espèce de repli d'Émeraude (SPECIES_OLD_UNOWN_J)
+GetUnownLetterByPersonality même GET_UNOWN_LETTER
+GetMonIconTiles même UBFIX
+SafeLoadMonIconPalette émeraude espèce de repli d'Émeraude
+LoadMonIconPalette même déclarations
+SafeFreeMonIconPalette émeraude espèce de repli d'Émeraude
+GetValidMonIconPalettePtr émeraude espèce de repli d'Émeraude
+GetValidMonIconPalIndex émeraude espèce de repli d'Émeraude
+RunScriptCommand émeraude + mode arrêté ; noms
+ScriptContext_SetupScript journal
+RunScriptImmediately même &
+MapHeaderGetScriptTable même !x = x == 0
+MapHeaderRunScriptType même != 0
+MapHeaderCheckScriptTable même DSIZEPTR = 4 (pointeurs 64 bits)
+TryRunOnFrameMapScript journal
+GetSavedRamScriptIfValid même localId = objectId ; LOCALID_PLAYER = 255
+InitRamScript_NoObjectEvent même LOCALID_PLAYER = 255
+#
+# battle_script_commands.c (2026-11-04) : types de combat de RF traduits comme dans battle_main.c
+Cmd_accuracycheck kanto POKéDUDE (gBattlePokedudeFrlg) ; combat de CHEN écarté ; DSIZEPTR (pointeurs 64 bits)
+Cmd_critcalc kanto vieil homme (WALLY_TUTORIAL), POKéDUDE ; combat de CHEN écarté
+SetMoveEffect kanto POKéDUDE ; Tour des Dresseurs (TRAINER_HILL) ; macros écrites autrement
+Cmd_getexp kanto pas d'EXP à la Tour des Dresseurs (TRAINER_HILL), au POKéDUDE ; + Zone de Combat
+Cmd_switchinanim kanto vieil homme, POKéDUDE, fantôme ; légendaires « vus » : variante (docs/VARIANTES-RF.md) ; + Arène
+Cmd_tryswapitems kanto Tour des Dresseurs (TRAINER_HILL) ; + Zone de Combat, bases secrètes
+Cmd_handleballthrow kanto fantôme (IS_BATTLE_TYPE_GHOST), vieil homme, POKéDUDE ; BATTLE_OPPOSITE = ^ 1
+Cmd_givecaughtmon kanto PC de LÉO à Kanto (Fusion_GetPCOwner) ; BATTLE_OPPOSITE = ^ 1
+#
+# berry.c, berry_powder.c (2026-11-04)
+ClearEnigmaBerries même InitEnigmaBerry appelé ailleurs
+SetEnigmaBerry même copie écrite autrement
+GetEnigmaBerryChecksum même déclarations
+IsEnigmaBerryValid même !x = x == 0
+GetBerryInfo même LAST_BERRY_INDEX = ITEM_ENIGMA_BERRY
+ItemIdToBerryType même LAST_BERRY_INDEX
+BerryTypeToItemId même LAST_BERRY_INDEX
+GetBerryNameByBerryType même pointeur
+ApplyNewEncryptionKeyToBerryPowder même pointeur
+HasEnoughBerryPowder même VAR_0x8004 lu par la version d'Émeraude (HasEnoughBerryPowder_ pour RF)
+TakeBerryPowder même idem
+GetBerryPowder même pointeur
+PrintBerryPowderAmount variante police de la fenêtre de la POUDRE BAIE : celle d'Émeraude (vendeur d'Azuria)
+DrawPlayerPowderAmount variante fenêtre de la POUDRE BAIE d'Émeraude
+PrintPlayerBerryPowderAmount variante fenêtre de la POUDRE BAIE d'Émeraude
+DisplayBerryPowderVendorMenu variante fenêtre de la POUDRE BAIE d'Émeraude ; journal écarté
+#
+# field_camera.c (2026-11-04)
+DrawWholeMapView émeraude + copie du fond demandée
+CurrentMapDrawMetatileAt émeraude + copie du fond demandée
+DrawDoorMetatileAt émeraude + copie du fond demandée
+DrawMetatileAt kanto tilesets de Kanto au découpage d'Émeraude (512 métatuiles primaires)
+DrawMetatile même METATILE_LAYER_TYPE_* = 0, 1, 2
+CameraUpdateCallback même Camera_MoveX = data[2]
+CameraUpdate même x %= 16 = x - 16 * (x / 16)
+SetCameraPanningCallback même nom du paramètre
+#
+# item_menu.c (2026-11-04) : le sac de RF est kanto_item_menu.c (SAC = KANTO), comparé ici
+GoToBagMenu kanto kanto_item_menu.c ; ITEMMENULOCATION_* numérotés autrement
+CB2_BagMenuFromStartMenu kanto kanto_item_menu.c
+CB2_BagMenuFromBattle kanto kanto_item_menu.c ; + Pyramide
+CreateBagInputHandlerTask kanto kanto_item_menu.c ; ITEMMENULOCATION_*
+Task_BagMenu_HandleInput kanto kanto_item_menu.c ; poches de la fusion (KPOCKET), boîtes en tête des Objets rares
+OpenContextMenu kanto kanto_item_menu.c ; ITEMMENULOCATION_*
+Task_ItemContext_Sell kanto kanto_item_menu.c ; GetDialogBoxFontId = FONT_KANTO
+UseRegisteredKeyItemOnField émeraude + Pyramide, Pic, salle multi ; PlayerFreeze = HandleEnforcedLookDirectionOnPlayerStopMoving
+#
+# ereader_screen.c (2026-11-04) : le lecteur e-Reader, link ; RF y range les étages e-Reader de la Tour des Dresseurs
+EReader_Load link vu16 = volatile u16
+EReader_Reset link vu16 = volatile u16
+OpenEReaderLink link type de link 0x5502 (RF) / 0x5503 (Émeraude) : à reprendre avec le multi
+ValidateEReaderConnection link REG_IME lu plus tôt
+TryReceiveCard link même test écrit autrement (== 3 || == 4 || == 5 / >= 3 && <= 5)
+CreateEReaderTask link déclaration déplacée
+Task_EReader link RF : CEReaderTool_SaveTrainerTower (étages e-Reader de la Tour des Dresseurs, morts dans RF) ; Émeraude : TryWriteTrainerHill ; à reprendre avec le multi
+#
+# evolution_scene.c (2026-11-04)
+EvolutionScene même DecompressPicFromTable_2, .ptr, POKEMON_NAME_BUFFER_SIZE
+CB2_EvolutionSceneLoadGraphics même DecompressPicFromTable_2, .ptr
+CB2_TradeEvolutionSceneLoadGraphics même DecompressPicFromTable_2, .ptr
+TradeEvolutionScene même DecompressPicFromTable_2, .ptr, POKEMON_NAME_BUFFER_SIZE
+Task_EvolutionScene porter FAIT 2026-11-04 : arrêt sans le POKéDEX NATIONAL, à Kanto (Kanto_IsEvolutionBlocked, demande de l'utilisateur) ; PlayCry_Normal = EvoScene_DoMonAnimAndCry, sans animation avec POKéMON = KANTO
+Task_TradeEvolutionScene porter FAIT 2026-11-04 : arrêt sans le POKéDEX NATIONAL, à Kanto ; EVOSTATE_TRY_LEARN_MOVE de RF = 15 = T_EVOSTATE_CANCEL
+StartBgAnimation même PLTT_SIZE_4BPP = sizeof(BgAnim_Intro_Pal) ; BG 1 en paramètre
+#
+# field_weather.c (2026-11-04)
+StartWeather journal ApplyGlobalFieldPaletteTint (teinte du journal) ; palette de la météo allouée par Émeraude
+Task_WeatherMain émeraude + palProcessingState != 2 (correctif d'Émeraude)
+ApplyFogBlend même BG_PLTT_ID, 16 * 16, RGB2
+UpdateSpritePaletteWithWeather même != 0
+LoadDroughtWeatherPalette émeraude correctif d'Émeraude
+DroughtStateInit émeraude délai de la sécheresse en variable (5 comme Émeraude) ; pas de sécheresse à Kanto
+DroughtStateRun émeraude idem
+#
+# script_menu.c (2026-11-04) : les menus de RF sont kanto_script_menu (MENUS = KANTO)
+ScriptMenu_Multichoice variante DrawVerticalMultichoiceMenu de RF avec MENUS = KANTO
+ScriptMenu_MultichoiceWithDefault variante idem
+ScriptMenu_YesNo journal QL_AvoidDisplay
+ScriptMenu_MultichoiceGrid variante MENUS = KANTO ; QL_AvoidDisplay (journal)
+ScriptMenu_DisplayPCStartupPrompt même FONT_NORMAL vaut 2 dans RF, 1 dans Émeraude
+ScriptMenu_ShowPokemonPic journal QL_AvoidDisplay
+CreateWindowFromRect émeraude baseBlock 100 (VRAM d'Émeraude)
+#
+# string_util.c (2026-11-04) : {VERSION}, {MAGMA}… n'apparaissent dans aucun texte de RF
+ExpandPlaceholder_Version émeraude RF : RUBIS (inutilisé dans RF)
+ExpandPlaceholder_Magma émeraude inutilisé dans RF
+ExpandPlaceholder_Aqua émeraude inutilisé dans RF
+ExpandPlaceholder_Maxie émeraude inutilisé dans RF
+ExpandPlaceholder_Archie émeraude inutilisé dans RF
+ExpandPlaceholder_Groudon émeraude inutilisé dans RF
+ExpandPlaceholder_Kyogre émeraude inutilisé dans RF
+#
+# trainer_see.c (2026-11-04)
+CheckForTrainersWantingBattle variante deux dresseurs qui voient le joueur ensemble : combat double (Émeraude), un seul (RF) ; QL_IsTrainerSightDisabled (journal)
+CheckTrainer émeraude + Pic, Pyramide, combat à deux dresseurs ; GetMonsStateToDoubles_2
+GetTrainerApproachDistance même ARRAY_COUNT = 4
+GetTrainerApproachDistanceSouth émeraude garde de RF : table des objets pleine (16) et portée > 3 vers le bas ; cas limite invisible
+CheckPathBetweenTrainerAndPlayer même RF teste aussi la case du dresseur (toujours libre)
+Task_RunTrainerSeeFuncList même TaskGetTrainerObj = &gObjectEvents[data[7]]
+FldEff_QuestionMarkIcon même numéro d'animation de chaque table ; palette du joueur (PERSO)

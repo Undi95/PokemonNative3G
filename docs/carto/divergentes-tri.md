@@ -12,41 +12,10 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 
 | Fichier RF | Divergentes | Même code une fois normalisé | Par règle de famille | Classées | À lire | Corps introuvable |
 |---|---|---|---|---|---|---|
-| shop.c | 39 | 18 | 0 | 0 | 21 | 0 |
-| metatile_behavior.c | 23 | 3 | 0 | 0 | 20 | 0 |
-| field_weather_effects.c | 38 | 19 | 0 | 0 | 19 | 0 |
-| field_specials.c | 20 | 2 | 0 | 0 | 18 | 0 |
-| battle_controller_oak_old_man.c | 26 | 9 | 0 | 0 | 17 | 0 |
-| battle_controllers.c | 16 | 3 | 0 | 0 | 13 | 0 |
-| item.c | 20 | 7 | 0 | 0 | 12 | 1 |
-| bike.c | 12 | 1 | 0 | 0 | 11 | 0 |
-| event_data.c | 16 | 5 | 0 | 0 | 11 | 0 |
-| field_door.c | 16 | 5 | 0 | 0 | 11 | 0 |
-| field_fadetransition.c | 24 | 13 | 0 | 0 | 11 | 0 |
-| wild_encounter.c | 12 | 1 | 0 | 0 | 11 | 0 |
-| hall_of_fame.c | 23 | 13 | 0 | 0 | 10 | 0 |
-| item_use.c | 14 | 4 | 0 | 0 | 10 | 0 |
-| battle_main.c | 56 | 5 | 42 | 0 | 9 | 0 |
-| ereader_helpers.c | 9 | 0 | 0 | 0 | 9 | 0 |
-| menu_helpers.c | 9 | 0 | 0 | 0 | 9 | 0 |
-| pokemon_icon.c | 10 | 1 | 0 | 0 | 9 | 0 |
-| script.c | 13 | 4 | 0 | 0 | 9 | 0 |
-| battle_script_commands.c | 116 | 39 | 69 | 0 | 8 | 0 |
-| berry.c | 8 | 0 | 0 | 0 | 8 | 0 |
-| berry_powder.c | 9 | 1 | 0 | 0 | 8 | 0 |
-| field_camera.c | 10 | 2 | 0 | 0 | 8 | 0 |
-| item_menu.c | 13 | 5 | 0 | 0 | 8 | 0 |
-| ereader_screen.c | 7 | 0 | 0 | 0 | 7 | 0 |
-| evolution_scene.c | 9 | 2 | 0 | 0 | 7 | 0 |
-| field_weather.c | 15 | 8 | 0 | 0 | 7 | 0 |
-| script_menu.c | 8 | 1 | 0 | 0 | 7 | 0 |
-| string_util.c | 23 | 8 | 8 | 0 | 7 | 0 |
-| trainer_see.c | 9 | 2 | 0 | 0 | 7 | 0 |
 | evolution_graphics.c | 8 | 2 | 0 | 0 | 6 | 0 |
 | field_tasks.c | 6 | 0 | 0 | 0 | 6 | 0 |
 | new_game.c | 6 | 0 | 0 | 0 | 6 | 0 |
 | start_menu.c | 10 | 4 | 0 | 0 | 6 | 0 |
-| battle_controller_opponent.c | 34 | 5 | 24 | 0 | 5 | 0 |
 | field_message_box.c | 8 | 3 | 0 | 0 | 5 | 0 |
 | field_poison.c | 5 | 0 | 0 | 0 | 5 | 0 |
 | minigame_countdown.c | 6 | 1 | 0 | 0 | 5 | 0 |
@@ -56,6 +25,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | script_pokemon_util.c | 5 | 0 | 0 | 0 | 5 | 0 |
 | special_field_anim.c | 6 | 1 | 0 | 0 | 5 | 0 |
 | trainer_pokemon_sprites.c | 6 | 1 | 0 | 0 | 5 | 0 |
+| battle_controller_opponent.c | 34 | 5 | 21 | 4 | 4 | 0 |
 | easy_chat.c | 10 | 6 | 0 | 0 | 4 | 0 |
 | fldeff_cut.c | 5 | 1 | 0 | 0 | 4 | 0 |
 | fldeff_flash.c | 5 | 1 | 0 | 0 | 4 | 0 |
@@ -82,7 +52,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | trainer_tower.c | 3 | 0 | 0 | 0 | 3 | 0 |
 | battle_ai_script_commands.c | 88 | 3 | 81 | 0 | 2 | 2 |
 | battle_bg.c | 10 | 1 | 7 | 0 | 2 | 0 |
-| battle_controller_player.c | 69 | 16 | 50 | 0 | 2 | 1 |
 | battle_message.c | 7 | 2 | 3 | 0 | 2 | 0 |
 | battle_setup.c | 25 | 3 | 20 | 0 | 2 | 0 |
 | battle_util2.c | 3 | 0 | 1 | 0 | 2 | 0 |
@@ -99,8 +68,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | region_map.c | 10 | 8 | 0 | 0 | 2 | 0 |
 | title_screen.c | 3 | 0 | 0 | 1 | 2 | 0 |
 | wonder_news.c | 2 | 0 | 0 | 0 | 2 | 0 |
-| battle_controller_pokedude.c | 30 | 29 | 0 | 0 | 1 | 0 |
-| battle_controller_safari.c | 12 | 5 | 6 | 0 | 1 | 0 |
+| battle_controller_player.c | 69 | 16 | 42 | 9 | 1 | 1 |
 | battle_interface.c | 35 | 10 | 24 | 0 | 1 | 0 |
 | battle_records.c | 7 | 2 | 4 | 0 | 1 | 0 |
 | battle_util.c | 17 | 7 | 9 | 0 | 1 | 0 |
@@ -156,14 +124,23 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | battle_anim_status_effects.c | 4 | 2 | 2 | 0 | 0 | 0 |
 | battle_anim_utility_funcs.c | 29 | 4 | 25 | 0 | 0 | 0 |
 | battle_anim_water.c | 14 | 4 | 10 | 0 | 0 | 0 |
-| battle_controller_link_opponent.c | 20 | 4 | 16 | 0 | 0 | 0 |
-| battle_controller_link_partner.c | 20 | 4 | 16 | 0 | 0 | 0 |
+| battle_controller_link_opponent.c | 20 | 4 | 15 | 1 | 0 | 0 |
+| battle_controller_link_partner.c | 20 | 4 | 15 | 1 | 0 | 0 |
+| battle_controller_oak_old_man.c | 26 | 9 | 0 | 17 | 0 | 0 |
+| battle_controller_pokedude.c | 30 | 29 | 0 | 1 | 0 | 0 |
+| battle_controller_safari.c | 12 | 5 | 5 | 2 | 0 | 0 |
+| battle_controllers.c | 16 | 3 | 0 | 13 | 0 | 0 |
 | battle_gfx_sfx_util.c | 29 | 9 | 20 | 0 | 0 | 0 |
 | battle_intro.c | 8 | 2 | 6 | 0 | 0 | 0 |
+| battle_main.c | 56 | 5 | 42 | 9 | 0 | 0 |
+| battle_script_commands.c | 116 | 39 | 69 | 8 | 0 | 0 |
 | battle_tower.c | 12 | 0 | 12 | 0 | 0 | 0 |
 | battle_transition.c | 77 | 11 | 66 | 0 | 0 | 0 |
+| berry.c | 8 | 0 | 0 | 8 | 0 | 0 |
 | berry_fix_program.c | 3 | 0 | 3 | 0 | 0 | 0 |
+| berry_powder.c | 9 | 1 | 0 | 8 | 0 | 0 |
 | bg.c | 42 | 4 | 38 | 0 | 0 | 0 |
+| bike.c | 12 | 1 | 0 | 11 | 0 | 0 |
 | blend_palette.c | 1 | 0 | 1 | 0 | 0 | 0 |
 | blit.c | 1 | 0 | 1 | 0 | 0 | 0 |
 | daycare.c | 35 | 10 | 0 | 24 | 0 | 1 |
@@ -171,15 +148,29 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | diploma.c | 1 | 1 | 0 | 0 | 0 | 0 |
 | dma3_manager.c | 4 | 1 | 3 | 0 | 0 | 0 |
 | dynamic_placeholder_text_util.c | 3 | 3 | 0 | 0 | 0 | 0 |
+| ereader_helpers.c | 9 | 0 | 0 | 9 | 0 | 0 |
+| ereader_screen.c | 7 | 0 | 0 | 7 | 0 | 0 |
+| event_data.c | 16 | 5 | 0 | 11 | 0 | 0 |
 | event_object_lock.c | 5 | 5 | 0 | 0 | 0 | 0 |
 | event_object_movement.c | 378 | 301 | 0 | 77 | 0 | 0 |
+| evolution_scene.c | 9 | 2 | 0 | 7 | 0 | 0 |
+| field_camera.c | 10 | 2 | 0 | 8 | 0 | 0 |
 | field_control_avatar.c | 25 | 2 | 0 | 23 | 0 | 0 |
+| field_door.c | 16 | 5 | 0 | 11 | 0 | 0 |
 | field_effect.c | 94 | 34 | 0 | 60 | 0 | 0 |
 | field_effect_helpers.c | 60 | 7 | 0 | 53 | 0 | 0 |
+| field_fadetransition.c | 24 | 13 | 0 | 11 | 0 | 0 |
 | field_player_avatar.c | 64 | 26 | 0 | 38 | 0 | 0 |
+| field_specials.c | 20 | 2 | 0 | 18 | 0 | 0 |
+| field_weather.c | 15 | 8 | 0 | 7 | 0 | 0 |
+| field_weather_effects.c | 38 | 19 | 0 | 19 | 0 | 0 |
 | fieldmap.c | 34 | 3 | 0 | 31 | 0 | 0 |
+| hall_of_fame.c | 23 | 13 | 0 | 10 | 0 | 0 |
 | isagbprn.c | 7 | 0 | 7 | 0 | 0 | 0 |
+| item.c | 20 | 7 | 0 | 12 | 0 | 1 |
+| item_menu.c | 13 | 5 | 0 | 8 | 0 | 0 |
 | item_menu_icons.c | 8 | 8 | 0 | 0 | 0 | 0 |
+| item_use.c | 14 | 4 | 0 | 10 | 0 | 0 |
 | librfu_intr.c | 2 | 0 | 2 | 0 | 0 | 0 |
 | librfu_rfu.c | 16 | 4 | 12 | 0 | 0 | 0 |
 | librfu_sio32id.c | 1 | 0 | 1 | 0 | 0 | 0 |
@@ -193,7 +184,9 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | main.c | 10 | 1 | 9 | 0 | 0 | 0 |
 | malloc.c | 4 | 0 | 4 | 0 | 0 | 0 |
 | menu.c | 17 | 2 | 15 | 0 | 0 | 0 |
+| menu_helpers.c | 9 | 0 | 0 | 9 | 0 | 0 |
 | menu_indicators.c | 15 | 1 | 14 | 0 | 0 | 0 |
+| metatile_behavior.c | 23 | 3 | 0 | 20 | 0 | 0 |
 | multiboot.c | 6 | 0 | 6 | 0 | 0 | 0 |
 | mystery_event_script.c | 21 | 14 | 7 | 0 | 0 | 0 |
 | mystery_gift.c | 16 | 3 | 13 | 0 | 0 | 0 |
@@ -209,6 +202,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | party_menu.c | 145 | 38 | 0 | 107 | 0 | 0 |
 | play_time.c | 1 | 0 | 1 | 0 | 0 | 0 |
 | pokemon.c | 62 | 23 | 0 | 39 | 0 | 0 |
+| pokemon_icon.c | 10 | 1 | 0 | 9 | 0 | 0 |
 | pokemon_jump.c | 26 | 8 | 18 | 0 | 0 | 0 |
 | pokemon_special_anim.c | 1 | 1 | 0 | 0 | 0 | 0 |
 | pokemon_storage_system.c | 1 | 0 | 0 | 0 | 0 | 1 |
@@ -220,9 +214,13 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | save.c | 26 | 11 | 15 | 0 | 0 | 0 |
 | scanline_effect.c | 3 | 0 | 3 | 0 | 0 | 0 |
 | scrcmd.c | 68 | 9 | 0 | 59 | 0 | 0 |
+| script.c | 13 | 4 | 0 | 9 | 0 | 0 |
+| script_menu.c | 8 | 1 | 0 | 7 | 0 | 0 |
+| shop.c | 39 | 18 | 0 | 21 | 0 | 0 |
 | slot_machine.c | 2 | 2 | 0 | 0 | 0 | 0 |
 | sound.c | 4 | 0 | 4 | 0 | 0 | 0 |
 | sprite.c | 20 | 9 | 11 | 0 | 0 | 0 |
+| string_util.c | 23 | 8 | 8 | 7 | 0 | 0 |
 | task.c | 4 | 0 | 4 | 0 | 0 | 0 |
 | text.c | 17 | 2 | 15 | 0 | 0 | 0 |
 | text_printer.c | 8 | 2 | 6 | 0 | 0 | 0 |
@@ -230,6 +228,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | tilemap_util.c | 9 | 0 | 9 | 0 | 0 | 0 |
 | trade_scene.c | 32 | 7 | 25 | 0 | 0 | 0 |
 | trainer_card.c | 52 | 31 | 0 | 21 | 0 | 0 |
+| trainer_see.c | 9 | 2 | 0 | 7 | 0 | 0 |
 | union_room_battle.c | 1 | 0 | 1 | 0 | 0 | 0 |
 | union_room_chat.c | 15 | 2 | 13 | 0 | 0 | 0 |
 | union_room_chat_display.c | 8 | 2 | 6 | 0 | 0 | 0 |
@@ -237,10 +236,11 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | union_room_player_avatar.c | 18 | 8 | 10 | 0 | 0 | 0 |
 | util.c | 4 | 2 | 2 | 0 | 0 | 0 |
 | vs_seeker.c | 3 | 3 | 0 | 0 | 0 | 0 |
+| wild_encounter.c | 12 | 1 | 0 | 11 | 0 | 0 |
 | window.c | 8 | 1 | 7 | 0 | 0 | 0 |
 | window_8bpp.c | 3 | 3 | 0 | 0 | 0 | 0 |
 | wireless_communication_status_screen.c | 7 | 0 | 7 | 0 | 0 | 0 |
-| **total** | 4254 | 1366 | 1706 | 628 | 545 | 9 |
+| **total** | 4254 | 1366 | 1692 | 968 | 219 | 9 |
 
 ## À lire
 
@@ -251,100 +251,22 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `battle_ai_switch_items.c` **GetAI_ItemType** : corps introuvable dans la fusion (déplacé ?)
 - `battle_bg.c` **LoadBattleMenuWindowGfx** : 15 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_FIRST_BATTLE, BATTLE_TYPE_POKEDUDE
 - `battle_bg.c` **DrawBattleEntryBackground** ✓ : 11 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE, BATTLE_TYPE_TRAINER_TOWER, TRAINER_CLASS_CHAMPION, TRAINER_CLASS_LEADER
-- `battle_controller_oak_old_man.c` **HandleInputChooseAction** : 2 différence(s) ; marqueurs de RF absents de la fusion : ITEM_PREMIER_BALL, SE_SELECT
-- `battle_controller_oak_old_man.c` **CompleteOnBattlerSpriteCallbackDummy** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **CompleteOnInactiveTextPrinter** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **CompleteOnSpecialAnimDone** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **OpenPartyMenuToChooseMon** : 4 différence(s)
-- `battle_controller_oak_old_man.c` **WaitForMonSelection** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **OpenBagAndChooseItem** : 6 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_FIRST_BATTLE
-- `battle_controller_oak_old_man.c` **CompleteWhenChoseItem** : 2 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_FIRST_BATTLE, ITEM_POTION
-- `battle_controller_oak_old_man.c` **Intro_WaitForShinyAnimAndHealthbox** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **FreeMonSpriteAfterFaintAnim** : 3 différence(s)
-- `battle_controller_oak_old_man.c` **CompleteOnHealthbarDone** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **CompleteOnInactiveTextPrinter2** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **DoHitAnimBlinkSpriteEffect** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **DoSwitchOutAnimation** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **CompleteOnFinishedBattleAnimation** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **CompleteOnFinishedStatusAnimation** : 1 différence(s)
-- `battle_controller_oak_old_man.c` **HandleChooseActionAfterDma3** : 2 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_FIRST_BATTLE
-- `battle_controller_opponent.c` **CompleteOnHealthbarDone** : 5 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_FIRST_BATTLE
 - `battle_controller_opponent.c` **OpponentHandleLoadMonSprite** : 4 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_GHOST
 - `battle_controller_opponent.c` **OpponentHandleDrawTrainerPic** : 10 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_TRAINER_TOWER
 - `battle_controller_opponent.c` **OpponentHandleTrainerSlide** : 8 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_TRAINER_TOWER
 - `battle_controller_opponent.c` **OpponentHandlePrintString** : 3 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_FIRST_BATTLE
-- `battle_controller_player.c` **HandleInputChooseAction** : 2 différence(s) ; marqueurs de RF absents de la fusion : ITEM_PREMIER_BALL, SE_SELECT
 - `battle_controller_player.c` **HandleMoveSwitching** : 21 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_FIRST_BATTLE
 - `battle_controller_player.c` **MoveSelectionDisplayPpNumber** : corps introuvable dans la fusion (déplacé ?)
-- `battle_controller_pokedude.c` **OpenBagAndChooseItem** : 2 différence(s)
-- `battle_controller_safari.c` **HandleInputChooseAction** : 2 différence(s) ; marqueurs de RF absents de la fusion : SE_SELECT
-- `battle_controllers.c` **InitBattleControllers** : 2 différence(s)
-- `battle_controllers.c` **InitSinglePlayerBtlControllers** : 33 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_FIRST_BATTLE, BATTLE_TYPE_OLD_MAN_TUTORIAL, BATTLE_TYPE_POKEDUDE
-- `battle_controllers.c` **InitLinkBtlControllers** : 1 différence(s)
-- `battle_controllers.c` **SetBattlePartyIds** : 3 différence(s)
-- `battle_controllers.c` **PrepareBufferDataTransferLink** : 20 différence(s)
-- `battle_controllers.c` **Task_HandleSendLinkBuffersData** : 23 différence(s)
-- `battle_controllers.c` **TryReceiveLinkBattleData** : 2 différence(s)
-- `battle_controllers.c` **Task_HandleCopyReceivedLinkBuffersData** : 26 différence(s)
-- `battle_controllers.c` **BtlController_EmitMoveAnimation** : 1 différence(s)
-- `battle_controllers.c` **BtlController_EmitPrintString** : 1 différence(s)
-- `battle_controllers.c` **BtlController_EmitPrintSelectionString** : 1 différence(s)
-- `battle_controllers.c` **BtlController_EmitLinkStandbyMsg** : 4 différence(s)
-- `battle_controllers.c` **BtlController_EmitEndLinkBattle** : 2 différence(s)
 - `battle_interface.c` **TryAddPokeballIconToHealthbox** : 5 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_FIRST_BATTLE, BATTLE_TYPE_OLD_MAN_TUTORIAL, BATTLE_TYPE_POKEDUDE
-- `battle_main.c` **CB2_InitBattle** : 4 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_SAFARI
-- `battle_main.c` **BattleMainCB2** : 1 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE
-- `battle_main.c` **CreateNPCTrainerParty** : 9 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_TRAINER_TOWER
-- `battle_main.c` **BattleStartClearSetData** : 17 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE, SPECIES_NONE
-- `battle_main.c` **BattleIntroDrawTrainersOrMonsSprites** : 16 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_GHOST, BATTLE_TYPE_GHOST_UNVEILED, BATTLE_TYPE_LEGENDARY, BATTLE_TYPE_OLD_MAN_TUTORIAL, BATTLE_TYPE_POKEDUDE
-- `battle_main.c` **BattleIntroRecordMonsToDex** : 4 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_GHOST, BATTLE_TYPE_LEGENDARY, BATTLE_TYPE_OLD_MAN_TUTORIAL, BATTLE_TYPE_POKEDUDE
-- `battle_main.c` **HandleEndTurn_BattleWon** : 14 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_TRAINER_TOWER, TRAINER_CLASS_COOLTRAINER, TRAINER_CLASS_DOME_ACE, TRAINER_CLASS_GENTLEMAN, TRAINER_CLASS_SALON_MAIDEN
-- `battle_main.c` **HandleEndTurn_FinishBattle** : 14 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_OLD_MAN_TUTORIAL, BATTLE_TYPE_TRAINER_TOWER
-- `battle_main.c` **HandleAction_UseItem** : 8 différence(s) ; marqueurs de RF absents de la fusion : ITEM_PREMIER_BALL
 - `battle_message.c` **BufferStringBattle** : 42 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_GHOST, BATTLE_TYPE_GHOST_UNVEILED, BATTLE_TYPE_OLD_MAN_TUTORIAL
 - `battle_message.c` **BattleStringExpandPlaceholders** : 73 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_TRAINER_TOWER, FLAG_SYS_NOT_SOMEONES_PC, TRAINER_CLASS_CHAMPION, TRAINER_CLASS_FACTORY_HEAD, TRAINER_CLASS_RIVAL_EARLY
 - `battle_records.c` **UpdatePlayerLinkBattleRecords** : 8 différence(s) ; marqueurs de RF absents de la fusion : MAP_GROUP, MAP_NUM, MAP_UNION_ROOM
-- `battle_script_commands.c` **Cmd_accuracycheck** : 6 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_FIRST_BATTLE, BATTLE_TYPE_POKEDUDE
-- `battle_script_commands.c` **Cmd_critcalc** : 3 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_OLD_MAN_TUTORIAL, BATTLE_TYPE_POKEDUDE
-- `battle_script_commands.c` **SetMoveEffect** : 22 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE, BATTLE_TYPE_TRAINER_TOWER
-- `battle_script_commands.c` **Cmd_getexp** : 8 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE, BATTLE_TYPE_TRAINER_TOWER
-- `battle_script_commands.c` **Cmd_switchinanim** : 4 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_GHOST, BATTLE_TYPE_LEGENDARY, BATTLE_TYPE_OLD_MAN_TUTORIAL, BATTLE_TYPE_POKEDUDE
-- `battle_script_commands.c` **Cmd_tryswapitems** : 8 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_TRAINER_TOWER
-- `battle_script_commands.c` **Cmd_handleballthrow** : 15 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_GHOST, BATTLE_TYPE_OLD_MAN_TUTORIAL, BATTLE_TYPE_POKEDUDE
-- `battle_script_commands.c` **Cmd_givecaughtmon** : 16 différence(s) ; marqueurs de RF absents de la fusion : FLAG_SYS_NOT_SOMEONES_PC
 - `battle_setup.c` **StartGroudonKyogreBattle** : 5 différence(s) ; marqueurs de RF absents de la fusion : MUS_RS_VS_TRAINER
 - `battle_setup.c` **StartRegiBattle** : 5 différence(s) ; marqueurs de RF absents de la fusion : MUS_RS_VS_TRAINER
 - `battle_util.c` **IsMonDisobedient** : 16 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE, FLAG_BADGE02_GET, FLAG_BADGE04_GET, FLAG_BADGE06_GET, FLAG_BADGE08_GET
 - `battle_util2.c` **AllocateBattleResources** : 8 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE, BATTLE_TYPE_TRAINER_TOWER
 - `battle_util2.c` **FreeBattleResources** : 3 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE, BATTLE_TYPE_TRAINER_TOWER
-- `berry.c` **ClearEnigmaBerries** : 1 différence(s)
-- `berry.c` **SetEnigmaBerry** : 9 différence(s)
-- `berry.c` **GetEnigmaBerryChecksum** : 8 différence(s)
-- `berry.c` **IsEnigmaBerryValid** : 4 différence(s)
-- `berry.c` **GetBerryInfo** : 5 différence(s)
-- `berry.c` **ItemIdToBerryType** : 5 différence(s) ; marqueurs de RF absents de la fusion : ITEM_ENIGMA_BERRY
-- `berry.c` **BerryTypeToItemId** : 4 différence(s) ; marqueurs de RF absents de la fusion : ITEM_ENIGMA_BERRY
-- `berry.c` **GetBerryNameByBerryType** : 2 différence(s)
 - `berry_crush.c` **Cmd_SignalReadyToBegin** : 3 différence(s) ; marqueurs de RF absents de la fusion : MUS_GAME_CORNER
-- `berry_powder.c` **ApplyNewEncryptionKeyToBerryPowder** : 2 différence(s)
-- `berry_powder.c` **HasEnoughBerryPowder** : 3 différence(s)
-- `berry_powder.c` **TakeBerryPowder** : 6 différence(s)
-- `berry_powder.c` **GetBerryPowder** : 2 différence(s)
-- `berry_powder.c` **PrintBerryPowderAmount** : 1 différence(s)
-- `berry_powder.c` **DrawPlayerPowderAmount** : 5 différence(s)
-- `berry_powder.c` **PrintPlayerBerryPowderAmount** : 4 différence(s)
-- `berry_powder.c` **DisplayBerryPowderVendorMenu** : 8 différence(s)
-- `bike.c` **MovePlayerOnBike** : 5 différence(s)
-- `bike.c` **GetBikeCollision** : 7 différence(s)
-- `bike.c` **GetBikeCollisionAt** : 4 différence(s)
-- `bike.c` **RS_IsRunningDisallowed** : 3 différence(s)
-- `bike.c` **IsRunningDisallowed** : 4 différence(s)
-- `bike.c` **IsBikingDisallowedByPlayer** : 2 différence(s)
-- `bike.c` **IsPlayerNotUsingAcroBikeOnBumpySlope** : 2 différence(s)
-- `bike.c` **GetOnOffBike** : 5 différence(s)
-- `bike.c` **BikeClearState** : 6 différence(s)
-- `bike.c` **Bike_UpdateBikeCounterSpeed** : 1 différence(s)
-- `bike.c` **GetPlayerSpeed** : 4 différence(s)
 - `braille_text.c` **FontFunc_Braille** : 9 différence(s)
 - `braille_text.c` **DecompressGlyph_Braille** : 11 différence(s)
 - `buy_menu_helpers.c` **BuyMenuInitWindows** : 2 différence(s)
@@ -367,76 +289,12 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `easy_chat.c` **InitEasyChatPhrases** : 4 différence(s)
 - `easy_chat.c` **InitQuestionnaireWords** : 1 différence(s)
 - `easy_chat_2.c` **ShowEasyChatScreen** : 1 différence(s)
-- `ereader_helpers.c` **EReader_Send** : 10 différence(s)
-- `ereader_helpers.c` **EReader_Recv** : 10 différence(s)
-- `ereader_helpers.c` **OpenSerial32** : 2 différence(s)
-- `ereader_helpers.c` **EReaderHandleTransfer** : 5 différence(s)
-- `ereader_helpers.c` **DetermineSendRecvState** : 2 différence(s)
-- `ereader_helpers.c` **SetUpTransferManager** : 4 différence(s)
-- `ereader_helpers.c` **EReaderHelper_SerialCallback** : 24 différence(s)
-- `ereader_helpers.c` **DisableTm3** : 1 différence(s)
-- `ereader_helpers.c` **GetKeyInput** : 1 différence(s)
-- `ereader_screen.c` **EReader_Load** : 1 différence(s)
-- `ereader_screen.c` **EReader_Reset** : 1 différence(s)
-- `ereader_screen.c` **OpenEReaderLink** : 1 différence(s)
-- `ereader_screen.c` **ValidateEReaderConnection** : 3 différence(s)
-- `ereader_screen.c` **TryReceiveCard** : 7 différence(s)
-- `ereader_screen.c` **CreateEReaderTask** : 2 différence(s)
-- `ereader_screen.c` **Task_EReader** : 8 différence(s)
-- `event_data.c` **ClearTempFieldEventData** : 7 différence(s)
-- `event_data.c` **EnableNationalPokedex** : 3 différence(s)
-- `event_data.c` **IsNationalPokedexEnabled** : 3 différence(s)
-- `event_data.c` **ClearMysteryGiftVars** : 1 différence(s) ; marqueurs de RF absents de la fusion : VAR_ALTERING_CAVE_WILD_SET
-- `event_data.c` **CanResetRTC** : 5 différence(s)
-- `event_data.c` **GetVarPointer** : 4 différence(s)
-- `event_data.c` **VarGet** : 2 différence(s)
-- `event_data.c` **VarSet** : 2 différence(s)
-- `event_data.c` **FlagSet** : 1 différence(s)
-- `event_data.c` **FlagClear** : 1 différence(s)
-- `event_data.c` **FlagGet** : 5 différence(s)
 - `evolution_graphics.c` **SetEvoSparklesMatrices** : 2 différence(s)
 - `evolution_graphics.c` **LoadEvoSparkleSpriteAndPal** : 1 différence(s)
 - `evolution_graphics.c` **EvolutionSparkles_ArcDown** : 2 différence(s)
 - `evolution_graphics.c` **EvolutionSparkles_CircleInward** : 2 différence(s)
 - `evolution_graphics.c` **EvolutionSparkles_SprayAndFlash_Trade** : 1 différence(s)
 - `evolution_graphics.c` **CycleEvolutionMonSprite** : 13 différence(s)
-- `evolution_scene.c` **EvolutionScene** : 6 différence(s)
-- `evolution_scene.c` **CB2_EvolutionSceneLoadGraphics** : 2 différence(s)
-- `evolution_scene.c` **CB2_TradeEvolutionSceneLoadGraphics** : 2 différence(s)
-- `evolution_scene.c` **TradeEvolutionScene** : 3 différence(s)
-- `evolution_scene.c` **Task_EvolutionScene** : 25 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_MEW
-- `evolution_scene.c` **Task_TradeEvolutionScene** : 13 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_MEW
-- `evolution_scene.c` **StartBgAnimation** : 3 différence(s)
-- `field_camera.c` **DrawWholeMapView** : 1 différence(s)
-- `field_camera.c` **CurrentMapDrawMetatileAt** : 1 différence(s)
-- `field_camera.c` **DrawDoorMetatileAt** : 1 différence(s)
-- `field_camera.c` **DrawMetatileAt** : 2 différence(s)
-- `field_camera.c` **DrawMetatile** : 3 différence(s)
-- `field_camera.c` **CameraUpdateCallback** : 2 différence(s)
-- `field_camera.c` **CameraUpdate** : 5 différence(s)
-- `field_camera.c` **SetCameraPanningCallback** : 1 différence(s)
-- `field_door.c` **DrawDoor** : 1 différence(s)
-- `field_door.c` **DrawClosedDoorTiles** : 1 différence(s)
-- `field_door.c` **CopyDoorTilesToVram** : 2 différence(s)
-- `field_door.c` **DrawCurrentDoorAnimFrame** : 2 différence(s)
-- `field_door.c` **Task_AnimateDoor** : 7 différence(s)
-- `field_door.c` **StartDoorAnimationTask** : 4 différence(s)
-- `field_door.c` **FieldSetDoorOpened** ✓ : 1 différence(s)
-- `field_door.c` **FieldSetDoorClosed** ✓ : 1 différence(s)
-- `field_door.c` **FieldAnimateDoorClose** ✓ : 1 différence(s)
-- `field_door.c` **FieldAnimateDoorOpen** ✓ : 1 différence(s)
-- `field_door.c` **GetDoorSoundEffect** ✓ : 1 différence(s) ; marqueurs de RF absents de la fusion : SE_DOOR
-- `field_fadetransition.c` **WarpFadeInScreen** : 4 différence(s)
-- `field_fadetransition.c` **FadeInFromBlack** : 1 différence(s)
-- `field_fadetransition.c` **WarpFadeOutScreen** : 5 différence(s)
-- `field_fadetransition.c` **Task_ReturnToFieldRecordMixing** : 4 différence(s)
-- `field_fadetransition.c` **FieldCB_ReturnToFieldWirelessLink** : 1 différence(s)
-- `field_fadetransition.c` **SetUpWarpExitTask** : 3 différence(s)
-- `field_fadetransition.c` **FieldCB_DefaultWarpExit** : 2 différence(s)
-- `field_fadetransition.c` **FieldCB_WarpExitFadeFromBlack** : 3 différence(s)
-- `field_fadetransition.c` **Task_ExitDoor** : 14 différence(s)
-- `field_fadetransition.c` **Task_ExitNonAnimDoor** : 6 différence(s)
-- `field_fadetransition.c` **Task_TeleportWarpIn** : 5 différence(s)
 - `field_message_box.c` **InitFieldMessageBox** : 1 différence(s)
 - `field_message_box.c` **ShowFieldMessage** : 1 différence(s)
 - `field_message_box.c` **ShowFieldAutoScrollMessage** : 1 différence(s)
@@ -451,56 +309,12 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `field_screen_effect.c` **WriteFlashScanlineEffectBuffer** : 4 différence(s)
 - `field_special_scene.c` **FieldCB_ShowPortholeView** : 1 différence(s)
 - `field_special_scene.c` **LookThroughPorthole** : 1 différence(s)
-- `field_specials.c` **ResetCyclingRoadChallengeData** : 1 différence(s)
-- `field_specials.c` **GetPlayerAvatarBike** : 2 différence(s)
-- `field_specials.c` **GetPlayerTrainerIdOnesDigit** : 3 différence(s)
-- `field_specials.c` **SpawnCameraObject** : 2 différence(s)
-- `field_specials.c` **LeadMonHasEffortRibbon** : 2 différence(s)
-- `field_specials.c` **GiveLeadMonEffortRibbon** : 7 différence(s)
-- `field_specials.c` **IsPokerusInParty** : 2 différence(s)
-- `field_specials.c` **GetLeadMonIndex** : 5 différence(s)
-- `field_specials.c` **CountDigits** : 8 différence(s)
-- `field_specials.c` **ChangeBoxPokemonNickname** : 8 différence(s)
-- `field_specials.c` **ChangePokemonNickname** : 5 différence(s)
-- `field_specials.c` **IsMonOTIDNotPlayers** : 1 différence(s)
-- `field_specials.c` **GetMysteryGiftCardStat** : 1 différence(s)
-- `field_specials.c` **ShouldShowBoxWasFullMessage** : 5 différence(s)
-- `field_specials.c` **IsDestinationBoxFull** : 4 différence(s)
-- `field_specials.c` **UsedPokemonCenterWarp** : 3 différence(s)
-- `field_specials.c` **BufferTMHMMoveName** : 2 différence(s)
-- `field_specials.c` **IncrementBirthIslandRockStepCount** : 6 différence(s)
 - `field_tasks.c` **Task_RunTimeBasedEvents** : 3 différence(s)
 - `field_tasks.c` **SetUpFieldTasks** : 1 différence(s)
 - `field_tasks.c` **MarkIcePuzzleCoordVisited** : 8 différence(s)
 - `field_tasks.c` **AshGrassPerStepCallback** : 2 différence(s)
 - `field_tasks.c` **SetCrackedFloorHoleMetatile** : 3 différence(s)
 - `field_tasks.c` **CrackedFloorPerStepCallback** : 1 différence(s)
-- `field_weather.c` **StartWeather** : 2 différence(s)
-- `field_weather.c` **Task_WeatherMain** : 1 différence(s)
-- `field_weather.c` **ApplyFogBlend** : 6 différence(s)
-- `field_weather.c` **UpdateSpritePaletteWithWeather** : 1 différence(s)
-- `field_weather.c` **LoadDroughtWeatherPalette** : 1 différence(s)
-- `field_weather.c` **DroughtStateInit** : 1 différence(s)
-- `field_weather.c` **DroughtStateRun** : 2 différence(s)
-- `field_weather_effects.c` **Clouds_InitVars** : 2 différence(s)
-- `field_weather_effects.c` **Clouds_InitAll** : 2 différence(s)
-- `field_weather_effects.c` **CreateCloudSprites** : 20 différence(s)
-- `field_weather_effects.c` **Drought_InitAll** : 2 différence(s)
-- `field_weather_effects.c` **Drought_Main** : 2 différence(s)
-- `field_weather_effects.c` **UpdateDroughtBlend** : 6 différence(s)
-- `field_weather_effects.c` **Snow_InitAll** : 2 différence(s)
-- `field_weather_effects.c` **Thunderstorm_InitAll** : 2 différence(s)
-- `field_weather_effects.c` **Downpour_InitAll** : 2 différence(s)
-- `field_weather_effects.c` **FogHorizontal_InitVars** : 2 différence(s)
-- `field_weather_effects.c` **FogHorizontal_InitAll** : 2 différence(s)
-- `field_weather_effects.c` **FogHorizontalSpriteCallback** : 1 différence(s)
-- `field_weather_effects.c` **CreateFogHorizontalSprites** : 1 différence(s)
-- `field_weather_effects.c` **Ash_InitAll** : 2 différence(s)
-- `field_weather_effects.c` **UpdateAshSprite** : 1 différence(s)
-- `field_weather_effects.c` **FogDiagonal_InitAll** : 2 différence(s)
-- `field_weather_effects.c` **UpdateFogDiagonalSprite** : 1 différence(s)
-- `field_weather_effects.c` **UpdateSandstormSprite** : 1 différence(s)
-- `field_weather_effects.c` **DestroyBubbleSprites** : 2 différence(s)
 - `field_weather_util.c` **DoCurrentWeather** : 1 différence(s)
 - `field_weather_util.c` **ResumePausedWeather** : 1 différence(s)
 - `field_weather_util.c` **TranslateWeatherNum** : 1 différence(s)
@@ -531,53 +345,12 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `fldeff_sweetscent.c` **TrySweetScentEncounter** : 11 différence(s)
 - `fldeff_sweetscent.c` **FailSweetScentEncounter** : 1 différence(s)
 - `fldeff_teleport.c` **FldEff_UseTeleport** : 2 différence(s)
-- `hall_of_fame.c` **InitHallOfFameScreen** : 2 différence(s) ; marqueurs de RF absents de la fusion : MUS_HALL_OF_FAME
-- `hall_of_fame.c` **Task_Hof_InitTeamSaveData** : 5 différence(s)
-- `hall_of_fame.c` **Task_Hof_TrySaveData** : 2 différence(s)
-- `hall_of_fame.c` **Task_Hof_WaitAndPrintPlayerInfo** : 1 différence(s)
-- `hall_of_fame.c` **Task_HofPC_CopySaveData** : 7 différence(s)
-- `hall_of_fame.c` **Task_HofPC_HandlePaletteOnExit** : 1 différence(s)
-- `hall_of_fame.c` **Task_HofPC_PrintDataIsCorrupted** : 1 différence(s)
-- `hall_of_fame.c` **HallOfFame_PrintWelcomeText** : 2 différence(s)
-- `hall_of_fame.c` **HallOfFame_PrintMonInfo** : 8 différence(s)
-- `hall_of_fame.c` **HallOfFame_PrintPlayerInfo** : 7 différence(s)
 - `heal_location.c` **GetHealLocation** : 2 différence(s)
 - `hof_pc.c` **ReshowPCMenuAfterHallOfFamePC** : 1 différence(s)
 - `image_processing_effects.c` **ConvertColorToGrayscale** : 17 différence(s)
 - `intro.c` **LoadCopyrightGraphics** : 8 différence(s)
 - `intro.c` **SetUpCopyrightScreen** : 34 différence(s)
 - `intro.c` **CB2_InitCopyrightScreenAfterBootup** : 2 différence(s)
-- `item.c` **ApplyNewEncryptionKeyToBagItems** : 7 différence(s)
-- `item.c` **ApplyNewEncryptionKeyToBagItems_** : corps introuvable dans la fusion (déplacé ?)
-- `item.c` **CopyItemName** : 1 différence(s)
-- `item.c` **CheckBagHasItem** : 3 différence(s)
-- `item.c` **HasAtLeastOneBerry** : 5 différence(s) ; marqueurs de RF absents de la fusion : ITEM_BERRY_POUCH
-- `item.c` **CheckBagHasSpace** : 13 différence(s)
-- `item.c` **AddBagItem** : 30 différence(s) ; marqueurs de RF absents de la fusion : FLAG_SYS_GOT_BERRY_POUCH, ITEM_BERRY_POUCH, ITEM_TM_CASE
-- `item.c` **RemoveBagItem** : 24 différence(s)
-- `item.c` **CheckPCHasItem** : 5 différence(s)
-- `item.c` **AddPCItem** : 19 différence(s)
-- `item.c` **RemovePCItem** : 5 différence(s)
-- `item.c` **SwapItemSlots** : 5 différence(s)
-- `item.c` **SanitizeItemId** : 2 différence(s)
-- `item_menu.c` **GoToBagMenu** : 3 différence(s)
-- `item_menu.c` **CB2_BagMenuFromStartMenu** : 1 différence(s)
-- `item_menu.c` **CB2_BagMenuFromBattle** : 4 différence(s)
-- `item_menu.c` **CreateBagInputHandlerTask** : 5 différence(s)
-- `item_menu.c` **Task_BagMenu_HandleInput** : 5 différence(s)
-- `item_menu.c` **OpenContextMenu** : 15 différence(s)
-- `item_menu.c` **Task_ItemContext_Sell** : 2 différence(s)
-- `item_menu.c` **UseRegisteredKeyItemOnField** : 6 différence(s)
-- `item_use.c` **SetUpItemUseCallback** : 9 différence(s) ; marqueurs de RF absents de la fusion : ITEM_TYPE_FIELD
-- `item_use.c` **CheckIfItemIsTMHMOrEvolutionStone** : 6 différence(s)
-- `item_use.c` **CB2_CheckMail** : 1 différence(s)
-- `item_use.c` **Task_UseRepel** : 6 différence(s)
-- `item_use.c` **RemoveUsedItem** : 2 différence(s)
-- `item_use.c` **Task_UsedBlackWhiteFlute** : 4 différence(s)
-- `item_use.c` **ItemUseOutOfBattle_EscapeRope** : 1 différence(s)
-- `item_use.c` **ItemUseOnFieldCB_EscapeRope** : 1 différence(s)
-- `item_use.c` **ItemUseOutOfBattle_EnigmaBerry** : 8 différence(s)
-- `item_use.c` **ItemUseInBattle_EnigmaBerry** : 4 différence(s)
 - `itemfinder.c` **ItemUseOnFieldCB_Itemfinder** : 1 différence(s)
 - `itemfinder.c` **CreateStarSprite** : 1 différence(s)
 - `learn_move.c` **PrintTextOnWindow** : 1 différence(s)
@@ -588,35 +361,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `menu2.c` **AddTextPrinterParameterized4** : 4 différence(s)
 - `menu2.c` **AddTextPrinterParameterized5** : 4 différence(s)
 - `menu2.c` **UnusedBlitBitmapRect** : 15 différence(s)
-- `menu_helpers.c` **Task_ContinueTaskAfterMessagePrints** : 1 différence(s)
-- `menu_helpers.c` **Task_CallYesOrNoCallback** : 4 différence(s)
-- `menu_helpers.c` **CreateYesNoMenuWithCallbacks** : 2 différence(s)
-- `menu_helpers.c` **GetLRKeysPressedAndHeld** : 2 différence(s)
-- `menu_helpers.c` **IsWritingMailAllowed** : 1 différence(s)
-- `menu_helpers.c` **MenuHelpers_IsLinkActive** : 1 différence(s)
-- `menu_helpers.c` **IsActiveOverworldLinkBusy** : 1 différence(s)
-- `menu_helpers.c` **ResetVramOamAndBgCntRegs** : 2 différence(s)
-- `menu_helpers.c` **AdjustQuantityAccordingToDPadInput** : 38 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsPokeGrass** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsReflective** : 2 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsEscalator** : 3 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsNonAnimDoor** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsNorthArrowWarp** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsSouthArrowWarp** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsForcedMovementTile** : 4 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_HasRipples** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsTallGrass** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsDiveable** : 4 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsUnableToEmerge** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsShallowFlowingWater** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsSurfableAndNotWaterfall** : 2 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsEastBlocked** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsWestBlocked** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsNorthBlocked** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsSouthBlocked** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsUnionRoomWarp** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsSeaweed** : 1 différence(s)
-- `metatile_behavior.c` **MetatileBehavior_IsRunningDisallowed** : 1 différence(s)
 - `mini_printf.c` **mini_pchar_decode** : 1 différence(s)
 - `mini_printf.c` **_putsEncoded** : 1 différence(s)
 - `mini_printf.c` **mini_vpprintf** : 2 différence(s)
@@ -655,15 +399,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `pokeball.c` **Task_DoPokeballSendOutAnim** : 9 différence(s) ; marqueurs de RF absents de la fusion : BATTLE_TYPE_POKEDUDE
 - `pokeball.c` **SpriteCB_BallThrow_CaptureMon** : 1 différence(s) ; marqueurs de RF absents de la fusion : MUS_CAUGHT_INTRO
 - `pokedex.c` **GetSetPokedexFlag** : 6 différence(s)
-- `pokemon_icon.c` **CreateMonIcon** : 2 différence(s)
-- `pokemon_icon.c` **GetIconSpecies** : 1 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_NONE
-- `pokemon_icon.c` **GetUnownLetterByPersonality** : 3 différence(s)
-- `pokemon_icon.c` **GetMonIconTiles** : 4 différence(s)
-- `pokemon_icon.c` **SafeLoadMonIconPalette** : 1 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_NONE
-- `pokemon_icon.c` **LoadMonIconPalette** : 1 différence(s)
-- `pokemon_icon.c` **SafeFreeMonIconPalette** : 1 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_NONE
-- `pokemon_icon.c` **GetValidMonIconPalettePtr** : 1 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_NONE
-- `pokemon_icon.c` **GetValidMonIconPalIndex** : 1 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_NONE
 - `pokemon_size_record.c` **FormatMonSizeRecord** : 1 différence(s)
 - `pokemon_size_record.c` **CompareMonSize** : 3 différence(s)
 - `pokemon_size_record.c` **GetMonSizeRecordInfo** : 1 différence(s)
@@ -696,22 +431,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `save_location.c` **TrySetReloadWarpStatus** : 2 différence(s)
 - `save_location.c` **TrySetUnknownWarpStatus** : 2 différence(s)
 - `save_location.c` **SetUnlockedPokedexFlags** : 3 différence(s)
-- `script.c` **RunScriptCommand** : 9 différence(s)
-- `script.c` **ScriptContext_SetupScript** : 1 différence(s)
-- `script.c` **RunScriptImmediately** : 2 différence(s)
-- `script.c` **MapHeaderGetScriptTable** : 5 différence(s)
-- `script.c` **MapHeaderRunScriptType** : 1 différence(s)
-- `script.c` **MapHeaderCheckScriptTable** : 3 différence(s)
-- `script.c` **TryRunOnFrameMapScript** : 1 différence(s)
-- `script.c` **GetSavedRamScriptIfValid** : 2 différence(s)
-- `script.c` **InitRamScript_NoObjectEvent** : 1 différence(s)
-- `script_menu.c` **ScriptMenu_Multichoice** : 2 différence(s)
-- `script_menu.c` **ScriptMenu_MultichoiceWithDefault** : 2 différence(s)
-- `script_menu.c` **ScriptMenu_YesNo** : 4 différence(s)
-- `script_menu.c` **ScriptMenu_MultichoiceGrid** : 20 différence(s)
-- `script_menu.c` **ScriptMenu_DisplayPCStartupPrompt** : 1 différence(s)
-- `script_menu.c` **ScriptMenu_ShowPokemonPic** : 8 différence(s)
-- `script_menu.c` **CreateWindowFromRect** : 2 différence(s)
 - `script_movement.c` **ScriptMovement_UnfreezeObjectEvents** : 2 différence(s)
 - `script_movement.c` **ScriptMovement_StartMoveObjects** : 3 différence(s)
 - `script_movement.c` **GetMovementScriptIdFromObjectEventId** : 2 différence(s)
@@ -721,27 +440,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `script_pokemon_util.c` **CreateScriptedWildMon** : 1 différence(s)
 - `script_pokemon_util.c` **ScriptSetMonMoveSlot** : 2 différence(s)
 - `script_pokemon_util.c` **ChooseHalfPartyForBattle** : 1 différence(s)
-- `shop.c` **CreateShopMenu** : 6 différence(s)
-- `shop.c` **Task_ShopMenu** : 1 différence(s)
-- `shop.c` **Task_HandleShopMenuBuy** : 1 différence(s)
-- `shop.c` **Task_HandleShopMenuSell** : 2 différence(s)
-- `shop.c` **CB2_GoToSellMenu** : 3 différence(s)
-- `shop.c` **Task_HandleShopMenuQuit** : 1 différence(s)
-- `shop.c` **Task_ReturnToShopMenu** : 2 différence(s)
-- `shop.c` **BuyMenuBuildListMenuTemplate** : 5 différence(s)
-- `shop.c` **BuyMenuPrintItemDescriptionAndShowItemIcon** : 6 différence(s)
-- `shop.c` **BuyMenuPrintPriceInList** : 2 différence(s)
-- `shop.c` **BuyMenuDrawMapBg** : 2 différence(s)
-- `shop.c` **BuyMenuDrawMapMetatile** : 3 différence(s)
-- `shop.c` **BuyMenuPrintItemQuantityAndPrice** : 1 différence(s)
-- `shop.c` **Task_BuyMenu** : 2 différence(s)
-- `shop.c` **Task_BuyHowManyDialogueInit** : 2 différence(s)
-- `shop.c` **Task_BuyHowManyDialogueHandleInput** : 1 différence(s)
-- `shop.c` **BuyMenuTryMakePurchase** : 3 différence(s)
-- `shop.c` **BuyMenuSubtractMoney** : 2 différence(s) ; marqueurs de RF absents de la fusion : SE_SHOP
-- `shop.c` **CreatePokemartMenu** ✓ : 1 différence(s)
-- `shop.c` **CreateDecorationShop1Menu** : 2 différence(s)
-- `shop.c` **CreateDecorationShop2Menu** : 2 différence(s)
 - `special_field_anim.c` **SetEscalatorMetatile** : 32 différence(s)
 - `special_field_anim.c` **Task_DrawEscalator** : 9 différence(s)
 - `special_field_anim.c` **CreateEscalatorTask** : 3 différence(s)
@@ -753,13 +451,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `start_menu.c` **StartMenuOptionCallback** : 1 différence(s)
 - `start_menu.c` **StartMenuExitCallback** : 1 différence(s)
 - `start_menu.c` **StartMenuSafariZoneRetireCallback** : 1 différence(s)
-- `string_util.c` **ExpandPlaceholder_Version** : 2 différence(s) ; marqueurs de RF absents de la fusion : FIRERED, LEAFGREEN
-- `string_util.c` **ExpandPlaceholder_Magma** : 2 différence(s) ; marqueurs de RF absents de la fusion : FIRERED, LEAFGREEN
-- `string_util.c` **ExpandPlaceholder_Aqua** : 2 différence(s) ; marqueurs de RF absents de la fusion : FIRERED, LEAFGREEN
-- `string_util.c` **ExpandPlaceholder_Maxie** : 2 différence(s) ; marqueurs de RF absents de la fusion : FIRERED, LEAFGREEN
-- `string_util.c` **ExpandPlaceholder_Archie** : 2 différence(s) ; marqueurs de RF absents de la fusion : FIRERED, LEAFGREEN
-- `string_util.c` **ExpandPlaceholder_Groudon** : 2 différence(s) ; marqueurs de RF absents de la fusion : FIRERED, LEAFGREEN
-- `string_util.c` **ExpandPlaceholder_Kyogre** : 2 différence(s) ; marqueurs de RF absents de la fusion : FIRERED, LEAFGREEN
 - `tileset_anims.c` **QueueAnimTiles_General_Flower** : 3 différence(s)
 - `tileset_anims.c` **TilesetAnim_General** : 6 différence(s)
 - `tileset_anims.c` **InitTilesetAnim_General** : 1 différence(s)
@@ -773,27 +464,9 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `trainer_pokemon_sprites.c` **CreatePicSprite** : 8 différence(s)
 - `trainer_pokemon_sprites.c` **CreateTrainerCardSprite** : 6 différence(s)
 - `trainer_pokemon_sprites.c` **PlayerGenderToFrontTrainerPicId** : 2 différence(s)
-- `trainer_see.c` **CheckForTrainersWantingBattle** : 11 différence(s)
-- `trainer_see.c` **CheckTrainer** : 11 différence(s)
-- `trainer_see.c` **GetTrainerApproachDistance** : 1 différence(s)
-- `trainer_see.c` **GetTrainerApproachDistanceSouth** : 1 différence(s)
-- `trainer_see.c` **CheckPathBetweenTrainerAndPlayer** : 13 différence(s)
-- `trainer_see.c` **Task_RunTrainerSeeFuncList** : 2 différence(s)
-- `trainer_see.c` **FldEff_QuestionMarkIcon** : 1 différence(s)
 - `trainer_tower.c` **GetOwnerState** : 8 différence(s)
 - `trainer_tower.c` **GiveChallengePrize** : 4 différence(s)
 - `trainer_tower.c` **CheckFinalTime** : 12 différence(s)
 - `union_room.c` **Task_RunUnionRoom** : 30 différence(s) ; marqueurs de RF absents de la fusion : SE_NOTE_C
-- `wild_encounter.c` **ChooseWildMonLevel** : 1 différence(s)
-- `wild_encounter.c` **GetCurrentMapWildMonHeaderId** : 2 différence(s)
-- `wild_encounter.c` **TryGenerateWildMon** : 5 différence(s)
-- `wild_encounter.c` **StandardWildEncounter** : 26 différence(s)
-- `wild_encounter.c` **RockSmashWildEncounter** : 10 différence(s)
-- `wild_encounter.c` **SweetScentWildEncounter** : 14 différence(s)
-- `wild_encounter.c` **DoesCurrentMapHaveFishingMons** : 5 différence(s)
-- `wild_encounter.c` **FishingWildEncounter** : 3 différence(s)
-- `wild_encounter.c` **UpdateRepelCounter** : 2 différence(s)
-- `wild_encounter.c` **ApplyFluteEncounterRateMod** : 7 différence(s)
-- `wild_encounter.c` **ApplyCleanseTagEncounterRateMod** : 3 différence(s)
 - `wonder_news.c` **WonderNews_GetRewardInfo** : 1 différence(s)
 - `wonder_news.c` **GetRewardType** : 2 différence(s)
