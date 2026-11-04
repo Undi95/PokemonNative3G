@@ -430,3 +430,155 @@ GetUnionRoomTrainerClass link combats enregistrés
 CreateMonSpritesGfxManager émeraude deux gestionnaires de sprites
 DestroyMonSpritesGfxManager émeraude deux gestionnaires de sprites
 MonSpritesGfxManager_GetSpritePtr émeraude deux gestionnaires de sprites
+#
+# party_menu.c (2026-11-04) : l'écran d'équipe d'Émeraude dans les deux régions (MENUS = KANTO : palette de RF) ;
+# beaucoup de boucles écrites ++i / i++
+InitPartyMenu émeraude + sprites de confirmation (127 = aucun)
+ShowPartyMenu même ++ avant / après
+ExitPartyMenu variante fondu de sortie : RF -2 (plus rapide), Émeraude 0 (docs/VARIANTES-RF.md)
+AllocPartyMenuBg même ResetAllBgsCoordinates
+AllocPartyMenuBgGfx même ++ avant / après
+PartyPaletteBufferCopy même u8
+InitPartyMenuBoxes émeraude + ids de sprites à 255 ; ++i
+RenderPartyMenuBox émeraude + écrans de l'équipe d'Émeraude (maître des capacités, mini-jeux sans fil, Pyramide)
+DisplayPartyPokemonDataForMoveTutorOrEvolutionItem porter FAIT 2026-11-04 : pas de « APTE » pour les capacités ultimes (RF)
+DisplayPartyPokemonDataForMultiBattle link nom du partenaire (japonais)
+AnimatePartySlot même parenthèses
+GetPartyBoxPaletteFlags émeraude + Arène de Combat
+IsMultiBattle émeraude combats multi hors link (MARC)
+SwapPartyPokemon même nom de variable
+Task_ClosePartyMenu variante fondu de sortie : RF -2, Émeraude 0 (docs/VARIANTES-RF.md)
+Task_ClosePartyMenuAndSetCB2 émeraude + ResetSpriteData
+HandleChooseMonSelection émeraude + fenêtre retirée (PartyMenuRemoveWindow)
+HandleChooseMonCancel émeraude DisplayCancelChooseMonYesNo d'Émeraude couvre plus de cas
+DisplayCancelChooseMonYesNo émeraude + Zone de Combat, Concours
+UpdatePartySelectionSingleLayout même parenthèses
+UpdatePartySelectionDoubleLayout même parenthèses
+Task_PrintAndWaitForText même RunTextPrintersRetIsActive
+DisplayGaveHeldItemMessage journal
+DisplayTookHeldItemMessage journal
+DisplaySwitchedHeldItemMessage journal
+GiveItemToMon même GiveMailToMonByItemId
+BufferBagFullCantTakeItemMessage porter FAIT 2026-11-04 : avec le sac de RF, « Le SAC A BAIES / la BOITE CT est plein »
+Task_PartyMenuModifyHP même -- avant / après
+SetPartyMonsAllowedInMinigame link mini-jeux sans fil
+CanMonLearnTMTutor même ITEM_TM01 = ITEM_TM01_FOCUS_PUNCH
+GetTutorMove kanto capacités ultimes numérotées après les tuteurs d'Émeraude (TUTOR_MOVE_FRENZY_PLANT = 30)
+CanLearnTutorMove kanto capacités ultimes numérotées après les tuteurs d'Émeraude
+InitPartyMenuWindows variante cadre et palette des fenêtres de l'équipe : ceux d'Émeraude (option CADRE)
+CreateCancelConfirmWindows même GetStringCenterAlignXOffset
+BlitBitmapToPartyWindow même ++i
+BlitBitmapToPartyWindow_LeftColumn même !x = x == 0
+BlitBitmapToPartyWindow_RightColumn même !x = x == 0
+LoadPartyBoxPalette émeraude + case vide (multi)
+DisplayPartyPokemonNickname même / 8 = >> 3
+DisplayPartyPokemonLevelCheck même / 8 = >> 3
+DisplayPartyPokemonLevel même gText_LevelSymbol
+DisplayPartyPokemonGenderNidoranCheck même / 8 = >> 3
+DisplayPartyPokemonHPCheck même / 8 = >> 3
+DisplayPartyPokemonMaxHPCheck même / 8 = >> 3
+DisplayPartyPokemonDescriptionText émeraude effacement de la zone calculé ; / 8 = >> 3
+DisplayPartyMenuStdMessage même PARTY_MSG_* numérotés autrement
+ShouldUseChooseMonText même ++i
+DisplaySelectionWindow variante police et place des fenêtres de choix de l'équipe : celles d'Émeraude
+PartyMenuDisplayYesNoMenu variante OUI / NON de l'équipe : celui d'Émeraude
+DrawHeldItemIconsForTrade link
+SetPartyMonSelectionActions même ACTIONS_NONE = 0 ; ++i
+SetPartyMonFieldSelectionActions émeraude capacités de terrain d'Émeraude (+ POKé MONTURE) ; CURSOR_OPTION_* numérotés autrement
+GetPartyMenuActionsType émeraude + salle des partenaires (multi)
+CreateSelectionWindow émeraude + Pyramide
+Task_TryCreateSelectionWindow même MENU_B_PRESSED
+CB2_ShowPokemonSummaryScreen émeraude ShowPokemonSummaryScreen d'Émeraude (résumé de RF par l'option MENUS)
+CB2_ReturnToPartyMenuFromSummaryScreen même gLastViewedMonIndex
+SwitchSelectedMons journal
+TryMovePartySlot même parenthèses
+CB2_SelectBagItemToGive même ITEMMENULOCATION_* numérotés autrement
+CB2_WriteMailToGiveMon émeraude + argument de l'écran des lettres
+CB2_ReturnToPartyMenuFromWritingMail même PARTY_MSG_NONE
+Task_UpdateHeldItemSprite même pointeur
+Task_HandleFieldMoveExitAreaYesNoInput journal
+Task_CancelAfterAorBPress même JOY_NEW
+SetUpFieldMove_Surf porter FAIT 2026-11-04 : pas de SURF face au courant des Îles Écume (MB_FAST_WATER rétabli)
+DisplayCantUseSurfMessage porter FAIT 2026-11-04 : « Le courant est trop rapide! », « C'est parti pour une balade! » (Piste Cyclable)
+CB2_ShowPartyMenuForItemUse kanto retour au sac de RF par KantoBag_TryGoToBagMenu (ITEMMENULOCATION_LAST)
+CB2_ReturnToBagMenu émeraude + Pyramide ; retour au sac de RF par KantoBag_TryGoToBagMenu
+ItemUseCB_Medicine kanto scène de RF avec le sac de RF ; journal écarté
+ShowMoveSelectWindow variante police des capacités : celle d'Émeraude
+SetSelectedMoveForPPItem émeraude PP en combat traités par le combat d'Émeraude
+ItemUseCB_PPUp même PARTY_MSG_* numérotés autrement
+ItemIdToBattleMoveId même ITEM_TM01
+IsMoveHm même boucle écrite autrement
+MonKnowsMove même ++i
+ItemUseCB_TMHM kanto scène de RF avec le sac de RF ; journal écarté
+Task_LearnedMove même pointeur
+Task_LearnNextMoveOrClosePartyMenu même JOY_NEW
+CB2_ReturnToPartyMenuWhileLearningMove kanto retour à la Boîte à CT de RF avec le sac de RF
+ItemUseCB_RareCandy kanto scène de RF avec le sac de RF
+Task_DisplayLevelUpStatsPg1 même parenthèses
+Task_DisplayLevelUpStatsPg2 même parenthèses
+Task_TryLearnNewMoves même parenthèses
+Task_TryLearningNextMove même MOVE_NONE = 0
+UseSacredAsh journal
+Task_SacredAshLoop journal
+TryTutorSelectedMon même data[] au lieu des champs nommés
+CB2_ChooseMonToGiveItem émeraude + Pyramide ; retour au sac de RF par KantoBag_TryGoToBagMenu
+CB2_WriteMailToGiveMonFromBag émeraude + argument de l'écran des lettres
+TryGiveMailToSelectedMon même a + b = b + a
+GetPartySlotEntryStatus même return / else
+GetBattleEntryEligibility link niveau 30 de l'Union Room (RF) ; Zone de Combat d'Émeraude
+CheckBattleEntriesAndGetMessage link + Zone de Combat
+HasPartySlotAlreadyBeenSelected même ++i
+ChooseMonForMoveTutor porter FAIT 2026-11-04 : capacités ultimes du Cap Falaise au POKéMON de tête (VAR_0x8007), sans choix
+GetPartyMenuActionsTypeInBattle même conditions inversées
+TrySwitchInPokemon même noms
+BufferBattlePartyOrder même int / s32
+BufferBattlePartyOrderBySide même int / s32
+SwitchPartyOrderLinkMulti link
+GetPartyIdFromBattlePartyId même int / s32
+UpdatePartyToBattleOrder même ++i
+UpdatePartyToFieldOrder même ++i
+SwitchAliveMonIntoLeadSlot même ++i
+CB2_SetUpExitToBattleScreen même
+Task_MultiPartnerPartySlideIn émeraude multi (MARC)
+SlideMultiPartyMenuBoxSpritesOneStep émeraude multi (MARC)
+ChooseMonForDaycare émeraude retour par BufferMonSelection (pensions des deux régions)
+#
+# field_player_avatar.c (2026-11-04)
+TryInterruptObjectEventSpecialAnim variante Émeraude interrompt le petit choc contre un obstacle s'il a disparu (RF attend la fin) ; MOVEMENT_ACTION_* numérotés autrement
+MovePlayerAvatarUsingKeypadInput même PLAYER_AVATAR_FLAG_MACH_BIKE | ACRO_BIKE
+TryDoMetatileBehaviorForcedMovement même PLAYER_AVATAR_FLAG_CONTROLLABLE de RF = PLAYER_AVATAR_FLAG_FORCED_MOVE d'Émeraude (GetForcedMovementByMetatileBehavior)
+DoForcedMovement même noms
+DoForcedMovementInCurrentDirection même noms
+ForcedMovement_Slide même noms
+CheckMovementInputNotOnBike même return de l'affectation
+PlayerNotOnBikeMoving kanto escaliers latéraux de RF (COLLISION_DIRECTIONAL_STAIR_WARP) ; + MEW de l'Île Lointaine
+CheckForPlayerAvatarCollision kanto escaliers latéraux de RF ; COLLISION_* numérotés autrement
+CheckForObjectEventCollision émeraude + portes tournantes, DEBUG sans collision
+CanStopSurfing même ELEVATION_DEFAULT = 3 ; journal écarté
+TryPushBoulder kanto + rochers de Kanto (OBJ_EVENT_GFX_KANTO_PUSHABLE_BOULDER) ; trous de RF (MB_FALL_WARP)
+CheckAcroBikeCollision même ARRAY_COUNT = 5
+SetPlayerAvatarTransitionFlags même nom du champ
+PlayerAvatarTransition_Normal journal enregistrement du journal ; même sprite
+PlayerAvatarTransition_Surfing journal enregistrement du journal ; même sprite
+PlayerAvatarTransition_Underwater émeraude plongée (vide dans RF)
+PlayerAnimIsMultiFrameStationary même MOVEMENT_ACTION_* numérotés autrement
+PlayerSetAnimId journal
+PlayCollisionSoundIfNotFacingWarp porter FAIT 2026-11-04 : pas de choc sur un escalier latéral pris par le côté
+GetRivalAvatarGraphicsIdByStateIdAndGender émeraude sprites du rival d'Émeraude
+GetPlayerAvatarGenderByGraphicsId même PERSO garde les numéros de sprite de BRICE / FLORA (GetRedLeafGraphicsId au dessin)
+IsPlayerFacingSurfableFishableWater kanto terrain « eau » de RF à Kanto (MetatileAtCoordsIsWaterTile)
+ClearPlayerAvatarInfo même memset
+GetPlayerAvatarStateTransitionByGraphicsId même struct au lieu de tableau
+GetPlayerAvatarGraphicsIdByCurrentState même struct au lieu de tableau
+InitPlayerAvatar même gabarit d'Émeraude (objUnion.normal de RF)
+PlayerUseAcroBikeOnBumpySlope émeraude vélo cross
+SetPlayerAvatarWatering émeraude CARAPUCE À O
+PlayerAvatar_DoSecretBaseMatJump émeraude bases secrètes
+PlayerAvatar_SecretBaseMatSpinStep1 émeraude bases secrètes
+PlayerAvatar_SecretBaseMatSpinStep2 émeraude bases secrètes
+PlayerAvatar_SecretBaseMatSpinStep3 émeraude bases secrètes
+CreateStopSurfingTask variante RF fige les PNJ pendant le saut de fin de Surf, Émeraude non (docs/VARIANTES-RF.md)
+Task_StopSurfingInit même saut « with effect » de RF = saut spécial d'Émeraude (InitJumpSpecial, DoJumpSpecialAnim)
+Task_WaitStopSurfing variante PNJ figés pendant le saut (RF) ; BUGFIX non défini ; aide L/R écartée
+StartFishing kanto + chaîne de pêche de la fusion ; journal écarté
+AlignFishingAnimationFrames même noms

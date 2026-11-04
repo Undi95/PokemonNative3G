@@ -12,8 +12,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 
 | Fichier RF | Divergentes | Même code une fois normalisé | Par règle de famille | Classées | À lire | Corps introuvable |
 |---|---|---|---|---|---|---|
-| party_menu.c | 145 | 36 | 0 | 0 | 109 | 0 |
-| field_player_avatar.c | 64 | 26 | 0 | 0 | 38 | 0 |
 | fieldmap.c | 34 | 3 | 0 | 0 | 31 | 0 |
 | naming_screen.c | 37 | 8 | 0 | 0 | 29 | 0 |
 | daycare.c | 35 | 10 | 0 | 0 | 24 | 1 |
@@ -180,6 +178,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | event_object_movement.c | 378 | 301 | 0 | 77 | 0 | 0 |
 | field_effect.c | 94 | 34 | 0 | 60 | 0 | 0 |
 | field_effect_helpers.c | 60 | 7 | 0 | 53 | 0 | 0 |
+| field_player_avatar.c | 64 | 26 | 0 | 38 | 0 | 0 |
 | isagbprn.c | 7 | 0 | 7 | 0 | 0 | 0 |
 | item_menu_icons.c | 8 | 8 | 0 | 0 | 0 | 0 |
 | librfu_intr.c | 2 | 0 | 2 | 0 | 0 | 0 |
@@ -207,6 +206,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | new_menu_helpers.c | 24 | 10 | 14 | 0 | 0 | 0 |
 | overworld.c | 92 | 27 | 0 | 65 | 0 | 0 |
 | palette.c | 23 | 7 | 14 | 0 | 0 | 2 |
+| party_menu.c | 145 | 38 | 0 | 107 | 0 | 0 |
 | play_time.c | 1 | 0 | 1 | 0 | 0 | 0 |
 | pokemon.c | 62 | 23 | 0 | 39 | 0 | 0 |
 | pokemon_jump.c | 26 | 8 | 18 | 0 | 0 | 0 |
@@ -215,7 +215,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | pokemon_storage_system_data.c | 49 | 24 | 25 | 0 | 0 | 0 |
 | pokemon_storage_system_menu.c | 13 | 9 | 4 | 0 | 0 | 0 |
 | pokemon_storage_system_misc.c | 39 | 11 | 28 | 0 | 0 | 0 |
-| pokemon_storage_system_tasks.c | 71 | 32 | 39 | 0 | 0 | 0 |
+| pokemon_storage_system_tasks.c | 71 | 32 | 38 | 1 | 0 | 0 |
 | random.c | 2 | 0 | 2 | 0 | 0 | 0 |
 | save.c | 26 | 11 | 15 | 0 | 0 | 0 |
 | scanline_effect.c | 3 | 0 | 3 | 0 | 0 | 0 |
@@ -240,7 +240,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | window.c | 8 | 1 | 7 | 0 | 0 | 0 |
 | window_8bpp.c | 3 | 3 | 0 | 0 | 0 | 0 |
 | wireless_communication_status_screen.c | 7 | 0 | 7 | 0 | 0 | 0 |
-| **total** | 4254 | 1364 | 1707 | 375 | 799 | 9 |
+| **total** | 4254 | 1366 | 1706 | 521 | 652 | 9 |
 
 ## À lire
 
@@ -448,7 +448,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `field_control_avatar.c` **GetInteractedObjectEventScript** : 2 différence(s)
 - `field_control_avatar.c` **GetInteractedBackgroundEventScript** : 13 différence(s)
 - `field_control_avatar.c` **GetInteractedMetatileScript** : 18 différence(s)
-- `field_control_avatar.c` **GetInteractedWaterScript** : 5 différence(s) ; marqueurs de RF absents de la fusion : FLAG_BADGE05_GET, FLAG_BADGE07_GET
+- `field_control_avatar.c` **GetInteractedWaterScript** : 6 différence(s) ; marqueurs de RF absents de la fusion : FLAG_BADGE05_GET, FLAG_BADGE07_GET
 - `field_control_avatar.c` **TryStartStepBasedScript** : 1 différence(s)
 - `field_control_avatar.c` **TryStartMiscWalkingScripts** : 2 différence(s)
 - `field_control_avatar.c` **TryStartStepCountScript** : 8 différence(s)
@@ -490,44 +490,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `field_message_box.c` **ShowFieldAutoScrollMessage** : 1 différence(s)
 - `field_message_box.c` **ForceShowFieldAutoScrollMessage** : 1 différence(s)
 - `field_message_box.c` **IsFieldMessageBoxHidden** : 1 différence(s)
-- `field_player_avatar.c` **TryInterruptObjectEventSpecialAnim** : 5 différence(s)
-- `field_player_avatar.c` **MovePlayerAvatarUsingKeypadInput** : 3 différence(s)
-- `field_player_avatar.c` **TryDoMetatileBehaviorForcedMovement** : 7 différence(s)
-- `field_player_avatar.c` **DoForcedMovement** : 2 différence(s)
-- `field_player_avatar.c` **DoForcedMovementInCurrentDirection** : 1 différence(s)
-- `field_player_avatar.c` **ForcedMovement_Slide** : 1 différence(s)
-- `field_player_avatar.c` **CheckMovementInputNotOnBike** : 6 différence(s)
-- `field_player_avatar.c` **PlayerNotOnBikeMoving** : 9 différence(s)
-- `field_player_avatar.c` **CheckForPlayerAvatarCollision** : 1 différence(s)
-- `field_player_avatar.c` **CheckForObjectEventCollision** : 2 différence(s)
-- `field_player_avatar.c` **CanStopSurfing** : 3 différence(s)
-- `field_player_avatar.c` **TryPushBoulder** : 11 différence(s)
-- `field_player_avatar.c` **CheckAcroBikeCollision** : 1 différence(s)
-- `field_player_avatar.c` **SetPlayerAvatarTransitionFlags** : 1 différence(s)
-- `field_player_avatar.c` **PlayerAvatarTransition_Normal** : 3 différence(s)
-- `field_player_avatar.c` **PlayerAvatarTransition_Surfing** : 3 différence(s)
-- `field_player_avatar.c` **PlayerAvatarTransition_Underwater** : 1 différence(s)
-- `field_player_avatar.c` **PlayerAnimIsMultiFrameStationary** : 9 différence(s)
-- `field_player_avatar.c` **PlayerSetAnimId** : 2 différence(s)
-- `field_player_avatar.c` **PlayCollisionSoundIfNotFacingWarp** : 4 différence(s)
-- `field_player_avatar.c` **GetRivalAvatarGraphicsIdByStateIdAndGender** : 3 différence(s)
-- `field_player_avatar.c` **GetPlayerAvatarGenderByGraphicsId** : 1 différence(s)
-- `field_player_avatar.c` **IsPlayerFacingSurfableFishableWater** : 3 différence(s)
-- `field_player_avatar.c` **ClearPlayerAvatarInfo** : 3 différence(s)
-- `field_player_avatar.c` **GetPlayerAvatarStateTransitionByGraphicsId** : 5 différence(s)
-- `field_player_avatar.c` **GetPlayerAvatarGraphicsIdByCurrentState** : 4 différence(s)
-- `field_player_avatar.c` **InitPlayerAvatar** : 8 différence(s)
-- `field_player_avatar.c` **PlayerUseAcroBikeOnBumpySlope** : 1 différence(s)
-- `field_player_avatar.c` **SetPlayerAvatarWatering** : 1 différence(s)
-- `field_player_avatar.c` **PlayerAvatar_DoSecretBaseMatJump** : 1 différence(s)
-- `field_player_avatar.c` **PlayerAvatar_SecretBaseMatSpinStep1** : 1 différence(s)
-- `field_player_avatar.c` **PlayerAvatar_SecretBaseMatSpinStep2** : 6 différence(s)
-- `field_player_avatar.c` **PlayerAvatar_SecretBaseMatSpinStep3** : 2 différence(s)
-- `field_player_avatar.c` **CreateStopSurfingTask** : 1 différence(s)
-- `field_player_avatar.c` **Task_StopSurfingInit** : 2 différence(s)
-- `field_player_avatar.c` **Task_WaitStopSurfing** : 4 différence(s)
-- `field_player_avatar.c` **StartFishing** : 2 différence(s)
-- `field_player_avatar.c` **AlignFishingAnimationFrames** : 17 différence(s)
 - `field_poison.c` **AllMonsFainted** : 1 différence(s)
 - `field_poison.c` **FaintFromFieldPoison** : 4 différence(s)
 - `field_poison.c` **MonFaintedFromPoison** : 5 différence(s)
@@ -790,115 +752,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `palette.c` **DestroyBlendPalettesGraduallyTask** : corps introuvable dans la fusion (déplacé ?)
 - `palette_util.c` **RouletteFlash_FlashPalette** : 2 différence(s)
 - `palette_util.c` **UpdatePulseBlend** : 2 différence(s)
-- `party_menu.c` **InitPartyMenu** : 5 différence(s)
-- `party_menu.c` **ShowPartyMenu** : 48 différence(s)
-- `party_menu.c` **ExitPartyMenu** : 1 différence(s)
-- `party_menu.c` **AllocPartyMenuBg** : 2 différence(s)
-- `party_menu.c` **AllocPartyMenuBgGfx** : 17 différence(s)
-- `party_menu.c` **PartyPaletteBufferCopy** : 1 différence(s)
-- `party_menu.c` **InitPartyMenuBoxes** : 7 différence(s)
-- `party_menu.c` **RenderPartyMenuBox** : 4 différence(s)
-- `party_menu.c` **DisplayPartyPokemonDataForMoveTutorOrEvolutionItem** : 3 différence(s)
-- `party_menu.c` **DisplayPartyPokemonDataForMultiBattle** : 3 différence(s)
-- `party_menu.c` **AnimatePartySlot** : 4 différence(s)
-- `party_menu.c` **GetPartyBoxPaletteFlags** : 3 différence(s)
-- `party_menu.c` **IsMultiBattle** : 1 différence(s)
-- `party_menu.c` **SwapPartyPokemon** : 4 différence(s)
-- `party_menu.c` **Task_ClosePartyMenu** : 1 différence(s)
-- `party_menu.c` **Task_ClosePartyMenuAndSetCB2** : 1 différence(s)
-- `party_menu.c` **HandleChooseMonSelection** : 6 différence(s)
-- `party_menu.c` **HandleChooseMonCancel** : 2 différence(s)
-- `party_menu.c` **DisplayCancelChooseMonYesNo** : 3 différence(s)
-- `party_menu.c` **UpdatePartySelectionSingleLayout** : 4 différence(s)
-- `party_menu.c` **UpdatePartySelectionDoubleLayout** : 2 différence(s)
-- `party_menu.c` **Task_PrintAndWaitForText** : 1 différence(s)
-- `party_menu.c` **DisplayGaveHeldItemMessage** : 1 différence(s)
-- `party_menu.c` **DisplayTookHeldItemMessage** : 1 différence(s)
-- `party_menu.c` **DisplaySwitchedHeldItemMessage** : 1 différence(s)
-- `party_menu.c` **GiveItemToMon** : 1 différence(s)
-- `party_menu.c` **BufferBagFullCantTakeItemMessage** : 1 différence(s) ; marqueurs de RF absents de la fusion : ITEM_BERRY_POUCH, ITEM_TM_CASE
-- `party_menu.c` **Task_PartyMenuModifyHP** : 2 différence(s)
-- `party_menu.c` **SetPartyMonsAllowedInMinigame** : 11 différence(s)
-- `party_menu.c` **CanMonLearnTMTutor** : 4 différence(s) ; marqueurs de RF absents de la fusion : ITEM_TM01_FOCUS_PUNCH
-- `party_menu.c` **GetTutorMove** : 3 différence(s)
-- `party_menu.c` **CanLearnTutorMove** : 3 différence(s)
-- `party_menu.c` **InitPartyMenuWindows** : 6 différence(s)
-- `party_menu.c` **CreateCancelConfirmWindows** : 16 différence(s)
-- `party_menu.c` **BlitBitmapToPartyWindow** : 4 différence(s)
-- `party_menu.c` **BlitBitmapToPartyWindow_LeftColumn** : 2 différence(s)
-- `party_menu.c` **BlitBitmapToPartyWindow_RightColumn** : 2 différence(s)
-- `party_menu.c` **LoadPartyBoxPalette** : 1 différence(s)
-- `party_menu.c` **DisplayPartyPokemonNickname** : 4 différence(s)
-- `party_menu.c` **DisplayPartyPokemonLevelCheck** : 4 différence(s)
-- `party_menu.c` **DisplayPartyPokemonLevel** : 1 différence(s)
-- `party_menu.c` **DisplayPartyPokemonGenderNidoranCheck** : 4 différence(s)
-- `party_menu.c` **DisplayPartyPokemonHPCheck** : 4 différence(s)
-- `party_menu.c` **DisplayPartyPokemonMaxHPCheck** : 4 différence(s)
-- `party_menu.c` **DisplayPartyPokemonDescriptionText** : 6 différence(s)
-- `party_menu.c` **DisplayPartyMenuStdMessage** : 10 différence(s)
-- `party_menu.c` **ShouldUseChooseMonText** : 4 différence(s)
-- `party_menu.c` **DisplaySelectionWindow** : 12 différence(s)
-- `party_menu.c` **PartyMenuDisplayYesNoMenu** : 1 différence(s)
-- `party_menu.c` **DrawHeldItemIconsForTrade** : 4 différence(s)
-- `party_menu.c` **SetPartyMonSelectionActions** : 3 différence(s)
-- `party_menu.c` **SetPartyMonFieldSelectionActions** : 12 différence(s)
-- `party_menu.c` **GetPartyMenuActionsType** : 12 différence(s)
-- `party_menu.c` **CreateSelectionWindow** : 4 différence(s)
-- `party_menu.c` **Task_TryCreateSelectionWindow** : 4 différence(s)
-- `party_menu.c` **CB2_ShowPokemonSummaryScreen** : 3 différence(s)
-- `party_menu.c` **CB2_ReturnToPartyMenuFromSummaryScreen** : 2 différence(s)
-- `party_menu.c` **SwitchSelectedMons** : 1 différence(s)
-- `party_menu.c` **TryMovePartySlot** : 4 différence(s)
-- `party_menu.c` **CB2_SelectBagItemToGive** : 1 différence(s)
-- `party_menu.c` **CB2_WriteMailToGiveMon** : 1 différence(s)
-- `party_menu.c` **CB2_ReturnToPartyMenuFromWritingMail** : 1 différence(s)
-- `party_menu.c` **Task_UpdateHeldItemSprite** : 6 différence(s)
-- `party_menu.c` **Task_HandleFieldMoveExitAreaYesNoInput** : 1 différence(s)
-- `party_menu.c` **Task_CancelAfterAorBPress** : 4 différence(s)
-- `party_menu.c` **SetUpFieldMove_Surf** : 2 différence(s)
-- `party_menu.c` **DisplayCantUseSurfMessage** : 2 différence(s) ; marqueurs de RF absents de la fusion : MAP_GROUP, MAP_NUM, MAP_ROUTE17, MAP_ROUTE18
-- `party_menu.c` **CB2_ShowPartyMenuForItemUse** : 8 différence(s)
-- `party_menu.c` **CB2_ReturnToBagMenu** : 4 différence(s)
-- `party_menu.c` **ItemUseCB_Medicine** ✓ : 3 différence(s)
-- `party_menu.c` **ShowMoveSelectWindow** : 9 différence(s)
-- `party_menu.c` **SetSelectedMoveForPPItem** : 2 différence(s)
-- `party_menu.c` **ItemUseCB_PPUp** : 2 différence(s)
-- `party_menu.c` **ItemIdToBattleMoveId** : 1 différence(s) ; marqueurs de RF absents de la fusion : ITEM_TM01_FOCUS_PUNCH
-- `party_menu.c` **IsMoveHm** : 3 différence(s)
-- `party_menu.c` **MonKnowsMove** : 2 différence(s)
-- `party_menu.c` **ItemUseCB_TMHM** ✓ : 2 différence(s)
-- `party_menu.c` **Task_LearnedMove** : 2 différence(s)
-- `party_menu.c` **Task_LearnNextMoveOrClosePartyMenu** : 4 différence(s)
-- `party_menu.c` **CB2_ReturnToPartyMenuWhileLearningMove** : 7 différence(s)
-- `party_menu.c` **ItemUseCB_RareCandy** ✓ : 1 différence(s)
-- `party_menu.c` **Task_DisplayLevelUpStatsPg1** : 4 différence(s)
-- `party_menu.c` **Task_DisplayLevelUpStatsPg2** : 4 différence(s)
-- `party_menu.c` **Task_TryLearnNewMoves** : 5 différence(s)
-- `party_menu.c` **Task_TryLearningNextMove** : 1 différence(s)
-- `party_menu.c` **UseSacredAsh** : 1 différence(s)
-- `party_menu.c` **Task_SacredAshLoop** : 1 différence(s)
-- `party_menu.c` **TryTutorSelectedMon** : 5 différence(s)
-- `party_menu.c` **CB2_ChooseMonToGiveItem** : 6 différence(s)
-- `party_menu.c` **CB2_WriteMailToGiveMonFromBag** : 1 différence(s)
-- `party_menu.c` **TryGiveMailToSelectedMon** : 2 différence(s)
-- `party_menu.c` **GetPartySlotEntryStatus** : 2 différence(s)
-- `party_menu.c` **GetBattleEntryEligibility** : 13 différence(s)
-- `party_menu.c` **CheckBattleEntriesAndGetMessage** : 20 différence(s)
-- `party_menu.c` **HasPartySlotAlreadyBeenSelected** : 2 différence(s)
-- `party_menu.c` **ChooseMonForMoveTutor** : 2 différence(s)
-- `party_menu.c` **GetPartyMenuActionsTypeInBattle** : 8 différence(s)
-- `party_menu.c` **TrySwitchInPokemon** : 3 différence(s)
-- `party_menu.c` **BufferBattlePartyOrder** : 12 différence(s)
-- `party_menu.c` **BufferBattlePartyOrderBySide** : 11 différence(s)
-- `party_menu.c` **SwitchPartyOrderLinkMulti** : 10 différence(s)
-- `party_menu.c` **GetPartyIdFromBattlePartyId** : 7 différence(s)
-- `party_menu.c` **UpdatePartyToBattleOrder** : 2 différence(s)
-- `party_menu.c` **UpdatePartyToFieldOrder** : 2 différence(s)
-- `party_menu.c` **SwitchAliveMonIntoLeadSlot** : 2 différence(s)
-- `party_menu.c` **CB2_SetUpExitToBattleScreen** : 3 différence(s)
-- `party_menu.c` **Task_MultiPartnerPartySlideIn** : 3 différence(s)
-- `party_menu.c` **SlideMultiPartyMenuBoxSpritesOneStep** : 3 différence(s)
-- `party_menu.c` **ChooseMonForDaycare** : 2 différence(s)
 - `party_menu_specials.c` **ChoosePartyMon** : 3 différence(s)
 - `party_menu_specials.c` **ChooseMonForMoveRelearner** : 4 différence(s)
 - `party_menu_specials.c` **Task_ChoosePartyMon** : 4 différence(s)

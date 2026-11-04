@@ -19,9 +19,11 @@ Trouvées en lisant les fonctions « à vérifier » de l'inventaire (`tools/car
 | **Sortie d'un bâtiment** | fondu d'Émeraude | l'écran s'ouvre depuis le milieu, en portes de grange | `DoOutwardBarnDoorWipe` (field_screen_effect.c), `Task_ExitDoor` |
 | Corde Sortie | le joueur tourne de plus en plus vite, l'écran s'éteint ; à l'arrivée, il tourne en clignotant | il tourne, puis s'envole hors de l'écran ; à l'arrivée, il redescend du haut de l'écran en tournant | `SpinObjectEvent`, `WarpOutObjectEventUpwards`, `WarpInObjectEventDownwards` (field_effect.c) |
 | Surf, le Pokémon qui porte le joueur | monte et descend toutes les 4 / 8 images | 2× plus lent | `CreateBobbingEffect` (field_effect_helpers.c) |
+| Fin du Surf (le joueur saute à terre) | les PNJ continuent de marcher | les PNJ s'arrêtent pendant le saut | `CreateStopSurfingTask`, `Task_WaitStopSurfing` (field_player_avatar.c) |
 | **Pêche, la touche** | « Oh! Ça mord! », puis A à temps (la SUPER CANNE peut demander plusieurs fois) | pas de réaction : le Pokémon est ferré directement (« Un POKéMON a mordu! ») | `Fishing7` (field_player_avatar.c) |
 | Pêche, les points avant la touche | un point toutes les 8 images ; A arrête la pêche | un point toutes les 12 images, A sans effet | `Fishing5` (field_player_avatar.c) |
 | Pêche, ferrer | VENTOUSE ou GLUE en tête : touche plus souvent | aucun talent ne compte | `Fishing6` (field_player_avatar.c) |
+| Écran d'équipe | fenêtres, police et OUI / NON d'Émeraude ; fondu de sortie normal (MENUS = KANTO : palette de RF) | ses fenêtres et sa police ; fondu de sortie plus rapide | `ExitPartyMenu`, `Task_ClosePartyMenu`, `DisplaySelectionWindow`, `ShowMoveSelectWindow` (party_menu.c) |
 | FLASH dans une grotte sombre | un grand cercle de lumière autour du joueur | toute la grotte éclairée | `SetDefaultFlashLevel` (overworld.c) |
 | Poison sur le terrain (tous les 4 pas) | mosaïque jusqu'à 10, +2 puis -2 (10 images) | jusqu'à 6, +2 puis -1 (9 images, REVISION ≥ 0xA) | `Task_FieldPoisonEffect` (fldeff_poison.c), `AdjustBgMosaic` |
 | Sons (voir CONNAISSANCE-JEU.md, « Sons de Kanto ») | instruments HQ, batterie complète ; jingles d'Émeraude | samples à 13 kHz ; fanfares du Casino +10 %, évolution, carte retournée | banque de sons de RF |
