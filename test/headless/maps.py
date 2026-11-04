@@ -66,7 +66,7 @@ def _tile_kind(behavior):
         return "g"
     if name in LEDGES:
         return LEDGES[name]
-    if re.search(r"DEEP_WATER|POND_WATER|OCEAN_WATER|WATERFALL|CURRENT", name):
+    if re.search(r"DEEP_WATER|POND_WATER|OCEAN_WATER|FAST_WATER|WATERFALL|CURRENT", name):
         return "~"
     return "."
 

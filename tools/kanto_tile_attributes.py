@@ -11,6 +11,8 @@
    (2026-11-04) moniteur sans fil et écran des records du hall du 2ᵉ étage des Centres (accessibles en solo dans RF,
    comme leurs équivalents d'Émeraude). La porte de l'Union Room de RF et les tuiles sans effet dans RF (MB_WINDOW,
    MB_PORTHOLE) restent MB_NORMAL.
+   (2026-11-04) MB_FAST_WATER, le courant des Îles Écume, importé en MB_OCEAN_WATER : on pouvait y surfer sans arrêter
+   le courant avec les rochers (party_menu.c, field_control_avatar.c).
 2. Type de rencontre de RF (bits 24-26 de ses attributs : aucune, sol, eau) : RF décide avec lui des rencontres
    sauvages de chaque case, Émeraude avec le comportement. Il est rangé dans les bits 8-9 de l'attribut d'Émeraude
    (inutilisés) et lu à Kanto par wild_encounter.c (MapGridGetMetatileEncounterTypeAt).
@@ -33,6 +35,8 @@ RESTORED = (
     'MB_CYCLING_ROAD_WATER', 'MB_SAND_CAVE',
     # (2026-11-04) le hall du 2ᵉ étage des Centres : moniteur sans fil et écran des records, accessibles en solo dans RF
     'MB_CABLE_CLUB_WIRELESS_MONITOR', 'MB_BATTLE_RECORDS',
+    # (2026-11-04) le courant des Îles Écume (B3F, B4F), qui refuse SURF
+    'MB_FAST_WATER',
 )
 ENCOUNTER_SHIFT = 8      # METATILE_ATTR_ENCOUNTER_SHIFT (include/global.fieldmap.h)
 ENCOUNTER_MASK = 0x0300  # METATILE_ATTR_ENCOUNTER_MASK

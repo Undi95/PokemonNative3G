@@ -42,7 +42,7 @@ BEHAVIOR_ALIASES = {
     # Panneaux, dalles tournantes, objets d'intérieur… existent tels quels (tools/kanto_tile_attributes.py)
     'MB_WARP_DOOR': 'MB_ANIMATED_DOOR',      # animations : src/kanto_field_door.c
     'MB_CAVE_DOOR': 'MB_NON_ANIMATED_DOOR',
-    'MB_FAST_WATER': 'MB_OCEAN_WATER',
+    # MB_FAST_WATER existe tel quel depuis le 2026-11-04 (tools/kanto_tile_attributes.py)
     # MB_*_STAIR_WARP, MB_REGULAR_WARP, MB_FALL_WARP existent tels quels (field_screen_effect.c)
 }
 

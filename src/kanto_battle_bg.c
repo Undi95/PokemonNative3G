@@ -189,7 +189,8 @@ u8 Kanto_BattleSetup_GetTerrainId(void)
             return KANTO_BATTLE_TERRAIN_WATER;
         return KANTO_BATTLE_TERRAIN_PLAIN;
     }
-    if (MetatileBehavior_IsDeepOrOceanWater(tileBehavior))
+    // MetatileBehavior_IsDeepWaterTerrain de RF : eaux profondes et courant des Îles Écume (MB_FAST_WATER)
+    if (MetatileBehavior_IsDeepOrOceanWater(tileBehavior) || MetatileBehavior_IsFastWater(tileBehavior))
         return KANTO_BATTLE_TERRAIN_WATER;
     if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior))
         return KANTO_BATTLE_TERRAIN_POND;

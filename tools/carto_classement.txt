@@ -219,8 +219,7 @@ ReloadObjectsAndRunReturnToFieldMapScript équivalente InitObjectEventsReturnToF
 SetInitialPlayerAvatarStateWithDirection équivalente SetInitialPlayerAvatarStateWithDirection (overworld.c), portée 2026-11-02 (K.O. : face à l'infirmière)
 SetUpScrollSceneForCredits équivalente Overworld_DoScrollSceneForCredits (overworld.c), WARP_ID_NONE = -1
 # metatile_behavior.c
-MetatileBehavior_IsDeepWaterTerrain équivalente MetatileBehavior_IsDeepOrOceanWater (metatile_behavior.c), décor de combat de Kanto (kanto_battle_bg.c) ; MB_FAST_WATER importé en MB_OCEAN_WATER
-MetatileBehavior_IsFastWater morte jamais appelée dans RF
+MetatileBehavior_IsDeepWaterTerrain équivalente MetatileBehavior_IsDeepOrOceanWater (metatile_behavior.c), décor de combat de Kanto (kanto_battle_bg.c) ; MB_FAST_WATER (rétabli le 2026-11-04) testé à part (MetatileBehavior_IsFastWater)
 MetatileBehavior_IsImpressiveMachine morte MB_IMPRESSIVE_MACHINE dans aucun tileset de RF
 MetatileBehavior_IsSnacks morte MB_SNACKS dans aucun tileset de RF
 MetatileBehavior_IsVideoGame morte MB_VIDEO_GAME dans aucun tileset de RF

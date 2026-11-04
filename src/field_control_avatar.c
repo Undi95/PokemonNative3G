@@ -711,6 +711,9 @@ static const u8 *GetSignpostScriptAtMapPosition(struct MapPosition *position)
 
 static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metatileBehavior, u8 direction)
 {
+    // PokemonNative3G : GetInteractedWaterScript de RF : face au courant des Îles Écume, pas de SURF
+    if (MetatileBehavior_IsFastWater(metatileBehavior) == TRUE && PartyHasMonWithSurf() == TRUE)
+        return EventScript_CurrentTooFast;
     if (HasBadgeForFieldMove(FIELD_MOVE_SURF) && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE)
         return EventScript_UseSurf;
 

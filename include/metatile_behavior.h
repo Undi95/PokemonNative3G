@@ -176,6 +176,7 @@ bool8 MetatileBehavior_IsBlueprints(u8 metatileBehavior);
 bool8 MetatileBehavior_IsBurglary(u8 metatileBehavior);
 bool8 MetatileBehavior_IsComputer(u8 metatileBehavior);
 bool8 MetatileBehavior_IsTrainerTowerMonitor(u8 metatileBehavior);
+bool8 MetatileBehavior_IsFastWater(u8 metatileBehavior);
 bool8 MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor(u8 metatileBehavior, u8 playerDirection);
 bool8 MetatileBehavior_IsPlayerFacingBattleRecords(u8 metatileBehavior, u8 playerDirection);
 bool8 MetatileBehavior_IsCabinet(u8 metatileBehavior);

@@ -113,7 +113,7 @@ enum {
     MB_WATER_DOOR,
     MB_WATER_SOUTH_ARROW_WARP,
     MB_DEEP_SOUTH_WARP,
-    MB_UNUSED_6F,
+    MB_FAST_WATER, // PokemonNative3G : RF, courant des Îles Écume, pas de SURF (tools/kanto_tile_attributes.py)
     MB_BRIDGE_OVER_OCEAN,
     MB_BRIDGE_OVER_POND_LOW,
     MB_BRIDGE_OVER_POND_MED,
