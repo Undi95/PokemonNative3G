@@ -1185,3 +1185,120 @@ LoadPicPaletteBySlot même PLTT_ID = BG_PLTT_ID
 CreatePicSprite même tailles par constantes
 CreateTrainerCardSprite même TRAINER_PIC_SIZE, TRAINER_PIC_WIDTH
 PlayerGenderToFrontTrainerPicId kanto RED / LEAF avec PERSO (PlayerGenderToFrontTrainerPicId de pokemon.c) ; celle-ci est _Debug dans Émeraude
+#
+# fldeff_*.c (2026-11-04) : capacités de terrain. FLDEFF_SET_FUNC_TO_DATA de RF = ptr.funcPtr du portage PC
+DoWateringBerryTreeAnim émeraude tâche d'arrosage d'Émeraude
+SetUpFieldMove_Cut kanto branche Fusion_IsInKanto (arbres et herbe de RF)
+FldEff_UseCutOnGrass même ptr.funcPtr
+FldEff_UseCutOnTree même ptr.funcPtr
+FldEff_CutGrass kanto branche Fusion_IsInKanto
+SetUpFieldMove_Dig même else
+FldEff_UseDig émeraude + braille (ShouldDoBrailleDigEffect)
+StartDigFieldEffect émeraude + braille
+SetUpFieldMove_Flash émeraude même test (grotte, FLASH pas encore utilisé) ; + braille de REGISTEEL
+FieldCallback_Flash même ptr.funcPtr
+CB2_DoChangeMap même IntrEnable = EnableInterrupts ; + ScanlineEffect_Stop
+TryDoMapTransition même boucle écrite autrement
+Task_FieldPoisonEffect variante mosaïque du poison (docs/VARIANTES-RF.md, « Poison sur le terrain »)
+CheckObjectGraphicsInFrontOfPlayer émeraude UBFIX
+SetUpFieldMove_RockSmash émeraude + braille de REGIROCK
+FldEff_UseRockSmash même ptr.funcPtr
+SetUpFieldMove_SoftBoiled même PV > PV max / 5
+Task_TryUseSoftboiledOnPartyMon même return = else
+Task_FinishSoftboiled même idem
+Task_ChooseNewMonForSoftboiled même idem
+SetUpFieldMove_Strength variante RF refuse FORCE en surfant ; Émeraude non (rochers de Kanto ajoutés)
+FldEff_UseStrength émeraude + POKéMONTURE (fusion) ; ShowMonCB_UseStrength = StartStrengthFieldEffect
+FldEff_SweetScent même ptr.funcPtr
+StartSweetScentFieldEffect émeraude tampon de palette géré par Émeraude ; RGB_RED
+TrySweetScentEncounter émeraude + Tour Mirage
+FailSweetScentEncounter émeraude idem
+FldEff_UseTeleport même ptr.funcPtr
+#
+# buy_menu_helpers.c (2026-11-04) : la boutique de RF est kanto_shop.c (Kanto)
+BuyMenuInitWindows kanto kanto_shop.c
+BuyMenuDisplayMessage kanto kanto_shop.c
+BuyMenuConfirmPurchase kanto kanto_shop.c
+#
+# field_weather_util.c (2026-11-04)
+DoCurrentWeather émeraude + météo anormale (WEATHER_ABNORMAL)
+ResumePausedWeather émeraude idem
+TranslateWeatherNum émeraude idem
+#
+# menu2.c (2026-11-04)
+AddTextPrinterParameterized3 même champs x / y nommés
+AddTextPrinterParameterized4 même idem
+AddTextPrinterParameterized5 même idem
+UnusedBlitBitmapRect même inutilisé ; types écrits autrement
+#
+# pokemon_size_record.c (2026-11-04)
+FormatMonSizeRecord même + UNITS_IMPERIAL (non défini)
+CompareMonSize porter FAIT 2026-11-04 : Kanto_CompareMonSize pour SCARHINO et MAGICARPE (égalité = 4, {STR_VAR_3} = le record, que les scripts de Kanto attendent) ; celle d'Émeraude pour CHARMINI et NÉNUPIOT ; record par défaut de RF (0, pas 0x8000 : 90 cm pour MAGICARPE), sauvegardes réparées (KantoSave_FixSizeRecords)
+GetMonSizeRecordInfo émeraude + nom du détenteur dans {STR_VAR_2} (aucun texte de Kanto ne le lit après)
+GiveGiftRibbonToParty même < 65 = <= 64
+#
+# reshow_battle_screen.c (2026-11-04)
+ReshowBattleScreenAfterMenu journal SetHelpContext (aide L/R de RF)
+LoadBattlerSpriteGfx kanto dos du vieil homme de Jadielle (GetTutorialBackPic : IsOldManTutorialBattle)
+CreateBattlerSprite kanto idem ; + MORPHÉO
+CreateHealthboxSprite kanto idem
+#
+# safari_zone.c (2026-11-04)
+EnterSafariMode kanto 600 pas à Kanto (Fusion_IsInKanto), 500 à Hoenn ; + POKéBLOCS
+ExitSafariMode kanto émission TV seulement à Hoenn
+SafariZoneTakeStep kanto script de fin de RF à Kanto
+CB2_EndSafariBattle kanto idem
+#
+# script_movement.c (2026-11-04)
+ScriptMovement_UnfreezeObjectEvents même TASK_NONE = 255
+ScriptMovement_StartMoveObjects même taille du tableau
+GetMovementScriptIdFromObjectEventId même déclaration déplacée
+ScriptMovement_TakeStep même RF sort tout de suite d'un script fini ; Émeraude le refait (STEP_END de nouveau, sans effet)
+#
+# intro.c (2026-11-04) : l'intro de RF, son copyright compris, est kanto_intro.c (option INTRO) ; au démarrage, le
+# copyright d'Émeraude passe avant la lecture de l'option (sauvegarde pas encore chargée)
+LoadCopyrightGraphics kanto kanto_intro.c (graphics/kanto/intro/copyright)
+SetUpCopyrightScreen kanto idem ; fond noir de RF REVISION >= 10 dans kanto_intro.c
+CB2_InitCopyrightScreenAfterBootup kanto bascule vers KantoIntro_Start selon l'option INTRO
+#
+# mini_printf.c (2026-11-04) : printf de debug
+mini_pchar_decode émeraude + tiret
+_putsEncoded émeraude + \n et autres codes
+mini_vpprintf émeraude + %b
+#
+# money.c (2026-11-04)
+PrintMoneyAmount kanto Kanto_PrintMoneyAmountInMoneyBox (blancs 0, police de RF) ; Émeraude : CHAR_SPACER, recul pour POLICE = KANTO
+PrintMoneyAmountInMoneyBoxWithBorder kanto Kanto_PrintMoneyAmountInMoneyBoxWithBorder
+DrawMoneyBox kanto idem
+#
+# player_pc.c (2026-11-04)
+NewGameInitPCItems même NEW_GAME_PC_ITEMS (une POTION) = sNewGamePCItems
+BedroomPC kanto PC de la chambre de RF (commit « menu Start et PC de la chambre comme dans RF ») ; BackupHelpContext (aide L/R) écartée
+PlayerPC kanto idem
+#
+# pokemon_special_anim_scene.c (2026-11-04) : la scène de RF est kanto_pokemon_special_anim_scene.c ; ces noms sont aussi
+# dans Émeraude (party_menu.c, menu_specialized.c), comparés ici
+SpriteCB_Star kanto kanto_pokemon_special_anim_scene.c
+DrawLevelUpWindowPg1 kanto idem
+DrawLevelUpWindowPg2 kanto idem
+#
+# roamer.c (2026-11-04) : plusieurs vagabonds (LATIAS/LATIOS à Hoenn, les trois chiens de RF à Kanto)
+ClearRoamerData kanto FirstRoamerOfRegion..LastRoamerOfRegion
+CreateInitialRoamerMon kanto GetRoamerSpecies de RF par région
+InitRoamer kanto IS_KANTO_ROAMER
+#
+# save_failed_screen.c (2026-11-04)
+DoSaveFailedScreen émeraude + horloge
+VerifySectorWipe même types
+WipeSector même boucle écrite autrement
+#
+# tileset_anims.c (2026-11-04) : TilesetAnim_General de RF = animations du tileset général de Kanto (KantoGeneral, dans
+# tileset_anims.c de la fusion)
+QueueAnimTiles_General_Flower kanto TILE_SIZE_4BPP ; fleurs de Kanto avec KantoGeneral
+TilesetAnim_General kanto TilesetAnim_KantoGeneral (SandWatersEdge, Water_Current_LandWatersEdge)
+InitTilesetAnim_General kanto idem (compteur 640 de RF)
+#
+# trainer_tower.c (2026-11-04)
+GetOwnerState kanto gSaveBlockKanto.trainerTower
+GiveChallengePrize kanto idem
+CheckFinalTime kanto idem

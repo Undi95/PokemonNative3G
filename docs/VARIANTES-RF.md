@@ -29,6 +29,7 @@ Trouvées en lisant les fonctions « à vérifier » de l'inventaire (`tools/car
 | Écran des noms (MENUS = KANTO) | titre dans la fenêtre d'Émeraude (tuile 8, texte en 8) | titre 1 px plus à droite (fenêtre en tuile 9, texte en 1) | `DrawNormalTextEntryBox` (naming_screen.c) |
 | POKéDEX, légendaire combattu sans être capturé (MEWTWO, oiseaux…) | marqué « vu » | jamais « vu » (seule la capture l'inscrit) | `BattleIntroRecordMonsToDex`, `BattleIntroDrawTrainersOrMonsSprites` (battle_main.c) |
 | Vendeur de POUDRE BAIE (Azuria) | fenêtre de la poudre d'Émeraude | fenêtre de RF, un peu plus large, petite police | `DisplayBerryPowderVendorMenu`, `PrintPlayerBerryPowderAmount` (berry_powder.c) |
+| FORCE en surfant, face à un rocher (Îles Écume) | proposée dans le menu d'équipe | refusée (FORCE s'active à terre ; dans les deux jeux, une fois active, on pousse aussi depuis l'eau) | `SetUpFieldMove_Strength` (fldeff_strength.c) |
 | FLASH dans une grotte sombre | un grand cercle de lumière autour du joueur | toute la grotte éclairée | `SetDefaultFlashLevel` (overworld.c) |
 | Poison sur le terrain | tous les 4 pas ; mosaïque jusqu'à 10, +2 puis -2 (10 images) | tous les 5 pas ; jusqu'à 6, +2 puis -1 (9 images, REVISION ≥ 0xA) | `UpdatePoisonStepCounter` (field_control_avatar.c), `Task_FieldPoisonEffect` (fldeff_poison.c), `AdjustBgMosaic` |
 | Sons (voir CONNAISSANCE-JEU.md, « Sons de Kanto ») | instruments HQ, batterie complète ; jingles d'Émeraude | samples à 13 kHz ; fanfares du Casino +10 %, évolution, carte retournée | banque de sons de RF |
