@@ -582,3 +582,120 @@ Task_StopSurfingInit même saut « with effect » de RF = saut spécial d'Émera
 Task_WaitStopSurfing variante PNJ figés pendant le saut (RF) ; BUGFIX non défini ; aide L/R écartée
 StartFishing kanto + chaîne de pêche de la fusion ; journal écarté
 AlignFishingAnimationFrames même noms
+#
+# fieldmap.c (2026-11-04) : VMap / Xsize / Ysize de RF = gBackupMapLayout / width / height d'Émeraude
+InitMap émeraude + entrées des bases secrètes
+InitMapFromSavedGame émeraude + bases secrètes, écrans de TV
+InitMapLayoutData même VMap = gBackupMapLayout
+InitBackupMapLayoutData même VMap = gBackupMapLayout
+InitBackupMapLayoutConnections même gMapConnectionFlags de RF jamais lu hors de fieldmap.c ; return au lieu de if
+FillConnection même VMap = gBackupMapLayout
+FillSouthConnection même VMap = gBackupMapLayout ; return au lieu de if
+FillNorthConnection même VMap = gBackupMapLayout ; return au lieu de if
+FillWestConnection même VMap = gBackupMapLayout ; return au lieu de if
+FillEastConnection même VMap = gBackupMapLayout ; return au lieu de if
+MapGridGetElevationAt même UNPACK_ELEVATION
+MapGridGetCollisionAt même UNPACK_COLLISION
+MapGridGetMetatileIdAt même UNPACK_METATILE
+MapGridGetMetatileBehaviorAt même UNPACK_BEHAVIOR de l'attribut 16 bits d'Émeraude (Kanto converti, tools/kanto_tile_attributes.py)
+MapGridGetMetatileLayerTypeAt même UNPACK_LAYER_TYPE
+MapGridSetMetatileIdAt même VMap = gBackupMapLayout
+MapGridSetMetatileEntryAt même VMap = gBackupMapLayout
+MapGridSetMetatileImpassabilityAt même VMap = gBackupMapLayout
+SaveMapView même mapView dans SaveBlock1 (Émeraude) au lieu de SaveBlock2 (RF)
+SavedMapViewIsEmpty même sizeof = 512 ; SaveBlock1
+ClearSavedMapView même SaveBlock1
+LoadSavedMapView même SaveBlock1 ; return au lieu de if
+MoveMapViewToBackup même SaveBlock1 ; déclarations
+GetMapBorderIdAt même parenthèses, else
+CameraMove émeraude + Tour Mirage ; connexion cherchée seulement si elle existe
+GetIncomingConnection même déclarations
+IsCoordInIncomingConnectingMap même max() écrit avec if
+GetMapConnectionAtPos même conditions en plusieurs if
+ApplyGlobalTintToPaletteEntries journal teinte du journal de RF
+ApplyGlobalTintToPaletteSlot journal teinte du journal de RF
+LoadTilesetPalette kanto tilesets de Kanto convertis au découpage d'Émeraude (6 palettes primaires) ; PLTT_SIZEOF(1) = 2
+#
+# naming_screen.c (2026-11-04) : l'écran des noms d'Émeraude ; MENUS = KANTO : police, palettes, icône du PC et aide de
+# RF (NAMING_FONT, optionsMenuStyle)
+NamingScreen_Init émeraude + écran de WALDA (Émeraude)
+CreateNamingScreenTask journal aide L/R de RF
+Task_NamingScreen même états dans un autre ordre
+MainState_FadeIn émeraude + NamingScreen_Dummy ; RGB_BLACK = 0
+MainState_PressedOKButton émeraude svc_BadWordCheck = filtre de l'émulateur Sloop (REVISION >= 0xA), rien dans le jeu
+MainState_Exit émeraude ResetVHBlank, ResetSpriteData (PORTABLE) ; aide L/R écartée
+DisplaySentToPCMessage kanto PC de LEO ou de quelqu'un selon la région (Fusion_GetPCOwner)
+StartPageSwapAnim même déclarations
+Task_HandlePageSwapAnim même != 0
+PageSwapAnimState_1 même SWAP écrit en trois lignes
+PageSwapAnimState_2 même SWAP écrit en trois lignes
+CreateButtonFlashTask même déclarations
+SpriteCB_InputArrow même MOD = & (n - 1) (puissance de 2)
+SpriteCB_Underscore même MOD = & (n - 1)
+PageSwapSprite_SlideOff même ++ placé autrement
+PageSwapSprite_SlideOn même ++ placé autrement
+CreateBackOkSprites même déclarations
+NamingScreen_CreatePCIcon kanto icône du PC de RF avec MENUS = KANTO
+KeyboardKeyHandler_Character variante nom complet : Émeraude INPUT_STATE_OVERRIDE (le curseur va sur OK), RF INPUT_STATE_DISABLED
+HandleDpadMovement même JOY_REPEAT
+DrawNormalTextEntryBox variante titre : fenêtre d'Émeraude (tuile 8, texte en 8), RF (tuile 9, texte en 1) : 1 px plus à droite dans RF
+DrawMonTextEntryBox variante titre 1 px plus à droite dans RF (fenêtre en tuile 9) ; tampon de 48
+DrawGenderIcon kanto police de RF avec MENUS = KANTO ; 104 = 40 + 64
+LoadPalettes même sizeof = PLTT_SIZE_4BPP
+DrawTextEntry kanto police de RF avec MENUS = KANTO
+PrintKeyboardKeys kanto police de RF avec MENUS = KANTO
+DrawKeyboardPageOnDeck émeraude + NamingScreen_Dummy
+PrintControls kanto aide alignée à droite comme RF avec MENUS = KANTO
+IsWideLetter même RF français : alphabet « large » vide (strings_1_fr.h), toujours FAUX comme Émeraude française
+#
+# daycare.c (2026-11-04) : pension d'Émeraude dans les deux régions ; celle de la Route 5 dans gSaveBlockKanto
+Daycare_FindEmptySpot même SPECIES_NONE = 0
+StorePokemonInDaycare émeraude + langue de la lettre ; otName = OT_name
+GetDaycareCostForSelectedMon même = PrepareDaycareCostStringForSelectedMon d'Émeraude (commentaire dans daycare.c)
+Debug_AddDaycareSteps kanto pension de la Route 5 (gSaveBlockKanto) ; fonction de debug
+ClearDaycareMonMail même otName = OT_name
+_TriggerPendingDaycareEgg émeraude + nature transmise par la PIERRE STASE (Émeraude) ; personnalité sur 32 bits
+InheritIVs même BUGFIX non défini
+_GiveEggFromDaycare émeraude + PICHU avec ELECTACLE (BALLE LUMIERE)
+CreateEgg même metloc_u8_t
+SetInitialEggData même personnalité déjà sur 32 bits dans Émeraude (_TriggerPendingDaycareEgg)
+TryProduceOrHatchEgg émeraude + CHARME OVALE (fusion) ; noms des champs
+ShouldEggHatch kanto pension de la Route 5 dans gSaveBlockKanto
+_GetDaycareMonNicknames même SPECIES_NONE = 0 ; taille du tampon
+GetDaycareLevelMenuText même POKEMON_NAME_BUFFER_SIZE ; gText_Exit4 = OtherText_Exit
+DaycareAddTextPrinter variante menu de la pension : police d'Émeraude, RF FONT_NORMAL_COPY_2 espacée de 1 (docs/VARIANTES-RF.md)
+DaycarePrintMonNickname même POKEMON_NAME_BUFFER_SIZE
+DaycarePrintMonLvl variante niveau aligné à droite en 112 (Émeraude) ou en 132 (RF) (docs/VARIANTES-RF.md)
+Task_HandleDaycareLevelMenuInput même JOY_NEW
+AddHatchedMonToParty même metloc_u8_t ; taille du tampon
+EggHatchCreateMonSprite kanto sprites de l'option POKéMON (MON_PICS_KANTO) ; 120 = 240 / 2
+EggHatch variante fondu de l'éclosion : FadeScreen d'Émeraude ; aide L/R écartée
+EggHatchSetMonNickname journal aide L/R de RF
+Task_EggHatchPlayBGM émeraude + PlayRainStoppingSoundEffect
+CreateRandomEggShardSprite même 4 = ARRAY_COUNT ; coordonnées écrites autrement
+EggHatchPrintMessage variante message de l'éclosion : police et couleurs d'Émeraude (docs/VARIANTES-RF.md)
+#
+# field_control_avatar.c (2026-11-04)
+FieldClearPlayerInput même pressedRButton de RF (aide L/R) écarté
+FieldGetPlayerInput variante RF ignore A, B, START et SELECT pendant un déplacement forcé (PLAYER_AVATAR_FLAG_FORCED) ; journal écarté
+ProcessPlayerFieldInput porter FAIT 2026-11-04 : START pose FLAG_KANTO_OPENED_START_MENU (dame de Bourg Palette) ; + plongée (Émeraude) ; journal écarté
+GetInFrontOfPlayerPosition même ELEVATION_TRANSITION = 0
+TryStartInteractionScript porter FAIT 2026-11-04 : pas de son « sélection » devant le PC de la chambre de Bourg Palette (il joue SE_PC_ON) ; + Émeraude
+GetInteractedObjectEventScript émeraude + Colline des Dresseurs ; Union Room (link)
+GetInteractedBackgroundEventScript kanto objets cachés de RF (VAR_0x8004 / 0x8005 rangés comme les scripts de la fusion, scénario kanto_hidden_items)
+GetInteractedMetatileScript kanto métatuiles de RF à Kanto (TV, panneaux, objets d'intérieur, moniteurs) ; + Émeraude
+GetInteractedWaterScript kanto courant des Îles Écume (FAIT 2026-11-04) ; badges de la région (HasBadgeForFieldMove)
+TryStartStepBasedScript variante RF ne décompte pas la REPOUSSE quand le pas finit un déplacement forcé (invisible : pas de tookStep sur ces cases)
+TryStartMiscWalkingScripts émeraude + sol fissuré, tapis des bases secrètes
+TryStartStepCountScript émeraude + rematchs, Île Lointaine ; journal écarté
+UpdatePoisonStepCounter variante poison sur le terrain tous les 4 pas (Émeraude) au lieu de 5 (RF) (docs/VARIANTES-RF.md)
+RestartWildEncounterImmunitySteps même affectation au lieu d'appel
+CheckStandardWildEncounter émeraude + pas d'immunité après une rencontre ; rencontres de Kanto dans wild_encounter.c
+TryArrowWarp même WARP_ID_NONE = -1
+TryStartWarpEventScript kanto téléporteurs de RF (MetatileBehavior_IsWarpPad) ; + Émeraude ; Union Room = link
+IsWarpMetatileBehavior même conditions écrites en une expression ; + warps de RF
+SetupWarp émeraude + Colline des Dresseurs
+TryDoorWarp émeraude + bases secrètes ; WARP_ID_NONE
+GetWarpEventAtPosition même ELEVATION_TRANSITION = 0 ; WARP_ID_NONE
+GetCoordEventScriptAtPosition même ELEVATION_TRANSITION = 0
+GetBackgroundEventAtPosition même ELEVATION_TRANSITION = 0

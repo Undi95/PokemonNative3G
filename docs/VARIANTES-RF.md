@@ -24,6 +24,8 @@ Trouvées en lisant les fonctions « à vérifier » de l'inventaire (`tools/car
 | Pêche, les points avant la touche | un point toutes les 8 images ; A arrête la pêche | un point toutes les 12 images, A sans effet | `Fishing5` (field_player_avatar.c) |
 | Pêche, ferrer | VENTOUSE ou GLUE en tête : touche plus souvent | aucun talent ne compte | `Fishing6` (field_player_avatar.c) |
 | Écran d'équipe | fenêtres, police et OUI / NON d'Émeraude ; fondu de sortie normal (MENUS = KANTO : palette de RF) | ses fenêtres et sa police ; fondu de sortie plus rapide | `ExitPartyMenu`, `Task_ClosePartyMenu`, `DisplaySelectionWindow`, `ShowMoveSelectWindow` (party_menu.c) |
+| Pension : menu de retrait et message de l'éclosion | police d'Émeraude, niveau aligné à droite en 112 | une police espacée de 1, niveau aligné en 132 | `DaycareAddTextPrinter`, `DaycarePrintMonLvl`, `EggHatchPrintMessage` (daycare.c) |
+| Écran des noms (MENUS = KANTO) | titre dans la fenêtre d'Émeraude (tuile 8, texte en 8) | titre 1 px plus à droite (fenêtre en tuile 9, texte en 1) | `DrawNormalTextEntryBox` (naming_screen.c) |
 | FLASH dans une grotte sombre | un grand cercle de lumière autour du joueur | toute la grotte éclairée | `SetDefaultFlashLevel` (overworld.c) |
-| Poison sur le terrain (tous les 4 pas) | mosaïque jusqu'à 10, +2 puis -2 (10 images) | jusqu'à 6, +2 puis -1 (9 images, REVISION ≥ 0xA) | `Task_FieldPoisonEffect` (fldeff_poison.c), `AdjustBgMosaic` |
+| Poison sur le terrain | tous les 4 pas ; mosaïque jusqu'à 10, +2 puis -2 (10 images) | tous les 5 pas ; jusqu'à 6, +2 puis -1 (9 images, REVISION ≥ 0xA) | `UpdatePoisonStepCounter` (field_control_avatar.c), `Task_FieldPoisonEffect` (fldeff_poison.c), `AdjustBgMosaic` |
 | Sons (voir CONNAISSANCE-JEU.md, « Sons de Kanto ») | instruments HQ, batterie complète ; jingles d'Émeraude | samples à 13 kHz ; fanfares du Casino +10 %, évolution, carte retournée | banque de sons de RF |

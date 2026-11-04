@@ -12,10 +12,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 
 | Fichier RF | Divergentes | Même code une fois normalisé | Par règle de famille | Classées | À lire | Corps introuvable |
 |---|---|---|---|---|---|---|
-| fieldmap.c | 34 | 3 | 0 | 0 | 31 | 0 |
-| naming_screen.c | 37 | 8 | 0 | 0 | 29 | 0 |
-| daycare.c | 35 | 10 | 0 | 0 | 24 | 1 |
-| field_control_avatar.c | 25 | 2 | 0 | 0 | 23 | 0 |
 | shop.c | 39 | 18 | 0 | 0 | 21 | 0 |
 | metatile_behavior.c | 23 | 3 | 0 | 0 | 20 | 0 |
 | field_weather_effects.c | 38 | 19 | 0 | 0 | 19 | 0 |
@@ -170,15 +166,18 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | bg.c | 42 | 4 | 38 | 0 | 0 | 0 |
 | blend_palette.c | 1 | 0 | 1 | 0 | 0 | 0 |
 | blit.c | 1 | 0 | 1 | 0 | 0 | 0 |
+| daycare.c | 35 | 10 | 0 | 24 | 0 | 1 |
 | decompress.c | 8 | 1 | 7 | 0 | 0 | 0 |
 | diploma.c | 1 | 1 | 0 | 0 | 0 | 0 |
 | dma3_manager.c | 4 | 1 | 3 | 0 | 0 | 0 |
 | dynamic_placeholder_text_util.c | 3 | 3 | 0 | 0 | 0 | 0 |
 | event_object_lock.c | 5 | 5 | 0 | 0 | 0 | 0 |
 | event_object_movement.c | 378 | 301 | 0 | 77 | 0 | 0 |
+| field_control_avatar.c | 25 | 2 | 0 | 23 | 0 | 0 |
 | field_effect.c | 94 | 34 | 0 | 60 | 0 | 0 |
 | field_effect_helpers.c | 60 | 7 | 0 | 53 | 0 | 0 |
 | field_player_avatar.c | 64 | 26 | 0 | 38 | 0 | 0 |
+| fieldmap.c | 34 | 3 | 0 | 31 | 0 | 0 |
 | isagbprn.c | 7 | 0 | 7 | 0 | 0 | 0 |
 | item_menu_icons.c | 8 | 8 | 0 | 0 | 0 | 0 |
 | librfu_intr.c | 2 | 0 | 2 | 0 | 0 | 0 |
@@ -203,6 +202,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | mystery_gift_server.c | 6 | 0 | 6 | 0 | 0 | 0 |
 | mystery_gift_show_card.c | 6 | 0 | 6 | 0 | 0 | 0 |
 | mystery_gift_show_news.c | 7 | 4 | 3 | 0 | 0 | 0 |
+| naming_screen.c | 37 | 8 | 0 | 29 | 0 | 0 |
 | new_menu_helpers.c | 24 | 10 | 14 | 0 | 0 | 0 |
 | overworld.c | 92 | 27 | 0 | 65 | 0 | 0 |
 | palette.c | 23 | 7 | 14 | 0 | 0 | 2 |
@@ -240,7 +240,7 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 | window.c | 8 | 1 | 7 | 0 | 0 | 0 |
 | window_8bpp.c | 3 | 3 | 0 | 0 | 0 | 0 |
 | wireless_communication_status_screen.c | 7 | 0 | 7 | 0 | 0 | 0 |
-| **total** | 4254 | 1366 | 1706 | 521 | 652 | 9 |
+| **total** | 4254 | 1366 | 1706 | 628 | 545 | 9 |
 
 ## À lire
 
@@ -357,31 +357,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `coins.c` **ShowCoinsWindow** ✓ : 7 différence(s)
 - `coord_event_weather.c` **DoCoordEventWeather** : 1 différence(s)
 - `credits.c` **CB2_Credits** : 1 différence(s) ; marqueurs de RF absents de la fusion : FLAG_DONT_SHOW_MAP_NAME_POPUP
-- `daycare.c` **Daycare_FindEmptySpot** : 1 différence(s)
-- `daycare.c` **StorePokemonInDaycare** : 2 différence(s)
-- `daycare.c` **GetDaycareCostForSelectedMon** : corps introuvable dans la fusion (déplacé ?)
-- `daycare.c` **Debug_AddDaycareSteps** : 1 différence(s)
-- `daycare.c` **ClearDaycareMonMail** : 1 différence(s)
-- `daycare.c` **_TriggerPendingDaycareEgg** : 4 différence(s)
-- `daycare.c` **InheritIVs** : 8 différence(s)
-- `daycare.c` **_GiveEggFromDaycare** : 1 différence(s)
-- `daycare.c` **CreateEgg** : 3 différence(s)
-- `daycare.c` **SetInitialEggData** : 1 différence(s)
-- `daycare.c` **TryProduceOrHatchEgg** : 6 différence(s)
-- `daycare.c` **ShouldEggHatch** : 2 différence(s)
-- `daycare.c` **_GetDaycareMonNicknames** : 4 différence(s) ; marqueurs de RF absents de la fusion : SPECIES_NONE
-- `daycare.c` **GetDaycareLevelMenuText** : 2 différence(s)
-- `daycare.c` **DaycareAddTextPrinter** : 2 différence(s)
-- `daycare.c` **DaycarePrintMonNickname** : 1 différence(s)
-- `daycare.c` **DaycarePrintMonLvl** : 3 différence(s)
-- `daycare.c` **Task_HandleDaycareLevelMenuInput** : 4 différence(s)
-- `daycare.c` **AddHatchedMonToParty** : 4 différence(s)
-- `daycare.c` **EggHatchCreateMonSprite** : 5 différence(s)
-- `daycare.c` **EggHatch** : 3 différence(s)
-- `daycare.c` **EggHatchSetMonNickname** : 1 différence(s)
-- `daycare.c` **Task_EggHatchPlayBGM** : 1 différence(s)
-- `daycare.c` **CreateRandomEggShardSprite** : 3 différence(s)
-- `daycare.c` **EggHatchPrintMessage** : 4 différence(s)
 - `digit_obj_util.c` **DigitObjUtil_CreatePrinter** : 8 différence(s)
 - `digit_obj_util.c` **DrawNumObjsMinusInBack** : 2 différence(s)
 - `dodrio_berry_picking.c` **InitResults_Leader** : 8 différence(s) ; marqueurs de RF absents de la fusion : MUS_VICTORY_WILD
@@ -440,29 +415,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `field_camera.c` **CameraUpdateCallback** : 2 différence(s)
 - `field_camera.c` **CameraUpdate** : 5 différence(s)
 - `field_camera.c` **SetCameraPanningCallback** : 1 différence(s)
-- `field_control_avatar.c` **FieldClearPlayerInput** : 1 différence(s)
-- `field_control_avatar.c` **FieldGetPlayerInput** : 7 différence(s)
-- `field_control_avatar.c` **ProcessPlayerFieldInput** : 15 différence(s) ; marqueurs de RF absents de la fusion : FLAG_OPENED_START_MENU
-- `field_control_avatar.c` **GetInFrontOfPlayerPosition** : 2 différence(s)
-- `field_control_avatar.c` **TryStartInteractionScript** : 1 différence(s)
-- `field_control_avatar.c` **GetInteractedObjectEventScript** : 2 différence(s)
-- `field_control_avatar.c` **GetInteractedBackgroundEventScript** : 13 différence(s)
-- `field_control_avatar.c` **GetInteractedMetatileScript** : 18 différence(s)
-- `field_control_avatar.c` **GetInteractedWaterScript** : 6 différence(s) ; marqueurs de RF absents de la fusion : FLAG_BADGE05_GET, FLAG_BADGE07_GET
-- `field_control_avatar.c` **TryStartStepBasedScript** : 1 différence(s)
-- `field_control_avatar.c` **TryStartMiscWalkingScripts** : 2 différence(s)
-- `field_control_avatar.c` **TryStartStepCountScript** : 8 différence(s)
-- `field_control_avatar.c` **UpdatePoisonStepCounter** : 1 différence(s)
-- `field_control_avatar.c` **RestartWildEncounterImmunitySteps** : 1 différence(s)
-- `field_control_avatar.c` **CheckStandardWildEncounter** : 5 différence(s)
-- `field_control_avatar.c` **TryArrowWarp** : 3 différence(s)
-- `field_control_avatar.c` **TryStartWarpEventScript** : 4 différence(s)
-- `field_control_avatar.c` **IsWarpMetatileBehavior** : 21 différence(s)
-- `field_control_avatar.c` **SetupWarp** : 1 différence(s)
-- `field_control_avatar.c` **TryDoorWarp** : 2 différence(s)
-- `field_control_avatar.c` **GetWarpEventAtPosition** : 2 différence(s)
-- `field_control_avatar.c` **GetCoordEventScriptAtPosition** : 1 différence(s)
-- `field_control_avatar.c` **GetBackgroundEventAtPosition** : 1 différence(s)
 - `field_door.c` **DrawDoor** : 1 différence(s)
 - `field_door.c` **DrawClosedDoorTiles** : 1 différence(s)
 - `field_door.c` **CopyDoorTilesToVram** : 2 différence(s)
@@ -552,37 +504,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `field_weather_util.c` **DoCurrentWeather** : 1 différence(s)
 - `field_weather_util.c` **ResumePausedWeather** : 1 différence(s)
 - `field_weather_util.c` **TranslateWeatherNum** : 1 différence(s)
-- `fieldmap.c` **InitMap** : 1 différence(s)
-- `fieldmap.c` **InitMapFromSavedGame** : 2 différence(s)
-- `fieldmap.c` **InitMapLayoutData** : 11 différence(s)
-- `fieldmap.c` **InitBackupMapLayoutData** : 6 différence(s)
-- `fieldmap.c` **InitBackupMapLayoutConnections** : 19 différence(s)
-- `fieldmap.c` **FillConnection** : 5 différence(s)
-- `fieldmap.c` **FillSouthConnection** : 10 différence(s)
-- `fieldmap.c` **FillNorthConnection** : 10 différence(s)
-- `fieldmap.c` **FillWestConnection** : 10 différence(s)
-- `fieldmap.c` **FillEastConnection** : 10 différence(s)
-- `fieldmap.c` **MapGridGetElevationAt** : 2 différence(s)
-- `fieldmap.c` **MapGridGetCollisionAt** : 3 différence(s)
-- `fieldmap.c` **MapGridGetMetatileIdAt** : 5 différence(s)
-- `fieldmap.c` **MapGridGetMetatileBehaviorAt** : 2 différence(s)
-- `fieldmap.c` **MapGridGetMetatileLayerTypeAt** : 2 différence(s)
-- `fieldmap.c` **MapGridSetMetatileIdAt** : 8 différence(s)
-- `fieldmap.c` **MapGridSetMetatileEntryAt** : 3 différence(s)
-- `fieldmap.c` **MapGridSetMetatileImpassabilityAt** : 6 différence(s)
-- `fieldmap.c` **SaveMapView** : 3 différence(s)
-- `fieldmap.c` **SavedMapViewIsEmpty** : 4 différence(s)
-- `fieldmap.c` **ClearSavedMapView** : 2 différence(s)
-- `fieldmap.c` **LoadSavedMapView** : 9 différence(s)
-- `fieldmap.c` **MoveMapViewToBackup** : 18 différence(s)
-- `fieldmap.c` **GetMapBorderIdAt** : 10 différence(s)
-- `fieldmap.c` **CameraMove** : 5 différence(s)
-- `fieldmap.c` **GetIncomingConnection** : 2 différence(s)
-- `fieldmap.c` **IsCoordInIncomingConnectingMap** : 7 différence(s)
-- `fieldmap.c` **GetMapConnectionAtPos** : 7 différence(s)
-- `fieldmap.c` **ApplyGlobalTintToPaletteEntries** : 1 différence(s)
-- `fieldmap.c` **ApplyGlobalTintToPaletteSlot** : 1 différence(s)
-- `fieldmap.c` **LoadTilesetPalette** : 2 différence(s)
 - `fldeff_berrytree.c` **DoWateringBerryTreeAnim** : 1 différence(s)
 - `fldeff_cut.c` **SetUpFieldMove_Cut** : 3 différence(s)
 - `fldeff_cut.c` **FldEff_UseCutOnGrass** : 1 différence(s)
@@ -712,35 +633,6 @@ Règles de famille (`FAMILY_RULES`, sauf marqueur propre à Kanto dans le corps 
 - `money.c` **PrintMoneyAmount** : 4 différence(s)
 - `money.c` **PrintMoneyAmountInMoneyBoxWithBorder** ✓ : 2 différence(s)
 - `money.c` **DrawMoneyBox** ✓ : 5 différence(s)
-- `naming_screen.c` **NamingScreen_Init** : 1 différence(s)
-- `naming_screen.c` **CreateNamingScreenTask** : 1 différence(s)
-- `naming_screen.c` **Task_NamingScreen** : 1 différence(s)
-- `naming_screen.c` **MainState_FadeIn** : 2 différence(s)
-- `naming_screen.c` **MainState_PressedOKButton** : 2 différence(s)
-- `naming_screen.c` **MainState_Exit** : 4 différence(s)
-- `naming_screen.c` **DisplaySentToPCMessage** : 5 différence(s) ; marqueurs de RF absents de la fusion : FLAG_SYS_NOT_SOMEONES_PC
-- `naming_screen.c` **StartPageSwapAnim** : 1 différence(s)
-- `naming_screen.c` **Task_HandlePageSwapAnim** : 1 différence(s)
-- `naming_screen.c` **PageSwapAnimState_1** : 4 différence(s)
-- `naming_screen.c` **PageSwapAnimState_2** : 4 différence(s)
-- `naming_screen.c` **CreateButtonFlashTask** : 1 différence(s)
-- `naming_screen.c` **SpriteCB_InputArrow** : 3 différence(s)
-- `naming_screen.c` **SpriteCB_Underscore** : 4 différence(s)
-- `naming_screen.c` **PageSwapSprite_SlideOff** : 2 différence(s)
-- `naming_screen.c` **PageSwapSprite_SlideOn** : 2 différence(s)
-- `naming_screen.c` **CreateBackOkSprites** : 1 différence(s)
-- `naming_screen.c` **NamingScreen_CreatePCIcon** : 2 différence(s)
-- `naming_screen.c` **KeyboardKeyHandler_Character** : 1 différence(s)
-- `naming_screen.c` **HandleDpadMovement** : 6 différence(s)
-- `naming_screen.c` **DrawNormalTextEntryBox** : 3 différence(s)
-- `naming_screen.c` **DrawMonTextEntryBox** : 4 différence(s)
-- `naming_screen.c` **DrawGenderIcon** : 2 différence(s)
-- `naming_screen.c` **LoadPalettes** : 1 différence(s)
-- `naming_screen.c` **DrawTextEntry** : 2 différence(s)
-- `naming_screen.c` **PrintKeyboardKeys** : 2 différence(s)
-- `naming_screen.c` **DrawKeyboardPageOnDeck** : 1 différence(s)
-- `naming_screen.c` **PrintControls** : 4 différence(s)
-- `naming_screen.c` **IsWideLetter** : 1 différence(s)
 - `new_game.c` **CopyTrainerId** : 3 différence(s)
 - `new_game.c` **InitPlayerTrainerId** : 2 différence(s)
 - `new_game.c` **SetDefaultOptions** : 1 différence(s)
