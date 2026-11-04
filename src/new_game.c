@@ -47,6 +47,7 @@ void ResetTrainerFanClub(void); // kanto_trainer_fan_club.c
 #include "berry_powder.h"
 #include "mystery_gift.h"
 #include "union_room_chat.h"
+#include "kanto_item_menu.h"
 #include "constants/items.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
@@ -168,6 +169,7 @@ void ResetMenuAndMonGlobals(void)
     ZeroEnemyPartyMons();
     ResetBagScrollPositions();
     ResetPokeblockScrollPositions();
+    KantoBag_ResetCursorPositions(); // Rouge Feu : ResetBagCursorPositions, ResetTMCaseCursorPos, BerryPouch_CursorResetToTop
 }
 
 void NewGameInitData(void)

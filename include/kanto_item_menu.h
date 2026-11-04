@@ -13,6 +13,8 @@ void KantoBag_CloseItemMessage(u8 taskId);
 void KantoBag_FadeAndClose(u8 taskId);
 void KantoBag_SetNewScreenCallback(MainCallback callback);
 void KantoBag_RemoveUsedItem(u8 pocket);
+// Rouge Feu (new_game.c, ResetMenuAndMonGlobals) : curseurs du sac, de la BOITE CT et de la BOITE BAIES en haut
+void KantoBag_ResetCursorPositions(void);
 // Rouge Feu : le sac de la démonstration du vieil homme de Jadielle (option SAC = KANTO ; sinon celui de Wally)
 void InitOldManBag(void);
 

@@ -2569,6 +2569,16 @@ void KantoBag_RemoveUsedItem(u8 pocket)
     PocketCalculateInitialCursorPosAndItemsAbove(pocket);
 }
 
+// PokemonNative3G : les trois lignes du sac de ResetMenuAndMonGlobals de RF (new_game.c), au début d'une partie
+void ResetTMCaseCursorPos(void);              // kanto_tm_case.c
+void KBP_BerryPouch_CursorResetToTop(void);   // kanto_berry_pouch.c (BerryPouch_CursorResetToTop)
+void KantoBag_ResetCursorPositions(void)
+{
+    ResetBagCursorPositions();
+    ResetTMCaseCursorPos();
+    KBP_BerryPouch_CursorResetToTop();
+}
+
 void KantoBag_FadeAndClose(u8 taskId)
 {
     if (GetItemPocket(gSpecialVar_ItemId) == POCKET_BERRIES)
