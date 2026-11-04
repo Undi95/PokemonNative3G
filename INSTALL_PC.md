@@ -2,8 +2,8 @@
 
 These instructions explain how to set up the tools required to build **pokeemerald**, which assembles the source files into a binary.
 
-## Windows 10/11 (WSL1)
-Follow pret instructions on how to install WSL1 [here](INSTALL.md)
+## Windows 10/11 (WSL)
+Install WSL with an Ubuntu distribution (`wsl --install -d Ubuntu` in an administrator terminal), then open Ubuntu.
 
 Install the following libraries
 
@@ -64,7 +64,3 @@ gmake macos -j$(sysctl -n hw.ncpu)
 ```
 
 You should get an executable named `pokeemerald64`, which uses Homebrew's SDL2.
-
-## GBA
-
-Follow instructions in [INSTALL.md](INSTALL.md)
