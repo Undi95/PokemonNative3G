@@ -545,12 +545,13 @@ class Screens:
         game.wait(60)
         game.tap("DOWN")                # PC de <joueur> (2e entrée, dans les deux régions)
         game.tap("A")
-        game.wait(120)
+        tap_until_text(game, "faire")   # « PC personnel connecté. », puis le menu (« Que voulez-vous faire ? »)
+        game.wait(60)
         self.shot("menu")
-        game.tap("A")                   # les objets
+        game.tap("A")                   # STOCKAGE OBJ.
         game.wait(90)
         self.shot("objets")
-        game.tap("A")                   # RETIRER
+        game.tap("A")                   # RETIRER OBJET : la liste
         game.wait(150)
         self.shot("retirer")
         back_to_free(game)
@@ -565,8 +566,9 @@ class Screens:
         game.wait(60)
         game.tap("DOWN")
         game.tap("A")
-        game.wait(120)
-        game.tap("DOWN")                # BOITE AUX LETTRES (2e entrée)
+        tap_until_text(game, "faire")
+        game.wait(60)
+        game.tap("DOWN")                # BOITE LETTRE (2e entrée)
         game.tap("A")
         game.wait(150)
         self.shot("boite")
@@ -576,9 +578,15 @@ class Screens:
         back_to_free(game)
 
     def region_map(self):
-        """La carte de la région (FieldShowRegionMap, comme une carte murale)."""
+        """La carte de la région, comme une carte murale (EventScript_RegionMap : celle de RF à Kanto)."""
         game = self.game
-        game.special("FieldShowRegionMap")
+        screens = len(game.cb2s)
+        game.script("EventScript_RegionMap")
+        for _ in range(10):             # le message d'Émeraude avant la carte (« Regarder la carte de plus près »)
+            game.wait(60)
+            if any("Map" in n and "Overworld" not in n for _, n in game.cb2s[screens:]):
+                break
+            game.tap("A")
         game.wait(200)
         self.shot("carte")
         game.tap("RIGHT", 3, gap=20)

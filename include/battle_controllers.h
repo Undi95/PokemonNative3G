@@ -307,6 +307,7 @@ void SpriteCB_FreePlayerSpriteLoadMonSprite(struct Sprite *sprite);
 void CB2_SetUpReshowBattleScreenAfterMenu(void);
 void CB2_SetUpReshowBattleScreenAfterMenu2(void);
 void Task_PlayerController_RestoreBgmAfterCry(u8 taskId);
+u32 GetPlayerTrainerBackPicId(void); // PokemonNative3G : le dos du joueur selon PERSO et le genre
 void ActionSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum);
 void ActionSelectionDestroyCursorAt(u8 cursorPosition);
 void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum);

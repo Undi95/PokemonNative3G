@@ -2456,6 +2456,13 @@ static u32 GetPlayerBackPicBase(void)
     return gSaveBlock2Ptr->optionsPlayerCharacter ? TRAINER_BACK_PIC_RED : TRAINER_BACK_PIC_BRENDAN;
 }
 
+// PokemonNative3G : le dos du joueur (option PERSO et genre), pour les autres contrôleurs (Parc Safari) et le
+// réaffichage du combat, qui prenaient TRAINER_BACK_PIC_BRENDAN + genre
+u32 GetPlayerTrainerBackPicId(void)
+{
+    return GetPlayerBackPicBase() + gSaveBlock2Ptr->playerGender;
+}
+
 static void PlayerHandleDrawTrainerPic(void)
 {
     s16 xPos, yPos;
