@@ -1,0 +1,219 @@
+# Classement à la main des fonctions de même nom dans RF et la fusion, au corps différent (tools/carto_divergentes.py,
+# docs/carto/divergentes-tri.md). Une ligne par fonction : NOM CATÉGORIE PREUVE. Catégories :
+#   même       même code, une fois lue (une écriture que l'outil ne ramène pas : struct réorganisée, noms d'index)
+#   émeraude   Émeraude fait tout ce que fait RF, et plus (Pyramide, Colline, Île Lointaine…) : rien de Kanto perdu
+#   kanto      la fusion a déjà la partie propre à Kanto (variante Kanto, test de région, données de RF)
+#   variante   détail du code commun différent dans RF : Émeraude gardée (règle du 2026-11-02) ; les variantes
+#              visibles sont dans docs/VARIANTES-RF.md
+#   journal    journal (« Précédemment ») ou aide L/R de RF : écartés (Kanto = post-game, 2026-11-02)
+#   link       link : celui d'Émeraude dans les deux régions (caché, LINK_ENABLED)
+#   porter     à porter (un comportement de RF qui manque à Kanto)
+#
+# event_object_movement.c (2026-11-04)
+InitObjectEventStateFromTemplate kanto clones de RF par CLONE_TARGET_* (même lecture, autre struct : objUnion de RF = champs d'Émeraude)
+Unref_TryInitLocalObjectEvent émeraude + Pyramide et Colline des Dresseurs
+TrySetupObjectEventSprite kanto palettes d'Émeraude (PALSLOT) + palettes des objets de Kanto (slots >= 16, _PatchObjectPalette)
+SpawnSpecialObjectEventParameterized même struct de gabarit d'Émeraude (objUnion.normal de RF = champs directs)
+CopyObjectGraphicsInfoToSpriteTemplate journal callback du journal de RF (QL_UpdateObject)
+CreateObjectGraphicsSprite même gabarit alloué (Émeraude) au lieu d'un gabarit local (RF), mêmes champs
+CreateVirtualObject kanto palettes des objets de Kanto (slots >= 16)
+TrySpawnObjectEvents émeraude + Pyramide et Colline des Dresseurs
+RemoveObjectEventIfOutsideView même MAP_OFFSET_W + 2 + 8 = 17, MAP_OFFSET_H + 2 + 7 = 16
+SpawnObjectEventOnReturnToField kanto palettes des objets de Kanto (slots >= 16) ; le reste, mêmes champs
+ObjectEventSetGraphicsId variante RF réalloue les tuiles d'un sprite sans planche quand la taille change ; Émeraude non (vélo, surf, plongée des deux régions vérifiés : redleaf_visuals, poke_monture)
+GetObjectEventGraphicsInfo kanto + PERSO Red/Leaf (GetRedLeafGraphicsId) et graphismes des objets de Kanto (KantoObjectEventGraphicsInfoPointers)
+SetObjectEventDynamicGraphicsId émeraude borne supérieure des graphismes variables (OBJ_EVENT_GFX_VAR_F)
+SetObjectInvisibility même nom du paramètre
+LoadObjectEventPalette même (BUGFIX d'Émeraude non défini : même boucle)
+PatchObjectPalette journal teinte du journal de RF (ApplyGlobalFieldPaletteTint)
+ObjectEventDoesElevationMatch même ELEVATION_TRANSITION = 0
+AddCameraObject même sCamera_FollowSpriteId = data[0]
+GetBaseTemplateForObjectEvent même RF répète dans la boucle le test de carte déjà fait au début
+InitObjectEventPalettes émeraude palettes par emplacement d'Émeraude (PatchObjectPaletteSlots), mêmes 6 + 2 slots
+GetObjectPaletteTag émeraude GetObjectPaletteTagForSlot (Émeraude) = table de RF
+MovementType_WanderAround_Step2 même Random() & 3 = % 4 (sMovementDelaysMedium : 4 valeurs, les mêmes)
+MovementType_LookAround_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_WanderUpAndDown_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_WanderLeftAndRight_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_FaceDownAndUp_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_FaceLeftAndRight_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_FaceUpAndLeft_Step2 même Random() & 3 = % 4 (sMovementDelaysShort : 4 délais)
+MovementType_FaceUpAndRight_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_FaceDownAndLeft_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_FaceDownAndRight_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_FaceDownUpAndLeft_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_FaceDownUpAndRight_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_FaceUpLeftAndRight_Step2 même Random() & 3 = % 4 (4 délais)
+MovementType_FaceDownLeftAndRight_Step2 même Random() & 3 = % 4 (4 délais)
+CopyablePlayerMovement_Jump variante RF : le PNJ copieur saute 2 cases, Émeraude 1 ; aucun PNJ copieur à Kanto (seulement Île Lointaine et Route 119)
+MovementType_JogInPlace_Step0 variante jogging sur place : RF à la vitesse « faster », Émeraude « fast » (docs/VARIANTES-RF.md)
+GetStepAnimTable kanto + tables d'animation des objets de Kanto (KantoStepAnimTables)
+GetCollisionInDirection même déclarations
+IsCoordOutsideObjectEventMovementRange même rangeX/rangeY rangés dans range (struct d'Émeraude)
+ObjectEventSetHeldMovement journal lecture du journal de RF
+GetOppositeDirection même < 1 = <= 0
+ObjectEventSetSingleMovement journal enregistrement des pas dans le journal de RF
+InitNpcForMovement émeraude + objets à l'animation bloquée (sLockedAnimObjectEvents)
+MovementAction_WalkDownStartAffine_Step0 variante marche affine : RF « slower », Émeraude « slow » (docs/VARIANTES-RF.md)
+MovementAction_WalkDownAffine_Step0 variante marche affine : RF « slower », Émeraude « slow » (docs/VARIANTES-RF.md)
+MovementAction_FlyDown_Step1 même y2 == 0 = !y2
+GetAllGroundEffectFlags_OnFinishStep variante RF cherche aussi un reflet en fin de pas (reflets : docs/VARIANTES-RF.md)
+GetGroundEffectFlags_Reflection variante noms des drapeaux et compteur de reflet (reflets : docs/VARIANTES-RF.md)
+GetGroundEffectFlags_Tracks émeraude + sable profond
+IsElevationMismatchAt même ELEVATION_TRANSITION = 0, ELEVATION_MULTI_LEVEL = 15
+ObjectEventUpdateElevation même ELEVATION_TRANSITION = 0, ELEVATION_MULTI_LEVEL = 15
+SetObjectSubpriorityByElevation même déclarations
+AreElevationsCompatible même ELEVATION_TRANSITION = 0
+DoFlaggedGroundEffects variante RF : pas d'effets de sol pour la caméra invisible (Émeraude : sous BUGFIX) ; à Kanto, la caméra ne passe sur aucune herbe (Plateau Indigo, maison de Léo) ; + MEW de l'Île Lointaine (Émeraude)
+DoGroundEffects_OnSpawn même BUGFIX d'Émeraude non défini : même code
+DoGroundEffects_OnBeginStep même BUGFIX d'Émeraude non défini : même code
+DoGroundEffects_OnFinishStep même BUGFIX d'Émeraude non défini : même code
+FreezeObjectEvent même return / else
+FreezeObjectEventsExceptOne même nom du champ
+SetSpriteDataForNormalStep même index data[5] (RF) / data[6] (Émeraude), le même partout dans chaque jeu
+NpcTakeStep même index data[5] / data[6], comme SetSpriteDataForNormalStep
+SetWalkSlowSpriteData même index data[3] / data[6]
+UpdateWalkSlowAnim variante marche lente : RF 2 images sur 3 (16 px en 24 images), Émeraude 1 sur 2 (32 images) (docs/VARIANTES-RF.md)
+DoJumpSpriteMovement même parenthèses
+DoJumpSpecialSpriteMovement même tableaux écrits avec leurs index
+WaitForMovementDelay même data[3]-- puis test = --data[3]
+DestroyVirtualObjects link objets virtuels de l'Union Room
+TurnVirtualObject link objets virtuels de l'Union Room
+SetVirtualObjectGraphics link objets virtuels de l'Union Room
+SetVirtualObjectInvisibility link objets virtuels de l'Union Room
+IsVirtualObjectInvisible link objets virtuels de l'Union Room
+MoveUnionRoomObjectUp link objets virtuels de l'Union Room
+MoveUnionRoomObjectDown link objets virtuels de l'Union Room
+VirtualObject_UpdateAnim link objets virtuels de l'Union Room
+IsVirtualObjectAnimating link objets virtuels de l'Union Room
+StartFieldEffectForObjectEvent même conversions (u8 *)
+#
+# overworld.c (2026-11-04)
+DoWhiteOut kanto K.O. de Kanto par SetWhiteoutRespawnWarpAndHealerNpc (soigneurs de Kanto, Tour des Dresseurs ; scénarios kanto_whiteout*)
+Overworld_ResetStateAfterFly kanto Overworld_ResetKantoStateAfterWarp (Piste cyclable, Route 16, entrée du Parc Safari) ; VAR_QL_ENTRANCE = journal
+Overworld_ResetStateAfterTeleport kanto Overworld_ResetKantoStateAfterWarp ; VAR_QL_ENTRANCE = journal
+Overworld_ResetStateAfterDigEscRope kanto Overworld_ResetKantoStateAfterWarp ; VAR_QL_ENTRANCE = journal
+ResetGameStats même SetGameStat dans la boucle, même mise à zéro
+IncrementGameStat kanto 54 statistiques : celles d'Émeraude + Panthéon de Kanto (GAME_STAT_KANTO_*)
+GetGameStat kanto 54 statistiques (GAME_STAT_KANTO_*)
+SetGameStat kanto 54 statistiques (GAME_STAT_KANTO_*)
+LoadObjEventTemplatesFromHeader kanto clones de RF par CLONE_TARGET_* (struct d'Émeraude)
+LoadSaveblockObjEventScripts même noms ; garde UBFIX
+SetObjEventTemplateCoords même pointeur au lieu d'index
+SetObjEventTemplateMovementType même objUnion.normal de RF = champs d'Émeraude
+IsDummyWarp même WARP_ID_NONE = -1
+LoadCurrentMapData émeraude + section précédente (panneau de la Zone de Combat)
+SetWarpDestinationToHealLocation même noms ; WARP_ID_NONE = -1
+SetLastHealLocationWarp même WARP_ID_NONE = -1
+UpdateEscapeWarp porter FAIT 2026-11-04 : FORÊT DE JADE exclue, entrée vers le bas (Fusion_IsInKanto) ; scénario kanto_escape_rope
+SetWarpDestinationToFixedHoleWarp même WARP_ID_NONE = -1
+SetContinueGameWarpToHealLocation même noms ; WARP_ID_NONE = -1
+SetDiveWarp même WARP_ID_NONE = -1
+LoadMapFromCameraTransition kanto rematchs de Kanto (KantoMapResetTrainerRematches), panneau de RF ; palettes depuis NUM_PALS_IN_PRIMARY = 6 : tilesets de Kanto convertis au découpage d'Émeraude (LoadSecondaryTilesetPalette)
+LoadMapFromWarp kanto + rematchs de Kanto ; le reste Émeraude (Pyramide, Colline, bases secrètes) ; QL_ResetDefeatedWildMonRecord = journal
+SetDefaultFlashLevel variante FLASH : RF éclaire toute la grotte, Émeraude un grand cercle (docs/VARIANTES-RF.md)
+GetLocationMusic émeraude + légendaires de Sootopolis
+GetCurrLocationDefaultMusic émeraude + Route 111 (désert) et Route 118
+GetWarpDestinationMusic émeraude + Route 118
+Overworld_PlaySpecialMapMusic porter FAIT 2026-11-04 : salle du Champion de Kanto, la musique de victoire continue (scénario kanto_champion_oak)
+Overworld_ClearSavedMusic même MUS_DUMMY = 0
+Overworld_ChangeMusicTo émeraude + météo anormale
+TryFadeOutOldMapMusic émeraude + Pilier Céleste
+PlayAmbientCry porter FAIT 2026-11-04 : pas de cri quand la musique des cartes est figée (Panthéon, générique de Kanto)
+UpdateAmbientCry émeraude + talent ESSAIM en tête (délai divisé par 2) ; --(*n) == 0 = (*n)--, test
+ChooseAmbientCrySpecies émeraude + WAILORD de la Route 130
+InitOverworldBgs émeraude mêmes appels, rangés ailleurs (ResetScreenForMapLoad dans LoadMapInSteps*, InitTextBoxGfxAndPrinters dans InitViewGraphics)
+CleanupOverworldWindowsAndTilemaps émeraude + Tour Mirage ; TRY_FREE_AND_SET_NULL
+DoCB1_Overworld kanto HideMapNamePopUpWindow ferme aussi le panneau de RF (Kanto_DismissMapNamePopup) ; FieldInput_HandleCancelSignpost de RF ; le reste = journal
+CB1_Overworld journal lecture du journal
+OverworldBasic journal SetQuestLogEvent_Arrived
+CB2_Overworld même !! = != 0
+CB2_NewGame émeraude une nouvelle partie commence à Hoenn (camion)
+CB2_WhiteOut kanto RF va toujours au soigneur ; la fusion aussi quand il y en a un (soigneurs de Kanto dans sWhiteoutRespawns)
+CB2_LoadMap2 journal fin de scène du journal
+CB2_ReturnToField link IsOverworldLinkActive = IsUpdateLinkStateCBActive
+CB2_ReturnToFieldLink link file de réception
+CB2_ContinueSavedGame émeraude + Zone de Combat, Colline, Match Call, TV ; FieldCallback2 = journal
+FieldClearVBlankHBlankCallbacks même DisableInterrupts / EnableInterrupts écrits avec REG_IE
+InitCurrentFlashLevelScanlineEffect émeraude + Pyramide ; mêmes paramètres (sFlashEffectParams)
+LoadMapInStepsLink link aide L/R de RF (SetHelpContextForMap)
+LoadMapInStepsLocal kanto panneau de RF (Kanto_ShowMapNamePopup) ; étapes rangées comme Émeraude ; aide L/R et journal écartés
+ReturnToFieldLocal émeraude + palette e-Reader de la Colline ; aide L/R écartée
+ReturnToFieldLink link aide L/R écartée
+ResetScreenForMapLoad même DmaFillLarge16(3, 0, …) = DmaClearLarge16
+InitViewGraphics même InitTextBoxGfxAndPrinters (dans InitOverworldBgs chez RF)
+InitOverworldGraphicsRegisters même WIN_RANGE(0, 255) = 0xFF, WIN_RANGE(255, 255) = 0xFFFF ; mêmes registres
+ResumeMap émeraude + Tour Mirage
+InitObjectEventsLocal même s16 / u16
+UpdateAllLinkPlayers link joueurs du Club Câble
+UpdateHeldKeyCode link touches du link
+KeyInterCB_ReadButtons link touches du link
+KeyInterCB_DeferToRecvQueue link file de réception
+GetCableClubPartnersReady link Club Câble
+TryInteractWithPlayer link Club Câble
+Overworld_RecvKeysFromLinkIsRunning link touches du link
+Overworld_SendKeysToLinkIsRunning link touches du link
+CreateLinkPlayerSprite link sprites des joueurs en link
+SpriteCB_LinkPlayer link sprites des joueurs en link
+#
+# field_effect.c (2026-11-04)
+FieldEffectStart même const
+FieldEffectScript_ReadWord même T2_READ_32 écrit octet par octet
+FieldEffectScript_LoadTiles même FieldEffectScript_ReadPtr (pointeurs 64 bits du portage)
+FieldEffectScript_CallNative même FieldEffectScript_ReadPtr (pointeurs 64 bits du portage)
+FieldEffectFreeGraphicsResources même u8 / u32
+FieldEffectFreeTilesIfUnused même if (tag == TAG_NONE) return / if (tag != TAG_NONE)
+FieldEffectFreePaletteIfUnused même if (tag == TAG_NONE) return / if (tag != TAG_NONE)
+FieldEffectActiveListClear même 32 = ARRAY_COUNT
+FieldEffectActiveListAdd même 32 = ARRAY_COUNT
+FieldEffectActiveListRemove même 32 = ARRAY_COUNT
+FieldEffectActiveListContains même 32 = ARRAY_COUNT
+CreateMonSprite_PicBox même u16 / s32
+MultiplyInvertedPaletteRGBComponents même RGB_RED = 31, déclarations
+MultiplyPaletteRGBComponents même RGB_RED = 31, déclarations
+FldEff_PokecenterHeal kanto moniteur de RF en x = 128 à Kanto (CreatePokecenterMonitorSprite)
+Task_PokecenterHeal même data[1] / data[0] : autre index de l'état, le même partout
+PokecenterHealEffect_Init même index de l'état
+PokecenterHealEffect_WaitForBallPlacement même >= 2 = > 1 ; index de l'état
+PokecenterHealEffect_WaitForBallFlashing même index de l'état
+FldEff_HallOfFameRecord kanto moniteur du Panthéon de RF à Kanto (tIsKanto, KantoSpritePalette_HofMonitor)
+HallOfFameRecordEffect_Init kanto moniteur du Panthéon de RF à Kanto
+HallOfFameRecordEffect_WaitForBallPlacement kanto moniteur du Panthéon de RF à Kanto (sKantoSpriteTemplate_HofMonitor)
+HallOfFameRecordEffect_WaitForBallFlashing même index de l'état
+CreateGlowingPokeballsEffect variante RF : plateau en sous-priorité 255 (derrière les autres sprites) ; aucun ne le chevauche (infirmière à sa droite, ref kanto_heal_pc-soin)
+PokeballGlowEffect_PlaceBalls variante RF : Poké Balls en sous-priorité 255 ; aucun sprite ne les chevauche
+CreatePokecenterMonitorSprite kanto moniteur de RF à Kanto (SpriteTemplate_KantoPokecenterMonitor)
+CreateHofMonitorSprite émeraude grand moniteur du Panthéon d'Émeraude ; celui de RF à Kanto (HallOfFameRecordEffect_WaitForBallPlacement)
+SpriteCB_HallOfFameMonitor kanto RF : libéré à la fin de l'animation = SpriteCB_KantoHallOfFameMonitor (moniteur de Kanto)
+Task_UseFly kanto + POKé MONTURE (FIELD_MOVE_HELPER_SLOT) ; >= 6 = > 5 ; FLDEFF_USE_FLY = FLDEFF_FLY_OUT
+Task_FallWarpFieldEffect même déclarations
+StartEscalatorWarp même déclarations
+FldEff_UseWaterfall même déclarations
+FldEff_UseDive même déclarations
+DiveFieldEffect_TryWarp même noms
+EscapeRopeWarpOutEffect_Init variante Corde Sortie de RF : il s'envole hors de l'écran (docs/VARIANTES-RF.md)
+EscapeRopeWarpOutEffect_Spin variante Corde Sortie de RF (SpinObjectEvent, SE_WARP_IN) (docs/VARIANTES-RF.md)
+EscapeRopeWarpInEffect_Init variante Corde Sortie de RF (SE_WARP_OUT) (docs/VARIANTES-RF.md)
+EscapeRopeWarpInEffect_Spin variante Corde Sortie de RF : il redescend du haut de l'écran (docs/VARIANTES-RF.md)
+FldEff_FieldMoveShowMonInit kanto + POKé MONTURE (PokeMonture_HelperSpecies)
+InitFieldMoveMonSprite même 0x7FFFFFFF = ~0x80000000
+SpriteCB_FieldMoveMonSlideOnscreen même 120 = DISPLAY_WIDTH / 2
+FldEff_UseSurf kanto musique du Surf de Kanto (Overworld_GetSurfMusic) ; index de la tâche
+FlyOutFieldEffect_FieldMovePose même MOVEMENT_ACTION_START_ANIM_IN_DIRECTION (numérotés autrement) ; index de l'état
+FlyOutFieldEffect_ShowMon même index de l'état
+FlyOutFieldEffect_BirdLeaveBall même index de l'état
+FlyOutFieldEffect_JumpOnBird émeraude PLAYER_AVATAR_STATE_SURFING, MOVEMENT_ACTION_JUMP_2_DOWN (numérotés autrement) ; + fin du Surf
+FlyOutFieldEffect_FlyOffWithBird variante Vol : RF dessine RED ou LEAF dans l'image de l'oiseau, avec un zoom ; Émeraude pose le sprite du joueur sur l'oiseau (docs/VARIANTES-RF.md)
+StartFlyBirdSwoopDown même 120 = DISPLAY_WIDTH / 2
+SpriteCB_FlyBirdLeaveBall variante Vol : départ de l'oiseau selon le genre (RED / LEAF dans l'image) (docs/VARIANTES-RF.md)
+SpriteCB_FlyBirdSwoopDown même noms
+SpriteCB_FlyBirdReturnToBall variante Vol : retour de l'oiseau selon le genre (docs/VARIANTES-RF.md)
+FlyInFieldEffect_BirdSwoopDown même noms
+FlyInFieldEffect_FlyInWithBird variante Vol : TryChangeBirdSprite (image de l'oiseau avec RED / LEAF) (docs/VARIANTES-RF.md)
+FlyInFieldEffect_JumpOffBird même 18 = ARRAY_COUNT ; index de l'état
+FlyInFieldEffect_FieldMovePose même noms
+FlyInFieldEffect_End même PLAYER_AVATAR_STATE_* numérotés autrement
+FldEff_MoveDeoxysRock même noms des variables
+FldEff_DestroyDeoxysRock même FLDEFF_DESTROY_DEOXYS_ROCK (numérotés autrement)
+Task_DeoxysRockCameraShake même != 0
+Task_DestroyDeoxysRock même index

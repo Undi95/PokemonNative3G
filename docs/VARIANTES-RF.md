@@ -10,14 +10,18 @@ Trouvées en lisant les fonctions « à vérifier » de l'inventaire (`tools/car
 
 | Où | Émeraude (gardé) | Rouge Feu | Fonction RF |
 |---|---|---|---|
-| Vol, l'oiseau qui emporte le joueur | arc de rayon 140, 4 par image | arc de rayon 180, 2 par image (plus large, 2× plus lent) | `SpriteCB_FlyBirdWithPlayer` (field_effect.c) |
+| Vol, l'oiseau qui emporte le joueur | arc de rayon 140, 4 par image ; le sprite du joueur est posé sur l'oiseau (va avec tous les personnages) | arc de rayon 180, 2 par image (plus large, 2× plus lent) ; RED ou LEAF sont dessinés dans l'image de l'oiseau, qui grossit et rapetisse | `SpriteCB_FlyBirdWithPlayer`, `FlyOutFieldEffect_FlyOffWithBird`, `TryChangeBirdSprite` (field_effect.c) |
 | Dresseur qui repère le joueur | le joueur se tourne vers lui | le joueur ne bouge pas | `TrainerSeeFunc_PrepareToEngage` (trainer_see.c) |
-| Reflets dans l'eau et la glace | cases regardées selon la taille du sprite | toujours 1 × 2 cases (pareil pour le joueur et les PNJ ordinaires ; diffère pour les grands sprites) | `ObjectEventCheckForReflectiveSurface` (event_object_movement.c) |
+| Reflets dans l'eau et la glace | cases regardées selon la taille du sprite ; cherchés au début d'un pas | toujours 1 × 2 cases (pareil pour le joueur et les PNJ ordinaires ; diffère pour les grands sprites) ; cherchés aussi à la fin d'un pas | `ObjectEventCheckForReflectiveSurface`, `GetAllGroundEffectFlags_OnFinishStep` (event_object_movement.c) |
+| Marche lente des scripts (`walk_slow_*`, cinématiques) | 1 image sur 2 : une case en 32 images | 2 images sur 3 : une case en 24 images | `UpdateWalkSlowAnim` (event_object_movement.c) |
+| PNJ qui court sur place (`MOVEMENT_TYPE_JOG_IN_PLACE_*`) | vitesse « rapide » | vitesse « plus rapide » | `MovementType_JogInPlace_Step0` (event_object_movement.c) |
+| Marche affine vers le bas (`walk_down_affine`) | lente | plus lente | `MovementAction_WalkDownAffine_Step0` (event_object_movement.c) |
 | **Sortie d'un bâtiment** | fondu d'Émeraude | l'écran s'ouvre depuis le milieu, en portes de grange | `DoOutwardBarnDoorWipe` (field_screen_effect.c), `Task_ExitDoor` |
 | Corde Sortie | le joueur tourne de plus en plus vite, l'écran s'éteint ; à l'arrivée, il tourne en clignotant | il tourne, puis s'envole hors de l'écran ; à l'arrivée, il redescend du haut de l'écran en tournant | `SpinObjectEvent`, `WarpOutObjectEventUpwards`, `WarpInObjectEventDownwards` (field_effect.c) |
 | Surf, le Pokémon qui porte le joueur | monte et descend toutes les 4 / 8 images | 2× plus lent | `CreateBobbingEffect` (field_effect_helpers.c) |
 | **Pêche, la touche** | « Oh! Ça mord! », puis A à temps (la SUPER CANNE peut demander plusieurs fois) | pas de réaction : le Pokémon est ferré directement (« Un POKéMON a mordu! ») | `Fishing7` (field_player_avatar.c) |
 | Pêche, les points avant la touche | un point toutes les 8 images ; A arrête la pêche | un point toutes les 12 images, A sans effet | `Fishing5` (field_player_avatar.c) |
 | Pêche, ferrer | VENTOUSE ou GLUE en tête : touche plus souvent | aucun talent ne compte | `Fishing6` (field_player_avatar.c) |
+| FLASH dans une grotte sombre | un grand cercle de lumière autour du joueur | toute la grotte éclairée | `SetDefaultFlashLevel` (overworld.c) |
 | Poison sur le terrain (tous les 4 pas) | mosaïque jusqu'à 10, +2 puis -2 (10 images) | jusqu'à 6, +2 puis -1 (9 images, REVISION ≥ 0xA) | `Task_FieldPoisonEffect` (fldeff_poison.c), `AdjustBgMosaic` |
 | Sons (voir CONNAISSANCE-JEU.md, « Sons de Kanto ») | instruments HQ, batterie complète ; jingles d'Émeraude | samples à 13 kHz ; fanfares du Casino +10 %, évolution, carte retournée | banque de sons de RF |
