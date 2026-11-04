@@ -1,4 +1,5 @@
-# Cartes de dresseur des deux régions (2026-11-03, docs/A-TESTER.md « Carte dresseur » ; trainer_card.c, sOwnCardKanto) :
+# Cartes de dresseur des deux régions (2026-11-03, docs/A-TESTER.md « Carte dresseur » ; trainer_card.c d'Émeraude et,
+# depuis le 2026-11-04, kanto_trainer_card.c = trainer_card.c de RF pour celle de Kanto) :
 # - à Hoenn, la carte d'Émeraude s'ouvre d'abord, avec les badges de Hoenn ; SELECT : la carte de Kanto (RF), badges
 #   de Kanto ;
 # - à Kanto, la carte de Kanto d'abord ; SELECT : celle de Hoenn ;

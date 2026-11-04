@@ -19,6 +19,7 @@
 #include "strings.h"
 #include "string_util.h"
 #include "trainer_card.h"
+#include "kanto_trainer_card.h"
 #include "gpu_regs.h"
 #include "international_string_util.h"
 #include "pokedex.h"
@@ -361,13 +362,10 @@ static void CB2_TrainerCard(void)
     UpdatePaletteFade();
 }
 
-// PokemonNative3G : deux cartes pour le joueur. Carte de Hoenn (Émeraude, badges de Hoenn) et carte
-// de Kanto (style Rouge Feu, badges de Kanto). À l'ouverture : celle de la région de la carte courante ;
-// SELECT passe à l'autre.
-EWRAM_DATA static bool8 sOwnCardKanto = FALSE;
-EWRAM_DATA static bool8 sReopenOwnCard = FALSE;
-
-static void ShowPlayerTrainerCard_(void (*callback)(void));
+// PokemonNative3G : deux cartes pour le joueur. Carte de Hoenn (celle-ci, Émeraude, badges de Hoenn) et carte de Kanto
+// (kanto_trainer_card.c : trainer_card.c de Rouge Feu, badges de Kanto, depuis le 2026-11-04). À l'ouverture : celle
+// de la région de la carte courante ; SELECT passe à l'autre.
+EWRAM_DATA static bool8 sShowKantoCard = FALSE;
 
 static void CloseTrainerCard(u8 taskId)
 {
@@ -379,10 +377,10 @@ static void CloseTrainerCard(u8 taskId)
 #ifdef PORTABLE
     SetVBlankHBlankCallbacksToNull(); // UB: fixes use after free of sData in VBlank callback
 #endif
-    if (sReopenOwnCard)
+    if (sShowKantoCard)
     {
-        sReopenOwnCard = FALSE;
-        ShowPlayerTrainerCard_(callback);
+        sShowKantoCard = FALSE;
+        Kanto_ShowPlayerTrainerCard(callback);
     }
 }
 
@@ -470,10 +468,9 @@ static void Task_TrainerCard(u8 taskId)
             PlaySE(SE_RG_CARD_FLIP);
             sData->mainState = STATE_WAIT_FLIP_TO_BACK;
         }
-        else if (JOY_NEW(SELECT_BUTTON) && !sData->isLink) // PokemonNative3G : autre région
+        else if (JOY_NEW(SELECT_BUTTON) && !sData->isLink) // PokemonNative3G : carte de Kanto
         {
-            sOwnCardKanto = !sOwnCardKanto;
-            sReopenOwnCard = TRUE;
+            sShowKantoCard = TRUE;
             PlaySE(SE_RG_CARD_FLIP);
             BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, sData->blendColor);
             sData->mainState = STATE_CLOSE_CARD;
@@ -791,77 +788,10 @@ static void TrainerCard_GenerateCardForPlayer(struct TrainerCard *trainerCard)
     memset(trainerCard, 0, sizeof(struct TrainerCard));
     trainerCard->version = GAME_VERSION;
     SetPlayerCardData(trainerCard, CARD_TYPE_EMERALD);
-    if (sOwnCardKanto)
-        trainerCard->version = VERSION_FIRE_RED; // carte de Kanto : style Rouge Feu
     trainerCard->hasAllFrontierSymbols = HasAllFrontierSymbols();
     trainerCard->frontierBP = gSaveBlock2Ptr->frontier.cardBattlePoints;
     if (trainerCard->hasAllFrontierSymbols)
         trainerCard->stars++;
-
-    if (sOwnCardKanto)
-    {
-        // PokemonNative3G : la carte de Kanto est celle de RF (TrainerCard_GenerateCardForLinkPlayer et GetCaughtMonsCount
-        // de RF) : étoiles de RF, autocollants de l'homme de l'Île 4, icônes de la photo. Les champs de RF ont leur place
-        // dans la structure d'Émeraude (berryCrushPoints = linkPoints.berryCrush), comme une carte de RF reçue en link.
-        u32 berriesPicked, jumpsInRow, playTime;
-
-        // Compteurs du Panthéon de Kanto (séparés de ceux de Hoenn, décision du 2026-11-03) : la date d'entrée au
-        // Panthéon de Kanto, comme SetPlayerCardData le fait avec ceux de Hoenn
-        playTime = GetGameStat(GAME_STAT_KANTO_FIRST_HOF_PLAY_TIME);
-        if (!GetGameStat(GAME_STAT_KANTO_ENTERED_HOF))
-            playTime = 0;
-        trainerCard->hofDebutHours = playTime >> 16;
-        trainerCard->hofDebutMinutes = (playTime >> 8) & 0xFF;
-        trainerCard->hofDebutSeconds = playTime & 0xFF;
-        if ((playTime >> 16) > 999)
-        {
-            trainerCard->hofDebutHours = 999;
-            trainerCard->hofDebutMinutes = 59;
-            trainerCard->hofDebutSeconds = 59;
-        }
-
-        if (IsNationalPokedexEnabled())
-            trainerCard->caughtMonsCount = GetNationalPokedexCount(FLAG_GET_CAUGHT);
-        else
-            trainerCard->caughtMonsCount = GetKantoPokedexCount(FLAG_GET_CAUGHT);
-
-        trainerCard->hasAllFrontierSymbols = FALSE;
-        trainerCard->frontierBP = 0;
-        trainerCard->stars = 0;
-        if (trainerCard->hofDebutHours != 0 || trainerCard->hofDebutMinutes != 0 || trainerCard->hofDebutSeconds != 0)
-            trainerCard->stars = 1;
-
-        trainerCard->caughtAllHoenn = HasAllKantoMons();
-        berriesPicked = gSaveBlock2Ptr->berryPick.berriesPicked;
-        jumpsInRow = gSaveBlock2Ptr->pokeJump.jumpsInRow;
-
-        trainerCard->linkPoints.berryCrush = GetCappedGameStat(GAME_STAT_PLAYED_BERRY_CRUSH, 0xFFFF); // GAME_STAT_BERRY_CRUSH_POINTS de RF (51)
-        trainerCard->unionRoomNum = GetCappedGameStat(GAME_STAT_NUM_UNION_ROOM_BATTLES, 0xFFFF);
-        trainerCard->shouldDrawStickers = TRUE;
-
-        if (trainerCard->caughtAllHoenn)
-            trainerCard->stars++;
-
-        if (HasAllMons())
-            trainerCard->stars++;
-
-        if (berriesPicked >= 200 && jumpsInRow >= 200)
-            trainerCard->stars++;
-
-        trainerCard->stickers[0] = VarGet(VAR_KANTO_HOF_BRAG_STATE);
-        trainerCard->stickers[1] = VarGet(VAR_KANTO_EGG_BRAG_STATE);
-        trainerCard->stickers[2] = VarGet(VAR_KANTO_LINK_WIN_BRAG_STATE);
-
-        trainerCard->monIconTint = VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_TINT_IDX);
-
-        // MailSpeciesToIconSpecies de RF = GetIconSpeciesNoPersonality d'Émeraude
-        trainerCard->monSpecies[0] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_1));
-        trainerCard->monSpecies[1] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_2));
-        trainerCard->monSpecies[2] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_3));
-        trainerCard->monSpecies[3] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_4));
-        trainerCard->monSpecies[4] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_5));
-        trainerCard->monSpecies[5] = GetIconSpeciesNoPersonality(VarGet(VAR_KANTO_TRAINER_CARD_MON_ICON_6));
-    }
 
     if (trainerCard->gender == FEMALE)
         trainerCard->unionRoomClass = gUnionRoomFacilityClasses[(trainerCard->trainerId % NUM_UNION_ROOM_CLASSES) + NUM_UNION_ROOM_CLASSES];
@@ -935,15 +865,6 @@ static void SetDataFromTrainerCard(void)
     if (sData->trainerCard.battleTowerWins || sData->trainerCard.battleTowerStraightWins)
         sData->hasBattleTowerWins++;
 
-    if (!sData->isLink && sOwnCardKanto) // carte de Kanto : badges de Kanto
-    {
-        for (i = 0, badgeFlag = FLAG_KANTO_BADGE01_GET; badgeFlag < FLAG_KANTO_BADGE01_GET + NUM_BADGES; badgeFlag++, i++)
-        {
-            if (FlagGet(badgeFlag))
-                sData->badgeCount[i]++;
-        }
-        return;
-    }
     for (i = 0, badgeFlag = FLAG_BADGE01_GET; badgeFlag < FLAG_BADGE01_GET + NUM_BADGES; badgeFlag++, i++)
     {
         if (FlagGet(badgeFlag))
@@ -1878,12 +1799,16 @@ static bool8 Task_EndCardFlip(struct Task *task)
 
 void ShowPlayerTrainerCard(void (*callback)(void))
 {
-    sOwnCardKanto = Fusion_IsInKanto();
-    sReopenOwnCard = FALSE;
-    ShowPlayerTrainerCard_(callback);
+    sShowKantoCard = FALSE;
+    // PokemonNative3G : à Kanto, la carte de RF (kanto_trainer_card.c)
+    if (Fusion_IsInKanto())
+        Kanto_ShowPlayerTrainerCard(callback);
+    else
+        ShowHoennPlayerTrainerCard(callback);
 }
 
-static void ShowPlayerTrainerCard_(void (*callback)(void))
+// PokemonNative3G : la carte de Hoenn (ShowPlayerTrainerCard d'Émeraude), aussi ouverte par SELECT depuis celle de Kanto
+void ShowHoennPlayerTrainerCard(void (*callback)(void))
 {
     sData = AllocZeroed(sizeof(*sData));
     sData->callback2 = callback;
