@@ -1490,6 +1490,10 @@ bool8 ScrCmd_showmonpic(struct ScriptContext *ctx)
     u8 y = ScriptReadByte(ctx);
 
     ScriptMenu_ShowPokemonPic(species, x, y);
+    // PokemonNative3G : à Kanto, le showmonpic de RF fait aussi crier le Pokémon (ses scripts n'ont pas de
+    // playmoncry : statues de Parmanie, CHEN, Dojo de Safrania, photos de BILL, ARTIKODIN)
+    if (Fusion_IsInKanto())
+        PlayCry_Script(species, CRY_MODE_NORMAL);
     return FALSE;
 }
 
