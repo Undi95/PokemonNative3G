@@ -10,6 +10,12 @@
   dessinées à la main sur toutes les poses du joueur (course, vélos et figures du Vélo Cross, surf, Capacité, pêche,
   plongée, arrosoir, décoration). La monture du SURF et l'oiseau du VOL gardent les couleurs d'Émeraude ; pas de
   pose du Cherche VS à Hoenn, comme Brice et Flora.
+- À Hoenn, l'image d'aperçu de Rouge Feu s'affiche aussi à l'entrée de 13 lieux, avec leur nom : Bois Clémenti, Parc
+  Safari, Tunnel Mérazon, Grotte Granite, Site Météore, Chemin Ardent, Grotte Tréfonds, Grotte Origine, Route
+  Victoire, Grotte Zénith, Grotte Métamo, Grotte Atelier et Grotte Terra. Ce sont des images de Rouge Feu qui ne
+  montrent qu'une forêt, une savane ou une entrée de grotte. Les lieux uniques (Mont Mémoria, Pilier Céleste, planques,
+  Épave…) n'en ont pas. Comme à Kanto, l'aperçu dure plus longtemps à la première visite, et B l'abrège dans une
+  grotte.
 - Sac sans limite : les poches Objets, Objets rares et Balls ne sont plus jamais pleines (au-delà de 99, un objet
   continue sur une nouvelle ligne). Les CT et les baies gardent une seule ligne chacune (99 CT, 999 baies), pour la
   boîte à CT et le sac à baies de Rouge Feu. Les sauvegardes existantes sont reprises telles quelles.
