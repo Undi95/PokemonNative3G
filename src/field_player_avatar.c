@@ -1253,6 +1253,18 @@ static void PlayCollisionSoundIfNotFacingWarp(u8 direction)
 
     if (!sArrowWarpMetatileBehaviorChecks[direction - 1](metatileBehavior))
     {
+        // PokemonNative3G : PlayCollisionSoundIfNotFacingWarp de RF : pas de choc sur un escalier latéral de Kanto
+        // pris par le côté (il mène à l'autre étage)
+        if (direction == DIR_WEST)
+        {
+            if (MetatileBehavior_IsDirectionalUpLeftStairWarp(metatileBehavior) || MetatileBehavior_IsDirectionalDownLeftStairWarp(metatileBehavior))
+                return;
+        }
+        if (direction == DIR_EAST)
+        {
+            if (MetatileBehavior_IsDirectionalUpRightStairWarp(metatileBehavior) || MetatileBehavior_IsDirectionalDownRightStairWarp(metatileBehavior))
+                return;
+        }
         // Check if walking up into a door
         if (direction == DIR_NORTH)
         {
