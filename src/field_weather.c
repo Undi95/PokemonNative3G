@@ -6,6 +6,7 @@
 #include "event_object_movement.h"
 #include "field_weather.h"
 #include "fusion_region.h"
+#include "kanto_map_preview_screen.h"
 #include "main.h"
 #include "menu.h"
 #include "palette.h"
@@ -69,10 +70,12 @@ static const u8 *sPaletteColorMapTypes;
 // PokemonNative3G : à Kanto, la palette BG 13 (celle du panneau du nom de lieu de RF, kanto_map_name_popup.c) n'est
 // pas touchée par la météo, comme dans RF (sBasePaletteGammaTypes de field_weather.c de RF : BG 13 = GAMMA_NONE ; la
 // seule différence avec la table d'Émeraude, qui l'assombrit). Sinon le panneau est gris dans les chambres de Tanoby
-// encore fermées (WEATHER_SHADE d'EventScript_TryDarkenRuins).
+// encore fermées (WEATHER_SHADE d'EventScript_TryDarkenRuins). À Hoenn aussi, tant que l'aperçu de forêt de RF est à
+// l'écran (sur les palettes BG 13-14, kanto_map_preview_screen.c) : sinon celui du Bois Clémenti (WEATHER_SHADE) est
+// terni. ForestMapPreviewScreenIsRunning de RF rend FALSE quand l'aperçu est en cours.
 static u8 GetPaletteColorMapType(u16 palIndex)
 {
-    if (palIndex == 13 && Fusion_IsInKanto())
+    if (palIndex == 13 && (Fusion_IsInKanto() || !ForestMapPreviewScreenIsRunning()))
         return COLOR_MAP_NONE;
     return sPaletteColorMapTypes[palIndex];
 }
