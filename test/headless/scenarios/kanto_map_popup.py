@@ -29,4 +29,8 @@ def play(game):
     # (même section), le panneau avec l'étage
     arrive(game, "RocketHideout_B1F", 20, 10, "REPAIRE ROCKET", "apercu repaire")
     arrive(game, "RocketHideout_B2F", 20, 10, "2 SS", "repaire 2 sous-sol")
+    # Chambre de Tanoby encore fermée : la carte est assombrie (WEATHER_SHADE), le panneau reste blanc comme dans RF
+    # (la palette BG 13 échappe à la météo à Kanto, field_weather.c)
+    game.flag("FLAG_KANTO_SYS_UNLOCKED_TANOBY_RUINS", 0)
+    arrive(game, "SevenIsland_TanobyRuins_MoneanChamber", 11, 14, "CHAMBRE", "chambre tanoby fermee")
     arrive(game, "OldaleTown", 5, 10, "ROSYERES", "ville hoenn")

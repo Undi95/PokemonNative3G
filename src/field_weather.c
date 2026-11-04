@@ -5,6 +5,7 @@
 #include "util.h"
 #include "event_object_movement.h"
 #include "field_weather.h"
+#include "fusion_region.h"
 #include "main.h"
 #include "menu.h"
 #include "palette.h"
@@ -64,6 +65,17 @@ EWRAM_DATA struct Weather gWeather = {0};
 EWRAM_DATA static u8 ALIGNED(2) sFieldEffectPaletteColorMapTypes[32] = {0};
 
 static const u8 *sPaletteColorMapTypes;
+
+// PokemonNative3G : à Kanto, la palette BG 13 (celle du panneau du nom de lieu de RF, kanto_map_name_popup.c) n'est
+// pas touchée par la météo, comme dans RF (sBasePaletteGammaTypes de field_weather.c de RF : BG 13 = GAMMA_NONE ; la
+// seule différence avec la table d'Émeraude, qui l'assombrit). Sinon le panneau est gris dans les chambres de Tanoby
+// encore fermées (WEATHER_SHADE d'EventScript_TryDarkenRuins).
+static u8 GetPaletteColorMapType(u16 palIndex)
+{
+    if (palIndex == 13 && Fusion_IsInKanto())
+        return COLOR_MAP_NONE;
+    return sPaletteColorMapTypes[palIndex];
+}
 
 // The drought weather effect uses a precalculated color lookup table. Presumably this
 // is because the underlying color shift calculation is slow.
@@ -483,7 +495,7 @@ static void ApplyColorMap(u8 startPalIndex, u8 numPalettes, s8 colorMapIndex)
         // Loop through the specified palette range and apply necessary color maps.
         while (curPalIndex < numPalettes)
         {
-            if (sPaletteColorMapTypes[curPalIndex] == COLOR_MAP_NONE)
+            if (GetPaletteColorMapType(curPalIndex) == COLOR_MAP_NONE)
             {
                 // No palette change.
                 CpuFastCopy(&gPlttBufferUnfaded[palOffset], &gPlttBufferFaded[palOffset], PLTT_SIZE_4BPP);
@@ -493,7 +505,7 @@ static void ApplyColorMap(u8 startPalIndex, u8 numPalettes, s8 colorMapIndex)
             {
                 u8 r, g, b;
 
-                if (sPaletteColorMapTypes[curPalIndex] == COLOR_MAP_CONTRAST || curPalIndex - 16 == gWeatherPtr->contrastColorMapSpritePalIndex)
+                if (GetPaletteColorMapType(curPalIndex) == COLOR_MAP_CONTRAST || curPalIndex - 16 == gWeatherPtr->contrastColorMapSpritePalIndex)
                     colorMap = gWeatherPtr->contrastColorMaps[colorMapIndex];
                 else
                     colorMap = gWeatherPtr->darkenedContrastColorMaps[colorMapIndex];
@@ -522,7 +534,7 @@ static void ApplyColorMap(u8 startPalIndex, u8 numPalettes, s8 colorMapIndex)
 
         while (curPalIndex < numPalettes)
         {
-            if (sPaletteColorMapTypes[curPalIndex] == COLOR_MAP_NONE)
+            if (GetPaletteColorMapType(curPalIndex) == COLOR_MAP_NONE)
             {
                 // No palette change.
                 CpuFastCopy(&gPlttBufferUnfaded[palOffset], &gPlttBufferFaded[palOffset], PLTT_SIZE_4BPP);
@@ -564,7 +576,7 @@ static void ApplyColorMapWithBlend(u8 startPalIndex, u8 numPalettes, s8 colorMap
 
     while (curPalIndex < numPalettes)
     {
-        if (sPaletteColorMapTypes[curPalIndex] == COLOR_MAP_NONE)
+        if (GetPaletteColorMapType(curPalIndex) == COLOR_MAP_NONE)
         {
             // No color map. Simply blend the colors.
             BlendPalette(palOffset, 16, blendCoeff, blendColor);
@@ -574,7 +586,7 @@ static void ApplyColorMapWithBlend(u8 startPalIndex, u8 numPalettes, s8 colorMap
         {
             u8 *colorMap;
 
-            if (sPaletteColorMapTypes[curPalIndex] == COLOR_MAP_DARK_CONTRAST)
+            if (GetPaletteColorMapType(curPalIndex) == COLOR_MAP_DARK_CONTRAST)
                 colorMap = gWeatherPtr->darkenedContrastColorMaps[colorMapIndex];
             else
                 colorMap = gWeatherPtr->contrastColorMaps[colorMapIndex];
@@ -616,7 +628,7 @@ static void ApplyDroughtColorMapWithBlend(s8 colorMapIndex, u8 blendCoeff, u16 b
     palOffset = 0;
     for (curPalIndex = 0; curPalIndex < 32; curPalIndex++)
     {
-        if (sPaletteColorMapTypes[curPalIndex] == COLOR_MAP_NONE)
+        if (GetPaletteColorMapType(curPalIndex) == COLOR_MAP_NONE)
         {
             // No color map. Simply blend the colors.
             BlendPalette(palOffset, 16, blendCoeff, blendColor);
