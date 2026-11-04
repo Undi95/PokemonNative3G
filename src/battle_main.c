@@ -5033,6 +5033,8 @@ static void HandleEndTurn_BattleWon(void)
 
         if (gTrainerBattleOpponent_A == TRAINER_FRONTIER_BRAIN)
             PlayBGM(MUS_VICTORY_GYM_LEADER);
+        else if (gBattleTrainerTowerFrlg) // PokemonNative3G : Tour des Dresseurs de Kanto, MUS_VICTORY_TRAINER de RF
+            PlayBGM(MUS_RG_VICTORY_TRAINER);
         else
             PlayBGM(MUS_VICTORY_TRAINER);
     }

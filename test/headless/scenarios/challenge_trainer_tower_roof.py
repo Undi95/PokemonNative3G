@@ -60,12 +60,17 @@ def play(game):
     game.press("RIGHT", 20)
     wait_until(game, lambda s: s.free and s.map_name == "TrainerTower_1F", limit=600)
     results = []
+    sounds = len(game.sounds)
     for n in range(1, 9):
         game.heal()                                     # raccourci de test : l'équipe soignée à chaque étage
         results.append(floor(game, n))
         game.note(f"ÉTAGE {n} : {'gagné' if results[-1] else 'sans combat gagné'} ; maintenant {game.state.map_name}")
     expect_map(game, "TrainerTower_Roof")
     expect(game, all(results), f"8 étages gagnés ({results})")
+    # Musique de victoire de RF (MUS_VICTORY_TRAINER de RF = MUS_RG_VICTORY_TRAINER, 2026-11-04), pas celle d'Émeraude
+    played = [s for _, s in game.sounds[sounds:]]
+    expect(game, "MUS_RG_VICTORY_TRAINER" in played and "MUS_VICTORY_TRAINER" not in played,
+           f"musique de victoire de RF ({sorted(set(s for s in played if 'VICTORY' in s))})")
 
     # Le toit : le propriétaire (9, 7), parlé depuis le dessous
     since = mark(game)
