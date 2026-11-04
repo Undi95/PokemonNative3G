@@ -14,6 +14,9 @@
 - Pêcheur de la Route 12 et maison de l'Île 6 (records de MAGICARPE et de SCARHINO) : « même taille que la dernière
   fois » est de nouveau dit, l'ancien record s'affiche, et le record de départ n'est plus de 90 cm.
 - Tutoriel de capture de Timmy : son sac ne montre plus les objets du joueur, qui ne gagne plus une POTION au passage.
+- Pokédex de Rouge Feu (option POKéDEX = KANTO) : après une capture, le Pokémon s'affiche de nouveau sous la question
+  du surnom (l'écran restait vide).
+- Parc Safari : avec le personnage Red / Leaf (option PERSO), c'est bien lui qu'on voit de dos, et plus Brice / Flora.
 - Nouvelle partie : les curseurs du sac, de la boîte à CT et du sac à baies de Rouge Feu repartent du haut.
 - Nouvelle partie par-dessus une sauvegarde avec la boîte de dialogue KANTO : l'intro du Prof. Seko avait un cadre
   cassé et un texte bleu, et la partie démarrait avec le personnage de l'ancienne partie (Red à Hoenn). Les options
