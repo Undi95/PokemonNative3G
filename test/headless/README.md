@@ -75,7 +75,9 @@ scenario unless `anomalies_known.txt` lists it. `ANOMALY_SHOTS=1` also takes a s
 after each one (`shots/anomalie_FRAME_N.ppm`). `TEST_FONT=0` or `1` sets the POLICE option
 (Hoenn or Kanto letters) for the whole run: `TEST_FONT=1 suite.py BINARY --out DIR` checks
 for anomalies with the other font (the screen references are made with the default,
-Hoenn, so they don't match then). Each text event also has its color (`game.text_colors`).
+Hoenn, so `check_screen` only takes the screen then, without comparing it: a difference
+would stop the scenario at its first screen). Each text event also has its color
+(`game.text_colors`).
 
 Between frames, a scenario can also run test commands (lines starting with `!` in the
 input, so a run can still be replayed from `input.txt`), to set a scenario up quickly or

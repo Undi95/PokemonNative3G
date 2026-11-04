@@ -52,7 +52,7 @@ montrent).
 
 | État | Ce que c'est | Dernier passage (2026-11-04) |
 |---|---|---|
-| `debut` | sauvegarde de début de partie de chaque région | 811 cartes, 4 565 interactions, 827 combats, 0 erreur de carte, 0 anomalie, 0 texte suspect (aussi avec DIALOGUE = KANTO) |
+| `debut` | sauvegarde de début de partie de chaque région | 811 cartes, 4 565 interactions, 823 combats, 0 erreur de carte, 0 anomalie, 0 texte suspect (aussi avec DIALOGUE = KANTO) ; refait après la correction du VBlank en trop : même rapport, à 4 combats près (dresseurs qui repèrent le joueur en chemin, selon le hasard) |
 | `champion` | Hoenn fini (`FLAG_SYS_GAME_CLEAR`, 8 badges, Pokédex, PokéNav) : l'arrivée réelle à Kanto, le ferry ne part qu'après la Ligue de Hoenn | 811 cartes, 0 erreur de carte, 0 anomalie |
 | `fin` | les deux Ligues finies, comme le menu DEBUG (« Deux Ligues finies », POKé MONTURE + badges, passes, Pokédex, objets) | 811 cartes, 4 564 interactions, 859 combats, 0 erreur de carte, 0 anomalie |
 | `histoire` | `fin` + toute l'histoire des deux régions (`scripts.histoire 2` : drapeaux et variables d'avancement déduits des scripts, sans sauvegarde) | 811 cartes, 4 414 interactions, 781 combats, 0 erreur de carte, 0 anomalie, 0 texte suspect |
@@ -62,7 +62,7 @@ pas ») : MARC, le garçon de Clémenti-Ville, la pente de la Piste Cyclable, et
 une fois achetée (elle n'affiche plus rien, on entre directement). La grille (`matrix.py`, 18 jeux, 25 écrans depuis
 le 2026-11-04 : évolution et apprentissage, capture et surnom, combat double, Safari, SPECTRE, PC des objets, boîte
 aux lettres, carte murale, Panthéon et crédits, nouvelle partie par-dessus la sauvegarde en plus des 15 d'avant) :
-0 erreur, 0 anomalie ; planches relues le 2026-11-04. Trouvé en les relisant : avec POKéDEX = KANTO, l'écran vide
+0 erreur, 0 anomalie ; planches relues le 2026-11-04, et de nouveau après la correction du VBlank en trop. Trouvé en les relisant : avec POKéDEX = KANTO, l'écran vide
 sous « Donner un surnom ? » après une capture (l'image du POKéMON de RF manquait, `Cmd_displaydexinfo`) ; au Parc
 Safari, le dos de BRICE / FLORA même avec PERSO = RED / LEAF (`GetPlayerTrainerBackPicId`).
 

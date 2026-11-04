@@ -532,6 +532,11 @@ def check_screen(game, name, max_pixels=0):
     if used[name] > 1:
         name = f"{name}_{used[name]}"
     shot = Image.open(game.shot(name)).convert("RGB")
+    if os.environ.get("TEST_FONT"):
+        # La police imposée change les lettres de l'écran : les références sont faites avec celle des sauvegardes. Ne
+        # pas comparer, sinon le premier écran arrête le scénario et tout ce qui suit n'est plus joué dans cette police
+        game.note(f"écran {name} non comparé : police imposée (TEST_FONT={os.environ['TEST_FONT']})")
+        return
     ref = os.path.join(REFS_DIR, name + ".png")
     inputs_path = os.path.join(REFS_DIR, name + ".inputs")
     steps = [(f, game.step_names.get(i, b)) for i, (f, b) in enumerate(game.steps)]
