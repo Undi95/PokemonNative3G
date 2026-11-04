@@ -57,16 +57,12 @@ prefabs.json
 /gamecontrollerdb.txt
 __pycache__/
 
-# Claude Code: .claude/ is ignored except the checked-in review agents, the
-# code-audit skill and the shared settings (the audit loop's Stop hook)
-.claude/*
-!.claude/agents/
-.claude/agents/*
-!.claude/agents/review/
-!.claude/skills/
-.claude/skills/*
-!.claude/skills/code-audit/
-!.claude/settings.json
+# Claude Code (l'assistant) : sa configuration, ses agents, ses skills et ses consignes restent sur le poste, hors
+# du dépôt (demande user 2026-11-04, « GitHub propre »)
+.claude/
+/CLAUDE.md
+# Sortie du scénario kanto_warps (KW_MARKS)
+/marks.json
 build/
 out/
 out-alt/
