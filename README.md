@@ -11,6 +11,12 @@ sans émulateur. Objectif à terme : intégrer Kanto (Rouge Feu) dans le moteur 
   (branche `vanilla`), elle-même issue de [NTx86/pokeemerald-sdl2pc](https://github.com/NTx86/pokeemerald-sdl2pc).
 - Les deux partent du même commit pret (`83df84e40`) : la fusion est un vrai merge git.
 
+## Crédits graphiques
+
+- **Poffin_Case** (PokéCommunity, pack « FRHoenn ») : Brice et Flora dans leur tenue d'Émeraude, dessinés en style
+  Rouge Feu (toutes les poses), et les poses d'Émeraude de Red et Leaf en style Rouge Feu (Vélo Cross, arrosoir,
+  plongée, décoration). C'est le joueur à Kanto. Importés par `tools/sprites_joueur_rf.py`.
+
 ## Compiler (Docker, rien à installer d'autre)
 
 ```

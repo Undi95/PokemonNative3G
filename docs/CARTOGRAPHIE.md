@@ -201,6 +201,7 @@ Les choix HOENN/KANTO déjà faits sont dans [FUSION-OPTIONS.md](FUSION-OPTIONS.
 `src/kanto_*.c` (43 fichiers : copies de RF, cf. colonne « copie » de `carto/sources.md`), `battle_controller_old_man.c`,
 `debug_menu.c`, `kanto_save.c`, `kanto_specials_stubs.c`, `fusion_events.c` (événements propres à la fusion : œufs de
 starters…, scripts dans `data/scripts/fusion_*.inc`). Outils d'import : `tools/kanto/*.py`, `tools/import_rf_mon_pics.py`,
-`tools/redleaf_sprites.py`, `tools/item_doubles.py`, `tools/cartographie.py`, `tools/link_cable.py` (CÂBLE LINK), `tools/poke_monture.py` (POKé MONTURE), `tools/exclusifs.py`
+`tools/sprites_joueur_rf.py` (le joueur en style Rouge Feu, pack de Poffin_Case), `tools/pixel_grille.py` (dessiner un
+sprite pixel par pixel en texte), `tools/item_doubles.py`, `tools/cartographie.py`, `tools/link_cable.py` (CÂBLE LINK), `tools/poke_monture.py` (POKé MONTURE), `tools/exclusifs.py`
 (exclusivités de version dans les tables sauvages, à relancer après `tools/kanto/gen_wild.py`), `tools/obtenables.py`
 (espèces obtenables / manquantes).

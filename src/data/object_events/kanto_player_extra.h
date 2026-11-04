@@ -1,6 +1,8 @@
-// PokemonNative3G : sprites de Red/Leaf absents de Rouge Feu (Vélo Cross, arrosoir, plongée),
-// faits à partir de ceux de Brendan/May par tools/redleaf_sprites.py. Mêmes images et animations
-// que Brendan/May, dans la palette du joueur de Rouge Feu (la plongée garde la sienne).
+// PokemonNative3G : sprites de Red/Leaf absents de Rouge Feu (Vélo Cross, arrosoir, plongée, décoration), en style
+// Rouge Feu, de Poffin_Case (pack « FRHoenn », PokéCommunity ; tools/sprites_joueur_rf.py). Les 9 premières images
+// du Vélo Cross sont le vélo de Rouge Feu. Mêmes images et animations que Brendan/May d'Émeraude (arrosoir et
+// plongée : les 9 images de leur table, déroulées), dans la palette du joueur de Rouge Feu (la plongée garde la
+// sienne).
 
 const u16 gKantoObjectEventPic_RedAcroBike[] = INCGFX_U16("graphics/kanto/object_events/pics/people/red_acro_bike.png", ".4bpp", "-mwidth 4 -mheight 4");
 static const struct SpriteFrameImage sKantoPicTable_RedAcroBike[] = {
@@ -55,14 +57,14 @@ const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_RedAcroBike =
 const u16 gKantoObjectEventPic_RedWatering[] = INCGFX_U16("graphics/kanto/object_events/pics/people/red_watering.png", ".4bpp", "-mwidth 4 -mheight 4");
 static const struct SpriteFrameImage sKantoPicTable_RedWatering[] = {
     overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 0),
+    overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 1),
     overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 2),
+    overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 3),
     overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 4),
-    overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 1),
-    overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 1),
-    overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 3),
-    overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 3),
     overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 5),
-    overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 5),
+    overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 6),
+    overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 7),
+    overworld_frame(gKantoObjectEventPic_RedWatering, 4, 4, 8),
 };
 
 const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_RedWatering = {
@@ -89,12 +91,12 @@ static const struct SpriteFrameImage sKantoPicTable_RedUnderwater[] = {
     overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 0),
     overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 1),
     overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 2),
-    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 0),
-    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 0),
-    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 1),
-    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 1),
-    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 2),
-    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 2),
+    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 3),
+    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 4),
+    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 5),
+    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 6),
+    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 7),
+    overworld_frame(gKantoObjectEventPic_RedUnderwater, 4, 4, 8),
 };
 
 const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_RedUnderwater = {
@@ -169,14 +171,14 @@ const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_GreenAcroBike
 const u16 gKantoObjectEventPic_GreenWatering[] = INCGFX_U16("graphics/kanto/object_events/pics/people/green_watering.png", ".4bpp", "-mwidth 4 -mheight 4");
 static const struct SpriteFrameImage sKantoPicTable_GreenWatering[] = {
     overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 0),
+    overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 1),
     overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 2),
+    overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 3),
     overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 4),
-    overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 1),
-    overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 1),
-    overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 3),
-    overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 3),
     overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 5),
-    overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 5),
+    overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 6),
+    overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 7),
+    overworld_frame(gKantoObjectEventPic_GreenWatering, 4, 4, 8),
 };
 
 const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_GreenWatering = {
@@ -203,12 +205,12 @@ static const struct SpriteFrameImage sKantoPicTable_GreenUnderwater[] = {
     overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 0),
     overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 1),
     overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 2),
-    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 0),
-    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 0),
-    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 1),
-    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 1),
-    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 2),
-    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 2),
+    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 3),
+    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 4),
+    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 5),
+    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 6),
+    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 7),
+    overworld_frame(gKantoObjectEventPic_GreenUnderwater, 4, 4, 8),
 };
 
 const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_GreenUnderwater = {

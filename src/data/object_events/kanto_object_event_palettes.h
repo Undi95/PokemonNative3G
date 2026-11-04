@@ -14,6 +14,11 @@
     {gKantoObjectEventPal_RSQuintyPlumpReflection, OBJ_EVENT_PAL_TAG_KANTO_RS_QUINTY_PLUMP_REFLECTION},
     {gKantoObjectEventPal_Player, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_GREEN},
     {gKantoObjectEventPal_PlayerReflection, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_GREEN_REFLECTION},
+    // PokemonNative3G : Brice et Flora en style Rouge Feu (kanto_player_brendan_may.h)
+    {gKantoObjectEventPal_Brendan, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_BRENDAN},
+    {gKantoObjectEventPal_BrendanReflection, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_BRENDAN_REFLECTION},
+    {gKantoObjectEventPal_May, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY},
+    {gKantoObjectEventPal_MayReflection, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY_REFLECTION},
     {gKantoObjectEventPal_Meteorite, OBJ_EVENT_PAL_TAG_KANTO_METEORITE},
     {gKantoObjectEventPal_SSAnne, OBJ_EVENT_PAL_TAG_KANTO_SS_ANNE},
     {gKantoObjectEventPal_Seagallop, OBJ_EVENT_PAL_TAG_KANTO_SEAGALLOP},

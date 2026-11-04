@@ -3,6 +3,9 @@
 ## Prochaine version
 
 ### Nouveautés
+- À Kanto, le joueur a son sprite de style Rouge Feu, quel que soit le personnage : Brice et Flora y gardent leur
+  tenue d'Émeraude, dessinés en style Rouge Feu par Poffin_Case (marche, course, vélos, figures du Vélo Cross, surf,
+  pêche, Cherche VS…). Ils peuvent aussi lever le Cherche VS à Kanto.
 - Sac sans limite : les poches Objets, Objets rares et Balls ne sont plus jamais pleines (au-delà de 99, un objet
   continue sur une nouvelle ligne). Les CT et les baies gardent une seule ligne chacune (99 CT, 999 baies), pour la
   boîte à CT et le sac à baies de Rouge Feu. Les sauvegardes existantes sont reprises telles quelles.
@@ -11,6 +14,8 @@
   le Câble Link et l'objet tenu sont gardés.
 
 ### Corrections
+- Red et Leaf sur le Vélo Cross (figures), avec l'arrosoir et sous l'eau : de vrais sprites de style Rouge Feu
+  (Poffin_Case) ; ce n'était qu'une tête de Rouge Feu posée sur le corps de Brice/Flora, le sac à dos coupé en deux.
 - PC et Android : chaque fois que le jeu attendait la fin d'une copie d'écran, il rejouait toute une interruption
   d'image de plus. Les chronomètres du MONT DRESSEURS, de la TOUR DRESSEURS et de la Piste Cyclable (Route 110)
   prenaient de l'avance pendant les chargements, et les tirages au hasard ne suivaient plus ceux de la cartouche.

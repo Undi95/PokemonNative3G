@@ -573,12 +573,29 @@ static const u16 sReflectionPaletteTags_KantoPlayer[] = {
     OBJ_EVENT_PAL_TAG_KANTO_PLAYER_RED_REFLECTION,
 };
 
+// PokemonNative3G : Brice et Flora en style Rouge Feu (à Kanto), leur reflet (kanto_player_brendan_may.h)
+static const u16 sReflectionPaletteTags_KantoBrendan[] = {
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_BRENDAN_REFLECTION,
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_BRENDAN_REFLECTION,
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_BRENDAN_REFLECTION,
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_BRENDAN_REFLECTION,
+};
+
+static const u16 sReflectionPaletteTags_KantoMay[] = {
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY_REFLECTION,
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY_REFLECTION,
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY_REFLECTION,
+    OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY_REFLECTION,
+};
+
 static const struct PairedPalettes sPlayerReflectionPaletteSets[] = {
     {OBJ_EVENT_PAL_TAG_BRENDAN,           sReflectionPaletteTags_Brendan},
     {OBJ_EVENT_PAL_TAG_MAY,               sReflectionPaletteTags_May},
     {OBJ_EVENT_PAL_TAG_PLAYER_UNDERWATER, sReflectionPaletteTags_PlayerUnderwater},
     {OBJ_EVENT_PAL_TAG_KANTO_PLAYER_RED,   sReflectionPaletteTags_KantoPlayer}, // PokemonNative3G : RF
     {OBJ_EVENT_PAL_TAG_KANTO_PLAYER_GREEN, sReflectionPaletteTags_KantoPlayer},
+    {OBJ_EVENT_PAL_TAG_KANTO_PLAYER_BRENDAN, sReflectionPaletteTags_KantoBrendan},
+    {OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY,     sReflectionPaletteTags_KantoMay},
     {OBJ_EVENT_PAL_TAG_NONE,              NULL},
 };
 
@@ -2090,8 +2107,8 @@ static void SetBerryTreeGraphics(struct ObjectEvent *objectEvent, struct Sprite 
     }
 }
 
-// Sprites de Rouge Feu équivalents à ceux du joueur d'Émeraude. Vélo Cross, arrosoir et plongée,
-// absents de Rouge Feu : src/data/object_events/kanto_player_extra.h
+// Sprites de Rouge Feu équivalents à ceux du joueur d'Émeraude. Vélo Cross, arrosoir, plongée et décoration,
+// absents de Rouge Feu : src/data/object_events/kanto_player_extra.h et kanto_player_brendan_may.h
 static u16 GetRedLeafGraphicsId(u16 graphicsId)
 {
     switch (graphicsId)
@@ -2104,6 +2121,7 @@ static u16 GetRedLeafGraphicsId(u16 graphicsId)
     case OBJ_EVENT_GFX_BRENDAN_SURFING:    return OBJ_EVENT_GFX_KANTO_RED_SURF;
     case OBJ_EVENT_GFX_BRENDAN_FIELD_MOVE: return OBJ_EVENT_GFX_KANTO_RED_FIELD_MOVE;
     case OBJ_EVENT_GFX_BRENDAN_FISHING:    return OBJ_EVENT_GFX_KANTO_RED_FISH;
+    case OBJ_EVENT_GFX_BRENDAN_DECORATING: return OBJ_EVENT_GFX_KANTO_RED_DECORATING;
     case OBJ_EVENT_GFX_MAY_NORMAL:         return OBJ_EVENT_GFX_KANTO_GREEN_NORMAL;
     case OBJ_EVENT_GFX_MAY_MACH_BIKE:      return OBJ_EVENT_GFX_KANTO_GREEN_BIKE;
     case OBJ_EVENT_GFX_MAY_ACRO_BIKE:      return OBJ_EVENT_GFX_KANTO_GREEN_ACRO_BIKE;
@@ -2112,8 +2130,49 @@ static u16 GetRedLeafGraphicsId(u16 graphicsId)
     case OBJ_EVENT_GFX_MAY_SURFING:        return OBJ_EVENT_GFX_KANTO_GREEN_SURF;
     case OBJ_EVENT_GFX_MAY_FIELD_MOVE:     return OBJ_EVENT_GFX_KANTO_GREEN_FIELD_MOVE;
     case OBJ_EVENT_GFX_MAY_FISHING:        return OBJ_EVENT_GFX_KANTO_GREEN_FISH;
+    case OBJ_EVENT_GFX_MAY_DECORATING:     return OBJ_EVENT_GFX_KANTO_GREEN_DECORATING;
     default:                               return graphicsId;
     }
+}
+
+// Brice et Flora en style Rouge Feu (à Kanto) : src/data/object_events/kanto_player_brendan_may.h
+static u16 GetBrendanMayKantoGraphicsId(u16 graphicsId)
+{
+    switch (graphicsId)
+    {
+    case OBJ_EVENT_GFX_BRENDAN_NORMAL:     return OBJ_EVENT_GFX_KANTO_BRENDAN_NORMAL;
+    case OBJ_EVENT_GFX_BRENDAN_MACH_BIKE:  return OBJ_EVENT_GFX_KANTO_BRENDAN_BIKE;
+    case OBJ_EVENT_GFX_BRENDAN_ACRO_BIKE:  return OBJ_EVENT_GFX_KANTO_BRENDAN_ACRO_BIKE;
+    case OBJ_EVENT_GFX_BRENDAN_WATERING:   return OBJ_EVENT_GFX_KANTO_BRENDAN_WATERING;
+    case OBJ_EVENT_GFX_BRENDAN_UNDERWATER: return OBJ_EVENT_GFX_KANTO_BRENDAN_UNDERWATER;
+    case OBJ_EVENT_GFX_BRENDAN_SURFING:    return OBJ_EVENT_GFX_KANTO_BRENDAN_SURF;
+    case OBJ_EVENT_GFX_BRENDAN_FIELD_MOVE: return OBJ_EVENT_GFX_KANTO_BRENDAN_FIELD_MOVE;
+    case OBJ_EVENT_GFX_BRENDAN_FISHING:    return OBJ_EVENT_GFX_KANTO_BRENDAN_FISH;
+    case OBJ_EVENT_GFX_BRENDAN_DECORATING: return OBJ_EVENT_GFX_KANTO_BRENDAN_DECORATING;
+    case OBJ_EVENT_GFX_MAY_NORMAL:         return OBJ_EVENT_GFX_KANTO_MAY_NORMAL;
+    case OBJ_EVENT_GFX_MAY_MACH_BIKE:      return OBJ_EVENT_GFX_KANTO_MAY_BIKE;
+    case OBJ_EVENT_GFX_MAY_ACRO_BIKE:      return OBJ_EVENT_GFX_KANTO_MAY_ACRO_BIKE;
+    case OBJ_EVENT_GFX_MAY_WATERING:       return OBJ_EVENT_GFX_KANTO_MAY_WATERING;
+    case OBJ_EVENT_GFX_MAY_UNDERWATER:     return OBJ_EVENT_GFX_KANTO_MAY_UNDERWATER;
+    case OBJ_EVENT_GFX_MAY_SURFING:        return OBJ_EVENT_GFX_KANTO_MAY_SURF;
+    case OBJ_EVENT_GFX_MAY_FIELD_MOVE:     return OBJ_EVENT_GFX_KANTO_MAY_FIELD_MOVE;
+    case OBJ_EVENT_GFX_MAY_FISHING:        return OBJ_EVENT_GFX_KANTO_MAY_FISH;
+    case OBJ_EVENT_GFX_MAY_DECORATING:     return OBJ_EVENT_GFX_KANTO_MAY_DECORATING;
+    default:                               return graphicsId;
+    }
+}
+
+// Le sprite du joueur (graphicsId BRENDAN_X/MAY_X, les états d'Émeraude) dans le style de la région : Rouge Feu à
+// Kanto, Émeraude à Hoenn ; le personnage selon PERSO. À Hoenn, Red/Leaf gardent pour l'instant leurs sprites de
+// Rouge Feu.
+static u16 GetRegionalPlayerGraphicsId(u16 graphicsId)
+{
+    if (Fusion_IsInKanto())
+        return gSaveBlock2Ptr->optionsPlayerCharacter ? GetRedLeafGraphicsId(graphicsId)
+                                                      : GetBrendanMayKantoGraphicsId(graphicsId);
+    if (gSaveBlock2Ptr->optionsPlayerCharacter)
+        return GetRedLeafGraphicsId(graphicsId);
+    return graphicsId;
 }
 
 const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
@@ -2123,10 +2182,9 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
     if (graphicsId >= OBJ_EVENT_GFX_VARS && graphicsId <= OBJ_EVENT_GFX_VAR_F)
         graphicsId = VarGetObjectEventGraphicsId(graphicsId - OBJ_EVENT_GFX_VARS);
 
-    // PokemonNative3G : le joueur incarné par Red/Leaf garde les états d'Émeraude (graphicsId BRENDAN_X/MAY_X)
-    // mais s'affiche avec les sprites de Rouge Feu
-    if (gSaveBlock2Ptr->optionsPlayerCharacter)
-        graphicsId = GetRedLeafGraphicsId(graphicsId);
+    // PokemonNative3G : le joueur garde les états d'Émeraude (graphicsId BRENDAN_X/MAY_X) mais s'affiche dans le
+    // style de la région et avec le personnage de PERSO
+    graphicsId = GetRegionalPlayerGraphicsId(graphicsId);
 
     if (graphicsId >= KANTO_OBJ_EVENT_GFX_START && graphicsId < KANTO_OBJ_EVENT_GFX_START + NUM_KANTO_OBJ_EVENT_GFX)
         return gKantoObjectEventGraphicsInfoPointers[graphicsId - KANTO_OBJ_EVENT_GFX_START];
@@ -2742,15 +2800,29 @@ void OverrideSecretBaseDecorationSpriteScript(u8 localId, u8 mapNum, u8 mapGroup
     }
 }
 
-// Option PERSO Red/Leaf : la case 0 contient la palette de Red/Leaf, dont la couleur 14 n'est pas
-// blanche. Les icônes d'Émeraude qui lisent la case 0 (« ! », « ? », flèche de sortie) prennent
-// alors la palette de Brice, chargée à part.
+// Option PERSO Red/Leaf, ou à Kanto (joueur en style Rouge Feu) : la case 0 contient une autre palette que celle de
+// Brice/Flora d'Émeraude (celle de Red/Leaf : couleur 14 pas blanche). Les icônes d'Émeraude qui lisent la case 0
+// (« ! », « ? », flèche de sortie) prennent alors la palette de Brice, chargée à part.
 u8 GetPlayerIconPaletteNum(void)
 {
     struct SpritePalette pal = {gObjectEventPal_Brendan, OBJ_EVENT_PAL_TAG_BRENDAN};
     u8 index;
 
-    if (!gSaveBlock2Ptr->optionsPlayerCharacter)
+    if (!gSaveBlock2Ptr->optionsPlayerCharacter && !Fusion_IsInKanto())
+        return 0;
+    index = LoadSpritePalette(&pal);
+    return index == 0xFF ? 0 : index;
+}
+
+// La monture du SURF (surf_blob.png) et l'oiseau du VOL (bird.png) prennent les couleurs 5 et 6 de la palette du
+// joueur : le bleu marine de Brice, le bleu de Red. Brice et Flora en style Rouge Feu (à Kanto) ont la palette des PNJ
+// de Rouge Feu, sans bleu (5-6 = le vert de leur tenue) : ils prennent alors la palette de Red/Leaf, comme les leurs.
+u8 GetPlayerMountPaletteNum(void)
+{
+    struct SpritePalette pal = {gKantoObjectEventPal_Player, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_RED};
+    u8 index;
+
+    if (gSaveBlock2Ptr->optionsPlayerCharacter || !Fusion_IsInKanto())
         return 0;
     index = LoadSpritePalette(&pal);
     return index == 0xFF ? 0 : index;

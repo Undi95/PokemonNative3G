@@ -2421,21 +2421,29 @@ void SeafoamIslandsB4F_CurrentDumpsPlayerOnLand(void)
 }
 
 // ---- Rouge Feu (field_player_avatar.c) : pose du Cherche VS ----
-// Seulement avec Red/Leaf (option PERSO) : Brice et Flora n'ont pas de sprite avec le Cherche VS.
+// Les sprites du Cherche VS sont en style Rouge Feu : à Kanto pour tous (Brice et Flora : kanto_player_brendan_may.h),
+// à Hoenn seulement avec Red/Leaf (option PERSO) ; Brice et Flora d'Émeraude n'en ont pas.
 #define ANIM_VS_SEEKER 0 // tables d'animations des sprites du Cherche VS (kanto_object_events.h)
 
-static const u16 sPlayerAvatarVsSeekerGfxIds[][GENDER_COUNT] = { // PokemonNative3G : 16 bits (sprites de RF à partir de 0x100)
-    {OBJ_EVENT_GFX_KANTO_RED_VS_SEEKER,      OBJ_EVENT_GFX_KANTO_GREEN_VS_SEEKER},
-    {OBJ_EVENT_GFX_KANTO_RED_VS_SEEKER_BIKE, OBJ_EVENT_GFX_KANTO_GREEN_VS_SEEKER_BIKE},
+static const u16 sPlayerAvatarVsSeekerGfxIds[2][2][GENDER_COUNT] = { // PokemonNative3G : 16 bits (sprites de RF à partir de 0x100)
+    { // Brice / Flora
+        {OBJ_EVENT_GFX_KANTO_BRENDAN_VS_SEEKER,      OBJ_EVENT_GFX_KANTO_MAY_VS_SEEKER},
+        {OBJ_EVENT_GFX_KANTO_BRENDAN_VS_SEEKER_BIKE, OBJ_EVENT_GFX_KANTO_MAY_VS_SEEKER_BIKE},
+    },
+    { // Red / Leaf
+        {OBJ_EVENT_GFX_KANTO_RED_VS_SEEKER,      OBJ_EVENT_GFX_KANTO_GREEN_VS_SEEKER},
+        {OBJ_EVENT_GFX_KANTO_RED_VS_SEEKER_BIKE, OBJ_EVENT_GFX_KANTO_GREEN_VS_SEEKER_BIKE},
+    },
 };
 
 bool8 StartPlayerAvatarVsSeekerAnim(void)
 {
     bool8 bike = (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE)) != 0;
+    bool8 redLeaf = gSaveBlock2Ptr->optionsPlayerCharacter != 0;
 
-    if (!gSaveBlock2Ptr->optionsPlayerCharacter)
+    if (!redLeaf && !Fusion_IsInKanto())
         return FALSE;
-    ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], sPlayerAvatarVsSeekerGfxIds[bike][gPlayerAvatar.gender]);
+    ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], sPlayerAvatarVsSeekerGfxIds[redLeaf][bike][gPlayerAvatar.gender]);
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], ANIM_VS_SEEKER);
     return TRUE;
 }

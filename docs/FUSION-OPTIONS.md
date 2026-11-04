@@ -10,6 +10,10 @@ contenu dans un seul jeu.
 
 ## Fait
 - [x] Personnage joué : BRICE/FLORA ou RED/LEAF (option PERSO) — carte, combat, carte dresseur
+- [x] Sprite du joueur selon la région (2026-11-04, demande v1.1) : style Rouge Feu à Kanto pour les 4 personnages
+  (Brice/Flora en tenue d'Émeraude de Poffin_Case, `kanto_player_brendan_may.h`), style Émeraude à Hoenn (Red/Leaf :
+  à faire, ils gardent leurs sprites de RF). Une seule source par personnage et par style. La monture du SURF et
+  l'oiseau du VOL prennent la palette de Red sous Brice/Flora en style RF (la leur n'a pas de bleu).
 - [x] Écran titre : Émeraude ou Rouge Feu (option TITRE)
 - [x] Carte dresseur : les deux (Hoenn / Kanto), SELECT pour passer de l'une à l'autre
 - [x] Cadres de menus : 20 d'Émeraude + 9 de Rouge Feu (type 2 de RF = cadre 2 d'Émeraude) = 29 (option CADRE)

@@ -3261,7 +3261,7 @@ u8 FldEff_NPCFlyOut(void)
     u8 spriteId = CreateSprite(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_BIRD], 0x78, 0, 1);
     struct Sprite *sprite = &gSprites[spriteId];
 
-    sprite->oam.paletteNum = 0;
+    sprite->oam.paletteNum = GetPlayerMountPaletteNum(); // PokemonNative3G : 0, sauf Brice/Flora en style RF
     sprite->oam.priority = 1;
     sprite->callback = SpriteCB_NPCFlyOut;
     sprite->data[1] = gFieldEffectArguments[0];
@@ -3443,7 +3443,7 @@ static u8 CreateFlyBirdSprite(void)
     struct Sprite *sprite;
     spriteId = CreateSprite(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_BIRD], 0xff, 0xb4, 0x1);
     sprite = &gSprites[spriteId];
-    sprite->oam.paletteNum = 0;
+    sprite->oam.paletteNum = GetPlayerMountPaletteNum(); // PokemonNative3G : 0, sauf Brice/Flora en style RF
     sprite->oam.priority = 1;
     sprite->callback = SpriteCB_FlyBirdLeaveBall;
     return spriteId;
@@ -4102,8 +4102,9 @@ static void UseVsSeekerEffect_2(struct Task *task)
         }
         else
         {
-            // PokemonNative3G : Brice/Flora n'ont pas d'images du Cherche VS (et leurs animations de face
-            // bouclent) : ils se tournent vers le bas, comme Red, le temps de l'animation de RF (76 images)
+            // PokemonNative3G : Brice/Flora d'Émeraude (à Hoenn) n'ont pas d'images du Cherche VS (et leurs
+            // animations de face bouclent) : ils se tournent vers le bas, comme Red, le temps de l'animation de RF
+            // (76 images)
             ObjectEventSetHeldMovement(playerObj, MOVEMENT_ACTION_FACE_DOWN);
             task->data[1] = 76;
         }

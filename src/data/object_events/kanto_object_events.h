@@ -7941,6 +7941,7 @@ const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_SSAnne = {
 
 
 #include "kanto_player_extra.h"
+#include "kanto_player_brendan_may.h"
 
 const struct ObjectEventGraphicsInfo *const gKantoObjectEventGraphicsInfoPointers[NUM_KANTO_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_KANTO_RED_NORMAL - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_RedNormal,
@@ -8103,4 +8104,28 @@ const struct ObjectEventGraphicsInfo *const gKantoObjectEventGraphicsInfoPointer
     [OBJ_EVENT_GFX_KANTO_GREEN_UNDERWATER - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_GreenUnderwater,
     [OBJ_EVENT_GFX_KANTO_SHRINE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_Shrine,
     [OBJ_EVENT_GFX_FUSION_METEORITE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_FusionMeteorite,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_NORMAL - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanNormal,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanBike,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_ACRO_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanAcroBike,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_SURF - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanSurf,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_FIELD_MOVE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanFieldMove,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_VS_SEEKER - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanVSSeeker,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_VS_SEEKER_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanVSSeekerBike,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_FISH - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanFish,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_UNDERWATER - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanUnderwater,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_WATERING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanWatering,
+    [OBJ_EVENT_GFX_KANTO_BRENDAN_DECORATING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_BrendanDecorating,
+    [OBJ_EVENT_GFX_KANTO_MAY_NORMAL - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayNormal,
+    [OBJ_EVENT_GFX_KANTO_MAY_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayBike,
+    [OBJ_EVENT_GFX_KANTO_MAY_ACRO_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayAcroBike,
+    [OBJ_EVENT_GFX_KANTO_MAY_SURF - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MaySurf,
+    [OBJ_EVENT_GFX_KANTO_MAY_FIELD_MOVE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayFieldMove,
+    [OBJ_EVENT_GFX_KANTO_MAY_VS_SEEKER - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayVSSeeker,
+    [OBJ_EVENT_GFX_KANTO_MAY_VS_SEEKER_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayVSSeekerBike,
+    [OBJ_EVENT_GFX_KANTO_MAY_FISH - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayFish,
+    [OBJ_EVENT_GFX_KANTO_MAY_UNDERWATER - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayUnderwater,
+    [OBJ_EVENT_GFX_KANTO_MAY_WATERING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayWatering,
+    [OBJ_EVENT_GFX_KANTO_MAY_DECORATING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayDecorating,
+    [OBJ_EVENT_GFX_KANTO_RED_DECORATING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_RedDecorating,
+    [OBJ_EVENT_GFX_KANTO_GREEN_DECORATING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_GreenDecorating,
 };

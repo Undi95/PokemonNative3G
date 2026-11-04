@@ -1,7 +1,9 @@
-# Options > PERSO = Red/Leaf, tous les visuels du joueur (docs/A-TESTER.md, 2026-11-03) : RED, LEAF puis BRICE (retour
-# à Émeraude), chacun à pied, en courant, sur les deux vélos (roue arrière du VÉLO CROSS), en surfant, sous l'eau, en
-# pêchant, pendant COUPE, avec le « ! » d'un dresseur qui le repère (Kanto) et la flèche de sortie d'une maison, sur sa
-# carte de dresseur et de dos au début d'un combat (lancer de la Poké Ball). Captures « PERSO-étape » à revoir.
+# Options > PERSO = Red/Leaf, tous les visuels du joueur (docs/A-TESTER.md, 2026-11-03) : RED, LEAF, BRICE puis FLORA,
+# chacun à pied, en courant, sur les deux vélos (roue arrière du VÉLO CROSS), en surfant, sous l'eau, en pêchant,
+# pendant COUPE, avec le « ! » d'un dresseur qui le repère (Kanto) et la flèche de sortie d'une maison, sur sa carte de
+# dresseur et de dos au début d'un combat (lancer de la Poké Ball). À Kanto, le joueur est en style Rouge Feu (BRICE
+# et FLORA du pack de Poffin_Case, 2026-11-04) ; sous l'eau et à Hoenn, en style Émeraude. Captures « PERSO-étape » à
+# revoir.
 FIXTURE = "kanto"
 from driver import *  # les vérifications (expect...)
 import os, re, sys
@@ -9,11 +11,11 @@ import driver
 import maps
 import names
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
-from menu_helpers import open_start_entry, press_until_free
+from menu_helpers import open_start_entry, pick, press_until_free
 from poke_monture_moves import viridian_cut_tree
 
 OPTION_CHARACTER = 6
-PERSOS = (("red", 1, 0), ("leaf", 1, 1), ("brice", 0, 0))
+PERSOS = (("red", 1, 0), ("leaf", 1, 1), ("brice", 0, 0), ("flora", 0, 1))
 
 
 def sprite(game):
@@ -129,6 +131,16 @@ def one(game, who, perso, gender):
     open_start_entry(game, "AAAAAAA"); game.wait(240)
     game.shot(f"{who}-carte")
     press_until_free(game)
+
+    # VOL depuis Bourg Palette (vers Bourg Palette) : l'oiseau qui emporte le joueur
+    game.warp("PalletTown", 10, 9); game.wait(30)
+    open_start_entry(game, "POKéMON"); game.wait(90)
+    since = mark(game)
+    game.tap("A"); game.wait(40)
+    pick(game, since, "VOL"); game.wait(240)
+    game.tap("A")
+    film(game, f"{who}-vol", 48, 6)                                     # le bandeau du POKéMON, puis l'oiseau
+    wait_until(game, lambda s: s.free, limit=1500)
     return shown
 
 
@@ -137,11 +149,15 @@ def play(game):
     game.give_mon("SPECIES_MEWTWO", 100)
     game.dev("joueur.capacite", 0, 0, names.value("MOVE_CUT"))
     game.dev("joueur.capacite", 0, 1, names.value("MOVE_PSYCHIC"))
+    game.dev("joueur.capacite", 0, 2, names.value("MOVE_FLY"))
     game.flag("FLAG_SYS_POKEMON_GET", 1)
     game.flag("FLAG_KANTO_BADGE02_GET", 1)
+    game.flag("FLAG_KANTO_BADGE03_GET", 1)                     # VOL
+    game.flag("FLAG_KANTO_WORLD_MAP_PALLET_TOWN", 1)
     game.item("ITEM_OLD_ROD", 1)
     game.dev("joueur.enregistre", names.value("ITEM_OLD_ROD"))
     # RED et LEAF gardent les graphicsId de BRICE et FLORA (le dessin suit Options > PERSO) : on compare les captures
     sprites = {who: one(game, who, perso, gender) for who, perso, gender in PERSOS}
     game.note(f"SPRITES {sprites}")
-    expect(game, sprites["red"] == sprites["brice"] != sprites["leaf"], f"graphicsId garçon / fille ({sprites})")
+    expect(game, sprites["red"] == sprites["brice"] != sprites["leaf"] == sprites["flora"],
+           f"graphicsId garçon / fille ({sprites})")
