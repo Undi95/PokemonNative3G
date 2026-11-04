@@ -2421,8 +2421,8 @@ void SeafoamIslandsB4F_CurrentDumpsPlayerOnLand(void)
 }
 
 // ---- Rouge Feu (field_player_avatar.c) : pose du Cherche VS ----
-// Les sprites du Cherche VS sont en style Rouge Feu : à Kanto pour tous (Brice et Flora : kanto_player_brendan_may.h),
-// à Hoenn seulement avec Red/Leaf (option PERSO) ; Brice et Flora d'Émeraude n'en ont pas.
+// Les sprites du Cherche VS sont en style Rouge Feu : à Kanto pour tous (Brice et Flora : kanto_player_brendan_may.h).
+// À Hoenn, le joueur est en style Émeraude (Red/Leaf aussi : hoenn_player_red_leaf.h), qui n'a pas cette pose.
 #define ANIM_VS_SEEKER 0 // tables d'animations des sprites du Cherche VS (kanto_object_events.h)
 
 static const u16 sPlayerAvatarVsSeekerGfxIds[2][2][GENDER_COUNT] = { // PokemonNative3G : 16 bits (sprites de RF à partir de 0x100)
@@ -2441,7 +2441,7 @@ bool8 StartPlayerAvatarVsSeekerAnim(void)
     bool8 bike = (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE)) != 0;
     bool8 redLeaf = gSaveBlock2Ptr->optionsPlayerCharacter != 0;
 
-    if (!redLeaf && !Fusion_IsInKanto())
+    if (!Fusion_IsInKanto())
         return FALSE;
     ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], sPlayerAvatarVsSeekerGfxIds[redLeaf][bike][gPlayerAvatar.gender]);
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], ANIM_VS_SEEKER);

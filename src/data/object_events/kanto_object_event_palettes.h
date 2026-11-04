@@ -19,6 +19,9 @@
     {gKantoObjectEventPal_BrendanReflection, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_BRENDAN_REFLECTION},
     {gKantoObjectEventPal_May, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY},
     {gKantoObjectEventPal_MayReflection, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY_REFLECTION},
+    // PokemonNative3G : Red et Leaf en style Émeraude, à Hoenn (hoenn_player_red_leaf.h)
+    {gObjectEventPal_RedLeaf, OBJ_EVENT_PAL_TAG_HOENN_PLAYER_RED_LEAF},
+    {gHoennObjectEventPal_RedLeafReflection, OBJ_EVENT_PAL_TAG_HOENN_PLAYER_RED_LEAF_REFLECTION},
     {gKantoObjectEventPal_Meteorite, OBJ_EVENT_PAL_TAG_KANTO_METEORITE},
     {gKantoObjectEventPal_SSAnne, OBJ_EVENT_PAL_TAG_KANTO_SS_ANNE},
     {gKantoObjectEventPal_Seagallop, OBJ_EVENT_PAL_TAG_KANTO_SEAGALLOP},

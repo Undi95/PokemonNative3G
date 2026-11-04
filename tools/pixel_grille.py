@@ -37,10 +37,15 @@ def lire_palette(chemin):
 def plage(texte, total):
     if not texte:
         return list(range(total))
-    if "-" in texte:
-        a, b = texte.split("-")
-        return list(range(int(a), int(b) + 1))
-    return [int(v) for v in texte.split(",")]
+    # « 0-3,7,9-10 » : intervalles et numéros séparés par des virgules
+    nums = []
+    for part in texte.split(","):
+        if "-" in part:
+            a, b = part.split("-")
+            nums.extend(range(int(a), int(b) + 1))
+        else:
+            nums.append(int(part))
+    return nums
 
 
 def exporter(args):
@@ -124,7 +129,7 @@ def importer(args):
 
 
 def cadres_de(spec, args):
-    """(images, largeur, hauteur) d'un FICHIER[:a-b] (PNG ou grilles .txt)"""
+    """(images, largeur, hauteur, numéros) d'un FICHIER[:a-b] (PNG ou grilles .txt)"""
     # « :a-b » à la fin = les images a à b (pas le « C: » d'un chemin Windows)
     m = re.match(r"^(.*?)(?::([0-9][0-9,\-]*))?$", spec)
     chemin, sel = m.group(1), m.group(2)
@@ -132,11 +137,12 @@ def cadres_de(spec, args):
         images, (w, h) = lire_grilles(chemin)
         pal = lire_palette(args.palette)
         nums = plage(sel, max(images) + 1) if sel else sorted(images)
-        return [vers_image(images[n], pal) if n in images else None for n in nums], w, h
+        return [vers_image(images[n], pal) if n in images else None for n in nums], w, h, nums
     feuille = Image.open(chemin)
     w = args.largeur or (16 if feuille.width % 32 else 32)
     h = feuille.height
-    return [feuille.crop((n * w, 0, n * w + w, h)) for n in plage(sel, feuille.width // w)], w, h
+    nums = plage(sel, feuille.width // w)
+    return [feuille.crop((n * w, 0, n * w + w, h)) for n in nums], w, h, nums
 
 
 def apercu(args):
@@ -144,23 +150,24 @@ def apercu(args):
     fond = tuple(int(v) for v in args.fond.split(","))
     lignes = []
     for spec in args.fichiers:
-        cadres, w, h = cadres_de(spec, args)
+        cadres, w, h, nums = cadres_de(spec, args)
         if args.une_ligne and lignes:
             # tout sur la première ligne ; le nom de chaque fichier au-dessus de sa première image
-            lignes[0][1].extend((spec if i == 0 else None, c, w) for i, c in enumerate(cadres))
+            lignes[0][1].extend((spec if i == 0 else None, c, w, n) for i, (c, n) in enumerate(zip(cadres, nums)))
             lignes[0][2] = max(lignes[0][2], h)
         else:
-            lignes.append([spec, [(spec if args.une_ligne else None, c, w) for c in cadres], h])
-    largeur = max(sum(w * s + 6 for _, _, w in cellules) for _, cellules, _ in lignes)
+            lignes.append([spec, [(spec if args.une_ligne else None, c, w, n) for c, n in zip(cadres, nums)], h])
+    largeur = max(sum(w * s + 6 for _, _, w, _ in cellules) for _, cellules, _ in lignes)
     hauteur = sum(h * s + 14 for _, _, h in lignes)
     out = Image.new("RGB", (largeur, hauteur), (30, 30, 30))
     d = ImageDraw.Draw(out)
     y = 0
     for spec, cellules, h in lignes:
         if not args.une_ligne:
-            d.text((2, y), spec, fill=(255, 255, 0))
+            d.text((2, y), args.titre or spec, fill=(255, 255, 0))
+            args.titre = None
         x0 = 0
-        for nom, c, w in cellules:
+        for nom, c, w, num in cellules:
             if nom:
                 d.text((x0 + 2, y), os.path.basename(nom)[:w * s // 6], fill=(255, 255, 0))
             if c is None:
@@ -201,6 +208,10 @@ def apercu(args):
                 for gy in range(0, ch + 1, 8):
                     d.line([(x0, y + 12 + gy * s), (x0 + w * s, y + 12 + gy * s)],
                            fill=(0, 0, 0) if gy % 16 else (80, 0, 0))
+            if args.numeros:
+                # numéro de l'image dans la feuille, en haut à gauche de sa case
+                d.rectangle([(x0 + 1, y + 13), (x0 + 16, y + 24)], fill=(0, 0, 0))
+                d.text((x0 + 3, y + 13), str(num), fill=(255, 255, 255))
             x0 += w * s + 6
         y += h * s + 14
     out.save(args.sortie)
@@ -221,6 +232,8 @@ def main():
     a.add_argument("--indices", action="store_true", help="écrit l'indice de couleur dans chaque pixel")
     a.add_argument("--une-ligne", action="store_true", help="toutes les images sur une seule ligne")
     a.add_argument("--sans-grille", action="store_true", help="sans quadrillage (pour juger à petite échelle)")
+    a.add_argument("--numeros", action="store_true", help="le numéro de chaque image dans sa case")
+    a.add_argument("--titre", help="titre de la première ligne (au lieu du chemin du fichier)")
     args = p.parse_args()
     {"exporter": exporter, "importer": importer, "apercu": apercu}[args.action](args)
 

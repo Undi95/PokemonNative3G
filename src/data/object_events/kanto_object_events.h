@@ -7942,6 +7942,7 @@ const struct ObjectEventGraphicsInfo gKantoObjectEventGraphicsInfo_SSAnne = {
 
 #include "kanto_player_extra.h"
 #include "kanto_player_brendan_may.h"
+#include "hoenn_player_red_leaf.h"
 
 const struct ObjectEventGraphicsInfo *const gKantoObjectEventGraphicsInfoPointers[NUM_KANTO_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_KANTO_RED_NORMAL - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_RedNormal,
@@ -8128,4 +8129,23 @@ const struct ObjectEventGraphicsInfo *const gKantoObjectEventGraphicsInfoPointer
     [OBJ_EVENT_GFX_KANTO_MAY_DECORATING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_MayDecorating,
     [OBJ_EVENT_GFX_KANTO_RED_DECORATING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_RedDecorating,
     [OBJ_EVENT_GFX_KANTO_GREEN_DECORATING - KANTO_OBJ_EVENT_GFX_START] = &gKantoObjectEventGraphicsInfo_GreenDecorating,
+    // PokemonNative3G : Red et Leaf en style Émeraude, à Hoenn (hoenn_player_red_leaf.h)
+    [OBJ_EVENT_GFX_HOENN_RED_NORMAL - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_RedNormal,
+    [OBJ_EVENT_GFX_HOENN_RED_MACH_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_RedMachBike,
+    [OBJ_EVENT_GFX_HOENN_RED_ACRO_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_RedAcroBike,
+    [OBJ_EVENT_GFX_HOENN_RED_SURFING - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_RedSurfing,
+    [OBJ_EVENT_GFX_HOENN_RED_FIELD_MOVE - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_RedFieldMove,
+    [OBJ_EVENT_GFX_HOENN_RED_FISHING - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_RedFishing,
+    [OBJ_EVENT_GFX_HOENN_RED_UNDERWATER - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_RedUnderwater,
+    [OBJ_EVENT_GFX_HOENN_RED_WATERING - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_RedWatering,
+    [OBJ_EVENT_GFX_HOENN_RED_DECORATING - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_RedDecorating,
+    [OBJ_EVENT_GFX_HOENN_LEAF_NORMAL - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_LeafNormal,
+    [OBJ_EVENT_GFX_HOENN_LEAF_MACH_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_LeafMachBike,
+    [OBJ_EVENT_GFX_HOENN_LEAF_ACRO_BIKE - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_LeafAcroBike,
+    [OBJ_EVENT_GFX_HOENN_LEAF_SURFING - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_LeafSurfing,
+    [OBJ_EVENT_GFX_HOENN_LEAF_FIELD_MOVE - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_LeafFieldMove,
+    [OBJ_EVENT_GFX_HOENN_LEAF_FISHING - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_LeafFishing,
+    [OBJ_EVENT_GFX_HOENN_LEAF_UNDERWATER - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_LeafUnderwater,
+    [OBJ_EVENT_GFX_HOENN_LEAF_WATERING - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_LeafWatering,
+    [OBJ_EVENT_GFX_HOENN_LEAF_DECORATING - KANTO_OBJ_EVENT_GFX_START] = &gHoennObjectEventGraphicsInfo_LeafDecorating,
 };

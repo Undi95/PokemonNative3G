@@ -588,6 +588,14 @@ static const u16 sReflectionPaletteTags_KantoMay[] = {
     OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY_REFLECTION,
 };
 
+// PokemonNative3G : Red et Leaf en style Émeraude (à Hoenn), leur reflet (hoenn_player_red_leaf.h)
+static const u16 sReflectionPaletteTags_HoennRedLeaf[] = {
+    OBJ_EVENT_PAL_TAG_HOENN_PLAYER_RED_LEAF_REFLECTION,
+    OBJ_EVENT_PAL_TAG_HOENN_PLAYER_RED_LEAF_REFLECTION,
+    OBJ_EVENT_PAL_TAG_HOENN_PLAYER_RED_LEAF_REFLECTION,
+    OBJ_EVENT_PAL_TAG_HOENN_PLAYER_RED_LEAF_REFLECTION,
+};
+
 static const struct PairedPalettes sPlayerReflectionPaletteSets[] = {
     {OBJ_EVENT_PAL_TAG_BRENDAN,           sReflectionPaletteTags_Brendan},
     {OBJ_EVENT_PAL_TAG_MAY,               sReflectionPaletteTags_May},
@@ -596,6 +604,7 @@ static const struct PairedPalettes sPlayerReflectionPaletteSets[] = {
     {OBJ_EVENT_PAL_TAG_KANTO_PLAYER_GREEN, sReflectionPaletteTags_KantoPlayer},
     {OBJ_EVENT_PAL_TAG_KANTO_PLAYER_BRENDAN, sReflectionPaletteTags_KantoBrendan},
     {OBJ_EVENT_PAL_TAG_KANTO_PLAYER_MAY,     sReflectionPaletteTags_KantoMay},
+    {OBJ_EVENT_PAL_TAG_HOENN_PLAYER_RED_LEAF, sReflectionPaletteTags_HoennRedLeaf},
     {OBJ_EVENT_PAL_TAG_NONE,              NULL},
 };
 
@@ -2162,16 +2171,42 @@ static u16 GetBrendanMayKantoGraphicsId(u16 graphicsId)
     }
 }
 
+// Red et Leaf en style Émeraude (à Hoenn) : src/data/object_events/hoenn_player_red_leaf.h
+static u16 GetRedLeafHoennGraphicsId(u16 graphicsId)
+{
+    switch (graphicsId)
+    {
+    case OBJ_EVENT_GFX_BRENDAN_NORMAL:     return OBJ_EVENT_GFX_HOENN_RED_NORMAL;
+    case OBJ_EVENT_GFX_BRENDAN_MACH_BIKE:  return OBJ_EVENT_GFX_HOENN_RED_MACH_BIKE;
+    case OBJ_EVENT_GFX_BRENDAN_ACRO_BIKE:  return OBJ_EVENT_GFX_HOENN_RED_ACRO_BIKE;
+    case OBJ_EVENT_GFX_BRENDAN_SURFING:    return OBJ_EVENT_GFX_HOENN_RED_SURFING;
+    case OBJ_EVENT_GFX_BRENDAN_FIELD_MOVE: return OBJ_EVENT_GFX_HOENN_RED_FIELD_MOVE;
+    case OBJ_EVENT_GFX_BRENDAN_FISHING:    return OBJ_EVENT_GFX_HOENN_RED_FISHING;
+    case OBJ_EVENT_GFX_BRENDAN_UNDERWATER: return OBJ_EVENT_GFX_HOENN_RED_UNDERWATER;
+    case OBJ_EVENT_GFX_BRENDAN_WATERING:   return OBJ_EVENT_GFX_HOENN_RED_WATERING;
+    case OBJ_EVENT_GFX_BRENDAN_DECORATING: return OBJ_EVENT_GFX_HOENN_RED_DECORATING;
+    case OBJ_EVENT_GFX_MAY_NORMAL:         return OBJ_EVENT_GFX_HOENN_LEAF_NORMAL;
+    case OBJ_EVENT_GFX_MAY_MACH_BIKE:      return OBJ_EVENT_GFX_HOENN_LEAF_MACH_BIKE;
+    case OBJ_EVENT_GFX_MAY_ACRO_BIKE:      return OBJ_EVENT_GFX_HOENN_LEAF_ACRO_BIKE;
+    case OBJ_EVENT_GFX_MAY_SURFING:        return OBJ_EVENT_GFX_HOENN_LEAF_SURFING;
+    case OBJ_EVENT_GFX_MAY_FIELD_MOVE:     return OBJ_EVENT_GFX_HOENN_LEAF_FIELD_MOVE;
+    case OBJ_EVENT_GFX_MAY_FISHING:        return OBJ_EVENT_GFX_HOENN_LEAF_FISHING;
+    case OBJ_EVENT_GFX_MAY_UNDERWATER:     return OBJ_EVENT_GFX_HOENN_LEAF_UNDERWATER;
+    case OBJ_EVENT_GFX_MAY_WATERING:       return OBJ_EVENT_GFX_HOENN_LEAF_WATERING;
+    case OBJ_EVENT_GFX_MAY_DECORATING:     return OBJ_EVENT_GFX_HOENN_LEAF_DECORATING;
+    default:                               return graphicsId;
+    }
+}
+
 // Le sprite du joueur (graphicsId BRENDAN_X/MAY_X, les états d'Émeraude) dans le style de la région : Rouge Feu à
-// Kanto, Émeraude à Hoenn ; le personnage selon PERSO. À Hoenn, Red/Leaf gardent pour l'instant leurs sprites de
-// Rouge Feu.
+// Kanto, Émeraude à Hoenn ; le personnage selon PERSO.
 static u16 GetRegionalPlayerGraphicsId(u16 graphicsId)
 {
     if (Fusion_IsInKanto())
         return gSaveBlock2Ptr->optionsPlayerCharacter ? GetRedLeafGraphicsId(graphicsId)
                                                       : GetBrendanMayKantoGraphicsId(graphicsId);
     if (gSaveBlock2Ptr->optionsPlayerCharacter)
-        return GetRedLeafGraphicsId(graphicsId);
+        return GetRedLeafHoennGraphicsId(graphicsId);
     return graphicsId;
 }
 
@@ -2817,13 +2852,22 @@ u8 GetPlayerIconPaletteNum(void)
 // La monture du SURF (surf_blob.png) et l'oiseau du VOL (bird.png) prennent les couleurs 5 et 6 de la palette du
 // joueur : le bleu marine de Brice, le bleu de Red. Brice et Flora en style Rouge Feu (à Kanto) ont la palette des PNJ
 // de Rouge Feu, sans bleu (5-6 = le vert de leur tenue) : ils prennent alors la palette de Red/Leaf, comme les leurs.
+// Red et Leaf en style Émeraude (à Hoenn) ont red_leaf.pal (5-6 = le rouge de leur tenue) : la palette de Brice, comme
+// la monture d'Émeraude.
 u8 GetPlayerMountPaletteNum(void)
 {
     struct SpritePalette pal = {gKantoObjectEventPal_Player, OBJ_EVENT_PAL_TAG_KANTO_PLAYER_RED};
+    bool8 kanto = Fusion_IsInKanto();
+    bool8 redLeaf = gSaveBlock2Ptr->optionsPlayerCharacter != 0;
     u8 index;
 
-    if (gSaveBlock2Ptr->optionsPlayerCharacter || !Fusion_IsInKanto())
-        return 0;
+    if (kanto == redLeaf)
+        return 0; // Red/Leaf à Kanto, Brice/Flora à Hoenn : la palette du joueur
+    if (!kanto)
+    {
+        pal.data = gObjectEventPal_Brendan;
+        pal.tag = OBJ_EVENT_PAL_TAG_BRENDAN;
+    }
     index = LoadSpritePalette(&pal);
     return index == 0xFF ? 0 : index;
 }

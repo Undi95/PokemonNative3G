@@ -1,5 +1,6 @@
 #include "global.h"
 #include "fusion_events.h"
+#include "fusion_region.h"
 #include "naming_screen.h"
 #include "malloc.h"
 #include "palette.h"
@@ -1418,9 +1419,11 @@ static void NamingScreen_CreatePlayerIcon(void)
     u8 spriteId;
 
     rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, sNamingScreen->monSpecies);
-    // PokemonNative3G : option PERSO = Red/Leaf
-    if (gSaveBlock2Ptr->optionsPlayerCharacter)
+    // PokemonNative3G : option PERSO = Red/Leaf, dans le style de la région (Rouge Feu à Kanto, Émeraude à Hoenn)
+    if (gSaveBlock2Ptr->optionsPlayerCharacter && Fusion_IsInKanto())
         rivalGfxId = (sNamingScreen->monSpecies == MALE) ? OBJ_EVENT_GFX_KANTO_RED_NORMAL : OBJ_EVENT_GFX_KANTO_GREEN_NORMAL;
+    else if (gSaveBlock2Ptr->optionsPlayerCharacter)
+        rivalGfxId = (sNamingScreen->monSpecies == MALE) ? OBJ_EVENT_GFX_HOENN_RED_NORMAL : OBJ_EVENT_GFX_HOENN_LEAF_NORMAL;
     spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
