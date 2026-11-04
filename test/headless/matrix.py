@@ -34,6 +34,9 @@ OPTIONS = [("PERSO", 6), ("DIALOGUE", 8), ("POLICE", 9), ("POKEDEX", 10), ("MENU
 OPTION_FRAME = 1        # le cadre des fenêtres (0 à 19), changé à chaque combinaison
 OPTION_BATTLE_STYLE = 3
 
+# Les titres des poches, tels que les deux sacs les écrivent (Émeraude : 5 poches ; RF : 3)
+POCKET_TITLES = {"OBJETS", "POKé BALLS", "CT/CS", "CT & CS", "BAIES", "OBJETS RARES", "OBJ. RARES", "OBJ.RARES"}
+
 # Les entrées du menu Start (MENU_ACTION_*, src/start_menu.c)
 MENU_POKEDEX, MENU_POKEMON, MENU_BAG, MENU_POKENAV, MENU_PLAYER, MENU_SAVE, MENU_OPTION = range(7)
 
@@ -41,10 +44,10 @@ MENU_POKEDEX, MENU_POKEMON, MENU_BAG, MENU_POKENAV, MENU_PLAYER, MENU_SAVE, MENU
 REGIONS = {
     "kanto": {"home": "PalletTown", "grass": "Route1", "mart": "PewterCity_Mart", "trainer": ("Route3", 32, 6),
               "double": ("KantoVictoryRoad_3F", 38, 13), "safari": "KantoSafariZone_Center",
-              "ghost": "PokemonTower_3F"},
+              "ghost": "PokemonTower_3F", "hof": "PokemonLeague_HallOfFame"},
     "hoenn": {"home": "LittlerootTown", "grass": "Route101", "mart": "OldaleTown_Mart",
               "trainer": ("Route102", 33, 14), "double": ("Route103", 64, 12), "safari": "SafariZone_Southwest",
-              "ghost": None},
+              "ghost": None, "hof": "EverGrandeCity_HallOfFame"},
 }
 
 
@@ -145,8 +148,8 @@ class Screens:
 
     def __init__(self, game, region, shot, row=None):
         self.game, self.region, self.shot = game, REGIONS[region], shot
-        # Les options de ce jeu (OPTIONS, 0 Hoenn / 1 Kanto) : le sac en combat dépend de SAC
-        self.options = {name: value for (name, _), value in zip(OPTIONS, row or (0,) * len(OPTIONS))}
+        # Les options de ce jeu (OPTIONS, 0 Hoenn / 1 Kanto) ; pas « options » : c'est un écran
+        self.option_values = {name: value for (name, _), value in zip(OPTIONS, row or (0,) * len(OPTIONS))}
 
     def start_menu(self):
         game = self.game
@@ -437,16 +440,21 @@ class Screens:
         game.item("ITEM_MASTER_BALL", 1)
         self.force_encounter(self.region["grass"])
         self.wait_action_menu()
+        since_bag = mark(game)
         game.tap("RIGHT")               # SAC
         game.tap("A")
         game.wait(240)
-        if self.options["SAC"]:         # sac de RF : OBJETS, OBJ. RARES, BALLS
-            game.tap("LEFT", 3, gap=40)
-            game.tap("RIGHT", 2, gap=60)
-        else:                           # sac d'Émeraude : OBJETS, BALLS…
-            game.tap("LEFT", 5, gap=40)
-            game.tap("RIGHT", 1, gap=60)
-        game.wait(60)
+        # La poche des Balls, d'après le titre écrit par le sac (les deux sacs se rouvrent sur la dernière poche vue)
+        for _ in range(6):
+            titles = [" ".join(t.split()) for _, _, t in game.texts[since_bag:]]
+            titles = [t for t in titles if t in POCKET_TITLES]
+            if titles and titles[-1] == "POKé BALLS":
+                break
+            game.tap("RIGHT")
+            game.wait(60)
+        else:
+            raise GameError(f"pas de poche POKé BALLS dans le sac en combat ({titles[-3:]})")
+        game.wait(30)
         balls = [n for n, _, _ in crawl_bag(game).get("poche 2", [])]
         index = balls.index(driver.names.number("ITEM_MASTER_BALL"))
         game.tap("UP", 20, gap=8)
@@ -594,6 +602,45 @@ class Screens:
         self.shot("curseur")
         back_to_free(game)
 
+    def hall_of_fame(self):
+        """Le Panthéon de la région (scène de la salle, écran des POKéMON), puis les crédits, jusqu'au retour sur la
+        carte (Kanto) ou à l'écran titre (Hoenn, comme Émeraude) ; captures à intervalles dans chaque phase."""
+        game = self.game
+        hof_map = self.region["hof"]
+        try:
+            game.warp(hof_map, *crawl.spawn_point(hof_map))
+        except GameError:
+            if game.state.free:
+                raise
+            # la scène de la salle commence dès l'arrivée (script à chaque image)
+        plan = {"salle": [60], "pantheon": [240, 900, 1800, 2700, 3600], "credits": [300, 2500, 6000, 10000]}
+        started, taken = {}, set()
+        texts = mark(game)
+        for _ in range(1500):
+            cb2 = game.function(game.state.cb2)
+            if "Credit" in cb2:
+                phase = "credits"
+            elif "HallOfFame" in cb2 or "Hof" in cb2:
+                phase = "pantheon"
+            elif "credits" in started and ("Title" in cb2 or "Intro" in cb2 or "Copyright" in cb2 or game.state.free):
+                break                   # fin des crédits : retour sur la carte ou écran titre
+            elif any(window == 0 for _, window, _ in game.texts[texts:]):
+                phase = "salle"
+            else:
+                phase = None
+            if phase:
+                started.setdefault(phase, game.frames)
+                for delay in plan[phase]:
+                    if game.frames - started[phase] >= delay and (phase, delay) not in taken:
+                        taken.add((phase, delay))
+                        self.shot(f"{phase}-{delay}")
+            if phase != "credits":
+                game.tap("A", gap=40)   # la scène de la salle, la fin de l'écran du Panthéon
+            else:
+                game.wait(40)
+        if "credits" not in started:
+            raise GameError(f"pas de crédits après le Panthéon : {game.describe()}")
+
     def new_game(self):
         """En dernier : sauvegarde, redémarrage, NOUVELLE PARTIE par-dessus la sauvegarde (les options d'affichage
         sont gardées, PERSO non) ; l'intro du Prof. Seko jusqu'au choix du personnage."""
@@ -661,59 +708,72 @@ SCREENS = ["start_menu", "party", "summary", "bag", "pokedex", "pokenav", "train
            "dialog_sign", "dialog_npc", "shop", "pc", "wild_battle", "trainer_battle",
            # 2026-11-04 (phase 4 : le reste de la liste du plan)
            "evolution", "capture", "double_battle", "safari", "ghost_battle", "pc_items", "mailbox", "region_map",
-           "new_game"]                  # toujours le dernier : il quitte la partie
+           "hall_of_fame", "new_game"]
+# Écrans qui ne rendent pas la main au joueur : chacun dans sa propre partie (run_one)
+TERMINAL = {"hall_of_fame", "new_game"}
+
+
+def setup_game(game, index, row):
+    """La partie d'un jeu : continuer la sauvegarde, l'équipe, le sac, les drapeaux, les options de la combinaison."""
+    continue_game(game)
+    crawl.give_mewtwo(game)     # 4 attaques : les combats finissent
+    # De quoi remplir les écrans : un 2e Pokémon qui tient un objet, un objet de chaque poche
+    game.give_mon("SPECIES_PIKACHU", 25, "ITEM_ORAN_BERRY")
+    for item, count in (("ITEM_POTION", 5), ("ITEM_SUPER_POTION", 3), ("ITEM_POKE_BALL", 10),
+                        ("ITEM_GREAT_BALL", 2), ("ITEM_TM01", 1), ("ITEM_ORAN_BERRY", 4), ("ITEM_MACH_BIKE", 1)):
+        game.item(item, count)
+    game.dev("jeu.rencontres", 0)
+    for flag in ("FLAG_SYS_POKEDEX_GET", "FLAG_KANTO_SYS_POKEDEX_GET", "FLAG_SYS_POKEMON_GET",
+                 "FLAG_SYS_POKENAV_GET", "FLAG_ADDED_MATCH_CALL_TO_POKENAV"):
+        game.flag(flag, 1)
+    for (_, option), value in zip(OPTIONS, row):
+        game.dev("jeu.options", option, value)
+    game.dev("jeu.options", OPTION_FRAME, (index * 7) % 20)
+    # STYLE COMBAT : DEFINI, sans la question « changer de POKéMON ? » (fight_battle y répondrait OUI)
+    game.dev("jeu.options", OPTION_BATTLE_STYLE, 1)
 
 
 def run_one(binary, region, index, row, out_dir, screens):
-    """Un jeu : la région, la combinaison d'options row, chaque écran. Renvoie {jeu, captures, erreurs, anomalies}."""
+    """Un jeu : la région, la combinaison d'options row, chaque écran. Renvoie {jeu, captures, erreurs, anomalies}.
+    Les écrans qui ne rendent pas la main (TERMINAL : Panthéon et crédits, nouvelle partie) ont chacun leur partie,
+    repartie de la sauvegarde avec les mêmes options."""
     name = f"{region}_{index:02}"
     result = {"jeu": name, "region": region, "options": combo_name(row), "captures": {}, "erreurs": [],
               "anomalies": []}
-    game = driver.Game(binary, os.path.join(out_dir, name), save=fixture(binary, region), max_frames=5_000_000)
-    try:
-        continue_game(game)
-        crawl.give_mewtwo(game)     # 4 attaques : les combats finissent
-        # De quoi remplir les écrans : un 2e Pokémon qui tient un objet, un objet de chaque poche
-        game.give_mon("SPECIES_PIKACHU", 25, "ITEM_ORAN_BERRY")
-        for item, count in (("ITEM_POTION", 5), ("ITEM_SUPER_POTION", 3), ("ITEM_POKE_BALL", 10),
-                            ("ITEM_GREAT_BALL", 2), ("ITEM_TM01", 1), ("ITEM_ORAN_BERRY", 4), ("ITEM_MACH_BIKE", 1)):
-            game.item(item, count)
-        game.dev("jeu.rencontres", 0)
-        for flag in ("FLAG_SYS_POKEDEX_GET", "FLAG_KANTO_SYS_POKEDEX_GET", "FLAG_SYS_POKEMON_GET",
-                     "FLAG_SYS_POKENAV_GET", "FLAG_ADDED_MATCH_CALL_TO_POKENAV"):
-            game.flag(flag, 1)
-        for (_, option), value in zip(OPTIONS, row):
-            game.dev("jeu.options", option, value)
-        game.dev("jeu.options", OPTION_FRAME, (index * 7) % 20)
-        # STYLE COMBAT : DEFINI, sans la question « changer de POKéMON ? » (fight_battle y répondrait OUI)
-        game.dev("jeu.options", OPTION_BATTLE_STYLE, 1)
-        home = REGIONS[region]["home"]
-        spawn = crawl.spawn_point(home)
-        for screen in screens:
-            shots = []
+    home = REGIONS[region]["home"]
+    spawn = crawl.spawn_point(home)
+    normal = [s for s in screens if s not in TERMINAL]
+    runs = ([(name, normal)] if normal else []) + [(f"{name}-{s}", [s]) for s in screens if s in TERMINAL]
+    for folder, run_screens in runs:
+        game = driver.Game(binary, os.path.join(out_dir, folder), save=fixture(binary, region), max_frames=5_000_000)
+        try:
+            setup_game(game, index, row)
+            for screen in run_screens:
+                shots = []
 
-            def shot(step, screen=screen, shots=shots):
-                shots.append(game.shot(f"{screen}-{step}"))
+                def shot(step, screen=screen, shots=shots):
+                    shots.append(game.shot(f"{screen}-{step}"))
 
-            anomalies = len(game.anomalies)
-            try:
-                game.warp(home, *spawn)
-                finish_dialog(game, limit=100)
-                getattr(Screens(game, region, shot, row), screen)()
-            except Exception as e:      # GameError, ou une erreur de la grille elle-même
-                result["erreurs"].append(f"{screen} : {type(e).__name__}: {str(e)[:300]}")
-                if game.proc.poll() is not None:
-                    break
+                anomalies = len(game.anomalies)
                 try:
-                    back_to_free(game)
-                except GameError:
-                    break
-            result["captures"][screen] = shots
-            result["anomalies"] += [f"{screen} : {kind} : {text}" for _, kind, text in game.anomalies[anomalies:]]
-    except GameError as e:
-        result["erreurs"].append(f"jeu : {str(e)[:300]}")
-    finally:
-        game.finish()
+                    game.warp(home, *spawn)
+                    finish_dialog(game, limit=100)
+                    getattr(Screens(game, region, shot, row), screen)()
+                except Exception as e:      # GameError, ou une erreur de la grille elle-même
+                    result["erreurs"].append(f"{screen} : {type(e).__name__}: {str(e)[:300]}")
+                    if game.proc.poll() is not None:
+                        break
+                    try:
+                        back_to_free(game)
+                    except GameError:
+                        break
+                result["captures"][screen] = shots
+                result["anomalies"] += [f"{screen} : {kind} : {text}"
+                                        for _, kind, text in game.anomalies[anomalies:]]
+        except GameError as e:
+            result["erreurs"].append(f"jeu : {str(e)[:300]}")
+        finally:
+            game.finish()
     return result
 
 

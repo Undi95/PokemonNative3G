@@ -37,6 +37,7 @@ Toutes à deux valeurs, 0 = HOENN (Émeraude), 1 = KANTO (RF). Index de `jeu.opt
 | Évolution à Kanto sans le POKéDEX NATIONAL (règle de RF, demande du 2026-11-04 : `Kanto_IsEvolutionBlocked`) | pas d'évolution en une espèce hors des POKéDEX de Kanto et de Hoenn (LEUPHORIE, MENTALI, NOCTALI, STEELIX, CIZAYOX, ROIGADA, TARPAUD, PORYGON2) : la scène s'arrête d'elle-même sur « ……? » ; une pierre est refusée et gardée (« Hein? » de RF avec SAC = KANTO, « Ça n'aura aucun effet. » avec le sac d'Émeraude) ; le CÂBLE LINK et l'objet tenu sont gardés ; NOSTENFER, JOLIFLOR, HYPOROI et les POKéMON de Hoenn évoluent (POKéDEX de Hoenn) ; à Hoenn, comme Émeraude | RF teste « espèce > MEW », ce qui bloquerait les POKéMON de Hoenn ; scénarios `kanto_evolution_national`, `link_cable_more` |
 | Listes de RF (`kanto_list_menu.c` : badges d'Azuria, ascenseurs) | 4 lignes de 14 px dans 7 tiles, avec `FONT_KANTO` | avant le 2026-11-02, `FONT_NORMAL` (16 px) coupait la 4ᵉ ligne |
 | Étages (ascenseurs de RF) | « RC », « 1ᵉʳ », « 2ᵉ »… : `{SUPER_ER}` (0x2C) et `{SUPER_E}` (0x84) sont de vraies lettres | — |
+| Crédits et PERSO | le joueur des crédits est celui du jeu de la région, quel que soit PERSO : BRICE / FLORA à vélo à Hoenn, RED / LEAF qui court à Kanto (ces images n'existent que dans leur jeu) ; le Panthéon, lui, suit PERSO | vu par la grille (`matrix.py`, écran `hall_of_fame`, 2026-11-04) |
 | Crédits de Kanto | le métier (orange) sur sa ligne, les noms (blancs) en dessous, décalés à droite : deux textes dans la même fenêtre, placés par des lignes vides (« \n\n\nJunichi Masuda\n\n\n ») | `WrapTextToWindow` ne compte que les lignes jusqu'à la dernière non vide ; avant le 2026-11-02, il remettait ces lignes bout à bout (titre et noms sur une seule ligne) |
 | Maison à vendre (Bourg Palette, fusion) | boîte d'argent « 3000¥ » alignée par des `CHAR_SPACER` (0x77) | — |
 
@@ -58,8 +59,12 @@ montrent).
 
 Dans chaque passage, seules restent les limites connues de l'explorateur (section « Ce que l'explorateur ne fait
 pas ») : MARC, le garçon de Clémenti-Ville, la pente de la Piste Cyclable, et la porte de la maison de Bourg Palette
-une fois achetée (elle n'affiche plus rien, on entre directement). La grille (`matrix.py`, 18 jeux) : 0 erreur,
-0 anomalie ; planches relues le 2026-11-04.
+une fois achetée (elle n'affiche plus rien, on entre directement). La grille (`matrix.py`, 18 jeux, 25 écrans depuis
+le 2026-11-04 : évolution et apprentissage, capture et surnom, combat double, Safari, SPECTRE, PC des objets, boîte
+aux lettres, carte murale, Panthéon et crédits, nouvelle partie par-dessus la sauvegarde en plus des 15 d'avant) :
+0 erreur, 0 anomalie ; planches relues le 2026-11-04. Trouvé en les relisant : avec POKéDEX = KANTO, l'écran vide
+sous « Donner un surnom ? » après une capture (l'image du POKéMON de RF manquait, `Cmd_displaydexinfo`) ; au Parc
+Safari, le dos de BRICE / FLORA même avec PERSO = RED / LEAF (`GetPlayerTrainerBackPicId`).
 
 Pas besoin d'une sauvegarde pour atteindre un point du jeu : `scripts.histoire` met l'histoire finie, et
 `scripts.drapeaux` (menu DEBUG ou banc) met chaque drapeau ou variable à la main.

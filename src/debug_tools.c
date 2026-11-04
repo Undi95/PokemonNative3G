@@ -42,6 +42,7 @@
 #include "m4a.h"
 #include "mail.h"
 #include "main.h"
+#include "map_name_popup.h"
 #include "metatile_behavior.h"
 #include "money.h"
 #include "new_game.h"
@@ -685,6 +686,9 @@ static void Cmd_RunScript(const s32 *args, u32 argCount, struct DebugToolsOutput
         DebugTools_Print(out, "refuse : le joueur n'est pas libre sur la carte\n");
         return;
     }
+    // Comme une interaction (overworld.c, après ProcessPlayerFieldInput) : le panneau du nom de lieu se ferme ; sinon
+    // il garde la palette que la boîte de dialogue lui écrase (vu par la grille, 2026-11-04)
+    HideMapNamePopUpWindow();
     ScriptContext_SetupScript((const u8 *)((uintptr_t)AgbMain + (intptr_t)args[0]));
     DebugTools_Print(out, "script @%d lance\n", args[0]);
 }
