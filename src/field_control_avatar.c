@@ -248,6 +248,9 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
     if (input->pressedStartButton)
     {
+        // PokemonNative3G : ProcessPlayerFieldInput de RF : la dame de Bourg Palette qui cache le panneau des conseils
+        // finit sa scène quand le joueur a déjà ouvert le menu (PalletTown, PalletTown_ProfessorOaksLab)
+        FlagSet(FLAG_KANTO_OPENED_START_MENU);
         PlaySE(SE_WIN_OPEN);
         ShowStartMenu();
         return TRUE;
@@ -297,6 +300,7 @@ static bool8 TryStartInteractionScript(struct MapPosition *position, u16 metatil
      && script != SecretBase_EventScript_RecordMixingPC
      && script != SecretBase_EventScript_DollInteract
      && script != SecretBase_EventScript_CushionInteract
+     && script != PalletTown_PlayersHouse_2F_EventScript_PC // PokemonNative3G : RF, le PC de la chambre de Bourg Palette
      && script != EventScript_PC)
         PlaySE(SE_SELECT);
 

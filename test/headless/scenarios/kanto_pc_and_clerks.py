@@ -86,6 +86,9 @@ def play(game):
         expect(game, on != off, f"{map_name} : le PC s'allume ({off} -> {on})")
         expect(game, after == off, f"{map_name} : le PC s'éteint ({on} -> {after})")
         expect(game, "SE_PC_ON" in played and "SE_PC_OFF" in played, f"{map_name} : sons du PC ({played})")
+        # TryStartInteractionScript de RF (2026-11-04) : pas de SE_SELECT avant l'allumage, le PC joue SE_PC_ON
+        expect(game, "SE_PC_ON" in played and "SE_SELECT" not in played[:played.index("SE_PC_ON")],
+               f"{map_name} : pas de son « sélection » avant SE_PC_ON ({played})")
     # Jadielle : COLIS de CHEN déjà livré (la scène de la boutique, faite pour un joueur qui entre par la porte, ne
     # se joue pas ; avant la livraison, le vendeur dit de saluer CHEN au lieu de vendre)
     game.var("VAR_KANTO_MAP_SCENE_VIRIDIAN_CITY_MART", 2)
