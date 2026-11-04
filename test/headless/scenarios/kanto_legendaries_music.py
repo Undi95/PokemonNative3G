@@ -33,7 +33,8 @@ def play(game):
                 game.script(script)
             else:
                 talk_to(game, "UP", finish=False)
-            finish_dialog(game, on_battle=lambda g: (battled.append(True), fight_battle(g)))
+            # limite large : le légendaire peut enchaîner des capacités de statut (hasard) avant le coup qui met K.O.
+            finish_dialog(game, on_battle=lambda g: (battled.append(True), fight_battle(g, limit=4000)))
         except GameError as error:
             game.note(f"{name} : {error}")
         played = [s for f, s in game.songs if f >= since]

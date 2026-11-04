@@ -505,7 +505,12 @@ bool8 IsDma3ManagerBusyWithBgCopy(void)
     int i;
 
 #ifdef PORTABLE
-	RunDMAsAndVBlank();
+    // PokemonNative3G : les copies en attente se font tout de suite, comme le portage le voulait, mais sans toute
+    // l'interruption VBlank qu'il lançait ici (RunDMAsAndVBlank) : à chaque question, un VBlank de plus en pleine
+    // image (un tirage du hasard, deux en combat ; compteurs d'images, dont le chrono de la Colline des Dresseurs ;
+    // callback VBlank de l'écran rejoué ; link). Trouvé le 2026-11-04 avec jeu.hasard.appels (le panneau du nom de
+    // lieu de RF le demande en se fermant)
+    ProcessDma3Requests();
     return FALSE;
 #endif
     for (i = 0; i < 0x80; i++)

@@ -11,6 +11,9 @@
   le Câble Link et l'objet tenu sont gardés.
 
 ### Corrections
+- PC et Android : chaque fois que le jeu attendait la fin d'une copie d'écran, il rejouait toute une interruption
+  d'image de plus. Les chronomètres du MONT DRESSEURS, de la TOUR DRESSEURS et de la Piste Cyclable (Route 110)
+  prenaient de l'avance pendant les chargements, et les tirages au hasard ne suivaient plus ceux de la cartouche.
 - Pêcheur de la Route 12 et maison de l'Île 6 (records de MAGICARPE et de SCARHINO) : « même taille que la dernière
   fois » est de nouveau dit, l'ancien record s'affiche, et le record de départ n'est plus de 90 cm.
 - Tutoriel de capture de Timmy : son sac ne montre plus les objets du joueur, qui ne gagne plus une POTION au passage.

@@ -681,8 +681,10 @@ def fight_battle(game, limit=600, watch=None):
             continue
         new_texts = [text for _, _, text in game.texts[seen:]]
         seen = mark(game)
-        # Plus de PP, sans effet, ou refusée (TOURMENTE « empêche », ENTRAVE, PROVOC « ne peut pas ») : une autre
-        if any(words in t for t in new_texts for words in ("plus de PP", "affecte pas", "empêche", "ne peut pas")):
+        # Plus de PP, sans effet, ou refusée (TOURMENTE « empêche », ENTRAVE « Il y a une ENTRAVE sur … », PROVOC « ne
+        # peut pas ») : une autre
+        if any(words in t for t in new_texts
+               for words in ("plus de PP", "affecte pas", "empêche", "ne peut pas", "une ENTRAVE sur")):
             change_move = True
         # The moves are on screen: their type was just printed
         if change_move and any(t.startswith("TYPE/") for t in new_texts):

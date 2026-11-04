@@ -25,6 +25,7 @@ def solve(game, map_name, boulders, goal, start):
 
 def play(game):
     continue_game(game)
+    game.dev("jeu.rencontres", 0)                       # pas de POKéMON sauvage pendant les poussées (Route Victoire)
 
     # Îles Écume 1F : le rocher de droite dans le trou (30, 8)
     boulder, plan = solve(game, "SeafoamIslands_1F", [(32, 9), (22, 12)], (30, 8), (33, 10))

@@ -107,6 +107,8 @@ def play(game):
     game.dev("joueur.pv", 0, 999)
     # RAIKOU et ENTEI ont HURLEMENT au N.50 (SUICUNE non)
     roarers = [n for n, s in DOGS.items() if s in ("RAIKOU", "ENTEI")]
+    # une graine où le chien tire HURLEMENT avant de mettre K.O. le POKéMON du joueur (sinon : combat perdu)
+    game.dev("jeu.hasard", int(os.environ.get("KANTO_ROAR_SEED", "1")))
     second = meet_dog(game, lambda g: fight_battle(g, limit=1500), roarers)
     end = roamers(game)
     roared = saw_text(game, "HURLEMENT")

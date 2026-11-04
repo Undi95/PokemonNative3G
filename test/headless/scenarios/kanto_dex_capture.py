@@ -10,6 +10,9 @@ import names
 sys.path.insert(0, os.path.join(os.path.dirname(driver.__file__), 'scenarios'))
 from kanto_unown import Battle, stop_at_battle
 
+# Une graine où la rencontre est un RATTATA (jeu.hasard, posée sur la Route 1 juste avant les pas)
+SEED = int(os.environ.get("KANTO_DEX_CAPTURE_SEED", "2"))
+
 OPTION_POKEDEX = 10
 OPTION_BAG = 13
 
@@ -30,7 +33,7 @@ def play(game):
     expect(game, not caught(game, "SPECIES_RATTATA"), "RATTATA pas encore attrapé")
 
     game.warp("Route1", 12, 9); game.wait(30)
-    game.dev("jeu.hasard", 4)                              # la rencontre : un RATTATA (comme kanto_bag_battle)
+    game.dev("jeu.hasard", SEED)                           # la rencontre : un RATTATA
     since = mark(game)
     try:
         for i in range(60):

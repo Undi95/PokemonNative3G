@@ -232,6 +232,13 @@ doit refaire cette valeur quand on la connaît, sinon garder le comportement en 
 Les scénarios de défis (`challenge_*`) sous ASan ont trouvé ces cas ; `docker/test-sanitize.sh` les vérifie (les
 derniers : `egg_hatch_kanto`, `kanto_mail`, `kanto_clear_save`, `kanto_cut_surf`, le 2026-11-02).
 
+**Une seule interruption VBlank par image.** `VBlankIntr` tire le hasard (`Random()`, sauf en combat link/Frontière),
+compte les images (`vblankCounter1/2`, chronos du MONT DRESSEURS, de la TOUR DRESSEURS et de la Piste Cyclable) et
+rejoue le callback VBlank de l'écran. Sur PC, les copies DMA sont immédiates : `IsDma3ManagerBusyWithBgCopy` les
+termine (`ProcessDma3Requests`) et répond FALSE, sans relancer de VBlank (le portage d'origine appelait
+`RunDMAsAndVBlank` : une image de plus à chaque question, corrigé le 2026-11-04). Pour voir qui consomme le hasard :
+`jeu.hasard.appels` (DEVTOOLS.md).
+
 ## Ce que l'explorateur ne fait pas (à tester autrement)
 
 Limites connues, qui restent dans ses « interactions en erreur » sans être des bugs :

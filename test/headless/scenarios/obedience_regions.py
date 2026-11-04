@@ -22,7 +22,8 @@ def set_badges(game, kanto, hoenn):
 def obeyed_turns(game, place):
     """Combat sauvage dans l'herbe de place, TURNS tours de TREMPETTE, puis FUITE : tours où il a obéi."""
     game.warp(*place); game.wait(30)
-    game.dev("jeu.hasard", 11)
+    # une graine où le POKéMON sauvage ne met pas RATTATA K.O. pendant les tours de TREMPETTE
+    game.dev("jeu.hasard", int(os.environ.get("OBEDIENCE_SEED", "1")))
     since = mark(game)
     steps = ("UP", "DOWN") if place[0] == "Route1" else ("RIGHT", "LEFT")
     for i in range(300):

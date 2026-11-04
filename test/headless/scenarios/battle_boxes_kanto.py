@@ -36,7 +36,7 @@ def play(game):
     wait_action_menu(game)
     log(game, "double")
     expect(game, game.state.battle, "combat double contre ELI et ANNE")
-    fight_battle(game, limit=1500)
+    fight_battle(game, limit=4000)                      # combat double : sa durée dépend du hasard
     finish_dialog(game, limit=200)
 
     # Parc Safari : le guichet (OUI à tout), puis l'herbe

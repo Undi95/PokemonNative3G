@@ -194,7 +194,12 @@ def daisy(game):
     game.var("VAR_KANTO_MAP_SCENE_PALLET_TOWN_RIVALS_HOUSE", 2)       # CARTE reçue : Daisy n'est plus à table
     game.var("VAR_KANTO_MASSAGE_COOLDOWN_STEP_COUNTER", 500)
     game.dev("joueur.amitie", 1, 100)                  # PIKACHU
-    since = talk_wanderer(game, "PalletTown_RivalsHouse", 1, (8, 7))   # Daisy se promène autour de (10,6)
+    # Daisy se promène autour de (10,6), au hasard : son script directement, comme si on lui parlait (talk_wanderer
+    # la manquait selon le hasard)
+    game.warp("PalletTown_RivalsHouse", 8, 7); game.wait(40)
+    wait_until(game, lambda s: s.free)
+    since = mark(game)
+    game.script("PalletTown_RivalsHouse_EventScript_Daisy")
     converse(game, slot=1)
     massaged = (party(game)[1][2], game.var("VAR_KANTO_MASSAGE_COOLDOWN_STEP_COUNTER"), joined(game, since))
     wait_until(game, lambda s: s.free)

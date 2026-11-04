@@ -9,6 +9,11 @@ from driver import GameError, fight_battle, leave_map, wait_until, walk_to
 from kanto_tour import debug_warp, give_mewtwo, log
 
 
+# Une graine où la rencontre est un RATTATA (jeu.hasard, posée en arrivant sur la Route 1 : la suite ne dépend plus
+# du minutage d'avant)
+SEED = int(os.environ.get("KANTO_WILD_SEED", "4"))
+
+
 class Battle(Exception):
     pass
 
@@ -25,6 +30,7 @@ def play(game):
     give_mewtwo(game)
     debug_warp(game, 1); log(game, "Jadielle")
     walk_to(game, 23, 39); leave_map(game, "DOWN"); log(game, "Route 1")
+    game.dev("jeu.hasard", SEED)
     try:
         walk_to(game, 12, 9, on_battle=stop_at_battle)
     except Battle:

@@ -16,14 +16,20 @@ def free_row(name, length=5):
     la droite (4 cases)."""
     grid = maps.load(name)
     info = json.load(open(os.path.join(maps.REPO_DIR, "data", "maps", name, "map.json"), encoding="utf-8"))
-    taken = {(o["x"], o["y"]) for o in info.get("object_events", [])} | set(grid.warps)
-    taken |= {(c["x"], c["y"]) for c in info.get("coord_events", [])}
-    for y in range(1, grid.height - 1):
-        row = grid.tiles[y]
-        for x in range(0, grid.width - length + 1):
-            cells = [(x + i, y) for i in range(length)]
-            if all(row[cx] == "." and (cx, cy) not in taken for cx, cy in cells):
-                return x, y
+    objects = info.get("object_events", [])
+    fixed = set(grid.warps) | {(c["x"], c["y"]) for c in info.get("coord_events", [])}
+    # D'abord loin de toute la zone où chaque PNJ se promène (movement_range_x/y : un PNJ qui erre au hasard peut barrer
+    # la rangée), sinon loin de leur seule case de départ
+    wander = {(o["x"] + dx, o["y"] + dy) for o in objects
+              for dx in range(-int(o.get("movement_range_x", 0)), int(o.get("movement_range_x", 0)) + 1)
+              for dy in range(-int(o.get("movement_range_y", 0)), int(o.get("movement_range_y", 0)) + 1)}
+    for taken in (fixed | wander, fixed | {(o["x"], o["y"]) for o in objects}):
+        for y in range(1, grid.height - 1):
+            row = grid.tiles[y]
+            for x in range(0, grid.width - length + 1):
+                cells = [(x + i, y) for i in range(length)]
+                if all(row[cx] == "." and (cx, cy) not in taken for cx, cy in cells):
+                    return x, y
     raise GameError(f"pas de rangée libre dans {name}")
 
 

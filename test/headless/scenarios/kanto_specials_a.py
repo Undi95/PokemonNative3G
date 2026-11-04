@@ -81,6 +81,9 @@ def elevator(game):
 
 @part("poubelles")
 def trash_cans(game):
+    # Les dresseurs de l'arène battus : le chemin vers les interrupteurs (tirés au hasard) croise leur regard
+    for trainer in ("TRAINER_KANTO_SAILOR_DWAYNE", "TRAINER_KANTO_ENGINEER_BAILY", "TRAINER_KANTO_GENTLEMAN_TUCKER"):
+        game.flag(names.value("KANTO_TRAINER_FLAGS_START") + names.value(trainer) - names.value("KANTO_TRAINERS_START"), 1)
     game.warp("VermilionCity_Gym", 5, 16); game.wait(60)
     switches = (game.var("VAR_TEMP_0"), game.var("VAR_TEMP_1"))   # tirés à l'arrivée : plus de téléport ensuite
     said = []
