@@ -28,6 +28,7 @@ void ItemUseOnFieldCB_Itemfinder(u8 taskId); // Rouge Feu (kanto_itemfinder.c)
 #include "item.h"
 #include "item_menu.h"
 #include "item_use.h"
+#include "kanto_item_menu.h"
 #include "mail.h"
 #include "main.h"
 #include "menu.h"
@@ -498,8 +499,15 @@ static void RemoveUsedItem(void)
     StringExpandPlaceholders(gStringVar4, gText_PlayerUsedVar2);
     if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
-        UpdatePocketItemList(GetItemPocket(gSpecialVar_ItemId));
-        UpdatePocketListPosition(GetItemPocket(gSpecialVar_ItemId));
+        // PokemonNative3G : objet pris dans le sac de RF (Options > SAC) : ses listes à lui (RemoveUsedItem de RF).
+        // Le sac d'Émeraude peut n'avoir jamais été ouvert (gBagMenu nul : CORDE SORTIE, scénario kanto_escape_rope).
+        if (KantoBag_IsActive())
+            KantoBag_RemoveUsedItem(GetItemPocket(gSpecialVar_ItemId));
+        else
+        {
+            UpdatePocketItemList(GetItemPocket(gSpecialVar_ItemId));
+            UpdatePocketListPosition(GetItemPocket(gSpecialVar_ItemId));
+        }
     }
     else
     {

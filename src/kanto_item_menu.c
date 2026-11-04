@@ -2560,6 +2560,15 @@ void KantoBag_CloseItemMessage(u8 taskId)
         Task_ReturnToBagFromContextMenu(taskId);
 }
 
+// PokemonNative3G : la fin de RemoveUsedItem de RF (item_use.c), pour item_use.c d'Émeraude quand l'objet vient du sac
+// de RF (REPOUSSE, CORDE SORTIE, POKéPOUPEE). RF passe le numéro de poche de l'objet (POCKET_ITEMS = 1), là où ces
+// fonctions attendent un index (OPEN_BAG_ITEMS = 0), comme Émeraude dans le sien : transcrit tel quel.
+void KantoBag_RemoveUsedItem(u8 pocket)
+{
+    Pocket_CalculateNItemsAndMaxShowed(pocket);
+    PocketCalculateInitialCursorPosAndItemsAbove(pocket);
+}
+
 void KantoBag_FadeAndClose(u8 taskId)
 {
     if (GetItemPocket(gSpecialVar_ItemId) == POCKET_BERRIES)
