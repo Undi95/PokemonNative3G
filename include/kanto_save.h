@@ -53,13 +53,18 @@ struct SaveBlockKanto
 
 extern struct SaveBlockKanto gSaveBlockKanto;
 
-// Poches agrandies du sac (constants/global.h), écrites après le bloc Kanto
-#define SAVEBLOCK_BAG_OFFSET 4096
+// Poches du sac sans limite (constants/global.h). Depuis le 2026-11-04, écrites après le Panthéon de Kanto
+// (KANTO_HOF_OFFSET) : 999 lignes par poche ne tiennent plus à SAVEBLOCK_OLD_BAG_OFFSET, où l'ancien bloc « BAG1 »
+// (160 Objets, 80 Objets rares) est relu une fois (BagSave_Read)
+#define SAVEBLOCK_OLD_BAG_OFFSET 4096
+#define KANTO_HOF_OFFSET 8192
+#define SAVEBLOCK_BAG_OFFSET 16384
 struct SaveBlockBag
 {
     u32 magic;
     struct ItemSlot items[BIG_BAG_ITEMS_COUNT];
     struct ItemSlot keyItems[BIG_BAG_KEYITEMS_COUNT];
+    struct ItemSlot pokeBalls[BIG_BAG_POKEBALLS_COUNT];
     u32 checksum;
 };
 

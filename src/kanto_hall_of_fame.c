@@ -366,6 +366,10 @@ struct HallofFameTeam
     struct HallofFameMon mon[PARTY_SIZE];
 };
 
+// PokemonNative3G : les équipes et leur en-tête (8 octets) tiennent avant le sac dans le bloc annexe (kanto_save.h)
+STATIC_ASSERT(KANTO_HOF_OFFSET + 8 + sizeof(struct HallofFameTeam) * HALL_OF_FAME_MAX_TEAMS <= SAVEBLOCK_BAG_OFFSET,
+              KantoHallOfFameFitsBeforeBag);
+
 
 struct HofGfx
 {

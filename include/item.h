@@ -28,7 +28,7 @@ struct Item
 struct BagPocket
 {
     struct ItemSlot *itemSlots;
-    u8 capacity;
+    u16 capacity; // PokemonNative3G : u8 dans Émeraude ; les poches du sac ont 999 lignes (BIG_BAG_*)
 };
 
 extern const struct Item gItems[];
@@ -47,7 +47,7 @@ bool8 CheckBagHasSpace(u16 itemId, u16 count);
 bool8 AddBagItem(u16 itemId, u16 count);
 bool8 RemoveBagItem(u16 itemId, u16 count);
 u8 GetPocketByItemId(u16 itemId);
-void ClearItemSlots(struct ItemSlot *itemSlots, u8 itemCount);
+void ClearItemSlots(struct ItemSlot *itemSlots, u16 itemCount);
 u8 CountUsedPCItemSlots(void);
 bool8 CheckPCHasItem(u16 itemId, u16 count);
 bool8 AddPCItem(u16 itemId, u16 count);

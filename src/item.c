@@ -61,15 +61,15 @@ void ApplyNewEncryptionKeyToBagItems_(u32 newKey) // really GF?
 
 void SetBagItemsPointers(void)
 {
-    // PokemonNative3G : poches agrandies (gSaveBlockBag, kanto_save.c)
+    // PokemonNative3G : poches sans limite (gSaveBlockBag, kanto_save.c)
     gBagPockets[ITEMS_POCKET].itemSlots = gSaveBlockBag.items;
     gBagPockets[ITEMS_POCKET].capacity = BIG_BAG_ITEMS_COUNT;
 
     gBagPockets[KEYITEMS_POCKET].itemSlots = gSaveBlockBag.keyItems;
     gBagPockets[KEYITEMS_POCKET].capacity = BIG_BAG_KEYITEMS_COUNT;
 
-    gBagPockets[BALLS_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_PokeBalls;
-    gBagPockets[BALLS_POCKET].capacity = BAG_POKEBALLS_COUNT;
+    gBagPockets[BALLS_POCKET].itemSlots = gSaveBlockBag.pokeBalls;
+    gBagPockets[BALLS_POCKET].capacity = BIG_BAG_POKEBALLS_COUNT;
 
     gBagPockets[TMHM_POCKET].itemSlots = gSaveBlock1Ptr->bagPocket_TMHM;
     gBagPockets[TMHM_POCKET].capacity = BAG_TMHM_COUNT;
@@ -123,7 +123,7 @@ void GetBerryCountString(u8 *dst, const u8 *berryName, u32 quantity)
 
 bool8 IsBagPocketNonEmpty(u8 pocket)
 {
-    u8 i;
+    u16 i; // PokemonNative3G : u8 dans Émeraude (poches de 999 lignes)
 
     for (i = 0; i < gBagPockets[pocket - 1].capacity; i++)
     {
@@ -135,7 +135,7 @@ bool8 IsBagPocketNonEmpty(u8 pocket)
 
 bool8 CheckBagHasItem(u16 itemId, u16 count)
 {
-    u8 i;
+    u16 i; // PokemonNative3G : u8 dans Émeraude (poches de 999 lignes)
     u8 pocket;
 
     if (GetItemPocket(itemId) == 0)
@@ -180,7 +180,7 @@ bool8 HasAtLeastOneBerry(void)
 
 bool8 CheckBagHasSpace(u16 itemId, u16 count)
 {
-    u8 i;
+    u16 i; // PokemonNative3G : u8 dans Émeraude (poches de 999 lignes)
     u8 pocket;
     u16 slotCapacity;
     u16 ownedCount;
@@ -244,7 +244,7 @@ bool8 CheckBagHasSpace(u16 itemId, u16 count)
 
 bool8 AddBagItem(u16 itemId, u16 count)
 {
-    u8 i;
+    u16 i; // PokemonNative3G : u8 dans Émeraude (poches de 999 lignes)
 
     if (GetItemPocket(itemId) == POCKET_NONE)
         return FALSE;
@@ -351,8 +351,8 @@ bool8 AddBagItem(u16 itemId, u16 count)
 
 bool8 RemoveBagItem(u16 itemId, u16 count)
 {
-    u8 i;
-    u16 totalQuantity = 0;
+    u16 i; // PokemonNative3G : u8 dans Émeraude (poches de 999 lignes) ; total en u32 (plus de 65 535 possibles)
+    u32 totalQuantity = 0;
 
     if (GetItemPocket(itemId) == POCKET_NONE || itemId == ITEM_NONE)
         return FALSE;
@@ -365,7 +365,7 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
     else
     {
         u8 pocket;
-        u8 var;
+        u16 var; // PokemonNative3G : u8 dans Émeraude (ligne choisie au-delà de 255)
         u16 ownedCount;
         struct BagPocket *itemPocket;
 
@@ -442,7 +442,7 @@ u8 GetPocketByItemId(u16 itemId)
     return GetItemPocket(itemId);
 }
 
-void ClearItemSlots(struct ItemSlot *itemSlots, u8 itemCount)
+void ClearItemSlots(struct ItemSlot *itemSlots, u16 itemCount) // PokemonNative3G : u8 dans Émeraude
 {
     u16 i;
 
@@ -677,7 +677,7 @@ void ClearBag(void)
 u16 CountTotalItemQuantityInBag(u16 itemId)
 {
     u16 i;
-    u16 ownedCount = 0;
+    u32 ownedCount = 0; // PokemonNative3G : u16 dans Émeraude ; plafonné à 65 535 au retour (sac sans limite)
     struct BagPocket *bagPocket = &gBagPockets[GetItemPocket(itemId) - 1];
 
     for (i = 0; i < bagPocket->capacity; i++)
@@ -686,7 +686,7 @@ u16 CountTotalItemQuantityInBag(u16 itemId)
             ownedCount += GetBagItemQuantity(&bagPocket->itemSlots[i].quantity);
     }
 
-    return ownedCount;
+    return min(ownedCount, 0xFFFF);
 }
 
 static bool8 CheckPyramidBagHasItem(u16 itemId, u16 count)

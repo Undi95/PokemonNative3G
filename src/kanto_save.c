@@ -78,8 +78,18 @@ void KantoSave_Read(void)
 #endif
 }
 
-// --- Poches agrandies du sac ---------------------------------------------------
-#define BAG_SAVE_MAGIC 0x42414731 // "BAG1"
+// --- Poches du sac sans limite ---------------------------------------------------
+#define BAG_SAVE_MAGIC 0x42414732 // "BAG2"
+
+// L'ancien bloc (jusqu'au 2026-11-04), à SAVEBLOCK_OLD_BAG_OFFSET
+#define OLD_BAG_SAVE_MAGIC 0x42414731 // "BAG1"
+struct OldSaveBlockBag
+{
+    u32 magic;
+    struct ItemSlot items[160];
+    struct ItemSlot keyItems[80];
+    u32 checksum;
+};
 
 EWRAM_DATA struct SaveBlockBag gSaveBlockBag = {0};
 
@@ -101,24 +111,50 @@ void BagSave_Write(void)
 #endif
 }
 
-// Sauvegarde sans ce bloc (antérieure) : on reprend les poches d'origine de SaveBlock1
-// (quantités chiffrées avec la même clé, copiées telles quelles).
+#ifdef PORTABLE
+static u32 OldBagSave_Checksum(const struct OldSaveBlockBag *bag)
+{
+    const u8 *p = (const u8 *)bag;
+    u32 sum = 0x811C9DC5, i;
+    for (i = 0; i < offsetof(struct OldSaveBlockBag, checksum); i++)
+        sum = (sum ^ p[i]) * 0x01000193;
+    return sum;
+}
+#endif
+
+// Sauvegarde d'avant ce bloc : les Objets et Objets rares de l'ancien bloc « BAG1 », ou, plus ancienne, les poches
+// d'origine de SaveBlock1 ; les Balls viennent toujours de SaveBlock1 (quantités chiffrées avec la même clé, copiées
+// telles quelles). Le bloc est écrit à la sauvegarde suivante.
 void BagSave_Read(void)
 {
 #ifdef PORTABLE
+    struct OldSaveBlockBag old;
+
     if (Platform_ReadExtraSaveAt(SAVEBLOCK_BAG_OFFSET, &gSaveBlockBag, sizeof(gSaveBlockBag))
      && gSaveBlockBag.magic == BAG_SAVE_MAGIC
      && gSaveBlockBag.checksum == BagSave_Checksum())
         return;
 #endif
     memset(&gSaveBlockBag, 0, sizeof(gSaveBlockBag));
-    memcpy(gSaveBlockBag.items, gSaveBlock1Ptr->bagPocket_Items, sizeof(gSaveBlock1Ptr->bagPocket_Items));
-    memcpy(gSaveBlockBag.keyItems, gSaveBlock1Ptr->bagPocket_KeyItems, sizeof(gSaveBlock1Ptr->bagPocket_KeyItems));
+#ifdef PORTABLE
+    if (Platform_ReadExtraSaveAt(SAVEBLOCK_OLD_BAG_OFFSET, &old, sizeof(old))
+     && old.magic == OLD_BAG_SAVE_MAGIC
+     && old.checksum == OldBagSave_Checksum(&old))
+    {
+        memcpy(gSaveBlockBag.items, old.items, sizeof(old.items));
+        memcpy(gSaveBlockBag.keyItems, old.keyItems, sizeof(old.keyItems));
+    }
+    else
+#endif
+    {
+        memcpy(gSaveBlockBag.items, gSaveBlock1Ptr->bagPocket_Items, sizeof(gSaveBlock1Ptr->bagPocket_Items));
+        memcpy(gSaveBlockBag.keyItems, gSaveBlock1Ptr->bagPocket_KeyItems, sizeof(gSaveBlock1Ptr->bagPocket_KeyItems));
+    }
+    memcpy(gSaveBlockBag.pokeBalls, gSaveBlock1Ptr->bagPocket_PokeBalls, sizeof(gSaveBlock1Ptr->bagPocket_PokeBalls));
 }
 
-// Panthéon de Kanto (src/kanto_hall_of_fame.c) : ses équipes, à part de celles de Hoenn,
-// écrites après le sac dans le bloc annexe
-#define KANTO_HOF_OFFSET 8192
+// Panthéon de Kanto (src/kanto_hall_of_fame.c) : ses équipes, à part de celles de Hoenn, écrites dans le bloc annexe
+// à KANTO_HOF_OFFSET (kanto_save.h), avant le sac (STATIC_ASSERT dans kanto_hall_of_fame.c)
 #define KANTO_HOF_MAGIC  0x464F484B // "KHOF"
 
 static u32 KantoHallOfFame_Checksum(const void *data, u32 size)

@@ -2,7 +2,19 @@
 
 ## Prochaine version
 
+### Nouveautés
+- Sac sans limite : les poches Objets, Objets rares et Balls ne sont plus jamais pleines (au-delà de 99, un objet
+  continue sur une nouvelle ligne). Les CT et les baies gardent une seule ligne chacune (99 CT, 999 baies), pour la
+  boîte à CT et le sac à baies de Rouge Feu. Les sauvegardes existantes sont reprises telles quelles.
+- Kanto sans le POKéDEX NATIONAL : comme dans Rouge Feu, un Pokémon n'évolue pas en un Pokémon de Johto absent des
+  Pokédex de Kanto et de Hoenn (Leuphorie, Mentali, Noctali, Steelix, Cizayox, Roigada, Tarpaud, Porygon2) ; la pierre,
+  le Câble Link et l'objet tenu sont gardés.
+
 ### Corrections
+- Pêcheur de la Route 12 et maison de l'Île 6 (records de MAGICARPE et de SCARHINO) : « même taille que la dernière
+  fois » est de nouveau dit, l'ancien record s'affiche, et le record de départ n'est plus de 90 cm.
+- Tutoriel de capture de Timmy : son sac ne montre plus les objets du joueur, qui ne gagne plus une POTION au passage.
+- Nouvelle partie : les curseurs du sac, de la boîte à CT et du sac à baies de Rouge Feu repartent du haut.
 - Nouvelle partie par-dessus une sauvegarde avec la boîte de dialogue KANTO : l'intro du Prof. Seko avait un cadre
   cassé et un texte bleu, et la partie démarrait avec le personnage de l'ancienne partie (Red à Hoenn). Les options
   d'affichage sont gardées, le personnage est celui choisi dans l'intro.

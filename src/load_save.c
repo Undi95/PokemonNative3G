@@ -22,9 +22,10 @@ static void ApplyNewEncryptionKeyToTrainerTowerTimes(u32 encryptionKey);
 
 struct LoadedSaveData
 {
- /*0x0000*/ struct ItemSlot items[BAG_ITEMS_COUNT];
- /*0x0078*/ struct ItemSlot keyItems[BAG_KEYITEMS_COUNT];
- /*0x00F0*/ struct ItemSlot pokeBalls[BAG_POKEBALLS_COUNT];
+            // PokemonNative3G : poches sans limite (gSaveBlockBag)
+            struct ItemSlot items[BIG_BAG_ITEMS_COUNT];
+            struct ItemSlot keyItems[BIG_BAG_KEYITEMS_COUNT];
+            struct ItemSlot pokeBalls[BIG_BAG_POKEBALLS_COUNT];
  /*0x0130*/ struct ItemSlot TMsHMs[BAG_TMHM_COUNT];
  /*0x0230*/ struct ItemSlot berries[BAG_BERRIES_COUNT];
  /*0x02E8*/ struct Mail mail[MAIL_COUNT];
@@ -228,17 +229,18 @@ void LoadPlayerBag(void)
 {
     int i;
 
+    // PokemonNative3G : Objets, Objets rares et Balls sont dans gSaveBlockBag (poches sans limite), plus dans SaveBlock1
     // load player items.
-    for (i = 0; i < BAG_ITEMS_COUNT; i++)
-        gLoadedSaveData.items[i] = gSaveBlock1Ptr->bagPocket_Items[i];
+    for (i = 0; i < BIG_BAG_ITEMS_COUNT; i++)
+        gLoadedSaveData.items[i] = gSaveBlockBag.items[i];
 
     // load player key items.
-    for (i = 0; i < BAG_KEYITEMS_COUNT; i++)
-        gLoadedSaveData.keyItems[i] = gSaveBlock1Ptr->bagPocket_KeyItems[i];
+    for (i = 0; i < BIG_BAG_KEYITEMS_COUNT; i++)
+        gLoadedSaveData.keyItems[i] = gSaveBlockBag.keyItems[i];
 
     // load player pokeballs.
-    for (i = 0; i < BAG_POKEBALLS_COUNT; i++)
-        gLoadedSaveData.pokeBalls[i] = gSaveBlock1Ptr->bagPocket_PokeBalls[i];
+    for (i = 0; i < BIG_BAG_POKEBALLS_COUNT; i++)
+        gLoadedSaveData.pokeBalls[i] = gSaveBlockBag.pokeBalls[i];
 
     // load player TMs and HMs.
     for (i = 0; i < BAG_TMHM_COUNT; i++)
@@ -261,16 +263,16 @@ void SavePlayerBag(void)
     u32 encryptionKeyBackup;
 
     // save player items.
-    for (i = 0; i < BAG_ITEMS_COUNT; i++)
-        gSaveBlock1Ptr->bagPocket_Items[i] = gLoadedSaveData.items[i];
+    for (i = 0; i < BIG_BAG_ITEMS_COUNT; i++)
+        gSaveBlockBag.items[i] = gLoadedSaveData.items[i];
 
     // save player key items.
-    for (i = 0; i < BAG_KEYITEMS_COUNT; i++)
-        gSaveBlock1Ptr->bagPocket_KeyItems[i] = gLoadedSaveData.keyItems[i];
+    for (i = 0; i < BIG_BAG_KEYITEMS_COUNT; i++)
+        gSaveBlockBag.keyItems[i] = gLoadedSaveData.keyItems[i];
 
     // save player pokeballs.
-    for (i = 0; i < BAG_POKEBALLS_COUNT; i++)
-        gSaveBlock1Ptr->bagPocket_PokeBalls[i] = gLoadedSaveData.pokeBalls[i];
+    for (i = 0; i < BIG_BAG_POKEBALLS_COUNT; i++)
+        gSaveBlockBag.pokeBalls[i] = gLoadedSaveData.pokeBalls[i];
 
     // save player TMs and HMs.
     for (i = 0; i < BAG_TMHM_COUNT; i++)

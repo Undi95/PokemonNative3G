@@ -63,7 +63,7 @@
                             max(BAG_BERRIES_COUNT,           \
                             max(BIG_BAG_ITEMS_COUNT,         \
                             max(BIG_BAG_KEYITEMS_COUNT,      \
-                                BAG_POKEBALLS_COUNT))))) + 1)
+                                BIG_BAG_POKEBALLS_COUNT))))) + 1)
 
 // Up to 8 item slots can be visible at a time
 #define MAX_ITEMS_SHOWN 8
@@ -113,8 +113,8 @@ struct ListBuffer2 {
 };
 
 struct TempWallyBag {
-    struct ItemSlot bagPocket_Items[BAG_ITEMS_COUNT];
-    struct ItemSlot bagPocket_PokeBalls[BAG_POKEBALLS_COUNT];
+    struct ItemSlot bagPocket_Items[BIG_BAG_ITEMS_COUNT];       // PokemonNative3G : poches sans limite
+    struct ItemSlot bagPocket_PokeBalls[BIG_BAG_POKEBALLS_COUNT];
     u16 cursorPosition[POCKETS_COUNT];
     u16 scrollPosition[POCKETS_COUNT];
     u16 unused;
@@ -1168,7 +1168,7 @@ static void InitPocketScrollPositions(void)
         SetCursorScrollWithinListBounds(&gBagPosition.scrollPosition[i], &gBagPosition.cursorPosition[i], gBagMenu->numShownItems[i], gBagMenu->numItemStacks[i], MAX_ITEMS_SHOWN);
 }
 
-u8 GetItemListPosition(u8 pocketId)
+u16 GetItemListPosition(u8 pocketId) // PokemonNative3G : u8 dans Émeraude (lignes au-delà de 255)
 {
     return gBagPosition.scrollPosition[pocketId] + gBagPosition.cursorPosition[pocketId];
 }
@@ -2319,17 +2319,18 @@ static void PrepareBagForWallyTutorial(void)
 {
     u32 i;
 
+    // PokemonNative3G : les poches du sac sont dans gSaveBlockBag (gBagPockets), plus dans SaveBlock1
     sTempWallyBag = AllocZeroed(sizeof(*sTempWallyBag));
-    memcpy(sTempWallyBag->bagPocket_Items, gSaveBlock1Ptr->bagPocket_Items, sizeof(gSaveBlock1Ptr->bagPocket_Items));
-    memcpy(sTempWallyBag->bagPocket_PokeBalls, gSaveBlock1Ptr->bagPocket_PokeBalls, sizeof(gSaveBlock1Ptr->bagPocket_PokeBalls));
+    memcpy(sTempWallyBag->bagPocket_Items, gBagPockets[ITEMS_POCKET].itemSlots, sizeof(sTempWallyBag->bagPocket_Items));
+    memcpy(sTempWallyBag->bagPocket_PokeBalls, gBagPockets[BALLS_POCKET].itemSlots, sizeof(sTempWallyBag->bagPocket_PokeBalls));
     sTempWallyBag->pocket = gBagPosition.pocket;
     for (i = 0; i < POCKETS_COUNT; i++)
     {
         sTempWallyBag->cursorPosition[i] = gBagPosition.cursorPosition[i];
         sTempWallyBag->scrollPosition[i] = gBagPosition.scrollPosition[i];
     }
-    ClearItemSlots(gSaveBlock1Ptr->bagPocket_Items, BAG_ITEMS_COUNT);
-    ClearItemSlots(gSaveBlock1Ptr->bagPocket_PokeBalls, BAG_POKEBALLS_COUNT);
+    ClearItemSlots(gBagPockets[ITEMS_POCKET].itemSlots, BIG_BAG_ITEMS_COUNT);
+    ClearItemSlots(gBagPockets[BALLS_POCKET].itemSlots, BIG_BAG_POKEBALLS_COUNT);
     ResetBagScrollPositions();
 }
 
@@ -2337,8 +2338,8 @@ static void RestoreBagAfterWallyTutorial(void)
 {
     u32 i;
 
-    memcpy(gSaveBlock1Ptr->bagPocket_Items, sTempWallyBag->bagPocket_Items, sizeof(sTempWallyBag->bagPocket_Items));
-    memcpy(gSaveBlock1Ptr->bagPocket_PokeBalls, sTempWallyBag->bagPocket_PokeBalls, sizeof(sTempWallyBag->bagPocket_PokeBalls));
+    memcpy(gBagPockets[ITEMS_POCKET].itemSlots, sTempWallyBag->bagPocket_Items, sizeof(sTempWallyBag->bagPocket_Items));
+    memcpy(gBagPockets[BALLS_POCKET].itemSlots, sTempWallyBag->bagPocket_PokeBalls, sizeof(sTempWallyBag->bagPocket_PokeBalls));
     gBagPosition.pocket = sTempWallyBag->pocket;
     for (i = 0; i < POCKETS_COUNT; i++)
     {

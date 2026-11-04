@@ -100,17 +100,17 @@ struct BagMenuAlloc
     u16 contextMenuSelectedItem;
     u8 pocketScrollArrowsTask;
     u8 pocketSwitchArrowsTask;
-    u8 nItems[NUM_BAG_POCKETS_NO_CASES];
+    u16 nItems[NUM_BAG_POCKETS_NO_CASES]; // PokemonNative3G : u8 dans RF (poches de 999 lignes)
     u8 maxShowed[NUM_BAG_POCKETS_NO_CASES];
     u8 data[4];
 };
 
-// PokemonNative3G : les poches OBJETS et OBJ. RARES de la fusion sont agrandies (gSaveBlockBag)
+// PokemonNative3G : les poches OBJETS, OBJ. RARES et BALLS de la fusion sont sans limite (gSaveBlockBag)
 struct BagSlots
 {
     struct ItemSlot bagPocket_Items[BIG_BAG_ITEMS_COUNT];
     struct ItemSlot bagPocket_KeyItems[BIG_BAG_KEYITEMS_COUNT];
-    struct ItemSlot bagPocket_PokeBalls[BAG_POKEBALLS_COUNT];
+    struct ItemSlot bagPocket_PokeBalls[BIG_BAG_POKEBALLS_COUNT];
     u16 itemsAbove[NUM_BAG_POCKETS_NO_CASES];
     u16 cursorPos[NUM_BAG_POCKETS_NO_CASES];
     u16 registeredItem;
@@ -912,7 +912,7 @@ static void CalculateInitialCursorPosAndItemsAbove(void)
 static void UpdatePocketScrollPositions(void)
 {
     u8 i;
-    u8 j;
+    u16 j; // PokemonNative3G : u8 dans RF (poches de 999 lignes)
 
     for (i = 0; i < NUM_BAG_POCKETS_NO_CASES; i++)
     {
@@ -2099,7 +2099,7 @@ static void BackUpPlayerBag(void)
     sBackupPlayerBag = AllocZeroed(sizeof(struct BagSlots));
     memcpy(sBackupPlayerBag->bagPocket_Items, gBagPockets[ITEMS_POCKET].itemSlots, BIG_BAG_ITEMS_COUNT * sizeof(struct ItemSlot));
     memcpy(sBackupPlayerBag->bagPocket_KeyItems, gBagPockets[KEYITEMS_POCKET].itemSlots, BIG_BAG_KEYITEMS_COUNT * sizeof(struct ItemSlot));
-    memcpy(sBackupPlayerBag->bagPocket_PokeBalls, gBagPockets[BALLS_POCKET].itemSlots, BAG_POKEBALLS_COUNT * sizeof(struct ItemSlot));
+    memcpy(sBackupPlayerBag->bagPocket_PokeBalls, gBagPockets[BALLS_POCKET].itemSlots, BIG_BAG_POKEBALLS_COUNT * sizeof(struct ItemSlot));
     sBackupPlayerBag->registeredItem = gSaveBlock1Ptr->registeredItem;
     sBackupPlayerBag->pocket = gBagMenuState.pocket;
     sBackupPlayerBag->location = gBagMenuState.location;
@@ -2111,7 +2111,7 @@ static void BackUpPlayerBag(void)
     }
     ClearItemSlots(gBagPockets[ITEMS_POCKET].itemSlots, BIG_BAG_ITEMS_COUNT);
     ClearItemSlots(gBagPockets[KEYITEMS_POCKET].itemSlots, BIG_BAG_KEYITEMS_COUNT);
-    ClearItemSlots(gBagPockets[BALLS_POCKET].itemSlots, BAG_POKEBALLS_COUNT);
+    ClearItemSlots(gBagPockets[BALLS_POCKET].itemSlots, BIG_BAG_POKEBALLS_COUNT);
     gSaveBlock1Ptr->registeredItem = ITEM_NONE;
     ResetBagCursorPositions();
 }
@@ -2121,7 +2121,7 @@ static void RestorePlayerBag(void)
     u32 i;
     memcpy(gBagPockets[ITEMS_POCKET].itemSlots, sBackupPlayerBag->bagPocket_Items, BIG_BAG_ITEMS_COUNT * sizeof(struct ItemSlot));
     memcpy(gBagPockets[KEYITEMS_POCKET].itemSlots, sBackupPlayerBag->bagPocket_KeyItems, BIG_BAG_KEYITEMS_COUNT * sizeof(struct ItemSlot));
-    memcpy(gBagPockets[BALLS_POCKET].itemSlots, sBackupPlayerBag->bagPocket_PokeBalls, BAG_POKEBALLS_COUNT * sizeof(struct ItemSlot));
+    memcpy(gBagPockets[BALLS_POCKET].itemSlots, sBackupPlayerBag->bagPocket_PokeBalls, BIG_BAG_POKEBALLS_COUNT * sizeof(struct ItemSlot));
     gSaveBlock1Ptr->registeredItem = sBackupPlayerBag->registeredItem;
     gBagMenuState.pocket = sBackupPlayerBag->pocket;
     gBagMenuState.location = sBackupPlayerBag->location;

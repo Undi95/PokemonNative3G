@@ -13,7 +13,9 @@ contenu dans un seul jeu.
 - [x] Écran titre : Émeraude ou Rouge Feu (option TITRE)
 - [x] Carte dresseur : les deux (Hoenn / Kanto), SELECT pour passer de l'une à l'autre
 - [x] Cadres de menus : 20 d'Émeraude + 9 de Rouge Feu (type 2 de RF = cadre 2 d'Émeraude) = 29 (option CADRE)
-- [x] Sac : poches agrandies pour contenir les objets des deux jeux
+- [x] Sac sans limite (2026-11-04) : Objets, Objets rares et Balls ont 999 lignes de 99 (`BIG_BAG_*`, `gSaveBlockBag`) ;
+  CT/CS et Baies gardent une seule ligne par objet (99 CT, 999 baies), pour la BOITE CT et la BOITE BAIES de RF.
+  Les anciennes sauvegardes sont reprises (bloc « BAG1 » et Balls de SaveBlock1 ; scénario `bag_old_save`)
 - [x] Fonds des boîtes du PC : 16 d'Émeraude + 16 de Rouge Feu (tous différents), catégorie KANTO (non testé en jeu)
 - [x] Boîte de dialogue : HOENN / KANTO (option DIALOGUE : cadre, fenêtre et interligne de RF ; panneaux de RF et texte bleu/rouge des PNJ de Kanto depuis le 2026-10-30)
 - [x] Police : HOENN / KANTO (option POLICE, page 2, 2026-11-01) : les lettres de tous les textes (dialogues, combat,

@@ -59,7 +59,7 @@ struct YesNoFuncTable;
 #define NUM_BAG_POCKETS_NO_CASES 3
 extern const u8 gKantoBagPocketToEmerald[NUM_BAG_POCKETS_NO_CASES];
 #define KPOCKET(p) (gKantoBagPocketToEmerald[(p)])
-#define KANTO_BAG_MAX_ITEMS 255
+#define KANTO_BAG_MAX_ITEMS max(BIG_BAG_ITEMS_COUNT, max(BIG_BAG_KEYITEMS_COUNT, BIG_BAG_POKEBALLS_COUNT)) // sac sans limite
 
 #define ITEMMENUACTION_USE           0
 #define ITEMMENUACTION_TOSS          1
