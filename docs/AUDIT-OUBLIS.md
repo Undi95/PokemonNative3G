@@ -30,6 +30,10 @@ les starters de Hoenn.
 
 ## Scripts et specials
 
+- Écarts du portage PC (`#ifdef PORTABLE` / `#ifndef PORTABLE` dans 53 fichiers, relus le 2026-11-04) : son,
+  sauvegarde flash, horloge, link sans fil, alignements mémoire, crochets du banc et gardes contre des erreurs
+  mémoire, sans effet sur le jeu ; l'identifiant dresseur est tiré au hasard (la GBA le prend d'une minuterie). Un
+  seul changeait le jeu : l'évolution sautait les attentes du son et du cri (`evolution_scene.c`), rétablies.
 - Specials de RF en stub : plus aucun (2026-11-04, `src/kanto_specials_stubs.c` supprimé). Portés : places du
   Colisée et du Centre Troc de Kanto (`cable_club.c`), salle e-Reader de l'Île 7 (`kanto_battle_tower.c`) ; retirés
   de la table : ceux qu'aucun script de RF n'appelle (Tour de Combat de Rubis/Saphir…) et le triangle de Deoxys de

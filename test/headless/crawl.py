@@ -62,7 +62,8 @@ def apply_state(game, state):
 # Les écrans qui durent (Panthéon, crédits) : on les laisse aller au bout
 LONG_SCREENS = re.compile(r"HallOfFame|Hof|Credits")
 # Les écrans d'un défi lancé par un PNJ (Zone de Combat, Tentes, concours) : ils ne se quittent qu'en jouant le défi
-CHALLENGE_SCREENS = re.compile(r"SelectScreen|Swap_|Contest|PyramidBag|DomeTourney|ArenaFunction|Factory|Blender")
+CHALLENGE_SCREENS = re.compile(r"SelectScreen|Swap_|Contest|PyramidBag|DomeTourney|ArenaFunction|Factory|Blender|"
+                               r"Roulette")    # (la roulette de Lavandia : un mini-jeu, avec des jetons dans l'état « fin »)
 # Les attaques du MEWTWO des combats (Explorer.give_mewtwo)
 STRONG_MOVES = ("MOVE_PSYCHIC", "MOVE_ICE_BEAM", "MOVE_THUNDERBOLT", "MOVE_FLAMETHROWER")
 # Les salles où l'on n'entre que pendant un défi (Zone de Combat, Tentes, Mont Combat), un concours, un link ou avec
@@ -159,7 +160,8 @@ def spots(name, x, y, side=None):
             sx, sy = x - dx * distance, y - dy * distance
             # L'eau aussi (« ~ ») : le téléport y pose le joueur, de quoi parler aux nageurs
             if the_map.tile(sx, sy) in ".g~" and (sx, sy) not in the_map.warps:
-                if distance == 1 or the_map.tile(x - dx, y - dy) == "#":
+                # À deux cases, seulement par-dessus un comptoir (le jeu ne parle à travers que MB_COUNTER), pas un mur
+                if distance == 1 or the_map.behaviors[y - dy][x - dx] == "MB_COUNTER":
                     found.append((sx, sy, direction))
     return found
 
@@ -167,12 +169,21 @@ def spots(name, x, y, side=None):
 def give_mewtwo(game):
     """Un MEWTWO N.100 avec les 4 attaques de STRONG_MOVES, en dernier de l'équipe."""
     game.give_mon("SPECIES_MEWTWO", 100)
-    # (l'équipe de game.state est celle de la dernière image : compter avec l'outil, à jour tout de suite)
-    slot = len(re.findall(r"(?m)^\d+ ", game.dev("joueur.equipe"))) - 1
-    for place, move in enumerate(STRONG_MOVES):
-        reply = game.dev("joueur.capacite", slot, place, names.number(move))
-        if "refuse" in reply:
-            raise GameError(f"joueur.capacite : {reply.strip()}")
+    arm_mewtwo(game)
+
+
+def arm_mewtwo(game):
+    """Les 4 attaques de STRONG_MOVES à chaque MEWTWO de l'équipe : l'état « fin » (menu DEBUG) en met un en tête, et
+    un donneur de capacités (RIPOSTE à Céladopole, COPIE à Safrania : l'explorateur répond OUI) remplace PSYKO.
+    (L'équipe de game.state est celle de la dernière image : lire l'outil, à jour tout de suite)"""
+    mewtwo = names.value("SPECIES_MEWTWO")
+    slots = [int(slot) for slot, species in re.findall(r"(?m)^(\d+) .*?espece (\d+)", game.dev("joueur.equipe"))
+             if int(species) == mewtwo]
+    for slot in slots:
+        for place, move in enumerate(STRONG_MOVES):
+            reply = game.dev("joueur.capacite", slot, place, names.number(move))
+            if "refuse" in reply:
+                raise GameError(f"joueur.capacite : {reply.strip()}")
 
 
 def texts_since(game, before):
@@ -196,9 +207,11 @@ class Explorer:
         out = self.out_dir if self.starts == 1 else f"{self.out_dir}_{self.starts}"
         self.game = driver.Game(self.binary, out, save=self.save, max_frames=MAX_FRAMES)
         continue_game(self.game)
-        self.give_mewtwo()
         self.game.dev("jeu.rencontres", 0)
+        # L'état d'abord : les actions du menu DEBUG (« fin ») installent leur équipe, dont un MEWTWO en tête ; les 4
+        # attaques vont ensuite à chaque MEWTWO de l'équipe
         apply_state(self.game, self.state)
+        self.give_mewtwo()
         # Texte rapide, sans animations de combat (OPTION_TEXT_SPEED, OPTION_BATTLE_SCENE_OFF) : les combats de
         # la Ligue tiennent dans le budget
         self.game.dev("jeu.options", 0, 2)
@@ -403,6 +416,7 @@ class Explorer:
             result["erreurs"].append(f"arrivée : {error}")
         result["textes_arrivee"] = texts_since(game, before)
         if self.alive():
+            arm_mewtwo(game)    # (ses attaques, peut-être changées par un donneur de capacités d'une carte d'avant)
             game.wait(30)
             game.shot(name)
             result["capture"] = os.path.join(game.shots_dir, name + ".ppm")

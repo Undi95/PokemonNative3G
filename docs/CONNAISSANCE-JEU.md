@@ -48,12 +48,17 @@ montrent).
 
 ## États de partie explorés (`crawl.py --etat`)
 
-| État | Ce que c'est | Dernier passage (2026-11-02) |
+| État | Ce que c'est | Dernier passage (2026-11-04) |
 |---|---|---|
-| `debut` | sauvegarde de début de partie de chaque région | 845 cartes, 4 604 interactions, 0 anomalie (police Hoenn et KANTO) |
-| `champion` | Hoenn fini (`FLAG_SYS_GAME_CLEAR`, 8 badges, Pokédex, PokéNav) : l'arrivée réelle à Kanto, le ferry ne part qu'après la Ligue de Hoenn | 835 cartes, 4 586 interactions, 837 combats, 0 anomalie |
-| `fin` | les deux Ligues finies, comme le menu DEBUG (« Deux Ligues finies », POKé MONTURE + badges, passes, Pokédex, objets) | 835 cartes, 4 586 interactions, 862 combats, 0 anomalie |
-| `histoire` | `fin` + toute l'histoire des deux régions (`scripts.histoire 2` : drapeaux et variables d'avancement déduits des scripts, sans sauvegarde) | 0 anomalie, 0 texte suspect |
+| `debut` | sauvegarde de début de partie de chaque région | 811 cartes, 4 565 interactions, 827 combats, 0 erreur de carte, 0 anomalie, 0 texte suspect (aussi avec DIALOGUE = KANTO) |
+| `champion` | Hoenn fini (`FLAG_SYS_GAME_CLEAR`, 8 badges, Pokédex, PokéNav) : l'arrivée réelle à Kanto, le ferry ne part qu'après la Ligue de Hoenn | 811 cartes, 0 erreur de carte, 0 anomalie |
+| `fin` | les deux Ligues finies, comme le menu DEBUG (« Deux Ligues finies », POKé MONTURE + badges, passes, Pokédex, objets) | 811 cartes, 4 564 interactions, 859 combats, 0 erreur de carte, 0 anomalie |
+| `histoire` | `fin` + toute l'histoire des deux régions (`scripts.histoire 2` : drapeaux et variables d'avancement déduits des scripts, sans sauvegarde) | 811 cartes, 4 414 interactions, 781 combats, 0 erreur de carte, 0 anomalie, 0 texte suspect |
+
+Dans chaque passage, seules restent les limites connues de l'explorateur (section « Ce que l'explorateur ne fait
+pas ») : MARC, le garçon de Clémenti-Ville, la pente de la Piste Cyclable, et la porte de la maison de Bourg Palette
+une fois achetée (elle n'affiche plus rien, on entre directement). La grille (`matrix.py`, 18 jeux) : 0 erreur,
+0 anomalie ; planches relues le 2026-11-04.
 
 Pas besoin d'une sauvegarde pour atteindre un point du jeu : `scripts.histoire` met l'histoire finie, et
 `scripts.drapeaux` (menu DEBUG ou banc) met chaque drapeau ou variable à la main.
@@ -229,7 +234,15 @@ Limites connues, qui restent dans ses « interactions en erreur » sans être de
 - **Le garçon de l'Arène de Clémenti-Ville** : la case à côté de lui déclenche sa visite de l'Arène à chaque
   téléport, le budget s'épuise.
 - PNJ « insaisissables » (ils marchent sans cesse, Koichi Route 115) et « inaccessibles » (décor du camion, panneaux
-  au-dessus d'un mur, tunnel de l'Île 3 derrière des rochers) : listés à part.
+  au-dessus d'un mur, tunnel de l'Île 3 derrière des rochers, dresseurs de l'énigme 7 de la Maison des Pièges derrière
+  ses portes tournantes) : listés à part. On ne parle à deux cases que par-dessus un comptoir (`MB_COUNTER`, comme
+  `GetInteractedObjectEventScript`), jamais à travers un mur.
+- **Objets cachés renouvelables de RF** (Forêt Baie, Plage Trésor, Île 5, Souterrains, Mont Sélénite… : 67) : RF les
+  marque pris au début de la partie (`SetAllRenewableItemFlags`) et en fait revenir au hasard avec les pas
+  (`kanto_renewable_hidden_items.c`) ; l'explorateur les compte « déjà pris », avec les objets « sous les pieds »
+  (trouvés au CHERCH'OBJET).
+- **Bas de la Piste Cyclable** (Route 17 : panneau en (11, 157), MAX ELIXIR caché en (14, 157)) : la pente fait glisser
+  le joueur vers le bas (`MB_CYCLING_ROAD_PULL_DOWN`) avant que l'explorateur appuie sur A ; mêmes données que RF.
 
 - **Salles de défi, de concours, de link** (Zone de Combat, Tentes, Mont Combat, Pyramide, concours, Colisée,
   Centre Troc, Union Room) : on n'y entre que pendant un défi. Par téléport, hors défi, un combat démarre sans
