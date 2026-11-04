@@ -255,7 +255,9 @@ def name_rater(game):
 def cape_brink(game):
     since = talk(game, "TwoIsland_CapeBrink_House", (4, 4))
     converse(game, slot=0, forget=0)
-    return moves(game, 0), str(game.flag("FLAG_KANTO_TUTOR_FRENZY_PLANT")).strip(), joined(game, since)[-160:]
+    # ChooseMonForMoveTutor de RF (2026-11-04) : le POKéMON de tête, sans « Enseigner à quel POKéMON? »
+    return (moves(game, 0), str(game.flag("FLAG_KANTO_TUTOR_FRENZY_PLANT")).strip(), joined(game, since)[-160:],
+            "Enseigner à quel" in joined(game, since))
 
 
 def play(game):
@@ -292,3 +294,4 @@ def play(game):
     r = RESULTS["cap falaise"]
     expect(game, ok("cap falaise") and names.number("MOVE_FRENZY_PLANT") in r[0] and r[1] in ("1", "True"),
            f"Cap Falaise : VÉGÉ-ATTAQUE apprise ({r})")
+    expect(game, ok("cap falaise") and not r[3], f"Cap Falaise : au POKéMON de tête, sans choisir dans l'équipe ({r})")

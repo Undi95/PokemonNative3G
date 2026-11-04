@@ -1024,6 +1024,9 @@ static bool8 DisplayPartyPokemonDataForMoveTutorOrEvolutionItem(u8 slot)
     if (gPartyMenu.action == PARTY_ACTION_MOVE_TUTOR)
     {
         gSpecialVar_Result = FALSE;
+        // PokemonNative3G : RF (capacités ultimes du Cap Falaise, après les tuteurs d'Émeraude) : pas de « APTE »
+        if (gSpecialVar_0x8005 >= TUTOR_MOVE_COUNT)
+            return FALSE;
         DisplayPartyPokemonDataToTeachMove(slot, 0, gSpecialVar_0x8005);
     }
     else
@@ -1872,8 +1875,32 @@ static u8 TryTakeMonItem(struct Pokemon *mon)
     return 2;
 }
 
-static void BufferBagFullCantTakeItemMessage(u16 itemUnused)
+// PokemonNative3G : avec le sac de RF (Options > SAC), BufferBagFullCantTakeItemMessage de RF : les CT vont dans la
+// BOITE CT et les baies dans le SAC BAIES, le message nomme celui qui est plein (texte de RF, strings_1_fr.h)
+static const u8 sKantoText_BagFullCouldNotRemoveItem[] = _("Le {STR_VAR_1} est plein. Impossible\nd'enlever l'objet au POKéMON.{PAUSE_UNTIL_PRESS}");
+
+static void BufferBagFullCantTakeItemMessage(u16 itemId)
 {
+    if (gSaveBlock2Ptr->optionsBagStyle)
+    {
+        const u8 *string;
+
+        switch (GetItemPocket(itemId))
+        {
+        default:
+            string = gText_MenuBag;
+            break;
+        case POCKET_TM_HM:
+            string = GetItemName(ITEM_TM_CASE);
+            break;
+        case POCKET_BERRIES:
+            string = GetItemName(ITEM_BERRY_POUCH);
+            break;
+        }
+        StringCopy(gStringVar1, string);
+        StringExpandPlaceholders(gStringVar4, sKantoText_BagFullCouldNotRemoveItem);
+        return;
+    }
     StringExpandPlaceholders(gStringVar4, gText_BagFullCouldNotRemoveItem);
 }
 
@@ -4000,9 +4027,17 @@ static void FieldCallback_Surf(void)
     FieldEffectStart(FLDEFF_USE_SURF);
 }
 
+// PokemonNative3G : SetUpFieldMove_Surf et DisplayCantUseSurfMessage de RF : pas de SURF face au courant des Îles
+// Écume (MB_FAST_WATER, « Le courant est trop rapide! »), et sur la Piste Cyclable (Routes 17 et 18) « C'est parti pour
+// une balade! ». Ni courant ni Piste à Hoenn : rien ne change pour Émeraude.
 static bool8 SetUpFieldMove_Surf(void)
 {
-    if (PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE)
+    s16 x, y;
+
+    GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
+    if (MetatileBehavior_IsFastWater(MapGridGetMetatileBehaviorAt(x, y)) != TRUE
+     && PartyHasMonWithSurf() == TRUE
+     && IsPlayerFacingSurfableFishableWater() == TRUE)
     {
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
         gPostMenuFieldCallback = FieldCallback_Surf;
@@ -4013,10 +4048,24 @@ static bool8 SetUpFieldMove_Surf(void)
 
 static void DisplayCantUseSurfMessage(void)
 {
+    s16 x, y;
+
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    {
         DisplayPartyMenuStdMessage(PARTY_MSG_ALREADY_SURFING);
+    }
     else
-        DisplayPartyMenuStdMessage(PARTY_MSG_CANT_SURF_HERE);
+    {
+        GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
+        if (MetatileBehavior_IsFastWater(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
+            DisplayPartyMenuStdMessage(PARTY_MSG_CURRENT_TOO_FAST);
+        else if ((gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ROUTE17))
+              && ((gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ROUTE17))
+                 || (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ROUTE18))))
+            DisplayPartyMenuStdMessage(PARTY_MSG_ENJOY_CYCLING);
+        else
+            DisplayPartyMenuStdMessage(PARTY_MSG_CANT_SURF_HERE);
+    }
 }
 
 static bool8 SetUpFieldMove_Fly(void)
@@ -6224,9 +6273,20 @@ void ChooseMonForTradingBoard(u8 menuType, MainCallback callback)
     InitPartyMenu(menuType, PARTY_LAYOUT_SINGLE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_CHOOSE_MON, Task_HandleChooseMonInput, callback);
 }
 
+// PokemonNative3G : ChooseMonForMoveTutor de RF : les capacités ultimes du Cap Falaise (numérotées après les tuteurs
+// d'Émeraude, TUTOR_MOVE_FRENZY_PLANT…) vont au POKéMON de tête que le script a désigné (VAR_0x8007,
+// CapeBrinkGetMoveToTeachLeadPokemon), sans le choisir dans l'équipe
 void ChooseMonForMoveTutor(void)
 {
-    InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_MOVE_TUTOR, FALSE, PARTY_MSG_TEACH_WHICH_MON, Task_HandleChooseMonInput, CB2_ReturnToFieldContinueScriptPlayMapMusic);
+    if (gSpecialVar_0x8005 < TUTOR_MOVE_COUNT)
+    {
+        InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_MOVE_TUTOR, FALSE, PARTY_MSG_TEACH_WHICH_MON, Task_HandleChooseMonInput, CB2_ReturnToFieldContinueScriptPlayMapMusic);
+    }
+    else
+    {
+        InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_MOVE_TUTOR, FALSE, PARTY_MSG_NONE, TryTutorSelectedMon, CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        gPartyMenu.slotId = gSpecialVar_0x8007;
+    }
 }
 
 void ChooseMonForWirelessMinigame(void)
