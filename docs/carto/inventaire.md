@@ -10,9 +10,9 @@ Les 1621 fonctions propres à Rouge Feu absentes de la fusion par leur nom (`fon
 | à vérifier | ressemble à une fonction de la fusion (donnée) sans en être prouvée la même : à lire | 0 |
 | équivalente | prouvée : même code sous un autre nom (seuls diffèrent des noms eux-mêmes équivalents) | 708 |
 | triviale | corps vide ou d'une instruction (« return TRUE; ») : se porte avec son appelant | 111 |
-| morte | jamais appelée ni référencée dans RF | 149 |
+| morte | jamais appelée ni référencée dans RF | 155 |
 | link | link / E-Reader : à porter, désactivé | 0 |
-| écartée | écartée par décision | 653 |
+| écartée | écartée par décision | 647 |
 
 ## Manquante (0) : rien de proche dans la fusion : à porter
 
@@ -1015,7 +1015,7 @@ nullsub_8
 nullsub_9
 
 
-## Morte (149) : jamais appelée ni référencée dans RF
+## Morte (155) : jamais appelée ni référencée dans RF
 
 ### event_object_movement.c (38)
 GetReflectionEffectPaletteSlot, CameraObjectGetFollowedObjectId, GetAcroBunnyHopFrontWheelDirectionAnimNum,
@@ -1092,6 +1092,14 @@ MetatileBehavior_IsVideoGame (MB_VIDEO_GAME dans aucun tileset de RF)
 ### field_player_avatar.c (7)
 PlayerWalkSlower, PlayerGlide, PlayerFaceDirectionFast, PlayerShakeHeadOrWalkInPlace, PlayerAcroWheelieCollide,
 PlayerAcroPopWheelie, PlayerAcroWheelieMove
+
+### cereader_tool.c (6)
+ValidateTrainerTowerTrainer (étages e-Reader de la Tour : dans RF, ReadTrainerTowerAndValidate est vide (« Populated in Emerald », renvoie FALSE) et la Tour ne les lit jamais),
+ValidateTrainerTowerData (étages e-Reader de la Tour : dans RF, ReadTrainerTowerAndValidate est vide (renvoie FALSE), la Tour ne les lit jamais),
+CEReaderTool_SaveTrainerTower_r (étages e-Reader de la Tour : écrits par la lecture d'une carte, jamais lus dans RF (ReadTrainerTowerAndValidate vide)),
+CEReaderTool_SaveTrainerTower (étages e-Reader de la Tour : écrits par la lecture d'une carte, jamais lus dans RF (ReadTrainerTowerAndValidate vide)),
+CEReaderTool_LoadTrainerTower_r (étages e-Reader de la Tour : seulement si ReadTrainerTowerAndValidate (vide dans RF) renvoie TRUE),
+CEReaderTool_LoadTrainerTower (étages e-Reader de la Tour : seulement si ReadTrainerTowerAndValidate (vide dans RF) renvoie TRUE)
 
 ### battle_transition.c (5)
 Task_Spiral (B_TRANSITION_SPIRAL : aucun combat de RF ne l'utilise),
@@ -1219,7 +1227,7 @@ CopyGlyphToWindow_Parameterized
 ## Link (0) : link / E-Reader : à porter, désactivé
 
 
-## Écartée (653) : écartée par décision
+## Écartée (647) : écartée par décision
 
 ### quest_log_events.c (117)
 — « Précédemment » de RF (Kanto = post-game, décision 2026-11-02), SetQuestLogEvent,
@@ -1531,14 +1539,6 @@ BikeInputHandler_Slope (vélo de RF : un seul vélo, celui de Hoenn ; repris dan
 BikeTransition_MoveDirection (vélo de RF : un seul vélo, celui de Hoenn ; escaliers de roche repris dans MachBikeTransition_TrySpeedUp (bike.c)),
 BikeTransition_Downhill (vélo de RF : un seul vélo, celui de Hoenn ; même code dans MovePlayerOnCyclingRoadSlope (bike.c)),
 BikeTransition_Uphill (vélo de RF : un seul vélo, celui de Hoenn ; même code dans MovePlayerOnCyclingRoadSlope (bike.c))
-
-### cereader_tool.c (6)
-ValidateTrainerTowerTrainer (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)),
-ValidateTrainerTowerData (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)),
-CEReaderTool_SaveTrainerTower_r (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)),
-CEReaderTool_SaveTrainerTower (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)),
-CEReaderTool_LoadTrainerTower_r (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)),
-CEReaderTool_LoadTrainerTower (étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF))
 
 ### field_player_avatar.c (6)
 QL_TryRecordPlayerStepWithDuration0 (journal de RF), QL_TryRecordNPCStepWithDuration32 (journal de RF),

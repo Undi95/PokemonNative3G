@@ -52,9 +52,11 @@
 
 bool8 gBattleTrainerTowerFrlg;
 
-// Rouge Feu (cereader_tool.c) : pas d'e-Reader, la Tour utilise toujours ses propres étages
+// Rouge Feu (cereader_tool.c) : vide dans RF lui-même (« Stubbed out. Populated in Emerald »), la Tour utilise toujours
+// ses propres étages ; les étages lus d'une carte e-Reader (CEReaderTool_SaveTrainerTower) n'y sont jamais chargés
 u16 ReadTrainerTowerAndValidate(void)
 {
+    // Stubbed out. Populated in Emerald
     return FALSE;
 }
 

@@ -1027,12 +1027,12 @@ UnionRoomChat_AnimateSelectorCursorReopen écartée Union Room et chat d'Émerau
 UnionRoomChat_SpawnTextEntryPointerSprites écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
 CreatePageSwitchUISprites écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
 UpdateVisibleUnionRoomChatIcon écartée Union Room et chat d'Émeraude (union_room_chat.c) dans les deux régions
-ValidateTrainerTowerTrainer écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
-ValidateTrainerTowerData écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
-CEReaderTool_SaveTrainerTower_r écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
-CEReaderTool_SaveTrainerTower écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
-CEReaderTool_LoadTrainerTower_r écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
-CEReaderTool_LoadTrainerTower écartée étages e-Reader de la Tour des Dresseurs : seulement d'une carte e-Reader (ReadTrainerTowerAndValidate : étages de RF)
+ValidateTrainerTowerTrainer morte étages e-Reader de la Tour : dans RF, ReadTrainerTowerAndValidate est vide (« Populated in Emerald », renvoie FALSE) et la Tour ne les lit jamais
+ValidateTrainerTowerData morte étages e-Reader de la Tour : dans RF, ReadTrainerTowerAndValidate est vide (renvoie FALSE), la Tour ne les lit jamais
+CEReaderTool_SaveTrainerTower_r morte étages e-Reader de la Tour : écrits par la lecture d'une carte, jamais lus dans RF (ReadTrainerTowerAndValidate vide)
+CEReaderTool_SaveTrainerTower morte étages e-Reader de la Tour : écrits par la lecture d'une carte, jamais lus dans RF (ReadTrainerTowerAndValidate vide)
+CEReaderTool_LoadTrainerTower_r morte étages e-Reader de la Tour : seulement si ReadTrainerTowerAndValidate (vide dans RF) renvoie TRUE
+CEReaderTool_LoadTrainerTower morte étages e-Reader de la Tour : seulement si ReadTrainerTowerAndValidate (vide dans RF) renvoie TRUE
 DisplayPartyPokemonDataForChooseMultiple écartée choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7
 CursorCB_Enter écartée choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7
 CursorCB_NoEntry écartée choix d'équipe des combats link d'Émeraude (InitChooseHalfPartyForBattle), aussi pour l'Île 7
