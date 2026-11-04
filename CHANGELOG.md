@@ -18,6 +18,10 @@
   le Câble Link et l'objet tenu sont gardés.
 
 ### Corrections
+- Kanto, sous la météo « ombre » (Forêt de Jade, Bois Baies, Manoir, chambres de Tanoby encore fermées) : le panneau
+  du nom de lieu restait gris et l'image d'aperçu du lieu était ternie. Comme dans Rouge Feu, ni l'un ni l'autre ne
+  sont plus touchés par la météo. Vérifié sur une carte par lieu des deux régions : à Kanto, le panneau de Rouge Feu ;
+  à Hoenn, celui d'Émeraude, au cadre du lieu.
 - Red et Leaf sur le Vélo Cross (figures), avec l'arrosoir et sous l'eau : de vrais sprites de style Rouge Feu
   (Poffin_Case) ; ce n'était qu'une tête de Rouge Feu posée sur le corps de Brice/Flora, le sac à dos coupé en deux.
 - PC et Android : chaque fois que le jeu attendait la fin d'une copie d'écran, il rejouait toute une interruption
