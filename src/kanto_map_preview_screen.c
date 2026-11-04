@@ -324,7 +324,8 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     // RF qui ne montrent pas un lieu unique (forêt, savane, entrées de grotte naturelles) ; comme RF le fait pour ses 7
     // chambres de Tanoby. Pas d'image pour les lieux uniques de Hoenn (Mont Mémoria, Pilier Céleste, planques…) ni
     // pour les grottes où l'on entre en plongée. Drapeau : le lieu visité, posé à la transition de la carte d'entrée
-    // (setworldmapflag FLAG_HOENN_WORLD_MAP_* ajoutés, ou FLAG_LANDMARK_* d'Émeraude, posés au même moment).
+    // (setworldmapflag FLAG_HOENN_WORLD_MAP_* ajoutés, ou FLAG_LANDMARK_* d'Émeraude posé au même moment quand la
+    // carte d'entrée le pose).
     [MPS_HOENN_PETALBURG_WOODS] = {
         .mapsec = MAPSEC_PETALBURG_WOODS,
         .type = MPS_TYPE_FOREST,
@@ -416,7 +417,7 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     [MPS_HOENN_ARTISAN_CAVE] = {
         .mapsec = MAPSEC_ARTISAN_CAVE,
         .type = MPS_TYPE_CAVE,
-        .flagId = FLAG_LANDMARK_ARTISAN_CAVE,
+        .flagId = FLAG_HOENN_WORLD_MAP_ARTISAN_CAVE_1F,
         .tilesptr = sLostCaveMapPreviewTiles,
         .tilemapptr = sLostCaveMapPreviewTilemap,
         .palptr = sLostCaveMapPreviewPalette

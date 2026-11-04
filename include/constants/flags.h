@@ -69,7 +69,7 @@
 #define FLAG_HOENN_WORLD_MAP_VICTORY_ROAD_1F                  0x34 // PokemonNative3G
 #define FLAG_HOENN_WORLD_MAP_TERRA_CAVE_ENTRANCE              0x35 // PokemonNative3G
 #define FLAG_HOENN_WORLD_MAP_SAFARI_ZONE_SOUTH                0x36 // PokemonNative3G
-#define FLAG_UNUSED_0x037    0x37 // Unused Flag
+#define FLAG_HOENN_WORLD_MAP_ARTISAN_CAVE_1F                  0x37 // PokemonNative3G : FLAG_LANDMARK_ARTISAN_CAVE n'est posé qu'au sous-sol
 #define FLAG_UNUSED_0x038    0x38 // Unused Flag
 #define FLAG_UNUSED_0x039    0x39 // Unused Flag
 #define FLAG_UNUSED_0x03A    0x3A // Unused Flag
