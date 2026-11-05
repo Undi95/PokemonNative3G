@@ -1,6 +1,6 @@
 # Variantes de Rouge Feu gardées d'Émeraude
 
-Règle (décision de l'utilisateur, 2026-11-02) : quand une fonction du code **commun** aux deux jeux (effets de
+Règle (choix de l'auteur, 2026-11-02) : quand une fonction du code **commun** aux deux jeux (effets de
 terrain, menus, animations, sons) a dans Rouge Feu une variante de détail, la fusion garde la version d'Émeraude dans
 les deux régions. Rouge Feu est porté pour ce qui est propre à Kanto (contenu, mécaniques, écrans de RF déjà au choix
 dans les Options). Chaque variante **visible** est listée ici, pour pouvoir en choisir une plus tard.

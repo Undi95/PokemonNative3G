@@ -1,4 +1,4 @@
-# Version navigateur (v1.1, 2026-11-05)
+# Version navigateur (depuis la 1.2)
 
 Le jeu tourne dans un navigateur, sans serveur : deux fichiers, `index.html` (la page) et `pokeemeraude.js` (le jeu,
 WebAssembly compris). On les ouvre d'un double-clic sur `index.html`, ou on les dépose tels quels sur n'importe quel

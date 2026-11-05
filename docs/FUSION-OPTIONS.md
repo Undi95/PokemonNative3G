@@ -1,6 +1,6 @@
 # Fusion Émeraude + Rouge Feu : tout ce qui existe dans les deux jeux
 
-Règle (utilisateur, 2026-10-20) : tout ce qui existe dans les deux jeux est fusionné pour avoir tout le
+Règle (2026-10-20) : tout ce qui existe dans les deux jeux est fusionné pour avoir tout le
 contenu dans un seul jeu.
 - Contenu de même nature (cadres, fonds de PC…) : on garde **les deux listes**, sans doublon (comparer
   pixels + palette ; un élément identique n'apparaît qu'une fois).
@@ -10,7 +10,7 @@ contenu dans un seul jeu.
 
 ## Fait
 - [x] Personnage joué : BRICE/FLORA ou RED/LEAF (option PERSO) — carte, combat, carte dresseur
-- [x] Sprite du joueur selon la région (2026-11-04, demande v1.1) : style Rouge Feu à Kanto pour les 4 personnages
+- [x] Sprite du joueur selon la région (2026-11-04) : style Rouge Feu à Kanto pour les 4 personnages
   (Brice/Flora en tenue d'Émeraude de Poffin_Case, `kanto_player_brendan_may.h`), style Émeraude à Hoenn (Red/Leaf
   dessinés à la main sur les poses de Brice/Flora, `hoenn_player_red_leaf.h`, `graphics/object_events/pics/people/
   {red,leaf}/`). Une seule source par personnage et par style. La monture du SURF et l'oiseau du VOL prennent la
@@ -98,7 +98,7 @@ contenu dans un seul jeu.
   (le sac du joueur est sauvegardé puis rendu, poches agrandies comprises). RF n'affiche les émissions CT et objet
   qu'avec la Boîte à CT : ici, dès la première CT ou CS (avec le sac de RF, la Boîte à CT de la fusion est toujours là).
   BATTLE_TYPE_POKEDUDE n'a pas de bit libre : `gBattlePokedudeFrlg`.
-- [-] Interface du PC (stockage) : abandonné (choix utilisateur 2026-10-23) — on garde celle d'Émeraude, qui a déjà les fonds des deux versions
+- [-] Interface du PC (stockage) : abandonné (choix de l'auteur, 2026-10-23) — on garde celle d'Émeraude, qui a déjà les fonds des deux versions
 - [x] Écran de nom (MENUS : police + icône PC de RF ; sprite selon PERSO ; Easy Chat gardé d'Émeraude) (option, décision 2026-10-23) : clavier de RF, avec le sprite du perso choisi (Brice/Flora ou Red/Leaf) ;
   aussi l'écran de sélection de mots (Easy Chat)
 - [x] Intro (KANTO par défaut) : option INTRO HOENN/KANTO près de ÉCRAN TITRE (Flygon / Nidorino-Ectoplasma)
@@ -110,9 +110,9 @@ contenu dans un seul jeu.
   Kanto est finie ET le Rubis/Saphir rendu à Céladon (quête post-game RF qui relie le PC de Kanto à Hoenn :
   sert de contexte, le joueur ne récupère pas ses Pokémon de Hoenn avant). POKéDEX Kanto : débloqué par le
   Pokédex de Chen (déjà fait).
-## À faire (liste de l'utilisateur, 2026-10-23)
+## Liste de départ (2026-10-23)
 - [x] Braille (2026-10-24) : option DIALOGUE = KANTO -> écrit dans la boîte de dialogue (comme RF) ; HOENN -> fenêtre d'Émeraude ; vérifié en headless (`kanto_dotted_hole.py` / `kanto_dotted_hole_rf.py`)
-- [-] Décorations de Kanto (maison de Bourg Palette) : abandonné (choix utilisateur 2026-10-24) ; la chambre de RF n'a pas les tuiles de décoration d'Émeraude
+- [-] Décorations de Kanto (maison de Bourg Palette) : abandonné (choix de l'auteur, 2026-10-24) ; la chambre de RF n'a pas les tuiles de décoration d'Émeraude
 - [x] Cartes de région : icône du joueur selon le perso choisi (PERSO) sur les deux cartes
 - [x] Cherche VS à Hoenn : il déclenche les revanches du PokéNav (dresseurs inscrits ; 70 % comme RF, 100 % si un appel l'avait déjà décidé) ; les dresseurs de Hoenn sautent au lieu de lever la main (pas d'image « main levée » dans les sprites d'Émeraude)
 - [-] Cherche VS : sprites de Brice/Flora levant le Cherche VS : pas faisable simplement (tout le corps change de pose dans les images de RF, il faudrait redessiner) ; Brice/Flora se tournent vers le bas, comme Red
@@ -124,9 +124,9 @@ contenu dans un seul jeu.
 - [x] Légendaires manquants (2026-10-24) : Celebi et Jirachi (voir plus haut) ; les autres étaient déjà obtenables (`tools/obtenables.py`)
 - [x] Événements de distribution (2026-10-24 ; PASSE EON ajouté le 2026-10-31) : option CADEAU MYST. au menu principal une fois le RUBIS et le SAPHIR rendus à CÉLIO, tant qu'un cadeau manque ; chaque cadeau est présenté sur une CARTE MYSTÈRE d'Émeraude (fond, icône Deoxys / Lugia / Mew) puis donné avec les effets des scripts de distribution : TICKET AURORA (ILE AURORE) et TICKET MYSTIK (ROC NOMBRI) au départ de Nénucrique ou de Carmin sur Mer, VIEILLE CARTE (ILE LOINTAINE, Mew) au départ de Nénucrique seulement ; sauvegarde puis retour au titre, l'option disparaît (`CB2_InitFusionMysteryGift`, mystery_gift_menu.c). Îles en un seul exemplaire (cartes d'Émeraude), donc légendaires combattus une seule fois ; venu par le ferry de Carmin, le marin de l'île ramène à Carmin (FLAG_ISLAND_TRIP_FROM_KANTO)
 - [x] Aperçus de donjons/lieux de RF à Kanto (2026-10-24, `src/kanto_map_preview_screen.c`)
-- [-] « Précédemment dans votre quête » (journal de RF) : abandonné (décision de l'utilisateur, 2026-10-24)
+- [-] « Précédemment dans votre quête » (journal de RF) : abandonné (choix de l'auteur, 2026-10-24)
 - [x] Courir partout (intérieurs compris ; bike.c, IsRunningDisallowed)
-- [x] Cherch'Objet de RF dans tout le jeu (2026-10-31, choix de l'utilisateur ; avant : celui d'Émeraude à Hoenn, retiré) ; objets « sous les pieds » de RF perdus à l'import des cartes (traités comme des objets cachés normaux)
+- [x] Cherch'Objet de RF dans tout le jeu (2026-10-31, choix de l'auteur ; avant : celui d'Émeraude à Hoenn, retiré) ; objets « sous les pieds » de RF perdus à l'import des cartes (traités comme des objets cachés normaux)
 - [x] Objets donnés deux fois : voir docs/OBJETS-EN-DOUBLE.md ; CS réglées (2026-10-24) : POKé MONTURE à Kanto ; plus aucun objet clé ni CS donné dans les deux régions (`tools/item_doubles.py`, 2026-10-31)
 - [x] CS (2026-10-24) : les CS restent à Hoenn ; à Kanto, les 7 dons de CS de RF donnent la POKé MONTURE (objet rare, icône dessinée pour la fusion) puis lui ajoutent chaque capacité (flags de RF FLAG_KANTO_GOT_HM01..06 et ramassage de la CS07). Sans POKéMON de l'équipe qui connaît la capacité, un POKéMON des environs vient l'utiliser, partout : Kanto INSECATEUR, ROUCARNAGE, LOKHLASS, MACKOGNEUR, PIKACHU, GROLEM, POISSOROY ; Hoenn ABSOL, ALTARIA, WAILORD, HARIYAMA, ÉLECSPRINT, GALEGON, MILOBELLUS (Coupe, Vol, Surf, Force, Flash, Éclate-Roc, Cascade). Badges toujours exigés ; Vol et Flash depuis le sac. `tools/poke_monture.py`, `data/scripts/fusion_poke_monture.inc`, `src/fusion_events.c`
 - [x] Cannes (2026-10-24) : les 3 pêcheurs de Kanto (CANNE à Carmin, SUPER CANNE à Parmanie, MEGA CANNE Route 12) améliorent la canne au lieu d'en donner une 2e (s'il ne l'a pas encore, ils la donnent, déjà améliorée) ; chacun a son texte. Canne améliorée : chaîne de pêche, chaque POKéMON remonté au même endroit donne un tirage chromatique de plus à la prise suivante (max 40) ; la série se brise si rien ne mord / s'échappe, si le joueur fait un pas, change de carte ou de canne (`FishingChain_*`, src/fusion_events.c ; data/scripts/fusion_fishing.inc ; FLAG_OLD/GOOD/SUPER_ROD_UPGRADED)
@@ -137,11 +137,11 @@ contenu dans un seul jeu.
 - [x] Nom du PC (2026-10-24, tools/pc_owner.py) : « PC de ??? » devient PC de LÉO à Kanto (après l'avoir rencontré) et PC d'ANNETTE à Hoenn (menu, connexion, transfert)
 - [x] Objets de confort (2026-10-24, tools/fusion_charms.py) : OVO-CHRONO (Fan Club de Carmin, au lieu du BON COMMANDE ; éclosion x2), CHARME CHROMA (concepteur de Nénucrique, POKéDEX NATIONAL ; +2 tirages chromatiques sur les sauvages et les OEUFS de la PENSION), CHARME OVALE (concepteur de Céladopole, POKéDEX NATIONAL ; OEUFS 20/50/70 % -> 40/80/88 %)
 
-## Trouvé par la cartographie — décisions de l'utilisateur (2026-10-23)
+## Trouvé par la cartographie — choix de l'auteur (2026-10-23)
 Contenu de RF à importer :
-- [x] Approche des dresseurs, la même dans tout le jeu (2026-10-31, choix de l'utilisateur ; scénario `trainer_camera`) : caméra de RF quand un dresseur tourné vers le bas repère le joueur de loin (elle monte jusqu'à lui, « ! », puis redescend) ; comme dans Émeraude, le joueur se tourne vers le dresseur (RF ne le faisait pas)
+- [x] Approche des dresseurs, la même dans tout le jeu (2026-10-31, choix de l'auteur ; scénario `trainer_camera`) : caméra de RF quand un dresseur tourné vers le bas repère le joueur de loin (elle monte jusqu'à lui, « ! », puis redescend) ; comme dans Émeraude, le joueur se tourne vers le dresseur (RF ne le faisait pas)
 - [x] Description des capacités de terrain dans le menu d'équipe (2026-10-31, RF ; avec MENUS = KANTO ; scénario `options_fieldmove_desc`) : bande de RF au-dessus du message ; Plongée et Force Cachée, absentes de RF, ont deux descriptions dans le même style (« Plonger en eau profonde. », « Ouvrir une base secrète. »)
-- [x] K.O. de RF dans tout le jeu (2026-10-31, demandé par l'utilisateur ; scénario `kanto_whiteout`) : perte d'argent de RF (niveau de l'équipe × badges de la région où l'on est ; Émeraude : la moitié de l'argent) annoncée en combat (« panique et perd X¥ », « paye X¥ comme récompense ») et après un K.O. par le poison ; reprise devant l'infirmière du dernier Centre, Kanto comme Hoenn (respawn_* de `heal_locations.json`), message sur fond noir puis soins. Sans infirmière (maisons de Bourg-en-Vol et de Bourg Palette, Île du Sud) : reprise d'Émeraude
+- [x] K.O. de RF dans tout le jeu (2026-10-31, choix de l'auteur ; scénario `kanto_whiteout`) : perte d'argent de RF (niveau de l'équipe × badges de la région où l'on est ; Émeraude : la moitié de l'argent) annoncée en combat (« panique et perd X¥ », « paye X¥ comme récompense ») et après un K.O. par le poison ; reprise devant l'infirmière du dernier Centre, Kanto comme Hoenn (respawn_* de `heal_locations.json`), message sur fond noir puis soins. Sans infirmière (maisons de Bourg-en-Vol et de Bourg Palette, Île du Sud) : reprise d'Émeraude
 - [x] Combat FANTÔME de la Tour Pokémon (SPECTRES sans Scope Sylph, Ossatueur révélé avec le Scope Sylph de Giovanni ; `gBattleGhostType`, plus de bit libre dans gBattleTypeFlags)
 - [x] Objets cachés qui réapparaissent (`src/kanto_renewable_hidden_items.c`, 2026-10-23)
 - [x] Fame Checker = MEMORYDEX (2026-10-23, `src/kanto_fame_checker.c` ; même écran avec les deux sacs, police de RF)
@@ -161,6 +161,6 @@ Choix HOENN / KANTO :
 - [x] Menu Options en pages (2026-10-23, L/R ; titre « {L}{R} 1/2 : JEU » / « {L}{R} 2/2 : HOENN/KANTO », sans « PAGE » depuis le 2026-11-02 : avec la police de RF, le titre recouvrait « OPTIONS » ; page 2 : PERSO, POKéMON, DIALOGUE, BOITES COMBAT, MENUS, SAC, POKéDEX, TITRE, INTRO) : page 1 = réglages d'Émeraude, page 2 (et suivantes) = choix HOENN/KANTO ; indiquer clairement qu'il y a d'autres pages (ex. « PAGE 1/2 » et flèches L/R dans le titre)
 
 ## Notes
-- Piste (utilisateur) : Émeraude a été construit à partir de Rouge Feu ; il garde des fonctions vidées et des entrées inutilisées de RF (ex. BgTileAllocOp « Dummied out », LoadMonPicInWindow UNUSED). Les rétablir avec le code de RF avant de réinventer.
+- Piste : Émeraude a été construit à partir de Rouge Feu ; il garde des fonctions vidées et des entrées inutilisées de RF (ex. BgTileAllocOp « Dummied out », LoadMonPicInWindow UNUSED). Les rétablir avec le code de RF avant de réinventer.
 - Comparaison des cadres : script PIL (pixels RGB identiques) ; refaire de même pour chaque liste.
 - Les choix d'option sont dans gSaveBlock2Ptr (bits libres) ; au-delà, gSaveBlockKanto.

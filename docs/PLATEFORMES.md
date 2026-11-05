@@ -7,7 +7,8 @@ part de HEAD). Sous Git Bash, à la racine du dépôt :
 P="$(pwd -W)"
 ```
 
-Ajouter `-e "MAKEFLAGS_EXTRA=KANTO_DEBUG=1"` pour le menu DEBUG.
+Ajouter `-e "MAKEFLAGS_EXTRA=KANTO_DEBUG=1"` pour le menu DEBUG. Version navigateur : [NAVIGATEUR.md](NAVIGATEUR.md).
+Release complète (les quatre plateformes sans menu DEBUG, plus l'APK debug à part) : `bash build-all.sh VERSION`.
 
 ## Windows (`out/winwsl/`)
 

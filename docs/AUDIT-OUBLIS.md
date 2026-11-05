@@ -1,8 +1,8 @@
 # Audit des oublis (2026-10-31)
 
-Le jeu est jouable du début à la fin (les deux Ligues, post-game de Célio). Cet audit cherche ce qui aurait pu
-être oublié. Ordre de travail convenu : 1) finitions ci-dessous, 2) APK Android, 3) playthrough de l'utilisateur
-sur téléphone (`docs/A-TESTER.md` sert de liste de points à surveiller).
+Le jeu est jouable du début à la fin (les deux Ligues, post-game de Célio). Cet audit, fait avant la 1.0 et
+complété jusqu'à la 1.2, cherche ce qui aurait pu être oublié. Les points à voir en jeu sont dans
+`docs/A-TESTER.md`.
 
 ## Pokémon (Pokédex national 386)
 
@@ -47,7 +47,7 @@ les starters de Hoenn.
 - Liaison Hoenn → Kanto : PAPA (PASSE BATEAU), destination KANTO du ferry, texte du marin (2026-10-31).
 - Liaison Kanto → Hoenn : Ligue de Kanto + RUBIS/SAPHIR rendus à CÉLIO (quête de RF), puis ferry et vol.
 - Après les deux Ligues : Celebi, Jirachi, cadeaux mystère, œufs de starters (docs/FUSION-OPTIONS.md).
-- Décisions de l'utilisateur, pas des oublis : rival = BLUE sans choix du nom, pas de conseils de Chen, pas
+- Choix de l'auteur, pas des oublis : rival = BLUE sans choix du nom, pas de conseils de Chen, pas
   d'aide L/R ni de journal de RF, pas de décorations dans la maison de Bourg Palette.
 
 ## Pokédex

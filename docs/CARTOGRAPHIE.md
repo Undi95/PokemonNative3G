@@ -86,7 +86,7 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 6. ~~Combats sauvages scriptés de RF~~ : faits le 2026-10-24 (`gBattleWildScriptedFrlg`, posé par `dowildbattle` à Kanto). NB : dans RF comme dans Émeraude, le contrôleur adverse ne consulte l'IA que pour les dresseurs, le Safari, les errants et le premier combat ; les réglages d'IA des sauvages scriptés et des légendaires de RF n'ont donc aucun effet en jeu (portés pour être complets).
 7. ~~Aperçus des donjons~~ : faits le 2026-10-24 (`src/kanto_map_preview_screen.c` ; grottes dans fldeff_flash.c, forêts au chargement de la carte, attente des fondus `FieldFadeTransitionBackgroundEffectIsFinished`).
 8. ~~PNJ en stub~~ : faits le 2026-10-24 (`kanto_field_specials.c` : `ShowEasyChatMessage` = `ShowEasyChatProfile` d'Émeraude ; `BufferRandomHobbyOrLifestyleString` n'est appelé par aucun script de RF).
-9. ~~Journal « Précédemment dans votre quête »~~ : ABANDONNÉ (décision de l'utilisateur, 2026-10-24). Bilan du
+9. ~~Journal « Précédemment dans votre quête »~~ : ABANDONNÉ (choix de l'auteur, 2026-10-24). Bilan du
    2026-10-24 : 4 500 lignes de RF, 238 points d'accroche dans 39 fichiers du moteur (terrain, déplacements des objets,
    entrées du joueur, combats, sac, boutique, PC, sauvegarde) et 84 gardes `goto_if_questlog` dans les scripts. Le rejeu
    repasse les touches enregistrées dans le moteur du terrain et restaure équipe, PC, drapeaux et variables de chaque
@@ -106,8 +106,8 @@ Ordre proposé : d'abord ce qui bloque ou manque dans l'aventure de Kanto, puis 
 - ~~Panneaux de RF, polices homme/femme et couleurs de texte~~ : faits le 2026-10-30. Tuiles MB_SIGNPOST / enseignes Centre, Boutique, Plateau Indigo rétablies (`tools/kanto_signposts.py`, 0xC8-0xCC) ; on ouvre un panneau en marchant vers lui et on le ferme en s'éloignant (field_control_avatar.c, script.c) ; avec DIALOGUE = KANTO, cadre « panneau » de RF et texte bleu/rouge des PNJ de Kanto (`ContextNpcGetTextColor`, kanto_field_specials.c). Les polices FONT_MALE/FEMALE de RF ont les glyphes et couleurs de sa police normale (= FONT_KANTO). Scénario `kanto_signposts`.
 
 **C. À décider (écartés jusqu'ici)**
-- Aide L/R de RF (help_system*.c) : NON (décision de l'utilisateur, 2026-10-30).
-- Conseils de Chen pendant le combat du labo (battle_controller_oak_old_man.c) : NON (décision de l'utilisateur, 2026-10-30).
+- Aide L/R de RF (help_system*.c) : NON (choix de l'auteur, 2026-10-30).
+- Conseils de Chen pendant le combat du labo (battle_controller_oak_old_man.c) : NON (choix de l'auteur, 2026-10-30).
 - Discours de Chen de nouvelle partie (oak_speech.c) : la partie commence à Hoenn.
 
 **D. Hors solo (link)** : Colisée, échanges câble, Union Room, Tour de Combat de RF, E-Reader, records de combat.
@@ -141,7 +141,7 @@ FICHIER.c [NOM_RF=NOM_FUSION…] [--court]` montre, pour chaque fonction « à v
 de sa voisine dans la fusion (commentaires, accolades, TRUE/1, hexadécimal, `GetGpuReg(REG_OFFSET_X)`, variables
 locales, appels au journal de RF et macros `#define tX data[N]` mis de côté ; noms appariés par l'inventaire
 remplacés ; `NOM_RF=NOM_FUSION` corrige un mauvais appariement). Chaque fonction lue va dans
-`tools/carto_classement.txt` avec sa preuve. Règle (utilisateur, 2026-11-02) : une variante de détail de RF dans le
+`tools/carto_classement.txt` avec sa preuve. Règle (2026-11-02) : une variante de détail de RF dans le
 code commun garde la version d'Émeraude et va dans [VARIANTES-RF.md](VARIANTES-RF.md) si elle se voit ; ce qui est
 propre à Kanto (contenu, mécaniques) est porté. La lecture du 2026-10-31 avait pris la pêche pour un renommage : celle
 de RF ferre toute seule (VARIANTES-RF.md). Un écran de RF « de façade » suit l'option ou la région qui couvre déjà
@@ -149,7 +149,7 @@ son voisin (menu principal et effacement : TITRE ; choix multiples, OUI/NON, let
 région). `--tout` montre toutes les différences d'une fonction.
 
 Fin de la lecture des « à vérifier » le 2026-11-02 : plus aucune (la dernière, l'écran Options de RF, est portée :
-MENUS = KANTO, choix user).
+MENUS = KANTO, choix de l'auteur).
 L'inventaire est stable d'une exécution à l'autre depuis ce jour (empreintes en crc32 ; `hash()` changeait à chaque
 lancement de Python). Reste : manquante 201 (dont l'écran Options de RF, terrain, polices, écran d'échec de
 sauvegarde, PC), link 196 (dont la Tour de Combat de RF : e-Reader).

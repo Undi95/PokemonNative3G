@@ -1,6 +1,9 @@
-# Import de Kanto — état et reprise (2026-10-19)
+# Import de Kanto dans le moteur d'Émeraude
 
-## Fait
+Comment Rouge Feu a été importé : les outils, la sauvegarde, les scripts, les warps et les choix faits en route
+(commencé le 2026-10-19, à jour pour la 1.2).
+
+## Import (outils)
 - Émeraude FR natif Windows/Linux (merge port pokeemerald-native), build Docker (`docker/build.sh`, `MAKEFLAGS_EXTRA="KANTO_DEBUG=1"`).
 - Menu DEBUG (Start) : téléport villes Kanto/Sevii, murs, rencontres, soin.
 - Bloc de sauvegarde Kanto (`src/kanto_save.c`) : flags 0x1000+, vars 0x5000+, après les 128 Ko du .sav.
@@ -8,8 +11,8 @@
 - graphicsId 16 bits ; 152 sprites RF (`gen_objects.py`, ids 0x100+). Non-régression Hoenn vérifiée (`compare.py` = identique).
 - Conversion scripts/textes RF (`import_scripts.py`, appelé par import_kanto) : labels, flags/vars, sprites, localid, musiques, macros RF (`asm/macros/kanto_event.inc`), commandes RF (`src/kanto_scrcmd.c`, opcodes 0xc7-0xcc/0xd0/0xe3), menus/chaînes/échanges RF ajoutés en fin de tables (`gen_script_menu.py`), braille RF.
 
-## En cours (2026-10-19) : le jeu tourne dans Kanto
-Testé en headless (`test/headless/run.py out/winwsl/pokeemeraude64.exe kanto_tour|kanto_warps --shots 60`,
+## Le jeu à Kanto
+Premiers tests en headless (`test/headless/run.py out/winwsl/pokeemeraude64.exe kanto_tour|kanto_warps --shots 60`,
 sous Windows l'exe tourne directement) :
 - les 22 téléports DEBUG s'affichent sans gel ; Bourg Palette, maison, labo, Centre de Jadielle (soin) jouables ;
 - PNJ Kanto visibles et aux couleurs RF (corrigé : découpe -mwidth/-mheight des sprites, palettes RF hors
@@ -34,14 +37,14 @@ Specials RF : portés dans `src/kanto_field_specials.c`, `src/kanto_specials.c` 
 
 Warps RF : escaliers latéraux (`MB_*_STAIR_WARP`, scénario `kanto_stairs`), téléporteurs `MB_REGULAR_WARP` (DoTeleportWarp ; animation = DoPlayerSpinExit/Entrance d'Émeraude, scénario `kanto_warp_pad`), trous `MB_FALL_WARP` (EventScript_DoFallWarp, non testé), escaliers de roche `MB_ROCK_STAIRS` (PlayerWalkSlow/PlayerRunSlow de RF, actions MOVEMENT_ACTION_KANTO_WALK_SLOW_* et PLAYER_RUN_*_SLOW ; marche vérifiée par `kanto_rock_stairs`, course non testée ; à vélo, PlayerWalkFast comme RF : Vélo Course bridé à sa 2e vitesse (bike.c), Vélo Cross inchangé), rochers de Force qui tombent dans les trous et interrupteurs `MB_STRENGTH_BUTTON` de la Route Victoire (non testés) portés tels quels. Reste `MB_CAVE_DOOR` -> porte non animée (équivalent). Dalles tournantes `MB_SPIN_*` / `MB_STOP_SPINNING` (TryUpdatePlayerSpinDirection, ForcedMovement_Spin* et MOVEMENT_ACTION_SPIN_* de RF ; animation de rotation ajoutée aussi aux sprites de Brice/Flora) et objets d'intérieur de RF : 2026-10-31 (`tools/kanto_tile_attributes.py`, scénario `kanto_tiles`). Rencontres de Kanto : type de rencontre de RF par métatuile (bits 8-9 de l'attribut, `MapGridGetMetatileEncounterTypeAt`, wild_encounter.c) ; taux et règles d'Émeraude. Terrain de RF par métatuile (bits 10-11, `MapGridGetMetatileTerrainAt`, 2026-11-02, scénario `kanto_cut_surf`) : eau en face du joueur pour le Surf et les cannes, herbe que COUPE tond (carré 3 × 3 et table de tonte de RF) ; voir CONNAISSANCE-JEU.
 
-## Dettes (provisoire → importer depuis RF)
+## Choix et différences avec Rouge Feu
 - Tour des Dresseurs (Île 7) : faite le 2026-10-24 (`src/kanto_trainer_tower.c`, scénarios `kanto_trainer_tower*`).
-- Combat : conseils de Chen pendant le combat du labo : NON (décision de l'utilisateur, 2026-10-30).
+- Combat : conseils de Chen pendant le combat du labo : NON (choix de l'auteur, 2026-10-30).
 - Télé Pokémon (TV ABC) et combats du Pokédude : faits le 2026-10-31 (six émissions, `kanto_teachy_tv.py`).
-- Système d'aide RF (abandonné, décision de l'utilisateur 2026-10-30), `walk_slower_*` → walk_slow. (Panneaux, textcolor/signmsg, couleurs homme/femme : faits le 2026-10-30.)
-- Objets « clone » de RF (2026-10-31, `tools/kanto_clones.py`, gardés par `import_kanto.py`) : sur 9 cartes, l'obstacle de la carte voisine (arbres à Couper en bordure, garde de la Grotte Azurée, deux PNJ) est chargé au bord de la carte, comme dans RF (LoadObjEventTemplatesFromHeader, InitObjectEventStateFromTemplate, TemplateIsObstacleAndWithinView) ; en franchissant la jonction, c'est le même objet (`kanto_clone_tree`). Sans la règle de RF qui cache, à l'arrivée par un bord, les arbres et rochers proches de ce bord (choix de l'utilisateur : Hoenn inchangé). Le modèle du joueur (InitPlayerAvatar) initialise maintenant `kind` (lu par les clones ; non initialisé dans Émeraude et RF, trouvé par ASan). Animations de tilesets de RF : les six portées (`tileset_anims.c`). Comportements de tuiles décoratifs/énigmes : faits le 2026-10-31, `tools/kanto_tile_attributes.py`.
-- Graphismes présents dans les deux jeux : en option (PERSO, DIALOGUE, BOITES COMBAT avec la barre de l'équipe, MENUS, SAC, POKéDEX, POKéMON, TITRE, INTRO, CADRE : docs/FUSION-OPTIONS.md) ; transitions et musiques de combat = celles de la région (décision utilisateur).
-- Std msgbox RF (Kanto_Std_*), scénario (mamans, Rocket…) ; le choix du nom du rival (oak_speech) : plus tard avec l'utilisateur.
+- Système d'aide RF (abandonné, choix de l'auteur, 2026-10-30), `walk_slower_*` → walk_slow. (Panneaux, textcolor/signmsg, couleurs homme/femme : faits le 2026-10-30.)
+- Objets « clone » de RF (2026-10-31, `tools/kanto_clones.py`, gardés par `import_kanto.py`) : sur 9 cartes, l'obstacle de la carte voisine (arbres à Couper en bordure, garde de la Grotte Azurée, deux PNJ) est chargé au bord de la carte, comme dans RF (LoadObjEventTemplatesFromHeader, InitObjectEventStateFromTemplate, TemplateIsObstacleAndWithinView) ; en franchissant la jonction, c'est le même objet (`kanto_clone_tree`). Sans la règle de RF qui cache, à l'arrivée par un bord, les arbres et rochers proches de ce bord (choix de l'auteur : Hoenn inchangé). Le modèle du joueur (InitPlayerAvatar) initialise maintenant `kind` (lu par les clones ; non initialisé dans Émeraude et RF, trouvé par ASan). Animations de tilesets de RF : les six portées (`tileset_anims.c`). Comportements de tuiles décoratifs/énigmes : faits le 2026-10-31, `tools/kanto_tile_attributes.py`.
+- Graphismes présents dans les deux jeux : en option (PERSO, DIALOGUE, BOITES COMBAT avec la barre de l'équipe, MENUS, SAC, POKéDEX, POKéMON, TITRE, INTRO, CADRE : docs/FUSION-OPTIONS.md) ; transitions et musiques de combat = celles de la région (choix de l'auteur).
+- Std msgbox RF (Kanto_Std_*), scénario (mamans, Rocket…) ; pas de choix du nom du rival (oak_speech) : il s'appelle BLUE (choix de l'auteur, 2026-10-30).
 - {RIVAL} à Kanto = `gSaveBlockKanto.rivalName`, « BLUE » par défaut. Fame Checker (drapeaux) dans `gSaveBlockKanto`.
 - Journal (Quest Log) de RF non importé : `GetQuestLogState` = 0, `SetUsedPkmnCenterQuestLogEvent` sans effet (`src/kanto_field_specials.c`).
 - Normal, pas un bug : pas de musique au départ debug à Bourg Palette (on y arrive normalement par le camion), scène du rival à l'Île 4 (on y arrive en bateau).

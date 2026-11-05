@@ -1,7 +1,7 @@
 # Outils de debug (builds DEBUG)
 
-Les mêmes commandes, de trois façons : **toi** par le menu DEBUG du jeu, **moi** par le banc headless ou par la
-console d'une partie qui tourne. Une commande ajoutée au registre apparaît partout. Uniquement dans les builds
+Les mêmes commandes, de trois façons : par le menu DEBUG du jeu, par le banc headless ou par la console d'une
+partie qui tourne. Une commande ajoutée au registre apparaît partout. Uniquement dans les builds
 `KANTO_DEBUG=1` (build de test `out/winwsl`, APK debug) ; la release n'en a rien.
 
 ## Utilisation

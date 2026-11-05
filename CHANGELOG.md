@@ -3,7 +3,11 @@
 ## Version 1.2 (5 novembre 2026) — la base
 
 Cette version est la **base** de PokemonNative3G : le jeu complet, à reprendre pour construire son propre jeu
-par-dessus.
+par-dessus. Le dépôt est public : https://github.com/Undi95/PokemonNative3G
+
+Contenu du zip : `Windows/` (`PokemonNative3G.exe` + `SDL2.dll`), `Linux/` (`PokemonNative3G`), `Android/`
+(`PokemonNative3G.apk`), `Navigateur/` (`index.html` + `pokeemeraude.js`, nouveau), ce CHANGELOG et le guide
+`Où trouver les Pokémon.md`.
 
 ### Nouveautés
 - À Kanto, le joueur a son sprite de style Rouge Feu, quel que soit le personnage : Brice et Flora y gardent leur

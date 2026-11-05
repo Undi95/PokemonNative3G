@@ -1,66 +1,47 @@
-# Instructions
+# Compiler sans Docker
 
-These instructions explain how to set up the tools required to build **pokeemerald**, which assembles the source files into a binary.
+La voie testée est Docker (voir le [README](README.md)) : l'image `docker/Dockerfile` installe exactement ce qui
+suit (`python3` et `python3-pil` ne servent pas au build lui-même, mais aux outils de `tools/` et aux tests). Ces instructions servent à compiler directement sur sa machine. Android et la version navigateur ne se
+compilent que par Docker ([docs/PLATEFORMES.md](docs/PLATEFORMES.md), [docs/NAVIGATEUR.md](docs/NAVIGATEUR.md)).
 
-## Windows 10/11 (WSL)
-Install WSL with an Ubuntu distribution (`wsl --install -d Ubuntu` in an administrator terminal), then open Ubuntu.
+## Windows 10/11 (avec WSL)
 
-Install the following libraries
-
-```
-sudo apt install build-essential git make g++-mingw-w64-i686 g++-mingw-w64-x86-64 libpng-dev
-```
-Download SDL2 mingw libraries from [here](https://archive.org/download/sdl-2-2.0.16/SDL2-devel-2.0.16-mingw.tar.gz)
-
-Extract the tar to the root of the project and rename the SDL2-2.0.16 folder to SDL2
-
-Get the number of threads in your pc using the command `nproc`
-
-Build the Windows version using the following command (replace the parentheses with the number you got from nproc)
+Installer WSL avec Ubuntu (`wsl --install -d Ubuntu` dans un terminal administrateur), puis ouvrir Ubuntu et
+installer les outils :
 
 ```
-make winwsl -j(nproc number here)
+sudo apt install build-essential git make python3 python3-pil pkg-config libpng-dev g++-mingw-w64-x86-64 binutils-mingw-w64-x86-64
 ```
 
-To build 32 bit version add `IS64BIT=0` to the end of the command above
+Télécharger SDL2 pour MinGW (`SDL2-devel-2.30.9-mingw.tar.gz`, sur les
+[releases de SDL](https://github.com/libsdl-org/SDL/releases/tag/release-2.30.9)), l'extraire à la racine du dépôt
+et renommer le dossier `SDL2-2.30.9` en `SDL2`. Puis :
 
-You should get an executable named `pokeemerald(64 or 32).exe`
+```
+make winwsl -j$(nproc)
+```
 
-Download SDL2.dll [32 bit version](https://archive.org/download/sdl-2-2.0.16/SDL2-2.0.16-win32-x86.zip), [64 bit version](https://archive.org/download/sdl-2-2.0.16/SDL2-2.0.16-win32-x64.zip) and put it in the same place as the executable and you should be good to go
+On obtient `pokeemeraude64.exe`. Le copier avec `SDL2/x86_64-w64-mingw32/bin/SDL2.dll`, les deux fichiers vont
+ensemble. Ajouter `KANTO_DEBUG=1` à la commande `make` pour le menu DEBUG.
 
 ## Linux (Ubuntu)
 
-Run the following command to install the required libraries
 ```
-sudo apt install build-essential git make libpng-dev libsdl2-dev
-```
-
-Get the number of threads in your pc using the command `nproc`
-
-Build the Linux version using the following command (replace the parentheses with the number you got from nproc)
-
-```
-make linux -j(nproc number here)
+sudo apt install build-essential git make python3 python3-pil pkg-config libpng-dev libsdl2-dev
+make linux -j$(nproc)
 ```
 
-To build 32 bit version add `IS64BIT=0` to the end of the command above (32 bit version does not build on Ubuntu 25 and above)
+On obtient `pokeemeraude64` (x86_64). Pour compiler avec clang plutôt que gcc : `COMPILER=clang`.
 
-You should get an executable named `pokeemerald(64 or 32)`
+## macOS (non testé pour PokemonNative3G)
 
-To build with clang instead of gcc, add `COMPILER=clang`.
+Hérité de la couche PC d'origine. Installer les outils en ligne de commande de Xcode (`xcode-select --install`) et
+[Homebrew](https://brew.sh), puis :
 
-## macOS
-
-Install the Xcode command line tools with `xcode-select --install`, and [Homebrew](https://brew.sh). Then install the other tools and libraries:
 ```
 brew install make pkg-config libpng sdl2 x86_64-elf-binutils
-```
-
-The game's data is assembled with the GNU assembler from `x86_64-elf-binutils`, because clang's assembler can't build it. Homebrew's `make` is a newer GNU make than the one macOS has, and it's run as `gmake`.
-
-Build the macOS version with:
-```
 gmake macos -j$(sysctl -n hw.ncpu)
 ```
 
-You should get an executable named `pokeemerald64`, which uses Homebrew's SDL2.
+Les données du jeu sont assemblées par l'assembleur GNU de `x86_64-elf-binutils` (celui de clang ne sait pas) ;
+`gmake` est le GNU make récent de Homebrew. On obtient `pokeemeraude64`, qui utilise la SDL2 de Homebrew.
