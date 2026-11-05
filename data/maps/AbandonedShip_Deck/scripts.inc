@@ -3,6 +3,7 @@ AbandonedShip_Deck_MapScripts::
 	.byte 0
 
 AbandonedShip_Deck_OnTransition:
+	setworldmapflag FLAG_LANDMARK_ABANDONED_SHIP @ PokemonNative3G : aperçu de RF (durée plus longue à la 1re visite)
 	setflag FLAG_LANDMARK_ABANDONED_SHIP
 	end
 

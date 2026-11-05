@@ -17,6 +17,7 @@ NewMauville_Entrance_EventScript_CloseDoor::
 	return
 
 NewMauville_Entrance_OnTransition:
+	setworldmapflag FLAG_LANDMARK_NEW_MAUVILLE @ PokemonNative3G : aperçu de RF (durée plus longue à la 1re visite)
 	setflag FLAG_LANDMARK_NEW_MAUVILLE
 	end
 

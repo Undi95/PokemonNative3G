@@ -1,5 +1,11 @@
 AquaHideout_1F_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, AquaHideout_1F_OnTransition @ PokemonNative3G
 	.byte 0
+
+@ PokemonNative3G : aperçu de RF à l'entrée (kanto_map_preview_screen.c), plus long à la 1re visite
+AquaHideout_1F_OnTransition:
+	setworldmapflag FLAG_HOENN_WORLD_MAP_AQUA_HIDEOUT_1F
+	end
 
 /* The below two entrance guards give hints about what to do to progress the story*/
 AquaHideout_1F_EventScript_HideoutEntranceGrunt1::

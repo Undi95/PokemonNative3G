@@ -1,5 +1,11 @@
 MtPyre_1F_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, MtPyre_1F_OnTransition @ PokemonNative3G
 	.byte 0
+
+@ PokemonNative3G : aperçu de RF à l'entrée (kanto_map_preview_screen.c), plus long à la 1re visite
+MtPyre_1F_OnTransition:
+	setworldmapflag FLAG_HOENN_WORLD_MAP_MT_PYRE_1F
+	end
 
 MtPyre_1F_EventScript_CleanseTagWoman::
 	lock

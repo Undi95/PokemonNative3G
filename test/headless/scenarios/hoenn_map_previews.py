@@ -1,6 +1,7 @@
 # Aperçus de lieu de RF à Hoenn (v1.1, 2026-11-04, demande user : « l'image qui s'affiche comme à Kanto à l'entrée
 # d'une zone ou d'un donjon ») : les entrées MPS_HOENN_* de sMapPreviewScreenData (src/kanto_map_preview_screen.c),
-# avec une image de RF qui ne montre pas un lieu unique. Pour chacun, entrée depuis la carte voisine : l'aperçu
+# avec une image de RF qui ne montre pas un lieu unique, ou, pour les lieux uniques, une illustration dessinée dans le
+# style de RF (2026-11-05, tools/apercus_hoenn.py). Pour chacun, entrée depuis la carte voisine : l'aperçu
 # s'affiche avec le nom de Hoenn (table d'Émeraude), 120 images à la première visite (drapeau du lieu posé par le
 # script de transition de la carte d'entrée : setworldmapflag ou FLAG_LANDMARK_*), puis, pour une grotte, le panneau
 # d'Émeraude ; une forêt n'a pas de panneau, comme dans RF. Captures « LIEU » (aperçu) à revoir.
@@ -22,7 +23,13 @@ NAMES = {"MAPSEC_PETALBURG_WOODS": "BOIS CLEMENTI", "MAPSEC_SAFARI_ZONE": "PARC 
          "MAPSEC_SHOAL_CAVE": "GROTTE TREFONDS", "MAPSEC_CAVE_OF_ORIGIN": "GROTTE ORIGINE",
          "MAPSEC_VICTORY_ROAD": "ROUTE VICTOIRE", "MAPSEC_SCORCHED_SLAB": "GROTTE ZENITH",
          "MAPSEC_ALTERING_CAVE": "GROTTE METAMO", "MAPSEC_ARTISAN_CAVE": "GROTTE ATELIER",
-         "MAPSEC_TERRA_CAVE": "GROTTE TERRA"}
+         "MAPSEC_TERRA_CAVE": "GROTTE TERRA",
+         # 2026-11-05 : les lieux uniques, avec une illustration dessinée dans le style de RF (tools/apercus_hoenn.py)
+         "MAPSEC_MT_PYRE": "MONT MEMORIA", "MAPSEC_SKY_PILLAR": "PILIER CELESTE",
+         "MAPSEC_AQUA_HIDEOUT": "PLANQUE AQUA", "MAPSEC_MAGMA_HIDEOUT": "PLANQUE MAGMA",
+         "MAPSEC_ABANDONED_SHIP": "EPAVE", "MAPSEC_NEW_MAUVILLE": "NEW LAVANDIA", "MAPSEC_MIRAGE_TOWER": "TOUR MIRAGE",
+         "MAPSEC_DESERT_RUINS": "RUINES DESERT", "MAPSEC_ISLAND_CAVE": "GROTTE ISLAND",
+         "MAPSEC_ANCIENT_TOMB": "TOMBEAU ANTIQUE"}
 POPUP_EM = "Task_MapNamePopUpWindow"   # le panneau d'Émeraude (map_name_popup.c)
 
 

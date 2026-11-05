@@ -46,6 +46,18 @@ enum MapPreviewScreenId
     MPS_HOENN_ALTERING_CAVE,
     MPS_HOENN_ARTISAN_CAVE,
     MPS_HOENN_TERRA_CAVE,
+    // PokemonNative3G : lieux uniques de Hoenn, avec une illustration dessinée dans le style de RF
+    // (graphics/fusion/map_preview, tools/apercus_hoenn.py)
+    MPS_HOENN_MT_PYRE,
+    MPS_HOENN_SKY_PILLAR,
+    MPS_HOENN_AQUA_HIDEOUT,
+    MPS_HOENN_MAGMA_HIDEOUT,
+    MPS_HOENN_ABANDONED_SHIP,
+    MPS_HOENN_NEW_MAUVILLE,
+    MPS_HOENN_MIRAGE_TOWER,
+    MPS_HOENN_DESERT_RUINS,
+    MPS_HOENN_ISLAND_CAVE,
+    MPS_HOENN_ANCIENT_TOMB,
     MPS_COUNT
 };
 

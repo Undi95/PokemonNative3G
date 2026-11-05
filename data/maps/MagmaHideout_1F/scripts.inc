@@ -3,6 +3,7 @@ MagmaHideout_1F_MapScripts::
 	.byte 0
 
 MagmaHideout_1F_OnTransition:
+	setworldmapflag FLAG_HOENN_WORLD_MAP_MAGMA_HIDEOUT_1F @ PokemonNative3G : aperçu de RF (kanto_map_preview_screen.c)
 	setvar VAR_JAGGED_PASS_ASH_WEATHER, 0
 	end
 

@@ -13,9 +13,16 @@
 - À Hoenn, l'image d'aperçu de Rouge Feu s'affiche aussi à l'entrée de 13 lieux, avec leur nom : Bois Clémenti, Parc
   Safari, Tunnel Mérazon, Grotte Granite, Site Météore, Chemin Ardent, Grotte Tréfonds, Grotte Origine, Route
   Victoire, Grotte Zénith, Grotte Métamo, Grotte Atelier et Grotte Terra. Ce sont des images de Rouge Feu qui ne
-  montrent qu'une forêt, une savane ou une entrée de grotte. Les lieux uniques (Mont Mémoria, Pilier Céleste, planques,
-  Épave…) n'en ont pas. Comme à Kanto, l'aperçu dure plus longtemps à la première visite, et B l'abrège dans une
-  grotte.
+  montrent qu'une forêt, une savane ou une entrée de grotte. Comme à Kanto, l'aperçu dure plus longtemps à la
+  première visite, et B l'abrège dans une grotte.
+- Les 10 lieux uniques de Hoenn ont leur propre image d'aperçu, dessinée dans le style de Rouge Feu : Mont Mémoria,
+  Pilier Céleste, Planque Aqua, Planque Magma, Épave, New Lavandia, Tour Mirage, Ruines Désert, Grotte Island et
+  Tombeau Antique. Le Pilier Céleste et les entrées des trois ruines des Regi sont dessinés d'après Rubis Oméga et
+  Saphir Alpha.
+- Version navigateur : le jeu se joue dans un navigateur, sans rien installer. Le dossier Navigateur contient deux
+  fichiers à ouvrir tels quels ou à déposer sur un site. La partie est gardée dans le navigateur, avec des boutons
+  pour exporter et importer la sauvegarde : c'est le même fichier que sur PC et Android. Le son, la manette et
+  l'écran tactile fonctionnent.
 - Sac sans limite : les poches Objets, Objets rares et Balls ne sont plus jamais pleines (au-delà de 99, un objet
   continue sur une nouvelle ligne). Les CT et les baies gardent une seule ligne chacune (99 CT, 999 baies), pour la
   boîte à CT et le sac à baies de Rouge Feu. Les sauvegardes existantes sont reprises telles quelles.

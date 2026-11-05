@@ -94,6 +94,37 @@ static const u8 sIcefallCaveMapPreviewTilemap[] = INCGFX_U8("graphics/kanto/map_
 static const u8 sAlteringCaveMapPreviewPalette[] = INCGFX_U8("graphics/kanto/map_preview/altering_cave/tiles.png", ".gbapal");
 static const u8 sAlteringCaveMapPreviewTiles[] = INCGFX_U8("graphics/kanto/map_preview/altering_cave/tiles.png", ".4bpp.lz");
 static const u8 sAlteringCaveMapPreviewTilemap[] = INCGFX_U8("graphics/kanto/map_preview/altering_cave/tilemap.bin", ".lz");
+// PokemonNative3G : les lieux uniques de Hoenn, dessinés dans le style des aperçus de RF (tools/apercus_hoenn.py)
+static const u8 sHoennMtPyreMapPreviewPalette[] = INCGFX_U8("graphics/fusion/map_preview/mt_pyre/tiles.png", ".gbapal");
+static const u8 sHoennMtPyreMapPreviewTiles[] = INCGFX_U8("graphics/fusion/map_preview/mt_pyre/tiles.png", ".4bpp.lz");
+static const u8 sHoennMtPyreMapPreviewTilemap[] = INCGFX_U8("graphics/fusion/map_preview/mt_pyre/tilemap.bin", ".lz");
+static const u8 sHoennSkyPillarMapPreviewPalette[] = INCGFX_U8("graphics/fusion/map_preview/sky_pillar/tiles.png", ".gbapal");
+static const u8 sHoennSkyPillarMapPreviewTiles[] = INCGFX_U8("graphics/fusion/map_preview/sky_pillar/tiles.png", ".4bpp.lz");
+static const u8 sHoennSkyPillarMapPreviewTilemap[] = INCGFX_U8("graphics/fusion/map_preview/sky_pillar/tilemap.bin", ".lz");
+static const u8 sHoennAquaHideoutMapPreviewPalette[] = INCGFX_U8("graphics/fusion/map_preview/aqua_hideout/tiles.png", ".gbapal");
+static const u8 sHoennAquaHideoutMapPreviewTiles[] = INCGFX_U8("graphics/fusion/map_preview/aqua_hideout/tiles.png", ".4bpp.lz");
+static const u8 sHoennAquaHideoutMapPreviewTilemap[] = INCGFX_U8("graphics/fusion/map_preview/aqua_hideout/tilemap.bin", ".lz");
+static const u8 sHoennMagmaHideoutMapPreviewPalette[] = INCGFX_U8("graphics/fusion/map_preview/magma_hideout/tiles.png", ".gbapal");
+static const u8 sHoennMagmaHideoutMapPreviewTiles[] = INCGFX_U8("graphics/fusion/map_preview/magma_hideout/tiles.png", ".4bpp.lz");
+static const u8 sHoennMagmaHideoutMapPreviewTilemap[] = INCGFX_U8("graphics/fusion/map_preview/magma_hideout/tilemap.bin", ".lz");
+static const u8 sHoennAbandonedShipMapPreviewPalette[] = INCGFX_U8("graphics/fusion/map_preview/abandoned_ship/tiles.png", ".gbapal");
+static const u8 sHoennAbandonedShipMapPreviewTiles[] = INCGFX_U8("graphics/fusion/map_preview/abandoned_ship/tiles.png", ".4bpp.lz");
+static const u8 sHoennAbandonedShipMapPreviewTilemap[] = INCGFX_U8("graphics/fusion/map_preview/abandoned_ship/tilemap.bin", ".lz");
+static const u8 sHoennNewMauvilleMapPreviewPalette[] = INCGFX_U8("graphics/fusion/map_preview/new_mauville/tiles.png", ".gbapal");
+static const u8 sHoennNewMauvilleMapPreviewTiles[] = INCGFX_U8("graphics/fusion/map_preview/new_mauville/tiles.png", ".4bpp.lz");
+static const u8 sHoennNewMauvilleMapPreviewTilemap[] = INCGFX_U8("graphics/fusion/map_preview/new_mauville/tilemap.bin", ".lz");
+static const u8 sHoennMirageTowerMapPreviewPalette[] = INCGFX_U8("graphics/fusion/map_preview/mirage_tower/tiles.png", ".gbapal");
+static const u8 sHoennMirageTowerMapPreviewTiles[] = INCGFX_U8("graphics/fusion/map_preview/mirage_tower/tiles.png", ".4bpp.lz");
+static const u8 sHoennMirageTowerMapPreviewTilemap[] = INCGFX_U8("graphics/fusion/map_preview/mirage_tower/tilemap.bin", ".lz");
+static const u8 sHoennDesertRuinsMapPreviewPalette[] = INCGFX_U8("graphics/fusion/map_preview/desert_ruins/tiles.png", ".gbapal");
+static const u8 sHoennDesertRuinsMapPreviewTiles[] = INCGFX_U8("graphics/fusion/map_preview/desert_ruins/tiles.png", ".4bpp.lz");
+static const u8 sHoennDesertRuinsMapPreviewTilemap[] = INCGFX_U8("graphics/fusion/map_preview/desert_ruins/tilemap.bin", ".lz");
+static const u8 sHoennIslandCaveMapPreviewPalette[] = INCGFX_U8("graphics/fusion/map_preview/island_cave/tiles.png", ".gbapal");
+static const u8 sHoennIslandCaveMapPreviewTiles[] = INCGFX_U8("graphics/fusion/map_preview/island_cave/tiles.png", ".4bpp.lz");
+static const u8 sHoennIslandCaveMapPreviewTilemap[] = INCGFX_U8("graphics/fusion/map_preview/island_cave/tilemap.bin", ".lz");
+static const u8 sHoennAncientTombMapPreviewPalette[] = INCGFX_U8("graphics/fusion/map_preview/ancient_tomb/tiles.png", ".gbapal");
+static const u8 sHoennAncientTombMapPreviewTiles[] = INCGFX_U8("graphics/fusion/map_preview/ancient_tomb/tiles.png", ".4bpp.lz");
+static const u8 sHoennAncientTombMapPreviewTilemap[] = INCGFX_U8("graphics/fusion/map_preview/ancient_tomb/tilemap.bin", ".lz");
 
 static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     [MPS_VIRIDIAN_FOREST] = {
@@ -429,6 +460,89 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
         .tilesptr = sDiglettsCaveMapPreviewTiles,
         .tilemapptr = sDiglettsCaveMapPreviewTilemap,
         .palptr = sDiglettsCaveMapPreviewPalette
+    },
+    // Lieux uniques : le type suit le lieu de RF qui leur ressemble. Tours comme la Tour Pokémon et ruines comme les
+    // salles de Tanoby : grotte (aperçu avant la carte). Planques comme la Planque Rocket, épave comme le Manoir,
+    // New Lavandia comme la Centrale : forêt (aperçu sur l'arrivée, drapeau posé par setworldmapflag).
+    [MPS_HOENN_MT_PYRE] = {
+        .mapsec = MAPSEC_MT_PYRE,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_HOENN_WORLD_MAP_MT_PYRE_1F,
+        .tilesptr = sHoennMtPyreMapPreviewTiles,
+        .tilemapptr = sHoennMtPyreMapPreviewTilemap,
+        .palptr = sHoennMtPyreMapPreviewPalette
+    },
+    [MPS_HOENN_SKY_PILLAR] = {
+        .mapsec = MAPSEC_SKY_PILLAR,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_LANDMARK_SKY_PILLAR,
+        .tilesptr = sHoennSkyPillarMapPreviewTiles,
+        .tilemapptr = sHoennSkyPillarMapPreviewTilemap,
+        .palptr = sHoennSkyPillarMapPreviewPalette
+    },
+    [MPS_HOENN_AQUA_HIDEOUT] = {
+        .mapsec = MAPSEC_AQUA_HIDEOUT,
+        .type = MPS_TYPE_FOREST,
+        .flagId = FLAG_HOENN_WORLD_MAP_AQUA_HIDEOUT_1F,
+        .tilesptr = sHoennAquaHideoutMapPreviewTiles,
+        .tilemapptr = sHoennAquaHideoutMapPreviewTilemap,
+        .palptr = sHoennAquaHideoutMapPreviewPalette
+    },
+    [MPS_HOENN_MAGMA_HIDEOUT] = {
+        .mapsec = MAPSEC_MAGMA_HIDEOUT,
+        .type = MPS_TYPE_FOREST,
+        .flagId = FLAG_HOENN_WORLD_MAP_MAGMA_HIDEOUT_1F,
+        .tilesptr = sHoennMagmaHideoutMapPreviewTiles,
+        .tilemapptr = sHoennMagmaHideoutMapPreviewTilemap,
+        .palptr = sHoennMagmaHideoutMapPreviewPalette
+    },
+    [MPS_HOENN_ABANDONED_SHIP] = {
+        .mapsec = MAPSEC_ABANDONED_SHIP,
+        .type = MPS_TYPE_FOREST,
+        .flagId = FLAG_LANDMARK_ABANDONED_SHIP,
+        .tilesptr = sHoennAbandonedShipMapPreviewTiles,
+        .tilemapptr = sHoennAbandonedShipMapPreviewTilemap,
+        .palptr = sHoennAbandonedShipMapPreviewPalette
+    },
+    [MPS_HOENN_NEW_MAUVILLE] = {
+        .mapsec = MAPSEC_NEW_MAUVILLE,
+        .type = MPS_TYPE_FOREST,
+        .flagId = FLAG_LANDMARK_NEW_MAUVILLE,
+        .tilesptr = sHoennNewMauvilleMapPreviewTiles,
+        .tilemapptr = sHoennNewMauvilleMapPreviewTilemap,
+        .palptr = sHoennNewMauvilleMapPreviewPalette
+    },
+    [MPS_HOENN_MIRAGE_TOWER] = {
+        .mapsec = MAPSEC_MIRAGE_TOWER,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_LANDMARK_MIRAGE_TOWER,
+        .tilesptr = sHoennMirageTowerMapPreviewTiles,
+        .tilemapptr = sHoennMirageTowerMapPreviewTilemap,
+        .palptr = sHoennMirageTowerMapPreviewPalette
+    },
+    [MPS_HOENN_DESERT_RUINS] = {
+        .mapsec = MAPSEC_DESERT_RUINS,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_LANDMARK_DESERT_RUINS,
+        .tilesptr = sHoennDesertRuinsMapPreviewTiles,
+        .tilemapptr = sHoennDesertRuinsMapPreviewTilemap,
+        .palptr = sHoennDesertRuinsMapPreviewPalette
+    },
+    [MPS_HOENN_ISLAND_CAVE] = {
+        .mapsec = MAPSEC_ISLAND_CAVE,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_LANDMARK_ISLAND_CAVE,
+        .tilesptr = sHoennIslandCaveMapPreviewTiles,
+        .tilemapptr = sHoennIslandCaveMapPreviewTilemap,
+        .palptr = sHoennIslandCaveMapPreviewPalette
+    },
+    [MPS_HOENN_ANCIENT_TOMB] = {
+        .mapsec = MAPSEC_ANCIENT_TOMB,
+        .type = MPS_TYPE_CAVE,
+        .flagId = FLAG_LANDMARK_ANCIENT_TOMB,
+        .tilesptr = sHoennAncientTombMapPreviewTiles,
+        .tilemapptr = sHoennAncientTombMapPreviewTilemap,
+        .palptr = sHoennAncientTombMapPreviewPalette
     }
 };
 
