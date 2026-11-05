@@ -1,5 +1,11 @@
 # PokemonNative3G — Changelog
 
+## Prochaine version
+
+### Corrections
+- Version navigateur : le clavier se lit comme sur PC, par la lettre écrite sur la touche, AZERTY comme QWERTY
+  (A = Z, L = A). Avant, c'étaient les positions d'un clavier QWERTY (sur AZERTY, A = W et L = Q).
+
 ## Version 1.2 (5 novembre 2026) — la base
 
 Cette version est la **base** de PokemonNative3G : le jeu complet, à reprendre pour construire son propre jeu

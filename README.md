@@ -26,9 +26,9 @@ Le zip contient aussi le [CHANGELOG](CHANGELOG.md) et le guide
 
 **Touches par défaut** (modifiables dans `pokeemerald.ini`, à côté de la sauvegarde) : A = **Z**, B = **X**,
 L = **A**, R = **S**, START = **Entrée**, SELECT = **Retour arrière**, croix = **flèches**, avance rapide =
-**Espace**, reset = **F5**, plein écran = **F11** ou **Alt+Entrée**. Sur PC, une touche est celle où la lettre est
-écrite, quelle que soit la disposition du clavier (AZERTY comme QWERTY) ; dans le navigateur, ce sont les positions
-d'un clavier QWERTY (sur AZERTY : A = **W**, L = **Q**). Manette et écran tactile marchent aussi.
+**Espace**, reset = **F5**, plein écran = **F11** ou **Alt+Entrée**. Une touche est celle où la lettre est écrite,
+quelle que soit la disposition du clavier (AZERTY comme QWERTY), dans le navigateur comme sur PC. Manette et écran
+tactile marchent aussi.
 
 **Sauvegarde** : `%APPDATA%\pokeemerald` (Windows), `~/.local/share/pokeemerald` (Linux), dossier de l'appli
 (Android), le navigateur (avec export et import du `.sav`). C'est le même fichier partout : une partie passe d'une

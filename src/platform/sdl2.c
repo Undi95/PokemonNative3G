@@ -677,7 +677,15 @@ void ProcessEvents(void)
         case SDL_QUIT:
             isRunning = false;
             break;
+#ifdef __EMSCRIPTEN__
+        case SDL_KEYUP:
+            Input_HandleEvent(&event);   // navigateur : les touches tenues, par la lettre écrite dessus (settings.c)
+            break;
+#endif
         case SDL_KEYDOWN:
+#ifdef __EMSCRIPTEN__
+            Input_HandleEvent(&event);
+#endif
             switch (event.key.keysym.sym)
             {
             case SDLK_r:
@@ -715,6 +723,7 @@ void ProcessEvents(void)
             break;
 #endif
 #ifdef __EMSCRIPTEN__
+            Input_HandleEvent(&event);   // focus perdu : plus aucune touche tenue
             break; // PokemonNative3G : canevas de taille fixe, mis à l'échelle par la page
 #endif
             if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED

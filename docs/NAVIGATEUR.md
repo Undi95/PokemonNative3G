@@ -8,10 +8,12 @@ hébergeur statique (GitHub Pages, itch.io, Netlify, un FTP…). Pas de multijou
 
 - **Lancer** : un clic sur « Cliquer pour jouer » (ou Entrée). Un navigateur ne joue du son qu'après un geste du
   joueur, d'où ce bouton.
-- **Touches** : celles du PC (`src/platform/settings.c`), en positions QWERTY : flèches, A = Z, B = X, Start = Entrée,
-  Select = Retour arrière, L = A, R = S, accélérer = Espace. Sur AZERTY : A = W, L = Q. F5 recharge la page (celle du
-  navigateur, pas la réinitialisation du jeu : A+B+Start+Select la fait). Manettes : celles que le navigateur
-  reconnaît (API Gamepad). Écran tactile : les touches d'Android apparaissent au premier toucher (`touch.c`).
+- **Touches** : celles du PC (`src/platform/settings.c`) : flèches, A = Z, B = X, Start = Entrée, Select = Retour
+  arrière, L = A, R = S, accélérer = Espace. Comme sur PC, une touche est celle où la lettre est écrite, quelle que
+  soit la disposition (AZERTY comme QWERTY) : le SDL2 d'Emscripten garde une table de touches QWERTY, le jeu suit
+  donc les touches tenues par le keycode de leurs événements (tiré de `keyCode`, la lettre de la touche). Une touche
+  accentuée (« key_a = ù » sur PC) n'est pas reconnue dans le navigateur. F5 recharge la page (celle du navigateur, pas la
+  réinitialisation du jeu : A+B+Start+Select la fait). Manettes : celles que le navigateur reconnaît (API Gamepad). Écran tactile : les touches d'Android apparaissent au premier toucher (`touch.c`).
 - **Plein écran** : le bouton de la barre du bas.
 - **Sauvegarde** : gardée dans le navigateur (IndexedDB), recopiée après chaque sauvegarde du jeu ; la barre du bas
   affiche l'heure de la dernière. Le bouton **Exporter** télécharge `pokeemerald.sav`, le même fichier que sur PC et

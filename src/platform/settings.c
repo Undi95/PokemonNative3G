@@ -133,11 +133,45 @@ static bool ParseKey(const char *name, SDL_Keycode *key)
     return *key != SDLK_UNKNOWN;
 }
 
+#ifdef __EMSCRIPTEN__
+// PokemonNative3G, navigateur : le SDL2 d'Emscripten donne le scancode de la position de la touche (event.code) et
+// garde sa table des touches d'un clavier QWERTY, que la disposition ne change jamais (SDL_GetScancodeFromKey : la
+// touche A répondait au W d'un AZERTY). Le keycode de ses événements, lui, vient de keyCode : la lettre écrite sur la
+// touche. Les touches tenues sont donc gardées par keycode, pour lire le clavier comme sur PC.
+#define MAX_WEB_KEYS 16
+static SDL_Keycode sWebKeys[MAX_WEB_KEYS];
+static int sNumWebKeys;
+
+static void WebKeyEvent(const SDL_Event *event)
+{
+    SDL_Keycode key = event->key.keysym.sym;
+    int i;
+
+    for (i = 0; i < sNumWebKeys && sWebKeys[i] != key; i++)
+        ;
+    if (event->type == SDL_KEYDOWN && i == sNumWebKeys && sNumWebKeys < MAX_WEB_KEYS)
+        sWebKeys[sNumWebKeys++] = key;
+    else if (event->type == SDL_KEYUP && i < sNumWebKeys)
+        sWebKeys[i] = sWebKeys[--sNumWebKeys];
+}
+#endif
+
 // keyboard: SDL's state, by position; the key's position comes from the layout in use. NULL: the test mode's keys
 static bool KeyHeld(SDL_Keycode key, const Uint8 *keyboard)
 {
     SDL_Scancode scancode;
 
+#ifdef __EMSCRIPTEN__
+    if (keyboard != NULL)
+    {
+        for (int i = 0; i < sNumWebKeys; i++)
+        {
+            if (sWebKeys[i] == key)
+                return true;
+        }
+        return false;
+    }
+#endif
     if (keyboard == NULL)
     {
         for (int i = 0; i < sNumTestKeys; i++)
@@ -320,6 +354,19 @@ void LoadSettings(const char *path)
 
 void Input_HandleEvent(const SDL_Event *event)
 {
+#ifdef __EMSCRIPTEN__
+    if (event->type == SDL_KEYDOWN || event->type == SDL_KEYUP)
+    {
+        WebKeyEvent(event);
+        return;
+    }
+    // Onglet ou fenêtre quittés : le navigateur n'enverra pas le relâchement des touches tenues
+    if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_FOCUS_LOST)
+    {
+        sNumWebKeys = 0;
+        return;
+    }
+#endif
     if (event->type == SDL_CONTROLLERDEVICEADDED)
     {
         SDL_JoystickID id = SDL_JoystickGetDeviceInstanceID(event->cdevice.which);
