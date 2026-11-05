@@ -1,0 +1,140 @@
+<!doctype html>
+<!-- PokemonNative3G, version navigateur (docs/NAVIGATEUR.md). Deux fichiers : cette page et pokeemeraude.js (le jeu,
+     WebAssembly compris). Ils s'ouvrent tels quels depuis le disque ou se déposent sur n'importe quel hébergeur. -->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>PokemonNative3G</title>
+<style>
+  :root { --fond: #101418; --texte: #e8e8ee; --doux: #9aa0ad; --accent: #4a8fe0; }
+  html, body { margin: 0; height: 100%; background: var(--fond); color: var(--texte);
+               font: 15px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; overflow: hidden; }
+  #ecran { position: fixed; inset: 0 0 48px 0; display: flex; align-items: center; justify-content: center; }
+  canvas { display: block; width: min(100vw, calc((100vh - 48px) * 1.5)); aspect-ratio: 3 / 2;
+           image-rendering: pixelated; image-rendering: crisp-edges; background: #000; outline: none; }
+  /* Écran tactile : le canevas prend toute la place, le jeu reste au centre et les touches vont autour (le jeu suit
+     la forme du canevas, src/platform/sdl2.c) */
+  body.tactile canvas { width: 100vw; height: calc(100vh - 48px); aspect-ratio: auto; touch-action: none; }
+  #ecran:fullscreen canvas { height: 100vh; width: 100vw; aspect-ratio: auto; }
+  #barre { position: fixed; left: 0; right: 0; bottom: 0; height: 48px; display: flex; gap: 8px; align-items: center;
+           padding: 0 12px; box-sizing: border-box; background: #181d24; border-top: 1px solid #262c36; }
+  #barre button, #barre label { font: inherit; color: var(--texte); background: #252c37; border: 1px solid #333c4a;
+           border-radius: 6px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+  #barre button:hover, #barre label:hover { background: #2e3744; }
+  #barre .info { margin-left: auto; color: var(--doux); font-size: 13px; overflow: hidden; text-overflow: ellipsis;
+           white-space: nowrap; }
+  #lancer { position: fixed; inset: 0 0 48px 0; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; gap: 16px; background: rgba(8, 10, 14, .92); cursor: pointer; text-align: center;
+            padding: 16px; box-sizing: border-box; }
+  #lancer h1 { margin: 0; font-size: 28px; }
+  #lancer .bouton { font-size: 20px; padding: 12px 28px; border-radius: 10px; background: var(--accent); color: #fff; }
+  #lancer p { margin: 0; color: var(--doux); max-width: 34em; }
+  #lancer.charge .bouton { background: #333c4a; }
+  input[type=file] { display: none; }
+  @media (max-width: 640px) { #barre .info { display: none; } #barre button, #barre label { padding: 6px 8px; } }
+</style>
+</head>
+<body>
+<div id="ecran"><canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas></div>
+<div id="lancer" class="charge">
+  <h1>PokemonNative3G</h1>
+  <div class="bouton" id="lancer-texte">Chargement…</div>
+  <p>Clavier (QWERTY) : flèches, A = Z, B = X, Start = Entrée, Select = Retour arrière, L = A, R = S,
+     accélérer = Espace. Sur AZERTY : A = W, L = Q. Manette et écran tactile aussi.</p>
+  <p>La partie est gardée dans ce navigateur. Exportez-la de temps en temps : c'est le même fichier .sav que sur PC
+     et Android.</p>
+</div>
+<div id="barre">
+  <button id="plein-ecran" title="Plein écran">Plein écran</button>
+  <button id="exporter" title="Télécharger la sauvegarde (.sav)">Exporter</button>
+  <label title="Remplacer la partie par un fichier .sav">Importer<input type="file" id="importer" accept=".sav"></label>
+  <span class="info" id="info"></span>
+</div>
+<script>
+  'use strict';
+  var SAV = '/sauvegarde/pokeemerald.sav';
+  var lancer = document.getElementById('lancer');
+  var lancerTexte = document.getElementById('lancer-texte');
+  var info = document.getElementById('info');
+  var pret = false, lance = false;
+
+  function dire(texte) { info.textContent = texte; }
+
+  var Module = {
+    canvas: document.getElementById('canvas'),
+    print: function (t) { console.log(t); },
+    printErr: function (t) { console.warn(t); },
+    onRuntimeInitialized: function () {
+      pret = true;
+      lancer.classList.remove('charge');
+      lancerTexte.textContent = 'Cliquer pour jouer';
+    },
+    onSauvegarde: function (err) {
+      dire(err ? 'Écriture de la sauvegarde impossible (voir la console)'
+               : 'Partie gardée dans le navigateur à ' + new Date().toLocaleTimeString());
+    },
+    onAbort: function (raison) { dire('Le jeu s\'est arrêté : ' + raison); }
+  };
+
+  // Le son ne démarre qu'après un geste de l'utilisateur : le jeu se lance au clic (ou à une touche)
+  function demarrer() {
+    if (!pret || lance) return;
+    lance = true;
+    lancer.style.display = 'none';
+    Module.canvas.focus();
+    Module.callMain([]);
+  }
+  lancer.addEventListener('click', demarrer);
+  window.addEventListener('keydown', function (e) {
+    if (!lance && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); demarrer(); }
+    // Les flèches et l'espace font défiler la page sinon
+    if (lance && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Backspace'].indexOf(e.key) >= 0)
+      e.preventDefault();
+  });
+
+  document.getElementById('plein-ecran').addEventListener('click', function () {
+    var el = document.getElementById('ecran');
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (el.requestFullscreen) el.requestFullscreen();
+    Module.canvas.focus();
+  });
+
+  document.getElementById('exporter').addEventListener('click', function () {
+    var donnees;
+    try { donnees = FS.readFile(SAV); } catch (e) { dire('Pas encore de sauvegarde'); return; }
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([donnees], { type: 'application/octet-stream' }));
+    a.download = 'pokeemerald.sav';
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    Module.canvas.focus();
+  });
+
+  document.getElementById('importer').addEventListener('change', function (e) {
+    var fichier = e.target.files[0];
+    if (!fichier) return;
+    if (!pret) { dire('Le jeu charge encore, réessayez dans un instant'); return; }
+    if (!confirm('Remplacer la partie de ce navigateur par « ' + fichier.name + ' » ? La page va se recharger.')) return;
+    fichier.arrayBuffer().then(function (buf) {
+      FS.writeFile(SAV, new Uint8Array(buf));
+      FS.syncfs(false, function (err) {
+        if (err) { dire('Import impossible (voir la console)'); console.error('[import]', err); return; }
+        location.reload();
+      });
+    }).catch(function (err) { dire('Lecture du fichier impossible'); console.error('[import]', err); });
+  });
+
+  // Écran tactile (téléphone, tablette) : la page passe en mode tactile dès le départ, ou au premier toucher
+  function tactile() { document.body.classList.add('tactile'); }
+  if (window.matchMedia && matchMedia('(pointer: coarse)').matches) tactile();
+  window.addEventListener('touchstart', tactile, { once: true, passive: true });
+
+  // Un ancien navigateur sans WebAssembly : le dire plutôt qu'un écran vide
+  if (typeof WebAssembly !== 'object') lancerTexte.textContent = 'Ce navigateur ne lit pas WebAssembly';
+</script>
+<!-- ?v= : la version du jeu (docker/build.sh), pour qu'un navigateur ne garde pas l'ancien jeu en cache après une mise
+     à jour du site -->
+<script src="pokeemeraude.js?v=VERSION_DU_JEU" onerror="document.getElementById('lancer-texte').textContent = 'pokeemeraude.js est introuvable à côté de cette page'"></script>
+</body>
+</html>

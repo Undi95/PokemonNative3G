@@ -13,6 +13,14 @@ STAMP="build/.flags_$TARGET"; mkdir -p build
 if [ "$(cat "$STAMP" 2>/dev/null)" != "$MAKEFLAGS_EXTRA" ]; then touch src/new_game.c; echo "$MAKEFLAGS_EXTRA" > "$STAMP"; fi
 make "$TARGET" -j"${JOBS:-$(nproc)}" $MAKEFLAGS_EXTRA 2>&1 | tail -n "${TAILN:-40}"
 OUT=/out/${OUT_NAME:-$TARGET}; mkdir -p $OUT
+# Version navigateur (image pn3g-web) : la page et le jeu, deux fichiers à déposer tels quels (docs/NAVIGATEUR.md)
+if [ "$TARGET" = web ]; then
+    cp -v pokeemeraude32.js $OUT/pokeemeraude.js
+    sed "s/VERSION_DU_JEU/$(git rev-parse --short HEAD)/" src/platform/web/index.html > $OUT/index.html
+    # Adresses des variables (HEAPU8 dans la console du navigateur), à côté et pas dans la version à déposer
+    mkdir -p /out/web-debug && cp pokeemeraude.map /out/web-debug/
+    exit 0
+fi
 if [ "$TARGET" = winwsl ]; then cp -v pokeemeraude64.exe $OUT/; else cp -v pokeemeraude64 $OUT/; fi
 # Les symboles (fonctions et données), pour que les tests et les outils de debug nomment les adresses
 # (test/headless/names.py)

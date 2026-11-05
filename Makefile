@@ -44,10 +44,19 @@ ifeq (android,$(MAKECMDGOALS))
   COMPILER := clang
   CLANG := aarch64-linux-android24-clang
 endif
+# Navigateur (WebAssembly, wasm32) : le C par emcc ; les données assemblées par GNU as en 32 bits, puis converties en
+# objets wasm par tools/elf2wasm.py au moment du lien (docs/NAVIGATEUR.md, docker/Dockerfile.web)
+ifeq (web,$(MAKECMDGOALS))
+  PORTABLE := 1
+  TARGET_OS := WEB
+  COMPILER := clang
+  CLANG := emcc
+  IS64BIT := 0
+endif
 CLANG ?= clang
 
-# -m64 / -m32 (not for Android, whose compiler only targets arm64)
-ifeq ($(TARGET_OS),ANDROID)
+# -m64 / -m32 (not for Android, whose compiler only targets arm64, nor the web, always 32 bits)
+ifneq (,$(filter ANDROID WEB,$(TARGET_OS)))
   BIT_WIDTH_FLAG :=
 else
   BIT_WIDTH_FLAG = -m$(BIT_WIDTH)
@@ -190,6 +199,18 @@ ifeq ($(PORTABLE),1)
     # undefined symbols, which the library would then ask the system for
     FIX_UNDERSCORE += --rename-section .rodata=.data.rel.ro,alloc,load,contents,data --strip-unneeded
     BUILD_FEXTENSION := .so
+  else ifeq ($(TARGET_OS),WEB)
+    # Les données restent des objets ELF jusqu'au lien (elf2wasm a besoin des signatures des fonctions C)
+    FIX_UNDERSCORE := true
+    BUILD_FEXTENSION := .js
+    # Un seul fichier (le wasm dans le .js) : le jeu s'ouvre aussi depuis le disque (file://), où un navigateur
+    # refuse de charger un .wasm à part. Les fonctions des tables (specials, tâches...) sont appelées avec une autre
+    # signature que la leur (u16 (*)(void) pour une fonction void...) : légal en pratique sur PC, un piège en wasm,
+    # d'où EMULATE_FUNCTION_POINTER_CASTS. Sauvegardes dans IndexedDB (IDBFS, src/platform/web/pre.js).
+    OS_LFLAGS := -sSINGLE_FILE=1 -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=4MB -sEMULATE_FUNCTION_POINTER_CASTS=1 \
+      -sENVIRONMENT=web -sINVOKE_RUN=0 -sEXIT_RUNTIME=0 -sFORCE_FILESYSTEM=1 -lidbfs.js \
+      -sEXPORTED_RUNTIME_METHODS=callMain,FS,HEAPU8 -Wl,--Map=pokeemeraude.map \
+      --pre-js src/platform/web/pre.js
   else ifeq ($(IS64BIT),1)
     # Build position independent, so nothing can rely on addresses fitting in 32 bits
     OS_CFLAGS := -fPIE
@@ -219,6 +240,10 @@ ifeq ($(PORTABLE),1)
     PLATFORM_LFLAGS += -L$(SDL_PREFIX)/lib -lSDL2 -lm
   else ifeq ($(TARGET_OS),ANDROID)
     PLATFORM_LFLAGS += -lSDL2 -lm
+  else ifeq ($(TARGET_OS),WEB)
+    # Le port SDL2 d'Emscripten (compilé dans l'image pn3g-web)
+    PLATFORM_INCLUDES += -sUSE_SDL=2
+    PLATFORM_LFLAGS += -sUSE_SDL=2 -lm
   else
     PLATFORM_LFLAGS += -lSDL2main -lSDL2 -lm
   endif
@@ -429,7 +454,7 @@ MAKEFLAGS += --no-print-directory
 .DELETE_ON_ERROR:
 
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidynonmodern generated clean-generated
-.PHONY: all rom modern compare winwsl linux macos android
+.PHONY: all rom modern compare winwsl linux macos android web
 .PHONY: $(RULES_NO_SCAN)
 
 infoshell = $(foreach line, $(shell $1 | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
@@ -511,6 +536,7 @@ winwsl: all
 linux: all
 macos: all
 android: all
+web: all
 
 # Other rules
 rom: $(ROM)
@@ -724,6 +750,21 @@ else ifeq ($(TARGET_OS),MACOS)
 # without chained fixups (see -no_fixup_chains)
 $(ROM): $(OBJS)
 	$(MODERNCC) $(CFLAGS) $^ $(PLATFORM_LFLAGS) $(OS_LFLAGS) -o $@ 2>&1 | sed '/ld: warning: pointer not aligned/d'
+else ifeq ($(TARGET_OS),WEB)
+# Les objets de données (ELF 32 bits) sont convertis en objets wasm ici, une fois les objets C compilés : un pointeur
+# vers une fonction C demande sa signature (tools/elf2wasm.py)
+WEB_DATA_OBJS := $(ASM_OBJS) $(DATA_ASM_OBJS) $(MID_OBJS)
+# Les variables du jeu (pas celles de src/platform/) entre deux marqueurs, pour la réinitialisation logicielle :
+# wasm-ld range les variables à zéro dans l'ordre des objets (src/platform/system.c, GetGameRam)
+WEB_GAME_C_OBJS := $(filter-out $(C_BUILDDIR)/platform/%,$(C_OBJS))
+WEB_PLATFORM_C_OBJS := $(filter $(C_BUILDDIR)/platform/%,$(C_OBJS))
+$(OBJ_DIR)/web_ram_%.o: $(C_SUBDIR)/platform/web/ram_%.inc.c
+	$(MODERNCC) $(CFLAGS) -c -o $@ $<
+$(ROM): $(OBJS) $(OBJ_DIR)/web_ram_debut.o $(OBJ_DIR)/web_ram_fin.o tools/elf2wasm.py src/platform/web/pre.js
+	@printf '%s\n' $(C_OBJS) > $(OBJ_DIR)/c_objs.txt
+	python3 tools/elf2wasm.py --c-objs $(OBJ_DIR)/c_objs.txt --sigs $(OBJ_DIR)/signatures.txt --cc $(MODERNCC) $(WEB_DATA_OBJS)
+	$(MODERNCC) $(CFLAGS) $(OBJ_DIR)/web_ram_debut.o $(WEB_GAME_C_OBJS) $(OBJ_DIR)/web_ram_fin.o $(WEB_PLATFORM_C_OBJS) \
+	  $(WEB_DATA_OBJS:%=%.wasm.o) $(PLATFORM_LFLAGS) $(OS_LFLAGS) -o $@
 else
 $(ROM): $(OBJS)
 	$(MODERNCC) $(CFLAGS) -Wl,--demangle $^ -static-libgcc -L$(SDL_DIR)/lib $(PLATFORM_LFLAGS) $(OS_LFLAGS) -o $@

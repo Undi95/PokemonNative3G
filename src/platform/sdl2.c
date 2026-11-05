@@ -10,6 +10,10 @@
 #endif
 
 #include <SDL2/SDL.h>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
 
 #include "global.h"
 #include "debug_checks.h"
@@ -104,6 +108,16 @@ static void WriteWavHeader(FILE *file, u32 dataSize);
 static void FindDataFiles(void);
 static void ToggleFullscreen(void);
 static int RunTestMode(void);
+static void RunFrame(void);
+
+// PokemonNative3G : version navigateur. La sauvegarde et les options sont des fichiers en mémoire (IDBFS, montés sur
+// /sauvegarde par src/platform/web/pre.js) : après chaque écriture, la page les recopie dans IndexedDB.
+static void SyncStorage(void)
+{
+#ifdef __EMSCRIPTEN__
+    EM_ASM({ if (Module.sauvegardeModifiee) Module.sauvegardeModifiee(); });
+#endif
+}
 
 // PokemonNative3G : zone du jeu dans la taille réelle de l'écran (pixels du rendu, comme les touches tactiles) :
 // agrandie au pixel entier, centrée
@@ -239,8 +253,16 @@ int main(int argc, char **argv)
 #ifdef __ANDROID__
     SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight"); // PokemonNative3G : paysage seulement
 #endif
+#ifdef __EMSCRIPTEN__
+    // PokemonNative3G : un canevas de taille fixe (4 fois l'écran de la GBA), que la page agrandit ou réduit à la
+    // taille de la fenêtre (web/index.html) ; le plein écran se demande depuis la page (geste de l'utilisateur)
+    videoScale = 4;
+    sdlWindow = SDL_CreateWindow("PokemonNative3G", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DISPLAY_WIDTH * videoScale, DISPLAY_HEIGHT * videoScale,
+                                 SDL_WINDOW_SHOWN);
+#else
     sdlWindow = SDL_CreateWindow("PokemonNative3G", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DISPLAY_WIDTH * videoScale, DISPLAY_HEIGHT * videoScale,
                                  SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | (gSettings.fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+#endif
 #ifdef __ANDROID__
     SDL_SetWindowFullscreen(sdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP); // PokemonNative3G
 #endif
@@ -299,19 +321,66 @@ int main(int argc, char **argv)
 
     AgbMain();
 
-    double accumulator = 0.0;
-    double snapDebt = 0.0;
-    Uint32 vsyncCheckTime = 0;
     lastGameTime = SDL_GetPerformanceCounter();
+
+#ifdef __EMSCRIPTEN__
+    // PokemonNative3G : dans un navigateur, la page ne doit jamais rester bloquée : c'est lui qui appelle une image de
+    // la boucle à chaque rafraîchissement de l'écran (requestAnimationFrame). Ne revient pas.
+    emscripten_set_main_loop(RunFrame, 0, 1);
+#else
+    while (isRunning)
+        RunFrame();
+#endif
+
+    CloseSaveFile();
+
+    SDL_DestroyWindow(sdlWindow);
+    SDL_Quit();
+    return 0;
+}
+
+// Une image de la boucle principale : les entrées, les frames de jeu dues depuis la précédente (pas fixe de 1/60 s),
+// l'affichage
+static void RunFrame(void)
+{
+    static double accumulator = 0.0;
+    static double snapDebt = 0.0;
+    static Uint32 vsyncCheckTime = 0;
 
     // PokemonNative3G : PN3G_FPS=1 écrit toutes les 5 s les frames de jeu par seconde et la part du temps passée à
     // les calculer et les dessiner, et les à-coups (images où passent plusieurs frames de jeu d'un coup)
-    bool showFps = SDL_getenv("PN3G_FPS") != NULL;
-    Uint64 fpsStart = SDL_GetPerformanceCounter(), fpsBusy = 0;
-    int fpsFrames = 0, fpsHitches = 0;
+    static int showFps = -1;
+    static Uint64 fpsStart, fpsBusy = 0;
+    static int fpsFrames = 0, fpsHitches = 0;
 
-    bool isGameStepDrawn = false;
-    while (isRunning)
+    static bool isGameStepDrawn = false;
+
+    if (showFps < 0)
+    {
+        showFps = SDL_getenv("PN3G_FPS") != NULL;
+        fpsStart = SDL_GetPerformanceCounter();
+    }
+#ifdef __EMSCRIPTEN__
+    // PokemonNative3G : le canevas garde la forme que la page lui donne (3:2 sur ordinateur ; tout l'écran sur un
+    // téléphone, où les touches tactiles vont autour du jeu, comme sur Android), à 4 fois la hauteur de la GBA
+    {
+        double cssW, cssH;
+
+        if (emscripten_get_element_css_size("#canvas", &cssW, &cssH) == EMSCRIPTEN_RESULT_SUCCESS && cssW > 0 && cssH > 0)
+        {
+            int w = (int)(DISPLAY_HEIGHT * 4 * cssW / cssH + 0.5), h = DISPLAY_HEIGHT * 4, curW, curH;
+
+            if (w < DISPLAY_WIDTH * 4)
+            {
+                w = DISPLAY_WIDTH * 4;
+                h = (int)(DISPLAY_WIDTH * 4 * cssH / cssW + 0.5);
+            }
+            SDL_GetWindowSize(sdlWindow, &curW, &curH);
+            if (curW != w || curH != h)
+                SDL_SetWindowSize(sdlWindow, w, h);
+        }
+    }
+#endif
     {
         double deltaTime;
         int steps = 0;
@@ -423,16 +492,14 @@ int main(int argc, char **argv)
                     fpsHitches = 0;
                 }
             }
+#ifndef __EMSCRIPTEN__ // le navigateur rappelle RunFrame à l'image suivante, sans attendre ici
             if (steps == 0 && wait > 0.002)
                 SDL_Delay((Uint32)((wait - 0.001) * 1000));
+#else
+            (void)wait;
+#endif
         }
     }
-
-    CloseSaveFile();
-
-    SDL_DestroyWindow(sdlWindow);
-    SDL_Quit();
-    return 0;
 }
 
 static void ReadSaveFile(const char *path)
@@ -470,6 +537,7 @@ static void StoreSaveFile()
         // PokemonNative3G : écrit tout de suite, comme les blocs annexes ; sinon la fin pouvait attendre la fermeture
         // du fichier, à la sortie du jeu (perdue si le jeu est tué : Android, plantage)
         fflush(sSaveFile);
+        SyncStorage();
     }
 }
 
@@ -485,6 +553,7 @@ void Platform_WriteExtraSave(const void *data, u32 size)
     fseek(sSaveFile, sizeof(FLASH_BASE), SEEK_SET);
     fwrite(data, 1, size, sSaveFile);
     fflush(sSaveFile);
+    SyncStorage();
 }
 
 bool8 Platform_ReadExtraSave(void *data, u32 size)
@@ -503,6 +572,7 @@ void Platform_WriteExtraSaveAt(u32 offset, const void *data, u32 size)
     fseek(sSaveFile, sizeof(FLASH_BASE) + offset, SEEK_SET);
     fwrite(data, 1, size, sSaveFile);
     fflush(sSaveFile);
+    SyncStorage();
 }
 
 bool8 Platform_ReadExtraSaveAt(u32 offset, void *data, u32 size)
@@ -643,6 +713,9 @@ void ProcessEvents(void)
             if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED || event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED)
                 SDL_SetWindowFullscreen(sdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
             break;
+#endif
+#ifdef __EMSCRIPTEN__
+            break; // PokemonNative3G : canevas de taille fixe, mis à l'échelle par la page
 #endif
             if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED
              && !(SDL_GetWindowFlags(sdlWindow) & SDL_WINDOW_FULLSCREEN))
@@ -933,12 +1006,17 @@ static bool ParseArgs(int argc, char **argv)
 static void FindDataFiles(void)
 {
     static char savePath[1024], settingsPath[1024];
+#ifdef __EMSCRIPTEN__
+    // Le dossier gardé dans IndexedDB (src/platform/web/pre.js)
+    sDataDir = SDL_strdup("/sauvegarde/");
+#else
     FILE *oldSave = fopen("pokeemerald.sav", "rb");
 
     if (oldSave != NULL)
         fclose(oldSave);
     else
         sDataDir = SDL_GetPrefPath("", "pokeemerald");
+#endif
     if (sDataDir == NULL)
         sDataDir = SDL_strdup("");
 

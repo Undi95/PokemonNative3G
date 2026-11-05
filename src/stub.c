@@ -1,6 +1,7 @@
 #ifdef PORTABLE
 #include "global.h"
 #include "main.h"
+#include "libgcnmultiboot.h"
 
 #include <stdio.h>
 
@@ -13,10 +14,12 @@ STUB_FUNC_QUIET_BLOCK(bool8 HandleLinkConnection(), return 0;)
 STUB_FUNC_BLOCK(int MultiBoot(struct MultiBootParam *mp), return 0;)
 STUB_FUNC(void IntrMain())
 STUB_FUNC(void GameCubeMultiBoot_Hash())
-STUB_FUNC_QUIET(void GameCubeMultiBoot_Main())
-STUB_FUNC(void GameCubeMultiBoot_ExecuteProgram())
-STUB_FUNC(void GameCubeMultiBoot_Init())
-STUB_FUNC(void GameCubeMultiBoot_HandleSerialInterrupt())
+// PokemonNative3G : avec les paramètres de libgcnmultiboot.h : en WebAssembly, une fonction appelée avec une autre
+// signature que la sienne est remplacée par un piège (l'intro appelle GameCubeMultiBoot_Main)
+STUB_FUNC_QUIET(void GameCubeMultiBoot_Main(struct GcmbStruct *pStruct))
+STUB_FUNC(void GameCubeMultiBoot_ExecuteProgram(struct GcmbStruct *pStruct))
+STUB_FUNC(void GameCubeMultiBoot_Init(struct GcmbStruct *pStruct))
+STUB_FUNC(void GameCubeMultiBoot_HandleSerialInterrupt(struct GcmbStruct *pStruct))
 STUB_FUNC(void GameCubeMultiBoot_Quit())
 STUB_FUNC(void rfu_initializeAPI())
 STUB_FUNC(void InitRFUAPI(void))

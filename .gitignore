@@ -46,6 +46,8 @@ prefabs.json
 *.diff
 *.sym
 *.js
+# Version navigateur : le code de la page lu par emcc (--pre-js)
+!src/platform/web/*.js
 /pokeemerald-*.png
 /pokeemerald_modern-*.png
 

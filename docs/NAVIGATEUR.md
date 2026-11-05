@@ -1,76 +1,81 @@
-# Version navigateur : étude et plan (v1.1, 2026-11-04)
+# Version navigateur (v1.1, 2026-11-05)
 
-Demande : une version pour navigateur, hébergeable, qui marche en local ou simplement déposée sur un site web, sans
-serveur (pas de multijoueur pour l'instant).
+Le jeu tourne dans un navigateur, sans serveur : deux fichiers, `index.html` (la page) et `pokeemeraude.js` (le jeu,
+WebAssembly compris). On les ouvre d'un double-clic sur `index.html`, ou on les dépose tels quels sur n'importe quel
+hébergeur statique (GitHub Pages, itch.io, Netlify, un FTP…). Pas de multijoueur pour l'instant.
 
-**Réponse : oui, c'est possible.** Le résultat serait un dossier statique (`index.html` + le jeu compilé en
-WebAssembly). On l'ouvre d'un double-clic ou on le dépose tel quel sur n'importe quel hébergeur statique (GitHub Pages,
-itch.io, Netlify, un FTP…). Rien n'est encore fait : il faut d'abord la chaîne de compilation Emscripten, à télécharger
-(voir « Ce qu'il faut »).
+## Jouer
 
-## Ce qui est déjà prêt dans la couche PC
+- **Lancer** : un clic sur « Cliquer pour jouer » (ou Entrée). Un navigateur ne joue du son qu'après un geste du
+  joueur, d'où ce bouton.
+- **Touches** : celles du PC (`src/platform/settings.c`), en positions QWERTY : flèches, A = Z, B = X, Start = Entrée,
+  Select = Retour arrière, L = A, R = S, accélérer = Espace. Sur AZERTY : A = W, L = Q. F5 recharge la page (celle du
+  navigateur, pas la réinitialisation du jeu : A+B+Start+Select la fait). Manettes : celles que le navigateur
+  reconnaît (API Gamepad). Écran tactile : les touches d'Android apparaissent au premier toucher (`touch.c`).
+- **Plein écran** : le bouton de la barre du bas.
+- **Sauvegarde** : gardée dans le navigateur (IndexedDB), recopiée après chaque sauvegarde du jeu ; la barre du bas
+  affiche l'heure de la dernière. Le bouton **Exporter** télécharge `pokeemerald.sav`, le même fichier que sur PC et
+  Android ; **Importer** remplace la partie du navigateur par un `.sav` et recharge la page. Effacer les données du
+  site efface la partie : exporter de temps en temps.
 
-- **Boucle de jeu image par image** (`main` de `src/platform/sdl2.c` : `RunMainLoop`, `VBlankIntrWait` vide). C'est la
-  forme qu'un navigateur impose : il suffit d'appeler un tour de cette boucle à chaque image du navigateur
-  (`emscripten_set_main_loop`), au lieu du `while (isRunning)` et du `SDL_Delay`.
-- **SDL2 existe pour le web** (port SDL2 d'Emscripten) : image, son (Web Audio), clavier, manettes (Gamepad API),
-  tactile (`src/platform/touch.c`, déjà fait pour Android).
-- **Aucun thread** : pas d'en-têtes spéciaux à demander à l'hébergeur.
+## Construire
 
-## Le gros morceau : les données assemblées
+Image Docker à part (Emscripten, depuis l'image officielle `emscripten/emsdk`), à construire une fois :
 
-Les scripts, les cartes et les autres tables de `data/` (`.s`, des milliers de fichiers) sont assemblés par GNU as.
-Ils contiennent des pointeurs vers d'autres données et vers des fonctions C (`special`, `callnative`…). Chaque
-plateforme a sa solution :
+```bash
+docker build -t pn3g-web -f docker/Dockerfile.web docker
+```
 
-| Plateforme | Données |
+Puis, comme les autres plateformes (le build part du dernier commit) :
+
+```bash
+MSYS_NO_PATHCONV=1 docker run --rm -v "$(pwd -W):/repo:ro" -v "$(pwd -W)/out:/out" -v pn3g-work-web:/work pn3g-web bash /repo/docker/build.sh web
+```
+
+Sortie : `out/web/index.html` et `out/web/pokeemeraude.js` (environ 30 Mo). `out/web-debug/pokeemeraude.map` donne
+l'adresse de chaque variable, pour lire l'état du jeu dans la console du navigateur (`Module.HEAPU8`). La release
+(`build-all.sh`) les met dans `Navigateur/`.
+
+## Comment c'est fait
+
+| Morceau | Fichier |
 |---|---|
-| Windows, Linux | GNU as pour x86-64 (ELF / COFF) |
-| Android | GNU as pour aarch64 |
-| macOS | GNU as (ELF), puis `tools/elf2macho` (668 lignes de C) les convertit en objets Mach-O |
-| Navigateur | **à faire** : pas d'assembleur GNU pour WebAssembly |
+| Cible `make web` : emcc, 32 bits (`IS64BIT=0`), port SDL2 d'Emscripten | `Makefile`, `docker/Dockerfile.web` |
+| Données assemblées (scripts, cartes, musiques) converties en objets WebAssembly | `tools/elf2wasm.py` |
+| Boucle principale : une image par rafraîchissement du navigateur | `src/platform/sdl2.c` (`RunFrame`) |
+| Sauvegarde et options dans IndexedDB | `src/platform/web/pre.js`, `SyncStorage` dans `sdl2.c` |
+| Variables du jeu effacées par la réinitialisation logicielle | `src/platform/web/ram_*.inc.c`, `system.c` |
+| La page : lancement, plein écran, export et import | `src/platform/web/index.html` |
 
-Le plan suit le précédent de macOS :
+- **Les données** : les fichiers de `data/` sont écrits pour GNU as, avec des macros que l'assembleur de clang ne sait
+  pas lire. Comme pour macOS (`tools/elf2macho`), GNU as les assemble, ici en 32 bits (`as --32` : des pointeurs de
+  4 octets, ceux de wasm32), puis `elf2wasm.py` traduit chaque objet ELF en assembleur WebAssembly de LLVM, qu'emcc
+  assemble :
+  - une section devient un segment de données d'un seul tenant, car un script peut continuer dans le label suivant ;
+  - un pointeur vers une donnée devient une relocation `R_WASM_MEMORY_ADDR_I32` ;
+  - un pointeur vers une fonction C (special, callnative…) devient une entrée de la table des fonctions. Sa
+    signature est relevée dans les objets C compilés : avec une autre signature, wasm-ld la remplacerait par un
+    piège. La conversion se fait donc au moment du lien.
+- **Les appels de fonctions par pointeur** : le jeu appelle souvent une fonction avec une autre signature que la
+  sienne (une fonction `void` de la table des specials appelée comme `u16 (*)(void)`). C'est sans effet sur PC, mais
+  un piège en WebAssembly : d'où `-sEMULATE_FUNCTION_POINTER_CASTS`. Le jeu ne prend qu'environ 1 ms par image.
+- **Un seul fichier** : `-sSINGLE_FILE` met le WebAssembly dans le `.js`. Ouverte depuis le disque (`file://`), une
+  page n'a pas le droit de charger un `.wasm` à part.
+- **Réinitialisation logicielle** : sur PC, les variables du jeu ont une section à elles (`gba_ram`), que
+  `RegisterRamReset` efface. Clang n'applique pas `#pragma clang section` en WebAssembly : les objets du jeu sont liés
+  entre deux marqueurs (`gWebGameRamStart`, `gWebGameRamEnd`), avant ceux de `src/platform/`, et wasm-ld range les
+  variables dans l'ordre des objets.
+- **32 bits** : la sauvegarde garde la disposition de la GBA (`save.c`). Une partie passe donc d'une plateforme à
+  l'autre, y compris les blocs annexes de la fusion. Vérifié : une sauvegarde faite sur PC se charge dans le
+  navigateur (Kanto, sac de Rouge Feu).
 
-1. Assembler les données **en 32 bits** (`as --32`). Les macros savent déjà le faire (`asm/macros/bit_width.inc`,
-   `VER_64BIT`). Ce sont des pointeurs de 4 octets, ceux de WebAssembly (wasm32).
-2. Un convertisseur `tools/elf2wasm` transforme chaque objet ELF en objet WebAssembly :
-   - sections de données → segments de données ;
-   - symboles → symboles de données ;
-   - pointeurs vers des données (`R_386_32`) → `R_WASM_MEMORY_ADDR_I32` ;
-   - pointeurs vers des fonctions C → `R_WASM_TABLE_INDEX_I32`. La signature de chaque fonction est relevée dans les
-     objets C compilés, sinon l'éditeur de liens remplace la fonction par un piège.
-3. Vérifier le **code C en 32 bits**. La fusion n'a été jouée qu'en 64 bits (`pokeemeraude64`) ; il y a 25 endroits
-   `VER_64BIT` dans `src/` et `include/`. Le banc de test, lui, reste sur l'exe natif.
+## Vérifié (2026-11-05, Chrome du panneau navigateur de l'appli)
 
-Autre voie possible : wasm64 (pointeurs de 8 octets, données en x86-64). Elle éviterait l'étape 3, mais Safari et
-les navigateurs plus anciens ne la lisent pas. À écarter pour un jeu à partager.
+Intro, écran titre, nouvelle partie jusqu'au camion, sauvegarde, rechargement de la page puis « Continuer »,
+import d'une sauvegarde faite sur PC, sac de Kanto, réinitialisation logicielle puis reprise, son (contexte audio
+actif à 48 kHz), vitesse (environ 0,8 ms de calcul par image).
 
-## Le reste (connu, sans difficulté)
+## Limites
 
-- **Sauvegarde** dans le navigateur (IndexedDB, via le système de fichiers IDBFS d'Emscripten), synchronisée après
-  chaque écriture. Les options (`settings.c`) aussi.
-  - Boutons **Exporter / Importer** : le `.sav` est le même que sur PC et Android, une partie passe d'un appareil à
-    l'autre.
-  - Les données d'un navigateur peuvent être effacées : export conseillé.
-- **Ouvrir en local** : un navigateur refuse de charger un `.wasm` depuis `file://`. Le jeu est donc compilé **en un
-  seul fichier** (`-sSINGLE_FILE` : le wasm dans le `.js`). La même version sert en ligne.
-- **Son** : un navigateur exige un clic avant de jouer du son : écran « Cliquer pour jouer ».
-- **Plein écran**, mise à l'échelle nette (pixels entiers), contrôles tactiles sur téléphone : comme Android.
-- Pas de console des outils de debug (`devtools.c`, TCP) dans cette version.
-
-## Ce qu'il faut
-
-- **Emscripten**, dans une image Docker à part (`docker/Dockerfile.web`, depuis l'image officielle
-  `emscripten/emsdk`, environ 1,5 Go à télécharger). C'est un téléchargement : **à faire avec ton accord**.
-- Une cible `make web` et `docker/build.sh web`, avec une sortie `out/web/` (`index.html` + `pokeemeraude.js`).
-- Test dans le navigateur intégré : intro, nouvelle partie, sauvegarde, rechargement, son, manette. Captures.
-
-## Estimation
-
-| Étape | Taille |
-|---|---|
-| `elf2wasm` et données en 32 bits | le plus long, une à deux sessions |
-| Code C en 32 bits | dépend de ce qui casse |
-| Boucle, sauvegarde, page HTML, export/import | une session |
-| Tests et release « navigateur » dans `build-all.sh` | une session |
+- Pas de console des outils de debug (`devtools.c`, TCP) : la version navigateur est construite sans le menu DEBUG.
+- Le banc de test (`test/headless`) reste sur l'exe natif.

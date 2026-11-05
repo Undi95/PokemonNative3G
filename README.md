@@ -26,6 +26,8 @@ docker run --rm -v "<chemin du dépôt>:/repo:ro" -v pn3g-work:/work -v "<chemin
 ```
 
 Sorties : `out/linux/pokeemeraude64` et `out/winwsl/pokeemeraude64.exe` + `SDL2.dll`.
+Android : [docs/PLATEFORMES.md](docs/PLATEFORMES.md). Navigateur (deux fichiers à ouvrir ou à déposer sur un site) :
+[docs/NAVIGATEUR.md](docs/NAVIGATEUR.md).
 Le build compile le **dernier commit** du dépôt (pas les modifications non commitées).
 Instructions sans Docker : voir [INSTALL_PC.md](INSTALL_PC.md).
 

@@ -1,0 +1,11 @@
+# Version navigateur (WebAssembly) : Emscripten, depuis l'image officielle (docs/NAVIGATEUR.md)
+#   docker build -t pn3g-web -f docker/Dockerfile.web docker
+FROM emscripten/emsdk:4.0.10
+ENV DEBIAN_FRONTEND=noninteractive
+# libpng pour les outils de build (gbagfx...) ; GNU as (binutils, déjà là) assemble les données en 32 bits
+RUN apt-get update && apt-get install -y --no-install-recommends libpng-dev python3-pil \
+    && rm -rf /var/lib/apt/lists/*
+# Le port SDL2 d'Emscripten, téléchargé et compilé une fois pour toutes dans l'image
+RUN embuilder build sdl2
+RUN git config --global --add safe.directory '*'
+WORKDIR /src

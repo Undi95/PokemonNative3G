@@ -4,6 +4,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
+#ifdef __EMSCRIPTEN__
+// PokemonNative3G : la libc d'Emscripten (musl) définit PAGE_SIZE (page de mémoire wasm), un nom que le Pokédex
+// utilise pour sa page « Taille » (src/pokedex.c)
+#undef PAGE_SIZE
+#endif
 
 #ifdef PORTABLE
     #define DBGPRINTF(...) printf(__VA_ARGS__)

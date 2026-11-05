@@ -65,6 +65,14 @@ static void GetGameRam(u8 **start, size_t *size)
 
 	*start = gbaRamStart;
 	*size = gbaRamEnd - gbaRamStart;
+#elif defined(__EMSCRIPTEN__)
+	// PokemonNative3G : en WebAssembly, pas de section à part (clang n'y applique pas #pragma clang section) : les
+	// variables du jeu sont liées entre deux marqueurs, avant celles de src/platform/ (Makefile, cible web), et
+	// wasm-ld range les variables à zéro dans l'ordre des objets
+	extern u8 gWebGameRamStart[], gWebGameRamEnd[];
+
+	*start = gWebGameRamStart;
+	*size = gWebGameRamEnd - gWebGameRamStart;
 #else
 	extern u8 __start_gba_ram[], __stop_gba_ram[];
 

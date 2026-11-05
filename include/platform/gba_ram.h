@@ -7,6 +7,8 @@
 // objcopy renames .bss after compiling instead.
 #ifdef __APPLE__
 #pragma clang section bss="__DATA,__gba_ram,zerofill"
+#elif defined(__EMSCRIPTEN__)
+// Sans effet en WebAssembly : la zone est délimitée par l'ordre du lien (src/platform/system.c, GetGameRam)
 #else
 #pragma clang section bss="gba_ram"
 #endif
