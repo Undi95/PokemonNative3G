@@ -558,7 +558,9 @@ static void StartRainSpriteFall(struct Sprite *sprite)
     if (sprite->tRandom == 0)
         sprite->tRandom = 361;
 
-    rand = ISO_RANDOMIZE2(sprite->tRandom);
+    // PokemonNative3G : calcul en non signé (u32), le même résultat que la GBA dans rand ; en int, le produit déborde
+    // (comportement indéfini, UBSan)
+    rand = ISO_RANDOMIZE2((u32)sprite->tRandom);
     sprite->tRandom = ((rand & 0x7FFF0000) >> 16) % 600;
 
     numFallingFrames = sRainSpriteFallingDurations[gWeatherPtr->isDownpour][0];
