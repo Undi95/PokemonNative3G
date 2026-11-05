@@ -1,7 +1,10 @@
 # PokemonNative3G
 
-Pokémon Émeraude (version française) compilé **nativement** pour Windows et Linux,
-sans émulateur. Objectif à terme : intégrer Kanto (Rouge Feu) dans le moteur d'Émeraude.
+Pokémon Émeraude et Pokémon Rouge Feu (versions françaises) réunis en un seul jeu, compilé **nativement** pour
+Windows, Linux, Android et le navigateur, sans émulateur : Hoenn puis Kanto et les îles Sevii, dans le moteur
+d'Émeraude. Le détail par version est dans [CHANGELOG.md](CHANGELOG.md).
+
+PokemonNative3G est une **base** : le jeu complet, à reprendre (fork) pour construire son propre jeu par-dessus.
 
 ## Origine du code
 

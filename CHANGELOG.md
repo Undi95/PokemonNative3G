@@ -1,6 +1,9 @@
 # PokemonNative3G — Changelog
 
-## Prochaine version
+## Version 1.2 (5 novembre 2026) — la base
+
+Cette version est la **base** de PokemonNative3G : le jeu complet, à reprendre pour construire son propre jeu
+par-dessus.
 
 ### Nouveautés
 - À Kanto, le joueur a son sprite de style Rouge Feu, quel que soit le personnage : Brice et Flora y gardent leur
