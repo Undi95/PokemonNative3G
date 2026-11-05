@@ -1,6 +1,12 @@
 # PokemonNative3G — Changelog
 
-## Prochaine version
+## Version 1.2.1 (5 novembre 2026)
+
+Petite mise à jour de la base, pour la version navigateur.
+
+### Nouveauté
+- Version navigateur : les touches se changent dans la page (bouton « Touches » de la barre du bas, une fois le jeu
+  lancé). Elles sont gardées dans le navigateur du joueur, avec sa partie.
 
 ### Corrections
 - Version navigateur : le clavier se lit comme sur PC, par la lettre écrite sur la touche, AZERTY comme QWERTY

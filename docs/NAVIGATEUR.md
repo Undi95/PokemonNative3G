@@ -12,7 +12,11 @@ hébergeur statique (GitHub Pages, itch.io, Netlify, un FTP…). Pas de multijou
   arrière, L = A, R = S, accélérer = Espace. Comme sur PC, une touche est celle où la lettre est écrite, quelle que
   soit la disposition (AZERTY comme QWERTY) : le SDL2 d'Emscripten garde une table de touches QWERTY, le jeu suit
   donc les touches tenues par le keycode de leurs événements (tiré de `keyCode`, la lettre de la touche). Une touche
-  accentuée (« key_a = ù » sur PC) n'est pas reconnue dans le navigateur. F5 recharge la page (celle du navigateur, pas la
+  accentuée (« key_a = ù » sur PC) n'est pas reconnue dans le navigateur. **Changer les touches** : le bouton
+  « Touches » de la barre du bas (une fois le jeu lancé), « Changer » puis la touche voulue (Échap annule) ; la touche
+  ne commande plus aucun autre bouton ; « Par défaut » revient aux touches d'origine. Elles sont écrites dans
+  `pokeemerald.ini`, à côté de la sauvegarde : dans l'IndexedDB du navigateur du joueur, jamais sur le site
+  (`Web_GetKeys`, `Web_CaptureKey`, `Web_ResetKeys` dans `src/platform/settings.c`). F5 recharge la page (celle du navigateur, pas la
   réinitialisation du jeu : A+B+Start+Select la fait). Manettes : celles que le navigateur reconnaît (API Gamepad). Écran tactile : les touches d'Android apparaissent au premier toucher (`touch.c`).
 - **Plein écran** : le bouton de la barre du bas.
 - **Sauvegarde** : gardée dans le navigateur (IndexedDB), recopiée après chaque sauvegarde du jeu ; la barre du bas

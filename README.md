@@ -24,7 +24,8 @@ Télécharger le zip de la dernière version sur la page [Releases](https://gith
 Le zip contient aussi le [CHANGELOG](CHANGELOG.md) et le guide
 [Où trouver les Pokémon](docs/OU-TROUVER-LES-POKEMON.md).
 
-**Touches par défaut** (modifiables dans `pokeemerald.ini`, à côté de la sauvegarde) : A = **Z**, B = **X**,
+**Touches par défaut** (modifiables dans `pokeemerald.ini`, à côté de la sauvegarde ; dans le navigateur, par le
+bouton « Touches ») : A = **Z**, B = **X**,
 L = **A**, R = **S**, START = **Entrée**, SELECT = **Retour arrière**, croix = **flèches**, avance rapide =
 **Espace**, reset = **F5**, plein écran = **F11** ou **Alt+Entrée**. Une touche est celle où la lettre est écrite,
 quelle que soit la disposition du clavier (AZERTY comme QWERTY), dans le navigateur comme sur PC. Manette et écran

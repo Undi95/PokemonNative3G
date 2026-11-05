@@ -2,9 +2,9 @@
 # PokemonNative3G : release complète SANS menu DEBUG (Windows, Linux, APK Android, navigateur) dans out/release/, avec
 # CHANGELOG.md, puis out/PokemonNative3G-VERSION.zip (journal : out/build-all.log).
 # Volumes à part (pn3g-rel-*) : la build de test avec DEBUG (pn3g-work-release, out/winwsl, KANTO_DEBUG=1) reste
-# intacte pour test/headless/suite.py. Usage : bash build-all.sh [VERSION]   (défaut : 1.2)
+# intacte pour test/headless/suite.py. Usage : bash build-all.sh [VERSION]   (défaut : 1.2.1)
 cd "$(dirname "$0")"
-VERSION=${1:-1.2}
+VERSION=${1:-1.2.1}
 P="$(pwd -W 2>/dev/null || pwd)"; LOG=out/build-all.log; REL=out/release; mkdir -p out; : > $LOG
 run() { MSYS_NO_PATHCONV=1 docker run --rm -v "$P:/repo:ro" -v "$P/out:/out" "$@" >> $LOG 2>&1 || { echo "ÉCHEC $* (voir $LOG)"; exit 1; }; }
 run -e OUT_NAME=rel-windows -v pn3g-rel-windows:/work pn3g-build bash /repo/docker/build.sh winwsl
