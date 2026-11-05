@@ -556,7 +556,16 @@ void BattleTv_SetDataBasedOnString(u16 stringId)
     atkSide = GetBattlerSide(gBattlerAttacker);
     defSide = GetBattlerSide(gBattlerTarget);
     effSide = GetBattlerSide(gEffectBattler);
+#ifdef UBFIX
+    // En combat double, scrActive vaut parfois MAX_BATTLERS_COUNT : gBattlerPositions[4] n'existe pas (sur GBA,
+    // l'octet suivant en mémoire). scriptingSide ne sert qu'au message des Picots, où scrActive est un vrai combattant.
+    if (gBattleMsgDataPtr->scrActive < MAX_BATTLERS_COUNT)
+        scriptingSide = GetBattlerSide(gBattleMsgDataPtr->scrActive);
+    else
+        scriptingSide = B_SIDE_PLAYER;
+#else
     scriptingSide = GetBattlerSide(gBattleMsgDataPtr->scrActive);
+#endif
 
     if (atkSide == B_SIDE_PLAYER)
         atkMon = &gPlayerParty[gBattlerPartyIndexes[gBattlerAttacker]];
