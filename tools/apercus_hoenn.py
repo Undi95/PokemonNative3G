@@ -6,9 +6,11 @@ ressemblent à un lieu de Kanto en reprennent l'image ; les lieux uniques (Pilie
 illustration dessinée dans le style de RF : vue en perspective, couleurs douces, 15 couleurs.
 
 Le style de RF, relevé sur ses aperçus : de grands aplats de couleurs claires, un tramage en damier seulement à la
-limite de deux teintes (horizon, ombres), des reflets en traits horizontaux sur l'eau, des rochers en facettes nettes
-éclairées par le haut à gauche, des contours un ton plus sombre. Chaque scène est dessinée en code (fonctions scene_*)
-avec les outils de dessin ci-dessous.
+limite de deux teintes (horizon, ombres), des reflets en traits horizontaux sur l'eau, de la roche en gros blocs
+arrondis éclairés par le haut à gauche. Comme RF le fait entre ses propres aperçus, le décor générique reprend des
+morceaux peints de RF recolorés dans la palette du lieu (nuages, mer, roche, fougères, sapins, collines, vapeur :
+coller_rf, texturer, massif_rf) ; le sujet unique de chaque lieu (tour, épave, butte, générateur...) est dessiné en
+code (fonctions scene_*), d'après Rubis Oméga / Saphir Alpha pour le Pilier Céleste et les ruines des Regi.
 
 Format des aperçus de RF (graphics/kanto/map_preview/*) :
 - image de 240 x 112 au milieu de l'écran (rangées de tuiles 3 à 16), en 15 couleurs (palette BG 13) ;
@@ -125,6 +127,184 @@ def contour(t, m, sombre, clair=None):
             t.point(x, y, sombre)
         elif clair and (not dedans(m, x, y - 1) or not dedans(m, x - 1, y)):
             t.point(x, y, clair)
+
+
+# --- Morceaux peints des aperçus de RF --------------------------------------------------------------------------
+# RF compose ses aperçus en reprenant des morceaux des autres (la Grotte Taupiqueur reprend le Tunnel Roche, les
+# grottes de Sevii reprennent les Îles Écume...). On fait pareil pour le décor générique (nuages, mer, roche, fougères,
+# herbes, collines, sapins, vapeur) : un morceau d'un aperçu de RF, recoloré dans la palette du lieu (chaque teinte
+# du morceau prend la teinte de la rampe au même rang de luminosité). Le sujet unique du lieu est dessiné à part.
+
+_RF = {}
+
+
+def rf(nom):
+    """L'image (240 x 112) d'un aperçu de RF, graphics/kanto/map_preview/<nom>."""
+    if nom not in _RF:
+        _RF[nom] = rendu_ecran(os.path.join(RACINE, 'graphics', 'kanto', 'map_preview', nom)).crop(
+            (0, IMAGE_Y * 8, W, IMAGE_Y * 8 + H))
+    return _RF[nom]
+
+
+def lum(c):
+    return 0.3 * c[0] + 0.55 * c[1] + 0.15 * c[2]
+
+
+def recoloration(pixels_rgb, rampe):
+    """{teinte du morceau : nom de la rampe} : les teintes rangées par luminosité, réparties sur la rampe (du sombre au
+    clair) selon la part de pixels qu'elles occupent."""
+    compte = {}
+    for c in pixels_rgb:
+        compte[c] = compte.get(c, 0) + 1
+    total = sum(compte.values()) or 1
+    res, cumul = {}, 0
+    for c in sorted(compte, key=lum):
+        milieu = (cumul + compte[c] / 2) / total
+        cumul += compte[c]
+        res[c] = rampe[min(len(rampe) - 1, int(milieu * len(rampe)))]
+    return res
+
+
+def coller_rf(t, nom, box, x, y, rampe, garder=None, miroir=False, masque_clip=None):
+    """Colle le morceau `box` de l'aperçu de RF `nom` en (x, y), recoloré sur `rampe`. `garder(rgb)` choisit les
+    pixels du morceau à coller (le reste est transparent)."""
+    morceau = rf(nom).crop(box)
+    if miroir:
+        morceau = morceau.transpose(Image.FLIP_LEFT_RIGHT)
+    px = morceau.load()
+    l, h = morceau.size
+    garder = garder or (lambda c: True)
+    gardes = [px[i, j] for j in range(h) for i in range(l) if garder(px[i, j])]
+    table = recoloration(gardes, rampe)
+    for j in range(h):
+        for i in range(l):
+            c = px[i, j]
+            if garder(c) and (masque_clip is None or dedans(masque_clip, x + i, y + j)):
+                t.point(x + i, y + j, table[c])
+
+
+def texturer(t, m, nom, box, rampe, ox=0, oy=0, miroir_alterne=True):
+    """Remplit le masque `m` avec la texture du morceau `box` de RF (répété, une rangée sur deux en miroir pour cacher
+    les raccords), recolorée sur `rampe`."""
+    morceau = rf(nom).crop(box)
+    inverse = morceau.transpose(Image.FLIP_LEFT_RIGHT)
+    l, h = morceau.size
+    px, pxi = morceau.load(), inverse.load()
+    table = recoloration([px[i, j] for j in range(h) for i in range(l)], rampe)
+    for x, y in pixels(m):
+        rang_x, rang_y = (x + ox) // l, (y + oy) // h
+        src = pxi if miroir_alterne and (rang_x + rang_y) % 2 else px
+        t.point(x, y, table[src[(x + ox) % l, (y + oy) % h]])
+
+
+def est_ciel(c):
+    return c[2] > c[0] + 24 and lum(c) > 150
+
+
+def est_nuage(c):
+    return lum(c) > 214 and -4 <= c[2] - c[0] < 30
+
+
+ROCHE_RF = ('altering_cave', (120, 0, 240, 74))   # la roche en gros blocs ronds de la Grotte Métamo de RF
+
+
+def massif_rf(t, pts, rampe, dessus, graine, ox=0, oy=0, ombre=0.3, texture=ROCHE_RF, clair_dessus=None):
+    """Un massif de roche (butte, falaise, paroi) au contour irrégulier, peint avec la roche de RF recolorée sur
+    `rampe` (du sombre au clair) : le dessus plat éclairé, le pied sombre, et le côté droit (la part `ombre`) un ton
+    plus bas. Renvoie son masque."""
+    contour_ = organique(pts, 1.6, graine)
+    m = masque_poly(contour_)
+    texturer(t, m, texture[0], texture[1], rampe, ox, oy)
+    xs = [x for x, _ in pixels(m)]
+    if xs and ombre:
+        limite = max(xs) - (max(xs) - min(xs)) * ombre
+        for x, y in pixels(m):
+            if x > limite and ((x + y) & 1 or x > limite + 4):
+                k = rampe.index(t.nom(x, y)) if t.nom(x, y) in rampe else 1
+                t.point(x, y, rampe[max(0, k - 1)])
+    haut, bas = {}, {}
+    for x, y in pixels(m):
+        haut[x] = min(haut.get(x, y), y)
+        bas[x] = max(bas.get(x, y), y)
+    if dessus:
+        for x, y0 in haut.items():
+            for k in range(3):
+                t.point(x, y0 + k, (clair_dessus or dessus) if k == 0 else dessus)
+    for x, y1 in bas.items():
+        t.point(x, y1, rampe[0])
+    return m
+
+
+def ellipse_pts(cx, cy, rx, ry, n=24):
+    """Les sommets d'une ellipse, pour un contour irrégulier (organique)."""
+    return [(cx + math.cos(2 * math.pi * k / n) * rx, cy + math.sin(2 * math.pi * k / n) * ry) for k in range(n)]
+
+
+def butte_rf(t, cx, base, rampe, dessus, porte, graine):
+    """L'entrée d'une salle des Regi (Rubis Oméga / Saphir Alpha) : une butte de roche rouge en deux gradins, peinte
+    avec la roche de RF, et la bouche sombre de la grotte, en arc, posée au sol."""
+    massif_rf(t, [(cx - 52, base - 22), (cx - 40, base - 48), (cx + 40, base - 48), (cx + 52, base - 22)], rampe,
+              dessus, graine, ox=graine * 7)
+    massif_rf(t, [(cx - 80, base), (cx - 64, base - 28), (cx + 64, base - 28), (cx + 80, base)], rampe, dessus,
+              graine + 1, ox=graine * 3 + 40, oy=20)
+    bouche(t, cx, base, 20, 24, porte, rampe[-1])
+
+
+# Des nuages entiers de RF, qui ne touchent pas le bord de leur morceau (repérés par composantes connexes : ailleurs,
+# les nuages débordent du morceau ou se confondent avec le ciel pâle de l'horizon) : le cumulus de la Route Victoire et
+# la traînée du Mont Sélénite.
+NUAGES_RF = [('victory_road', (4, 1, 81, 32)), ('mt_moon', (16, 14, 65, 26)), ('victory_road', (4, 1, 81, 32))]
+COLLINES_RF = ('safari_zone', (120, 26, 240, 52))    # les collines lointaines du Parc Safari
+SAPINS_RF = ('victory_road', (0, 26, 88, 104))        # la forêt de sapins de la Route Victoire
+VOLCAN_RF = ('mt_ember', (92, 18, 200, 54))           # le volcan lointain du Mont Braise
+VAPEUR_RF = ('mt_ember', (186, 40, 236, 104))         # les jets de vapeur du Mont Braise
+
+
+def loin(c):
+    """Un pixel de décor lointain (ni ciel ni nuage)."""
+    return not est_ciel(c) and not est_nuage(c)
+
+
+def ciel_rf(t, y1, rampe, nuages, blanc='blanc', ombre='nuage_ombre'):
+    """Ciel en bandes, et des nuages peints de RF : `nuages` = [(n° du morceau de NUAGES_RF, x, y, miroir)]."""
+    bandes_v(t, 0, 0, W, y1, rampe, rangs=2)
+    for k, x, y, miroir in nuages:
+        nom, box = NUAGES_RF[k]
+        coller_rf(t, nom, box, x, y, [ombre, blanc], est_nuage, miroir,
+                  masque_clip=masque_poly([(0, 0), (W, 0), (W, y1), (0, y1)]))
+
+
+def bloc_rf(t, cx, cy, rx, ry, rampe, graine, sol=True):
+    """Un rocher arrondi peint avec la roche de RF (contour irrégulier, base plate s'il est posé au sol)."""
+    pts = []
+    for k in range(12):
+        a = math.pi + 2 * math.pi * k / 12
+        y = cy + math.sin(a) * ry
+        if sol and y > cy:
+            y = cy + (y - cy) * 0.3
+        pts.append((cx + math.cos(a) * rx, y))
+    return massif_rf(t, pts, rampe, None, graine, ox=graine * 13, oy=graine * 5, ombre=0.35)
+
+
+def mer_rf(t, y0, y1, rampe, horizon):
+    """La mer de RF (celle de la Grotte Métamo), répétée sur toute la largeur, avec la ligne claire de l'horizon."""
+    m = masque_poly([(0, y0), (W, y0), (W, y1), (0, y1)])
+    texturer(t, m, 'altering_cave', (0, 20, 84, 44), rampe, 0, 0)
+    for x in range(W):
+        t.point(x, y0, horizon)
+        if x & 1:
+            t.point(x, y0 + 1, horizon)
+
+
+def fougere_rf(t, x, y, rampe, miroir=False):
+    """Les fougères du premier plan de RF (Grotte Métamo), pour encadrer la scène."""
+    coller_rf(t, 'altering_cave', (190, 74, 240, 112), x, y, rampe,
+              lambda c: c[1] > c[0] + 12 and c[1] > c[2], miroir)
+
+
+def rocaille_rf(t, x, y, rampe, miroir=False, box=(0, 74, 70, 112)):
+    """Des blocs de roche de RF au premier plan (le bas gauche de la Grotte Métamo)."""
+    coller_rf(t, 'altering_cave', box, x, y, rampe, lambda c: not est_ciel(c) and not (c[1] > c[0] + 12), miroir)
 
 
 # --- Éléments de décor ------------------------------------------------------------------------------------------
@@ -367,24 +547,25 @@ def scene_sky_pillar():
         'sable_clair': (246, 228, 176), 'sable': (226, 198, 140),
         'falaise_claire': (224, 150, 116), 'falaise': (188, 108, 84), 'falaise_ombre': (130, 74, 64),
     })
-    bandes_v(t, 0, 0, W, 62, ['ciel_haut', 'ciel', 'blanc'], rangs=2)
-    nuage(t, 30, 26, 56, 10, 3, ombre='ciel')
-    nuage(t, 214, 18, 56, 10, 5, ombre='ciel')
-    mer(t, 58, H, 'blanc', 'mer', 'mer_clair', 'blanc', 2)
+    ciel_rf(t, 62, ['ciel_haut', 'ciel', 'blanc'], [(0, 2, 2, False), (0, 176, -4, True), (2, 196, 24, False)],
+            ombre='ciel')
+    mer_rf(t, 58, H, ['mer', 'mer', 'mer_clair', 'blanc'], 'blanc')
     # L'île : un plateau de sable aux bords irréguliers, la mer tout autour, l'écume sur ses bords
     ile = organique([(10, 112), (230, 112), (210, 70), (30, 70)], 3, 6, pas=8)
     t.poly([(x + (-3 if x < 120 else 3), y - 2) for x, y in ile], 'blanc')
     m = masque_poly(ile)
     bandes_v(t, 0, 66, W, H, ['sable_clair', 'sable'], rangs=2, masque=m)
-    # Falaises rouges sur l'île, de part et d'autre de la tour
+    # Falaises rouges sur l'île, de part et d'autre de la tour, peintes avec la roche de RF
     rampe_f = ['pierre_noire', 'falaise_ombre', 'falaise', 'falaise_claire']
-    roche_cannelee(t, [(30, 82), (38, 62), (70, 60), (78, 82)], rampe_f, 'pierre', 1, clair_dessus='pierre_claire')
-    roche_cannelee(t, [(162, 82), (170, 58), (204, 60), (214, 82)], rampe_f, 'pierre', 3, clair_dessus='pierre_claire')
+    massif_rf(t, [(30, 82), (38, 62), (70, 60), (78, 82)], rampe_f, 'pierre', 1, 5, 0, clair_dessus='pierre_claire')
+    massif_rf(t, [(162, 82), (170, 58), (204, 60), (214, 82)], rampe_f, 'pierre', 3, 60, 10,
+              clair_dessus='pierre_claire')
     bouche(t, 194, 82, 12, 15, 'porte', 'pierre')  # la grotte vers l'entrée du Pilier
-    roche_cannelee(t, [(16, 102), (24, 86), (50, 86), (58, 102)], rampe_f, 'pierre', 2, clair_dessus='pierre_claire')
-    roche_cannelee(t, [(186, 104), (194, 88), (218, 88), (226, 104)], rampe_f, 'pierre', 4, clair_dessus='pierre_claire')
-    # La tour : d'énormes blocs de pierre, la face avant éclairée, le flanc droit dans l'ombre ; elle sort de l'image
+    # La tour : d'énormes blocs de pierre au grain peint (la roche de RF, recolorée en ocre), la face avant éclairée,
+    # le flanc droit dans l'ombre ; elle sort de l'image par le haut
     x0, x1, flanc, base = 70, 160, 172, 84
+    texturer(t, masque_poly([(x0, 0), (x1, 0), (x1, base), (x0, base)]), ROCHE_RF[0], ROCHE_RF[1],
+             ['pierre_ombre', 'pierre', 'pierre', 'pierre_claire'], 11, 3)
     rnd = random.Random(8)
     for y_assise in range(-6, base, 12):
         x = x0 - rnd.randint(0, 12)
@@ -395,14 +576,11 @@ def scene_sky_pillar():
             for yy in range(max(0, y_assise), min(base, y_assise + 12)):
                 for xx in range(g, d):
                     if yy == y_assise or xx == g:
-                        nom = 'pierre_ombre'
-                    elif yy == y_assise + 1:
-                        nom = 'pierre_claire'
-                    elif sombre and (xx + yy) & 1:
-                        nom = 'pierre_ombre'
-                    else:
-                        nom = 'pierre'
-                    t.point(xx, yy, nom)
+                        t.point(xx, yy, 'pierre_ombre')
+                    elif yy == y_assise + 1 or xx == g + 1:
+                        t.point(xx, yy, 'pierre_claire')
+                    elif sombre and (xx + yy) & 1 and t.nom(xx, yy) == 'pierre':
+                        t.point(xx, yy, 'pierre_ombre')
             x += largeur
     for y in range(0, base):  # flanc droit, dans l'ombre
         for xx in range(x1, flanc + 1):
@@ -441,10 +619,10 @@ def scene_sky_pillar():
         for yy in range(base, base + 4):
             if (xx + yy) & 1 and t.nom(xx, yy).startswith('sable'):
                 t.point(xx, yy, 'pierre_ombre')
-    # Rochers rouges éparpillés sur le sable
-    for k, (x, y, rx, ry) in enumerate([(40, 104, 10, 7), (84, 100, 7, 5), (150, 104, 9, 6), (182, 100, 7, 5),
-                                        (210, 108, 12, 7), (12, 108, 8, 5), (120, 110, 8, 4)]):
-        rocher(t, x, y, rx, ry, ['falaise_ombre', 'falaise', 'pierre'], 40 + k, 'pierre_noire')
+    # Rochers rouges sur le sable, et deux gros au premier plan qui encadrent la scène
+    for k, (x, y, rx, ry) in enumerate([(84, 100, 7, 5), (150, 102, 8, 5), (182, 96, 6, 4), (120, 110, 7, 4),
+                                        (22, 108, 22, 16), (220, 110, 24, 18), (58, 96, 6, 4)]):
+        bloc_rf(t, x, y, rx, ry, rampe_f, 40 + k)
     return t
 
 
@@ -457,34 +635,41 @@ def scene_mirage_tower():
         'tour_claire': (248, 224, 168), 'tour': (224, 192, 128), 'tour_ombre': (184, 144, 96),
         'tour_noire': (128, 96, 72), 'porte': (80, 60, 52), 'cactus': (136, 168, 96), 'cactus_ombre': (96, 128, 80),
     })
-    bandes_v(t, 0, 0, W, 66, ['ciel_haut', 'ciel', 'voile'], rangs=3)
-    # Mesas lointaines noyées dans le sable qui vole
-    for pts in ([(0, 64), (6, 54), (40, 52), (52, 58), (60, 64)], [(150, 64), (162, 50), (204, 49), (214, 56), (240, 58),
-                                                                  (240, 64)]):
-        t.poly(pts, 'loin')
+    ciel_rf(t, 66, ['ciel_haut', 'ciel', 'voile'], [(1, 30, 10, False), (1, 170, 4, True)], 'voile', 'ciel')
+    # Mesas lointaines : les collines de RF, noyées dans le sable qui vole
+    coller_rf(t, COLLINES_RF[0], COLLINES_RF[1], 0, 40, ['loin', 'voile'], loin)
+    coller_rf(t, COLLINES_RF[0], COLLINES_RF[1], 130, 38, ['loin', 'voile'], loin, miroir=True)
     # Le sol et les dunes, plus foncées en approchant
     bandes_v(t, 0, 62, W, H, ['sable_clair', 'sable', 'sable_ombre'], rangs=2)
     for pts, rampe in [([(0, 100), (40, 84), (90, 90), (130, 112), (0, 112)], ['sable_clair', 'sable_ombre']),
                        ([(150, 112), (192, 86), (240, 80), (240, 112)], ['sable_clair', 'sable', 'sable_fonce'])]:
-        m = masque_poly(pts)
+        m = masque_poly(organique(pts, 2, len(pts)))
         ys = [p[1] for p in pts]
         bandes_v(t, 0, min(ys), W, H, rampe, masque=m)
-    # La tour : un fût de grosses pierres de sable, crénelé, plus étroit en haut
+    # La tour : un fût de grosses pierres de sable au grain peint (roche de RF), éclairé à gauche, plus étroit en haut
     cx, base, sommet = 110, 92, 6
+    profil = []
     for y in range(sommet, base):
         u = (base - y) / (base - sommet)
         demi = 21 - 6 * u
-        assise = (y - sommet) % 10
-        for x in range(int(cx - demi), int(cx + demi) + 1):
-            v = (x - (cx - demi)) / (2 * demi)
-            l = 0.95 - 0.95 * max(0.0, v) ** 1.3  # cylindre éclairé à gauche
-            if assise == 0:
-                l -= 0.3
-            aplat(t, x, y, ['tour_noire', 'tour_ombre', 'tour', 'tour_claire'], l, 0.06)
-            if assise > 0 and (int(x - cx + demi) + (y - sommet) // 10 * 4) % 8 == 0 and v > 0.05:
-                t.point(x, y, 'tour_ombre' if v < 0.7 else 'tour_noire')
-        t.point(int(cx - demi) - 1, y, 'tour_noire')
-        t.point(int(cx + demi) + 1, y, 'tour_noire')
+        profil += [(cx - demi, y)]
+    fut = masque_poly(profil + [(2 * cx - x, y) for x, y in reversed(profil)])
+    texturer(t, fut, ROCHE_RF[0], ROCHE_RF[1], ['tour_ombre', 'tour', 'tour', 'tour_claire'], 7, 2)
+    rampe_t = ['tour_noire', 'tour_ombre', 'tour', 'tour_claire']
+    for x, y in pixels(fut):
+        u = (base - y) / (base - sommet)
+        demi = 21 - 6 * u
+        v = (x - (cx - demi)) / (2 * demi)
+        k = rampe_t.index(t.nom(x, y))
+        if v > 0.62 and ((x + y) & 1 or v > 0.78):  # le côté droit du cylindre, dans l'ombre
+            t.point(x, y, rampe_t[max(0, k - 1)])
+        if (y - sommet) % 10 == 0:
+            t.point(x, y, 'tour_ombre' if v < 0.7 else 'tour_noire')
+        elif (y - sommet) % 10 == 1 and v < 0.62:
+            t.point(x, y, 'tour_claire')
+    for x, y in pixels(fut):
+        if not dedans(fut, x - 1, y) or not dedans(fut, x + 1, y):
+            t.point(x, y, 'tour_noire')
     for k in range(5):  # créneaux
         x = cx - 14 + k * 6
         t.rect(x, sommet - 5, x + 3, sommet, 'tour' if k < 3 else 'tour_ombre')
@@ -506,6 +691,9 @@ def scene_mirage_tower():
         t.rect(x - 5, y0 - h + 2, x - 4, y0 - h + 8, 'cactus')
         t.rect(x + 4, y0 - h + 8, x + 7, y0 - h + 10, 'cactus')
         t.rect(x + 6, y0 - h + 4, x + 7, y0 - h + 10, 'cactus_ombre')
+    # Rochers de grès au premier plan (roche de RF)
+    for k, (x, y, rx, ry) in enumerate([(14, 108, 20, 13), (226, 106, 22, 15), (168, 100, 7, 4), (72, 98, 6, 4)]):
+        bloc_rf(t, x, y, rx, ry, ['tour_noire', 'sable_fonce', 'sable_ombre', 'sable_clair'], 70 + k)
     # Traînées de sable qui volent
     rnd = random.Random(7)
     for _ in range(40):
@@ -526,10 +714,8 @@ def scene_abandoned_ship():
         'rouille': (192, 120, 88), 'rouille_fonce': (136, 80, 64), 'noir': (64, 68, 88),
         'roc': (176, 160, 136), 'roc_ombre': (120, 112, 100), 'roc_clair': (216, 204, 176),
     })
-    bandes_v(t, 0, 0, W, 58, ['ciel_haut', 'ciel', 'blanc'], rangs=2)
-    nuage(t, 60, 24, 70, 12, 21)
-    nuage(t, 196, 14, 50, 9, 22)
-    mer(t, 58, H, 'blanc', 'mer', 'mer_clair', 'blanc', 23)
+    ciel_rf(t, 58, ['ciel_haut', 'ciel', 'blanc'], [(0, 20, 6, False), (1, 150, 10, False), (0, 176, -4, True)])
+    mer_rf(t, 58, H, ['mer', 'mer', 'mer_clair', 'blanc'], 'blanc')
 
     # Le paquebot, penché : proue à gauche relevée. Coordonnées dans le repère du bateau, puis tournées.
     angle = math.radians(-7)
@@ -568,6 +754,21 @@ def scene_abandoned_ship():
     t.poly(p([(34, -50), (46, -50), (45, -53), (35, -53)]), 'noir')
     t.ligne([r(-74, -14), r(-78, -44), r(-70, -52)], 'coque_ombre', 2)  # mât, plié
     t.ligne([r(-74, -14), r(-78, -44)], 'noir')
+    # La coque rongée : la rouille prend le grain de la roche de RF, et des coulures descendent des hublots
+    rouille = masque()
+    for x in range(W):
+        for y in range(H):
+            if t.nom(x, y) in ('rouille', 'rouille_fonce'):
+                rouille.putpixel((x, y), 255)
+    texturer(t, rouille, ROCHE_RF[0], ROCHE_RF[1], ['noir', 'rouille_fonce', 'rouille', 'rouille'], 9, 4)
+    rnd_c = random.Random(12)
+    for k in range(22):
+        x = rnd_c.randint(-90, 84)
+        y0 = rnd_c.choice([-12, -4])
+        for d in range(rnd_c.randint(2, 6)):
+            px_, py_ = r(x, y0 + d)
+            if t.nom(int(px_), int(py_)) in ('coque', 'coque_claire'):
+                t.point(int(px_), int(py_), 'rouille' if d < 2 else 'coque_ombre')
     # Ligne de flottaison : la mer recouvre le bas de la coque, avec de l'écume
     for x in range(W):
         for y in range(84, H):
@@ -578,10 +779,10 @@ def scene_abandoned_ship():
         x = rnd.randrange(16, 214)
         y = int(86 + (x - 20) * 0.12) + rnd.randint(-1, 2)
         t.ligne([(x, y), (x + rnd.randint(2, 7), y)], 'blanc')
-    # Rochers au premier plan
-    rampe = ['roc_ombre', 'roc', 'roc_clair']
-    for k, (x, y, rx, ry) in enumerate([(14, 104, 26, 12), (226, 102, 28, 14), (190, 110, 18, 6)]):
-        m = rocher(t, x, y, rx, ry, rampe, 60 + k, 'noir')
+    # Rochers au premier plan (roche de RF), l'écume à leur pied
+    rampe = ['noir', 'roc_ombre', 'roc', 'roc_clair']
+    for k, (x, y, rx, ry) in enumerate([(16, 106, 26, 16), (226, 104, 28, 18), (190, 110, 14, 7)]):
+        m = bloc_rf(t, x, y, rx, ry, rampe, 60 + k)
         for xx, yy in pixels(m):
             if not dedans(m, xx, yy + 1) and yy + 1 < H and (xx + yy) % 3:
                 t.point(xx, yy + 1, 'blanc')
@@ -602,22 +803,22 @@ def scene_mt_pyre():
     for y in range(62, 68):
         for x in range(W):
             t.point(x, y, 'mer' if y > 63 or (x + y) & 1 else 'blanc')
-    # La montagne : une crête irrégulière ; chaque versant prend l'aplat de sa pente (montant : éclairé, descendant :
-    # dans l'ombre), avec des ravines sous les sommets
-    crete = [(20, 66), (44, 52), (58, 50), (76, 40), (90, 38), (104, 26), (116, 24), (130, 10), (142, 6), (150, 3),
-             (160, 9), (170, 12), (182, 22), (196, 26), (210, 38), (226, 42), (240, 50), (240, 66)]
-    t.poly(crete, 'mont')
-    # Versant éclairé (à gauche de l'arête qui descend du sommet) et versant à l'ombre (à droite d'une autre arête)
-    t.poly(crete[:10] + [(132, 30), (118, 46), (100, 66)], 'mont_clair')
-    t.poly(crete[9:] + [(150, 66), (158, 40), (154, 22)], 'mont_ombre')
-    t.ligne([(150, 3), (154, 22), (158, 40), (150, 66)], 'mont_noir')
-    for pts in ([(116, 24), (112, 40), (106, 60)], [(90, 38), (88, 52)], [(182, 22), (188, 40), (190, 62)],
-                [(210, 38), (216, 56)], [(142, 6), (136, 22), (132, 30)]):
-        t.ligne(pts, 'mont_noir' if pts[0][0] > 150 else 'mont_ombre')
-    t.ligne(crete[1:-1], 'mont_noir')
-    for (ax, ay), (bx, by) in zip(crete[:10], crete[1:10]):
-        if by < ay:
-            t.ligne([(ax, ay + 1), (bx, by + 1)], 'blanc')
+    # La montagne : une grande crête peinte avec la roche de RF, recolorée en gris-vert, le versant droit à l'ombre ;
+    # des montagnes plus lointaines, plus pâles, de chaque côté
+    rampe_m = ['mont_noir', 'mont_ombre', 'mont', 'mont_clair']
+    massif_rf(t, [(0, 66), (0, 42), (30, 36), (60, 50), (60, 66)], ['mont', 'mont', 'mont_clair', 'brume'], None, 3,
+              ombre=0)
+    massif_rf(t, [(180, 66), (196, 40), (220, 34), (240, 38), (240, 66)], ['mont', 'mont', 'mont_clair', 'brume'],
+              None, 4, 30, 8, ombre=0)
+    crete = [(30, 66), (58, 50), (76, 40), (90, 38), (104, 26), (116, 24), (130, 10), (142, 6), (150, 3), (160, 9),
+             (170, 12), (182, 22), (196, 26), (210, 38), (226, 46), (226, 66)]
+    massif_rf(t, crete, rampe_m, None, 5, 17, 0, ombre=0.45)
+    for (ax, ay), (bx, by) in zip(crete[1:9], crete[2:10]):  # le fil de la crête, au soleil
+        t.ligne([(ax, ay), (bx, by)], 'blanc' if by < ay else 'mont_clair')
+    for x in range(W):  # le pied des montagnes dans la brume
+        for y in range(54, 68):
+            if t.nom(x, y).startswith('mont') and (y > 58 or (x + y) & 1):
+                t.point(x, y, 'brume' if y < 62 else 'blanc')
     # Brume accrochée aux flancs : des nappes de nuages bas
     for k, (x, y, l, h) in enumerate([(60, 50, 90, 8), (170, 40, 80, 7), (120, 60, 160, 8), (220, 58, 70, 6),
                                       (20, 60, 60, 6)]):
@@ -647,6 +848,8 @@ def scene_mt_pyre():
             if (x + y) % 2 == 0 and (x // 9 + y) % 3 and t.nom(x, y).startswith('herbe'):
                 t.point(x, y, 'blanc')
     herbe(t, 0, W, H, 7, ['herbe_ombre', 'herbe', 'herbe_claire'], 31, 0.5)
+    fougere_rf(t, -10, 78, ['herbe_ombre', 'herbe', 'herbe_claire'])
+    fougere_rf(t, 200, 78, ['herbe_ombre', 'herbe', 'herbe_claire'], miroir=True)
     return t
 
 
@@ -686,8 +889,16 @@ def scene_new_mauville():
         for k in range(3):
             t.rect(x0 + 5 + k * 6, 68, x0 + 8 + k * 6, 71, 'vert' if k != 1 else 'gen')
         t.rect(x1 - 2 if sens > 0 else x0, 40, x1 if sens > 0 else x0 + 2, 90, 'mur_ombre')
-    # Le générateur : des anneaux empilés, éclairé à gauche, avec des voyants verts
+    # Les faisceaux des néons, comme les rayons de lumière de la Centrale de RF : un ton plus clair, en damier
+    eclaircir = {'mur_ombre': 'mur', 'mur': 'mur_clair', 'sol_ombre': 'sol', 'sol': 'sol_clair', 'noir': 'mur_ombre'}
+    for x0 in (60, 150):
+        faisceau = masque_poly([(x0, 8), (x0 + 30, 8), (x0 + 58, 112), (x0 - 24, 112)])
+        for x, y in pixels(faisceau):
+            if (x + y) % 2 == 0 and t.nom(x, y) in eclaircir:
+                t.point(x, y, eclaircir[t.nom(x, y)])
+    # Le générateur : des bobines empilées, cerclées de métal, éclairées à gauche, voyants verts et sphère au sommet
     cx = 120
+    rampe_g = ['gen_noir', 'gen_ombre', 'gen', 'gen_clair']
 
     def anneau(y0, y1, demi):
         for y in range(y0, y1):
@@ -696,16 +907,23 @@ def scene_new_mauville():
                 l = 0.9 - 0.9 * max(0.0, v) ** 1.4
                 if y - y0 < 2:
                     l += 0.25
-                aplat(t, x, y, ['gen_noir', 'gen_ombre', 'gen', 'gen_clair'], l, 0.06)
+                if (x - cx) % 5 == 0 and y - y0 >= 3:
+                    l -= 0.28  # les spires de la bobine
+                aplat(t, x, y, rampe_g, l, 0.06)
+        t.ellipse((cx - demi - 2, y1 - 3, cx + demi + 2, y1 + 3), 'mur_ombre')  # cerclage de métal en bas
+        t.ellipse((cx - demi - 2, y1 - 4, cx + demi + 2, y1 + 1), 'mur_clair')
         t.ellipse((cx - demi, y0 - 3, cx + demi, y0 + 3), 'gen_clair')
         t.ellipse((cx - demi + 3, y0 - 2, cx + demi - 3, y0 + 2), 'gen')
     t.ellipse((cx - 44, 80, cx + 44, 98), 'sol_ombre')  # socle
     t.ellipse((cx - 42, 78, cx + 42, 94), 'mur_ombre')
-    anneau(58, 88, 36)
-    anneau(38, 58, 28)
-    anneau(22, 38, 20)
-    t.ellipse((cx - 12, 14, cx + 12, 26), 'gen_ombre')
-    t.ellipse((cx - 10, 15, cx + 8, 23), 'gen_clair')
+    anneau(58, 86, 36)
+    anneau(38, 56, 28)
+    anneau(22, 36, 20)
+    t.rect(cx - 2, 8, cx + 2, 22, 'mur_ombre')  # la tige et la sphère du sommet
+    t.rect(cx - 2, 8, cx - 1, 22, 'mur_clair')
+    t.ellipse((cx - 7, 2, cx + 7, 14), 'gen_ombre')
+    t.ellipse((cx - 6, 3, cx + 5, 12), 'gen_clair')
+    t.ellipse((cx - 4, 4, cx, 8), 'lumiere')
     for k in range(7):
         x = cx - 27 + k * 9
         t.rect(x, 70, x + 3, 73, 'vert')
@@ -727,15 +945,21 @@ def scene_aqua_hideout():
         'roc_noir': (48, 56, 80), 'roc_ombre': (80, 92, 124), 'roc': (112, 124, 156), 'roc_clair': (152, 164, 192),
         'eau_fonce': (48, 96, 160), 'eau': (72, 136, 200), 'eau_claire': (128, 184, 232), 'blanc': (232, 240, 248),
         'metal_clair': (200, 208, 216), 'metal': (152, 160, 176), 'metal_ombre': (104, 112, 128),
-        'sm': (56, 80, 128), 'sm_clair': (96, 128, 176), 'lampe': (248, 232, 160), 'rouge': (208, 72, 72),
+        'sm': (64, 96, 152), 'sm_clair': (128, 164, 212), 'lampe': (248, 232, 160), 'rouge': (208, 72, 72),
     })
     t.rect(0, 0, W, H, 'roc_noir')
-    # La voûte de la grotte et l'ouverture du fond, plus claire
-    t.ellipse((40, 8, 200, 96), 'roc_ombre')
-    t.ellipse((58, 18, 182, 90), 'eau_fonce')
-    for k, (x, y, rx, ry) in enumerate([(30, 20, 40, 26), (210, 18, 40, 26), (120, 2, 80, 12), (6, 70, 26, 40),
-                                        (234, 70, 26, 40)]):
-        rocher(t, x, y, rx, ry, ['roc_noir', 'roc_ombre', 'roc', 'roc_clair'], 70 + k, 'roc_noir', plat_bas=False)
+    # L'ouverture du fond, sombre, et la voûte de la grotte peinte avec la roche de RF (recolorée en gris-bleu)
+    bandes_v(t, 50, 14, 190, 96, ['roc_noir', 'eau_fonce'], rangs=3)
+    voute = masque()
+    d = ImageDraw.Draw(voute)
+    d.rectangle((0, 0, W, H), fill=255)
+    d.polygon(organique(ellipse_pts(120, 55, 70, 41), 3, 77), fill=0)
+    d.rectangle((30, 62, 210, H), fill=0)
+    texturer(t, voute, ROCHE_RF[0], ROCHE_RF[1], ['roc_noir', 'roc_ombre', 'roc', 'roc_clair'], 4, 9)
+    for x, y in pixels(voute):  # le bord de l'ouverture, un ton plus sombre : la profondeur
+        proche = any(not dedans(voute, x + dx, y + dy) for dx, dy in ((4, 0), (-4, 0), (0, 4), (0, -4)))
+        if proche and t.nom(x, y) != 'roc_noir':
+            t.point(x, y, {'roc_clair': 'roc', 'roc': 'roc_ombre', 'roc_ombre': 'roc_noir'}[t.nom(x, y)])
     for x in range(52, 190, 9):  # stalactites
         h = 4 + (x * 7) % 9
         t.poly([(x - 3, 12), (x + 3, 12), (x, 12 + h)], 'roc_ombre')
@@ -796,12 +1020,12 @@ def scene_magma_hideout():
         'metal_clair': (208, 208, 216), 'metal': (160, 160, 172), 'metal_ombre': (104, 104, 120), 'noir': (40, 32, 40),
         'rouge': (200, 48, 48), 'vapeur': (236, 228, 228),
     })
-    t.rect(0, 0, W, H, 'roc_ombre')
-    bandes_v(t, 0, 0, W, 40, ['roc_noir', 'roc_ombre'], rangs=2)
-    # Parois de la galerie
-    for k, (x, y, rx, ry) in enumerate([(20, 30, 40, 40), (220, 30, 40, 42), (60, 8, 50, 16), (180, 6, 50, 16),
-                                        (120, -4, 60, 14), (10, 90, 30, 26), (232, 88, 28, 26)]):
-        rocher(t, x, y, rx, ry, ['roc_noir', 'roc_ombre', 'roc', 'roc_clair'], 90 + k, 'noir', plat_bas=False)
+    # Le fond de la galerie et ses parois, peints avec la roche de RF recolorée en rouge sombre (plus sombre au fond)
+    texturer(t, masque_poly([(0, 0), (W, 0), (W, 70), (0, 70)]), ROCHE_RF[0], ROCHE_RF[1],
+             ['noir', 'roc_noir', 'roc_ombre', 'roc'], 21, 6)
+    for k, pts in enumerate([[(0, 0), (70, 0), (52, 30), (40, 70), (24, 100), (0, 112)],
+                             [(240, 0), (172, 0), (190, 32), (200, 70), (216, 100), (240, 112)]]):
+        massif_rf(t, pts, ['roc_noir', 'roc_ombre', 'roc', 'roc_clair'], None, 90 + k, 40 * k, 7, ombre=0.4 if k else 0)
     # La porte blindée au fond, dans un cadre de métal
     t.rect(92, 20, 148, 66, 'metal_ombre')
     t.rect(94, 22, 146, 64, 'metal')
@@ -835,14 +1059,9 @@ def scene_magma_hideout():
         y = 70 + k * 9
         for g in (104 - (y - 66) * 32 / 46 - 2, 136 + (y - 66) * 32 / 46 + 2):
             t.ligne([(g, y), (g, y - 8 - k * 2)], 'noir')
-    # Vapeur qui monte des coulées
-    rnd = random.Random(4)
-    for bx in (30, 200):
-        for k in range(26):
-            x = bx + rnd.randint(-10, 10) + k // 3
-            y = 78 - k * 2
-            r = 2 + k // 6
-            t.ellipse((x - r, y - r, x + r, y + r), 'vapeur' if k % 3 else 'cendre')
+    # Vapeur qui monte des coulées : les jets de vapeur peints du Mont Braise de RF
+    coller_rf(t, VAPEUR_RF[0], VAPEUR_RF[1], 6, 14, ['cendre', 'vapeur'], est_nuage)
+    coller_rf(t, VAPEUR_RF[0], VAPEUR_RF[1], 184, 10, ['cendre', 'vapeur'], est_nuage, miroir=True)
     return t
 
 
@@ -860,21 +1079,24 @@ def rochers_regi(t, positions, graine):
 def scene_desert_ruins():
     """Ruines Désert : la butte rouge de la salle de Regirock au milieu du désert de la Route 111."""
     t = Toile(dict({
-        'ciel_haut': (184, 204, 232), 'ciel': (216, 224, 236), 'voile': (244, 236, 212), 'loin': (220, 196, 156),
+        'ciel_haut': (176, 204, 236), 'ciel': (214, 226, 240), 'voile': (244, 236, 212), 'loin': (220, 198, 160),
         'sable_clair': (248, 232, 168), 'sable': (236, 208, 136), 'sable_ombre': (208, 172, 104),
-        'dessus': (220, 160, 120), 'cactus': (128, 164, 96), 'cactus_ombre': (88, 124, 76),
+        'dessus': (226, 168, 124), 'cactus': (128, 164, 96), 'cactus_ombre': (88, 124, 76),
     }, **REGI_ROCHE))
-    bandes_v(t, 0, 0, W, 50, ['ciel_haut', 'ciel', 'voile'], rangs=2)
-    t.poly([(0, 50), (10, 42), (46, 40), (58, 48), (176, 48), (186, 38), (224, 37), (240, 44), (240, 50)], 'loin')
+    ciel_rf(t, 50, ['ciel_haut', 'ciel', 'voile'], [(0, 140, 0, False), (2, 20, 6, True)], 'voile', 'ciel')
+    # Les collines lointaines de RF, devenues des mesas de sable noyées dans la brume du désert
+    coller_rf(t, COLLINES_RF[0], COLLINES_RF[1], 0, 24, ['loin', 'voile'], loin)
+    coller_rf(t, COLLINES_RF[0], COLLINES_RF[1], 120, 22, ['loin', 'voile'], loin, miroir=True)
     bandes_v(t, 0, 48, W, H, ['sable_clair', 'sable', 'sable_ombre'], rangs=2)
     for y in range(54, H, 6):  # rides du sable
         for x in range(0, W, 2):
             if math.sin(x / 9 + y) > 0.55:
                 t.point(x, y + int(2 * math.sin(x / 13)), 'sable_ombre' if y > 70 else 'sable')
-    butte_regi(t, 120, 96, REGI_RAMPE, 'dessus', 'porte', 110)
-    rochers_regi(t, [(26, 70, 9, 7), (214, 66, 8, 6), (36, 104, 12, 8), (204, 104, 13, 8), (64, 100, 6, 4),
-                     (178, 98, 6, 4), (90, 56, 5, 3), (160, 56, 5, 3)], 114)
-    for x, y0, h in [(12, 92, 14), (230, 90, 12)]:  # cactus
+    butte_rf(t, 120, 96, REGI_RAMPE, 'dessus', 'porte', 110)
+    for k, (x, y, rx, ry) in enumerate([(26, 70, 9, 6), (214, 66, 8, 6), (90, 56, 5, 3), (160, 56, 5, 3),
+                                        (64, 100, 6, 4), (178, 98, 6, 4), (20, 108, 20, 14), (222, 110, 22, 15)]):
+        bloc_rf(t, x, y, rx, ry, REGI_RAMPE, 114 + k)
+    for x, y0, h in [(44, 94, 14), (196, 90, 12)]:  # cactus
         t.rect(x, y0 - h, x + 3, y0, 'cactus')
         t.rect(x + 3, y0 - h, x + 3, y0, 'cactus_ombre')
         t.rect(x - 5, y0 - h + 6, x - 1, y0 - h + 8, 'cactus')
@@ -891,24 +1113,26 @@ def scene_desert_ruins():
 def scene_island_cave():
     """Grotte de l'Île : la butte rouge de la salle de Regice sur son îlot de sable, en pleine mer (Route 105)."""
     t = Toile(dict({
-        'ciel_haut': (152, 196, 240), 'ciel': (196, 222, 248), 'blanc': (248, 248, 248), 'nuage_ombre': (208, 216, 240),
-        'mer': (88, 148, 216), 'mer_clair': (152, 196, 240),
-        'sable_clair': (248, 236, 192), 'sable': (232, 212, 156), 'dessus': (220, 160, 120),
+        'ciel_haut': (152, 196, 240), 'ciel': (200, 224, 248), 'blanc': (248, 248, 248), 'nuage_ombre': (214, 224, 244),
+        'mer_fonce': (80, 136, 208), 'mer': (120, 172, 232), 'mer_clair': (176, 212, 244),
+        'sable_clair': (248, 236, 196), 'sable': (230, 210, 158), 'dessus': (224, 170, 128),
     }, **REGI_ROCHE))
-    bandes_v(t, 0, 0, W, 44, ['ciel_haut', 'ciel', 'blanc'], rangs=2)
-    nuage(t, 190, 18, 70, 11, 41)
-    nuage(t, 40, 26, 46, 8, 42)
-    mer(t, 44, H, 'blanc', 'mer', 'mer_clair', 'blanc', 43)
-    for x, y in [(70, 14), (84, 20), (150, 10)]:  # Goélise au loin
-        t.ligne([(x - 4, y - 2), (x, y), (x + 4, y - 2)], 'roc_ombre')
-    # L'îlot de sable, son écume
-    t.ellipse((6, 56, 234, 124), 'blanc')
-    t.ellipse((10, 58, 230, 122), 'sable')
-    t.ellipse((24, 62, 216, 118), 'sable_clair')
-    t.ellipse((40, 66, 200, 116), 'sable')
-    butte_regi(t, 120, 98, REGI_RAMPE, 'dessus', 'porte', 120)
-    rochers_regi(t, [(30, 84, 9, 6), (210, 82, 10, 7), (60, 104, 9, 6), (184, 106, 10, 6), (44, 70, 6, 4),
-                     (196, 68, 6, 4)], 124)
+    ciel_rf(t, 46, ['ciel_haut', 'ciel', 'blanc'], [(0, 150, -2, False), (0, 6, 4, True), (2, 76, -6, False)])
+    mer_rf(t, 44, H, ['mer_fonce', 'mer', 'mer_clair', 'blanc'], 'blanc')
+    for x, y in [(70, 14), (84, 20), (128, 8)]:  # Goélise au loin
+        t.ligne([(x - 3, y - 2), (x, y), (x + 3, y - 2)], 'roc_ombre')
+    # L'îlot de sable aux bords irréguliers, son écume
+    ile = organique([(4, 112), (236, 112), (214, 64), (26, 64)], 4, 9, pas=8)
+    t.poly([(x + (-3 if x < 120 else 3), y - 2) for x, y in ile], 'blanc')
+    m = masque_poly(ile)
+    bandes_v(t, 0, 62, W, H, ['sable_clair', 'sable'], rangs=2, masque=m)
+    for x, y in pixels(m):  # le sable mouillé du bord, un ton plus foncé
+        if not dedans(m, x - 4, y) or not dedans(m, x + 4, y):
+            t.point(x, y, 'sable' if (x + y) & 1 else 'sable_clair')
+    butte_rf(t, 120, 98, REGI_RAMPE, 'dessus', 'porte', 120)
+    for k, (x, y, rx, ry) in enumerate([(52, 74, 7, 5), (188, 72, 8, 5), (22, 106, 16, 11), (222, 108, 18, 12),
+                                        (72, 106, 7, 5), (166, 106, 8, 5)]):
+        bloc_rf(t, x, y, rx, ry, REGI_RAMPE, 30 + k)
     return t
 
 
@@ -921,19 +1145,25 @@ def scene_ancient_tomb():
         'herbe_ombre': (100, 148, 88), 'herbe': (140, 188, 112), 'herbe_claire': (184, 216, 144),
         'eau': (136, 184, 232), 'dessus': (196, 176, 120),
     }, **REGI_ROCHE))
-    bandes_v(t, 0, 0, W, 40, ['ciel', 'blanc'], rangs=2)
-    for k in range(14):  # la forêt au fond
-        sapin(t, -6 + k * 19, 50, 34 + (k * 13) % 12, ['arbre_fonce', 'arbre', 'herbe'])
-    bandes_v(t, 0, 48, W, H, ['herbe_claire', 'herbe', 'herbe_ombre'], rangs=2)
+    ciel_rf(t, 40, ['ciel', 'blanc'], [(0, 10, -6, False), (0, 150, -10, True)], 'blanc', 'ciel')
+    # La forêt de sapins de RF (Route Victoire), recolorée en vert sombre de jour de pluie
+    rampe_sapins = ['arbre_fonce', 'arbre', 'herbe', 'herbe_claire']
+    for k, x in enumerate((-10, 74, 158)):
+        coller_rf(t, SAPINS_RF[0], SAPINS_RF[1], x, -16, rampe_sapins, lambda c: c[1] > c[0] + 8 and c[1] >= c[2],
+                  miroir=bool(k % 2))
+    bandes_v(t, 0, 52, W, H, ['herbe_claire', 'herbe', 'herbe_ombre'], rangs=2)
     for box in [(14, 92, 70, 108), (168, 96, 236, 114), (100, 104, 150, 118)]:  # mares
         t.ellipse(box, 'herbe_ombre')
         t.ellipse((box[0] + 2, box[1] + 1, box[2] - 2, box[3] - 1), 'eau')
         t.ligne([(box[0] + 8, box[1] + 4), (box[0] + 18, box[1] + 4)], 'blanc')
-    butte_regi(t, 120, 94, REGI_RAMPE, 'dessus', 'porte', 130)
+    butte_rf(t, 120, 94, REGI_RAMPE, 'dessus', 'porte', 130)
     for xx in range(46, 194, 5):  # herbe sur le dessus de la butte
         t.point(xx, 69 if 70 < xx < 170 else 70, 'herbe')
-    rochers_regi(t, [(24, 66, 8, 6), (216, 64, 9, 6), (86, 98, 6, 4), (160, 98, 7, 4)], 134)
+    for k, (x, y, rx, ry) in enumerate([(24, 66, 8, 6), (216, 64, 9, 6), (86, 98, 6, 4), (160, 98, 7, 4)]):
+        bloc_rf(t, x, y, rx, ry, REGI_RAMPE, 134 + k)
     herbe(t, 0, W, H + 2, 9, ['herbe_ombre', 'herbe', 'herbe_claire'], 51, 0.9)
+    fougere_rf(t, -6, 80, ['herbe_ombre', 'herbe', 'herbe_claire'])
+    fougere_rf(t, 196, 80, ['herbe_ombre', 'herbe', 'herbe_claire'], miroir=True)
     rnd = random.Random(52)  # pluie fine
     for _ in range(80):
         x, y = rnd.randrange(W), rnd.randrange(H)
