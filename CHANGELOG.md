@@ -203,7 +203,8 @@ Contenu du zip : `Windows/` (`PokemonNative3G.exe` + `SDL2.dll`), `Linux/` (`Pok
 - Combats : l'IA des dresseurs teste de nouveau les capacités connues exactement comme la cartouche (une lecture
   mal alignée la faisait « mieux » jouer sur PC et Android) ; plus de lecture hors limites à la fin d'un tour de
   combat double, ni dans l'animation de Métronome ; les confettis des résultats de concours ne lisent plus en dehors
-  de la table des sinus.
+  de la table des sinus ; en combat double, « Ce n'est pas très efficace » ne fait plus lire la télé de combat hors
+  de la table des combattants.
 
 ## Version 1.1 (1er novembre 2026)
 
