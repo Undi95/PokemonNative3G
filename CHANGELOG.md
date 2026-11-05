@@ -4,13 +4,15 @@
 
 Petite mise à jour de la base, pour la version navigateur.
 
-### Nouveauté
+### Nouveautés
 - Version navigateur : les touches se changent dans la page (bouton « Touches » de la barre du bas, une fois le jeu
   lancé). Elles sont gardées dans le navigateur du joueur, avec sa partie.
+- Touche L : **Q** par défaut (au lieu de A), à côté de S (R) sur un clavier AZERTY. Un fichier de réglages qui a
+  encore l'ancienne ligne par défaut (`key_l = A`) passe à Q ; une autre touche choisie pour L est gardée.
 
 ### Corrections
 - Version navigateur : le clavier se lit comme sur PC, par la lettre écrite sur la touche, AZERTY comme QWERTY
-  (A = Z, L = A). Avant, c'étaient les positions d'un clavier QWERTY (sur AZERTY, A = W et L = Q).
+  (A = Z). Avant, c'étaient les positions d'un clavier QWERTY (sur AZERTY, A = W).
 
 ## Version 1.2 (5 novembre 2026) — la base
 

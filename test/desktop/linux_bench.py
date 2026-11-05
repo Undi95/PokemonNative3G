@@ -201,7 +201,7 @@ def main():
             # XWayland (WSLg) perd parfois la toute première frappe synthétique : une touche sans effet d'abord
             game.xkey("shift")
             game.wait_frames(10)
-            for key, button in (("Return", "START"), ("z", "A"), ("x", "B"), ("Down", "DOWN"), ("a", "L"), ("s", "R")):
+            for key, button in (("Return", "START"), ("z", "A"), ("x", "B"), ("Down", "DOWN"), ("q", "L"), ("s", "R")):
                 marker = game.key_marker()
                 game.xkey(key)
                 game.wait_frames(10)

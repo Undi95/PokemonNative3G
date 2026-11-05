@@ -186,7 +186,7 @@ def keyboard_test(exe, root):
     game = launch(exe, work)
     try:
         game.wait_frames(30)
-        for key, button in (("Z", "A"), ("X", "B"), ("RETURN", "START"), ("BACK", "SELECT"), ("A", "L"), ("S", "R"),
+        for key, button in (("Z", "A"), ("X", "B"), ("RETURN", "START"), ("BACK", "SELECT"), ("Q", "L"), ("S", "R"),
                             ("UP", "UP"), ("DOWN", "DOWN"), ("LEFT", "LEFT"), ("RIGHT", "RIGHT")):
             marker = game.key_marker()
             game.key(key)

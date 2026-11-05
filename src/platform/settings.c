@@ -81,7 +81,7 @@ static const char sDefaultSettings[] =
     "key_b = X\n"
     "key_start = Return\n"
     "key_select = \\, Backspace\n"
-    "key_l = A\n"
+    "key_l = Q\n"
     "key_r = S\n"
     "key_up = Up\n"
     "key_down = Down\n"
@@ -427,6 +427,7 @@ void LoadSettings(const char *path)
     FILE *file;
     long size;
     bool hasResetKey;
+    char *oldDefaultL;
 
     memset(sBindings, 0, sizeof(sBindings));
     memcpy(text, sDefaultSettings, sizeof(sDefaultSettings));
@@ -459,7 +460,23 @@ void LoadSettings(const char *path)
     // Settings files from older versions lack the reset key: add its default line (looked for before
     // ParseSettings, which cuts the text into lines)
     hasResetKey = strstr(text, "key_reset") != NULL;
+    // PokemonNative3G 1.2.1 : L passe de A à Q (à côté de S sur un clavier AZERTY). Un fichier qui a encore l'ancienne
+    // ligne par défaut prend la nouvelle ; une autre touche choisie pour L est gardée
+    if ((oldDefaultL = strstr(text, "\nkey_l = A\n")) != NULL)
+    {
+        oldDefaultL[9] = 'Q';
+        oldDefaultL = strdup(text);
+    }
     ParseSettings(text, path);
+    if (oldDefaultL != NULL)
+    {
+        if ((file = fopen(path, "wb")) != NULL)
+        {
+            fputs(oldDefaultL, file);
+            fclose(file);
+        }
+        free(oldDefaultL);
+    }
     if (!hasResetKey && (file = fopen(path, "ab")) != NULL)
     {
         fputs("\n# Soft reset (back to the title screen, like A+B+START+SELECT)\nkey_reset = F5\n", file);

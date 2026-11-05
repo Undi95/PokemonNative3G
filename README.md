@@ -26,7 +26,7 @@ Le zip contient aussi le [CHANGELOG](CHANGELOG.md) et le guide
 
 **Touches par défaut** (modifiables dans `pokeemerald.ini`, à côté de la sauvegarde ; dans le navigateur, par le
 bouton « Touches ») : A = **Z**, B = **X**,
-L = **A**, R = **S**, START = **Entrée**, SELECT = **Retour arrière**, croix = **flèches**, avance rapide =
+L = **Q**, R = **S**, START = **Entrée**, SELECT = **Retour arrière**, croix = **flèches**, avance rapide =
 **Espace**, reset = **F5**, plein écran = **F11** ou **Alt+Entrée**. Une touche est celle où la lettre est écrite,
 quelle que soit la disposition du clavier (AZERTY comme QWERTY), dans le navigateur comme sur PC. Manette et écran
 tactile marchent aussi.
