@@ -32,6 +32,22 @@
   #lancer p { margin: 0; color: var(--doux); max-width: 34em; }
   #lancer.charge .bouton { background: #333c4a; }
   input[type=file] { display: none; }
+  /* Panneau « Touches » : les touches du clavier, changées en jeu (src/platform/settings.c, Web_*) */
+  #touches { position: fixed; inset: 0 0 48px 0; display: flex; align-items: center; justify-content: center;
+             background: rgba(8, 10, 14, .85); }
+  #touches[hidden] { display: none; }
+  #touches .panneau { background: #181d24; border: 1px solid #333c4a; border-radius: 10px; padding: 16px 20px;
+             max-width: 30em; width: calc(100% - 32px); max-height: calc(100% - 32px); overflow: auto;
+             box-sizing: border-box; }
+  #touches h2 { margin: 0 0 6px; font-size: 20px; }
+  #touches .aide { margin: 0 0 12px; color: var(--doux); font-size: 13px; }
+  #touches table { width: 100%; border-collapse: collapse; }
+  #touches td { padding: 4px 6px; border-top: 1px solid #262c36; }
+  #touches td.touche { color: var(--doux); }
+  #touches td.touche.attente { color: #f0be28; }
+  #touches button { font: inherit; color: var(--texte); background: #252c37; border: 1px solid #333c4a;
+             border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  #touches .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
   @media (max-width: 640px) { #barre .info { display: none; } #barre button, #barre label { padding: 6px 8px; } }
 </style>
 </head>
@@ -50,7 +66,17 @@
   <button id="plein-ecran" title="Plein écran">Plein écran</button>
   <button id="exporter" title="Télécharger la sauvegarde (.sav)">Exporter</button>
   <label title="Remplacer la partie par un fichier .sav">Importer<input type="file" id="importer" accept=".sav"></label>
+  <button id="ouvrir-touches" title="Changer les touches du clavier">Touches</button>
   <span class="info" id="info"></span>
+</div>
+<div id="touches" hidden>
+  <div class="panneau">
+    <h2>Touches</h2>
+    <p class="aide">« Changer », puis la touche voulue (Échap : annuler). Une touche est celle où la lettre est écrite ;
+       les touches sont gardées dans ce navigateur.</p>
+    <table id="touches-liste"></table>
+    <div class="actions"><button id="touches-defaut">Par défaut</button><button id="touches-fermer">Fermer</button></div>
+  </div>
 </div>
 <script>
   'use strict';
@@ -124,6 +150,69 @@
         location.reload();
       });
     }).catch(function (err) { dire('Lecture du fichier impossible'); console.error('[import]', err); });
+  });
+
+  // Touches : les boutons du jeu dans l'ordre de sBindingNames (src/platform/settings.c), affichés dans un ordre lisible
+  var BOUTONS_JEU = ['a', 'b', 'select', 'start', 'right', 'left', 'up', 'down', 'r', 'l', 'speedup', 'reset'];
+  var BOUTONS = [['a', 'A'], ['b', 'B'], ['start', 'START'], ['select', 'SELECT'], ['up', 'Haut'], ['down', 'Bas'],
+                 ['left', 'Gauche'], ['right', 'Droite'], ['l', 'L'], ['r', 'R'], ['speedup', 'Accélérer'],
+                 ['reset', 'Reset du jeu']];
+  // Les noms de touches de SDL, en français quand ils ne sont pas une lettre ou un chiffre
+  var NOMS = { Return: 'Entrée', Space: 'Espace', Backspace: 'Retour arrière', Up: 'Flèche haut', Down: 'Flèche bas',
+               Left: 'Flèche gauche', Right: 'Flèche droite', Escape: 'Échap', 'Left Shift': 'Maj gauche',
+               'Right Shift': 'Maj droite', 'Left Ctrl': 'Ctrl gauche', 'Right Ctrl': 'Ctrl droite', 'Left Alt': 'Alt',
+               'Right Alt': 'Alt Gr', Delete: 'Suppr', Insert: 'Inser', Home: 'Début', End: 'Fin',
+               PageUp: 'Page précédente', PageDown: 'Page suivante' };
+  var panneau = document.getElementById('touches');
+  var capture = -1;
+
+  function afficherTouches() {
+    var touches = {};
+    Module.UTF8ToString(Module._Web_GetKeys()).split('\n').forEach(function (ligne) {
+      var i = ligne.indexOf('=');
+      if (i > 0) touches[ligne.slice(0, i)] = ligne.slice(i + 1);
+    });
+    var liste = document.getElementById('touches-liste');
+    liste.innerHTML = '';
+    BOUTONS.forEach(function (b) {
+      var index = BOUTONS_JEU.indexOf(b[0]);
+      var tr = liste.insertRow();
+      tr.insertCell().textContent = b[1];
+      var td = tr.insertCell();
+      td.className = 'touche' + (capture === index ? ' attente' : '');
+      td.textContent = capture === index ? 'Appuyez sur une touche…' : (touches[b[0]] || '').split(', ').filter(Boolean)
+        .map(function (n) { return NOMS[n] || n; }).join(' ou ') || '(aucune)';
+      var bouton = document.createElement('button');
+      bouton.textContent = 'Changer';
+      bouton.addEventListener('click', function () {
+        capture = index;
+        Module._Web_CaptureKey(index);
+        bouton.blur();
+        afficherTouches();
+      });
+      tr.insertCell().appendChild(bouton);
+    });
+  }
+  // Appelé par le jeu quand la touche est choisie (ou la capture annulée par Échap)
+  Module.toucheChoisie = function () { capture = -1; afficherTouches(); };
+
+  document.getElementById('ouvrir-touches').addEventListener('click', function () {
+    this.blur();
+    if (!lance) { dire('Lancez le jeu pour changer les touches'); return; }
+    panneau.hidden = false;
+    afficherTouches();
+  });
+  document.getElementById('touches-defaut').addEventListener('click', function () {
+    this.blur();
+    Module._Web_ResetKeys();
+    afficherTouches();
+  });
+  document.getElementById('touches-fermer').addEventListener('click', function () {
+    this.blur();
+    if (capture >= 0) Module._Web_CaptureKey(-1);
+    capture = -1;
+    panneau.hidden = true;
+    Module.canvas.focus();
   });
 
   // Écran tactile (téléphone, tablette) : la page passe en mode tactile dès le départ, ou au premier toucher

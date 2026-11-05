@@ -209,7 +209,7 @@ ifeq ($(PORTABLE),1)
     # d'où EMULATE_FUNCTION_POINTER_CASTS. Sauvegardes dans IndexedDB (IDBFS, src/platform/web/pre.js).
     OS_LFLAGS := -sSINGLE_FILE=1 -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=4MB -sEMULATE_FUNCTION_POINTER_CASTS=1 \
       -sENVIRONMENT=web -sINVOKE_RUN=0 -sEXIT_RUNTIME=0 -sFORCE_FILESYSTEM=1 -lidbfs.js \
-      -sEXPORTED_RUNTIME_METHODS=callMain,FS,HEAPU8 -Wl,--Map=pokeemeraude.map \
+      -sEXPORTED_RUNTIME_METHODS=callMain,FS,HEAPU8,UTF8ToString -Wl,--Map=pokeemeraude.map \
       --pre-js src/platform/web/pre.js
   else ifeq ($(IS64BIT),1)
     # Build position independent, so nothing can rely on addresses fitting in 32 bits

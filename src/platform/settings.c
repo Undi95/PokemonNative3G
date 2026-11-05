@@ -7,6 +7,9 @@
 #include "global.h"
 #include "platform/settings.h"
 #include "platform/touch.h"
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 // What the keyboard and controllers can do: the GBA buttons, in the order of
 // their bits in KEYINPUT, fast-forward and the soft reset
@@ -142,11 +145,121 @@ static bool ParseKey(const char *name, SDL_Keycode *key)
 static SDL_Keycode sWebKeys[MAX_WEB_KEYS];
 static int sNumWebKeys;
 
+// La page « Touches » du navigateur (src/platform/web/index.html) change les touches en jeu : Web_CaptureKey(N) fait
+// de la prochaine touche appuyée celle du bouton N (sBindingNames), Échap annule. Les touches sont réécrites dans le
+// fichier de réglages (gardé dans le navigateur avec la sauvegarde), lu comme sur PC au lancement.
+static char *sWebSettingsPath;
+static int sWebCapture = -1;
+
+static void ParseSettings(char *text, const char *source);
+
+// Le fichier de réglages : celui par défaut, avec les touches de chaque bouton (les noms de SDL, comme sur PC)
+static void WebWriteSettings(void)
+{
+    FILE *file;
+    const char *line = sDefaultSettings;
+
+    if (sWebSettingsPath == NULL || (file = fopen(sWebSettingsPath, "wb")) == NULL)
+    {
+        fprintf(stderr, "Could not write the settings\n");
+        return;
+    }
+    while (*line != '\0')
+    {
+        const char *end = strchr(line, '\n');
+        size_t length = end != NULL ? (size_t)(end - line) + 1 : strlen(line);
+        int binding = -1;
+
+        for (int i = 0; strncmp(line, "key_", 4) == 0 && i < NUM_BINDINGS; i++)
+        {
+            size_t nameLength = strlen(sBindingNames[i]);
+            if (strncmp(line + 4, sBindingNames[i], nameLength) == 0 && line[4 + nameLength] == ' ')
+                binding = i;
+        }
+        if (binding < 0)
+        {
+            fwrite(line, 1, length, file);
+        }
+        else
+        {
+            fprintf(file, "key_%s =", sBindingNames[binding]);
+            for (int j = 0; j < sBindings[binding].numKeys; j++)
+                fprintf(file, "%s %s", j > 0 ? "," : "", SDL_GetKeyName(sBindings[binding].keys[j]));
+            fputc('\n', file);
+        }
+        line += length;
+    }
+    fclose(file);
+    EM_ASM({ if (Module.sauvegardeModifiee) Module.sauvegardeModifiee(); });
+}
+
+// Les touches de chaque bouton, une ligne par bouton : « a=Z », « select=\, Backspace »…
+EMSCRIPTEN_KEEPALIVE const char *Web_GetKeys(void)
+{
+    static char text[NUM_BINDINGS * (MAX_BINDING_INPUTS * 24 + 16)];
+    size_t used = 0;
+
+    text[0] = '\0';
+    for (int i = 0; i < NUM_BINDINGS; i++)
+    {
+        used += snprintf(text + used, sizeof(text) - used, "%s=", sBindingNames[i]);
+        for (int j = 0; j < sBindings[i].numKeys; j++)
+            used += snprintf(text + used, sizeof(text) - used, "%s%s", j > 0 ? ", " : "",
+                             SDL_GetKeyName(sBindings[i].keys[j]));
+        used += snprintf(text + used, sizeof(text) - used, "\n");
+    }
+    return text;
+}
+
+EMSCRIPTEN_KEEPALIVE void Web_CaptureKey(int binding)
+{
+    sWebCapture = (binding >= 0 && binding < NUM_BINDINGS) ? binding : -1;
+}
+
+EMSCRIPTEN_KEEPALIVE void Web_ResetKeys(void)
+{
+    char *text = malloc(sizeof(sDefaultSettings));
+
+    memcpy(text, sDefaultSettings, sizeof(sDefaultSettings));
+    ParseSettings(text, "default settings");
+    free(text);
+    WebWriteSettings();
+}
+
+// La touche appuyée pendant une capture : elle devient la seule touche du bouton, et n'en commande plus aucun autre
+static void WebCapturedKey(SDL_Keycode key)
+{
+    struct Binding *binding = &sBindings[sWebCapture];
+
+    if (key != SDLK_ESCAPE)
+    {
+        for (int i = 0; i < NUM_BINDINGS; i++)
+        {
+            for (int j = 0; j < sBindings[i].numKeys; j++)
+            {
+                if (sBindings[i].keys[j] == key)
+                    sBindings[i].keys[j--] = sBindings[i].keys[--sBindings[i].numKeys];
+            }
+        }
+        binding->keys[0] = key;
+        binding->numKeys = 1;
+        WebWriteSettings();
+    }
+    sWebCapture = -1;
+    EM_ASM({ if (Module.toucheChoisie) Module.toucheChoisie(); });
+}
+
 static void WebKeyEvent(const SDL_Event *event)
 {
     SDL_Keycode key = event->key.keysym.sym;
     int i;
 
+    if (event->type == SDL_KEYDOWN && sWebCapture >= 0)
+    {
+        if (!event->key.repeat)
+            WebCapturedKey(key);
+        return;
+    }
     for (i = 0; i < sNumWebKeys && sWebKeys[i] != key; i++)
         ;
     if (event->type == SDL_KEYDOWN && i == sNumWebKeys && sNumWebKeys < MAX_WEB_KEYS)
@@ -322,6 +435,9 @@ void LoadSettings(const char *path)
 
     if (path == NULL)
         return;
+#ifdef __EMSCRIPTEN__
+    sWebSettingsPath = strdup(path);     // réécrit par la page « Touches » (WebWriteSettings)
+#endif
     file = fopen(path, "rb");
     if (file == NULL)
     {
